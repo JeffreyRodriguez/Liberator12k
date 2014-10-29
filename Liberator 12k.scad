@@ -1,17 +1,11 @@
-//$t=0;
 include <Trigger Assembly.scad>;
 include <Receiver.scad>;
 
 
 
-//trigger_pin_offset_back = 0.25;
-//trigger_pin_offset_top = 0.4;
-//trigger_pin_length = trigger_bar_width + .5;
-//trigger_pin_offset_top  = (trigger_height/2);
-
-  grip_base_thickness = 0.25;
-  grip_height = sear_length - sear_top_z_compressed + sear_spring_length_compressed + grip_base_thickness;
-  grip_diameter = 3_4_tee_rim_od;
+grip_base_thickness = 0.25;
+grip_height = sear_length - sear_top_z_compressed + sear_spring_length_compressed + grip_base_thickness;
+grip_diameter = 3_4_tee_rim_od;
 //  grip_diameter = (trigger_pin_x_extended + trigger_pin_diameter) * 2;
 
 receiver();
@@ -49,7 +43,7 @@ module grip() {
       trigger_tracks();
 
       // Sear
-      color("Red") 
+      color("Red")
       translate([trigger_assembly_x,0,sear_top_z_compressed - sear_length])
       cylinder(r=sear_diameter/2, h=sear_length + sear_travel);
 
@@ -80,3 +74,6 @@ difference() {
   translate([-grip_diameter,-(grip_diameter+1),-grip_height -1])
   cube([grip_diameter*2,grip_diameter+1,grip_height + 2]);
 }
+
+
+trigger_assembly($t);

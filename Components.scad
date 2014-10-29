@@ -50,6 +50,19 @@ trigger_assembly_x = - (3_4_tee_id/2)
                      + (sear_diameter/2)
                      + trigger_assembly_clearance;
 
+// Trigger geometry: Trigger Travel (C on diagram)
+function trigger_travel(trigger_pin_min, sear_travel) =
+    sqrt( pow(trigger_pin_min,2) + (2*pow(sear_travel,2)) )
+    - trigger_pin_min + sear_travel;
+
+// Trigger geometry: Trigger Bar Pin Distance (D on diagram)
+function trigger_bar_pin_distance(trigger_pin_min, sear_travel) =
+    (trigger_pin_min + trigger_travel(trigger_pin_min, sear_travel))
+    * sqrt(2);
+
+function trigger_bar_angle(pin_distance, trigger_travel, pct) =
+    0;
+
 
 // Trunnion: 3/4"x1/8" Bushing and 1" Pipe
 trunnion_guide_tube_length = 1.6;
@@ -60,6 +73,6 @@ barrel_id     = 3_4_pipe_id;
 barrel_od     = 3_4_pipe_od;
 barrel_length = 18.5; // Fascism free?
 
-// Stock: 3/4"xFASCISM_MIN_LENGTH" Pipe
+// Stock: 3/4x"FASCISM_MIN_LENGTH" Pipe
 overall_length = 26.5; // Fascism free?
 stock_length   = overall_length - barrel_length + breech_face_x - 3_4_pipe_depth;
