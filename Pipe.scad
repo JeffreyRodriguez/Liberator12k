@@ -66,7 +66,7 @@ module pipe(id, od, length) {
   }
 }
 
-module tee(width, height, od, id, rim_od, rim_width) {
+module tee(width, height, od, id, rim_od, rim_width, cutout = false) {
   difference() {
     union() {
 
@@ -101,5 +101,30 @@ module tee(width, height, od, id, rim_od, rim_width) {
     // Bottom Hole
     translate([0,0,-height * 0.01])
     cylinder(r=id/2, h=height - (od/2) * 1.01);
+
+    // Cutout
+    if (cutout) {
+       translate([-width/1.8,-od,-height*0.05])
+      cube([width * 1.1, od * 1.1, height * 1.1]);
+    }
   }
 }
+
+module 3_4_tee(width=3_4_tee_width,
+               height=3_4_tee_height,
+               od=3_4_tee_diameter,
+               id=0,
+               rim_od=3_4_tee_rim_od,
+               rim_width=3_4_tee_rim_width,
+               cutout=false) {
+  $fn = 30;
+  
+tee(width=width,
+     height=height,
+     od=od,
+     id=id,
+     rim_od=rim_od,
+     rim_width=rim_width,
+     cutout=cutout);
+}
+

@@ -1,4 +1,17 @@
-include <Components.scad>;
+include <Pipe.scad>;
+
+// Trunnion: 3/4"x1/8" Bushing and 1" Pipe
+trunnion_guide_tube_length = 1.6;
+trunnion_length = 3;
+
+// Barrel: 3/4"x18.5" Pipe
+barrel_id     = 3_4_pipe_id;
+barrel_od     = 3_4_pipe_od;
+barrel_length = 18.5; // Fascism free?
+
+// Stock: 3/4x"FASCISM_MIN_LENGTH" Pipe
+overall_length = 26.5; // Fascism free?
+stock_length   = overall_length - barrel_length + breech_face_x - 3_4_pipe_depth;
 
 module trunnion(length) {
   union() {
@@ -37,14 +50,12 @@ module receiver() {
   }
 
   // Trunnion
-  color("LightGreen")
   difference() {
     rotate([0,-90,0])
     translate([3_4_tee_height - (3_4_tee_diameter/2),0,-(3_4_tee_width/2) - 3_4_x_1_8_bushing_depth])
     trunnion(length=trunnion_length);
 
     // Cutaway
-    color("LightGreen")
     translate([trunnion_length/2-2,-.90,1_pipe_od/2 -1])
     cube([trunnion_length+2,1,1_pipe_od + 2]);
   }
