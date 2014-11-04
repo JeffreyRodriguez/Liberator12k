@@ -21,22 +21,48 @@ module 3_4_tee_and_pipe(pipe_length_pos=1, pipe_length_neg=1) {
 }
 
 
-module ar15_grip() {
+module ar15_grip(mount_height=1, mount_length=1) {
   slot_width = .35;
   slot_height = .98;
   slot_length = 1.28;
   slot_angle  = 30;
   slot_angle_offset = -0.415;
 
-  difference() {
-    color("Green")
-    translate([-slot_length,-slot_width/2,-slot_height])
-    cube([slot_length,slot_width,slot_height]);
+  grip_width = 0.85;
+  grip_height = 1.27;
+  grip_bolt_diameter = 1/4;
 
-    translate([-slot_length,0,slot_angle_offset])
-    rotate([0,slot_angle,0])
-    translate([0,-slot_width/2 - 0.1,-2])
-    cube([2, slot_width + 0.2, 2]);
+  // TODO: Calculate this instead of specifying
+  grip_bolt_length = 2;
+  grip_bolt_offset_x = -slot_length/2 - grip_bolt_diameter/2 - 1/32; // TODO: Why 1/32?
+
+  color("Green")
+  union() {
+    difference() {
+      // Mount body
+      translate([-slot_length,-slot_width/2,-slot_height])
+      cube([slot_length,slot_width,slot_height]);
+
+      // Angle cutter
+      translate([-slot_length,0,slot_angle_offset])
+      rotate([0,slot_angle,0])
+      translate([0,-slot_width/2 - 0.1,-2])
+      cube([2, slot_width + 0.2, 2]);
+
+      // Mounting Hole Cutter
+      translate([grip_bolt_offset_x,0,-grip_bolt_length/2])
+      rotate([0,30,0])
+      cylinder(r=grip_bolt_diameter/2, h=grip_bolt_length);
+    }
+
+    // TODO: Clean up
+    // Vertical Mounting Block
+    translate([-slot_length,-grip_width/2,0])
+    cube([slot_length,grip_width,mount_height]);
+
+    // Horizontal Mounting Block
+    translate([0,-grip_width/2,-grip_height])
+    cube([mount_length,grip_width,grip_height + mount_height]);
   }
 
   translate([-1.766,0])
@@ -45,26 +71,27 @@ module ar15_grip() {
   %import("AR15_grip.stl");
 }
 
-module ar_tee_housing(v = 0, h = 0, tee_overlap, tee_clearance) {
+module ar_tee_housing(v = 0, h = 0, mount_length = 0, mount_height=0, tee_overlap, tee_clearance) {
   bottom_block_width = 3_4_tee_rim_od + (tee_overlap*2);
   bottom_block_length = (3_4_tee_width/2) + (3_4_tee_rim_od/2) + tee_overlap * 2;
   back_block_height = 3_4_tee_height - (3_4_tee_rim_od/2);
   back_block_overlap = 5/8;
   back_block_width = 3_4_tee_rim_width + (tee_overlap*2) + back_block_overlap;
 
+  color("Green", 0.5)
   union() {
 
     difference() {
       union() {
 
-        // Bottom
+        // Bottom Rim Block
         translate([(-3_4_tee_width/2) - tee_overlap,-bottom_block_width/2,-tee_overlap])
         cube([
           bottom_block_length,
           bottom_block_width,
           3_4_tee_rim_width + (tee_overlap*2)]);
 
-        // Back
+        // Back Rim Block
         translate([
           (-3_4_tee_width/2) - tee_overlap - back_block_overlap,
           -(3_4_tee_rim_od/2)-tee_overlap,
@@ -74,8 +101,6 @@ module ar_tee_housing(v = 0, h = 0, tee_overlap, tee_clearance) {
           back_block_height]);
       }
 
-
-
       // TODO: Clean up the backside of the housing
       translate([-3_4_tee_width/2 - h/2,0,0])
       *circle_cutter(diameter=grip_width, length = 1.5, width = 2, height=1/2, xp=1.5);
@@ -83,14 +108,14 @@ module ar_tee_housing(v = 0, h = 0, tee_overlap, tee_clearance) {
       3_4_tee_and_pipe();
     }
 
-    translate([-h,0,v])
+    translate([h,0,v])
     translate([0,0,-tee_overlap])
-    ar15_grip();
+    ar15_grip(mount_height=mount_height,mount_length=mount_length);
   }
 }
 
 *ar_tee_housing(
-  v = 0,
+  v = -1,
   h = 1/4,
   tee_overlap         = 1/8,
   tee_clearance       = 1/64);
