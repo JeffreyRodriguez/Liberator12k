@@ -275,17 +275,17 @@ module housing_left() {
       translate([0,-1,0])
       cube([10,2,10], center=true);
 
-      // Bottom front housing pin
-      translate([
-        sear_diameter/2 + sear_block_padding + housing_pin_diameter/2,
-        0,
-        -trigger_housing_height + housing_pin_diameter])
-      housing_pin(male=false);
+      // Top back housing pin socket
+      translate([-3_4_tee_width/2,0,3_4_tee_rim_z_min - housing_pin_diameter/2 - tee_overlap])
+      housing_pin(male=true);
     }
 
-    // Top back housing pin socket
-    translate([-3_4_tee_width/2,0,3_4_tee_rim_z_min - housing_pin_diameter/2 - tee_overlap])
-    housing_pin();
+    // Bottom front housing pin
+    translate([
+      sear_diameter/2 + sear_block_padding + housing_pin_diameter/2,
+      0,
+      -trigger_housing_height + housing_pin_diameter])
+    housing_pin(male=true);
   }
 }
 
@@ -308,7 +308,7 @@ module housing_right() {
 
     // Top back housing pin
     translate([-3_4_tee_width/2,0,3_4_tee_rim_z_min - housing_pin_diameter/2 - tee_overlap])
-      housing_pin(male=false);
+    housing_pin(male=false);
   }
 }
 
@@ -316,14 +316,20 @@ module housing_right() {
 
 scale([25.4,25.4,25.4]) {
 
+translate([1.5,0,sear_block_height])
 sear_block();
 
+translate([-2.7,0,0])
 rotate([180,0,0])
 trigger();
 
-translate([0,2,0])
-housing_right();
+  translate([0,0,3_4_tee_rim_od/2 + tee_overlap]) {
+    translate([0,-1.75,0])
+    rotate([0,0,-30])
+    housing_right();
 
-translate([0,-2,0])
-housing_left();
+    translate([0,1.75,0])
+    rotate([0,0,30])
+    housing_left();
+  }
 }
