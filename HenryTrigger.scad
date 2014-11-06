@@ -5,11 +5,11 @@ include <Receiver.scad>;
 
 tee_overlap = 1/16;
 
-trigger_travel = 3/8;
+trigger_travel = 5/16;
 sear_tee_clearance = 2/16;
 sear_diameter = 1/4;
 sear_rod_clearance = 1/64;
-sear_block_rod_clearance = 1/64;
+sear_block_rod_clearance = 1/32;
 sear_block_clearance = 1/128;
 trigger_clearance    = 1/128;
 sear_block_padding = 1/8;
@@ -80,7 +80,7 @@ module trigger() {
     }
 
     // Sear Hole
-    #translate([-0.01, -sear_hole_width/2,-0.01])
+    translate([-0.01, -sear_hole_width/2,-0.01])
     color("Red")
     cube([sear_hole_length + 0.01,
            sear_hole_width,
@@ -103,7 +103,7 @@ module trigger() {
 
 
     // Shave the point off the back
-    #translate([
+    translate([
       -trigger_travel-0.5,
       -(trigger_width/2)-0.1,
       sear_block_height - sear_block_padding])
@@ -246,22 +246,19 @@ module housing() {
   }
 }
 
-housing_pin_diameter = 1/4;
-housing_pin_length   = 1/8;
-housing_pin_clearance = 1/128;
+housing_pin_diameter = 3/16;
+housing_pin_length   = 3/16;
+housing_pin_clearance = 1/32;
 
 module housing_pin(male=true) {
   rotate([90,0,0])
   if (male) {
-    cylinder(
-      r=housing_pin_diameter/2,
-      h=housing_pin_length + housing_pin_clearance,
-      center=true);
+    cube([housing_pin_diameter,housing_pin_diameter,housing_pin_length], center=true);
   } else {
-    cylinder(
-      r=housing_pin_diameter/2 + housing_pin_clearance,
-      h=housing_pin_length + housing_pin_clearance,
-      center=true);
+    cube([
+      housing_pin_diameter+housing_pin_clearance,
+      housing_pin_diameter+housing_pin_clearance,
+      housing_pin_length + housing_pin_clearance], center=true);
   }
 
 }
@@ -277,7 +274,7 @@ module housing_left() {
 
       // Top back housing pin socket
       translate([-3_4_tee_width/2,0,3_4_tee_rim_z_min - housing_pin_diameter/2 - tee_overlap])
-      housing_pin(male=true);
+      housing_pin(male=false);
     }
 
     // Bottom front housing pin
@@ -308,7 +305,7 @@ module housing_right() {
 
     // Top back housing pin
     translate([-3_4_tee_width/2,0,3_4_tee_rim_z_min - housing_pin_diameter/2 - tee_overlap])
-    housing_pin(male=false);
+    housing_pin(male=true);
   }
 }
 
@@ -326,7 +323,7 @@ trigger();
   translate([0,0,3_4_tee_rim_od/2 + tee_overlap]) {
     translate([0,-1.75,0])
     rotate([0,0,-30])
-    housing_right();
+    !housing_right();
 
     translate([0,1.75,0])
     rotate([0,0,30])
