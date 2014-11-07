@@ -211,17 +211,17 @@ module trigger_housing() {
       translate([
         0,
         -trigger_wing_span/2 + trigger_width/2,
-        trigger_height - trigger_wing_height])
+        trigger_height - trigger_wing_height - trigger_clearance])
       cube([
         trigger_wing_length + trigger_travel + trigger_clearance*2,
         trigger_wing_span + trigger_clearance*2,
         trigger_wing_height + trigger_clearance]);
     }
 
-    // Bottom sear collar pocket
-    translate([0,0,-trigger_housing_internal_bottom - sear_collar_padding - sear_collar_pocket_height/2])
-    cylinder(r=sear_collar_pocket_radius,
-              h=sear_collar_pocket_height,
+    // Bottom sear track
+    translate([0,0,-trigger_housing_internal_bottom])
+    cylinder(r=sear_diameter/2 + sear_rod_clearance,
+              h=sear_spring_height,
               center=true);
 
     // Sear Track
