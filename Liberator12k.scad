@@ -9,9 +9,9 @@ housing_pin_diameter    = 3/16;
 housing_pin_length      = 3/16;
 sear_block_padding      = 5/32;
 sear_collar_padding     = 1/16;
-trigger_padding         = 1/4;
+trigger_padding         = 1/8;
 trigger_wing_height     = 1/8;
-trigger_wing_width      = 1/8;
+trigger_wing_width      = 1/4;
 trigger_wing_length     = 5/16;
 trigger_protrousion     = 0;
 trigger_overtravel      = 1/32;
@@ -42,12 +42,13 @@ trigger_travel           = (firing_pin_collar_diameter - firing_pin_diameter)/2 
 sear_block_width         = sear_diameter + (sear_block_padding*2);
 sear_block_height        = trigger_travel + (sear_block_padding*2);
 trigger_height           = sear_block_height + trigger_travel;
-trigger_width            = sear_block_width;
 
 // Calculated: Trigger
 trigger_sear_slot_width  = sear_diameter + sear_rod_clearance;
 trigger_sear_slot_length = trigger_travel + sear_diameter + sear_rod_clearance;
+trigger_width            = trigger_sear_slot_width + trigger_padding;
 trigger_wing_span        = trigger_width + trigger_wing_width;
+trigger_wing_x_offset    = sear_diameter + trigger_travel;
 trigger_track_height     = trigger_height + trigger_clearance;
 trigger_track_width      = trigger_width + (trigger_clearance*2);
 
@@ -58,10 +59,11 @@ sear_block_length                = sear_diameter + (sear_block_padding*2);
 sear_block_hole_radius           = sear_diameter/2 + sear_block_rod_clearance/2;
 sear_block_track_width           = sear_block_width + (sear_block_clearance*2);
 sear_block_track_length          = sear_block_length + (sear_block_clearance*2);
-sear_block_track_height          = sear_block_height + trigger_travel;
+sear_block_track_height          = sear_block_height + trigger_travel + sear_block_clearance*2;
 trigger_housing_internal_top     = sear_collar_padding         // Top collar pocket, top padding
                                    + sear_collar_pocket_height // Collar pocket
                                    + sear_collar_padding;      // Top collar pocket, bottom padding
+
 trigger_housing_internal_bottom  = trigger_housing_internal_top + sear_block_track_height;
 
 // Calculated: Trigger Housing
@@ -88,8 +90,8 @@ trigger_rear_height        = 1/4;
 trigger_length             = trigger_housing_length + trigger_protrousion;
 trigger_angle_cutter_width = trigger_width * 1.1;
 trigger_rear_cutter_height = trigger_height - trigger_rear_height;
-trigger_x_extended         = -sear_diameter;
-trigger_x_compressed       = -sear_diameter -trigger_travel;
+trigger_x_extended         = -sear_diameter + trigger_travel;
+trigger_x_compressed       = -sear_diameter;
 
 module trigger() {
 
@@ -107,17 +109,17 @@ module trigger() {
         // Angle cutter
         translate([0,0,trigger_height])
         rotate([0,45,0])
-        translate([0,-trigger_width/2 - 0.1,-trigger_height-trigger_width])
+        translate([-1/2,-trigger_width/2 - 0.1,-trigger_height-trigger_width])
         color("Blue")
         cube([
-          1,
+          2,
           trigger_width + 0.2,
           trigger_height+trigger_width]);
       }
 
       // Trigger Wings
       translate([
-        0,
+        trigger_wing_x_offset,
         -trigger_wing_span/2,
         trigger_height - trigger_wing_height])
        cube([
@@ -187,7 +189,7 @@ module trigger_housing() {
     translate([
       0,
       -sear_block_clearance,
-      -trigger_housing_internal_top - sear_block_track_height/2])
+      -trigger_housing_internal_top - sear_block_track_height/2 + sear_block_clearance])
     cube([
       sear_block_track_length,
       sear_block_track_width,
@@ -209,10 +211,10 @@ module trigger_housing() {
 
       // Trigger Wings Track
       translate([
-        0,
+        trigger_wing_x_offset,
         -trigger_wing_span/2 + trigger_width/2,
         trigger_height - trigger_wing_height])
-      #cube([
+      cube([
         trigger_wing_length + trigger_travel + trigger_clearance*2,
         trigger_wing_span + trigger_clearance*2,
         trigger_wing_height + trigger_clearance]);
@@ -224,16 +226,12 @@ module trigger_housing() {
   }
 
   color("Yellow")
-  translate([0, 0, -trigger_housing_internal_top - sear_block_height - trigger_travel])
+  translate([0, 0, -trigger_housing_internal_top - sear_block_height - (trigger_travel*$t)])
   %sear_block();
 
   color("Red")
-  translate([trigger_x_compressed,0,-trigger_housing_internal_top])
+  translate([trigger_x_extended - (trigger_travel*$t),0,-trigger_housing_internal_top])
   %trigger();
-
-  color("Red")
-  translate([trigger_x_extended,0,-trigger_housing_internal_top])
-  *%trigger();
 }
 
 
