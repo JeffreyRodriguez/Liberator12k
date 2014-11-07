@@ -71,7 +71,7 @@ module ar15_grip(mount_height=1, mount_length=1) {
   %import("AR15_grip.stl");
 }
 
-module ar_tee_housing(v = 0, h = 0, mount_length = 0, mount_height=0, tee_overlap, tee_clearance) {
+module ar_tee_housing(v = 0, h = 0, mount_length = 0, mount_height=0, tee_overlap, tee_clearance, sear_hole_diameter) {
   bottom_block_width = 3_4_tee_rim_od + (tee_overlap*2);
   bottom_block_length = (3_4_tee_width/2) + (3_4_tee_rim_od/2) + tee_overlap * 2;
   back_block_height = 3_4_tee_height - (3_4_tee_rim_od/2);
@@ -101,6 +101,9 @@ module ar_tee_housing(v = 0, h = 0, mount_length = 0, mount_height=0, tee_overla
           back_block_height]);
       }
 
+      // Sear hole
+      cylinder(r=sear_hole_diameter/2, h=tee_padding + 0.1, center=true);
+
       // TODO: Clean up the backside of the housing
       translate([-3_4_tee_width/2 - h/2,0,0])
       *circle_cutter(diameter=grip_width, length = 1.5, width = 2, height=1/2, xp=1.5);
@@ -109,7 +112,7 @@ module ar_tee_housing(v = 0, h = 0, mount_length = 0, mount_height=0, tee_overla
     }
 
     translate([h,0,v])
-    translate([0,0,-tee_overlap])
+    translate([0,0,0])
     ar15_grip(mount_height=mount_height,mount_length=mount_length);
   }
 }
@@ -117,5 +120,6 @@ module ar_tee_housing(v = 0, h = 0, mount_length = 0, mount_height=0, tee_overla
 *ar_tee_housing(
   v = -1,
   h = 1/4,
-  tee_overlap         = 1/8,
-  tee_clearance       = 1/64);
+  tee_overlap         = 1/16,
+  tee_clearance       = 1/64,
+  sear_hole_diameter       = 1/4);

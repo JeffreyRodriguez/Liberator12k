@@ -3,59 +3,93 @@ include <Pipe.scad>;
 include <Tee Housing.scad>;
 include <Receiver.scad>;
 
-tee_overlap = 1/16;
+// Configurable Settings
+tee_overlap             = 1/16;
+housing_pin_diameter    = 3/16;
+housing_pin_length      = 3/16;
+sear_block_padding      = 5/32;
+sear_collar_padding     = 1/16;
+trigger_padding         = 1/4;
+trigger_wing_height     = 1/8;
+trigger_wing_width      = 1/8;
+trigger_wing_length     = 5/16;
+trigger_protrousion     = 0;
+trigger_overtravel      = 1/32;
+sear_spring_height      = 1/8;
+trigger_housing_length_extra = 1/4;
 
-trigger_travel = 5/16;
-sear_tee_clearance = 2/16;
-sear_diameter = 1/4;
-sear_rod_clearance = 1/64;
-sear_block_rod_clearance = 1/32;
-sear_block_clearance = 1/64;
-trigger_clearance    = 1/128;
-sear_block_padding = 1/8;
-trigger_width = sear_diameter + (sear_block_padding*2);
-sear_block_width = trigger_width;
-sear_block_length = sear_diameter + (sear_block_padding*2);
-sear_top_clearance = 1/64;
-sear_block_height_extra = sear_block_padding;
-sear_block_height = trigger_travel + sear_block_height_extra + sear_block_padding;
-sear_x = -((3_4_tee_id/2) - (sear_diameter/2) - sear_tee_clearance);
+// Vitamin measurements
+firing_pin_diameter        = 1/4;
+firing_pin_collar_diameter = 1/2;
+firing_pin_collar_height   = 1/4;
+sear_diameter              = 1/4;
+sear_collar_diameter       = 1/2;
+sear_collar_height         = 0.277;
+grip_width                 = 0.85;
+grip_height                = 1.27;
 
+// Clearances
+firing_pin_collar_clearance = 1/64;  // Adds to the trigger travel
+housing_pin_clearance       = 1/32;  // Housing pin socket
+sear_rod_clearance          = 1/32;  // Sear rod path
+sear_collar_clearance       = 1/128;     // Sear collar pockets
+sear_block_clearance        = 1/128; // Sear block path
+sear_block_rod_clearance    = 1/64;  // Widens the hole in the sear block
+trigger_clearance           = 1/128; // Trigger path
 
-sear_hole_width = sear_diameter + sear_rod_clearance;
-sear_hole_length = trigger_travel + sear_diameter + sear_rod_clearance;
+// Calculated: Trigger Geometry
+trigger_travel           = (firing_pin_collar_diameter - firing_pin_diameter)/2 + trigger_overtravel;
+sear_block_width         = sear_diameter + (sear_block_padding*2);
+sear_block_height        = trigger_travel + (sear_block_padding*2);
+trigger_height           = sear_block_height + trigger_travel;
+trigger_width            = sear_block_width;
 
+// Calculated: Trigger
+trigger_sear_slot_width  = sear_diameter + sear_rod_clearance;
+trigger_sear_slot_length = trigger_travel + sear_diameter + sear_rod_clearance;
+trigger_wing_span        = trigger_width + trigger_wing_width;
+trigger_track_height     = trigger_height + trigger_clearance;
+trigger_track_width      = trigger_width + (trigger_clearance*2);
 
-grip_width = 0.85;
-grip_height = 1.27;
-trigger_height = trigger_travel * 2;
-trigger_vertical_offset = 1/8;
-trigger_housing_length_extra = trigger_travel - sear_block_padding;
-trigger_housing_length = sear_block_length
-                       + (sear_block_padding*2)
-                       + trigger_housing_length_extra;
-trigger_housing_width = max(
-  sear_block_width + (sear_block_padding*2),
-  grip_width);
-trigger_housing_height = max(grip_height,
-                             trigger_height + sear_block_height + sear_block_padding + trigger_vertical_offset);
+// Calculated: Sear block
+sear_collar_pocket_height        = sear_collar_height + (sear_collar_clearance*2);
+sear_collar_pocket_radius        = (sear_collar_diameter + sear_collar_clearance)/2;
+sear_block_length                = sear_diameter + (sear_block_padding*2);
+sear_block_hole_radius           = sear_diameter/2 + sear_block_rod_clearance/2;
+sear_block_track_width           = sear_block_width + (sear_block_clearance*2);
+sear_block_track_length          = sear_block_length + (sear_block_clearance*2);
+sear_block_track_height          = sear_block_height + trigger_travel;
+trigger_housing_internal_top     = sear_collar_padding         // Top collar pocket, top padding
+                                   + sear_collar_pocket_height // Collar pocket
+                                   + sear_collar_padding;      // Top collar pocket, bottom padding
+trigger_housing_internal_bottom  = trigger_housing_internal_top + sear_block_track_height;
 
+// Calculated: Trigger Housing
+trigger_housing_length       = trigger_housing_length_extra
+                               + max(sear_block_length + (sear_block_padding*2), // Sear track and padding
 
-sear_rod_length = trigger_travel*2 + trigger_vertical_offset + 3_4_tee_center_z + trigger_height;
+                                   // OR
+                                   trigger_wing_length + trigger_travel // Track for the trigger wings
+                                   + sear_block_padding*2)              // Front and rear walls
 
-trigger_rear_height = 1/4;
-trigger_protrousion = 1/4;
-trigger_length = trigger_housing_length + sear_block_padding + trigger_protrousion;
+					  // AND
+                                 + trigger_housing_length_extra;
+trigger_housing_width        = max(trigger_wing_span + sear_block_padding,
+                                   grip_width);
+trigger_housing_height       = max(grip_height,
+                                   sear_collar_pocket_height + sear_collar_padding*2 // Top collar pocket
+                                 + max(trigger_track_height,sear_block_track_height) // Sear or trigger cutter, whichever is larger
+                                 + sear_collar_pocket_height + sear_collar_padding // Bottom collar pocket
+                                 + trigger_travel
+                                 + sear_spring_height);
+
+// Calculated:
+trigger_rear_height        = 1/4;
+trigger_length             = trigger_housing_length + trigger_protrousion;
 trigger_angle_cutter_width = trigger_width * 1.1;
-trigger_angle_cutter_length = 2;
-trigger_angle_cutter_height = 2;
 trigger_rear_cutter_height = trigger_height - trigger_rear_height;
-trigger_x_extended = -sear_diameter;
-trigger_x_compressed = trigger_x_extended - trigger_travel + (sear_diameter/2);
-
-trigger_wing_length = trigger_travel;
-trigger_wing_width  = trigger_width + 3/16; // <- Half of this fraction on each side
-trigger_wing_height = 1/8;
+trigger_x_extended         = -sear_diameter;
+trigger_x_compressed       = -sear_diameter -trigger_travel;
 
 module trigger() {
 
@@ -64,50 +98,40 @@ module trigger() {
   difference() {
 
     union() {
-      // Trigger Main body
-      translate([0,-trigger_width/2,0])
-      cube([trigger_length, trigger_width, trigger_height]);
+      difference() {
+        // Trigger Main body
+        translate([0,-trigger_width/2,0])
+        cube([trigger_length, trigger_width, trigger_height]);
+
+
+        // Angle cutter
+        translate([0,0,trigger_height])
+        rotate([0,45,0])
+        translate([0,-trigger_width/2 - 0.1,-trigger_height-trigger_width])
+        color("Blue")
+        cube([
+          1,
+          trigger_width + 0.2,
+          trigger_height+trigger_width]);
+      }
 
       // Trigger Wings
       translate([
-        sear_block_padding,
-        -trigger_wing_width/2,
+        0,
+        -trigger_wing_span/2,
         trigger_height - trigger_wing_height])
        cube([
         trigger_wing_length,
-        trigger_wing_width,
+        trigger_wing_span,
           trigger_wing_height]);
     }
 
-    // Sear Hole
-    translate([-0.01, -sear_hole_width/2,-0.01])
+    // Sear Slot
+    translate([-0.1, -trigger_sear_slot_width/2,-0.1])
     color("Red")
-    cube([sear_hole_length + 0.01,
-           sear_hole_width,
-           trigger_height + 0.02]);
-
-    // Angle cutter
-    translate([0,0,trigger_height])
-    difference() {
-      rotate([0,45,0])
-      translate([0,-trigger_angle_cutter_width/2,-2])
-      color("Blue")
-      cube([
-        trigger_angle_cutter_length,
-        trigger_angle_cutter_width,
-        2]);
-
-      translate([-0.1,-trigger_width/2 - 0.1,-sear_block_padding])
-      cube([sear_block_padding + 0.2, trigger_width + 0.2,sear_block_padding]);
-    }
-
-
-    // Shave the point off the back
-    translate([
-      -trigger_travel-0.5,
-      -(trigger_width/2)-0.1,
-      sear_block_height - sear_block_padding])
-    cube([1, trigger_width+0.2, 1]);
+    cube([trigger_sear_slot_length + 0.1,
+           trigger_sear_slot_width,
+           trigger_height + 0.2]);
   }
 }
 
@@ -115,40 +139,36 @@ module sear_block() {
   difference() {
 
     // Sear block body
-    translate([
-      -sear_block_length/2,
+    translate([0,
       -sear_block_width/2,
-      -sear_block_height])
+      0])
     difference() {
+
+      // Sear block main body
+      translate([-sear_block_length/2,0,0])
       cube([sear_block_length, sear_block_width, sear_block_height]);
 
-       // Sear Block Angle Cutter
-      translate([0,-0.1,sear_block_height])
+      // Sear Block Angle Cutter
+      translate([0,-0.1,sear_block_height/2])
       rotate([0,45,0])
-      translate([-0.1,0,0])
-      cube([2, sear_block_width + 0.2, 1]);
-
-      // Shave the point off the top
-      translate([-0.1,-0.1,sear_block_height - sear_block_padding])
-      cube([1, sear_block_width + 0.2, 1]);
+      translate([-pyth_A_B(sear_block_width, sear_block_height)/2,0,0])
+      cube([pyth_A_B(sear_block_width, sear_block_height), sear_block_width + 0.2, 1]);
     }
 
     // Sear Hole
-    translate([0,0,-sear_block_height-0.1])
-    cylinder(r=sear_diameter/2 + sear_rod_clearance/2, h=sear_block_height + 0.2);
+    translate([0,0,-0.1])
+    cylinder(r=sear_block_hole_radius, h=sear_block_height + 0.2);
   }
 }
 
 module trigger_housing() {
-  trigger_cutter_height = trigger_height + (trigger_clearance*2);
-  sear_cutter_height    = trigger_height + sear_block_height_extra + (sear_block_clearance*2);
 
   difference() {
 
     // Housing
-    color("Brown", 0.3)
+    color("LightGreen")
     translate([
-      -sear_block_length + sear_block_padding,
+      -trigger_housing_length/2,
       -trigger_housing_width/2,
       -trigger_housing_height])
     cube([
@@ -156,99 +176,96 @@ module trigger_housing() {
       trigger_housing_width,
       trigger_housing_height]);
 
-    // Tracks
-    color("White")
-    translate([0,0,-trigger_vertical_offset])
+    // Top sear collar pocket
+    translate([0,0,-sear_collar_pocket_height/2  -sear_collar_padding])
+    cylinder(r=sear_collar_pocket_radius,
+              h=sear_collar_pocket_height,
+              center=true);
+
+
+    // Sear Block Track
+    translate([
+      0,
+      -sear_block_clearance,
+      -trigger_housing_internal_top - sear_block_track_height/2])
+    cube([
+      sear_block_track_length,
+      sear_block_track_width,
+      sear_block_track_height], center=true);
+
+    // Trigger Track
+    translate([
+      trigger_x_compressed,
+      -(trigger_width/2) - trigger_clearance,
+      -trigger_height - trigger_housing_internal_top])
     union() {
 
-      // Trigger Track
-      translate([
-        -sear_block_length/2 - sear_block_padding - 0.01,
-        -(trigger_width/2) - trigger_clearance,
-        -trigger_height-trigger_clearance])
-
-      union() {
-        difference() {
-
-          // Main cutter for the trigger path
-          cube([
-            2,
-            trigger_width + (trigger_clearance*2),
-            trigger_cutter_height]);
-
-          // Leave a notch to keep the sear track whole
-          translate([
-            -1 + sear_block_padding + sear_block_clearance,
-            -0.1,
-            -1.01 + (trigger_height/2) + sear_block_padding])
-          cube([1, trigger_width + 0.2,1]);
-        }
-
-        // Trigger Wings Track
-        translate([
-          trigger_clearance,
-          -trigger_wing_width/2 + trigger_width/2,
-          trigger_height - trigger_wing_height])
+        // Main cutter for the trigger path
+        translate([0,-trigger_clearance,0])
         cube([
-          trigger_wing_length*2 + trigger_clearance*2,
-          trigger_wing_width + trigger_clearance*2,
-          trigger_wing_height + trigger_clearance*2]);
-      }
+          trigger_housing_length + 0.1,
+          trigger_track_width,
+          trigger_track_height]);
 
-      // Sear Block Track
+      // Trigger Wings Track
       translate([
-        -sear_block_length/2 - sear_block_clearance,
-        -(sear_block_width/2) - sear_block_clearance,
-        -sear_cutter_height + sear_block_clearance])
+        0,
+        -trigger_wing_span/2 + trigger_width/2,
+        trigger_height - trigger_wing_height])
       cube([
-        sear_block_length + (sear_block_clearance*2),
-        sear_block_width + (sear_block_clearance*2),
-        sear_cutter_height]);
-      }
+        trigger_wing_length + trigger_travel + trigger_clearance*2,
+        trigger_wing_span + trigger_clearance*2,
+        trigger_wing_height + trigger_clearance]);
+    }
+
+    // Bottom sear collar pocket
+    translate([0,0,-trigger_housing_internal_bottom - sear_collar_padding - sear_collar_pocket_height/2])
+    cylinder(r=sear_collar_pocket_radius,
+              h=sear_collar_pocket_height,
+              center=true);
+
+    // Sear Track
+    translate([0,0,-trigger_housing_height + sear_block_padding])
+    cylinder(r=sear_diameter/2 + sear_rod_clearance, h=trigger_housing_height + 0.1);
   }
 
   color("Yellow")
-  translate([0, 0, - trigger_height/2 + sear_block_padding -trigger_vertical_offset])
+  translate([0, 0, -trigger_housing_internal_top - sear_block_height - trigger_travel])
   %sear_block();
 
   color("Red")
-  translate([trigger_x_compressed,0,-trigger_vertical_offset])
+  translate([trigger_x_compressed,0,-trigger_housing_internal_top])
   %trigger();
 
+  color("Red")
+  translate([trigger_x_extended,0,-trigger_housing_internal_top])
+  *%trigger();
 }
 
-module housing() {
-  %receiver();
 
-  vertical_spacing = trigger_vertical_offset + sear_block_padding*2 - sear_block_clearance*2;
+module housing() {
+  *%receiver();
+
+  vertical_spacing = trigger_housing_internal_top + sear_block_padding*2 - sear_block_clearance*2;
 
   // Housing and trigger
-  difference() {
   union() {
 
     // 3/4 Tee Housing with AR-15 Grip
     ar_tee_housing(
-      v =  -vertical_spacing,
+      v =  -trigger_housing_height + grip_height,
       h = -7/16,
-      mount_height = vertical_spacing,
-      mount_length = 1/8,
+      mount_height = trigger_housing_height - grip_height,
+      mount_length = 0,
       tee_overlap         = tee_overlap,
-      tee_clearance       = 1/64);
+      tee_clearance       = 1/64,
+      sear_hole_diameter  = sear_diameter + sear_rod_clearance);
 
     // Trigger
-    translate([0,0,-tee_overlap])
+    translate([0,0,0])
     trigger_housing();
   }
-
-    // Sear Track
-    translate([0,0,-(trigger_travel*3) - sear_block_padding*2 - trigger_vertical_offset])
-    cylinder(r=sear_diameter/2 + sear_rod_clearance, h=sear_rod_length);
-  }
 }
-
-housing_pin_diameter = 3/16;
-housing_pin_length   = 3/16;
-housing_pin_clearance = 1/32;
 
 module housing_pin(male=true) {
   rotate([90,0,0])
@@ -260,7 +277,6 @@ module housing_pin(male=true) {
       housing_pin_diameter+housing_pin_clearance,
       housing_pin_length + housing_pin_clearance], center=true);
   }
-
 }
 
 module housing_left() {
@@ -274,7 +290,7 @@ module housing_left() {
 
       // Top back housing pin socket
       translate([-3_4_tee_width/2,0,3_4_tee_rim_z_min - housing_pin_diameter/2 - tee_overlap])
-      housing_pin(male=false);
+      #housing_pin(male=false);
     }
 
     // Bottom front housing pin
@@ -300,7 +316,7 @@ module housing_right() {
         sear_diameter/2 + sear_block_padding + housing_pin_diameter/2,
         0,
         -trigger_housing_height + housing_pin_diameter])
-      housing_pin(male=false);
+      #housing_pin(male=false);
     }
 
     // Top back housing pin
@@ -310,22 +326,26 @@ module housing_right() {
 }
 
 
-
+// Scale up to metric for printing
 scale([25.4,25.4,25.4]) {
 
-translate([1.5,0,sear_block_height])
-sear_block();
+  // Position the sear block
+  translate([1.5,0,0])
+  sear_block();
 
-translate([-2.7,0,0])
-rotate([180,0,0])
-trigger();
+  // Position the trigger
+  translate([-2.7,0,0])
+  rotate([180,0,0])
+  trigger();
 
+  // Position the left and right housing
   translate([0,0,3_4_tee_rim_od/2 + tee_overlap]) {
-    translate([0,-1.75,0])
+//  translate([0,0,trigger_housing_width/2]) {
+    translate([0,-1.9,0])
     rotate([0,0,-30])
-    !housing_right();
+    housing_right();
 
-    translate([0,1.75,0])
+    translate([0,1.9,0])
     rotate([0,0,30])
     housing_left();
   }

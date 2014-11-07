@@ -5,6 +5,9 @@ include <Pipe.scad>;
 //
 $fn=60;
 
+// Pythagorean Theorem
+function pyth_A_B(a,b) = sqrt(pow(a, 2) + pow(b, 2));
+
 // Centerline for firing pin and tee body
 centerline_z  = 3_4_tee_center_z; // OK
 
