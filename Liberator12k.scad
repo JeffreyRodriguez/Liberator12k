@@ -149,7 +149,7 @@ module sear_block() {
       cube([sear_block_length, sear_block_width, sear_block_height]);
 
       // Sear Block Angle Cutter
-      translate([0,-0.1,sear_block_height/2])
+      translate([sear_block_padding,-0.1,sear_block_height/2])
       rotate([0,45,0])
       translate([-pyth_A_B(sear_block_width, sear_block_height)/2,0,0])
       cube([pyth_A_B(sear_block_width, sear_block_height), sear_block_width + 0.2, 1]);
