@@ -218,12 +218,6 @@ module trigger_housing() {
         trigger_wing_height + trigger_clearance]);
     }
 
-    // Bottom sear track
-    translate([0,0,-trigger_housing_internal_bottom])
-    cylinder(r=sear_diameter/2 + sear_rod_clearance,
-              h=sear_spring_height,
-              center=true);
-
     // Sear Track
     translate([0,0,-trigger_housing_height + sear_block_padding])
     cylinder(r=sear_diameter/2 + sear_rod_clearance, h=trigger_housing_height + 0.1);
