@@ -211,8 +211,8 @@ module trigger_housing() {
       translate([
         0,
         -trigger_wing_span/2 + trigger_width/2,
-        trigger_height - trigger_wing_height - trigger_clearance])
-      cube([
+        trigger_height - trigger_wing_height])
+      #cube([
         trigger_wing_length + trigger_travel + trigger_clearance*2,
         trigger_wing_span + trigger_clearance*2,
         trigger_wing_height + trigger_clearance]);
