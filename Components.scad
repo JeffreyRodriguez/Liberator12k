@@ -53,7 +53,7 @@ sear_collar_padding     = 1/16;
 trigger_padding         = 1/8;
 trigger_wing_height     = 1/8;
 trigger_wing_width      = 1/4;
-trigger_wing_length     = 5/16;
+trigger_wing_length     = 1/2;
 trigger_protrousion     = 0;
 trigger_overtravel      = 1/32;
 sear_spring_height      = 1/8;
@@ -89,7 +89,7 @@ trigger_sear_slot_width  = sear_diameter + sear_rod_clearance;
 trigger_sear_slot_length = trigger_travel + sear_diameter + sear_rod_clearance;
 trigger_width            = trigger_sear_slot_width + trigger_padding;
 trigger_wing_span        = trigger_width + trigger_wing_width;
-trigger_wing_x_offset    = sear_diameter + trigger_travel;
+trigger_wing_x_offset    = sear_block_padding;
 trigger_track_height     = trigger_height + trigger_clearance;
 trigger_track_width      = trigger_width + (trigger_clearance*2);
 
@@ -112,10 +112,10 @@ trigger_housing_length       = trigger_housing_length_extra
                                + max(sear_block_length + (sear_block_padding*2), // Sear track and padding
 
                                    // OR
-                                   trigger_wing_length + trigger_travel // Track for the trigger wings
-                                   + sear_block_padding*2)              // Front and rear walls
+                                   trigger_wing_length/2 + trigger_travel // Track for the trigger wings
+                                   + sear_block_padding*2)                // Front and rear walls
 
-            // AND
+                                // AND
                                  + trigger_housing_length_extra;
 trigger_housing_width        = max(trigger_wing_span + sear_block_padding,
                                    grip_width);
