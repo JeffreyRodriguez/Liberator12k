@@ -24,14 +24,14 @@ firing_pin_collar_diameter = 1/2;
 firing_pin_collar_height   = 1/4;
 sear_diameter              = 1/4;
 sear_collar_diameter       = 1/2;
-sear_collar_height         = 0.277;
+sear_collar_height         = 1/4;
 grip_width                 = 0.85;
 grip_height                = 1.27;
 
 // Clearances
 firing_pin_collar_clearance = 1/64;  // Adds to the trigger travel
 housing_pin_clearance       = 1/32;  // Housing pin socket
-sear_rod_clearance          = 1/32;  // Sear rod path
+sear_rod_clearance          = 1/64;  // Sear rod path
 sear_collar_clearance       = 1/64;  // Sear collar pockets
 sear_block_clearance        = 1/128; // Sear block path
 sear_block_rod_clearance    = 1/64;  // Widens the hole in the sear block
@@ -213,11 +213,11 @@ module trigger_housing() {
       translate([
         trigger_wing_x_offset,
         -trigger_wing_span/2 + trigger_width/2,
-        trigger_height - trigger_wing_height])
+        trigger_height - trigger_wing_height - trigger_clearance])
       cube([
         trigger_wing_length + trigger_travel + trigger_clearance*2,
         trigger_wing_span + trigger_clearance*2,
-        trigger_wing_height + trigger_clearance]);
+        trigger_wing_height + trigger_clearance * 2]);
     }
 
     // Sear Track
