@@ -56,8 +56,9 @@ trigger_wing_width      = 1/4;
 trigger_wing_length     = 1/2;
 trigger_protrousion     = 0;
 trigger_overtravel      = 1/32;
-sear_spring_height      = 1/8;
+sear_spring_height      = 1/4;
 trigger_housing_length_extra = 1/4;
+trigger_housing_padding = 1/8;
 
 // Vitamin measurements
 firing_pin_diameter        = 1/4;
@@ -105,8 +106,6 @@ trigger_housing_internal_top     = sear_collar_padding         // Top collar poc
                                    + sear_collar_pocket_height // Collar pocket
                                    + sear_collar_padding;      // Top collar pocket, bottom padding
 
-trigger_housing_internal_bottom  = trigger_housing_internal_top + sear_block_track_height;
-
 // Calculated: Trigger Housing
 trigger_housing_length       = trigger_housing_length_extra
                                + max(sear_block_length + (sear_block_padding*2), // Sear track and padding
@@ -122,9 +121,11 @@ trigger_housing_width        = max(trigger_wing_span + sear_block_padding,
 trigger_housing_height       = max(grip_height,
                                    sear_collar_pocket_height + sear_collar_padding*2 // Top collar pocket
                                  + max(trigger_track_height,sear_block_track_height) // Sear or trigger cutter, whichever is larger
-                                 + sear_collar_pocket_height + sear_collar_padding // Bottom collar pocket
                                  + trigger_travel
-                                 + sear_spring_height);
+                                 + sear_spring_height
+                                 + trigger_housing_padding);
+
+trigger_housing_internal_bottom = trigger_housing_internal_top - sear_block_track_height;
 
 // Calculated:
 trigger_rear_height        = 1/4;
