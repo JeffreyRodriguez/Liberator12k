@@ -102,7 +102,7 @@ module ar_tee_housing(v = 0, h = 0, mount_length = 0, mount_height=0, tee_overla
       }
 
       // Sear hole
-      cylinder(r=sear_hole_diameter/2, h=tee_padding + 0.1, center=true);
+      cylinder(r=sear_hole_diameter/2, h=tee_overlap + 0.1, center=true);
 
       // TODO: Clean up the backside of the housing
       translate([-3_4_tee_width/2 - h/2,0,0])
