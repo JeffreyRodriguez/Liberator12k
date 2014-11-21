@@ -1,3 +1,5 @@
+//$t=1;
+
 include <Components.scad>;
 include <Receiver.scad>;
 
@@ -24,7 +26,7 @@ module sear_block() {
 
     // Sear Hole
     translate([0,0,-0.1])
-    cylinder(r=sear_block_hole_radius, h=sear_block_height + 0.2);
+    #cylinder(r=sear_block_hole_radius, h=sear_block_height + 2);
   }
 }
 
@@ -79,7 +81,7 @@ module trigger_housing() {
     // Housing
     color("LightGreen")
     translate([
-      -trigger_housing_length/2,
+      trigger_housing_x_back,
       -trigger_housing_width/2,
       -trigger_housing_height])
     cube([
@@ -87,8 +89,9 @@ module trigger_housing() {
       trigger_housing_width,
       trigger_housing_height]);
 
-    // Top sear collar pocket
-    translate([0,0,-sear_collar_pocket_height/2  -sear_collar_padding])
+
+    // Sear collar pocket
+    translate([0,0,-sear_collar_pocket_height/2 - trigger_housing_padding_top])
     cylinder(r=sear_collar_pocket_radius,
               h=sear_collar_pocket_height,
               center=true);
@@ -96,23 +99,23 @@ module trigger_housing() {
 
     // Sear Block Track
     translate([
-      0,
-      -sear_block_clearance,
-      -trigger_housing_internal_top - sear_block_track_height/2 + sear_block_clearance])
+      -sear_block_track_length/2,
+      -sear_block_track_width/2 - sear_block_clearance,
+      -trigger_housing_internal_top -sear_block_track_height])
     cube([
       sear_block_track_length,
       sear_block_track_width,
-      sear_block_track_height], center=true);
+      sear_block_track_height]);
 
     // Trigger Track
     translate([
-      trigger_x_compressed,
+      trigger_x_compressed - trigger_clearance,
       -(trigger_width/2) - trigger_clearance,
-      -trigger_height - trigger_housing_internal_top])
+      -trigger_height - trigger_housing_internal_top - trigger_clearance])
     union() {
 
         // Main cutter for the trigger path
-        translate([0,-trigger_clearance,0])
+        translate([0,0,-trigger_clearance])
         cube([
           trigger_housing_length + 0.1,
           trigger_track_width,
@@ -154,44 +157,40 @@ module trigger_housing_right() {
 
     }
 
-    // Top alignment pins
-    translate([0,0,-alignment_pin_diameter]) {
+    // Top alignment pin
+    translate([
+      sear_collar_diameter/2,
+      -trigger_housing_pin_width/2,
+      -trigger_housing_top_pin_height - trigger_housing_padding_top - alignment_pin_clearance])
+    cube([
+      trigger_housing_pin_length,
+      trigger_housing_pin_width,
+      trigger_housing_top_pin_height]);
 
-      // Back
-      translate([-trigger_housing_length/2 + alignment_pin_diameter, 0, 0])
-      alignment_pin(male=true);
-
-      // Front
-      translate([trigger_housing_length/2 - alignment_pin_diameter, 0, 0])
-      alignment_pin(male=true);
-    }
-
-    // Bottom alignment pins
-    translate([0,0,-trigger_housing_height + alignment_pin_diameter]) {
-
-        // Front
-        translate([-sear_diameter/2 - alignment_pin_diameter,0,0])
-        alignment_pin(male=true);
-
-        // Back
-        translate([sear_diameter/2 + alignment_pin_diameter,0,0])
-        alignment_pin(male=true);
-    }
+    // Bottom alignment pin
+    translate([
+      sear_diameter/2 + sear_block_padding - alignment_pin_clearance,
+      -trigger_housing_pin_width/2,
+      -trigger_housing_height + trigger_housing_padding_bottom])
+    cube([
+      trigger_housing_pin_length + alignment_pin_clearance,
+      trigger_housing_pin_width,
+      sear_spring_height]);
 
     // Spring Block
     difference() {
       translate([
-        -sear_diameter/2 - sear_block_padding,
-        -sear_diameter/2 - sear_block_padding - sear_block_clearance,
+        -sear_block_track_length/2 + alignment_pin_clearance,
+        -sear_block_track_width/2 - alignment_pin_clearance,
         -trigger_housing_height])
       cube([
-        sear_diameter + sear_block_padding*2,
-        sear_diameter + sear_block_padding*2 ,
-        sear_spring_height + trigger_housing_padding + trigger_travel + max(sear_block_clearance, trigger_clearance)]);
+        sear_block_track_length - alignment_pin_clearance*2,
+        sear_block_track_width,
+        trigger_housing_spring_block_height]);
 
       // Sear Hole
-      translate([0,0,-trigger_housing_height + trigger_housing_padding])
-      cylinder(r=sear_diameter/2 + sear_rod_clearance, h=trigger_housing_height + trigger_housing_padding);
+      translate([0,0,-trigger_housing_height + trigger_housing_padding_bottom])
+      cylinder(r=sear_diameter/2 + sear_rod_clearance, h=trigger_housing_height + trigger_housing_padding_bottom);
     }
   }
 }
@@ -205,39 +204,35 @@ module trigger_housing_left() {
       translate([0,-1,0])
       cube([10,2,10], center=true);
 
-      // Top alignment sockets
-      translate([0,0,-alignment_pin_diameter]) {
+      // Top alignment socket
+      translate([
+        sear_collar_diameter/2 - alignment_pin_clearance,
+        -trigger_housing_pin_width/2-alignment_pin_clearance,
+        -trigger_housing_top_pin_height - trigger_housing_padding_top - alignment_pin_clearance*2])
+      cube([
+        trigger_housing_pin_length + alignment_pin_clearance*2,
+        trigger_housing_pin_width + alignment_pin_clearance*2,
+        trigger_housing_top_pin_height + alignment_pin_clearance*2]);
 
-        // Back
-        translate([-trigger_housing_length/2 + alignment_pin_diameter, 0, 0])
-        alignment_pin(male=false);
-
-        // Front
-        translate([trigger_housing_length/2 - alignment_pin_diameter, 0, 0])
-        alignment_pin(male=false);
-      }
-
-      // Bottom alignment sockets
-      translate([0,0,-trigger_housing_height + alignment_pin_diameter]) {
-
-        // Front
-        translate([-sear_diameter/2 - alignment_pin_diameter,0,0])
-        alignment_pin(male=false);
-
-        // Back
-        translate([sear_diameter/2 + alignment_pin_diameter,0,0])
-        alignment_pin(male=false);
-      }
+      // Bottom alignment socket
+      translate([
+        sear_diameter/2 + sear_block_padding - alignment_pin_clearance,
+        -trigger_housing_pin_width/2 - alignment_pin_clearance,
+        -trigger_housing_height + trigger_housing_padding_bottom - alignment_pin_clearance])
+      cube([
+        trigger_housing_pin_length + alignment_pin_clearance*2,
+        trigger_housing_pin_width + alignment_pin_clearance*2,
+        sear_spring_height + alignment_pin_clearance*2]);
 
       // Spring Block Socket
       translate([
-        -sear_diameter/2 - sear_block_clearance - sear_block_padding,
-        -sear_diameter/2 - sear_block_padding,
+        -sear_block_track_length/2,
+        -sear_block_track_width/2,
         -trigger_housing_height])
-      #cube([
-        sear_diameter + sear_block_clearance*2 + sear_block_padding*2,
-        sear_diameter + sear_block_padding*2,
-        sear_spring_height + trigger_housing_padding + trigger_travel + max(sear_block_clearance, trigger_clearance)*2]);
+      cube([
+        sear_block_track_length,
+        sear_block_track_width - sear_block_clearance,
+        trigger_housing_spring_block_height + sear_block_clearance]);
 
     }
   }
@@ -248,6 +243,8 @@ module trigger_housing_left() {
   trigger_housing_right();
 }
 
+*!trigger_housing_left();
+*!trigger_housing_right();
 
 // Trigger Housing Printable Prototype: Scale up to metric for printing
 *scale([25.4,25.4,25.4]) {
@@ -259,7 +256,10 @@ module trigger_housing_left() {
   rotate([90,0,0])
   trigger_housing_right();
 
+  translate([-1,0,0])
   rotate([0,180,0])
   trigger();
+
+  sear_block();
 
 }

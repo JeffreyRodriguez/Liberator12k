@@ -5,7 +5,7 @@ include <Receiver.scad>;
 include <TriggerAssembly.scad>;
 
 module housing() {
-  *%receiver();
+  %receiver();
 
   vertical_spacing = trigger_housing_internal_top + sear_block_padding*2 - sear_block_clearance*2;
 
@@ -14,9 +14,9 @@ module housing() {
 
     // 3/4 Tee Housing with AR-15 Grip
     ar_tee_housing(
-      v =  -trigger_housing_height + grip_height,
-      h = -7/16,
-      mount_height = trigger_housing_height - grip_height,
+      v =  -trigger_housing_height+grip_height,
+      h = trigger_housing_x_back,
+      mount_height = trigger_housing_height-grip_height,
       mount_length = 0,
       tee_overlap         = tee_overlap,
       tee_clearance       = 1/64,
@@ -54,6 +54,12 @@ module housing_right() {
   }
 }
 
+rotate([90,0,0])
+*housing_left();
+
+rotate([-90,0,0])
+*housing_right();
+
 
 // Scale up to metric for printing
 scale([25.4,25.4,25.4]) {
@@ -70,11 +76,9 @@ scale([25.4,25.4,25.4]) {
   // Position the left and right housing
   translate([0,0,3_4_tee_rim_od/2 + tee_overlap]) {
     translate([0,-1.9,0])
-    rotate([0,0,-30])
     housing_right();
 
     translate([0,1.9,0])
-    rotate([0,0,30])
     housing_left();
   }
 }

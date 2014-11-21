@@ -46,7 +46,7 @@ module receiver() {
 
     // Cutaway
     translate([-3_4_tee_width,-1,-3_4_tee_height/2])
-    cube([3_4_tee_width+2,1,3_4_tee_height + 2]);
+    *cube([3_4_tee_width+2,1,3_4_tee_height + 2]);
   }
 
   // Trunnion
@@ -57,7 +57,7 @@ module receiver() {
 
     // Cutaway
     translate([trunnion_length/2-2,-.90,1_pipe_od/2 -1])
-    cube([trunnion_length+2,1,1_pipe_od + 2]);
+    *cube([trunnion_length+2,1,1_pipe_od + 2]);
   }
 
   // Barrel

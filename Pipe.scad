@@ -14,10 +14,10 @@
 // 3/4" Tee
 3_4_tee_diameter  = 1.38; // Diameter of the body, behind the rim
 3_4_tee_width     = 2.64; // Across the top of the T
-3_4_tee_height    = 2.0; // From the middle of the bottom rim to the top of the body
+3_4_tee_height    = 2.01; // From the middle of the bottom rim to the top of the body
 3_4_tee_id        = 0.91;
-3_4_tee_rim_od    = 1.513;
-3_4_tee_rim_width = 0.3255;
+3_4_tee_rim_od    = 1.55;
+3_4_tee_rim_width = 0.37;
 3_4_tee_center_z  = 3_4_tee_height - (3_4_tee_diameter/2); // Centerline of the T
 3_4_tee_rim_z_min = 3_4_tee_center_z - (3_4_tee_rim_od/2); // Bottom of the T rims
 3_4_tee_rim_z_max = 3_4_tee_center_z + (3_4_tee_rim_od/2); // Top of the T rims
@@ -32,9 +32,10 @@
 3_4_x_1_8_bushing_depth       = 0.5;
 
 // 1" Pipe
-1_pipe_od = 1.32;
-1_pipe_id = 1.06;
-
+1_pipe_id            = 1.06;
+1_pipe_od            = 1.32;
+1_pipe_tapered_od    = 1.285;  // Threaded portion of the pipe, smallest OD
+1_pipe_thread_length = 0.982;  // Length of the threads, measured from the end of the pipe to the last thread mark
 
 module bushing(id, od, height, head_major_width, head_height) {
   difference() {
@@ -63,6 +64,22 @@ module pipe(id, od, length) {
     // Hollow it out
     translate([0,0,-1])
     cylinder(r=id/2, h=length + 2);
+  }
+}
+
+module 1_pipe_tapered(length=2) {
+  union() {
+
+    // Thread taper
+    rotate([0,90,0])
+    color("Orange")
+    cylinder(r=1_pipe_tapered_od/2, r2=1_pipe_od/2, h=1_pipe_thread_length);
+
+    // Extra pipe length
+    translate([1_pipe_thread_length,0,0])
+    rotate([0,90,0])
+    color("Blue")
+    cylinder(r=1_pipe_od/2, h=length - 1_pipe_thread_length);
   }
 }
 
@@ -118,7 +135,7 @@ module 3_4_tee(width=3_4_tee_width,
                rim_width=3_4_tee_rim_width,
                cutout=false) {
   $fn = 30;
-  
+
 tee(width=width,
      height=height,
      od=od,
@@ -128,3 +145,5 @@ tee(width=width,
      cutout=cutout);
 }
 
+
+*3_4_tee();
