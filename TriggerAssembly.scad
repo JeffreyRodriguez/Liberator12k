@@ -26,7 +26,7 @@ module sear_block() {
 
     // Sear Hole
     translate([0,0,-0.1])
-    #cylinder(r=sear_block_hole_radius, h=sear_block_height + 2);
+    cylinder(r=sear_block_hole_radius, h=sear_block_height + 2);
   }
 }
 

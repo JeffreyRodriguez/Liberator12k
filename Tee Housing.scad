@@ -75,7 +75,7 @@ module tee_housing_block_back() {
       0,
       back_block_height -back_block_screw_block_hole_diameter/2 - back_block_screw_block_overlap])
     rotate([90,0,0])
-    #cylinder(r=back_block_screw_block_hole_diameter/2, h=back_block_width + 0.2, center=true);
+    cylinder(r=back_block_screw_block_hole_diameter/2, h=back_block_width + 0.2, center=true);
 
     // Upper screw hole
     translate([
@@ -83,7 +83,7 @@ module tee_housing_block_back() {
       0,
       back_block_screw_block_overlap + back_block_screw_block_hole_diameter/2])
     rotate([90,0,0])
-    #cylinder(r=back_block_screw_block_hole_diameter/2, h=back_block_width + 0.2, center=true);
+    cylinder(r=back_block_screw_block_hole_diameter/2, h=back_block_width + 0.2, center=true);
   }
 }
 
