@@ -1,5 +1,5 @@
 include <Components.scad>;
-include <Pipe.scad>;
+include <Vitamins/Pipe.scad>;
 include <AR15 Grip Mount.scad>;
 
 module 3_4_tee_and_pipe(pipe_length_pos=1, pipe_length_neg=1) {
@@ -169,6 +169,7 @@ module ar_tee_housing(v = 0, h = 0, mount_length = 0, mount_height=0, tee_overla
 }
 
 
+scale([25.4, 25.4, 25.4])
 *ar_tee_housing(
   v = 0,
   h = 0,

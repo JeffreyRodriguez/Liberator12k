@@ -1,4 +1,5 @@
-include <Pipe.scad>;
+include <Vitamins/Pipe.scad>;
+include <Components.scad>;
 
 // Trunnion: 3/4"x1/8" Bushing and 1" Pipe
 trunnion_guide_tube_length = 1.6;
@@ -25,7 +26,7 @@ module trunnion(length) {
             head_major_width=3_4_x_1_8_bushing_head_od,
             head_height=3_4_x_1_8_bushing_head_height);
 
-    translate([0,0,-length+3_4_x_1_8_bushing_depth])
+    translate([0,0,-length+3_4_x_1_8_bushing_depth -2])
     pipe(id=1_pipe_id,
          od=1_pipe_od,
          length=length);

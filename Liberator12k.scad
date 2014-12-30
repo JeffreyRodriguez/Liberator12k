@@ -1,11 +1,11 @@
 include <Components.scad>;
-include <Pipe.scad>;
 include <Tee Housing.scad>;
 include <Receiver.scad>;
 include <TriggerAssembly.scad>;
+include <Cylinder.scad>;
 
 module housing() {
-  %receiver();
+  receiver();
 
   vertical_spacing = trigger_housing_internal_top + sear_block_padding*2 - sear_block_clearance*2;
 
@@ -61,20 +61,28 @@ rotate([-90,0,0])
 *housing_right();
 
 
+
 // Scale up to metric for printing
 scale([25.4,25.4,25.4]) {
 
+  housing();
+  trigger_housing();
+
+  translate([breech_face_x  + chamber_protrusion,0,-cylinder_hole_diameter - revolver_cylinder_wall*2 + 3_4_tee_center_z])
+  rotate([0,90,0])
+  revolver_cylinder(hole=cylinder_hole_diameter, wall=revolver_cylinder_wall, height=2);
+
   // Position the sear block
   translate([1.5,0,0])
-  sear_block();
+  *sear_block();
 
   // Position the trigger
   translate([-2.7,0,0])
   rotate([180,0,0])
-  trigger();
+  *trigger();
 
   // Position the left and right housing
-  translate([0,0,3_4_tee_rim_od/2 + tee_overlap]) {
+  *translate([0,0,3_4_tee_rim_od/2 + tee_overlap]) {
     translate([0,-1.9,0])
     housing_right();
 

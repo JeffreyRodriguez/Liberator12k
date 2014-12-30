@@ -52,7 +52,7 @@ module ar15_grip(mount_height=1, mount_length=1) {
   translate([-1.766,0])
   rotate([180,0,-90])
   scale([1/25.4, 1/25.4, 1/25.4])
-  *%import("AR15_grip.stl");
+  %import("AR15_grip.stl");
 }
 
 

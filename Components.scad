@@ -1,19 +1,23 @@
-include <Pipe.scad>;
+include <Math/Triangles.scad>;
+include <Vitamins/Angle Stock.scad>;
+include <Vitamins/Pipe.scad>;
+include <Vitamins/Rod.scad>;
 
 //
 // Component Dimensions
 //
 $fn=60;
 
-
-
-// Pythagorean Theorem
-function pyth_A_B(a,b) = sqrt(pow(a, 2) + pow(b, 2));
+// Fascist Settings
+overall_length = 26.5;
+barrel_length = 18.5;
 
 // Centerline for firing pin and tee body
 centerline_z  = 3_4_tee_center_z; // OK
 
 breech_face_x = (3_4_tee_width/2) + 3_4_x_1_8_bushing_depth;
+
+
 
 
 // Configurable Settings
@@ -27,11 +31,32 @@ trigger_wing_length     = 1/2;
 trigger_protrousion     = 1/2;
 trigger_overtravel      = 1/16;
 sear_spring_height      = 1/4;
+revolver_cylinder_wall  = 1/16;
 trigger_housing_padding_back = 1/16;
 trigger_housing_padding_front = 12/32;
 trigger_housing_padding_sides = 1/16;
 trigger_housing_padding_top = 1/16;
 trigger_housing_padding_bottom = 1/8;
+forend_wall_thickness = 1/8;
+
+linkage_mount_wall_thickness = 1/16;
+linkage_mount_pipe_length = 1;
+linkage_mount_height = 1/2;
+linkage_mount_block_clearance = 1/64;
+
+
+revolver_zigzag_pin_diameter=1/4;
+revolver_shots = 6;
+zigzag_clearance = 1/64;
+zigzag_offset_z = 3/8;
+chamber_length = 3;
+
+
+// Configurable: Cylinder Linkage
+cylinder_linkage_height     = 3/8;
+cylinder_linkage_width      = 3/8;
+cylinder_linkage_length     = 7;
+cylinder_linakge_rod_offset = 3.5;
 
 // Clearances
 firing_pin_collar_clearance = 1/64;  // Adds to the trigger travel
@@ -41,6 +66,9 @@ sear_collar_clearance       = 1/64;  // Sear collar pocket
 sear_block_clearance        = 1/128; // Sear block path
 sear_block_rod_clearance    = 1/64;  // Widens the hole in the sear block
 trigger_clearance           = 1/128; // Trigger path
+forend_clearance            = 1/64;  // Around the linkage mounting block
+
+
 
 // Vitamin measurements
 firing_pin_diameter        = 1/4;
@@ -110,8 +138,38 @@ trigger_x_compressed       = -sear_diameter;
 // Calculated: Sear Collar Pocket
 sear_collar_alignment_pin_height = sear_collar_height + sear_collar_padding*2 + sear_collar_clearance*2;
 
+// Calculated: Revolver Cylinder
+cylinder_hole_diameter = 3_4_pipe_od + 3_4_pipe_clearance;
+revolver_cylinder_od   = ((cylinder_hole_diameter*1.5)+revolver_cylinder_wall*3 + revolver_zigzag_pin_diameter)*2;
+cylinder_circumference = 3.14 * pow(revolver_cylinder_od/2, 2);
+revolver_center_offset = cylinder_hole_diameter + revolver_cylinder_wall*2;
+rotation_angle = 360/revolver_shots;
+rotation_arc = cylinder_circumference/revolver_shots;
+zigzag_height = rotation_arc/2;
+zigzag_overtravel = revolver_zigzag_pin_diameter*1.5;
+revolver_cylinder_height = zigzag_height + zigzag_overtravel*2;
+zigzag_width = revolver_zigzag_pin_diameter + zigzag_clearance;
+top_slot_height = zigzag_overtravel + revolver_zigzag_pin_diameter + zigzag_clearance;
+bottom_slot_height = zigzag_overtravel + revolver_zigzag_pin_diameter + zigzag_clearance;
+chamber_protrusion = (chamber_length - revolver_cylinder_height)/2;
 
-module circle_cutter(diameter,length, width, height, xp=0, xn=0, yp=0, yn=0) {
+
+linkage_mount_linkage_offset = revolver_cylinder_od/2 - revolver_center_offset;
+linkage_mount_block_width = cylinder_linkage_width + linkage_mount_wall_thickness*2;
+linkage_mount_block_height = revolver_cylinder_od/2 - revolver_center_offset - 3_4_pipe_od/2 + cylinder_linkage_height + linkage_mount_wall_thickness;
+linkage_mount_block_length = linkage_mount_height + linkage_mount_pipe_length;
+linkage_mount_offset_x = 3_4_pipe_od/2 + 3_4_pipe_clearance;
+linkage_mount_offset_y = -linkage_mount_block_width/2;
+
+// Calculated: Backstrap position
+backstrap_offset      = 1_pipe_od/2
+                      + linkage_mount_block_height
+                      - linkage_mount_wall_thickness
+                      + forend_wall_thickness*2
+                      + 3_4_angle_stock_height;
+
+
+module circle_cutter(diameter,length, width, height, xp=0, xn=0, yp=0, yn=0, center=true) {
   difference() {
     // Outer Box
     cube([length, width, height], center=true);
