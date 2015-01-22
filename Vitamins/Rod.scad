@@ -4,9 +4,12 @@
 1_8_rod_clearance = 0.03; // TODO
 
 // 1/4" Rod
-1_4_rod_d         = 1/4;
-1_4_rod_r         = 1_4_rod_d/2;
-1_4_rod_clearance = 0.02; // TODO
+1_4_rod_d                = 1/4;
+1_4_rod_r                = 1_4_rod_d/2;
+1_4_rod_clearance        = 0.02; // TODO
+1_4_rod_collar_d         = 1/2;
+1_4_rod_collar_width     = 0.27;
+1_4_rod_collar_clearance = 0.0; // TODO
 
 // 5/16" Rod
 5_16_rod_d         = 5/16;
@@ -27,6 +30,10 @@ module 1_8_rod(length=1, cutter=false) {
 
 module 1_4_rod(length=1, cutter=false) {
   rod(diameter=1_4_rod_d, clearance=1_4_rod_clearance, length=length, cutter=cutter);
+}
+
+module 1_4_rod_collar(cutter=false) {
+  rod(diameter=1_4_rod_collar_d, clearance=1_4_rod_collar_clearance, cutter=cutter, length=1_4_rod_collar_width);
 }
 
 module 5_16_rod(length=1, cutter=false) {

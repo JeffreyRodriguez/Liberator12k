@@ -54,27 +54,3 @@ translate([-2,0,0])
 scale([25.4, 25.4, 25.4])
 translate([2,0,0])
 1_pipe_sleeve(wall=1/8, length=1/2);
-
-
-// 3/4" Angle Stock
-scale([25.4, 25.4, 25.4])
-translate([1.5,-2.5,0])
-difference() {
-  cube([1,1,1/2]);
-
-  translate([1/2, 1/2, -0.1])
-  cube([1,1,1]);
-
-  translate([1/8, 1/8, -0.1])
-  3_4_angle_stock(length=1, cutter=true);
-}
-
-
-// Revolver Cylinder Pipe
-scale([25.4, 25.4, 25.4])
-translate([0,-2,0])
-difference() {
-  cylinder(r=cylinder_hole_diameter/2 + revolver_cylinder_wall, h=2, $fn=20);
-  translate([0,0,-0.1])
-  cylinder(r=cylinder_hole_diameter/2, h=3, $fn=20);
-}

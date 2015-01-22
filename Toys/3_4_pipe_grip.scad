@@ -14,7 +14,7 @@ module 3_4_pipe_grip() {
   forend_width  = 1_pipe_od + forend_wall_thickness*2;
   forend_height = backstrap_offset;
 
-  translate([0,0,linkage_mount_height-forend_length]) {
+  translate([0,0,forend_length-forend_length]) {
 
   difference() {
 

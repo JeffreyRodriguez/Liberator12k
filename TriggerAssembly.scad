@@ -228,11 +228,11 @@ module trigger_housing_left() {
       translate([
         -sear_block_track_length/2,
         -sear_block_track_width/2,
-        -trigger_housing_height])
+        -trigger_housing_height - 0.1])
       cube([
         sear_block_track_length,
         sear_block_track_width - sear_block_clearance,
-        trigger_housing_spring_block_height + sear_block_clearance]);
+        trigger_housing_spring_block_height + sear_block_clearance + 0.1]);
 
     }
   }

@@ -1,20 +1,28 @@
 include <Components.scad>;
 
-module ar15_grip(mount_height=1, mount_length=1) {
+ar15_grip_POSITION_FRONT   = 0; // Default
+ar15_grip_POSITION_REAR    = 1;
   slot_width = .34;
   slot_height = .975;
   slot_length = 1.25;
   slot_angle  = 30;
   slot_angle_offset = -0.41;
+  slot_overlap = 1/4;
 
   grip_width = 0.85;
   grip_height = 1.26;
   grip_bolt_diameter = 1/4;
 
-  // TODO: Calculate this instead of specifying
-  grip_bolt_length = 2;
-  grip_bolt_offset_x = -slot_length/2 - grip_bolt_diameter/2 - 3/64; // Why?
+    // TODO: Calculate this instead of specifying
+    grip_bolt_length = 2;
+    grip_bolt_offset_x = -slot_length/2 - grip_bolt_diameter/2 - 3/64; // Why?
 
+module ar15_grip(mount_height=1, mount_length=1, position=0, debug=false) {
+
+  // Positioning options
+  x_offset = position == ar15_grip_POSITION_REAR ? slot_length : 0;
+
+  translate([x_offset, 0,0])
   difference() {
 
     union() {
@@ -24,11 +32,21 @@ module ar15_grip(mount_height=1, mount_length=1) {
       color("Fuchsia")
       cube([slot_length,slot_width,slot_height]);
 
-      // TODO: Clean up
       // Vertical Mounting Block
-      translate([-slot_length,-grip_width/2,0])
-      color("Purple")
-      cube([slot_length,grip_width,mount_height]);
+      intersection() {
+        translate([-slot_length - slot_overlap,-grip_width/2,0])
+        color("Purple")
+        cube([slot_length + slot_overlap,grip_width,mount_height]);
+
+        union() {
+          translate([-slot_length - slot_overlap + grip_width/2,0,-0.1])
+          cylinder(r=grip_width/2, h=mount_height + 0.2);
+
+          translate([-slot_length - slot_overlap + grip_width/2,-grip_width/2,0])
+          color("Purple")
+          cube([slot_length,grip_width,mount_height]);
+        }
+      }
 
       // Horizontal Mounting Block
       translate([0,-grip_width/2,-grip_height])
@@ -46,18 +64,19 @@ module ar15_grip(mount_height=1, mount_length=1) {
     // Mounting Hole Cutter
     translate([grip_bolt_offset_x,0,-grip_bolt_length/2])
     rotate([0,30,0])
-    #cylinder(r=grip_bolt_diameter/2, h=grip_bolt_length);
+    cylinder(r=grip_bolt_diameter/2, h=grip_bolt_length);
   }
 
-  translate([-1.766,0])
+  if (debug)
+  translate([-1.766 + x_offset,0])
   rotate([180,0,-90])
   scale([1/25.4, 1/25.4, 1/25.4])
-  %import("AR15_grip.stl");
+  %import("Vitamins/AR15_grip.stl");
 }
 
 
 // Test Print
 *scale([25.4,25.4,25.4]) {
-  rotate([0,90,0])
-  ar15_grip(mount_height = 1/8, mount_length = 1/8);
+  //rotate([0,90,0])
+  ar15_grip(mount_height = 1/4, mount_length = 1/4);
 }

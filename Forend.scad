@@ -1,81 +1,73 @@
 include <Vitamins/Pipe.scad>;
 include <Components.scad>;
-include <Tee Housing.scad>;
-include <Receiver.scad>;
+include <Actuator.scad>;
 include <Cylinder.scad>;
 include <Cylinder Linkage.scad>;
-include <Linkage Mount.scad>;
 
 module forend() {
 
-  // Linkage Mount
-  %linkage_mount();
-
-  forend_travel = 3;
-  forend_length = forend_travel  + 1/4;
-  forend_length = 1;
-  forend_width  = 1_pipe_od + forend_wall_thickness*2;
-  forend_height = backstrap_offset + 3_4_pipe_od;
-
-  translate([0,0,linkage_mount_height-forend_length]) {
+  echo("Forend Height", forend_length+revolver_cylinder_height + chamber_protrusion*2 + 1/4);
 
   difference() {
-
-
     union() {
 
-      translate([
-        -forend_height + backstrap_offset - 3_4_angle_stock_height - 8/32,
-        -forend_width/2,
-        0])
-      cube([forend_height,forend_width,forend_length]);
+      // Barrel and Gas Sealing Pipe Sleeve
+      cylinder(r=1_pipe_od/2 + forend_wall_thickness, h=forend_length);
 
-      // Angle Iron Sleeve
+      // Backstrap Sleeve
       translate([backstrap_offset,0,0])
-      rotate([0,0,135])
-      difference() {
-        cube([
-          3_4_angle_stock_width + forend_wall_thickness*3.5,
-          3_4_angle_stock_width + forend_wall_thickness*3.5,
-          forend_length]);
+      backstrap(loose=true, length=forend_length+revolver_cylinder_height + chamber_protrusion*2 + 1/4);
 
-        translate([forend_wall_thickness,forend_wall_thickness,-0.1])
-        #3_4_angle_stock(
-          length=10,
-          cutter=true);
-      }
+      // Spindle-Barrel Infill
+      translate([-revolver_center_offset, -cylinder_spindle_diameter/2-cylinder_spindle_wall,0])
+      cube([1,cylinder_spindle_diameter+cylinder_spindle_wall*2, forend_length]);
 
+      // Spindle Sleeve
+      translate([-revolver_center_offset, 0,0])
+      cylinder(r=cylinder_spindle_diameter/2 + cylinder_spindle_wall, h=forend_length);
     }
 
-      // Linkage Mount Block Track
-      translate([0,0,forend_length - forend_travel]) {
-        1_pipe(cutter=true, hollow=false, loose=true, length=forend_travel+0.1);
+    // Gas Sealing Pipe Clearance
+    translate([0,0,forend_length - forend_depth])
+    1_pipe(hollow=false, cutter=true, loose=false, length=forend_length + 0.1);
 
-        translate([
-          linkage_mount_offset_x,
-          -linkage_mount_block_width/2 - forend_clearance,
-          0])
-        cube([
-          linkage_mount_block_height + forend_clearance,
-          linkage_mount_block_width + forend_clearance*2,
-          forend_travel + 0.1]);
-      }
+    // Barrel Hole
+    translate([0,0,-0.1])
+    3_4_pipe(cutter=true, hollow=false, length=forend_length + 0.2);
 
-      // Barrel Hole
-      translate([0,0,-0.1])
-      3_4_pipe(hollow=false, cutter=true, length=forend_length + 0.2);
+    // Spindle Hole
+    translate([-revolver_center_offset, 0,-0.1])
+    cylinder(r=cylinder_spindle_diameter/2, h=forend_length + 0.2);
 
+    // Spindle Hole
+    translate([-revolver_center_offset, 0,-0.1])
+    cylinder(r=cylinder_spindle_diameter/2, h=forend_length + 0.2);
 
-      // Cylinder Mounting Hole
-      translate([-revolver_center_offset,0,-0.1])
-      3_4_pipe(hollow=false, cutter=true, length=forend_length + 0.2);
-    }
+    // Revolver Cylinder Clearance
+    translate([-revolver_center_offset,0,forend_length])
+    cylinder(r=revolver_cylinder_od/2 + actuator_cylinder_clearance,
+             h=revolver_cylinder_height + chamber_protrusion*2 + 1/4 + 0.1);
+
+    // Actuator Rod Hole
+    translate([-revolver_center_offset + revolver_cylinder_od/2 + actuator_pin_depth,0,forend_length+revolver_cylinder_height + chamber_protrusion*2 - 1/4])
+    rotate([0,-90,0])
+    1_4_rod(length=actuator_collar_offset + 0.1, cutter=true);
   }
 }
 
-
 // Scale up to metric for printing
 scale([25.4,25.4,25.4]) {
-  //rotate([0,-90,0])
   forend();
+
+  translate([-revolver_center_offset,0,revolver_cylinder_height + forend_depth + forend_seal_length - chamber_protrusion])
+  mirror([0,0,1])
+  %revolver_cylinder();
+
+  // Gas Sealing Pipe
+  translate([0,0,forend_length - forend_depth])
+  %1_pipe(length=2);
+
+  // Barrel
+  translate([0,0,-barrel_length + forend_length])
+  %3_4_pipe(length=barrel_length);
 }

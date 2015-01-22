@@ -21,7 +21,7 @@ breech_face_x = (3_4_tee_width/2) + 3_4_x_1_8_bushing_depth;
 
 
 // Configurable Settings
-tee_overlap             = 1/16;
+tee_overlap             = 1/8;
 sear_block_padding      = 5/32;
 sear_collar_padding     = 1/16; // Between the bottom of the sear collar and top of the tracks
 trigger_padding         = 1/8;
@@ -31,32 +31,49 @@ trigger_wing_length     = 1/2;
 trigger_protrousion     = 1/2;
 trigger_overtravel      = 1/16;
 sear_spring_height      = 1/4;
-revolver_cylinder_wall  = 1/16;
+
 trigger_housing_padding_back = 1/16;
 trigger_housing_padding_front = 12/32;
 trigger_housing_padding_sides = 1/16;
 trigger_housing_padding_top = 1/16;
 trigger_housing_padding_bottom = 1/8;
+
+// Configurable: Cylinder
+cylinder_spindle_diameter    = 1/4 + 1/32;
+cylinder_spindle_wall        = 1/4;
+revolver_cylinder_wall       = 1_pipe_wall;
+revolver_cylinder_outer_wall = 1_pipe_wall;
+spindle_overlap              = revolver_cylinder_wall;
+revolver_zigzag_pin_diameter = 1/4;
+revolver_zigzag_depth        = 3/16;
+revolver_shots               = 6;
+zigzag_clearance             = 1/64;
+chamber_length               = 3;
+spindle_collar_diameter      = 0.505;
+spindle_collar_height        = 0.27;
+
+// Configurable: Backstrap
+backstrap_wall_thickness = 1/4;
+
+// Configurable: Actuator
+actuator_length             = 1.5;
+actuator_collar_offset      = 5/8;
+actuator_pin_offset         = 1;
+actuator_pin_depth          = 13.5/32;
+actuator_cylinder_clearance = 1/16;
+
+// Configurable: Forend
+forend_length = 2;
 forend_wall_thickness = 1/8;
-
-linkage_mount_wall_thickness = 1/16;
-linkage_mount_pipe_length = 1;
-linkage_mount_height = 1/2;
-linkage_mount_block_clearance = 1/64;
-
-
-revolver_zigzag_pin_diameter=1/4;
-revolver_shots = 6;
-zigzag_clearance = 1/64;
-zigzag_offset_z = 3/8;
-chamber_length = 3;
+forend_seal_length = 2;
+forend_depth = 1.5;
 
 
 // Configurable: Cylinder Linkage
 cylinder_linkage_height     = 3/8;
 cylinder_linkage_width      = 3/8;
 cylinder_linkage_length     = 7;
-cylinder_linakge_rod_offset = 3.5;
+cylinder_linakge_rod_offset = 3.05;
 
 // Clearances
 firing_pin_collar_clearance = 1/64;  // Adds to the trigger travel
@@ -139,58 +156,60 @@ trigger_x_compressed       = -sear_diameter;
 sear_collar_alignment_pin_height = sear_collar_height + sear_collar_padding*2 + sear_collar_clearance*2;
 
 // Calculated: Revolver Cylinder
+zigzag_width = revolver_zigzag_pin_diameter + zigzag_clearance*2;
 cylinder_hole_diameter = 3_4_pipe_od + 3_4_pipe_clearance;
-revolver_cylinder_od   = ((cylinder_hole_diameter*1.5)+revolver_cylinder_wall*3 + revolver_zigzag_pin_diameter)*2;
+revolver_cylinder_od   = ((3_4_pipe_od*1.5)+revolver_cylinder_wall + revolver_cylinder_outer_wall + revolver_zigzag_depth)*2;
 cylinder_circumference = 3.14 * pow(revolver_cylinder_od/2, 2);
-revolver_center_offset = cylinder_hole_diameter + revolver_cylinder_wall*2;
+revolver_center_offset = 3_4_pipe_od + revolver_cylinder_wall;
 rotation_angle = 360/revolver_shots;
 rotation_arc = cylinder_circumference/revolver_shots;
-zigzag_height = rotation_arc/2;
-zigzag_overtravel = revolver_zigzag_pin_diameter*1.5;
-revolver_cylinder_height = zigzag_height + zigzag_overtravel*2;
-zigzag_width = revolver_zigzag_pin_diameter + zigzag_clearance;
-top_slot_height = zigzag_overtravel + revolver_zigzag_pin_diameter + zigzag_clearance;
-bottom_slot_height = zigzag_overtravel + revolver_zigzag_pin_diameter + zigzag_clearance;
+zigzag_height = rotation_arc/2 + revolver_zigzag_pin_diameter/2;
+revolver_cylinder_height = zigzag_height + revolver_zigzag_pin_diameter*2.5;
 chamber_protrusion = (chamber_length - revolver_cylinder_height)/2;
 
+top_slot_height = revolver_zigzag_pin_diameter*2;
+bottom_slot_height = revolver_zigzag_pin_diameter*2 + zigzag_clearance*1.5;
 
-linkage_mount_linkage_offset = revolver_cylinder_od/2 - revolver_center_offset;
-linkage_mount_block_width = cylinder_linkage_width + linkage_mount_wall_thickness*2;
-linkage_mount_block_height = revolver_cylinder_od/2 - revolver_center_offset - 3_4_pipe_od/2 + cylinder_linkage_height + linkage_mount_wall_thickness;
-linkage_mount_block_length = linkage_mount_height + linkage_mount_pipe_length;
-linkage_mount_offset_x = 3_4_pipe_od/2 + 3_4_pipe_clearance;
-linkage_mount_offset_y = -linkage_mount_block_width/2;
+
+
+forend_linkage_offset = revolver_cylinder_od/2 - revolver_center_offset;
+forend_block_width = cylinder_linkage_width + forend_wall_thickness*2;
+forend_block_height = revolver_cylinder_od/2 - revolver_center_offset - 3_4_pipe_od/2 + cylinder_linkage_height + forend_wall_thickness;
+forend_block_length = forend_length + forend_seal_length;
+forend_offset_x = 3_4_pipe_od/2 + 3_4_pipe_clearance;
+forend_offset_y = -forend_block_width/2;
 
 // Calculated: Backstrap position
-backstrap_offset      = 1_pipe_od/2
-                      + linkage_mount_block_height
-                      - linkage_mount_wall_thickness
-                      + forend_wall_thickness*2
+backstrap_offset      = 3_4_tee_rim_od/2 + tee_overlap*2
                       + 3_4_angle_stock_height;
 
-
-module circle_cutter(diameter,length, width, height, xp=0, xn=0, yp=0, yn=0, center=true) {
+module backstrap(length = 1, loose=false) {
   difference() {
-    // Outer Box
-    cube([length, width, height], center=true);
 
-    // Center Hole
-    cylinder(r=(diameter/2), h=height + 0.2, center=true);
+    // 3/4" Angle Stock Mount, with a bit of rounding-off
+    translate([
+      backstrap_wall_thickness*sqrt(2),
+      0,
+      0])
+    rotate([0,0,135]) {
+      intersection() {
+        translate([3_4_angle_stock_width - 1/8,3_4_angle_stock_width - 1/8, - 0.1])
+        cylinder(r=3_4_angle_stock_width/2 + 12/32, h=length + 0.2);
 
-    // Legs - X-Positive
-    translate([0,-diameter/2,(-height/2) - 0.1])
-    cube([xp, diameter, height + 0.2]);
+        cube([
+          3_4_angle_stock_width + backstrap_wall_thickness*2,
+          3_4_angle_stock_width + backstrap_wall_thickness*2,
+          length]);
+        }
+    }
 
-    // Legs - X-Negative
-    translate([-xn,-diameter/2,(-height/2) - 0.1])
-    cube([xn, diameter, height + 0.2]);
 
-    // Legs - Y-Positive
-    translate([-diameter/2,0,(-height/2) - 0.1])
-    cube([yp, diameter, height + 0.2]);
-
-    // Legs - Y-Negative
-    translate([-diameter/2,-yn,(-height/2) - 0.1])
-    cube([yn, diameter, height + 0.2]);
+    // 3/4" Angle Stock
+    translate([0,0,-2.1])
+    rotate([0,0,135])
+    3_4_angle_stock(
+      length=length + 4.2,
+      cutter=true,
+      loose=loose);
   }
 }

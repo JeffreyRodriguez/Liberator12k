@@ -7,11 +7,13 @@
 1_8_pipe_id = 0.265;
 
 // 3/4" Pipe
-3_4_pipe_od              = 1.05;
 3_4_pipe_id              = 0.81;
+3_4_pipe_od              = 1.05;
+3_4_pipe_tapered_od      = 1.018;
+3_4_pipe_thread_length   = 0.9;
 3_4_pipe_depth           = 0.5; // Depth when fully screwed into a fitting
 3_4_pipe_clearance       = 0.015;
-3_4_pipe_clearance_loose = 0.025;
+3_4_pipe_clearance_loose = 0.027;
 3_4_pipe_wall            = (3_4_pipe_od - 3_4_pipe_id)/2;
 
 // 1" Pipe
@@ -28,7 +30,7 @@
 3_4_tee_width     = 2.64; // Across the top of the T
 3_4_tee_height    = 2.01; // From the middle of the bottom rim to the top of the body
 3_4_tee_id        = 0.91;
-3_4_tee_rim_od    = 1.55;
+3_4_tee_rim_od    = 1.523;
 3_4_tee_rim_width = 0.37;
 3_4_tee_center_z  = 3_4_tee_height - (3_4_tee_diameter/2); // Centerline of the T
 3_4_tee_rim_z_min = 3_4_tee_center_z - (3_4_tee_rim_od/2); // Bottom of the T rims
@@ -199,13 +201,13 @@ module 3_4_tee(width=3_4_tee_width,
                cutout=false) {
   $fn = 30;
 
-tee(width=width,
-     height=height,
-     od=od,
-     id=id,
-     rim_od=rim_od,
-     rim_width=rim_width,
-     cutout=cutout);
+  tee(width=width,
+       height=height,
+       od=od,
+       id=id,
+       rim_od=rim_od,
+       rim_width=rim_width,
+       cutout=cutout);
 };
 
 
