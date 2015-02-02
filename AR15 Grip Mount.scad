@@ -67,11 +67,6 @@ module ar15_grip(mount_height=1, mount_length=1, position=0, debug=false) {
     cylinder(r=grip_bolt_diameter/2, h=grip_bolt_length);
   }
 
-  if (debug)
-  translate([-1.766 + x_offset,0])
-  rotate([180,0,-90])
-  scale([1/25.4, 1/25.4, 1/25.4])
-  %import("Vitamins/AR15_grip.stl");
 }
 
 

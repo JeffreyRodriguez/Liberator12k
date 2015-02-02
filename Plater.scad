@@ -16,9 +16,3 @@ scale([25.4, 25.4, 25.4]) {
   revolver_cylinder();
 
 }
-
-  
-color("OrangeRed")
-translate([80,100,0])
-rotate([0,0,180])
-import("Vitamins/AR15_grip.stl");
