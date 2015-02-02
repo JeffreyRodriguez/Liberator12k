@@ -29,7 +29,7 @@
 3_4_tee_diameter  = 1.38; // Diameter of the body, behind the rim
 3_4_tee_width     = 2.64; // Across the top of the T
 3_4_tee_height    = 2.01; // From the middle of the bottom rim to the top of the body
-3_4_tee_id        = 0.91;
+3_4_tee_id        = 0.90;
 3_4_tee_rim_od    = 1.523;
 3_4_tee_rim_width = 0.37;
 3_4_tee_center_z  = 3_4_tee_height - (3_4_tee_diameter/2); // Centerline of the T
@@ -37,13 +37,14 @@
 3_4_tee_rim_z_max = 3_4_tee_center_z + (3_4_tee_rim_od/2); // Top of the T rims
 
 // 3/4" x 1/8" Bushing
-3_4_x_1_8_bushing_height      = 0.95;
-3_4_x_1_8_bushing_id          = 0.45;
-3_4_x_1_8_bushing_od          = 1.0;
-3_4_x_1_8_bushing_head_height = 0.22;
-3_4_x_1_8_bushing_head_od     = 1.215;
-3_4_x_1_8_bushing_head_id     = 1.06;
-3_4_x_1_8_bushing_depth       = 0.5;
+3_4_x_1_8_bushing_height         = 0.955;
+3_4_x_1_8_bushing_id             = 0.45;
+3_4_x_1_8_bushing_od             = 1.0;
+3_4_x_1_8_bushing_head_height    = 0.215;
+3_4_x_1_8_bushing_depth          = 0.5;    // Bushing screws in about half an inch
+3_4_x_1_8_bushing_head_od        = 1.225;  // Across the points
+3_4_x_1_8_bushing_head_id        = 1.065;  // Across the flats
+3_4_x_1_8_bushing_head_clearance = 0.01;
 
 module bushing(id, od, height, head_major_width, head_height) {
   difference() {
@@ -51,7 +52,7 @@ module bushing(id, od, height, head_major_width, head_height) {
 
       // Body
       translate([0,0,head_height/2])
-      cylinder(r=od/2, h=height - (head_height/2));
+      cylinder(r=od/2, h=height - (head_height/2), $fn=20);
 
       // Head
       cylinder(r=head_major_width/2, h=head_height, $fn=6);
@@ -59,7 +60,7 @@ module bushing(id, od, height, head_major_width, head_height) {
 
     // Hole
     translate([0,0,-1])
-    cylinder(r=id/2, h=height + 2);
+    cylinder(r=id/2, h=height + 2, $fn=20);
   }
 };
 
@@ -80,6 +81,15 @@ module pipe(id=1, od=2, length=1, hollow=true, cutter=false, clearance=0.1) {
     }
   }
 };
+
+
+module 3_4_x_1_8_bushing() {
+  bushing(id=3_4_x_1_8_bushing_id,
+     od=3_4_x_1_8_bushing_od,
+     height=3_4_x_1_8_bushing_height,
+     head_major_width=3_4_x_1_8_bushing_head_od,
+     head_height=3_4_x_1_8_bushing_head_height);
+}
 
 module 3_4_pipe(length=1, hollow=true, cutter=false, loose=false) {
   clearance = loose ? 3_4_pipe_clearance_loose : 3_4_pipe_clearance;
