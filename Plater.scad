@@ -4,7 +4,7 @@ include <Cylinder.scad>;
 
 scale([25.4, 25.4, 25.4]) {
 
-  color("LightGrey")
+  color("Lime2")
   translate([3,0,0])
   rotate([0,0,-90])
   forend();
@@ -18,7 +18,7 @@ scale([25.4, 25.4, 25.4]) {
 }
 
   
-color("DarkGrey")
+color("OrangeRed")
 translate([80,100,0])
 rotate([0,0,180])
 import("Vitamins/AR15_grip.stl");
