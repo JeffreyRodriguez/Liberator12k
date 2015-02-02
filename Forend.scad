@@ -56,7 +56,7 @@ module forend() {
 }
 
 // Scale up to metric for printing
-scale([25.4,25.4,25.4]) {
+*scale([25.4,25.4,25.4]) {
   forend();
 
   translate([-revolver_center_offset,0,revolver_cylinder_height + forend_depth + forend_seal_length - chamber_protrusion])
