@@ -6,7 +6,7 @@ This is **EXTREMELY DANGEROUS**. Failure to respect the pressures and forces at 
 Repeated testing from behind a solid barrier (e.g. several feet of dirt) is a must. Material failure is possible, even after extensive testing.
 
 
-License
+Unlicense
 =======
 This is free and unencumbered software released into the public domain.
 
