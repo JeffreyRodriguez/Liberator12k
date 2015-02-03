@@ -1,11 +1,9 @@
 include <Components.scad>;
 include <Tee Housing.scad>;
-include <Receiver.scad>;
 include <TriggerAssembly.scad>;
 include <Cylinder.scad>;
 
 module housing() {
-  *%receiver();
 
   vertical_spacing = trigger_housing_internal_top + sear_block_padding*2 - sear_block_clearance*2;
 
