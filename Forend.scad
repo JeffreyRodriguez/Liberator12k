@@ -1,12 +1,11 @@
 include <Vitamins/Pipe.scad>;
 include <Components.scad>;
-include <Actuator.scad>;
 include <Cylinder.scad>;
 include <Cylinder Linkage.scad>;
 
 module forend() {
 
-  echo("Forend Height", forend_length+revolver_cylinder_height + chamber_protrusion*2 + 1/4);
+  echo("Forend Height", forend_length+revolver_cylinder_height + chamber_protrusion*2);
 
   difference() {
     union() {
@@ -16,7 +15,7 @@ module forend() {
 
       // Backstrap Sleeve
       translate([backstrap_offset,0,0])
-      backstrap(loose=true, length=forend_length+revolver_cylinder_height + chamber_protrusion*2 + 1/4);
+      backstrap(loose=true, length=forend_length+revolver_cylinder_height + chamber_protrusion*2);
 
       // Spindle-Barrel Infill
       translate([-revolver_center_offset, -cylinder_spindle_diameter/2-cylinder_spindle_wall,0])
@@ -49,14 +48,14 @@ module forend() {
              h=revolver_cylinder_height + chamber_protrusion*2 + 1/4 + 0.1);
 
     // Actuator Rod Hole
-    translate([-revolver_center_offset + revolver_cylinder_od/2 + actuator_pin_depth,0,forend_length+revolver_cylinder_height + chamber_protrusion*2 - 1/4])
+    #translate([-revolver_center_offset + revolver_cylinder_od/2 + actuator_pin_depth,0,forend_length+revolver_cylinder_height + chamber_protrusion*2 - 1/2])
     rotate([0,-90,0])
     1_4_rod(length=actuator_collar_offset + 0.1, cutter=true);
   }
 }
 
 // Scale up to metric for printing
-*scale([25.4,25.4,25.4]) {
+scale([25.4,25.4,25.4]) {
   forend();
 
   translate([-revolver_center_offset,0,revolver_cylinder_height + forend_depth + forend_seal_length - chamber_protrusion])

@@ -49,6 +49,7 @@ revolver_zigzag_depth        = 3/16;
 revolver_shots               = 6;
 zigzag_clearance             = 1/64;
 chamber_length               = 3;
+chamber_seal_overlap         = 1/4;
 spindle_collar_diameter      = 0.505;
 spindle_collar_height        = 0.27;
 

@@ -237,5 +237,5 @@ module tee_housing_reference() {
   %1_pipe(length=front_block_length + chamber_protrusion);
 }
 
-//!tee_housing_reference();
+!tee_housing_reference();
 //!tee_housing_plater();

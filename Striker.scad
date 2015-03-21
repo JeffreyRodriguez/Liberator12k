@@ -41,11 +41,15 @@ color("Chartreuse") {
     mirror([1,0,0])
     cube([3_4_tee_id, charging_slot_width, breech_offset + 0.2]);
 
-    // Trigger Hole
-    #translate([spring_or * 0.9,0,trigger_hole_offset])
+    // Trigger Hole (tapered)
+    *translate([spring_or * 0.9,0,trigger_hole_offset])
     rotate([0,90,0])
-//    cylinder(r=trigger_hole_r, h=3_4_pipe_id);
     cylinder(r1=trigger_hole_r, r2=trigger_hole_d, h=(3_4_pipe_id/2) - (spring_or * 0.80));
+
+    // Trigger Hole (offset)
+    #translate([0,trigger_hole_d,trigger_hole_offset])
+    rotate([0,90,0])
+    cylinder(r=trigger_hole_r, h=3_4_pipe_id);
 
     translate([0,0,breech_offset]) {
 
