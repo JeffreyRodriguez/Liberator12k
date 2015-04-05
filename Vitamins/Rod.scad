@@ -8,7 +8,7 @@
 1_4_rod_d                = 1/4;
 1_4_rod_r                = 1_4_rod_d/2;
 1_4_rod_clearance        = 0.01;
-1_4_rod_clearance_loose  = 0.02;
+1_4_rod_clearance_loose  = 0.015;
 1_4_rod_collar_d         = 1/22;
 1_4_rod_collar_width     = 0.27;
 1_4_rod_collar_clearance = 0.0; // TODO

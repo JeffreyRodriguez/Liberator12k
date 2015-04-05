@@ -8,7 +8,7 @@
 
 // 3/4" Pipe
 3_4_pipe_id              = 0.81;
-3_4_pipe_od              = 1.05;
+3_4_pipe_od              = 1.07;
 3_4_pipe_tapered_od      = 1.018;
 3_4_pipe_thread_length   = 0.9;
 3_4_pipe_depth           = 0.5; // Depth when fully screwed into a fitting
@@ -18,7 +18,7 @@
 
 // 1" Pipe
 1_pipe_id              = 1.06;
-1_pipe_od              = 1.325;
+1_pipe_od              = 1.315;
 1_pipe_tapered_od      = 1.285;  // Threaded portion of the pipe, smallest OD
 1_pipe_thread_length   = 0.982;  // Length of the threads, measured from the end of the pipe to the last thread mark
 1_pipe_clearance       = 0.02;
@@ -29,8 +29,8 @@
 3_4_tee_diameter  = 1.38; // Diameter of the body, behind the rim
 3_4_tee_width     = 2.64; // Across the top of the T
 3_4_tee_height    = 2.01; // From the middle of the bottom rim to the top of the body
-3_4_tee_id        = 0.90;
-3_4_tee_rim_od    = 1.523;
+3_4_tee_id        = 0.88;
+3_4_tee_rim_od    = 1.53;
 3_4_tee_rim_width = 0.37;
 3_4_tee_center_z  = 3_4_tee_height - (3_4_tee_diameter/2); // Centerline of the T
 3_4_tee_rim_z_min = 3_4_tee_center_z - (3_4_tee_rim_od/2); // Bottom of the T rims

@@ -4,7 +4,7 @@ include <AR15 Grip Mount.scad>;
 
 front_block_seal_length = 1;
 front_block_overlap = 3_4_x_1_8_bushing_height - 3_4_x_1_8_bushing_depth;
-front_rim_overlap = 3_4_tee_center_z - 3_4_tee_rim_width - 3_4_tee_rim_od/2;
+front_rim_overlap = tee_overlap; // 3_4_tee_center_z - 3_4_tee_rim_width - 3_4_tee_rim_od/2;
 front_block_length = 3_4_tee_rim_width + front_block_overlap;
 front_block_x_offset = -3_4_tee_rim_width/2;
 front_block_width = 3_4_tee_rim_od + (tee_overlap*2);
@@ -28,14 +28,6 @@ module bottom_tee_housing(debug=false) {
       // Rim Wall
       color("LightBlue")
       cylinder(r=3_4_tee_rim_od/2 + bottom_block_wall, h=3_4_tee_rim_width);
-
-      // Bottom/Rear Interlock
-      translate([-slot_length -3_4_tee_rim_od/2,-grip_width/2-tee_overlap,3_4_tee_rim_width - tee_overlap])
-      cube([slot_length, grip_width+tee_overlap*2,tee_overlap]);
-
-      // AR15 Grip
-      translate([-3_4_tee_width/2,0,0])
-      ar15_grip(mount_height=3_4_tee_rim_width,mount_length=3_4_tee_width/2 - 3_4_tee_rim_od/2, debug=debug);
     }
 
     // Front Tee Block Hole
@@ -69,7 +61,13 @@ module front_tee_housing(debug=false) {
       // Backstrap
       translate([0,0,centerline_z + backstrap_offset])
       rotate([180,-90,0])
-      backstrap(length = front_block_length);
+      difference() {
+        backstrap(length = front_block_length);
+
+
+        translate([-3_4_angle_stock_width + tee_overlap + 0.01,0,-0.1])
+        cylinder(r=rope_od/2, h=back_block_length + 0.2);
+      }
 
       // Main Body and Gas Sealing Pipe Holder
       translate([0,0,centerline_z])
@@ -124,8 +122,8 @@ module front_tee_housing(debug=false) {
 
 back_block_overlap = slot_length;
 back_block_x_offset = 3_4_tee_width/2 + back_block_overlap;
-back_block_length = 3_4_tee_rim_width + back_block_overlap;
-module back_tee_housing(debug=false) {
+back_block_length = back_block_overlap + .25;
+module back_tee_housing(debug=true) {
 
   if (debug) {
     translate([-3_4_tee_width/2 + 3_4_tee_rim_width,0,0])
@@ -138,24 +136,30 @@ module back_tee_housing(debug=false) {
       // Backstrap
       translate([0,0,centerline_z + backstrap_offset])
       rotate([180,-90,0])
-      backstrap(length = back_block_length);
+      difference() {
+        backstrap(length = back_block_length);
+
+        translate([-3_4_angle_stock_width + tee_overlap + rope_od/2,0,-0.1])
+        cylinder(r=rope_od/2, h=back_block_length + 0.2);
+      }
 
       // Main Body and Stock Pipe Holder
       translate([0,0,centerline_z])
       rotate([0,90,0])
       cylinder(r=3_4_tee_rim_od/2 + tee_overlap, h=back_block_length);
 
-      // Grip Block Holder
-      intersection() {
+      // AR15 Grip
+      translate([0,0,3/16])
+      rotate([0,0,180])
+      #ar15_grip(mount_height=3_4_tee_center_z,mount_length=0, debug=debug);
 
-        // Block
-        translate([-tee_overlap/2,-grip_width/2 - tee_overlap*2,0])
-        cube([back_block_length + tee_overlap, grip_width + tee_overlap*4,1]);
+      // AR15 Grip Support
+      translate([slot_length,-slot_width/2,-.5])
+      difference() {
+        cube([.25,slot_width,1]);
 
-        // Rounding
-        translate([-1/16,0,3_4_tee_rim_width + 5/32])
-        rotate([0,90,0])
-        cylinder(r=grip_width/2 + tee_overlap*2, h=back_block_length + 1/16);
+        #translate([.01,slot_width*.1,.1])
+        cube([.25,slot_width*.8,.8]);
       }
     }
 
@@ -168,14 +172,6 @@ module back_tee_housing(debug=false) {
     translate([-0.1,0,3_4_tee_center_z])
     rotate([0,90,0])
     3_4_pipe(length=back_block_length + 0.2, hollow=false, cutter=true, loose=true);
-
-    // Grip Block Hole
-    translate([-0.1,-grip_width/2,-0.1])
-    cube([back_block_length + 0.2,grip_width,3_4_tee_rim_width + 0.1]);
-
-    // Bottom/Rear Interlock
-    translate([-3/16,-grip_width/2-tee_overlap,3_4_tee_rim_width - tee_overlap])
-    cube([slot_length, grip_width+tee_overlap*2,tee_overlap]);
   }
 }
 
@@ -237,5 +233,5 @@ module tee_housing_reference() {
   %1_pipe(length=front_block_length + chamber_protrusion);
 }
 
-!tee_housing_reference();
-//!tee_housing_plater();
+//tee_housing_reference();
+tee_housing_plater();

@@ -18,8 +18,6 @@ centerline_z  = 3_4_tee_center_z; // OK
 breech_face_x = (3_4_tee_width/2) + 3_4_x_1_8_bushing_depth;
 
 
-
-
 // Configurable Settings
 tee_overlap             = 1/8;
 sear_block_padding      = 5/32;
@@ -31,6 +29,7 @@ trigger_wing_length     = 1/2;
 trigger_protrousion     = 1/2;
 trigger_overtravel      = 1/16;
 sear_spring_height      = 1/4;
+rope_od                 = 6/32;
 
 trigger_housing_padding_back = 1/16;
 trigger_housing_padding_front = 12/32;
@@ -40,7 +39,7 @@ trigger_housing_padding_bottom = 1/8;
 
 // Configurable: Cylinder
 cylinder_spindle_diameter    = 1/4 + 1/32;
-cylinder_spindle_wall        = 1/4;
+cylinder_spindle_wall        = 5/16;
 revolver_cylinder_wall       = 1_pipe_wall;
 revolver_cylinder_outer_wall = 1_pipe_wall;
 spindle_overlap              = revolver_cylinder_wall;
@@ -65,9 +64,9 @@ actuator_cylinder_clearance = 1/16;
 
 // Configurable: Forend
 forend_length = 2;
-forend_wall_thickness = 1/8;
+forend_wall_thickness = 3/16;
 forend_seal_length = 2;
-forend_depth = 1.5;
+forend_extension = 1/2;
 
 
 // Configurable: Cylinder Linkage

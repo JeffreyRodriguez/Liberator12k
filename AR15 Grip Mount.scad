@@ -33,6 +33,7 @@ module ar15_grip(mount_height=1, mount_length=1, position=0, debug=false) {
       cube([slot_length,slot_width,slot_height]);
 
       // Vertical Mounting Block
+      if (mount_height > 0)
       intersection() {
         translate([-slot_length - slot_overlap,-grip_width/2,0])
         color("Purple")
@@ -49,6 +50,7 @@ module ar15_grip(mount_height=1, mount_length=1, position=0, debug=false) {
       }
 
       // Horizontal Mounting Block
+      if (mount_length > 0)
       translate([0,-grip_width/2,-grip_height])
       color("Indigo")
       cube([mount_length,grip_width,grip_height + mount_height]);
