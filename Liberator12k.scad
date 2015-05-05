@@ -9,10 +9,15 @@ use <Striker.scad>;
 use <Stock Spacer.scad>;
 use <Spring Cap.scad>;
 use <Shell.scad>;
+use <New Trigger.scad>;
 
 rotate([0,0,360*$t])
 scale([25.4, 25.4, 25.4]) {
   tee_housing_reference();
+
+  translate([0,-3/16,0])
+  rotate([0,90,90])
+  new_trigger();
 
   translate([3_4_tee_width/2 +3_4_x_1_8_bushing_height - 3_4_x_1_8_bushing_depth+1/8,0,1/8])
   rotate([0,90,0]) {

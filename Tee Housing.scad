@@ -110,13 +110,9 @@ module bottom_tee_housing(front_slot_width=grip_width +0.05,
     translate([-lookup(RodRadius, triggerPin),-3_4_tee_rim_od/2,-lookup(RodRadius, triggerPin)])
     cube([lookup(RodDiameter, triggerPin), 3_4_tee_rim_od, 1/2]);
 
-    // Trigger clearance
-    // TODO: Cube or cylinder?
-    translate([-3_4_tee_id/2,-3_4_tee_id/2,-3_4_tee_rim_width - 0.1])
-    cube([3_4_tee_id, 3_4_tee_id,3_4_tee_rim_width + 0.2]);
-
+    // Trigger Hole
     rotate([90,0,0])
-    cylinder(r=3_4_tee_id/2, h=3_4_tee_id, center=true);
+    #cylinder(r=31/64, h=13/32, center=true);
 
     // Front Pins
     front_tee_housing_pins();
