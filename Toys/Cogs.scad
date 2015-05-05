@@ -64,7 +64,7 @@ module quarter_cog(od=od) {
 scale([25.4, 25.4, 25.4]) {
 
 
-  translate([-2,0,0]) {
+  *translate([-2,0,0]) {
     translate([0,2,0])
     three_quarters_cog(od=1);
 
@@ -75,7 +75,7 @@ scale([25.4, 25.4, 25.4]) {
   }
 
 
-  translate([2,0,0]) {
+  *translate([2,0,0]) {
     translate([0,2,0])
     three_quarters_cog(od=1.25);
 
@@ -86,10 +86,10 @@ scale([25.4, 25.4, 25.4]) {
   }
   
   translate([0,2,0])
-  three_quarters_cog();
+  *three_quarters_cog();
 
-  half_cog();
+  *half_cog();
 
-  translate([0,-2,0])
+  *translate([0,-2,0])
   quarter_cog();
 }

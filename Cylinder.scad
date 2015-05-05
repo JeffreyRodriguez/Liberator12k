@@ -1,6 +1,7 @@
+use <Vitamins/Rod.scad>;
 include <Components.scad>;
 
-module revolver_cylinder(debug=false) {
+module revolver_cylinder(spindleRod=RodOneEighthInch, debug=false) {
 
   echo("Cylinder OD:", revolver_cylinder_od);
   echo("Cylinder Circ:", cylinder_circumference);
@@ -35,7 +36,7 @@ union() {
         translate([
           3_4_pipe_od + revolver_cylinder_wall,
           0,
-          -chamber_length/2 + revolver_cylinder_height/2])
+          0])//-chamber_length/2 + revolver_cylinder_height/2])
         %3_4_pipe(length=chamber_length);
 
         // Zig (push)
@@ -44,7 +45,7 @@ union() {
           linear_extrude(height = zigzag_height,
                          center = false,
                          convexity = 1,
-                         slices=23,
+                         slices=50,
                          twist = rotation_angle/2 + 360/(1*(cylinder_circumference/zigzag_width)))
           translate([revolver_cylinder_od/2 -revolver_zigzag_depth,-zigzag_width/2, 0])
           square([revolver_zigzag_depth*2, zigzag_cutter_width]);
@@ -74,7 +75,7 @@ union() {
           linear_extrude(height = zigzag_height,
                           center = false,
                           convexity = 3,
-                          slices=23,
+                          slices=50,
                           twist = -rotation_angle/2 -360/(1*(cylinder_circumference/zigzag_width)))
           translate([revolver_cylinder_od/2-revolver_zigzag_depth, -(zigzag_cutter_width) + zigzag_width/2, 0])
           square([revolver_zigzag_depth*2, zigzag_cutter_width]);
@@ -116,7 +117,8 @@ union() {
 
     // Spindle
     translate([0,0,-2])
-    cylinder(r=cylinder_spindle_diameter/2, h=7);
+    Rod(rod=spindleRod, clearance=RodClearanceLoose, length=7);
+    //cylinder(r=cylinder_spindle_diameter/2, h=7);
 
     // Gas Sealing Pipe
     translate([revolver_center_offset,0,revolver_cylinder_height])
@@ -135,4 +137,5 @@ union() {
   }
 }
 
-//revolver_cylinder();
+*scale([25.4, 25.4, 25.4])
+revolver_cylinder(debug=true);

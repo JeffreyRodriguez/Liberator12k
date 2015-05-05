@@ -2,10 +2,10 @@ include <Components.scad>;
 include <Vitamins/Pipe.scad>;
 include <Vitamins/Rod.scad>;
 
-module striker(length=3_4_tee_width, od=0.75,
-               firing_pin_diam=0.14, firing_pin_depth=1.25, rope_width = 1/8, rope_depth=3/4, mocks=true, $fn=30) {
-
-  line_pin_offset = (length - rope_depth) + rope_width + (firing_pin_diam/2);
+module striker(length=3, od=0.75, id=0.53,
+               firing_pin_diam=0.14, firing_pin_depth=0.44, firing_pin_pad = 3/8,
+               rope_width = 1/8, rope_depth=1/4,
+               mocks=true, $fn=30) {
 
   difference() {
 
@@ -19,12 +19,12 @@ module striker(length=3_4_tee_width, od=0.75,
       *cylinder(r1=od/2, r2=firing_pin_diam*1.5, h=od/4);
     }
 
-    // Rear Line Hole
-    translate([0,0,length - rope_depth])
-    cylinder(r=rope_width + (firing_pin_diam/2), h=length);
+    // Line Hole
+    translate([0,0,firing_pin_depth + firing_pin_pad])
+    cylinder(r=id/2, h=length);
 
     // Line Pin Hole
-    translate([0,od/2 + 0.1,line_pin_offset])
+    translate([0,od/2 + 0.1,length - rope_depth])
     rotate([90,0,0])
     cylinder(r=firing_pin_diam/2, h=od + 0.2, $fn=10);
 
@@ -40,7 +40,7 @@ module striker(length=3_4_tee_width, od=0.75,
       cylinder(r=firing_pin_diam/2, h=1 + firing_pin_depth);
 
       // Line Pin
-      translate([0,od/2 + 0.025,line_pin_offset])
+      translate([0,od/2 + 0.025,length - rope_depth])
       rotate([90,0,0])
       cylinder(r=firing_pin_diam/2, h=od + 0.05);
 
@@ -54,29 +54,6 @@ module striker(length=3_4_tee_width, od=0.75,
       translate([od/2 - 1/16,0,0])
       circle(r=1/32);
     }
-  }
-}
-
-module spring_cap(length=1/1.5, od=3/4, id=3/16, $fn=20) {
-  difference() {
-    union() {
-      cylinder(r=od/2, h=length/3);
-
-      translate([0,0,length/3])
-      cylinder(r1=od/2, r2=od/6, h=length/3*2);
-    }
-
-    translate([0,0,-0.1])
-    cylinder(r=id/2, h=2);
-  }
-}
-
-module stock_spacer(length=1, od=0.75, id=0.5, $fn=20) {
-  difference() {
-    cylinder(r=od/2, h=length);
-
-    translate([0,0,-0.1])
-    cylinder(r=id/2, h=length+0.2);
   }
 }
 
@@ -150,20 +127,60 @@ module striker_guide_center(wall = 1/8, overlap=1/4, side_overlap = 3/8, pin = 1
   }
 }
 
-module striker_guide_side() {
+module striker_guide_side(disc_thickness=1/8, rope_width = 1/4, pin=1/8, top_pin_extension=3/8) {
+
+  difference() {
+  union() {
+
+    // Rim Disc
+    cylinder(r=3_4_tee_rim_od/2, h=disc_thickness);
+
+    translate([0,0,disc_thickness]) {
+      // Main Body
+      difference() {
+
+        // Body
+        cylinder(r=3_4_tee_id/2, h=3_4_tee_width + top_pin_extension);
+
+        // Rope Track
+        translate([-rope_width,-rope_width/2,(3_4_tee_width/2) - rope_width])
+        cube([(3_4_tee_id/2) + rope_width + 0.1, rope_width, 3_4_tee_width]);
+
+        // Stock Rope Pin
+        #translate([0,-(3_4_tee_id/2) - 0.1,(3_4_tee_width/2) + rope_width])
+        rotate([-90,0,0])
+        cylinder(r=pin/2, h=3_4_tee_id + 0.2, $fn=12);
+      }
+    
+    }
+  }
+
+    // Body Center Rope Track
+    translate([-rope_width,-rope_width/2,-0.1])
+    cube([rope_width,rope_width,3_4_tee_width + disc_thickness + top_pin_extension + 0.2]);
+
+    // Side Cutters
+    translate([0,0,3_4_tee_width + top_pin_extension + disc_thickness]) {
+
+      // Rope Track
+      translate([-rope_width,-rope_width/2,- rope_width])
+      cube([(3_4_tee_id/2) + rope_width + 0.1, rope_width, rope_width + 0.1]);
+      
+      // Rope Pin
+      #translate([0,-(3_4_tee_id/2) - 0.1,-rope_width])
+      rotate([-90,0,0])
+      cylinder(r=pin/2, h=3_4_tee_id + 0.2, $fn=12);
+    }
+  }
+  
 }
 
-scale([25.4, 25.4, 25.4])
-*striker_guide_center();
+*scale([25.4, 25.4, 25.4])
+striker_guide_center();
 
 scale([25.4, 25.4, 25.4])
 striker_guide_side();
 
 scale([25.4, 25.4, 25.4])
+translate([0,2,0])
 striker();
-
-scale([25.4, 25.4, 25.4])
-*spring_cap();
-
-scale([25.4, 25.4, 25.4])
-*stock_spacer(length=5);

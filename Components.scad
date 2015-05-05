@@ -2,6 +2,7 @@ include <Math/Triangles.scad>;
 include <Vitamins/Angle Stock.scad>;
 include <Vitamins/Pipe.scad>;
 include <Vitamins/Rod.scad>;
+include <Components/Backstrap.scad>;
 
 //
 // Component Dimensions
@@ -16,6 +17,7 @@ barrel_length = 18.5;
 centerline_z  = 3_4_tee_center_z; // OK
 
 breech_face_x = (3_4_tee_width/2) + 3_4_x_1_8_bushing_depth;
+
 
 
 // Configurable Settings
@@ -38,12 +40,12 @@ trigger_housing_padding_top = 1/16;
 trigger_housing_padding_bottom = 1/8;
 
 // Configurable: Cylinder
-cylinder_spindle_diameter    = 1/4 + 1/32;
+cylinder_spindle_diameter    = 1/8;
 cylinder_spindle_wall        = 5/16;
 revolver_cylinder_wall       = 1_pipe_wall;
-revolver_cylinder_outer_wall = 1_pipe_wall;
+revolver_cylinder_outer_wall = 3/64;
 spindle_overlap              = revolver_cylinder_wall;
-revolver_zigzag_pin_diameter = 1/4;
+revolver_zigzag_pin_diameter = 4/32;
 revolver_zigzag_depth        = 3/16;
 revolver_shots               = 6;
 zigzag_clearance             = 1/64;
@@ -52,7 +54,12 @@ chamber_seal_overlap         = 1/4;
 spindle_collar_diameter      = 0.505;
 spindle_collar_height        = 0.27;
 
+// Configurable: Components
+spindleRod=RodOneEighthInch;
+gasSealingPipe=PipeOneInch;
+
 // Configurable: Backstrap
+backstrap = AngleStockThreeQuartersByOneEighthInch;
 backstrap_wall_thickness = 1/4;
 
 // Configurable: Actuator
@@ -60,7 +67,7 @@ actuator_length             = 1.5;
 actuator_collar_offset      = 5/8;
 actuator_pin_offset         = 1;
 actuator_pin_depth          = 13.5/32;
-actuator_cylinder_clearance = 1/16;
+actuator_cylinder_clearance = 1/64;
 
 // Configurable: Forend
 forend_length = 2;
@@ -91,7 +98,7 @@ forend_clearance            = 1/64;  // Around the linkage mounting block
 firing_pin_diameter        = 1/4;
 firing_pin_collar_diameter = 1/2;
 firing_pin_collar_height   = 1/4;
-sear_diameter              = 1/4;
+sear_diameter              = 1/8;
 sear_collar_diameter       = 1/2;
 sear_collar_height         = 0.27;
 grip_width                 = 0.85;
@@ -158,12 +165,13 @@ sear_collar_alignment_pin_height = sear_collar_height + sear_collar_padding*2 + 
 // Calculated: Revolver Cylinder
 zigzag_width = revolver_zigzag_pin_diameter + zigzag_clearance*2;
 cylinder_hole_diameter = 3_4_pipe_od + 3_4_pipe_clearance;
-revolver_cylinder_od   = ((3_4_pipe_od*1.5)+revolver_cylinder_wall + revolver_cylinder_outer_wall + revolver_zigzag_depth)*2;
+revolver_cylinder_radius = (3_4_pipe_od*1.5)+revolver_cylinder_wall + revolver_cylinder_outer_wall + revolver_zigzag_depth;
+revolver_cylinder_od   = revolver_cylinder_radius*2;
 cylinder_circumference = 3.14 * pow(revolver_cylinder_od/2, 2);
 revolver_center_offset = 3_4_pipe_od + revolver_cylinder_wall;
 rotation_angle = 360/revolver_shots;
 rotation_arc = cylinder_circumference/revolver_shots;
-zigzag_height = rotation_arc/2 + revolver_zigzag_pin_diameter/2;
+zigzag_height = rotation_arc/2 + revolver_zigzag_pin_diameter*2;
 revolver_cylinder_height = zigzag_height + revolver_zigzag_pin_diameter*2.5;
 chamber_protrusion = (chamber_length - revolver_cylinder_height)/2;
 
@@ -181,35 +189,4 @@ forend_offset_y = -forend_block_width/2;
 
 // Calculated: Backstrap position
 backstrap_offset      = 3_4_tee_rim_od/2 + tee_overlap*2
-                      + 3_4_angle_stock_height;
-
-module backstrap(length = 1, loose=false) {
-  difference() {
-
-    // 3/4" Angle Stock Mount, with a bit of rounding-off
-    translate([
-      backstrap_wall_thickness*sqrt(2),
-      0,
-      0])
-    rotate([0,0,135]) {
-      intersection() {
-        translate([3_4_angle_stock_width - 1/8,3_4_angle_stock_width - 1/8, - 0.1])
-        cylinder(r=3_4_angle_stock_width/2 + 12/32, h=length + 0.2);
-
-        cube([
-          3_4_angle_stock_width + backstrap_wall_thickness*2,
-          3_4_angle_stock_width + backstrap_wall_thickness*2,
-          length]);
-        }
-    }
-
-
-    // 3/4" Angle Stock
-    translate([0,0,-2.1])
-    rotate([0,0,135])
-    3_4_angle_stock(
-      length=length + 4.2,
-      cutter=true,
-      loose=loose);
-  }
-}
+                      + lookup(AngleStockHeight, backstrap);

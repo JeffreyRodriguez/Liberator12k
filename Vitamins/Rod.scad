@@ -1,3 +1,31 @@
+RodDiameter       = 1;
+RodRadius         = 2;
+RodClearanceSnug  = 3;
+RodClearanceLoose = 4;
+RodFn             = 5;
+
+RodOneEighthInch = [
+  [RodDiameter, 1/8],
+  [RodRadius, 1/8/2],
+  [RodClearanceSnug, 0.02],
+  [RodClearanceLoose, 0.03],
+  [RodFn, 16]
+];
+
+RodOneQuarterInch = [
+  [RodDiameter,       1/4],
+  [RodRadius,         1/4/2],
+  [RodClearanceSnug,  0.01],
+  [RodClearanceLoose, 0.015],
+  [RodFn,             20]
+];
+
+module Rod(rod=RodOneQuarterInch, length=1, clearance=undef, center=false) {
+  clearRadius = clearance != undef ? lookup(clearance, rod)/2 : 0;
+
+  cylinder(r=lookup(RodDiameter, rod)/2 + clearRadius, h=length, center=center);
+}
+
 // 1/8" Rod
 1_8_rod_d                = 1/8;
 1_8_rod_r                = 1_8_rod_d/2;

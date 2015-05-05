@@ -1,83 +1,71 @@
+include <Vitamins/Pipe.scad>;
+
 include <Components.scad>;
-include <Tee Housing.scad>;
-include <TriggerAssembly.scad>;
-include <Cylinder.scad>;
+use <TriggerAssembly.scad>;
+use <Cylinder.scad>;
+use <Forend.scad>;
+use <Tee Housing.scad>;
+use <Striker.scad>;
+use <Stock Spacer.scad>;
+use <Spring Cap.scad>;
+use <Shell.scad>;
 
-module housing() {
+rotate([0,0,360*$t])
+scale([25.4, 25.4, 25.4]) {
+  tee_housing_reference();
 
-  vertical_spacing = trigger_housing_internal_top + sear_block_padding*2 - sear_block_clearance*2;
+  translate([3_4_tee_width/2 +3_4_x_1_8_bushing_height - 3_4_x_1_8_bushing_depth+1/8,0,1/8])
+  rotate([0,90,0]) {
+    color("Gold")
+    revolver_cylinder(debug=true);
 
-  // Housing and trigger
-  union() {
-
-    // 3/4 Tee Housing with AR-15 Grip
-    front_tee_housing();
+    color("White")
+    for (i=[0:6-1])
+    rotate([0,0,360/6*i])
+    translate([3_4_pipe_od + revolver_cylinder_wall, 0,-1/8])
+    shell();
   }
-}
 
-module housing_left() {
-  rotate([-90,0,0])
-  union() {
-    difference() {
-      housing();
+  color("Purple")
+  translate([6.8+1/8,0,3_4_tee_center_z])
+  rotate([0,-90,0])
+  forend();
 
-      translate([0,-1,0])
-      cube([10,2,10], center=true);
-    }
+  color("Red")
+  translate([0,0,3_4_tee_center_z])
+  rotate([0,-90,0])
+  striker();
 
-    // Trigger
-    trigger_housing_left();
-  }
-}
+  color("White")
+  translate([-7,0,3_4_tee_center_z])
+  rotate([0,-90,0])
+  stock_spacer(length=6);
 
-module housing_right() {
-  rotate([90,0,0])
-  union() {
-    difference() {
-      housing();
+  color("Black")
+  translate([-4,0,3_4_tee_center_z])
+  rotate([0,-90,0])
+  spring_cap();
 
-      translate([0,1,0])
-      cube([10,2,10], center=true);
-    }
-
-    // Trigger
-    trigger_housing_right();
-  }
-}
-
-rotate([90,0,0])
-*housing_left();
-
-rotate([-90,0,0])
-*housing_right();
-
-
-
-// Scale up to metric for printing
-scale([25.4,25.4,25.4]) {
-
-  *housing();
-  *trigger_housing();
-
-  translate([breech_face_x  + chamber_protrusion,0,-cylinder_hole_diameter - revolver_cylinder_wall*2 + 3_4_tee_center_z])
+  color("Black")
+  translate([-7,0,3_4_tee_center_z])
   rotate([0,90,0])
-  *revolver_cylinder(wall=revolver_cylinder_wall, height=2);
+  spring_cap();
 
-  // Position the sear block
-  translate([1.5,0,0])
-  *sear_block();
+  color("CornflowerBlue")
+  translate([-3_4_tee_width/2 -12,0,-1/8])
+  striker_guide_side();
 
-  // Position the trigger
-  translate([-2.7,0,0])
-  rotate([180,0,0])
-  *trigger();
+  // Stock
+  union() {
 
-  // Position the left and right housing
-  translate([0,0,3_4_tee_rim_od/2 + tee_overlap]) {
-    translate([0,-1.9,0])
-    *housing_right();
-
-    translate([0,1.9,0])
-    housing_left();
+    // Tee
+    translate([-12,0,3_4_tee_center_z])
+    rotate([0,-90,0])
+    %3_4_tee();
+  
+    // Stock Pipe
+    translate([-3_4_tee_width/2,0,3_4_tee_center_z])
+    rotate([0,-90,0])
+    %3_4_pipe(length=12);
   }
 }

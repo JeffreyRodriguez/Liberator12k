@@ -2,9 +2,104 @@
 // Pipe dimensions
 //
 
-// 1/8" Pipe
-1_8_pipe_od = 0.415;
-1_8_pipe_id = 0.265;
+PipeInnerDiameter   = 1; // Inner Diameter of pipe, smallest measurement if asymmetrical
+PipeOuterDiameter   = 2; // Outer Diameter of pipe, largest measurement if asymmetrical
+PipeTaperedDiameter = 4; // Threads are tapered, smallest measurement if asymmetrical
+PipeThreadLength    = 5; // Total length of the pipe thread
+PipeThreadDepth     = 6; // Depth when fully seated
+PipeClearanceSnug   = 7; // Should not slip
+PipeClearanceLoose  = 8; // Should slide freely
+PipeFn              = 9; // Number of sides
+PipeWeightPerUnit   = 10;
+
+
+// 1/4" Pipe
+PipeOneQuarterInch = [
+  [PipeInnerDiameter,   0.265],
+  [PipeOuterDiameter,   0.415],
+  [PipeTaperedDiameter, 0.415], // TODO: Verify
+  [PipeThreadLength,    0.5],   // TODO: Verify
+  [PipeThreadDepth,     0.25],  // TODO: Verify
+  [PipeClearanceSnug,   0.015], // TODO: Verify
+  [PipeClearanceLoose,  0.027], // TODO: Verify
+  [PipeFn,              20],
+  [PipeWeightPerUnit,   0] // TODO
+];
+
+
+// 3/4" Pipe
+PipeThreeQuartersInch = [
+  [PipeInnerDiameter,   0.81],
+  [PipeOuterDiameter,   1.07],
+  [PipeTaperedDiameter, 1.018],
+  [PipeThreadLength,    0.9],
+  [PipeThreadDepth,     0.5],
+  [PipeClearanceSnug,   0.015],
+  [PipeClearanceLoose,  0.027],
+  [PipeFn,              30],
+  [PipeWeightPerUnit,   0] // TODO
+];
+
+// 1" Pipe
+PipeOneInch = [
+  [PipeInnerDiameter,   1.06],
+  [PipeOuterDiameter,   1.315],
+  [PipeTaperedDiameter, 1.285],
+  [PipeThreadLength,    0.982],
+  [PipeThreadDepth,     0.5], // TODO: Verify
+  [PipeClearanceSnug,   0.02],
+  [PipeClearanceLoose,  0.03],
+  [PipeFn,              30],
+  [PipeWeightPerUnit,   0] // TODO
+];
+
+function PipeOuterRadius(pipe, clearance=0) = (lookup(PipeOuterDiameter, pipe) + clearance) / 2;
+function PipeInnerRadius(pipe, clearance=0) = (lookup(PipeInnerDiameter, pipe) + clearance) / 2;
+
+module Pipe(pipe=PipeThreeQuartersInch, length = 1, hollow=false, clearance=undef) {
+  $fn = lookup(PipeFn, pipe);
+
+  difference() {
+
+    // Create the pipe wall
+    if (clearance == undef) {
+      cylinder(r=PipeOuterRadius(pipe), h=length);
+    } else {
+      cylinder(r=PipeOuterRadius(pipe, clearance=lookup(clearance, pipe)), h=length);
+    }
+
+    // Hollow it out
+    if (hollow) {
+      translate([0,0,-0.1])
+      cylinder(r=PipeInnerRadius(pipe), h=length + 0.2);
+    }
+  }
+};
+
+//Pipe(pipe=PipeOneInch, clearance=PipeClearanceLoose);
+
+
+// Fittings: Tee
+TeeOuterDiameter = 1; // Diameter of the body, not the rim
+TeeWidth         = 2; // Across the top of the tee, side-to-side
+TeeHeight        = 3; // From the middle of the bottom rim to the top of the body
+TeeInnerDiameter = 4; // Diameter of the threaded hole
+TeeRimDiameter   = 5; // Diameter of the tee rim
+TeeRimWidth      = 6; // Width of the tee rim
+
+TeeThreeQuarterInch = [
+  [TeeOuterDiameter, 1.38],
+  [TeeWidth,         2.64],
+  [TeeInnerDiameter, 0.88],
+  [TeeRimDiameter,   1.53],
+  [TeeRimWidth,      0.31]
+];
+
+function TeeRimWidth(tee) = lookup(TeeRimWidth, tee);
+
+module TeeRim(tee=TeeThreeQuarterInch, heightMultiplier=1) {
+  cylinder(r=lookup(TeeRimDiameter, tee)/2, h=lookup(TeeRimWidth, tee) * heightMultiplier);
+}
 
 // 3/4" Pipe
 3_4_pipe_id              = 0.81;
@@ -31,7 +126,7 @@
 3_4_tee_height    = 2.01; // From the middle of the bottom rim to the top of the body
 3_4_tee_id        = 0.88;
 3_4_tee_rim_od    = 1.53;
-3_4_tee_rim_width = 0.37;
+3_4_tee_rim_width = 0.31;
 3_4_tee_center_z  = 3_4_tee_height - (3_4_tee_diameter/2); // Centerline of the T
 3_4_tee_rim_z_min = 3_4_tee_center_z - (3_4_tee_rim_od/2); // Bottom of the T rims
 3_4_tee_rim_z_max = 3_4_tee_center_z + (3_4_tee_rim_od/2); // Top of the T rims
