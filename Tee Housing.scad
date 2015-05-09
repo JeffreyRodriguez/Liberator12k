@@ -2,6 +2,7 @@ include <Components.scad>;
 include <Vitamins/Pipe.scad>;
 include <Vitamins/Rod.scad>;
 include <AR15 Grip Mount.scad>;
+use <New Trigger.scad>;
 
 function teeHousingPinRod() = RodOneEighthInch;
 
@@ -65,7 +66,7 @@ module bottom_tee_housing(front_slot_width=grip_width +0.05,
   %3_4_tee();
 
   body_length = 3_4_tee_width + front_block_length + back_block_length -(3_4_tee_rim_width*2);
-
+union() {
   difference() {
     intersection() {
       union() {
@@ -105,14 +106,13 @@ module bottom_tee_housing(front_slot_width=grip_width +0.05,
     // Trigger Pin
     translate([0,0,-lookup(RodRadius, triggerPin)])
     rotate([90,0,0])
-    #Rod(rod=triggerPin, length=3_4_tee_rim_od,
-         center=true,clearance=RodClearanceSnug);
-    translate([-lookup(RodRadius, triggerPin),-3_4_tee_rim_od/2,-lookup(RodRadius, triggerPin)])
-    cube([lookup(RodDiameter, triggerPin), 3_4_tee_rim_od, 1/2]);
+    Rod(rod=triggerPin,
+         length=3_4_tee_rim_od*2,
+         center=true,
+         clearance=RodClearanceSnug);
 
-    // Trigger Hole
-    rotate([90,0,0])
-    #cylinder(r=31/64, h=13/32, center=true);
+    // Trigger Insert Hole
+    cube([3_4_tee_id, 3_4_tee_id, 3_4_tee_rim_width*3], center=true);
 
     // Front Pins
     front_tee_housing_pins();
@@ -151,6 +151,12 @@ module bottom_tee_housing(front_slot_width=grip_width +0.05,
     translate([-3_4_tee_width/2 +3_4_tee_rim_width,0,-3_4_tee_rim_width])
     ar15_grip_bolt(nut_offset=0, nut_angle=90);
   }
+
+  // Trigger Insert
+  rotate([0,0,180])
+  translate([0,0,-3_4_tee_rim_width])
+  trigger_insert();
+}
 
 }
 

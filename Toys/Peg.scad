@@ -4,11 +4,11 @@ include <../Components.scad>;
 base_thickness = grip_height;
 base_thickness = 1/4; // For testing
 
-column_height = centerline_z -1/4;
+column_height = 0.95;
 
 overall_height = column_height + base_thickness;
 
-module peg() {
+module peg(column_height=column_height) {
   union() {
     translate([0,0,base_thickness])
     cylinder(r=3_4_tee_id/2, h=column_height);
@@ -56,7 +56,7 @@ module peg_with_offset_hole(offset=0) {
 scale([25.4, 25.4, 25.4]) {
 
   translate([-2,0,0])
-  peg_with_center_hole();
+  *peg_with_center_hole();
 
   translate([0,0,0])
   *peg_with_offset_hole(offset=1/8);
@@ -65,11 +65,11 @@ scale([25.4, 25.4, 25.4]) {
   *peg_with_offset_hole(offset=1/4);
 
   translate([-2,2,0])
-  peg_slotted_with_offset_holes();
+  *peg_slotted_with_offset_holes();
 
   translate([0,2,0])
-  peg_slotted_with_offset_holes(offset=1/8);
+  *peg_slotted_with_offset_holes(offset=1/8);
 
   translate([2,2,0])
-  peg_slotted_with_offset_holes(offset=1/4);
+  *peg_slotted_with_offset_holes(offset=1/4);
 }
