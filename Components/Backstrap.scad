@@ -1,6 +1,10 @@
 include <../Vitamins/Angle Stock.scad>;
 
-module backstrap(stock=AngleStockThreeQuartersByOneEighthInch, length=1, trough=0.5, infill_width=1.45, infill_length=1, wall_thickness = 1/4, clearance=undef) {
+module backstrap(stock=AngleStockThreeQuartersByOneEighthInch,
+                 thicknessClearance=AngleStockThicknessClearanceLoose,
+                 widthClearance=AngleStockWidthClearanceLoose,
+                 length=1, trough=0.5, wall_thickness = 1/4,
+                 infill_width=1.45, infill_length=1) {
   difference() {
 
 
@@ -27,6 +31,6 @@ module backstrap(stock=AngleStockThreeQuartersByOneEighthInch, length=1, trough=
     // 3/4" Angle Stock
     translate([0,0,-0.1])
     rotate([0,0,135])
-    AngleStock(stock=stock, length=length + 0.2, trough=trough, clearance=clearance);
+    AngleStock(stock=stock, length=length + 0.2, trough=trough, thicknessClearance=thicknessClearance, widthClearance=widthClearance);
   }
 }

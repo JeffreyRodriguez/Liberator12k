@@ -33,7 +33,7 @@ module forend(spindleRod=RodOneEighthInch, actuatorRod=RodOneEighthInch, gasSeal
 
       // AR15 Grip Mount
       // HACK: This whole thing is just eye-balled
-      intersection() {
+      *intersection() {
         rotate([0,0,-30])
         translate([-revolver_center_offset,.25,.692])
         rotate([0,45,0])

@@ -8,13 +8,13 @@ AngleStockThicknessClearanceLoose = 7;
 AngleStockHeight                  = 8;
 
 AngleStockThreeQuartersByOneEighthInch = [
-  [AngleStockWidth,                   3/4],
+  [AngleStockWidth,                   0.771],
   [AngleStockThickness,               0.13],
   [AngleStockTrough,                  0.235],
   [AngleStockWidthClearanceSnug,      0.008],
-  [AngleStockWidthClearanceLoose,     0.008],
-  [AngleStockThicknessClearanceSnug,  0.005],
-  [AngleStockThicknessClearanceLoose, 0.007],
+  [AngleStockWidthClearanceLoose,     0.015],
+  [AngleStockThicknessClearanceSnug,  0.007],
+  [AngleStockThicknessClearanceLoose, 0.008],
   [AngleStockHeight,                  0.574]
 ];
 

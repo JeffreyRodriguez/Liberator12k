@@ -1,21 +1,24 @@
 include <Angle Stock.scad>;
 
+stock = AngleStockThreeQuartersByOneEighthInch;
+wall = 1/8;
+
 scale([25.4, 25.4, 25.4]) {
 
   difference() {
-    cube([1.3,1,1/2]);
-    
-    // Cut out the middle to save materials
-    translate([6/16,.35,-0.1])
-    cube([8/16, 1/4, 1]);
+    cube([1.4,1.2,1/2]);
 
     // Tight
     translate([1/8, 1/8, -0.1])
-    3_4_angle_stock(length=1, cutter=true);
+    AngleStock(stock=AngleStockThreeQuartersByOneEighthInch,
+               thicknessClearance=AngleStockThicknessClearanceSnug,
+               widthClearance=AngleStockWidthClearanceSnug);
 
     // Loose
-    translate([9/8, 7/8, -0.1])
+    translate([10/8, 1, -0.1])
     rotate([0,0,180])
-    3_4_angle_stock(length=1, cutter=true, loose=true);
+    AngleStock(stock=AngleStockThreeQuartersByOneEighthInch,
+               thicknessClearance=AngleStockThicknessClearanceLoose,
+               widthClearance=AngleStockWidthClearanceLoose);
   }
 }

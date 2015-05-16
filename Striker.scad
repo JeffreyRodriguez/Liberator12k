@@ -32,6 +32,10 @@ module striker(length=3, od=0.75, id=0.53,
     translate([0,0,-0.1])
     cylinder(r=firing_pin_diam/2, h=firing_pin_depth+0.2, $fn=12);
 
+    // Sear Slot
+    translate([firing_pin_diam,-0.13,1/8])
+    #cube([0.26, 0.26, 13/16]);
+
     // Mocks
     %if (mocks == true) {
 
@@ -151,7 +155,7 @@ module striker_guide_side(disc_thickness=1/8, rope_width = 1/4, pin=1/8, top_pin
         rotate([-90,0,0])
         cylinder(r=pin/2, h=3_4_tee_id + 0.2, $fn=12);
       }
-    
+
     }
   }
 
@@ -165,14 +169,14 @@ module striker_guide_side(disc_thickness=1/8, rope_width = 1/4, pin=1/8, top_pin
       // Rope Track
       translate([-rope_width,-rope_width/2,- rope_width])
       cube([(3_4_tee_id/2) + rope_width + 0.1, rope_width, rope_width + 0.1]);
-      
+
       // Rope Pin
       #translate([0,-(3_4_tee_id/2) - 0.1,-rope_width])
       rotate([-90,0,0])
       cylinder(r=pin/2, h=3_4_tee_id + 0.2, $fn=12);
     }
   }
-  
+
 }
 
 *scale([25.4, 25.4, 25.4])
@@ -181,6 +185,6 @@ striker_guide_center();
 scale([25.4, 25.4, 25.4])
 striker_guide_side();
 
-scale([25.4, 25.4, 25.4])
-translate([0,2,0])
+!scale([25.4, 25.4, 25.4])
+//translate([0,2,0])
 striker();

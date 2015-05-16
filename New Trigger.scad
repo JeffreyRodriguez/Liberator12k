@@ -34,7 +34,7 @@ interface_clearance=0.005;
 
 
 
-module new_sear(pin=RodOneEighthInch, pin_clearance=RodClearanceLoose, od=sear_major_od, height=sear_height, center=false, angle=140) {
+module new_sear(pin=RodOneEighthInch, pin_clearance=RodClearanceLoose, od=sear_major_od, height=sear_height, center=false, angle=235) {
 
   sear_infill = od + .33;
 
@@ -47,10 +47,17 @@ module new_sear(pin=RodOneEighthInch, pin_clearance=RodClearanceLoose, od=sear_m
       // Spindle Wall
       cylinder(r=sear_minor_od/2, h=height);
 
-      // Main Body
-      linear_extrude(height=height)
-      mirror([1,0,0])
-      semicircle(od=od, angle=360-sear_arc_angle-64); // TODO: Do the trig for this - it needs to clear the striker
+      difference() {
+        // Main Body
+        linear_extrude(height=height)
+        mirror([1,0,0])
+        semicircle(od=od, angle=angle); // TODO: Do the trig for this - it needs to clear the striker
+
+        // Reset Spring Hole
+        rotate([0,0,(angle-270)])
+        translate([-od/4,sear_minor_od/2 + (od - sear_minor_od)/8,height/4])
+        cube([od, (od - sear_minor_od)/4, height/2]);
+      }
 
       // Trigger Interface Extension
       linear_extrude(height=height)
@@ -102,7 +109,7 @@ module new_trigger(pin=RodOneEighthInch, pin_clearance=RodClearanceSnug, pin_wal
       rotate([0,0,40-interface_arc_angle])
       mirror([1,0,0])
       linear_extrude(height=height)
-      semicircle(od=trigger_body_od, angle=280);
+      semicircle(od=trigger_body_od, angle=270);
 
       // Spindle Body
       cylinder(r=lookup(RodRadius, pin) + pin_wall, h=height);
@@ -136,6 +143,19 @@ module new_trigger(pin=RodOneEighthInch, pin_clearance=RodClearanceSnug, pin_wal
     // Spindle Hole
     translate([0,0,-0.1])
     Rod(rod=pin, clearance=pin_clearance, length=height + 0.2);
+
+    // Reset Spring Hole
+    translate([0,0,height/4]) {
+      difference() {
+        cylinder(r=(trigger_body_od/2) - pin_wall, h=height/2);
+
+        translate([0,0,-height/4])
+        cylinder(r=lookup(RodRadius, pin) + pin_wall, h=height);
+      }
+
+      translate([lookup(RodRadius, pin) + pin_wall,-1,0])
+      #cube([(trigger_body_od - (lookup(RodDiameter, pin) - (pin_wall*2)))/8, 2, height/2]);
+    }
   }
 }
 
@@ -148,6 +168,9 @@ module trigger_insert(pin=RodOneEighthInch, column_height=0.95, base_thickness=3
 
     // Striker
     translate([0,0,3_4_tee_rim_width]) {
+
+      //translate([-(0.5*$t),0,0])
+      translate([-(0.5),0,0])
       translate([0,0,3_4_tee_center_z])
       rotate([0,90,0])
       striker();
@@ -155,8 +178,8 @@ module trigger_insert(pin=RodOneEighthInch, column_height=0.95, base_thickness=3
       translate([0,0,3_4_tee_center_z])
       translate([0,0,-trigger_offset])
       rotate([90,90,0])
-      //rotate([0,0,$t*sear_arc_angle])
-      rotate([0,0,sear_arc_angle])
+      rotate([0,0,$t*sear_arc_angle])
+      //rotate([0,0,sear_arc_angle])
       new_sear(center=true);
 
       translate([0,0, -1/16])
@@ -167,7 +190,7 @@ module trigger_insert(pin=RodOneEighthInch, column_height=0.95, base_thickness=3
     }
   }
 
-  %difference() {
+  difference() {
     union() {
       cylinder(r=3_4_tee_id/2, h=3_4_tee_center_z+base_thickness-(3_4_tee_id/5));
 
@@ -266,11 +289,11 @@ inner_width = 3/4;
 scale([25.4, 25.4, 25.4]) {
 
   translate([-3,0,0])
-  *trigger_insert(debug=true);
+  trigger_insert(debug=false);
 
   translate([0,0,3_4_tee_rim_od/2])
   rotate([0,-90,0])
-  *test_block(debug=false);
+  test_block(debug=false);
 
   translate([0,2,0])
   new_trigger();
