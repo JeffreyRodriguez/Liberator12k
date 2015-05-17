@@ -1,7 +1,7 @@
 //$t=1;
 
-use <Vitamins/Rod.scad>;
-use <Vitamins/Pipe.scad>;
+include <Vitamins/Rod.scad>;
+include <Vitamins/Pipe.scad>;
 
 // Centerline for firing pin and tee body
 centerline_z  = 3_4_tee_center_z; // OK
@@ -109,7 +109,7 @@ trigger_x_compressed       = -sear_diameter;
 sear_collar_alignment_pin_height = sear_collar_height + sear_collar_padding*2 + sear_collar_clearance*2;
 
 
-module sear_block() {
+module sear_block(rod=searRod) {
   difference() {
 
     // Sear block body
@@ -341,6 +341,66 @@ module trigger_housing_left() {
 
     }
   }
+}
+
+function trigger_angle() = 90;
+function sear_travel() = ((3/4) - (1/8))/2;
+function trigger_travel() = sin(90 - trigger_angle()) * sear_travel();
+
+function sear_rod() = RodOneEighthInch;
+
+function sear_side() = 3/8;
+
+function trigger_travel_ratio(angle=trigger_angle()) = sin(90 - angle);
+
+module sear(rod=sear_rod(),
+            searTravel=sear_travel(),
+            angle=trigger_angle()) {
+  difference() {
+    linear_extrude(height=3/8)
+    polygon(points=[
+            [0,0],
+            [sear_side(),0],
+            [sear_side(),(sear_side()-(sin(angle) * sear_side()))],
+            [0, sear_side()]]);
+
+    translate([3/16,-1,3/16])
+    rotate([-90,0,0])
+    Rod(rod=RodOneEighthInch, length=3, $fn=12);
+  }
+}
+
+module searTrack(rod=sear_rod(),
+            searTravel=sear_travel(),
+            side=sear_side(),
+            angle=trigger_angle()) {
+
+  slopeHeight = (sin(angle) * side);
+
+    polygon(points=[
+            [0,0],
+            [side + (trigger_travel_ratio()*side),0],
+            [side + (trigger_travel_ratio()*side),(side-slopeHeight)+sear_travel()],
+            [0, side+searTravel]]);
+}
+
+
+
+!scale([25.4, 25.4, 25.4]) {
+
+  difference() {
+    translate([0,5/16,0])
+    %sear();
+
+
+    translate([-1/16,0,0])
+    cube([1,2,1/16 + 3/16]);
+
+    #translate([0,0,1/16])
+    linear_extrude(height=3/8)
+    searTrack();
+  }
+  
 }
 
 *union() {

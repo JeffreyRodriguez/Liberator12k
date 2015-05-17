@@ -39,7 +39,7 @@ module peg_with_center_hole() {
     peg();
 
     translate([0,0,-0.1])
-    #1_4_rod(cutter=true, loose=true, length = overall_height + 0.2);
+    #Rod(rod=RodOneEighthInch, clearance=RodClearanceLoose, length=overall_height+0.2);
   }
 }
 
@@ -55,8 +55,8 @@ module peg_with_offset_hole(offset=0) {
 
 scale([25.4, 25.4, 25.4]) {
 
-  translate([-2,0,0])
-  *peg_with_center_hole();
+  //translate([-2,0,0])
+  peg_with_center_hole();
 
   translate([0,0,0])
   *peg_with_offset_hole(offset=1/8);
