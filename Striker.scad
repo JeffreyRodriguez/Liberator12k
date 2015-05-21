@@ -32,10 +32,6 @@ module striker(length=3, od=0.75, id=0.53,
     translate([0,0,-0.1])
     cylinder(r=firing_pin_diam/2, h=firing_pin_depth+0.2, $fn=12);
 
-    // Sear Slot
-    translate([firing_pin_diam,-0.13,1/8])
-    #cube([0.26, 0.26, 13/16]);
-
     // Mocks
     %if (mocks == true) {
 

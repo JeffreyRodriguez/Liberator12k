@@ -104,7 +104,7 @@ union() {
     }
 
     // Trigger Pin
-    translate([0,0,-lookup(RodRadius, triggerPin)])
+    translate([-3_4_tee_id/2 +3/16,0,-lookup(RodRadius, triggerPin)])
     rotate([90,0,0])
     Rod(rod=triggerPin,
          length=3_4_tee_rim_od*2,
