@@ -1,4 +1,5 @@
 include <Vitamins/Pipe.scad>;
+include <Vitamins/Angle Stock.scad>;
 
 include <Components.scad>;
 use <TriggerAssembly.scad>;
@@ -6,6 +7,7 @@ use <Cylinder.scad>;
 use <Forend.scad>;
 use <Tee Housing.scad>;
 use <Striker.scad>;
+use <Striker Guide.scad>;
 use <Stock Spacer.scad>;
 use <Spring Cap.scad>;
 use <Shell.scad>;

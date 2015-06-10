@@ -1,7 +1,8 @@
 use <Vitamins/Rod.scad>;
+use <Vitamins/Pipe.scad>;
 include <Components.scad>;
 
-module revolver_cylinder(spindleRod=RodOneEighthInch, debug=false, $fn=30) {
+module revolver_cylinder(chamber=PipeThreeQuartersInch, spindleRod=RodOneEighthInch, debug=false, $fn=30) {
 
   echo("Cylinder OD:", revolver_cylinder_od);
   echo("Cylinder Circ:", cylinder_circumference);
@@ -29,7 +30,7 @@ union() {
 
         // Chamber Holes
         translate([3_4_pipe_od + revolver_cylinder_wall,0,-0.1])
-        3_4_pipe(hollow=false, cutter=true, length=revolver_cylinder_height + 0.2);
+        Pipe(clearance=PipeClearanceSnug, length=revolver_cylinder_height + 0.2);
 
         // Chamber Mocks
         if (debug)
@@ -37,7 +38,8 @@ union() {
           3_4_pipe_od + revolver_cylinder_wall,
           0,
           0])//-chamber_length/2 + revolver_cylinder_height/2])
-        %3_4_pipe(length=chamber_length);
+        %Pipe(clearance=PipeClearanceSnug, length=chamber_length);
+        *3_4_pipe(length=chamber_length);
 
         // Flutes
         rotate([0,0,360/12])

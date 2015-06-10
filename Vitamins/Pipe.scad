@@ -54,9 +54,9 @@ PipeOneInch = [
 ];
 
 function PipeOuterRadius(pipe, clearance=0) = (lookup(PipeOuterDiameter, pipe) + clearance) / 2;
-function PipeInnerRadius(pipe, clearance=0) = (lookup(PipeInnerDiameter, pipe) + clearance) / 2;
+function PipeInnerRadius(pipe, clearance=0) = (lookup(PipeInnerDiameter, pipe) - clearance) / 2;
 
-module Pipe(pipe=PipeThreeQuartersInch, length = 1, hollow=false, clearance=undef) {
+module Pipe(pipe=PipeThreeQuartersInch, length = 1, clearance=undef) {
   $fn = lookup(PipeFn, pipe);
 
   difference() {
@@ -66,12 +66,6 @@ module Pipe(pipe=PipeThreeQuartersInch, length = 1, hollow=false, clearance=unde
       cylinder(r=PipeOuterRadius(pipe), h=length);
     } else {
       cylinder(r=PipeOuterRadius(pipe, clearance=lookup(clearance, pipe)), h=length);
-    }
-
-    // Hollow it out
-    if (hollow) {
-      translate([0,0,-0.1])
-      cylinder(r=PipeInnerRadius(pipe), h=length + 0.2);
     }
   }
 };

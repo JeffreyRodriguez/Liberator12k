@@ -2,50 +2,45 @@ include <Components.scad>;
 include <Vitamins/Pipe.scad>;
 include <Vitamins/Rod.scad>;
 
-module striker(length=3, od=0.75, id=0.53,
+module striker(length=4, od=0.75, id=0.53,
+               firingPin = RodOneEighthInch, linePin = RodOneEighthInch,
+               depth=0.8,
+               
                firing_pin_diam=0.14, firing_pin_depth=0.44, firing_pin_pad = 3/8,
                rope_width = 1/8, rope_depth=1/4,
                mocks=true, $fn=30) {
 
   difference() {
 
-    union() {
+    // Body
+    cylinder(r=od/2, h=length);
 
-      // Body
-      cylinder(r=od/2, h=length);
-
-      // Cap
-      translate([0,0,length])
-      *cylinder(r1=od/2, r2=firing_pin_diam*1.5, h=od/4);
-    }
-
-    // Line Hole
-    translate([0,0,firing_pin_depth + firing_pin_pad])
+    // Weight Hole
+    translate([0,0,depth])
     cylinder(r=id/2, h=length);
 
     // Line Pin Hole
-    translate([0,od/2 + 0.1,length - rope_depth])
+    translate([0,od/2 + 0.1,length - lookup(RodDiameter, firingPin)*2])
     rotate([90,0,0])
-    cylinder(r=firing_pin_diam/2, h=od + 0.2, $fn=10);
+    Rod(rod=firingPin, length=od+0.2, clearance=RodClearanceSnug);
 
     // Firing Pin Hole
     translate([0,0,-0.1])
-    cylinder(r=firing_pin_diam/2, h=firing_pin_depth+0.2, $fn=12);
+    Rod(rod=firingPin, length=length, clearance=RodClearanceSnug);
 
     // Mocks
     %if (mocks == true) {
 
       // Firing Pin
       translate([0,0,-1])
-      cylinder(r=firing_pin_diam/2, h=1 + firing_pin_depth);
+      Rod(rod=firingPin, length=1+depth, clearance=RodClearanceSnug);
 
       // Line Pin
-      translate([0,od/2 + 0.025,length - rope_depth])
+      translate([0,od/2 + 0.025,length - lookup(RodDiameter, firingPin)*2])
       rotate([90,0,0])
-      cylinder(r=firing_pin_diam/2, h=od + 0.05);
+      Rod(rod=firingPin, length=od + 0.05, clearance=RodClearanceSnug);
 
       // Line
-      translate([0,0,line_pin_offset])
       cylinder(r=rope_width/2, h=12);
 
       // Spring
@@ -181,6 +176,6 @@ striker_guide_center();
 scale([25.4, 25.4, 25.4])
 striker_guide_side();
 
+translate([0,50,0])
 !scale([25.4, 25.4, 25.4])
-//translate([0,2,0])
 striker();

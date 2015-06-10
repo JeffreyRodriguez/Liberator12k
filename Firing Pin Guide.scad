@@ -2,19 +2,22 @@ include <Vitamins/Pipe.scad>;
 include <Vitamins/Rod.scad>
 
 // Firing Pin Extension
-module firing_pin_guide(firingPin=RodOneEighthInch, extension=3/8, extension_od=3_4_tee_id, anchor=1/8, anchor_od=0.42, $fn=50) {
+module firing_pin_guide(firingPin=RodOneEighthInch,
+                        height=7/16, od=3_4_tee_id,
+                        $fn=50) {
   color("Orange")
   difference() {
     union() {
-      cylinder(r=extension_od/2, h=extension);
-      cylinder(r=anchor_od/2, h=extension + anchor);
+      cylinder(r=od/2, h=height);
     }
 
-    translate([0,0,-0.1])
-    Rod(rod=RodOneEighthInch, clearance=RodClearanceLoose, length=extension+anchor+0.2);
+    // Tapered Entrance
+    translate([0,0,height/3*2])
+    #cylinder(r1=lookup(RodRadius, RodOneEighthInch), r2=1/4, h=height/3);
 
-    translate([0,0,-0.01])
-    cylinder(r1=1/4, r2=lookup(RodRadius, RodOneEighthInch), h=1/8);
+    // Firing Pin Hole
+    translate([0,0,-0.1])
+    Rod(rod=firingPin, clearance=RodClearanceLoose, length=height+0.2);
   }
 }
 

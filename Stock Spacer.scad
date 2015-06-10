@@ -25,9 +25,9 @@ module stock_spacer(length=1, od=0.75, id=0.5, $fn=20) {
  *
  */
 scale([25.4, 25.4, 25.4]) {
-  stock_spacer(length=1);
+  stock_spacer(length=4);
   translate([2,2,0])
-  stock_spacer(length=1.5);
+  *stock_spacer(length=1.5);
   translate([0,2,0])
-  stock_spacer(length=2);
+  *stock_spacer(length=2);
 }
