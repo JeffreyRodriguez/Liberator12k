@@ -7,6 +7,14 @@ AngleStockThicknessClearanceSnug  = 6;
 AngleStockThicknessClearanceLoose = 7;
 AngleStockHeight                  = 8;
 
+// .747
+// .744
+// .745
+//.740
+
+
+//.749
+//.75
 AngleStockThreeQuartersByOneEighthInch = [
   [AngleStockWidth,                   0.771],
   [AngleStockThickness,               0.13],
@@ -46,6 +54,9 @@ module AngleStock(stock=AngleStockThreeQuartersByOneEighthInch, trough=.5, thick
           ],
           paths=[[0,1,2,3,4,5,6]]);
 }
+
+
+//#AngleStock();
 
 module 3_4_angle_stock(length=1, cutter=false, loose=false) {
   width_clearance     = loose ? 3_4_angle_stock_width_clearance_loose     : 3_4_angle_stock_width_clearance;

@@ -23,6 +23,7 @@ Primer209 = [
 
 
 module Primer(primer=Primer209, extend=0.1) {
+  render()
   union() {
 
     // Primer

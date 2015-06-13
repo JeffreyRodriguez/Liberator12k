@@ -3,8 +3,8 @@ include <../Vitamins/Angle Stock.scad>;
 module backstrap(stock=AngleStockThreeQuartersByOneEighthInch,
                  thicknessClearance=AngleStockThicknessClearanceLoose,
                  widthClearance=AngleStockWidthClearanceLoose,
-                 length=1, trough=0.5, wall_thickness = 1/4,
-                 infill_width=1.45, infill_length=1) {
+                 length=1, trough=0.5, wall_thickness = 1/2,
+                 infill_width=1.7, infill_length=1) {
   difference() {
 
 
@@ -14,8 +14,10 @@ module backstrap(stock=AngleStockThreeQuartersByOneEighthInch,
       translate([wall_thickness*sqrt(2), 0, 0])
       rotate([0,0,135]) {
         intersection() {
-          translate([lookup(AngleStockWidth, stock) - 1/8,lookup(AngleStockWidth, stock) - 1/8, - 0.1])
-          cylinder(r=lookup(AngleStockWidth, stock), h=length + 0.2, $fn=20);
+          translate([lookup(AngleStockWidth, stock) + (wall_thickness * .25),
+                     lookup(AngleStockWidth, stock) + (wall_thickness * .25),
+                     - 0.1])
+          cylinder(r=(lookup(AngleStockWidth, stock)/2) + wall_thickness, h=length + 0.2, $fn=20);
 
           cube([
             3_4_angle_stock_width + wall_thickness*2,
@@ -31,6 +33,8 @@ module backstrap(stock=AngleStockThreeQuartersByOneEighthInch,
     // 3/4" Angle Stock
     translate([0,0,-0.1])
     rotate([0,0,135])
-    AngleStock(stock=stock, length=length + 0.2, trough=trough, thicknessClearance=thicknessClearance, widthClearance=widthClearance);
+    #AngleStock(stock=stock, length=length + 0.2, trough=trough, thicknessClearance=thicknessClearance, widthClearance=widthClearance);
   }
 }
+
+backstrap();

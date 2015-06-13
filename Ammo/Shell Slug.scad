@@ -2,11 +2,12 @@ include <Shell Base.scad>;
 include <../Vitamins/Pipe.scad>;
 
 module ShellSlug(chamber=PipeThreeQuartersInch, primer=Primer209,
-                 height=2, slug_diameter=0.52,
+                 height=1.5, slug_diameter=0.52,
                  fin_width=.25, fin_wall=2/32, fin_taper=1/4) {
   ShellBase(chamber=chamber, primer=primer) {
     
     color("Orange")
+    render()
     intersection() {
       linear_extrude(height=height, twist=-70, slices=12)
       difference() {
@@ -42,4 +43,10 @@ module ShellSlug(chamber=PipeThreeQuartersInch, primer=Primer209,
   }
 }
 
-scale([25.4, 25.4, 25.4]) ShellSlug();
+scale([25.4, 25.4, 25.4])
+difference() {
+  ShellSlug();
+  
+  *translate([-2, 0, -1])
+  cube([4,4,4]);
+}
