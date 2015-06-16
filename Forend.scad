@@ -3,7 +3,7 @@ include <Components.scad>;
 use <Cylinder.scad>;
 use <AR15 Grip Mount.scad>;
 
-module forend(spindleRod=RodOneEighthInch, actuatorRod=RodOneEighthInch, gasSealingPipe=PipeOneInch) {
+module forend(spindleRod=RodOneQuarterInch, actuatorRod=RodOneEighthInch, gasSealingPipe=PipeOneInch) {
   forend_extra = 0.4;
   
   echo("Forend Height", forend_length + forend_extension + revolver_cylinder_height + forend_extra);
@@ -18,7 +18,7 @@ module forend(spindleRod=RodOneEighthInch, actuatorRod=RodOneEighthInch, gasSeal
 
       // Backstrap
       translate([backstrap_offset,0,0])
-      backstrap(length=forend_length + forend_extension + revolver_cylinder_height + forend_extra, trough=0.6, clearance=AngleStockClearanceLoose);
+      backstrap(length=forend_length + forend_extension + revolver_cylinder_height + forend_extra);
 
       // Barrel Sleeve
       cylinder(r=pipe_radius + forend_wall_thickness, h=forend_length);
@@ -45,7 +45,7 @@ module forend(spindleRod=RodOneEighthInch, actuatorRod=RodOneEighthInch, gasSeal
     }
 
      // Actuator Rod
-    translate([backstrap_offset - lookup(AngleStockThickness,backstrap) ,0,forend_length + forend_extension + revolver_cylinder_height])
+    translate([backstrap_offset - lookup(RodDiameter,backstrapRod) ,0,forend_length + forend_extension + revolver_cylinder_height])
     rotate([0,-90,0])
     Rod(rod=actuatorRod, length=1);
 

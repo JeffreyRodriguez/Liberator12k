@@ -34,7 +34,7 @@ PipeThreeQuartersInch = [
   [PipeTaperedDiameter, 1.018],
   [PipeThreadLength,    0.9],
   [PipeThreadDepth,     0.5],
-  [PipeClearanceSnug,   0.015],
+  [PipeClearanceSnug,   0.005],
   [PipeClearanceLoose,  0.027],
   [PipeFn,              30],
   [PipeWeightPerUnit,   0] // TODO
@@ -127,13 +127,47 @@ module TeeRim(tee=TeeThreeQuarterInch, heightMultiplier=1) {
 
 // 3/4" x 1/8" Bushing
 3_4_x_1_8_bushing_height         = 0.955;
-3_4_x_1_8_bushing_id             = 0.45;
 3_4_x_1_8_bushing_od             = 1.0;
+3_4_x_1_8_bushing_id             = 0.45;
 3_4_x_1_8_bushing_head_height    = 0.215;
-3_4_x_1_8_bushing_depth          = 0.5;    // Bushing screws in about half an inch
+3_4_x_1_8_bushing_depth          = 0.5;    
 3_4_x_1_8_bushing_head_od        = 1.225;  // Across the points
 3_4_x_1_8_bushing_head_id        = 1.065;  // Across the flats
 3_4_x_1_8_bushing_head_clearance = 0.01;
+
+// Fittings: Bushings
+BushingHeight    = 1;
+BushingDiameter  = 2;
+BushingDepth     = 3; // Bushing screws in about half an inch
+BushingCapWidth  = 4;
+BushingCapHeight = 5;
+
+// 3/4" Bushing
+BushingThreeQuarterInch = [
+  [BushingHeight,    0.955],
+  [BushingDiameter,  1],
+  [BushingDepth,     0.5],
+  [BushingCapWidth,  1.225],
+  [BushingCapHeight, 0.215]
+];
+
+module Bushing(spec=BushingThreeQuarterInch) {
+  
+  od        = lookup(BushingDiameter, spec);
+  height    = lookup(BushingHeight, spec);
+  capWidth  = lookup(BushingCapWidth, spec);
+  capHeight = lookup(BushingCapHeight, spec);
+  
+  union() {
+
+    // Body
+    translate([0,0,capHeight/2])
+    cylinder(r=od/2, h=height - (capHeight/2), $fn=20);
+
+    // Head
+    cylinder(r=capWidth/2, h=capHeight, $fn=6);
+  }
+}
 
 module bushing(id, od, height, head_major_width, head_height) {
   difference() {

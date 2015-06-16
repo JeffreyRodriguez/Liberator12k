@@ -1,11 +1,11 @@
 include <Vitamins/Pipe.scad>;
 include <Vitamins/Angle Stock.scad>;
-include <Components/Backstrap.scad>;
 include <Components.scad>;
+use     <Components/Backstrap.scad>;
 
 module forend_single(wall=1/4, length=2, $fn=50,
                      pipe=PipeThreeQuartersInch,
-                     spindle=RodOneEighthInch) {
+                     spindle=spindleRod) {
 
   pipe_diameter    = lookup(PipeOuterDiameter, pipe);
   pipe_radius      = lookup(PipeOuterDiameter, pipe)/2;
@@ -17,18 +17,18 @@ module forend_single(wall=1/4, length=2, $fn=50,
 
       // Backstrap
       translate([backstrap_offset,0,0])
-      backstrap(length=length);
+      backstrap(length=length, rodClearance=RodClearanceLoose);
 
       // Barrel Sleeve
       cylinder(r=pipe_radius + wall, h=length);
 
       // Spindle-Barrel Infill
-      translate([-revolver_center_offset, -spindle_radius-cylinder_spindle_wall,0])
-      cube([pipe_radius + cylinder_spindle_wall,spindle_diameter+cylinder_spindle_wall*2, length]);
+      translate([-revolver_center_offset, -spindle_radius-wall,0])
+      cube([pipe_radius + wall,spindle_diameter+wall*2, length]);
 
       // Spindle Sleeve
       translate([-revolver_center_offset, 0,0])
-      cylinder(r=cylinder_spindle_diameter/2 + cylinder_spindle_wall, h=length);
+      cylinder(r=spindle_radius + wall, h=length);
     }
 
     // Barrel/Gas-Sealing Pipe Hole

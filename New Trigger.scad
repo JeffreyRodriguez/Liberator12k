@@ -1,4 +1,4 @@
-//$t=0;
+$t=0;
 //$t=1;
 include <Components.scad>;
 use <Components/Semicircle.scad>;
@@ -172,7 +172,7 @@ module trigger_insert(pin=RodOneEighthInch,
     }
   }
 
-  %difference() {
+  difference() {
     union() {
       difference() {
         cylinder(r=3_4_tee_id/2, h=3_4_tee_center_z+base_thickness-(3_4_tee_id/5));

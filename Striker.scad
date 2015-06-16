@@ -3,12 +3,10 @@ include <Vitamins/Pipe.scad>;
 include <Vitamins/Rod.scad>;
 
 module striker(length=4, od=0.75, id=0.53,
-               firingPin = RodOneEighthInch, linePin = RodOneEighthInch,
+               firingPin = RodOneEighthInch,
+               linePin = RodOneEighthInch,
                depth=0.8,
-               
-               firing_pin_diam=0.14, firing_pin_depth=0.44, firing_pin_pad = 3/8,
-               rope_width = 1/8, rope_depth=1/4,
-               mocks=true, $fn=30) {
+               rope_width = 1/8, rope_depth=1/4, $fn=30) {
 
   difference() {
 
@@ -28,27 +26,17 @@ module striker(length=4, od=0.75, id=0.53,
     translate([0,0,-0.1])
     Rod(rod=firingPin, length=length, clearance=RodClearanceSnug);
 
-    // Mocks
-    %if (mocks == true) {
-
-      // Firing Pin
-      translate([0,0,-1])
-      Rod(rod=firingPin, length=1+depth, clearance=RodClearanceSnug);
-
-      // Line Pin
-      translate([0,od/2 + 0.025,length - lookup(RodDiameter, firingPin)*2])
-      rotate([90,0,0])
-      Rod(rod=firingPin, length=od + 0.05, clearance=RodClearanceSnug);
-
-      // Line
-      cylinder(r=rope_width/2, h=12);
-
-      // Spring
-      translate([0,0,length])
-      linear_extrude(height=3, twist=360 * 12)
-      translate([od/2 - 1/16,0,0])
-      circle(r=1/32);
-    }
+    // Firing Pin
+    translate([0,0,-1])
+    %Rod(rod=firingPin, length=1+depth, clearance=RodClearanceSnug);
+    
+    // Line Pin
+    translate([0,od/2 + 0.025,length - lookup(RodDiameter, firingPin)*2])
+    rotate([90,0,0])
+    Rod(rod=firingPin, length=od + 0.05, clearance=RodClearanceSnug);
+    
+    // Line
+    cylinder(r=rope_width/2, h=12);
   }
 }
 

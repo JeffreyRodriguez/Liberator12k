@@ -2,6 +2,7 @@ include <Components.scad>;
 include <Vitamins/Pipe.scad>;
 include <Vitamins/Rod.scad>;
 include <AR15 Grip Mount.scad>;
+use <Components/Backstrap.scad>;
 use <New Trigger.scad>;
 
 function teeHousingPinRod() = RodOneEighthInch;
@@ -41,13 +42,10 @@ module back_tee_housing_pins(rod=teeHousingPinRod(), clearance=RodClearanceSnug,
         center=true, clearance=clearance);
 }
 
-front_block_seal_length = 1;
 front_block_overlap = 3_4_x_1_8_bushing_height - 3_4_x_1_8_bushing_depth;
-front_rim_overlap = tee_overlap; // 3_4_tee_center_z - 3_4_tee_rim_width - 3_4_tee_rim_od/2;
 front_block_length = 3_4_tee_rim_width + front_block_overlap;
 front_block_x_offset = -3_4_tee_rim_width/2;
 front_block_width = grip_width;
-front_block_spindle_sleeve_width = cylinder_spindle_diameter + cylinder_spindle_wall*2;
 
 
 bottom_block_wall = 3_4_tee_width/2 - 3_4_tee_rim_od/2 - 3_4_tee_rim_width;
@@ -89,7 +87,7 @@ union() {
       // Chamber the bottom and top of the body
       translate([-3_4_tee_width/2 - back_block_length + 3_4_tee_rim_width,0,-3_4_tee_rim_width*3])
       rotate([45,0,0])
-      cube([body_length,1.55,1.55]);
+      cube([body_length,1.6,1.6]);
 
       // Chamfer the front and back of the body
       translate([-3_4_tee_width/2 - back_block_length + 3_4_tee_rim_width -0.65,0,-3_4_tee_rim_width])
@@ -112,7 +110,7 @@ union() {
          clearance=RodClearanceSnug);
 
     // Trigger Insert Hole
-    cube([3_4_tee_id, 3_4_tee_id, 3_4_tee_rim_width*3], center=true);
+    cube([3_4_tee_id * 1.2, 3_4_tee_id*.8, 3_4_tee_rim_width*3], center=true);
 
     // Front Pins
     front_tee_housing_pins();
@@ -160,7 +158,7 @@ union() {
 
 }
 
-module front_tee_housing(debug=false) {
+module front_tee_housing(debug=false, rimOverlap=tee_overlap) {
   if (debug) {
     translate([-3_4_tee_center_z,0,3_4_tee_width/2 + front_block_length - 3_4_tee_rim_width])
     rotate([0,90,0])
@@ -178,7 +176,7 @@ module front_tee_housing(debug=false) {
 
       // Tee Rim Block
       color("LightBlue")
-      cylinder(r=3_4_tee_rim_od/2 + front_rim_overlap, h=front_block_length);
+      cylinder(r=3_4_tee_rim_od/2 + rimOverlap, h=front_block_length);
 
       // Spindle Block
       color("Orange")
@@ -237,12 +235,13 @@ module back_tee_housing(debug=false) {
       // AR15 Grip
       translate([3_4_tee_center_z+3_4_tee_rim_width,0,back_block_length])
       rotate([0,-90,0])
-      ar15_grip(mount_height=3_4_tee_center_z + 3_4_tee_rim_width,mount_length=0, top_extension=0, extension=0, debug=true);
+      ar15_grip(mount_height=3_4_tee_center_z + 3_4_tee_rim_width,
+                mount_length=0, top_extension=0, extension=0, debug=false);
 
       // Grip Mount Support Block
 //      translate([body_offset + 6/16,-1/4,0])
       translate([3_4_tee_center_z + 11/16,-1/4,0])
-      cube([3/4, 1/2,1/4]);
+      cube([3/4, 1/2,1/4 + 0.001]);
     }
 
     // Pins
@@ -292,6 +291,7 @@ module tee_housing_reference() {
 
   // Center Backstrap
   color("Yellow")
+  render()
   difference() {
     translate([(3_4_tee_width/2) - 3_4_tee_rim_width,0,3_4_tee_center_z + backstrap_offset])
     rotate([0,-90,0])
@@ -304,14 +304,17 @@ module tee_housing_reference() {
   }
 
   color("HotPink")
+  render()
   translate([3_4_tee_width/2 - 3_4_tee_rim_width + front_block_length,0,3_4_tee_center_z])
   rotate([0,-90,0])
   front_tee_housing(debug=false);
 
   color("White")
+  render()
   bottom_tee_housing(debug=false);
 
   color("Olive")
+  render()
   translate([-back_block_length -3_4_tee_width/2 +3_4_tee_rim_width,0,3_4_tee_center_z])
   rotate([0,90,0])
   back_tee_housing(debug=false);
@@ -322,13 +325,13 @@ module tee_housing_reference() {
     0,
     centerline_z - revolver_center_offset])
   rotate([0,90,0])
-  cylinder(r=cylinder_spindle_diameter/2, h=10);
+  Rod(rod=spindleRod, h=10);
 
   // Backstrap
   translate([-3_4_tee_width/2 -back_block_length + 3_4_tee_rim_width,0,centerline_z + backstrap_offset])
   rotate([0,90,0])
   rotate([0,0,-45])
-  %3_4_angle_stock(length=12);
+  %Rod(rod=backstrapRod, length=12);
 
   // Barrel
   translate([3_4_tee_width/2+0.5,0,3_4_tee_center_z])
@@ -336,5 +339,5 @@ module tee_housing_reference() {
   %3_4_pipe(length=barrel_length);
 }
 
-scale([25.4, 25.4, 25.4])
+*scale([25.4, 25.4, 25.4])
 tee_housing_reference();

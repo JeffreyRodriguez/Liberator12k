@@ -2,7 +2,7 @@ use <Vitamins/Rod.scad>;
 use <Vitamins/Pipe.scad>;
 include <Components.scad>;
 
-module revolver_cylinder(chamber=PipeThreeQuartersInch, spindleRod=RodOneEighthInch, debug=false, $fn=30) {
+module revolver_cylinder(chamber=PipeThreeQuartersInch, spindleRod=RodOneQuarterInch, debug=false, $fn=30) {
 
   echo("Cylinder OD:", revolver_cylinder_od);
   echo("Cylinder Circ:", cylinder_circumference);
@@ -16,7 +16,7 @@ union() {
   difference() {
 
     // Body
-    color("LightGrey")
+    color("Gold")
     cylinder(r=revolver_cylinder_od/2, h=revolver_cylinder_height, $fn=60);
 
     for (i=[0:revolver_shots-1]) {
@@ -43,10 +43,11 @@ union() {
 
         // Flutes
         rotate([0,0,360/12])
-        translate([(revolver_cylinder_od/2),0,0])
-        sphere(r=3_4_pipe_od/2, $fn=20);
+        translate([(revolver_cylinder_od/2) + revolver_cylinder_wall,0,0])
+        *sphere(r=3_4_pipe_od/2, $fn=20);
 
         // Zig (push)
+        render()
         translate([0,0,bottom_slot_height])
         difference() {
           linear_extrude(height = zigzag_height,
@@ -76,6 +77,7 @@ union() {
         }
 
         // Zag (pull)
+        render()
         rotate([0,0,rotation_angle])
         translate([0,0,revolver_zigzag_pin_diameter])
         difference() {
@@ -125,7 +127,6 @@ union() {
     // Spindle
     translate([0,0,-2])
     Rod(rod=spindleRod, clearance=RodClearanceLoose, length=7);
-    //cylinder(r=cylinder_spindle_diameter/2, h=7);
 
     // Gas Sealing Pipe
     translate([revolver_center_offset,0,revolver_cylinder_height])

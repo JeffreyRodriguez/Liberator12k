@@ -3,10 +3,10 @@ include <Components.scad>;
 ar15_grip_POSITION_FRONT   = 0; // Default
 ar15_grip_POSITION_REAR    = 1;
   slot_width = .35;
-  slot_height = .975;
+  slot_height = .983;
   slot_length = 1.28;
-  slot_angle  = 30;
-  slot_angle_offset = -0.42;
+  slot_angle  = 30.1;
+  slot_angle_offset = -0.413;
   slot_overlap = 1/4;
 
   grip_width = 0.85;
@@ -92,7 +92,8 @@ module ar15_grip(mount_height=1, mount_length=1, position=0, top_extension = 0, 
 
 
 // Test Print
-*scale([25.4,25.4,25.4]) {
-  //rotate([0,90,0])
+scale([25.4,25.4,25.4]) {
+  translate([0,0,1/4])
+  rotate([0,180,0])
   ar15_grip(mount_height = 1/4, mount_length = 0);
 }
