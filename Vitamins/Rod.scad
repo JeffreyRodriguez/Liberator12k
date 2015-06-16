@@ -15,27 +15,35 @@ RodOneEighthInch = [
 RodOneQuarterInch = [
   [RodDiameter,       1/4],
   [RodRadius,         1/4/2],
-  [RodClearanceSnug,  0.01],
-  [RodClearanceLoose, 0.015],
+  [RodClearanceSnug,  0.027],
+  [RodClearanceLoose, 0.035],
   [RodFn,             20]
 ];
 
-module Rod2d(rod=RodOneQuarterInch, clearance=undef, center=false) {
+RodThreeQuarterInchTubing = [
+  [RodDiameter,       0.758],
+  [RodRadius,         0.758/2],
+  [RodClearanceSnug,  0.023],
+  [RodClearanceLoose, 0.027],
+  [RodFn,             40]
+];
+
+module Rod2d(rod=RodOneQuarterInch, clearance=undef, center=false, $fn=undef) {
   clearRadius = clearance != undef ? lookup(clearance, rod)/2 : 0;
 
   circle(r=lookup(RodDiameter, rod)/2 + clearRadius,
          center=center,
-         $fn=lookup(RodFn, rod));
+         $fn=$fn == undef ? lookup(RodFn, rod) : $fn);
 }
 
 
-module Rod(rod=RodOneQuarterInch, length=1, clearance=undef, center=false) {
+module Rod(rod=RodOneQuarterInch, length=1, clearance=undef, center=false, $fn=undef) {
   clearRadius = clearance != undef ? lookup(clearance, rod)/2 : 0;
 
   cylinder(r=lookup(RodDiameter, rod)/2 + clearRadius,
            h=length,
            center=center,
-           $fn=lookup(RodFn, rod));
+           $fn=$fn == undef ? lookup(RodFn, rod) : $fn);
 }
 
 // 1/8" Rod
