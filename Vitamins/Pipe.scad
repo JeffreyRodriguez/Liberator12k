@@ -84,12 +84,16 @@ TeeRimWidth      = 6; // Width of the tee rim
 TeeThreeQuarterInch = [
   [TeeOuterDiameter, 1.38],
   [TeeWidth,         2.64],
+  [TeeHeight,        2.01],
   [TeeInnerDiameter, 0.88],
   [TeeRimDiameter,   1.53],
   [TeeRimWidth,      0.31]
 ];
 
 function TeeRimWidth(tee) = lookup(TeeRimWidth, tee);
+function TeeRimDiameter(tee) = lookup(TeeRimDiameter, tee);
+function TeeWidth(tee) = lookup(TeeWidth, tee);
+function TeeCenter(tee) = lookup(TeeHeight, tee) - (lookup(TeeOuterDiameter, tee)/2);
 
 module TeeRim(tee=TeeThreeQuarterInch, heightMultiplier=1) {
   cylinder(r=lookup(TeeRimDiameter, tee)/2, h=lookup(TeeRimWidth, tee) * heightMultiplier);
@@ -130,7 +134,7 @@ module TeeRim(tee=TeeThreeQuarterInch, heightMultiplier=1) {
 3_4_x_1_8_bushing_od             = 1.0;
 3_4_x_1_8_bushing_id             = 0.45;
 3_4_x_1_8_bushing_head_height    = 0.215;
-3_4_x_1_8_bushing_depth          = 0.5;    
+3_4_x_1_8_bushing_depth          = 0.5;
 3_4_x_1_8_bushing_head_od        = 1.225;  // Across the points
 3_4_x_1_8_bushing_head_id        = 1.065;  // Across the flats
 3_4_x_1_8_bushing_head_clearance = 0.01;
@@ -152,12 +156,12 @@ BushingThreeQuarterInch = [
 ];
 
 module Bushing(spec=BushingThreeQuarterInch) {
-  
+
   od        = lookup(BushingDiameter, spec);
   height    = lookup(BushingHeight, spec);
   capWidth  = lookup(BushingCapWidth, spec);
   capHeight = lookup(BushingCapHeight, spec);
-  
+
   union() {
 
     // Body

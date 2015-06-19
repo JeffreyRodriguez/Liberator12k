@@ -2,9 +2,9 @@ include <../Vitamins/Angle Stock.scad>;
 include <../Vitamins/Rod.scad>;
 include <../Components.scad>;
 
+
 module backstrap(rod=backstrapRod, rodClearance=RodClearanceSnug,
                  wall = 5/16, length=1, infill_length=1) {
-                   
   infill_width = lookup(RodDiameter, rod) + (wall*2);
 
   render()

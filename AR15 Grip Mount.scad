@@ -3,7 +3,7 @@ include <Components.scad>;
 ar15_grip_POSITION_FRONT   = 0; // Default
 ar15_grip_POSITION_REAR    = 1;
   slot_width = .35;
-  slot_height = .983;
+  slot_height = .973;
   slot_length = 1.28;
   slot_angle  = 30.1;
   slot_angle_offset = -0.413;
@@ -18,7 +18,7 @@ ar15_grip_POSITION_REAR    = 1;
     grip_bolt_offset_x = -slot_length/2 - grip_bolt_diameter/2 - 0.04; // Why?
 
 
-module ar15_grip_bolt(od=grip_bolt_diameter, length=4, nut_od=0.5, nut_height=0.25, nut_offset=2, nut_angle=0) {
+module ar15_grip_bolt(od=grip_bolt_diameter, length=4, nut_od=0.5, nut_height=0.25, nut_offset=2, nut_angle=0, nut_side=0) {
     translate([grip_bolt_offset_x,0,-length/4])
     rotate([0,30,0])
     union() {
@@ -27,12 +27,19 @@ module ar15_grip_bolt(od=grip_bolt_diameter, length=4, nut_od=0.5, nut_height=0.
       // Nut
       if (nut_offset)
       rotate([0,0,nut_angle])
-      translate([0,0,nut_offset])
-      cylinder(r=nut_od/2, h=nut_height, $fn=6);
+      translate([0,0,nut_offset]) {
+        cylinder(r=nut_od/2, h=nut_height, $fn=6);
+
+        if (nut_side > 0)
+        translate([-nut_od/2,0,0])
+        cube([nut_od, nut_side, nut_height]);
+      }
     }
 }
 
-module ar15_grip(mount_height=1, mount_length=1, position=0, top_extension = 0, extension=0, debug=true) {
+module ar15_grip(mount_height=1, mount_length=1, position=0, top_extension = 0, extension=0,
+                 nut_od=0.5, nut_height=0.25, nut_offset=2, nut_angle=0,
+                 debug=true) {
 
   // Positioning options
   x_offset = position == ar15_grip_POSITION_REAR ? slot_length : 0;
@@ -78,7 +85,7 @@ module ar15_grip(mount_height=1, mount_length=1, position=0, top_extension = 0, 
     cube([1.2, slot_width + 0.2, 1]);
 
     // Mounting Hole Cutter
-    ar15_grip_bolt(nut_offset=undef);
+    #ar15_grip_bolt(nut_offset=nut_offset, nut_height=nut_height, nut_angle=nut_angle);
 
 
   if(debug)
@@ -92,8 +99,8 @@ module ar15_grip(mount_height=1, mount_length=1, position=0, top_extension = 0, 
 
 
 // Test Print
-scale([25.4,25.4,25.4]) {
-  translate([0,0,1/4])
-  rotate([0,180,0])
-  ar15_grip(mount_height = 1/4, mount_length = 0);
+*scale([25.4,25.4,25.4]) {
+  //translate([0,0,1/4])
+  rotate([0,90,0])
+  ar15_grip(mount_height = 1/4, mount_length = 1/8);
 }

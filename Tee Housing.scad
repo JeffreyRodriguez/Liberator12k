@@ -2,7 +2,7 @@ include <Components.scad>;
 include <Vitamins/Pipe.scad>;
 include <Vitamins/Rod.scad>;
 include <AR15 Grip Mount.scad>;
-use <Components/Backstrap.scad>;
+use <Forend Rail.scad>;
 use <New Trigger.scad>;
 
 function teeHousingPinRod() = RodOneEighthInch;
@@ -47,59 +47,69 @@ front_block_length = 3_4_tee_rim_width + front_block_overlap;
 front_block_x_offset = -3_4_tee_rim_width/2;
 front_block_width = grip_width;
 
-
-bottom_block_wall = 3_4_tee_width/2 - 3_4_tee_rim_od/2 - 3_4_tee_rim_width;
-bottom_block_height = 3_4_tee_rim_width*3;
-bottom_block_width = 1.45;
-module bottom_tee_housing(front_slot_width=grip_width +0.05,
-                          front_slot_length=front_block_length +1,
-                          back_slot_width=grip_width + 0.05,
-                          back_slot_length=back_block_length + 1,
+module bottom_tee_housing(receiverTee=receiverTee, rimClearance=0.1,
+                          triggerPin = RodOneEighthInch,
                           debug=false) {
 
-  triggerPin = RodOneEighthInch;
+  block_length = lookup(TeeWidth, receiverTee)
+        - (lookup(TeeRimWidth, receiverTee)*2);
 
   if (debug)
   translate([0,0,0])
   %3_4_tee();
 
-  body_length = 3_4_tee_width + front_block_length + back_block_length -(3_4_tee_rim_width*2);
-union() {
   difference() {
-    intersection() {
-      union() {
+    union() {
 
-      // Tee Rim
-      color("LightBlue")
-      translate([0,0,-3_4_tee_rim_width])
-      cylinder(r=3_4_tee_rim_od/2 + bottom_block_wall, h=bottom_block_height);
-
+      // Forend Rail
+      color("Green")
+      translate([0,0,3_4_tee_center_z])
+      rotate([0,-90,0])
+      render(convexity=3)
+      linear_extrude(height=block_length, center=true)
+      ForendRail(enableTop=false, enableBottomInfill=false, wall=tee_overlap + 0.03);
+      
       // Body
-      color("Orange")
-        translate([-3_4_tee_width/2 - back_block_length + 3_4_tee_rim_width,
-                   -bottom_block_width/2,
-                   -3_4_tee_rim_width])
-        cube([body_length,
-             bottom_block_width,
-            bottom_block_height]);
+      translate([0,0,3_4_tee_rim_width])
+      intersection() {
+        union() {
+          cube([block_length,
+                3_4_tee_rim_od+(tee_overlap*4),
+                3_4_tee_rim_width*4], center=true);
+          
+          // Grip mount
+          translate([-block_length/2 - .5,-grip_width/2,-3_4_tee_rim_width*2])
+          cube([.501,grip_width,.676]);
+        }
+
+        // Chamfer the cube
+        rotate([45,0,0])
+        cube([block_length*2,1.9,1.9], center=true);
       }
-
-      // Chamber the bottom and top of the body
-      translate([-3_4_tee_width/2 - back_block_length + 3_4_tee_rim_width,0,-3_4_tee_rim_width*3])
-      rotate([45,0,0])
-      cube([body_length,1.6,1.6]);
-
-      // Chamfer the front and back of the body
-      translate([-3_4_tee_width/2 - back_block_length + 3_4_tee_rim_width -0.65,0,-3_4_tee_rim_width])
-      rotate([0,0,-45])
-      cube([body_length - 0.35, body_length - 0.35, bottom_block_height]);
-
-      // Shave off the sides of the tee rim
-      translate([-3_4_tee_width/2 - back_block_length + 3_4_tee_rim_width,
-                 -(3_4_tee_rim_od/2) -(tee_overlap*1.5/2),
-                 -3_4_tee_rim_width])
-      cube([body_length, 3_4_tee_rim_od + tee_overlap*1.5, bottom_block_height]);
+      
+      // AR15 Grip
+      *translate([-3_4_tee_width/2 +3_4_tee_rim_width,0,-3_4_tee_rim_width])
+      //translate([0,0,slot_length+1/4])
+      ar15_grip(mount_height=1,
+                mount_length=0, top_extension=1/4, extension=1/4,
+                nut_offset=1.475, nut_height=0.25, nut_angle=90,
+                debug=debug);
     }
+    
+    // Rim casting clearance
+    for (i = [1, -1])
+    translate([(i*TeeWidth(receiverTee)/2) - (i*TeeRimWidth(receiverTee)),0,TeeCenter(receiverTee)])
+    rotate([0,i*-90,0])
+    cylinder(r1=lookup(TeeRimDiameter, receiverTee)/2,
+              r2=lookup(TeeOuterDiameter, receiverTee)/2,
+               h=rimClearance);
+
+    // Forend Rods
+    translate([0,0,3_4_tee_center_z])
+    rotate([0,-90,0])
+    render(convexity=3)
+    linear_extrude(height=3_4_tee_width, center=true)
+    ForendRods();
 
     // Trigger Pin
     translate([-3_4_tee_id/2 +3/16,0,-lookup(RodRadius, triggerPin)])
@@ -112,51 +122,51 @@ union() {
     // Trigger Insert Hole
     cube([3_4_tee_id * 1.2, 3_4_tee_id*.8, 3_4_tee_rim_width*3], center=true);
 
-    // Front Pins
-    front_tee_housing_pins();
 
-    // Back Pins
-    back_tee_housing_pins();
-
-    // Front Slot
-    translate([3_4_tee_rim_od/2 + bottom_block_wall,-front_slot_width/2,-3_4_tee_rim_width-0.1])
-    cube([front_slot_length + 0.1, front_slot_width, bottom_block_height + 0.2]);
-
-    // Back Slot
-    rotate([0,0,180])
-    translate([3_4_tee_width/2 - 3_4_tee_rim_width,-back_slot_width/2,-3_4_tee_rim_width-0.1])
-    cube([back_slot_length, back_slot_width, 3_4_tee_center_z + 0.2]);
-
-    // Side Tee Rims
-    translate([-3_4_tee_rim_width,0,3_4_tee_center_z])
-    rotate([0,90,0])
-    cylinder(r=3_4_tee_rim_od/2 + tee_overlap,
-              h=3_4_tee_width + front_block_length + back_block_length + 0.1,
-              center=true,
-              $fn=360);
+    // Tee Body
+    render()
+    union() {
+      
+      // Tee Top
+      translate([-3_4_tee_rim_width,0,3_4_tee_center_z])
+      rotate([0,90,0])
+      #cylinder(r=3_4_tee_diameter/2,
+                h=3_4_tee_width + front_block_length + back_block_length + 0.1,
+                center=true,
+                $fn=360);
+      
+      // Tee Body Saddle Corners Clearance
+      intersection() {
+        
+        translate([0,0,3_4_tee_center_z +0.25])
+        sphere(r=3_4_tee_rim_od/2 + .38);
+        
+        // DEBUG: Previous print
+        *translate([0,0,3_4_tee_center_z +0.15])
+        %sphere(r=3_4_tee_rim_od/2 + .3);
+        
+        cube([3_4_tee_rim_od,3_4_tee_diameter,3_4_tee_height], center=true);
+      }
+    }
+    
+    translate([0,0,3_4_tee_center_z - .2])
+    *sphere(r=3_4_tee_rim_od/2 + .15);
+    
+    translate([0,0,3_4_tee_center_z + .4])
+    *sphere(r=3_4_tee_rim_od/2 + .5);
 
     // Bottom Tee Rim
     cylinder(r=3_4_tee_rim_od/2, h=3_4_tee_center_z);
 
-    // Cylinder Spindle Hole
-    translate([0,
-               0,
-               centerline_z - revolver_center_offset])
-    rotate([0,90,0])
-    Rod(rod=spindleRod, length=2, clearance=RodClearanceSnug);
-
     // AR15 Grip Bolt
     translate([-3_4_tee_width/2 +3_4_tee_rim_width,0,-3_4_tee_rim_width])
-    ar15_grip_bolt(nut_offset=0, nut_angle=90);
+    #ar15_grip_bolt(nut_offset=1.475, nut_height=1/4, nut_angle=90, nut_side = 1);
   }
 
-  // Trigger Insert
-  rotate([0,0,180])
-  translate([0,0,-3_4_tee_rim_width])
-  trigger_insert();
 }
 
-}
+*!scale([25.4, 25.4, 25.4])
+bottom_tee_housing(debug=false);
 
 module front_tee_housing(debug=false, rimOverlap=tee_overlap) {
   if (debug) {
@@ -170,9 +180,10 @@ module front_tee_housing(debug=false, rimOverlap=tee_overlap) {
 
       // Backstrap
       color("Red")
-      translate([backstrap_offset,0,0])
-//      rotate([180,-90,0])
-      backstrap(length = front_block_length);
+      render(convexity=2)
+      linear_extrude(height=front_block_length)
+      ForendRail(railClearance=RodClearanceSnug);
+
 
       // Tee Rim Block
       color("LightBlue")
@@ -189,7 +200,7 @@ module front_tee_housing(debug=false, rimOverlap=tee_overlap) {
     }
 
     // Pins
-    translate([-3_4_tee_center_z,0,3_4_tee_width/2 + front_block_length - 3_4_tee_rim_width])
+    *translate([-3_4_tee_center_z,0,3_4_tee_width/2 + front_block_length - 3_4_tee_rim_width])
     rotate([0,90,0])
     front_tee_housing_pins(debug=false);
 
@@ -200,18 +211,12 @@ module front_tee_housing(debug=false, rimOverlap=tee_overlap) {
     // Gas Sealing Pipe Hole
     translate([0,0,-0.1])
     1_pipe(length=front_block_overlap + 0.2, hollow=false, cutter=true);
-
-    // Cylinder Spindle Hole
-    translate([-revolver_center_offset,
-                0,
-                -0.1])
-    Rod(rod=spindleRod, length=2, clearance=RodClearanceSnug);
   }
 }
 
 
-back_block_length = slot_length + 8/32;
-module back_tee_housing(debug=false) {
+back_block_length = slot_length + 1/2;
+module back_tee_housing(stockPipe=stockPipe, gripOffset = 3_4_tee_center_z + 3_4_tee_rim_width, debug=false) {
 
   if (debug) {
     translate([3_4_tee_center_z,0,3_4_tee_width/2 + back_block_length - 3_4_tee_rim_width])
@@ -223,42 +228,50 @@ module back_tee_housing(debug=false) {
     union() {
 
       // Backstrap
-      color("Red")
-      rotate([0,0,180])
-      translate([backstrap_offset,0,0])
-      backstrap(length = back_block_length);
+      rotate([0,0,180]) {
+        color("Red")
+        render(convexity=2)
+        linear_extrude(height=back_block_length)
+        ForendRail(railClearance=RodClearanceSnug);
+
+        %render()
+        linear_extrude(height=12)
+        ForendRods();
+      }
 
       // Main Body and Stock Sleeve
       color("LightBlue")
       cylinder(r=3_4_tee_rim_od/2 + tee_overlap, h=back_block_length);
 
       // AR15 Grip
-      translate([3_4_tee_center_z+3_4_tee_rim_width,0,back_block_length])
+      *translate([gripOffset,0,slot_length+1/4])
       rotate([0,-90,0])
-      ar15_grip(mount_height=3_4_tee_center_z + 3_4_tee_rim_width,
-                mount_length=0, top_extension=0, extension=0, debug=false);
-
+      #ar15_grip(mount_height=1,
+                mount_length=0, top_extension=1/4, extension=1/4, debug=true);
+      
       // Grip Mount Support Block
-//      translate([body_offset + 6/16,-1/4,0])
-      translate([3_4_tee_center_z + 11/16,-1/4,0])
+      translate([3_4_tee_center_z + 6.2/16,-1/4,0])
       cube([3/4, 1/2,1/4 + 0.001]);
+
     }
 
     // Pins
     translate([3_4_tee_center_z,0,3_4_tee_width/2 + back_block_length - 3_4_tee_rim_width])
     rotate([0,-90,0])
-    back_tee_housing_pins(debug=false);
+    *back_tee_housing_pins(debug=false);
 
     // Back Tee Rim
     translate([0,0,back_block_length - 3_4_tee_rim_width])
     cylinder(r=3_4_tee_rim_od/2, h=3_4_tee_rim_width + 0.1);
 
-    // Stock Sleeve
+    // Stock Pipe
     translate([0,0,-0.1])
-    3_4_pipe(length=back_block_length + 0.2, hollow=false, cutter=true, loose=true);
+    Pipe(pipe=stockPipe, length=back_block_length + 0.2, clearance=PipeClearanceLoose);
 
-    translate([-2,-4,-2])
-    *cube([4,4,4]);
+    // AR15 Grip Bolt
+    translate([gripOffset,0,slot_length])
+    rotate([0,-90,0])
+    *#ar15_grip_bolt(nut_offset=gripOffset+1/8, nut_height=1, nut_angle=90);
   }
 }
 
@@ -267,7 +280,7 @@ module back_tee_housing(debug=false) {
 module tee_housing_plater(debug=false) {
   color("HotPink")
   translate([0,2,0])
-  front_tee_housing(debug=debug);
+  *front_tee_housing(debug=debug);
 
   color("LightBlue")
   translate([0,0,3_4_tee_rim_width])
@@ -275,12 +288,8 @@ module tee_housing_plater(debug=false) {
 
   color("Orange")
   translate([0,-2,0])
-  back_tee_housing(debug=debug);
+  *back_tee_housing(debug=debug);
 }
-
-!scale([25.4, 25.4, 25.4])
-rotate([0,0,90])
-tee_housing_plater();
 
 module tee_housing_reference() {
 
@@ -290,7 +299,7 @@ module tee_housing_reference() {
   *cylinder(r=3_4_tee_id/2, h=3_4_tee_center_z);
 
   // Center Backstrap
-  color("Yellow")
+  *color("Yellow")
   render()
   difference() {
     translate([(3_4_tee_width/2) - 3_4_tee_rim_width,0,3_4_tee_center_z + backstrap_offset])
@@ -303,35 +312,20 @@ module tee_housing_reference() {
     cylinder(r=3_4_tee_diameter/2, h=3_4_tee_width, center=true);
   }
 
-  color("HotPink")
-  render()
   translate([3_4_tee_width/2 - 3_4_tee_rim_width + front_block_length,0,3_4_tee_center_z])
   rotate([0,-90,0])
   front_tee_housing(debug=false);
 
-  color("White")
-  render()
-  bottom_tee_housing(debug=false);
+  bottom_tee_housing(debug=true);
 
-  color("Olive")
-  render()
+  // Trigger Insert
+  rotate([0,0,180])
+  translate([0,0,-3_4_tee_rim_width])
+  trigger_insert();
+
   translate([-back_block_length -3_4_tee_width/2 +3_4_tee_rim_width,0,3_4_tee_center_z])
   rotate([0,90,0])
   back_tee_housing(debug=false);
-
-  // Spindle
-  %translate([
-    3_4_tee_width/2 - 3_4_tee_rim_width,
-    0,
-    centerline_z - revolver_center_offset])
-  rotate([0,90,0])
-  Rod(rod=spindleRod, h=10);
-
-  // Backstrap
-  translate([-3_4_tee_width/2 -back_block_length + 3_4_tee_rim_width,0,centerline_z + backstrap_offset])
-  rotate([0,90,0])
-  rotate([0,0,-45])
-  %Rod(rod=backstrapRod, length=12);
 
   // Barrel
   translate([3_4_tee_width/2+0.5,0,3_4_tee_center_z])
@@ -339,5 +333,11 @@ module tee_housing_reference() {
   %3_4_pipe(length=barrel_length);
 }
 
-*scale([25.4, 25.4, 25.4])
+
+
+scale([25.4, 25.4, 25.4])
+rotate([0,0,90])
+tee_housing_plater();
+
+*!scale([25.4, 25.4, 25.4])
 tee_housing_reference();

@@ -19,17 +19,9 @@ breech_face_x = (3_4_tee_width/2) + 3_4_x_1_8_bushing_depth;
 
 
 
-// Configurable Settings
+// Configurable: Wall Thickness
 tee_overlap             = 3/16;
-sear_block_padding      = 5/32;
-sear_collar_padding     = 1/16; // Between the bottom of the sear collar and top of the tracks
-trigger_padding         = 1/8;
-trigger_wing_height     = 1/8;
-trigger_wing_width      = 1/4;
-trigger_wing_length     = 1/2;
-trigger_protrousion     = 1/2;
-trigger_overtravel      = 1/16;
-sear_spring_height      = 1/4;
+
 rope_od                 = 6/32;
 
 trigger_housing_padding_back = 1/16;
@@ -56,10 +48,17 @@ spindle_collar_height        = 0.27;
 // Configurable: Vitamin Selection
 backstrapRod   = RodThreeQuarterInchTubing;
 spindleRod     = RodOneQuarterInch;
+topRailRod     = RodThreeQuarterInchTubing;
+bottomRailRod  = RodOneQuarterInch;
 breechBushing  = BushingThreeQuarterInch;
 barrelPipe     = PipeThreeQuartersInch;
+stockPipe      = PipeThreeQuartersInch;
 receiverTee    = TeeThreeQuarterInch;
 gasSealingPipe = PipeOneInch;
+
+// Configurable: Common Settings
+bottomRailAngle = 50;
+
 
 // Configurable: Actuator
 actuator_length             = 1.5;

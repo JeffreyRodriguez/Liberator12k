@@ -24,26 +24,49 @@ RodThreeQuarterInchTubing = [
   [RodDiameter,       0.758],
   [RodRadius,         0.758/2],
   [RodClearanceSnug,  0.023],
-  [RodClearanceLoose, 0.027],
+  [RodClearanceLoose, 0.029],
   [RodFn,             40]
 ];
 
-module Rod2d(rod=RodOneQuarterInch, clearance=undef, center=false, $fn=undef) {
-  clearRadius = clearance != undef ? lookup(clearance, rod)/2 : 0;
+/**
+ * Lookup the diameter of a rod.
+ * @param rod The rod to lookup.
+ * @param clearance The RodClearance to use.
+ */
+function RodDiameter(rod=undef, clearance=undef)
+           = lookup(RodDiameter, rod)
+          + (clearance != undef ? lookup(clearance, rod) : 0);
 
-  circle(r=lookup(RodDiameter, rod)/2 + clearRadius,
-         center=center,
-         $fn=$fn == undef ? lookup(RodFn, rod) : $fn);
+/**
+ * Lookup the radius of a rod.
+ * @param rod The rod to lookup.
+ * @param clearance The RodClearance to use.
+ */
+function RodRadius(rod, clearance=undef) = RodDiameter(rod, clearance)/2;
+
+/**
+ * Lookup the $fn value for a rod, optionally overriding it
+ * @param rod The rod to lookup.
+ * @param $fn Override the RodFn. If defined, this will be the result. (convenience arg)
+ **/
+function RodFn(rod, $fn=undef) = ($fn == undef) ? lookup(RodFn, rod) : $fn;
+
+/**
+ * A 2D rod (circle).
+ * @param rod The rod to render.
+ * @param clearance The RodClearance to use.
+ * @param $fn Override the RodFn value of the rod.
+ */
+module Rod2d(rod=RodOneQuarterInch, clearance=undef, $fn=undef) {
+  circle(r=RodRadius(rod, clearance),
+         $fn=RodFn(rod, $fn));
 }
 
 
 module Rod(rod=RodOneQuarterInch, length=1, clearance=undef, center=false, $fn=undef) {
-  clearRadius = clearance != undef ? lookup(clearance, rod)/2 : 0;
-
-  cylinder(r=lookup(RodDiameter, rod)/2 + clearRadius,
-           h=length,
-           center=center,
-           $fn=$fn == undef ? lookup(RodFn, rod) : $fn);
+  render(convexity=1)
+  linear_extrude(height=length, center=center)
+  Rod2d(rod, clearance, $fn=$fn);
 }
 
 // 1/8" Rod
