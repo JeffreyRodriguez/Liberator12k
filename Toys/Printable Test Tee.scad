@@ -12,7 +12,7 @@ width = 1;
 inner_width = 3/4;
 
   if (debug) {
-    translate([0,0,-3_4_tee_rim_width])
+    translate([0,0,-TeeRimWidth(receiverTee)])
     rotate([0,0,90])
     trigger_insert(debug=debug);
   }
@@ -21,41 +21,41 @@ inner_width = 3/4;
     rotate([0,0,-90])
       difference() {
         union() {
-          3_4_tee();
+          Tee(TeeThreeQuarterInch);
 
           // Floorplate
-          translate([-3_4_tee_width/2,-3_4_tee_rim_od/2,0])
-          cube([3_4_tee_width,.25, 3_4_tee_height]);
+          translate([-TeeWidth(receiverTee)/2,-TeeRimDiameter(receiverTee)/2,0])
+          cube([TeeWidth(receiverTee),.25, TeeHeight(receiverTee)]);
         }
 
         // Cut the block in half(ish)
-        translate([-3_4_tee_width/2 + 3_4_tee_rim_width,0,3_4_tee_rim_width])
-        cube([3_4_tee_width - (3_4_tee_rim_width*2),2,3_4_tee_height]);
+        translate([-TeeWidth(receiverTee)/2 + TeeRimWidth(receiverTee),0,TeeRimWidth(receiverTee)])
+        cube([TeeWidth(receiverTee) - (TeeRimWidth(receiverTee)*2),2,TeeHeight(receiverTee)]);
 
         // Cut out the inner track
         translate([0,0,-0.1])
-        cylinder(r=3_4_tee_id/2 +0.01, h=3_4_tee_center_z+0.1);
+        cylinder(r=TeeInnerDiameter(receiverTee)/2 +0.01, h=TeeCenter(receiverTee)+0.1);
 
         // Cut out the Striker
-        #translate([3_4_tee_id/2,0,3_4_tee_center_z]) // Back of tee to back of breech measured at 2.2"
+        #translate([TeeInnerDiameter(receiverTee)/2,0,TeeCenter(receiverTee)]) // Back of tee to back of breech measured at 2.2"
         rotate([0,-90,0])
         union() {
-          #cylinder(r=3_4_tee_id/2 +0.01, h=3_4_tee_width, center=false);
+          #cylinder(r=TeeInnerDiameter(receiverTee)/2 +0.01, h=TeeWidth(receiverTee), center=false);
           translate([0,0,-1])
-          Rod(rod=spindleRod, clearance=spindleClearance, length=3_4_tee_rim_od + 0.1, center=false);
+          Rod(rod=spindleRod, clearance=spindleClearance, length=TeeRimDiameter(receiverTee) + 0.1, center=false);
         }
 
         // Rubberband Pin
         for (i = [0:3]) {
-          translate([-i*.25,0,3_4_tee_center_z])
+          translate([-i*.25,0,TeeCenter(receiverTee)])
           rotate([90,0,0])
-          Rod(rod=spindleRod, clearance=RodClearanceSnug, length=3_4_tee_rim_od+0.2, center=true);
+          Rod(rod=spindleRod, clearance=RodClearanceSnug, length=TeeRimDiameter(receiverTee)+0.2, center=true);
         }
       }
 }
 
   
 scale([25.4, 25.4, 25.4])
-translate([0,0,3_4_tee_rim_od/2])
+translate([0,0,TeeRimDiameter(receiverTee)/2])
 rotate([0,-90,0])
 test_block(debug=false);

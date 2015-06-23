@@ -2,7 +2,7 @@ include <../Components.scad>;
 
 thickness = 1/4;
 id = 1_8_rod_d + 1_8_rod_clearance*2;
-od = 3_4_tee_id - 1/16;
+od = TeeInnerDiameter(receiverTee) - 1/16;
 
 module three_quarters_cog(od=od) {
   difference() {

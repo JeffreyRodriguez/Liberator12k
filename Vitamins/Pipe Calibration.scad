@@ -2,27 +2,41 @@ include <Pipe.scad>;
 
 $fn=60;
 
-scale([25.4,25.4,25.4]) {
+module TeeCalibration(tee, wall=1/8) {
 
   // 3/4" Tee Rim
-  // Calibration model for 3_4_tee_rim_od and 3_4_tee_rim_width
+  // Calibration model for TeeRimDiameter(receiverTee) and TeeRimWidth(receiverTee)
   // Press the bottom rim of the tee into the print so it's flush.
   // It should fit snugly around the tee, but not so tight you can't remove it without tools.
   // It should also be tall enough to extend above any tapered portion of the tee rim.
   difference() {
-    cylinder(r=3_4_tee_rim_od/2 + 1/8, h=3_4_tee_rim_width);
+    cylinder(r=TeeRimDiameter(tee)/2 + wall, h=TeeRimWidth(tee));
 
-    cylinder(r=3_4_tee_rim_od/2, h=3_4_tee_rim_width + 1, center=true);
+    cylinder(r=TeeRimDiameter(tee)/2, h=TeeRimWidth(tee) + 1, center=true);
   }
-
-  // 3/4" Pipe
-  translate([-2,0,0])
-  3_4_pipe_sleeve(wall=1/8, length=1/2);
+}
 
 
-  // 1" Pipe
-  translate([2,0,0])
-  1_pipe_sleeve(wall=1/8, length=1/2);
+module PipeOuterCalibration(pipe, wall=1/8, height=1/2) {
+  difference() {
+    cylinder(r=PipeOuterRadius(pipe) + wall, h=height);
+
+    cylinder(r=PipeOuterRadius(pipe), h=height + 1, center=true);
+  }
+}
+
+module PipeInnerCalibration(pipe, wall=1/8, height=1/2) {
+  difference() {
+    cylinder(r=PipeInnerRadius(pipe) + wall, h=height);
+
+    cylinder(r=PipeInnerRadius(pipe), h=height + 1, center=true);
+  }
+}
+
+scale([25.4,25.4,25.4]) {
+  TeeCalibration(TeeThreeQuarterInch);
+  PipeOuterCalibration(PipeThreeQuartersInch);
+  PipeInnerCalibration(PipeThreeQuartersInch);
 }
 
 

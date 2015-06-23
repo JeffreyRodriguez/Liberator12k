@@ -1,9 +1,11 @@
-include <Vitamins/Pipe.scad>;
-include <Vitamins/Rod.scad>
+include <Components.scad>;
+use <Vitamins/Pipe.scad>;
+use <Vitamins/Rod.scad>
+
 
 // Firing Pin Extension
 module firing_pin_guide(firingPinRod=RodOneEighthInch,
-                        height=7/16, od=3_4_tee_id,
+                        height=7/16, od=TeeInnerDiameter(receiverTee),
                         $fn=50) {
   color("Orange")
   render()

@@ -1,13 +1,13 @@
-include <Vitamins/Pipe.scad>;
+use <../Vitamins/Pipe.scad>;
 include <../AR15 Grip Mount.scad>;
 
-wall = 3_4_tee_width/2 - 3_4_tee_rim_od/2 - 3_4_tee_rim_width;
+wall = TeeWidth(receiverTee)/2 - TeeRimDiameter(receiverTee)/2 - TeeRimWidth(receiverTee);
 
 scale([25.4, 25.4, 25.4])
 union() {
-  translate([0,0,3_4_tee_rim_width])
+  translate([0,0,TeeRimWidth(receiverTee)])
   rotate([0,180,0])
-  %3_4_tee();
+  %Tee(TeeThreeQuarterInch);
 
 
   difference() {
@@ -15,16 +15,16 @@ union() {
 
       // Rim Wall
       color("LightBlue")
-      cylinder(r=3_4_tee_rim_od/2 + wall, h=3_4_tee_rim_width);
+      cylinder(r=TeeRimDiameter(receiverTee)/2 + wall, h=TeeRimWidth(receiverTee));
 
       // AR15 Grip
-      translate([3_4_tee_width/2,0,3_4_tee_rim_width])
+      translate([TeeWidth(receiverTee)/2,0,TeeRimWidth(receiverTee)])
       rotate([180,0,180])
-      ar15_grip(mount_height=3_4_tee_rim_width,mount_length=3_4_tee_width/2 - 3_4_tee_rim_od/2);
+      ar15_grip(mount_height=TeeRimWidth(receiverTee),mount_length=TeeWidth(receiverTee)/2 - TeeRimDiameter(receiverTee)/2);
     }
 
     // Tee Rim
     translate([0,0,-0.1])
-    cylinder(r=3_4_tee_rim_od/2, h=3_4_tee_rim_width + 0.2);
+    cylinder(r=TeeRimDiameter(receiverTee)/2, h=TeeRimWidth(receiverTee) + 0.2);
   }
 }

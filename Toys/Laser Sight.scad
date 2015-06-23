@@ -36,7 +36,7 @@ scale([25.4, 25.4, 25.4]) {
     backstrap(length=height);
 
     translate([0,0,-0.1])
-    cylinder(r=3_4_tee_rim_od/2,h=height+0.2);
+    cylinder(r=TeeRimDiameter(receiverTee)/2,h=height+0.2);
   }
 }
 

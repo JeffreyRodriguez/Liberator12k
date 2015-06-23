@@ -1,23 +1,23 @@
 include <Components.scad>;
-include <Vitamins/Pipe.scad>;
-include <Vitamins/Rod.scad>;
+use <Vitamins/Pipe.scad>;
+use <Vitamins/Rod.scad>;
 
-module striker_guide_center(wall = 1/8, overlap=1/4, side_overlap = 3/8, pin = 1/8) {
+module striker_guide_center(wall = 1/8, overlap=1/4, side_overlap = 3/8, pin = 1/8, stockPipe=stockPipe) {
   difference() {
     union() {
       translate([0,0,overlap])
-      *%3_4_tee();
+      *%Tee(TeeThreeQuarterInch);
 
       // Center Rim
-      cylinder(r=3_4_tee_rim_od/2 + wall, h=3_4_tee_rim_width+overlap);
+      cylinder(r=TeeRimDiameter(receiverTee)/2 + wall, h=TeeRimWidth(receiverTee)+overlap);
 
       // Center Block
-      translate([0,-3_4_tee_id/2,0])
-      cube([3_4_tee_width/2 + overlap,3_4_tee_id,3_4_tee_rim_width+overlap]);
+      translate([0,-TeeInnerDiameter(receiverTee)/2,0])
+      cube([TeeWidth(receiverTee)/2 + overlap,TeeInnerDiameter(receiverTee),TeeRimWidth(receiverTee)+overlap]);
 
       // Side Block
-      translate([3_4_tee_width/2 - 3_4_tee_rim_width,-3_4_tee_id/2,0])
-      cube([3_4_tee_rim_width +side_overlap,3_4_tee_id,overlap + 3_4_tee_center_z - (3_4_tee_id/2)]);
+      translate([TeeWidth(receiverTee)/2 - TeeRimWidth(receiverTee),-TeeInnerDiameter(receiverTee)/2,0])
+      cube([TeeRimWidth(receiverTee) +side_overlap,TeeInnerDiameter(receiverTee),overlap + TeeCenter(receiverTee) - (TeeInnerDiameter(receiverTee)/2)]);
     }
 
     // Cutaway View
@@ -26,49 +26,49 @@ module striker_guide_center(wall = 1/8, overlap=1/4, side_overlap = 3/8, pin = 1
 
     // Center Rim Hole
     translate([0,0,overlap])
-    cylinder(r=3_4_tee_rim_od/2, h=3_4_tee_center_z);
+    cylinder(r=TeeRimDiameter(receiverTee)/2, h=TeeCenter(receiverTee));
 
     // Pipe Hole
     translate([0,0,-0.1])
-    cylinder(r=(3_4_pipe_od+3_4_pipe_clearance)/2, h=3_4_tee_rim_width + overlap + 0.3);
+    cylinder(r=PipeOuterRadius(stockPipe, PipeClearanceLoose), h=TeeRimWidth(receiverTee) + overlap + 0.3);
 
     // Side Rim
-    translate([(3_4_tee_width/2)-3_4_tee_rim_width -0.1,0,3_4_tee_center_z+overlap])
+    translate([(TeeWidth(receiverTee)/2)-TeeRimWidth(receiverTee) -0.1,0,TeeCenter(receiverTee)+overlap])
     rotate([0,90,0])
     union() {
-      cylinder(r=3_4_tee_rim_od/2, h=3_4_tee_rim_width +0.1);
-      cylinder(r=3_4_tee_id/2, h=3_4_tee_rim_width+side_overlap+0.2);
+      cylinder(r=TeeRimDiameter(receiverTee)/2, h=TeeRimWidth(receiverTee) +0.1);
+      cylinder(r=TeeInnerDiameter(receiverTee)/2, h=TeeRimWidth(receiverTee)+side_overlap+0.2);
     }
 
     // Tee Body
-    translate([-3_4_tee_width/2,0,3_4_tee_center_z + overlap])
+    translate([-TeeWidth(receiverTee)/2,0,TeeCenter(receiverTee) + overlap])
     rotate([0,90,0])
-    cylinder(r=3_4_tee_diameter/2, h=3_4_tee_width-3_4_tee_rim_width + 0.1);
+    cylinder(r=TeeOuterDiameter(receiverTee)/2, h=TeeWidth(receiverTee)-TeeRimWidth(receiverTee) + 0.1);
 
     // Center Pin
-    translate([3_4_tee_rim_od/2 + overlap,3_4_tee_id/2 +0.1,overlap])
+    translate([TeeRimDiameter(receiverTee)/2 + overlap,TeeInnerDiameter(receiverTee)/2 +0.1,overlap])
     rotate([90,0,0])
-    #1_8_rod(length=3_4_tee_id + 0.2);
+    #1_8_rod(length=TeeInnerDiameter(receiverTee) + 0.2);
 
     // Center Pin Track
-    translate([3_4_tee_rim_od/2 + overlap - pin,0,-0.1])
+    translate([TeeRimDiameter(receiverTee)/2 + overlap - pin,0,-0.1])
     cylinder(r=pin, h=overlap + pin + 0.1);
 
     // Side/Center Rope Track
-    translate([3_4_tee_rim_od/2 + 0.01,-pin,overlap + pin + 0.01])
+    translate([TeeRimDiameter(receiverTee)/2 + 0.01,-pin,overlap + pin + 0.01])
     rotate([0,53,0])
     cube([pin*3.4,pin*2,2]);
 
     // Side Tip Rope Track
-    translate([3_4_tee_width/2, -pin,3_4_tee_center_z -(3_4_tee_id/2) +overlap - pin])
+    translate([TeeWidth(receiverTee)/2, -pin,TeeCenter(receiverTee) -(TeeInnerDiameter(receiverTee)/2) +overlap - pin])
     cube([side_overlap + 0.1, pin*2,1]);
 
     // Side Pin
-    translate([3_4_tee_width/2 + side_overlap - pin,
-               3_4_tee_id/2 +0.1,
-               3_4_tee_center_z - (3_4_tee_rim_od - 3_4_tee_id)/2])
+    translate([TeeWidth(receiverTee)/2 + side_overlap - pin,
+               TeeInnerDiameter(receiverTee)/2 +0.1,
+               TeeCenter(receiverTee) - (TeeRimDiameter(receiverTee) - TeeInnerDiameter(receiverTee))/2])
     rotate([90,0,0])
-    #1_8_rod(length=3_4_tee_id + 0.2);
+    #1_8_rod(length=TeeInnerDiameter(receiverTee) + 0.2);
   }
 }
 

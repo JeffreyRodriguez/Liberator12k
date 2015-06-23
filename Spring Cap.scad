@@ -17,16 +17,16 @@ module SpringCartridge() {
   spring_cap();
   
   // Spring
-  linear_extrude(height=3, twist=360 * 12)
+  %linear_extrude(height=3, twist=360 * 12)
   translate([.75/2 - 1/16,0,0])
-  %circle(r=1/32);
+  circle(r=1/32);
   
   translate([0,0,3])
   mirror([0,0,1])
   spring_cap();
 }
 
-SpringCartridge();
+!SpringCartridge();
 
 !scale([25.4, 25.4, 25.4]) {
   spring_cap();

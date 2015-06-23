@@ -3,9 +3,9 @@ include <Components.scad>;
 use <Cylinder.scad>;
 use <AR15 Grip Mount.scad>;
 
-module forend(spindleRod=RodOneQuarterInch, actuatorRod=RodOneEighthInch, gasSealingPipe=PipeOneInch) {
+module forend(spindleRod=RodOneQuarterInch, actuatorRod=RodOneEighthInch, gasSealingPipe=PipeOneInch, forend_extension = 1/2) {
   forend_extra = 0.4;
-  
+
   echo("Forend Height", forend_length + forend_extension + revolver_cylinder_height + forend_extra);
 
   pipe_diameter    = lookup(PipeOuterDiameter, gasSealingPipe);
@@ -73,9 +73,9 @@ scale([25.4,25.4,25.4]) {
   *revolver_cylinder();
 
   // Gas Sealing Pipe
-  %1_pipe(length=forend_length + forend_extension);
+  %Pipe(PipeOneInch, length=forend_length + forend_extension);
 
   // Barrel
   translate([0,0,-barrel_length + forend_length])
-  *%3_4_pipe(length=barrel_length);
+  *%Pipe(barrelPipe, length=barrel_length);
 }

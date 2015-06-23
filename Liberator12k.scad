@@ -1,8 +1,7 @@
-include <Vitamins/Pipe.scad>;
-include <Vitamins/Angle Stock.scad>;
-
 include <Components.scad>;
-use <TriggerAssembly.scad>;
+use <Vitamins/Pipe.scad>;
+use <Vitamins/Angle Stock.scad>;
+
 use <Cylinder.scad>;
 use <Forend.scad>;
 use <Forend_Single.scad>;
@@ -15,60 +14,59 @@ use <Spring Cap.scad>;
 use <Ammo/Shell Slug.scad>;
 use <New Trigger.scad>;
 
-module Liberator12k_Base() {
+module Liberator12k_Base(receiverTee=TeeThreeQuarterInch) {
 
   tee_housing_reference();
 
   color("Red")
   render()
-  translate([0,-1/8,0])
+  translate([-1/4,-1/8,-1/16])
   rotate([0,90,90])
   new_trigger();
 
-  translate([0,0,3_4_tee_center_z])
+  color("Gold")
+  translate([0,0,TeeCenter(receiverTee)])
   rotate([0,-90,0])
   striker();
 
-  color("Orange")
-  translate([(3_4_tee_width/2) - 3_4_x_1_8_bushing_depth,0,3_4_tee_center_z])
+  color("HotPink")
+  translate([(TeeWidth(receiverTee)/2) - BushingDepth(breechBushing),0,TeeCenter(receiverTee)])
   rotate([0,-90,0])
   firing_pin_guide();
 
-  color("White")
-  translate([-9.4,0,3_4_tee_center_z])
+  color("Green")
+  translate([-9.4,0,TeeCenter(receiverTee)])
   rotate([0,-90,0])
   stock_spacer(length=3.5);
 
-  color("Green")
-  translate([-4,0,3_4_tee_center_z])
+  translate([-4,0,TeeCenter(receiverTee)])
   rotate([0,-90,0])
   SpringCartridge();
 
-  color("Green")
-  translate([-4-3,0,3_4_tee_center_z])
+  translate([-4-3,0,TeeCenter(receiverTee)])
   rotate([0,-90,0])
   SpringCartridge();
 
   color("CornflowerBlue")
-  translate([-3_4_tee_width/2 -12,0,-1/8])
-  striker_guide_side();
+  translate([-TeeWidth(receiverTee)/2 -12,0,-1/8])
+  StrikerGuide();
 
   // Stock
   union() {
 
     // Tee
-    translate([-12,0,3_4_tee_center_z])
+    translate([-12,0,TeeCenter(receiverTee)])
     rotate([0,-90,0])
-    %3_4_tee();
-    
-    translate([(3_4_tee_width/2) + lookup(BushingHeight, BushingThreeQuarterInch) - lookup(BushingDepth, BushingThreeQuarterInch),0,3_4_tee_center_z])
+    %Tee(receiverTee);
+
+    translate([(TeeWidth(receiverTee)/2) + lookup(BushingHeight, breechBushing) - lookup(BushingDepth, breechBushing),0,TeeCenter(receiverTee)])
     rotate([0,-90,0])
-    %Bushing(spec=BushingThreeQuarterInch);
-  
+    %Bushing(spec=breechBushing);
+
     // Stock Pipe
-    translate([-3_4_tee_width/2,0,3_4_tee_center_z])
+    translate([-TeeWidth(receiverTee)/2,0,TeeCenter(receiverTee)])
     rotate([0,-90,0])
-    %3_4_pipe(length=12);
+    %Pipe(stockPipe, length=12);
   }
 }
 
@@ -77,7 +75,7 @@ module Liberator12k_Single() {
   Liberator12k_Base();
 
   color("Purple")
-  translate([2,0,3_4_tee_center_z])
+  translate([2,0,TeeCenter(receiverTee)])
   rotate([0,-90,180])
   forend_single(length=6);
 }
@@ -85,21 +83,21 @@ module Liberator12k_Single() {
 
 module Liberator12k_Revolver() {
   Liberator12k_Base();
-  
-  translate([3_4_tee_width/2 +3_4_x_1_8_bushing_height - 3_4_x_1_8_bushing_depth+1/8,0,1/8])
+
+  translate([TeeWidth(receiverTee)/2 +BushingHeight(breechBushing) - BushingDepth(breechBushing)+1/8,0,1/8])
   rotate([0,90,0]) {
     revolver_cylinder(debug=true);
 
     color("Red")
     for (i=[0:6-1])
     rotate([0,0,360/6*i])
-    translate([3_4_pipe_od + revolver_cylinder_wall, 0,-1/8])
+    translate([PipeOuterDiameter(PipeThreeQuartersInch) + revolver_cylinder_wall, 0,-1/8])
     ShellSlug();
   }
 
   color("Purple")
   render()
-  translate([6.15+1/8,0,3_4_tee_center_z])
+  translate([6.15+1/8,0,TeeCenter(receiverTee)])
   rotate([0,-90,0])
   forend();
 }

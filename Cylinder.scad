@@ -29,22 +29,21 @@ union() {
         %cylinder(r=revolver_zigzag_pin_diameter/2, h=revolver_zigzag_depth*2);
 
         // Chamber Holes
-        translate([3_4_pipe_od + revolver_cylinder_wall,0,-0.1])
-        Pipe(clearance=PipeClearanceSnug, length=revolver_cylinder_height + 0.2);
+        translate([PipeOuterDiameter(PipeThreeQuartersInch) + revolver_cylinder_wall,0,-0.1])
+        Pipe(pipe=chamber, clearance=PipeClearanceSnug, length=revolver_cylinder_height + 0.2);
 
         // Chamber Mocks
         if (debug)
         translate([
-          3_4_pipe_od + revolver_cylinder_wall,
+          PipeOuterDiameter(PipeThreeQuartersInch) + revolver_cylinder_wall,
           0,
           0])//-chamber_length/2 + revolver_cylinder_height/2])
-        %Pipe(clearance=PipeClearanceSnug, length=chamber_length);
-        *3_4_pipe(length=chamber_length);
+        *%Pipe(clearance=PipeClearanceSnug, length=chamber_length);
 
         // Flutes
         rotate([0,0,360/12])
         translate([(revolver_cylinder_od/2) + revolver_cylinder_wall,0,0])
-        *sphere(r=3_4_pipe_od/2, $fn=20);
+        *sphere(r=PipeOuterRadius(PipeThreeQuartersInch), $fn=20);
 
         // Zig (push)
         render()
@@ -130,7 +129,7 @@ union() {
 
     // Gas Sealing Pipe
     translate([revolver_center_offset,0,revolver_cylinder_height])
-    *%1_pipe(length=1);
+    *%Pipe(PipeOneInch, length=1);
   }
 
 }

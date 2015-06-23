@@ -11,10 +11,10 @@ overall_height = column_height + base_thickness;
 module peg(column_height=column_height) {
   union() {
     translate([0,0,base_thickness])
-    cylinder(r=3_4_tee_id/2, h=column_height);
+    cylinder(r=TeeInnerDiameter(receiverTee)/2, h=column_height);
 
-    translate([-3_4_tee_rim_od/2,-3_4_tee_id/2,0])
-    cube([3_4_tee_rim_od,3_4_tee_id,base_thickness]);
+    translate([-TeeRimDiameter(receiverTee)/2,-TeeInnerDiameter(receiverTee)/2,0])
+    cube([TeeRimDiameter(receiverTee),TeeInnerDiameter(receiverTee),base_thickness]);
   }
 }
 
@@ -29,8 +29,8 @@ module peg_slotted_with_offset_holes(offset=0) {
       #1_8_rod(cutter=true, loose=true, length = 3_4_tee_rim_id + 0.2, center=true);
     }
 
-    translate([-3_4_tee_id/2 - 0.01,-1_4_rod_r - 1_4_rod_clearance_loose,-0.1])
-    #cube([3_4_tee_id + 0.02, 1_4_rod_d + 1_4_rod_clearance_loose*2, overall_height + 0.2]);
+    translate([-TeeInnerDiameter(receiverTee)/2 - 0.01,-1_4_rod_r - 1_4_rod_clearance_loose,-0.1])
+    #cube([TeeInnerDiameter(receiverTee) + 0.02, 1_4_rod_d + 1_4_rod_clearance_loose*2, overall_height + 0.2]);
   }
 }
 
