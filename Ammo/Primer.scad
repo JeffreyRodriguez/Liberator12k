@@ -21,6 +21,16 @@ Primer209 = [
   [PrimerFn,            50]
 ];
 
+PrimerDummy = [
+  [PrimerRimDiameter,   0],
+  [PrimerRimHeight,     0],
+  [PrimerHeight,        0],
+  [PrimerMajorDiameter, 0],
+  [PrimerMinorDiameter, 0],
+  [PrimerClearance,     0],
+  [PrimerFn,            0]
+];
+
 
 module Primer(primer=Primer209, extend=0.1) {
   render()

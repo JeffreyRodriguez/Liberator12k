@@ -34,10 +34,7 @@ spindle_collar_height        = 0.27;
 actuator_cylinder_clearance  = 0.1;
 
 // Configurable: Vitamin Selection
-backstrapRod   = RodThreeQuarterInchTubing;
-spindleRod     = RodOneQuarterInch;
-topRailRod     = RodThreeQuarterInchTubing;
-bottomRailRod  = RodOneQuarterInch;
+railRod        = RodOneQuarterInch;
 breechBushing  = BushingThreeQuarterInch;
 barrelPipe     = PipeThreeQuartersInch;
 stockPipe      = PipeThreeQuartersInch;
@@ -70,7 +67,3 @@ chamber_protrusion = (chamber_length - revolver_cylinder_height)/2;
 
 top_slot_height = revolver_zigzag_pin_diameter*2;
 bottom_slot_height = revolver_zigzag_pin_diameter*2 + zigzag_clearance*1.5;
-
-// Calculated: Backstrap position
-backstrap_offset      = TeeRimDiameter(receiverTee)/2 + tee_overlap
-                      + lookup(RodRadius, backstrapRod);

@@ -12,17 +12,17 @@ use <Striker Guide.scad>;
 use <Stock Spacer.scad>;
 use <Spring Cap.scad>;
 use <Ammo/Shell Slug.scad>;
-use <New Trigger.scad>;
+use <Trigger.scad>;
 
 module Liberator12k_Base(receiverTee=TeeThreeQuarterInch) {
 
-  tee_housing_reference();
+  tee_housing_reference(debug=true);
 
   color("Red")
   render()
   translate([-1/4,-1/8,-1/16])
   rotate([0,90,90])
-  new_trigger();
+  trigger();
 
   color("Gold")
   translate([0,0,TeeCenter(receiverTee)])
@@ -41,11 +41,11 @@ module Liberator12k_Base(receiverTee=TeeThreeQuarterInch) {
 
   translate([-4,0,TeeCenter(receiverTee)])
   rotate([0,-90,0])
-  SpringCartridge();
+  SpringCartridge(debug=true);
 
   translate([-4-3,0,TeeCenter(receiverTee)])
   rotate([0,-90,0])
-  SpringCartridge();
+  SpringCartridge(debug=true);
 
   color("CornflowerBlue")
   translate([-TeeWidth(receiverTee)/2 -12,0,-1/8])

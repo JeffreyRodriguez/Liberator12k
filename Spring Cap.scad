@@ -13,14 +13,15 @@ module spring_cap(base_length=0.1, cap_length=0.3, od=3/4, major_id=0.32, minor_
   }
 }
 
-module SpringCartridge() {
+module SpringCartridge(debug=false) {
   spring_cap();
-  
+
   // Spring
-  %linear_extrude(height=3, twist=360 * 12)
+  if (debug)
+  linear_extrude(height=3, twist=360 * 12)
   translate([.75/2 - 1/16,0,0])
   circle(r=1/32);
-  
+
   translate([0,0,3])
   mirror([0,0,1])
   spring_cap();

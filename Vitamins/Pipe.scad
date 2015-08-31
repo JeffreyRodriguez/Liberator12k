@@ -17,6 +17,7 @@ function PipeInnerDiameter(pipe, clearance) = lookup(PipeInnerDiameter, pipe) + 
 function PipeOuterRadius(pipe, clearance)   = PipeOuterDiameter(pipe, clearance)/2;
 function PipeInnerRadius(pipe, clearance)   = PipeInnerDiameter(pipe, clearance)/2;
 function PipeWall(pipe)                     = PipeOuterRadius(pipe) - PipeInnerRadius(pipe);
+function PipeFn(pipe)                       = lookup(PipeFn, pipe);
 
 module Pipe(pipe, length = 1, clearance=undef) {
   cylinder(r=PipeOuterRadius(pipe, clearance=clearance), h=length, $fn=lookup(PipeFn, pipe));
@@ -38,6 +39,11 @@ PipeOneQuarterInch = [
   [PipeWeightPerUnit,   0] // TODO
 ];
 
+// 12GaugeChamber - 12ga Chamber tolerances are much pickier than ERW pipe
+12GaugeChamber = [
+  [PipeInnerDiameter,   0.78],
+  [PipeFn,              30]
+];
 
 // 3/4" Pipe
 PipeThreeQuartersInch = [
@@ -49,7 +55,7 @@ PipeThreeQuartersInch = [
   [PipeClearanceSnug,   0.005],
   [PipeClearanceLoose,  0.027],
   [PipeFn,              30],
-  [PipeWeightPerUnit,   0] // TODO
+  [PipeWeightPerUnit,   40]
 ];
 
 // 1" Pipe
@@ -77,14 +83,14 @@ TeeInfillSphere  = 7; // Diameter of the infill sphere, cuts out the casting inf
 TeeInfillOffset  = 8; // Offset for the infill sphere from center
 
 TeeThreeQuarterInch = [
-  [TeeOuterDiameter, 1.38],
+  [TeeOuterDiameter, 1.40],
   [TeeWidth,         2.64],
-  [TeeHeight,        2.01],
+  [TeeHeight,        2.07],
   [TeeInnerDiameter, 0.88],
-  [TeeRimDiameter,   1.53],
+  [TeeRimDiameter,   1.54],
   [TeeRimWidth,      0.31],
-  [TeeInfillSphere,  0.25],
-  [TeeInfillOffset,  0.38]
+  [TeeInfillSphere,  0.10],
+  [TeeInfillOffset,  0.41]
 ];
 
 function TeeOuterDiameter(tee) = lookup(TeeOuterDiameter, tee);
@@ -104,37 +110,38 @@ module Tee(tee, $fn=40) {
      // Top Body
      rotate([0,-90,0])
      translate([TeeHeight(tee) - (TeeOuterDiameter(tee)/2),0,0])
-     cylinder(r=TeeOuterRadius(tee), h=TeeWidth(tee) * 0.99, center=true);
+     cylinder(r=TeeOuterRadius(tee), h=TeeWidth(tee) * 0.99, center=true, $fn=36);
 
      // Bottom Body
      translate([0,0,TeeCenter(tee) * 0.01])
-     cylinder(r=TeeOuterRadius(tee), h=TeeCenter(tee) * 0.98);
+     cylinder(r=TeeOuterRadius(tee), h=TeeCenter(tee) * 0.98, $fn=36);
 
      // Bottom Rim
-     cylinder(r=TeeRimRadius(tee), h=TeeRimWidth(tee));
-     
-    
+     cylinder(r=TeeRimRadius(tee), h=TeeRimWidth(tee), $fn=36);
+
+
     // Rims
     for (i = [1, -1]) {
-      
+
       // Rim
       translate([i*TeeWidth(tee)/2,0,TeeCenter(tee)])
       rotate([0,i*-90,0]) {
-      cylinder(r=TeeRimRadius(tee), h=TeeRimWidth(tee));
-      
+      cylinder(r=TeeRimRadius(tee), h=TeeRimWidth(tee), $fn=36);
+
       // Casting Infill
       translate([0,0,TeeRimWidth(tee)])
       cylinder(r1=TeeRimRadius(tee),
                r2=TeeOuterRadius(tee),
-                h=TeeRimWidth(tee)*1/4);
+                h=TeeRimWidth(tee)*1/4,
+                $fn=36);
       }
     }
-    
+
     // Tee Body Casting Infill
     // TODO: Tweak this? Could be better, could be worse.
     intersection() {
       translate([0,0,TeeCenter(tee) + lookup(TeeInfillSphere, tee)])
-      sphere(r=TeeRimRadius(tee) + lookup(TeeInfillOffset, tee));
+      sphere(r=TeeRimRadius(tee) + lookup(TeeInfillOffset, tee), $fn=36);
 
       translate([-TeeRimRadius(tee),-TeeOuterRadius(tee),0])
       cube([TeeRimDiameter(tee),TeeOuterDiameter(tee),TeeCenter(tee)]);
@@ -142,10 +149,10 @@ module Tee(tee, $fn=40) {
    }
 };
 
-Tee(TeeThreeQuarterInch);
+//Tee(TeeThreeQuarterInch);
 
-module TeeRim(tee=TeeThreeQuarterInch, heightMultiplier=1) {
-  cylinder(r=TeeRimRadius(tee), h=TeeRimWidth(tee) * heightMultiplier);
+module TeeRim(tee=TeeThreeQuarterInch, height=1, clearance=0) {
+  cylinder(r=TeeRimRadius(tee) + clearance, h=height, $fn=36);
 }
 
 // Fittings: Bushings

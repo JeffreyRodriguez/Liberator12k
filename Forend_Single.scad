@@ -4,13 +4,10 @@ include <Components.scad>;
 use     <Forend Rail.scad>;
 
 module forend_single(wall=3/16, length=2, $fn=50,
-                     receiverTee=receiverTee, barrelPipe=barrelPipe,
-                     spindle=spindleRod) {
+                     receiverTee=receiverTee, barrelPipe=barrelPipe) {
 
   pipe_diameter    = lookup(PipeOuterDiameter, barrelPipe);
   pipe_radius      = lookup(PipeOuterDiameter, barrelPipe)/2;
-  spindle_diameter = lookup(RodDiameter, spindleRod);
-  spindle_radius   = lookup(RodDiameter, spindleRod)/2;
 
   difference() {
     union() {
