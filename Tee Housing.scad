@@ -46,12 +46,17 @@ module bottom_tee_housing(receiverTee=receiverTee, rimClearance=0.1,
           translate([-block_length/2,0,-0.5])
           rotate([45,0,0])
           cube([block_length*2,1.8,1.8]);
-
         }
 
         // Locking tab wrap
-        translate([block_length-0.1,-.5,-tee_overlap-1/8])
-        cube([front_block_length+0.27,1,0.628]);
+        difference() {
+          translate([block_length-0.01,-.5,-tee_overlap-1/8])
+          cube([front_block_length+0.3,1,0.628]);
+          
+          // Locking tab hole
+          translate([block_length/2 + TeeWidth(receiverTee)/2 -TeeRimWidth(receiverTee) - 0.01,-.265,-tee_overlap-3/16])
+          cube([front_block_length+0.02,0.53,0.8]);
+        }
       }
 
       // Forend Rods
@@ -60,10 +65,6 @@ module bottom_tee_housing(receiverTee=receiverTee, rimClearance=0.1,
       linear_extrude(height=block_length+0.2)
       ForendRods(angles=[50,-50]);
 
-      // Locking tab
-      translate([TeeWidth(receiverTee)/2 -TeeRimWidth(receiverTee) + 0.001,-.26,-tee_overlap-3/16])
-      cube([front_block_length,0.52,0.8]);
-
       // Tee
       Tee(tee=receiverTee);
 
@@ -71,24 +72,30 @@ module bottom_tee_housing(receiverTee=receiverTee, rimClearance=0.1,
       TeeRim(receiverTee, height=TeeCenter(receiverTee));
 
       // Trigger Pocket
-      translate([0,0,-TeeRimWidth(receiverTee)+1/8])
+     translate([0,0,-TeeRimWidth(receiverTee)+1/8])
       intersection() {
-        translate([-TeeRimRadius(receiverTee),-TeeInnerRadius(receiverTee)-0.005,0])
-        cube([TeeRimDiameter(receiverTee), TeeInnerDiameter(receiverTee) + 0.01, TeeRimWidth(receiverTee)*3]);
+        translate([-TeeRimRadius(receiverTee)+1/8-0.015,-TeeInnerRadius(receiverTee)-0.01,0])
+        cube([TeeRimDiameter(receiverTee), TeeInnerDiameter(receiverTee) + 0.02, TeeRimWidth(receiverTee)*3]);
 
         difference() {
           TeeRim(receiverTee, height=TeeCenter(receiverTee));
           
           // Center Tabs
-          translate([-TeeRimRadius(receiverTee),-0.12,-TeeRimWidth(receiverTee)-0.1])
-          cube([TeeRimDiameter(receiverTee), 0.24, TeeCenter(receiverTee)+0.2]);
+          translate([-TeeRimRadius(receiverTee),-0.127,-TeeRimWidth(receiverTee)-0.1])
+          cube([TeeRimDiameter(receiverTee), 0.254, TeeCenter(receiverTee)+0.2]);
         }
       }
 
       // Trigger Hole
-      translate([-TeeInnerRadius(receiverTee),-(TeeInnerDiameter(receiverTee)/2) -0.005,-TeeRimWidth(receiverTee)-0.1])
-      cube([TeeInnerDiameter(receiverTee), TeeInnerDiameter(receiverTee) + 0.01, TeeRimWidth(receiverTee)+0.2]);
-
+      difference() {
+        translate([-TeeInnerRadius(receiverTee)-1/8,-(TeeInnerDiameter(receiverTee)/2) -0.01,-TeeRimWidth(receiverTee)-0.1])
+        cube([TeeInnerDiameter(receiverTee)+1/8, TeeInnerDiameter(receiverTee) + 0.02, TeeRimWidth(receiverTee)+0.2]);
+                
+        // Center Tabs
+        translate([-TeeInnerRadius(receiverTee)-1/4,-0.127,-TeeRimWidth(receiverTee)-0.1])
+        cube([1/4, 0.254, TeeCenter(receiverTee)+0.2]);
+      }
+      
       // Trigger Pin
       %translate([-TeeInnerDiameter(receiverTee)/2 +3/16,0,-RodRadius(triggerPin)])
       rotate([90,0,0])
@@ -100,7 +107,7 @@ module bottom_tee_housing(receiverTee=receiverTee, rimClearance=0.1,
 
     // Trigger
     if (debug)
-    translate([0,0,0])
+    translate([0,0,-0.0001])
     rotate([0,0,180])
     trigger_insert(debug=debug);
 
@@ -108,7 +115,7 @@ module bottom_tee_housing(receiverTee=receiverTee, rimClearance=0.1,
 
 }
 
-*scale([25.4, 25.4, 25.4])
+*!scale([25.4, 25.4, 25.4])
 //rotate([0,90,0])
 bottom_tee_housing(debug=true);
 
@@ -215,13 +222,18 @@ module back_tee_housing(stockPipe=stockPipe, gripOffset = TeeCenter(receiverTee)
 
 module tee_housing_plater(debug=false) {
   translate([0,3,0])
-  front_tee_housing(debug=debug);
+  *front_tee_housing(debug=debug);
 
-  translate([0,0,TeeRimWidth(receiverTee)])
-  bottom_tee_housing(debug=debug);
+  intersection() {
+    translate([0,0,TeeRimWidth(receiverTee)])
+    bottom_tee_housing(debug=debug);
+    
+    // Timesaver hack
+    *cube([TeeRimDiameter(receiverTee)+0.1,TeeRimDiameter(receiverTee)+0.1,0.9], center=true);
+  }
 
   translate([0,-3,0])
-  back_tee_housing(debug=debug);
+  *back_tee_housing(debug=debug);
 }
 
 

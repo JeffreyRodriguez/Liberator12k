@@ -9,7 +9,7 @@ RodOneEighthInch = [
   [RodRadius, 1/8/2],
   [RodClearanceSnug, 0.02],
   [RodClearanceLoose, 0.03],
-  [RodFn, 7]
+  [RodFn, 8]
 ];
 
 RodOneQuarterInch = [
@@ -17,7 +17,7 @@ RodOneQuarterInch = [
   [RodRadius,         1/4/2],
   [RodClearanceSnug,  0.027],
   [RodClearanceLoose, 0.035],
-  [RodFn,             6]
+  [RodFn,             8]
 ];
 
 RodThreeQuarterInchTubing = [
