@@ -34,9 +34,9 @@ spindle_collar_height        = 0.27;
 actuator_cylinder_clearance  = 0.1;
 
 // Configurable: Vitamin Selection
-railRod        = RodOneQuarterInch;
+railRod        = RodFiveSixteenthInch;
 breechBushing  = BushingThreeQuarterInch;
-barrelPipe     = PipeThreeQuartersInch;
+barrelPipe     = TubingOnePointOneTwoFive;
 stockPipe      = PipeThreeQuartersInch;
 receiverTee    = TeeThreeQuarterInch;
 gasSealingPipe = PipeOneInch;

@@ -20,6 +20,14 @@ RodOneQuarterInch = [
   [RodFn,             8]
 ];
 
+RodFiveSixteenthInch = [
+  [RodDiameter,       5/16],
+  [RodRadius,         5/16/2],
+  [RodClearanceSnug,  0.025],
+  [RodClearanceLoose, 0.025],
+  [RodFn,             10]
+];
+
 RodThreeQuarterInchTubing = [
   [RodDiameter,       0.758],
   [RodRadius,         0.758/2],

@@ -189,9 +189,9 @@ module trigger_insert(pin=RodOneEighthInch,
               3/8]);
 
         // Taper the side
-        translate([0.5,0.5,3/16])
+        translate([0.5,TeeInnerRadius(receiverTee),4/16])
         rotate([45,0,0])
-        cube([1,1,1], center=true);
+        cube([1.2,1,1], center=true);
 
 
         // Taper front and back
@@ -208,15 +208,17 @@ module trigger_insert(pin=RodOneEighthInch,
         translate([-TeeRimRadius(receiverTee)-1/8,-TeeInnerRadius(receiverTee),0])
         cube([TeeRimDiameter(receiverTee), TeeInnerDiameter(receiverTee), 3/16]);
 
+        // Rim-wide
         TeeRim(receiverTee, height=1/4, clearance=-0.015);
-
+        
+        // Taper the rim
         translate([0,0,-0.001])
         cylinder(r1=TeeRimRadius(receiverTee)*0.9, r2=TeeRimRadius(receiverTee)*1.5, h=1/4);
 
         // Taper to help insertion
-        translate([-TeeRimRadius(receiverTee),TeeInnerRadius(receiverTee) - 5/16,-1/4])
+        translate([-TeeRimRadius(receiverTee),0,-0.4])
         rotate([45,0,0])
-        cube([TeeRimDiameter(receiverTee), 1, 1]);
+        cube([TeeRimDiameter(receiverTee), 2, 2]);
       }
     }
 
@@ -243,13 +245,32 @@ module trigger_insert(pin=RodOneEighthInch,
   }
 }
 
-module trigger_reference() {
-  trigger_insert(debug=true);
+
+*!scale([25.4, 25.4, 25.4])
+trigger_insert(debug=true);
+
+module trigger_insert_2d(receiverTee=TeeThreeQuarterInch, slot_width=0.254,
+                         sideClearance=0, rimClearance=-0.01, $fn=60) {
+  intersection() {
+    translate([-TeeRimRadius(receiverTee),-TeeInnerRadius(receiverTee)])
+    square([TeeRimDiameter(receiverTee) - 1/8, TeeInnerDiameter(receiverTee)]);
+    
+    difference() {
+      circle(r=TeeRimRadius(receiverTee) + rimClearance, $fn=$fn);
+
+      // Center Tabs
+      for (i = [0,180])
+      rotate([0,0,i])
+      translate([TeeInnerRadius(receiverTee),-slot_width/2])
+      square([TeeRimRadius(receiverTee), slot_width]);
+    }
+
+  }
 }
 
+*!scale([25.4, 25.4, 25.4])
+trigger_insert_2d();
 
-*scale([25.4, 25.4, 25.4])
-trigger_reference();
 
 module trigger_plater() {
   scale([25.4, 25.4, 25.4]) {

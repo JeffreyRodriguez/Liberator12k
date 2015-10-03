@@ -39,6 +39,6 @@ module ForendRail(receiverTee=receiverTee, barrelPipe=barrelPipe,
   }
 }
 
-render(convexity=2)
+*render(convexity=2)
 linear_extrude(height=1)
 ForendRail();

@@ -6,21 +6,27 @@ PipeOuterDiameter   = 2; // Outer Diameter of pipe, largest measurement if asymm
 PipeTaperedDiameter = 3; // Threads are tapered, smallest measurement if asymmetrical
 PipeThreadLength    = 4; // Total length of the pipe thread
 PipeThreadDepth     = 5; // Depth when fully seated
-PipeClearanceSnug   = 6; // Added to the diameter, should not slip
+PipeClearanceSnug   = 6; // Added to the diameter, should not slip (default)
 PipeClearanceLoose  = 7; // Added to the diameter, should slide freely
 PipeFn              = 8; // Number of sides
 PipeWeightPerUnit   = 9;
 
 function PipeClearance(pipe, clearance)     = (clearance != undef) ? lookup(clearance, pipe) : 0;
-function PipeOuterDiameter(pipe, clearance) = lookup(PipeOuterDiameter, pipe) + PipeClearance(clearance);
-function PipeInnerDiameter(pipe, clearance) = lookup(PipeInnerDiameter, pipe) + PipeClearance(clearance);
+function PipeOuterDiameter(pipe, clearance) = lookup(PipeOuterDiameter, pipe) + PipeClearance(pipe, clearance);
+function PipeInnerDiameter(pipe, clearance) = lookup(PipeInnerDiameter, pipe) + PipeClearance(pipe, clearance);
 function PipeOuterRadius(pipe, clearance)   = PipeOuterDiameter(pipe, clearance)/2;
 function PipeInnerRadius(pipe, clearance)   = PipeInnerDiameter(pipe, clearance)/2;
 function PipeWall(pipe)                     = PipeOuterRadius(pipe) - PipeInnerRadius(pipe);
 function PipeFn(pipe)                       = lookup(PipeFn, pipe);
 
-module Pipe(pipe, length = 1, clearance=undef) {
-  cylinder(r=PipeOuterRadius(pipe, clearance=clearance), h=length, $fn=lookup(PipeFn, pipe));
+module Pipe2d(pipe, clearance=PipeClearanceSnug) {
+  echo("PipeOuterRadius,PipeClearance: ", PipeOuterRadius(pipe=pipe, clearance=clearance), clearance);
+  circle(r=PipeOuterRadius(pipe=pipe, clearance=PipeClearanceSnug), $fn=lookup(PipeFn, pipe));
+};
+module Pipe(pipe, length = 1, clearance=PipeClearanceSnug, center=false) {
+  translate([0,0,center ? -length/2 : 0])
+  linear_extrude(height=length)
+  Pipe2d(pipe=pipe, clearance=clearance);
 };
 
 //Pipe(PipeOneInch, clearance=PipeClearanceLoose);
@@ -58,9 +64,22 @@ PipeThreeQuartersInch = [
   [PipeWeightPerUnit,   40]
 ];
 
+// 1.125" DOM Tubing
+TubingOnePointOneTwoFive = [
+  [PipeInnerDiameter,   0.813],
+  [PipeOuterDiameter,   1.125],
+  [PipeTaperedDiameter, 1.018],
+  [PipeThreadLength,    0.9],
+  [PipeThreadDepth,     0.5],
+  [PipeClearanceSnug,   0.020],
+  [PipeClearanceLoose,  0.022],
+  [PipeFn,              30],
+  [PipeWeightPerUnit,   42]
+];
+
 // 1" Pipe
 PipeOneInch = [
-  [PipeInnerDiameter,   1.06],
+  [PipeInnerDiameter,   1.055],
   [PipeOuterDiameter,   1.315],
   [PipeTaperedDiameter, 1.285],
   [PipeThreadLength,    0.982],
@@ -103,6 +122,12 @@ function TeeRimDiameter(tee)   = lookup(TeeRimDiameter, tee);
 function TeeRimRadius(tee)     = lookup(TeeRimDiameter, tee)/2;
 function TeeRimWidth(tee)      = lookup(TeeRimWidth, tee);
 function TeeCenter(tee)        = lookup(TeeHeight, tee) - TeeOuterRadius(tee);
+
+module TeeTetris_Side(tee) {
+  rotate([0,90,0])
+  translate([TeeWidth(tee)/2,0,-TeeCenter(tee)])
+  Tee(tee=tee);
+}
 
 module Tee(tee, $fn=40) {
    union() {
@@ -166,14 +191,18 @@ BushingCapHeight = 5;
 // 3/4" Bushing
 BushingThreeQuarterInch = [
   [BushingHeight,    0.955],
-  [BushingDiameter,  1],
-  [BushingDepth,     0.5],
-  [BushingCapWidth,  1.225],
+  [BushingDiameter,  1.05],
+  [BushingDepth,     0.49],
+  [BushingCapWidth,  1.227],
   [BushingCapHeight, 0.215]
 ];
 
-function BushingHeight(bushing) = lookup(BushingHeight, bushing);
-function BushingDepth(bushing) = lookup(BushingDepth, bushing);
+function BushingHeight(bushing)    = lookup(BushingHeight, bushing);
+function BushingDiameter(bushing)  = lookup(BushingDiameter, bushing);
+function BushingRadius(bushing)    = lookup(BushingDiameter, bushing)/2;
+function BushingDepth(bushing)     = lookup(BushingDepth, bushing);
+function BushingCapWidth(bushing)  = lookup(BushingCapWidth, bushing);
+function BushingCapHeight(bushing) = lookup(BushingCapHeight, bushing);
 
 module Bushing(spec=BushingThreeQuarterInch) {
 
@@ -186,9 +215,9 @@ module Bushing(spec=BushingThreeQuarterInch) {
 
     // Body
     translate([0,0,capHeight/2])
-    cylinder(r=od/2, h=height - (capHeight/2), $fn=20);
+    cylinder(r=BushingRadius(spec), h=height - (BushingCapHeight(spec)/2), $fn=20);
 
     // Head
-    cylinder(r=capWidth/2, h=capHeight, $fn=6);
+    cylinder(r=BushingCapWidth(spec)/2, h=BushingCapHeight(spec), $fn=6);
   }
 }

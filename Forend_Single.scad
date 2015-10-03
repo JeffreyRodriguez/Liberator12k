@@ -3,26 +3,38 @@ include <Vitamins/Angle Stock.scad>;
 include <Components.scad>;
 use     <Forend Rail.scad>;
 
-module forend_single(wall=3/16, length=2, $fn=50,
+module forend_single(wall=3/16, length=1, $fn=50,
                      receiverTee=receiverTee, barrelPipe=barrelPipe) {
 
   pipe_diameter    = lookup(PipeOuterDiameter, barrelPipe);
   pipe_radius      = lookup(PipeOuterDiameter, barrelPipe)/2;
 
+  render(convexity=2)
   difference() {
     union() {
-      render(convexity=2)
       linear_extrude(height=length)
-      ForendRail(wall=wall);
-
-      // Barrel Sleeve
-      cylinder(r=pipe_radius + wall, h=length);
-      cylinder(r=lookup(TeeRimDiameter, receiverTee)/2 + 4/32, h=length);
+      hull() {
+        ForendRail(wall=wall);
+        
+        circle(r=TeeRimRadius(receiverTee)+wall);
+      }
+      
+      *intersection() {
+        translate([0,0,length/2])
+        sphere(r=TeeRimRadius(receiverTee) + tee_overlap*2);
+        
+        translate([-2,-2,0])
+        #cube([4,4,length]);
+      }
     }
 
-    // Barrel/Gas-Sealing Pipe Hole
-    translate([0,0,-0.1])
-    Pipe(pipe=barrelPipe, clearance=PipeClearanceSnug, length=length + 0.2);
+    linear_extrude(height=length) {
+      // Barrel/Gas-Sealing Pipe Hole
+      translate([0,0,-0.1])
+      Pipe2d(pipe=barrelPipe, clearance=PipeClearanceSnug);
+      
+      ForendRods(clearance=RodClearanceLoose);
+    }
   }
 }
 

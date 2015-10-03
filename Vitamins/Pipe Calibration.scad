@@ -17,26 +17,33 @@ module TeeCalibration(tee, wall=1/8) {
 }
 
 
-module PipeOuterCalibration(pipe, wall=1/8, height=1/2) {
+module PipeOuterCalibration(pipe, clearance, wall=3/32, height=1/2) {
   difference() {
     cylinder(r=PipeOuterRadius(pipe) + wall, h=height);
-
-    cylinder(r=PipeOuterRadius(pipe), h=height + 1, center=true);
+    #Pipe(pipe=pipe, length=height*3, clearance=clearance, center=true);
   }
 }
 
-module PipeInnerCalibration(pipe, wall=1/8, height=1/2) {
+module PipeInnerCalibration(pipe, clearance, wall=3/32, height=1/2) {
   difference() {
     cylinder(r=PipeInnerRadius(pipe) + wall, h=height);
 
-    cylinder(r=PipeInnerRadius(pipe), h=height + 1, center=true);
+    cylinder(r=PipeInnerRadius(pipe, clearance), h=height + 1, center=true);
   }
 }
 
+module PipeCalibration(pipe=undef, clearance=PipeClearanceSnug, height=1/4, wall=3/32, inner=true, outer=true) {
+  
+  if (outer)
+  PipeOuterCalibration(pipe=pipe, clearance=clearance, height=height, wall=wall);
+  
+  if (inner)
+  PipeInnerCalibration(pipe=pipe, clearance=clearance, height=height, wall=wall);
+}
 scale([25.4,25.4,25.4]) {
-  TeeCalibration(TeeThreeQuarterInch);
-  PipeOuterCalibration(PipeThreeQuartersInch);
-  PipeInnerCalibration(PipeThreeQuartersInch);
+  PipeCalibration(pipe=TubingOnePointOneTwoFive, clearance=PipeClearanceLoose,
+                  height=1/2, wall=1/4,
+                  inner=false, outer=true);
 }
 
 

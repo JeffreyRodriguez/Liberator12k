@@ -26,6 +26,7 @@ module ShellBase(chamber=12GaugeChamber, primer=Primer209,
         color("Blue")
         cylinder(r=rimDiameter/2, h=rimHeight/2);
 
+        // Rim Taper
         translate([0,0,rimHeight/2])
         cylinder(r1=rimDiameter/2, r2=ShellRadius(chamber), h=rimHeight/2);
       }
