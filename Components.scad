@@ -37,7 +37,7 @@ actuator_cylinder_clearance  = 0.1;
 railRod        = RodFiveSixteenthInch;
 breechBushing  = BushingThreeQuarterInch;
 barrelPipe     = TubingOnePointOneTwoFive;
-stockPipe      = PipeThreeQuartersInch;
+stockPipe      = PipeThreeQuarterInch;
 receiverTee    = TeeThreeQuarterInch;
 gasSealingPipe = PipeOneInch;
 
@@ -55,10 +55,10 @@ grip_height                = 1.27;
 
 // Calculated: Revolver Cylinder
 zigzag_width = revolver_zigzag_pin_diameter + zigzag_clearance*2;
-revolver_cylinder_radius = (PipeOuterDiameter(PipeThreeQuartersInch)*1.5)+revolver_cylinder_wall + revolver_cylinder_outer_wall + revolver_zigzag_depth;
+revolver_cylinder_radius = (PipeOuterDiameter(PipeThreeQuarterInch)*1.5)+revolver_cylinder_wall + revolver_cylinder_outer_wall + revolver_zigzag_depth;
 revolver_cylinder_od   = revolver_cylinder_radius*2;
 cylinder_circumference = 3.14 * pow(revolver_cylinder_od/2, 2);
-revolver_center_offset = PipeOuterDiameter(PipeThreeQuartersInch) + revolver_cylinder_wall;
+revolver_center_offset = PipeOuterDiameter(PipeThreeQuarterInch) + revolver_cylinder_wall;
 rotation_angle = 360/revolver_shots;
 rotation_arc = cylinder_circumference/revolver_shots;
 zigzag_height = rotation_arc/2 + revolver_zigzag_pin_diameter*2;

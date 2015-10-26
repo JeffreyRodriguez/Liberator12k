@@ -13,7 +13,7 @@ overall_height = column_height + base_thickness;
 module peg_pivot(voffset=1/4, hoffset=0, pivotRod=RodOneEighthInch, pivotRodClearance=RodClearanceSnug) {
   difference() {
     children();
-  
+
     translate([hoffset,0,voffset])
     rotate([90,0,0])
     Rod(rod=pivotRod, clearance=pivotRodClearance, center=true);
@@ -23,12 +23,12 @@ module peg_pivot(voffset=1/4, hoffset=0, pivotRod=RodOneEighthInch, pivotRodClea
 module peg_slot(length=TeeInnerDiameter(receiverTee) + 0.02, width=0.255, height=3) {
   difference() {
     children();
-    
+
     cube([length, width, height], center=true);
   }
 }
 
-module peg(column_height=0.95, tee=receiverTee) {
+module peg(column_height=0.95, tee=Spec_TeeThreeQuarterInch) {
   union() {
     translate([0,0,base_thickness])
     cylinder(r=TeeInnerDiameter(tee)/2, h=column_height);
@@ -36,7 +36,7 @@ module peg(column_height=0.95, tee=receiverTee) {
     intersection() {
       translate([-TeeRimDiameter(tee)/2,-TeeInnerDiameter(tee)/2,0])
       cube([TeeRimDiameter(tee),TeeInnerDiameter(tee),base_thickness]);
-      
+
       cylinder(r=TeeRimRadius(tee) * 0.99, h=2);
     }
   }

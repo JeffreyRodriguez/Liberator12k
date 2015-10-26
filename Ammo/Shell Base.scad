@@ -1,9 +1,9 @@
 include <../Vitamins/Pipe.scad>;
 include <Primer.scad>;
 
-function ShellRadius(chamber) = PipeInnerRadius(chamber, lookup(PipeClearanceSnug, chamber));
+function ShellRadius(chamber) = PipeInnerRadius(chamber);
 
-module ShellBase(chamber=12GaugeChamber, primer=Primer209,
+module ShellBase(chamber=12GaugeChamber, primer=Primer22PAT,
                  chargeDiameter=0.6, chargeHeight=3/8, wadHeight=0.5,
                  rimDiameter=0.87, rimHeight=0.07,
                  dummy=false, $fn=50) {
@@ -50,4 +50,7 @@ module ShellBase(chamber=12GaugeChamber, primer=Primer209,
   }
 }
 
-*scale([25.4, 25.4, 25.4]) ShellBase() {%cylinder(r=ShellRadius(PipeThreeQuartersInch));};
+scale([25.4, 25.4, 25.4])
+ShellBase() {
+  %cylinder(r=ShellRadius(PipeThreeQuarterInch));
+};

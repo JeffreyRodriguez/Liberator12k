@@ -30,7 +30,18 @@ Primer209 = [
   [PrimerMajorDiameter, 0.248],
   [PrimerMinorDiameter, 0.242],
   [PrimerClearance,     0.021],
-  [PrimerFn,            50]
+  [PrimerFn,            12]
+];
+
+// .22 cal "Powder Actuated Tool" aka. Ramset
+Primer22PAT = [
+  [PrimerRimDiameter,   0.309],
+  [PrimerRimHeight,     0.039],
+  [PrimerHeight,        0.28],
+  [PrimerMajorDiameter, 0.226],
+  [PrimerMinorDiameter, 0.226],
+  [PrimerClearance,     0.021],
+  [PrimerFn,            12]
 ];
 
 // 12 gram CO2 cartridge mouth and neck
@@ -41,7 +52,7 @@ Primer12gCO2 = [
   [PrimerMajorDiameter, 0.315],
   [PrimerMinorDiameter, 0.76],
   [PrimerClearance,     0],
-  [PrimerFn,            24]
+  [PrimerFn,            12]
 ];
 
 function PrimerOAHeight(primer=undef) = lookup(PrimerHeight, primer) + lookup(PrimerRimHeight, primer);

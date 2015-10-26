@@ -3,7 +3,7 @@ include <../Vitamins/Rod.scad>;
 use <../Forend Rail.scad>;
 include <../Components.scad>;
 
-module trunnion(receiverTee=TeeThreeQuarterInch, barrelPipe=PipeThreeQuartersInch,
+module trunnion(receiverTee=TeeThreeQuarterInch, barrelPipe=PipeThreeQuarterInch,
                 breechBushing=BushingThreeQuarterInch, trunnionPipe=PipeOneInch,
                 latchRod=RodOneQuarterInch,
                 trunnionLength=1/2, wall=tee_overlap/2, $fn=40) {

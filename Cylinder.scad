@@ -2,7 +2,7 @@ use <Vitamins/Rod.scad>;
 use <Vitamins/Pipe.scad>;
 include <Components.scad>;
 
-module revolver_cylinder(chamber=PipeThreeQuartersInch, spindleRod=RodOneQuarterInch, debug=false, $fn=30) {
+module revolver_cylinder(chamber=PipeThreeQuarterInch, spindleRod=RodOneQuarterInch, debug=false, $fn=30) {
 
   echo("Cylinder OD:", revolver_cylinder_od);
   echo("Cylinder Circ:", cylinder_circumference);
@@ -29,13 +29,13 @@ union() {
         %cylinder(r=revolver_zigzag_pin_diameter/2, h=revolver_zigzag_depth*2);
 
         // Chamber Holes
-        translate([PipeOuterDiameter(PipeThreeQuartersInch) + revolver_cylinder_wall,0,-0.1])
+        translate([PipeOuterDiameter(PipeThreeQuarterInch) + revolver_cylinder_wall,0,-0.1])
         Pipe(pipe=chamber, clearance=PipeClearanceSnug, length=revolver_cylinder_height + 0.2);
 
         // Chamber Mocks
         if (debug)
         translate([
-          PipeOuterDiameter(PipeThreeQuartersInch) + revolver_cylinder_wall,
+          PipeOuterDiameter(PipeThreeQuarterInch) + revolver_cylinder_wall,
           0,
           0])//-chamber_length/2 + revolver_cylinder_height/2])
         *%Pipe(clearance=PipeClearanceSnug, length=chamber_length);
@@ -43,7 +43,7 @@ union() {
         // Flutes
         rotate([0,0,360/12])
         translate([(revolver_cylinder_od/2) + revolver_cylinder_wall,0,0])
-        *sphere(r=PipeOuterRadius(PipeThreeQuartersInch), $fn=20);
+        *sphere(r=PipeOuterRadius(PipeThreeQuarterInch), $fn=20);
 
         // Zig (push)
         render()

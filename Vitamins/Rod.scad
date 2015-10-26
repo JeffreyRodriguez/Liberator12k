@@ -4,6 +4,9 @@ RodClearanceSnug  = 3;
 RodClearanceLoose = 4;
 RodFn             = 5;
 
+function RodClearanceSnug()  = RodClearanceSnug;
+function RodClearanceLoose() = RodClearanceLoose;
+
 RodOneEighthInch = [
   [RodDiameter, 1/8],
   [RodRadius, 1/8/2],
@@ -11,6 +14,7 @@ RodOneEighthInch = [
   [RodClearanceLoose, 0.03],
   [RodFn, 8]
 ];
+function Spec_RodOneEighthInch() = RodOneEighthInch;
 
 RodOneQuarterInch = [
   [RodDiameter,       1/4],
@@ -19,6 +23,7 @@ RodOneQuarterInch = [
   [RodClearanceLoose, 0.035],
   [RodFn,             8]
 ];
+function Spec_RodOneQuarterInch() = RodOneQuarterInch;
 
 RodFiveSixteenthInch = [
   [RodDiameter,       5/16],
@@ -27,6 +32,7 @@ RodFiveSixteenthInch = [
   [RodClearanceLoose, 0.025],
   [RodFn,             10]
 ];
+function Spec_RodFiveSixteenthInch() = RodFiveSixteenthInch;
 
 RodThreeQuarterInchTubing = [
   [RodDiameter,       0.758],
@@ -35,6 +41,7 @@ RodThreeQuarterInchTubing = [
   [RodClearanceLoose, 0.029],
   [RodFn,             30]
 ];
+function Spec_RodThreeQuarterInchTubing() = RodThreeQuarterInchTubing;
 
 /**
  * Lookup the diameter of a rod.

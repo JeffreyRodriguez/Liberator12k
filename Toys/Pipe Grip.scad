@@ -1,4 +1,4 @@
-include <AR15 Grip Mount.scad>;
+include <../AR15 Grip Mount.scad>;
 
 ar15_grip_POSITION_FRONT   = 0; // Default
 ar15_grip_POSITION_REAR    = 1;
@@ -105,8 +105,6 @@ module ar15_grip(mount_height=1, mount_length=1, position=0, top_extension = 0, 
 
 
 // Test Print
-
-// Test Print
 scale([25.4,25.4,25.4]) {
   intersection() {
     rotate([0,90,0])
@@ -114,22 +112,22 @@ scale([25.4,25.4,25.4]) {
       union() {
         ar15_grip(mount_height = 1.1, mount_length = 0, top_extension=1/4, extension=1/4);
 
-        translate([-slot_length-1/4,0,1 + PipeOuterRadius(PipeThreeQuartersInch)])
+        translate([-slot_length-1/4,0,1 + PipeOuterRadius(PipeThreeQuarterInch)])
         rotate([0,90,0])
-        cylinder(r=PipeOuterRadius(PipeThreeQuartersInch) + tee_overlap, h=slot_length + 1/2);
+        cylinder(r=PipeOuterRadius(PipeThreeQuarterInch) + tee_overlap, h=slot_length + 1/2);
       }
 
       translate([-.55,0,.5])
       rotate([0,-90,0])
       #cylinder(r=.25, h=slot_length+1, $fn=20);
 
-      translate([-slot_length-1/4,0,1 + PipeOuterRadius(PipeThreeQuartersInch)])
+      translate([-slot_length-1/4,0,1 + PipeOuterRadius(PipeThreeQuarterInch)])
       rotate([0,90,0]) {
         translate([0,0,-0.1])
-        Pipe(pipe=PipeThreeQuartersInch, clearance=PipeClearanceSnug, length=slot_length+1/2+0.2);
+        Pipe(pipe=PipeThreeQuarterInch, clearance=PipeClearanceSnug, length=slot_length+1/2+0.2);
 
         translate([0,0,slot_length])
-        *#cylinder(r=PipeOuterRadius(PipeThreeQuartersInch,PipeClearanceSnug) + tee_overlap + 0.05, h=1);
+        *#cylinder(r=PipeOuterRadius(PipeThreeQuarterInch,PipeClearanceSnug) + tee_overlap + 0.05, h=1);
       }
 
       // Mounting Hole Cutter (From Tee Housing Rear)

@@ -1,40 +1,29 @@
-include <Vitamins/Pipe.scad>;
-include <Vitamins/Angle Stock.scad>;
-include <Components.scad>;
-use     <Forend Rail.scad>;
+use <Vitamins/Pipe.scad>;
+use <Vitamins/Rod.scad>;
+use <Forend Rail.scad>;
 
-module forend_single(wall=3/16, length=1, $fn=50,
-                     receiverTee=receiverTee, barrelPipe=barrelPipe) {
-
-  pipe_diameter    = lookup(PipeOuterDiameter, barrelPipe);
-  pipe_radius      = lookup(PipeOuterDiameter, barrelPipe)/2;
-
+module forend_single(receiver=Spec_TeeThreeQuarterInch(),
+                     barrel=Spec_PipeThreeQuarterInch(),
+                     rod=Spec_RodFiveSixteenthInch(),
+                     wall=3/16, length=1, $fn=50) {
   render(convexity=2)
+  linear_extrude(height=length)
   difference() {
     union() {
-      linear_extrude(height=length)
       hull() {
-        ForendRail(wall=wall);
+        ForendRail(receiver, barrel, rod, wall);
         
-        circle(r=TeeRimRadius(receiverTee)+wall);
-      }
-      
-      *intersection() {
-        translate([0,0,length/2])
-        sphere(r=TeeRimRadius(receiverTee) + tee_overlap*2);
+        // Add some more material to the center for ergo and strength
+        circle(r=TeeRimRadius(receiver)+wall);
         
-        translate([-2,-2,0])
-        #cube([4,4,length]);
       }
     }
-
-    linear_extrude(height=length) {
-      // Barrel/Gas-Sealing Pipe Hole
-      translate([0,0,-0.1])
-      Pipe2d(pipe=barrelPipe, clearance=PipeClearanceSnug);
-      
-      ForendRods(clearance=RodClearanceLoose);
-    }
+    
+    // Barrel Hole
+    Pipe2d(pipe=barrel, clearance=PipeClearanceSnug());
+    
+    // Forend Rod Holes
+    ForendRods(receiver, rod, wall=wall, clearance=RodClearanceLoose());
   }
 }
 

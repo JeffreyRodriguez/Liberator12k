@@ -1,44 +1,51 @@
-include <Vitamins/Pipe.scad>;
-include <Vitamins/Angle Stock.scad>;
-include <Components.scad>;
+use <Vitamins/Pipe.scad>;
+use <Vitamins/Rod.scad>;
 
-function ForendRailOffset(receiverTee=receiverTee,
-                          teeOverlap=tee_overlap,
-                          railRod=railRod) =
-      (lookup(TeeRimDiameter, receiverTee)/2) + teeOverlap
-     + lookup(RodRadius, railRod);
+FOREND_RAIL_WALL_DEFAULT = 3/16;
+function ForendRailWall() = FOREND_RAIL_WALL_DEFAULT;
+function ForendRodAngles(receiver, rod, wall) = [180, 50, -50];
+function ForendRailOffset(receiver, rod, wall) = TeeRimRadius(receiver) + wall + RodRadius(rod);
 
+module ForendRods(receiver=Spec_TeeThreeQuarterInch(),
+                  rod=Spec_RodFiveSixteenthInch(),
+                  wall=ForendRailWall(),
+                  clearance=RodClearanceSnug(), angles=ForendRodAngles(), rodFnAngle=90) {
 
-module ForendRods(receiverTee=receiverTee, railRod=railRod,
-                  clearance=undef, angles=[180,50,-50], rodFnAngle=90) {
-    for (angle = angles)
-    rotate([0,0,angle])
-    translate([-ForendRailOffset(railRod=railRod), 0])
-    rotate([0,0,-angle+rodFnAngle])
-    Rod2d(rod=railRod, clearance=clearance);
+  // Rods
+  for (angle = angles)
+  rotate([0,0,angle])
+  translate([-ForendRailOffset(receiver, rod, wall), 0])
+  rotate([0,0,-angle+rodFnAngle])
+  Rod2d(rod=rod, clearance=clearance);
+
+  // Debugging aid
+  //%TeeRim(receiver);
+
 }
 
-module ForendRail(receiverTee=receiverTee, barrelPipe=barrelPipe,
-                  railRod=railRod, railClearance=RodClearanceLoose,
-                  wall=tee_overlap,angles=[180,50,-50]) {
+module ForendRail(receiver=Spec_TeeThreeQuarterInch(),
+                  barrel=Spec_PipeThreeQuarterInch(),
+                  rod=Spec_RodFiveSixteenthInch(),
+                  rodHoles=true,
+                  wall=ForendRailWall(),
+                  clearance=RodClearanceLoose(),
+                  angles=ForendRodAngles()) {
 
-  // Debugging reference
-  *%TeeRim(receiverTee);
-
+  // Rail body
   difference() {
     hull()
     union() {
       for (angle = angles)
       rotate([0,0,angle])
-      translate([-ForendRailOffset(railRod=railRod, teeOverlap=tee_overlap), 0])
-      circle(r=RodRadius(railRod) + wall, $fn=24);
-
+      translate([-ForendRailOffset(receiver, rod, wall), 0])
+      circle(r=RodRadius(rod) + wall, $fn=24);
     }
 
-    ForendRods(angles=angles, clearance=railClearance);
+    if (rodHoles)
+    ForendRods(receiver, rod, wall, clearance, angles);
   }
 }
 
-*render(convexity=2)
+render(convexity=2)
 linear_extrude(height=1)
 ForendRail();

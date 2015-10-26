@@ -11,6 +11,10 @@ PipeClearanceLoose  = 7; // Added to the diameter, should slide freely
 PipeFn              = 8; // Number of sides
 PipeWeightPerUnit   = 9;
 
+function PipeClearanceSnug()  = PipeClearanceSnug;
+function PipeClearanceLoose() = PipeClearanceLoose;
+
+
 function PipeClearance(pipe, clearance)     = (clearance != undef) ? lookup(clearance, pipe) : 0;
 function PipeOuterDiameter(pipe, clearance) = lookup(PipeOuterDiameter, pipe) + PipeClearance(pipe, clearance);
 function PipeInnerDiameter(pipe, clearance) = lookup(PipeInnerDiameter, pipe) + PipeClearance(pipe, clearance);
@@ -44,15 +48,17 @@ PipeOneQuarterInch = [
   [PipeFn,              20],
   [PipeWeightPerUnit,   0] // TODO
 ];
+function Spec_PipeOneQuarterInch() = PipeOneQuarterInch;
 
 // 12GaugeChamber - 12ga Chamber tolerances are much pickier than ERW pipe
 12GaugeChamber = [
   [PipeInnerDiameter,   0.78],
   [PipeFn,              30]
 ];
+function Spec_12GaugeChamber() = 12GaugeChamber;
 
 // 3/4" Pipe
-PipeThreeQuartersInch = [
+PipeThreeQuarterInch = [
   [PipeInnerDiameter,   0.81],
   [PipeOuterDiameter,   1.07],
   [PipeTaperedDiameter, 1.018],
@@ -63,6 +69,7 @@ PipeThreeQuartersInch = [
   [PipeFn,              30],
   [PipeWeightPerUnit,   40]
 ];
+function Spec_PipeThreeQuarterInch() = PipeThreeQuarterInch;
 
 // 1.125" DOM Tubing
 TubingOnePointOneTwoFive = [
@@ -76,6 +83,7 @@ TubingOnePointOneTwoFive = [
   [PipeFn,              30],
   [PipeWeightPerUnit,   42]
 ];
+function Spec_TubingOnePointOneTwoFive() = TubingOnePointOneTwoFive;
 
 // 1" Pipe
 PipeOneInch = [
@@ -89,6 +97,7 @@ PipeOneInch = [
   [PipeFn,              30],
   [PipeWeightPerUnit,   0] // TODO
 ];
+function Spec_PipeOneInch() = PipeOneInch;
 
 
 // Fittings: Tee
@@ -102,15 +111,16 @@ TeeInfillSphere  = 7; // Diameter of the infill sphere, cuts out the casting inf
 TeeInfillOffset  = 8; // Offset for the infill sphere from center
 
 TeeThreeQuarterInch = [
-  [TeeOuterDiameter, 1.40],
+  [TeeOuterDiameter, 1.41],
   [TeeWidth,         2.64],
-  [TeeHeight,        2.07],
+  [TeeHeight,        2],
   [TeeInnerDiameter, 0.88],
   [TeeRimDiameter,   1.54],
-  [TeeRimWidth,      0.31],
+  [TeeRimWidth,      0.32],
   [TeeInfillSphere,  0.10],
   [TeeInfillOffset,  0.41]
 ];
+function Spec_TeeThreeQuarterInch() = TeeThreeQuarterInch;
 
 function TeeOuterDiameter(tee) = lookup(TeeOuterDiameter, tee);
 function TeeOuterRadius(tee)   = lookup(TeeOuterDiameter, tee)/2;
@@ -130,6 +140,7 @@ module TeeTetris_Side(tee) {
 }
 
 module Tee(tee, $fn=40) {
+   render()
    union() {
 
      // Top Body
@@ -196,11 +207,13 @@ BushingThreeQuarterInch = [
   [BushingCapWidth,  1.227],
   [BushingCapHeight, 0.215]
 ];
+function Spec_BushingThreeQuarterInch() = BushingThreeQuarterInch;
 
 function BushingHeight(bushing)    = lookup(BushingHeight, bushing);
 function BushingDiameter(bushing)  = lookup(BushingDiameter, bushing);
 function BushingRadius(bushing)    = lookup(BushingDiameter, bushing)/2;
 function BushingDepth(bushing)     = lookup(BushingDepth, bushing);
+function BushingExtension(bushing) = BushingHeight(bushing) - BushingDepth(bushing);
 function BushingCapWidth(bushing)  = lookup(BushingCapWidth, bushing);
 function BushingCapHeight(bushing) = lookup(BushingCapHeight, bushing);
 

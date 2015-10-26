@@ -1,7 +1,7 @@
 include <../Vitamins/Pipe.scad>;
 include <../Ammo/Primer.scad>;
 
-module PowderFunnel(socketDiameter=lookup(PipeOuterDiameter, PipeThreeQuartersInch),
+module PowderFunnel(socketDiameter=lookup(PipeOuterDiameter, PipeThreeQuarterInch),
                     socketDepth=1/8,
                     primer=Primer209,
                     wall=3/64,

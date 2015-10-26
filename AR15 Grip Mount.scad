@@ -105,7 +105,7 @@ module ar15_grip(mount_height=1, mount_length=1, position=0, top_extension = 0, 
 
 
 // Test Print
-*scale([25.4,25.4,25.4]) {
+scale([25.4,25.4,25.4]) {
   //translate([0,0,1/4])
   rotate([0,90,0])
   ar15_grip(mount_height = 1/4, mount_length = 1/8);
