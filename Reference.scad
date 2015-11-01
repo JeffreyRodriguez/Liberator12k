@@ -27,7 +27,9 @@ module Reference_Butt(receiver, stockLength) {
 }
 
 module Reference_Grip_Position(receiver) {
-  translate([-(TeeWidth(receiver)/2)+TeeRimWidth(receiver) + 0.03,0,-TeeCenter(receiver) +TeeRimWidth(receiver) + 0.07])
+  translate([-(TeeWidth(receiver)/2)+TeeRimWidth(receiver) + 0,
+             0,
+             -TeeCenter(receiver) +TeeRimWidth(receiver) + 0.0])
   children();
 }
 
@@ -60,7 +62,7 @@ module Reference(barrel=Spec_TubingOnePointOneTwoFive(), barrelLength=18,
   Reference_Stock(receiver, stock, stockLength);
   Reference_Barrel(receiver, breech, barrel, barrelLength);
   Reference_Forend(forend);
-  Reference_Grip(receiver);
+  #Reference_Grip(receiver);
 }
 
 scale([25.4, 25.4, 25.4])

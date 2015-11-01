@@ -13,7 +13,7 @@ module Barrel_Lug(barrel=Spec_TubingOnePointOneTwoFive(),
                   wall=3/8, length=3/8) {
   difference() {
     cylinder(r1=PipeOuterRadius(barrel) + wall, r2=TeeRimRadius(receiver), h=length, $fn=30);
-    Pipe(pipe=barrel, length=length*3, center=true);
+    #Pipe(pipe=barrel, length=length*3, center=true);
   }
 }
 
@@ -40,8 +40,8 @@ module Reference_Lock(barrel=barrel, receiver=receiver, rod=Spec_RodFiveSixteent
   Receiver_Lug();
 }
 
-*!scale([25.4, 25.4, 25.4])
-Barrel_Lug();
+!scale([25.4, 25.4, 25.4])
+Barrel_Lug(barrel=Spec_PipeThreeQuarterInch());
 
 scale([25.4, 25.4, 25.4]) {
   %Reference();

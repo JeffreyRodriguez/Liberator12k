@@ -3,7 +3,7 @@ use <Vitamins/Rod.scad>;
 
 FOREND_RAIL_WALL_DEFAULT = 3/16;
 function ForendRailWall() = FOREND_RAIL_WALL_DEFAULT;
-function ForendRodAngles(receiver, rod, wall) = [180, 50, -50];
+function ForendRodAngles(receiver, rod, wall) = [180, 52, -52];
 function ForendRailOffset(receiver, rod, wall) = TeeRimRadius(receiver) + wall + RodRadius(rod);
 
 module ForendRods(receiver=Spec_TeeThreeQuarterInch(),

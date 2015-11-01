@@ -1,3 +1,7 @@
+// TODO: Convert to automatic measurement
+function GripExtension() = 0.784;
+
+
 function GripSlotAngle() = 30;
 function GripWidth() = 0.85;
 function GripExtensionX(extension, angle=GripSlotAngle()) = extension * sin(angle);
@@ -26,7 +30,7 @@ module GripTab(slot_width=0.35, slot_height=0.984, slot_length=1.28,
                slot_angle=30, slot_angle_offset = -0.4136, bolt_offset = 0.22,
                grip_width = 0.9,
                extension=1/8,
-               extraFront=1/4, extraTop=0.2, debug=true) {
+               extraFront=1/2, extraTop=0.2, debug=true) {
     translate([bolt_offset -GripExtensionX(extension, slot_angle),0,-GripExtensionZ(extension, slot_angle)]) {
     difference() {
       union() {
@@ -42,18 +46,18 @@ module GripTab(slot_width=0.35, slot_height=0.984, slot_length=1.28,
         intersection() {
           translate([-slot_length-0.25,-grip_width/2,-0.001])
           cube([slot_length+0.25+extraFront,grip_width,extraTop]);
-          
-          translate([-slot_length+0.25,-0.005,-0.05]) {
-            translate([0,-(grip_width/2), 0])
-            cube([slot_length,grip_width+0.01,extraTop+0.1]);
-            
-            cylinder(r=(grip_width/2)+0.01, h=extraTop+0.1, $fn=30);
+
+          translate([-slot_length+0.23,0,-0.05]) {
+            translate([-0.02,-(grip_width/2), 0])
+            cube([slot_length+extraFront,grip_width+0.01,extraTop+0.1]);
+
+            cylinder(r=(grip_width/2), h=extraTop+0.1, $fn=30);
           }
         }
-        
+
         // Front
         translate([-0.0001,-grip_width/2,-slot_height-0.31])
-        cube([extraFront,grip_width,slot_height+0.32]);
+        *cube([extraFront,grip_width,slot_height+0.32]);
       }
 
       // Angle cutter

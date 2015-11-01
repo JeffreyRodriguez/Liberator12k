@@ -5,7 +5,7 @@ use <Forend Rail.scad>;
 module forend_single(receiver=Spec_TeeThreeQuarterInch(),
                      barrel=Spec_PipeThreeQuarterInch(),
                      rod=Spec_RodFiveSixteenthInch(),
-                     wall=3/16, length=1, $fn=50) {
+                     wall=3/16, length=1.5, $fn=50) {
   render(convexity=2)
   linear_extrude(height=length)
   difference() {
@@ -20,10 +20,10 @@ module forend_single(receiver=Spec_TeeThreeQuarterInch(),
     }
     
     // Barrel Hole
-    Pipe2d(pipe=barrel, clearance=PipeClearanceSnug());
+    Pipe2d(pipe=barrel, clearance=PipeClearanceLoose());
     
     // Forend Rod Holes
-    ForendRods(receiver, rod, wall=wall, clearance=RodClearanceLoose());
+    ForendRods(receiver, rod, wall=wall, clearance=RodClearanceSnug());
   }
 }
 

@@ -101,24 +101,26 @@ function Spec_PipeOneInch() = PipeOneInch;
 
 
 // Fittings: Tee
-TeeOuterDiameter = 1; // Diameter of the body, not the rim
-TeeWidth         = 2; // Across the top of the tee, side-to-side
-TeeHeight        = 3; // From the middle of the bottom rim to the top of the body
-TeeInnerDiameter = 4; // Diameter of the threaded hole
-TeeRimDiameter   = 5; // Diameter of the tee rim
-TeeRimWidth      = 6; // Width of the tee rim
-TeeInfillSphere  = 7; // Diameter of the infill sphere, cuts out the casting infill between the tee sections
-TeeInfillOffset  = 8; // Offset for the infill sphere from center
+TeeOuterDiameter   = 1; // Diameter of the body, not the rim
+TeeWidth           = 2; // Across the top of the tee, side-to-side
+TeeHeight          = 3; // From the middle of the bottom rim to the top of the body
+TeeHeightClearance = 4; // Range for the height
+TeeInnerDiameter   = 5; // Diameter of the threaded hole
+TeeRimDiameter     = 6; // Diameter of the tee rim
+TeeRimWidth        = 7; // Width of the tee rim
+TeeInfillSphere    = 8; // Diameter of the infill sphere, cuts out the casting infill between the tee sections
+TeeInfillOffset    = 9; // Offset for the infill sphere from center
 
 TeeThreeQuarterInch = [
-  [TeeOuterDiameter, 1.41],
-  [TeeWidth,         2.64],
-  [TeeHeight,        2],
-  [TeeInnerDiameter, 0.88],
-  [TeeRimDiameter,   1.54],
-  [TeeRimWidth,      0.32],
-  [TeeInfillSphere,  0.10],
-  [TeeInfillOffset,  0.41]
+  [TeeOuterDiameter,   1.41],
+  [TeeWidth,           2.64],
+  [TeeHeight,          2],     // Measured 1.998-2.042
+  [TeeHeightClearance, 0.022], // Derived from (height range/2)
+  [TeeInnerDiameter,   0.88],
+  [TeeRimDiameter,     1.54], // Measured: 1.494-1.523
+  [TeeRimWidth,        0.32],
+  [TeeInfillSphere,    0.10],
+  [TeeInfillOffset,    0.41]
 ];
 function Spec_TeeThreeQuarterInch() = TeeThreeQuarterInch;
 

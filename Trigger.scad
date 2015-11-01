@@ -1,4 +1,4 @@
-$t=0;
+//$t=0;
 //$t=1;
 include <Components.scad>;
 use <Components/Semicircle.scad>;
@@ -115,22 +115,21 @@ module trigger(pin=RodOneEighthInch, pin_clearance=RodClearanceLoose, minor_od=.
       rotate([0,0,-25])
       //translate([-0.1,-0.13,0])
       difference() {
-        intersection() {
 
-          // Trigger body
-          translate([0,0.18,0])
-          mirror([0,1])
-          square([1.5,0.6]);
-
-          // Trigger Back Curve
-          translate([od/2 * sqrt(2) + 0.09,-od/2 * sqrt(2)-0.15])
-          circle(r=1.05);
-        }
+        // Trigger body
+        translate([0,0.18,0])
+        mirror([0,1])
+        square([1.25,0.6]);
 
         // Trigger Front Curve
-        translate([.78,-0.5,-0.1])
+        translate([.45,-0.5,-0.1])
         translate([TeeRimWidth(receiverTee),0,0])
         circle(r=0.45);
+
+        // Trigger body
+        translate([0.9,0.25,0])
+        rotate([0,0,-45])
+        square([1,1]);
       }
     }
 
@@ -139,6 +138,20 @@ module trigger(pin=RodOneEighthInch, pin_clearance=RodClearanceLoose, minor_od=.
     Rod(rod=pin, clearance=pin_clearance, length=height + 0.2);
 
   }
+}
+
+module FireControlPins(pin=RodOneEighthInch) {
+
+    // Sear Pin
+    translate([0,0,TeeCenter(receiverTee) - trigger_offset])
+    rotate([90,0,0])
+    Rod(rod=pin, clearance=RodClearanceSnug, length=TeeRimDiameter(receiverTee), center=true);
+
+    // Trigger Pin
+    translate([trigger_backset,0,-RodRadius(pin)])
+    rotate([90,0,0])
+    Rod(rod=pin, clearance=RodClearanceSnug, length=TeeRimDiameter(receiverTee), center=true);
+
 }
 
 module trigger_insert(pin=RodOneEighthInch,
@@ -169,80 +182,6 @@ module trigger_insert(pin=RodOneEighthInch,
     //rotate([0,0,trigger_arc_angle])
     trigger(center=true);
   }
-
-  difference() {
-    union() {
-
-      // Insert body
-      cylinder(r=TeeInnerDiameter(receiverTee)/2, h=column_height, $fn=50);
-
-      // Foot
-      translate([-TeeInnerRadius(receiverTee)+0.01,
-                 -TeeInnerRadius(receiverTee),
-                 -5/16])
-      intersection() {
-
-        // ID-sized cube
-        translate([0,0,-1/16])
-        cube([TeeInnerDiameter(receiverTee)+(1/8)-0.02,
-              TeeInnerDiameter(receiverTee),
-              3/8]);
-
-        // Taper the side
-        translate([0.5,TeeInnerRadius(receiverTee),4/16])
-        rotate([45,0,0])
-        cube([1.2,1,1], center=true);
-
-
-        // Taper front and back
-        translate([0.5,0.5,13/64])
-        rotate([0,45,0])
-        cube([1,
-              1,
-              1], center=true);
-      }
-
-      // Support Tabs
-      translate([0,0,-TeeRimWidth(receiverTee)+1/8])
-      intersection() {
-        translate([-TeeRimRadius(receiverTee)-1/8,-TeeInnerRadius(receiverTee),0])
-        cube([TeeRimDiameter(receiverTee), TeeInnerDiameter(receiverTee), 3/16]);
-
-        // Rim-wide
-        TeeRim(receiverTee, height=1/4, clearance=-0.015);
-        
-        // Taper the rim
-        translate([0,0,-0.001])
-        cylinder(r1=TeeRimRadius(receiverTee)*0.9, r2=TeeRimRadius(receiverTee)*1.5, h=1/4);
-
-        // Taper to help insertion
-        translate([-TeeRimRadius(receiverTee),0,-0.4])
-        rotate([45,0,0])
-        cube([TeeRimDiameter(receiverTee), 2, 2]);
-      }
-    }
-
-    // Central Slot
-    if (!half)
-    translate([-TeeRimDiameter(receiverTee)/2 - 0.1,-slot_width/2,-TeeRimWidth(receiverTee)-0.1])
-    cube([TeeRimDiameter(receiverTee) +(1/8)+0.2, slot_width, column_height + 1]);
-
-    // Sear Pin
-    translate([0,0,TeeCenter(receiverTee) - trigger_offset])
-    rotate([90,0,0])
-    Rod(rod=pin, clearance=RodClearanceSnug, length=TeeRimDiameter(receiverTee), center=true);
-
-    // Trigger Pin
-    translate([trigger_backset,0,-RodRadius(pin)])
-    rotate([90,0,0])
-    Rod(rod=pin, clearance=RodClearanceSnug, length=TeeRimDiameter(receiverTee), center=true);
-
-    // Cut at slot for printing
-    if (half)
-    mirror([0,1,0])
-    translate([-(TeeRimDiameter(receiverTee)/2) - 0.1,-slot_width/2,-1/2])
-    cube([TeeRimDiameter(receiverTee)+0.2, slot_width + 1, column_height + 0.7]);
-  }
 }
 
 
@@ -254,7 +193,7 @@ module trigger_insert_2d(receiverTee=TeeThreeQuarterInch, slot_width=0.254,
   intersection() {
     translate([-TeeRimRadius(receiverTee),-TeeInnerRadius(receiverTee)])
     square([TeeRimDiameter(receiverTee) - 1/8, TeeInnerDiameter(receiverTee)]);
-    
+
     difference() {
       circle(r=TeeRimRadius(receiverTee) + rimClearance, $fn=$fn);
 
