@@ -71,20 +71,6 @@ PipeThreeQuarterInch = [
 ];
 function Spec_PipeThreeQuarterInch() = PipeThreeQuarterInch;
 
-// 1.125" DOM Tubing
-TubingOnePointOneTwoFive = [
-  [PipeInnerDiameter,   0.813],
-  [PipeOuterDiameter,   1.125],
-  [PipeTaperedDiameter, 1.018],
-  [PipeThreadLength,    0.9],
-  [PipeThreadDepth,     0.5],
-  [PipeClearanceSnug,   0.020],
-  [PipeClearanceLoose,  0.022],
-  [PipeFn,              30],
-  [PipeWeightPerUnit,   42]
-];
-function Spec_TubingOnePointOneTwoFive() = TubingOnePointOneTwoFive;
-
 // 1" Pipe
 PipeOneInch = [
   [PipeInnerDiameter,   1.055],
@@ -98,6 +84,49 @@ PipeOneInch = [
   [PipeWeightPerUnit,   0] // TODO
 ];
 function Spec_PipeOneInch() = PipeOneInch;
+
+// 1.125x0.813" DOM Tubing
+TubingOnePointOneTwoFive = [
+  [PipeInnerDiameter,   0.813],
+  [PipeOuterDiameter,   1.125],
+  [PipeTaperedDiameter, 1.018],
+  [PipeThreadLength,    0.9],
+  [PipeThreadDepth,     0.5],
+  [PipeClearanceSnug,   0.020],
+  [PipeClearanceLoose,  0.022],
+  [PipeFn,              30],
+  [PipeWeightPerUnit,   42]
+];
+function Spec_TubingOnePointOneTwoFive() = TubingOnePointOneTwoFive;
+
+// 5/16" Brake Line, for .22LR
+FiveSixteenthInchBrakeLine = [
+  [PipeInnerDiameter,   0.22],
+  [PipeOuterDiameter,   0.3125],
+  [PipeTaperedDiameter, 0.3125],
+  [PipeThreadLength,    0],
+  [PipeThreadDepth,     0],
+  [PipeClearanceSnug,   0.025],
+  [PipeClearanceLoose,  0.025],
+  [PipeFn,              10],
+  [PipeWeightPerUnit,   42]
+];
+function Spec_FiveSixteenthInchBrakeLine() = FiveSixteenthInchBrakeLine;
+
+// 0.56x9mm Barrel Blank
+PointFiveSix9mmBarrel = [
+  [PipeInnerDiameter,   0.0],
+  [PipeOuterDiameter,   0.56],
+  [PipeTaperedDiameter, 0.56],
+  [PipeThreadLength,    0],
+  [PipeThreadDepth,     0],
+  [PipeClearanceSnug,   0.020],
+  [PipeClearanceLoose,  0.022],
+  [PipeFn,              25],
+  [PipeWeightPerUnit,   0]
+];
+function Spec_PointFiveSix9mmBarrel() = PointFiveSix9mmBarrel;
+
 
 
 // Fittings: Tee

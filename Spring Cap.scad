@@ -18,9 +18,7 @@ module SpringCartridge(debug=false) {
 
   // Spring
   if (debug)
-  linear_extrude(height=3, twist=360 * 12)
-  translate([.75/2 - 1/16,0,0])
-  circle(r=1/32);
+  cylinder(r=3/8, h=3);
 
   translate([0,0,3])
   mirror([0,0,1])

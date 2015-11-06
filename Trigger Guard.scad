@@ -1,205 +1,329 @@
 include <Components.scad>;
-use <Vitamins/Grip.scad>;
+use <Debug.scad>;
 use <Vitamins/Pipe.scad>;
 use <Vitamins/Rod.scad>;
+use <Grip.scad>;
+use <Frame.scad>;
 use <Forend Rail.scad>;
 use <Trigger.scad>;
 use <Reference.scad>;
-use <Tee Housing.scad>;
 
-module TriggerGuardAlignmentPins(receiver, pin=Spec_RodOneEighthInch()) {
-  
-  #for (xz = [[TeeHousingFrontX(receiver) -TeeRimWidth(receiver),
-               -(TriggerGuardHeight()/2)],
-             [-(TeeWidth(receiver)/2)+TeeRimWidth(receiver),
-              -TriggerGuardHeight() + (RodRadius(pin)*3)]])
-  translate([xz[0],0,TeeHousingBaseZ(receiver)+xz[1]])
-  rotate([90,0,0])
-  Rod(rod=pin, center=true, clearance=RodClearanceLoose(),
-      length=TeeInnerDiameter(receiver)+1);
-}
+function TeeHousingBaseZ(receiver) = -TeeCenter(receiver)-TeeRimWidth(receiver);
 
-module TriggerGuardBlock(receiver, triggerGuardHole=TriggerGuardHole(),
-                              triggerGuardRearLength = TriggerGuardRearLength(),
-                              frontExtension=TeeHousingFrontExtension()) {
-  difference() {
+function TeeHousingBottomExtension() = 0.27;
+function TeeHousingFrontExtension(bushing=breechBushing) = BushingHeight(bushing) - BushingDepth(bushing);
+function TeeHousingFrontX(receiver) = (TeeWidth(receiver)/2)+TeeHousingFrontExtension();
+
+module TriggerGuardAlignmentPins(receiver, length=0.55, nutOd=0.25, pin=Spec_RodOneEighthInch()) {
+
+  for (xz = [[TeeHousingFrontX(receiver) -TeeRimWidth(receiver)-(RodDiameter(pin)*1),
+               -(TriggerGuardHole()*0.75)],
+             [-(TeeWidth(receiver)/2) -RodDiameter(pin),
+              -TriggerGuardHeight() + (RodDiameter(pin)*3)],
+             [-(TeeWidth(receiver)/2)-1.75,
+              -TriggerGuardHeight()-1.4]])
+  translate([xz[0],0,TeeHousingBaseZ(receiver)+xz[1]]) {
+    rotate([90,0,0])
+    Rod(rod=pin, center=true, clearance=RodClearanceLoose(),
+        length=GripWidth()+0.2);
     
-    // Main block
-    translate([-(TeeWidth(receiver)/2)+TeeRimWidth(receiver)-triggerGuardRearLength,
-               -TeeInnerRadius(receiver),
-               TeeHousingBaseZ(receiver)-TriggerGuardHeight()])
-    cube([TeeWidth(receiver)+frontExtension-TeeRimWidth(receiver)+triggerGuardRearLength-0.001,
-          TeeInnerDiameter(receiver),
-          TeeRimWidth(receiver)+TriggerGuardHeight()]);
-    
-    TriggerGuardFingerSlot(receiver);
-    
-    // Front chamfer
-    translate([(TeeWidth(receiver)/2)-TeeRimWidth(receiver),-1,-TeeCenter(receiver)-TriggerGuardHeight()-0.7])
-    rotate([0,45,0])
-    cube([2,2,2]);
+    for (side = [1,-1])
+    translate([0,side*length/2,0])
+    rotate([-90*side,0,0])
+    cylinder(r=nutOd/2, h=1, $fn=6);
   }
 }
 
+module TeeHousingPins(receiver, pin=Spec_RodFiveSixteenthInch(), clearance=RodClearanceLoose()) {
+  TeeHousingFrontPin(receiver, pin=pin, clearance=clearance);
+  TeeHousingRearPin(receiver, pin=pin, clearance=clearance);
+}
 
+module TeeHousingPinFlat(offset=1, side=-1, diameter=0.57, height=5) {
+  translate([0,offset*side,0])
+  rotate([-90*side,0,0])
+  rotate([0,0,90])
+  cylinder(r=diameter/2, h=height, $fn=6);
+}
+
+module TriggerGuardBackCenter(receiver, clearance=0.001) {
+  translate([-(TeeWidth(receiver)/2) -(TeeRimWidth(receiver)*3.5),
+             -0.125-clearance, -TeeCenter(receiver)-(TeeRimWidth(receiver)*1)])
+  cube([(TeeRimWidth(receiver)*4.5),
+        0.25+(clearance*2),TeeCenter(receiver)+TeeRimWidth(receiver)]);
+}
+
+module TeeHousingFrontPin(receiver, length=3, extraRadius=0, flat=false,
+                          pin=Spec_RodFiveSixteenthInch(),
+                          clearance=RodClearanceLoose()) {
+  translate([(TeeWidth(receiver)/2)+(RodRadius(pin)/2),0,-TeeCenter(receiver) -(TeeRimWidth(receiver)/2)]) {
+    rotate([90,0,0])
+    cylinder(r=RodRadius(pin, clearance)+extraRadius, center=true,
+             h=length, $fn=RodFn(pin));
+
+    if (flat)
+    for (i=[1,-1])
+    TeeHousingPinFlat(offset=(length/2)-0.0001, side=i);
+  }
+}
+
+module TeeHousingRearPin(receiver, length=3, extraRadius=0, flat=false,
+                        pin=Spec_RodFiveSixteenthInch(),
+                        clearance=RodClearanceLoose()) {
+  translate([-(TeeWidth(receiver)/2)-(TeeRimWidth(receiver)*2),0, -TeeCenter(receiver)+0.4]) {
+    rotate([90,0,0])
+    cylinder(r=RodRadius(pin, clearance)+extraRadius, center=true,
+             h=length, $fn=RodFn(pin));
+
+    if (flat)
+    for (i=[1,-1])
+    TeeHousingPinFlat(offset=(length/2)-0.0001, side=i);
+  }
+}
 
 module TriggerGuardSplitter(receiver, triggerGuardHole=TriggerGuardHole(),
-                              triggerGuardRearLength = TriggerGuardRearLength(),
                               frontExtension=TeeHousingFrontExtension(), clearance=0) {
-  translate([-(TeeWidth(receiver)/2) -1,
-             -0.125 -clearance,
-             TeeHousingBaseZ(receiver)-TriggerGuardHeight()-clearance])
-  cube([TeeWidth(receiver)+frontExtension+2,
-        0.25+(clearance*2),
-        TeeCenter(receiver)+TeeRimWidth(receiver)+TriggerGuardHeight()]);
+  translate([-10, -0.125 -clearance, -10])
+  cube([20, 0.25+(clearance*2), 20]);
+}
+
+module ReferenceTeeCutter(receiver) {
+  translate([0,0,-TeeCenter(receiver)])
+  TeeRim(receiver, height=TeeCenter(receiver));
+
+  translate([-TeeWidth(receiver)/2,0,0])
+  rotate([0,90,0])
+  TeeRim(receiver, height=TeeWidth(receiver));
+}
+
+function TriggerGuardHeight() = 1.31;
+function TriggerGuardHole() = 1.05;
+
+module TriggerGuardFingerSlot(receiver, length=0.8, chamfer=true, $fn=20) {
+
+    render()
+    union()
+    translate([-(TeeWidth(receiver)/2)+(TriggerGuardHole()/2) + 0.25,0,-TeeCenter(receiver)-(TriggerGuardHole()/2) - TeeRimWidth(receiver)]) {
+
+      // Trigger guard hole
+      hull()
+      for (i = [0,length])
+      translate([i,0,0])
+      rotate([90,0,0])
+      cylinder(r=(TriggerGuardHole()/2),
+               h=4, $fn=$fn, center=true);
+
+      // Chamfer the rim
+      if (chamfer)
+      difference() {
+        for (side = [1, 0])
+        mirror([0,side,0])
+        hull()
+        for (i = [0,length]) {
+          translate([i,0.125 + (GripWidth()/8)])
+          rotate([-90,0,0])
+          cylinder(r1=TriggerGuardHole()*0.5,
+                   r2=TriggerGuardHole()*0.6,
+                   h=(GripWidth()/2)-0.125, $fn=$fn);
+
+          translate([i,0.125 + (GripWidth()/2)])
+          rotate([-90,0,0])
+          cylinder(r=TriggerGuardHole()*0.6,
+                   h=2, $fn=$fn);
+        }
+
+        translate([-TeeWidth(receiver)*2,-5,TriggerGuardHole()/2])
+        cube([TeeWidth(receiver)*4, 10, 4]);
+      }
+    }
+}
+
+module TriggerGuardBlock(receiver, stock=stockPipe) {
+  height = TriggerGuardHeight()+abs(TeeHousingBaseZ(receiver));//(TeeRimWidth(receiver)*2);
+  rearLength = TeeRimWidth(receiver)+.7;
+
+  difference() {
+
+    union() {
+      // Main block
+      translate([-(TeeWidth(receiver)/2)-rearLength,
+                 -GripWidth()/2,
+                 TeeHousingBaseZ(receiver)-TriggerGuardHeight()])
+      cube([TeeWidth(receiver)+TeeHousingFrontExtension()+rearLength,
+            GripWidth(),
+            height]);
+
+      // Rounded Back
+      translate([-(TeeWidth(receiver)/2)-rearLength,
+                 0,
+                 TeeHousingBaseZ(receiver)-TriggerGuardHeight()])
+      cylinder(r=GripWidth()/2, h=height, $fn=20);
+
+      TriggerGuardGrip(receiver);
+    }
+
+    // Stock
+    Stock(receiver, stock, 12+(TeeWidth(receiver)/2));
+
+    // Cutout for the back tee housing
+    translate([-(TeeWidth(receiver)/2)-(TeeRimWidth(receiver)/2),
+               -(GripWidth()/2)-0.1,-TeeCenter(receiver)+TeeRimWidth(receiver)])
+    cube([TeeWidth(receiver)/2, GripWidth()+0.2, TeeCenter(receiver)]);
+
+    // Cut down the front top
+    translate([0, -(GripWidth()/2)-0.1,-TeeCenter(receiver)+TeeRimWidth(receiver)])
+    cube([TeeWidth(receiver), GripWidth()+0.2, TeeCenter(receiver)]);
+
+    TriggerGuardFingerSlot(receiver);
+
+    // Front curve
+    translate([-TriggerGuardHole()/2,0,TriggerGuardHole()/2])
+    translate([(TeeWidth(receiver)/2)+TeeHousingFrontExtension(),
+               0, TeeHousingBaseZ(receiver)-TriggerGuardHeight()])
+    difference() {
+      translate([0,-GripWidth(),-2])
+      cube([2,GripWidth()*2,2]);
+
+      rotate([90,0,0])
+      cylinder(r=(TriggerGuardHole()/2)+0.001, h=GripWidth()*3, $fn=20, center=true);
+    }
+  }
+}
+
+module TriggerGuardGrip(receiver, angle=40, length=1.25, height=4) {
+    translate([GripOffsetX()-1,0,-TeeCenter(receiver)-0.32])
+    rotate([0,angle,0])
+    union() {
+      hull()
+      for (i=[0,length])
+      translate([i,0,-height+1])
+      cylinder(r=GripWidth()/2, h=height, $fn=20);
+
+      translate([0,0,])
+      translate([length*0.3,0,-height*0.4])
+      rotate([0,10,0])
+      scale([2.5,1.7,height])
+      sphere(r=GripWidth()/2, $fn=20);
+    }
 }
 
 module TriggerGuardSides(receiver,
-  frontExtension = TeeHousingFrontExtension(),
-  forendPinRod   = Spec_RodFiveSixteenthInch(),
-  triggerGuardHole   = TriggerGuardHole(),
-  triggerGuardRearLength = TriggerGuardRearLength()) {
-  
+  frontExtension = TeeHousingFrontExtension()) {
+
   // Trigger Guard Sides
   difference() {
     union() {
-      
+      difference() {
+        TriggerGuardBlock(receiver);
+
+        translate([-ReceiverInnerWidth(receiver)/2,-2,TeeHousingBaseZ(receiver)+TeeRimWidth(receiver)])
+        cube([ReceiverInnerWidth(receiver), 4,4]);
+      }
+
       // Inner plug
-      translate([0,0,-TeeCenter(receiver)-0.001])
-      cylinder(r=TeeInnerRadius(receiver), h=TeeCenter(receiver) -0.35, $fn=25);
-      
-      TriggerGuardBlock(receiver);
-      
-      // Tab tops
-      translate([0,0,-TeeCenter(receiver)])
-      translate([(TeeWidth(receiver)/2)-TeeRimWidth(receiver)-0.001,
-                 -TeeInnerRadius(receiver), -0.001])
-      cube([TeeRimWidth(receiver)+frontExtension,
-             TeeInnerDiameter(receiver),
-             TeeCenter(receiver)-TeeRimRadius(receiver)-TeeRimWidth(receiver)]);
-      
-      // Grip Tab
-      TeeHousingGripTab(receiver, clearance=0);
-      
+      translate([0,0,TeeHousingBaseZ(receiver)-0.001])
+      cylinder(r=TeeInnerRadius(receiver),
+               h=abs(TeeHousingBaseZ(receiver)) -0.35,
+               $fn=25);
+
+      // Bottom Chamfer
+      translate([0,0,TeeHousingBaseZ(receiver)+TeeRimWidth(receiver)-0.001])
+      intersection() {
+        cylinder(r1=TeeInnerRadius(receiver)*1.1,
+                  r2=TeeInnerRadius(receiver),
+                  h=0.05,
+                  $fn=25);
+
+        // Chop off the sides
+        cube([ReceiverInnerWidth(receiver), GripWidth(), 0.2], center=true);
+      }
     }
 
-    TriggerGuardSplitter(receiver, clearance=0);
-    
+    // Shave the tips
+    translate([-TeeWidth(receiver)-1, -TeeRimRadius(receiver), -TeeInnerRadius(receiver)])
+    cube([TeeWidth(receiver),TeeRimDiameter(receiver),TeeInnerRadius(receiver)]);
+
+
+    TeeHousingPins(receiver);
+
+    TriggerGuardAlignmentPins(receiver);
+
+    TriggerGuardFingerSlot(receiver);
+
     translate([0,0,-TeeCenter(receiver)])
     rotate([0,0,180])
     FireControlPins();
-    
-    // Front Pin hole
-    TeeHousingFrontPin(receiver, forendPinRod);
-    
-    TriggerGuardAlignmentPins(receiver);
+
+    TriggerGuardSplitter(receiver, clearance=0.0000001);
   }
 
-}
-
-module TriggerGuardTop(receiver, wall=tee_overlap) {
-  difference() {
-    union() {
-      translate([0,0,TeeHousingBaseZ(receiver)])
-      hull() {
-
-        // Front
-        color("Red")
-        translate([(TeeWidth(receiver)/2)-TeeRimWidth(receiver),0,-TeeHousingBaseZ(receiver)])
-        rotate([0,-90,0])
-        linear_extrude(height=TeeRimWidth(receiver))
-        hull() {
-        
-          ForendRail(railClearance=RodClearanceSnug());
-          
-          // Trigger Fork Body
-          translate([TeeHousingBaseZ(receiver)-TeeHousingBottomExtension(),-TeeInnerRadius(receiver)])
-          square([TeeCenter(receiver), TeeInnerDiameter(receiver)]);
-        }
-        
-        // Rim
-        cylinder(r=TeeRimRadius(receiver)+wall, h=TeeRimWidth(receiver));
-        
-        // Rear face for hull
-        translate([-(TeeWidth(receiver)/2)+TeeRimWidth(receiver),-TeeInnerRadius(receiver),-0.04])
-        cube([0.001, TeeInnerDiameter(receiver), (TeeRimWidth(receiver)*2)+0.04]);
-      }
-        
-      // Infill rear center tab
-      translate([-(TeeWidth(receiver)/2)-0.001,
-                 -0.125,
-                 TeeHousingBaseZ(receiver)-TeeHousingBottomExtension()])
-      #cube([TeeRimRadius(receiver), 0.25, (TeeRimWidth(receiver)*2)+0.04]);
-      
-      // AR15 Grip
-      color("Blue",0.5)
-      Reference_Grip_Position(receiver)
-      GripTab(extension=GripExtension(), extraFront=TriggerGuardRearLength()+TeeRimWidth(receiver), extraTop=1, debug=debug);
-    }
-    
-    // Cut off the top
-    translate([-TeeWidth(receiver)*2,-2, -TeeCenter(receiver)+TeeRimWidth(receiver)])
-    cube([TeeWidth(receiver)*4,4, 4]);
-    
-    // AR15 Grip Bolt
-    color("Red")
-    Reference_Grip_Position(receiver)
-    #Grip_Bolt(extension=GripExtension(), nut_height=1, debug=false);
-    
-    translate([0,0,TeeHousingBaseZ(receiver)]) {
-    
-      // Trigger Guard Slots
-      for (i=[0.125, -TeeInnerRadius(receiver)])
-      translate([-(TeeWidth(receiver)/2)+TeeRimWidth(receiver),i,-TeeRimWidth(receiver)-0.001])
-      cube([TeeWidth(receiver),
-             TeeInnerRadius(receiver)-0.125,
-             TeeRimWidth(receiver)*2+0.002]);
-      
-      translate([0,0,TeeRimWidth(receiver)-0.005])
-      cylinder(r=TeeRimRadius(receiver), h=TeeRimWidth(receiver)*3, $fn=30);
-      
-      // Trigger Slot
-      translate([-TeeInnerRadius(receiver),-0.13,-TeeRimWidth(receiver)-0.01])
-      cube([TeeInnerDiameter(receiver),0.26,TeeRimWidth(receiver)*3]);
-    }
-    
-    TriggerGuardFingerSlot(receiver);
-    
-    TeeHousingRearPin(receiver);
-  }
-}
-
-module TeeHousingGripTab(receiver, clearance=0.005,
-                          triggerGuardRearLength = TriggerGuardRearLength(),
-                          tab_width=0.345) {  
-      translate([-(TeeWidth(receiver)/2) +TeeRimWidth(receiver) -TriggerGuardRearLength() -clearance -0.3,
-                 -(tab_width/2)-clearance,TeeHousingBaseZ(receiver)-TriggerGuardHeight()-clearance+0.31])
-      cube([0.5,tab_width+(clearance*2),0.5+(clearance*2)]);
 }
 
 module TriggerGuardCenter(receiver) {
   difference() {
-    union() {
-      intersection() {
-        TriggerGuardBlock(receiver);
-        
-        // Just the middle
-        TriggerGuardSplitter(receiver, clearance=0);
-      }
-      
-      // Grip Tab
-      TeeHousingGripTab(receiver, tab_width=0.25, clearance=0);
+    intersection() {
+      TriggerGuardBlock(receiver);
+
+      // Just the middle
+      TriggerGuardSplitter(receiver, clearance=0);
     }
-    
-    // Cut off the top
-    translate([-TeeWidth(receiver),-1,TeeHousingBaseZ(receiver)-TeeHousingBottomExtension()])
-    cube([TeeWidth(receiver)*2,2,2]);
-    
-    // Trigger Slot
-    translate([-TeeInnerRadius(receiver),-0.13,TeeHousingBaseZ(receiver)-TeeRimWidth(receiver)])
-    cube([TeeInnerDiameter(receiver),0.26,TeeRimWidth(receiver)*3]);
-    
+
+    translate([(ReceiverInnerWidth(receiver)/2)-0.05, -0.5, TeeHousingBaseZ(receiver)-(TriggerGuardHole()/2)])
+    cube([TeeInnerDiameter(receiver), 1, TeeCenter(receiver)]);
+
+    TriggerGuardBackCenter(receiver, clearance=0.001);
+
+     // Center Cutout (down to middle of trigger hole)
+    translate([-ReceiverInnerWidth(receiver)/2,
+               -2,TeeHousingBaseZ(receiver)-TriggerGuardHole(receiver)/2])
+    cube([ReceiverInnerWidth(receiver), 4,4]);
+
+    TeeHousingPins(receiver);
+
     TriggerGuardAlignmentPins(receiver);
+
+    TriggerGuardFingerSlot(receiver);
+  }
+}
+
+
+module TriggerGuardTop(receiver, wall=tee_overlap) {
+  intersection() {
+    difference() {
+      translate([-(ReceiverInnerWidth(receiver)/2)-0.002,
+                 -TeeRimRadius(receiver)-wall,
+                 TeeHousingBaseZ(receiver)-TeeRimWidth(receiver)])
+        cube([ReceiverInnerWidth(receiver)-0.004,
+              TeeRimDiameter(receiver)+(wall*2),
+              (TeeRimWidth(receiver)*3)]);
+
+      // Cutouts for grip
+      translate([0,0,0.001])
+      difference() {
+        translate([-(ReceiverInnerWidth(receiver)/2)-0.002,
+                   -GripWidth()/2,
+                   TeeHousingBaseZ(receiver) - (TeeRimWidth(receiver)*2)])
+          cube([ReceiverInnerWidth(receiver)+0.004,
+                GripWidth(),
+                (TeeRimWidth(receiver)*3)]);
+
+        TriggerGuardSplitter(receiver,clearance=0.0000001);
+      }
+
+      // Trigger Slot
+      translate([-TeeInnerRadius(receiver),-0.13,TeeHousingBaseZ(receiver)-TeeRimWidth(receiver)-0.01])
+      cube([TeeInnerDiameter(receiver),0.26,TeeRimWidth(receiver)*3]);
+
+      ReferenceTeeCutter(receiver);
+
+      TriggerGuardFingerSlot(receiver);
+
+      TeeHousingRearPin(receiver);
+    }
+
+    translate([-TeeWidth(receiver)/2,0,-TeeCenter(receiver)-(TeeRimWidth(receiver)*2*sqrt(2))])
+    rotate([45,0,0])
+    cube([TeeWidth(receiver), TeeWidth(receiver), TeeWidth(receiver)]);
   }
 }
 
@@ -209,30 +333,32 @@ module Reference_TriggerGuard(receiver=Spec_TeeThreeQuarterInch(),
   // Trigger
   %translate([0,0,-TeeCenter(receiver)])
   rotate([0,0,180])
+  render()
   trigger_insert(debug=true);
-  
+
   // Trigger Top
   color("Orange")
   render()
-  TriggerGuardTop(receiver, debug=debug);
-  
-  // Trigger Guard Sides
-  color("Green")
-  render()
-  *TriggerGuardSides(receiver, debug=debug);
-  
+  %TriggerGuardTop(receiver, debug=debug);
+
   // Trigger Guard Center
-  color("HotPink")
+  color("CornflowerBlue")
   render()
-  TriggerGuardCenter(receiver, debug=debug);
+  *TriggerGuardCenter(receiver, debug=debug);
+
+  // Trigger Guard Sides
+  color("Khaki")
+  render()
+  TriggerGuardSides(receiver, debug=debug);
 }
 
-
+//DebugHalf(dimension=1500)
 scale([25.4, 25.4, 25.4]) {
-  color("DarkGrey")
-  *Reference();
-  
-  render(convexity=4)
-  Reference_TeeHousing(debug=true);
-  Reference_TriggerGuard(debug=false);
+
+  Reference_TriggerGuard(debug=true);
+
+  *color("DarkGrey", 0.5) {
+    Reference();
+    Frame();
+  }
 }

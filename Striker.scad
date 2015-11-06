@@ -10,6 +10,7 @@ module striker(length=4, od=0.75, id=0.53,
   difference() {
 
     // Body
+    color("Orange")
     cylinder(r=od/2, h=length);
 
     // Weight Hole
@@ -26,14 +27,15 @@ module striker(length=4, od=0.75, id=0.53,
     Rod(rod=firingPin, length=length);
 
     // Firing Pin
+    color("Silver")
     translate([0,0,-1])
     %Rod(rod=firingPin, length=1+depth);
-    
+
     // Line Pin
     translate([0,od/2 + 0.025,length - RodDiameter(firingPin)*2])
     rotate([90,0,0])
     Rod(rod=firingPin, length=od + 0.05);
-    
+
     // Line
     cylinder(r=rope_width/2, h=12);
   }

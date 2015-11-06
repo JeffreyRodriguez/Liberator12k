@@ -147,8 +147,13 @@ module FireControlPins(pin=RodOneEighthInch) {
     rotate([90,0,0])
     Rod(rod=pin, clearance=RodClearanceSnug, length=TeeRimDiameter(receiverTee), center=true);
 
-    // Trigger Pin
+    // Trigger Pin (offset)
     translate([trigger_backset,0,-RodRadius(pin)])
+    rotate([90,0,0])
+    Rod(rod=pin, clearance=RodClearanceSnug, length=TeeRimDiameter(receiverTee), center=true);
+
+    // Trigger Pin (Centered)
+    translate([0,0,-RodRadius(pin)])
     rotate([90,0,0])
     Rod(rod=pin, clearance=RodClearanceSnug, length=TeeRimDiameter(receiverTee), center=true);
 
@@ -165,6 +170,7 @@ module trigger_insert(pin=RodOneEighthInch,
     // Striker
     //translate([-(0.5*$t),0,0])
     //translate([-(0.5),0,0])
+    color("Orange")
     translate([(sear_minor_od/2) * 1.75,0,TeeCenter(receiverTee)])
     rotate([0,90,0])
     striker();
