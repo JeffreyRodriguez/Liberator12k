@@ -40,8 +40,13 @@ module PipeCalibration(pipe=undef, clearance=PipeClearanceSnug, height=1/4, wall
   if (inner)
   PipeInnerCalibration(pipe=pipe, clearance=clearance, height=height, wall=wall);
 }
+
+
 scale([25.4,25.4,25.4]) {
-  PipeCalibration(pipe=TubingOnePointOneTwoFive, clearance=PipeClearanceLoose,
+  TeeCalibration(tee=Spec_304SS_150_TeeThreeQuarterInch());
+  *TeeCalibration(tee=Spec_TeeThreeQuarterInch());
+  
+  *PipeCalibration(pipe=TubingOnePointOneTwoFive, clearance=PipeClearanceLoose,
                   height=1/2, wall=1/4,
                   inner=false, outer=true);
 }
