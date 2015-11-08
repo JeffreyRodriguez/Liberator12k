@@ -2,12 +2,11 @@ use <Vitamins/Pipe.scad>;
 use <Vitamins/Rod.scad>;
 use <Reference.scad>;
 
-function FrameWall() = 3/16;
 function FrameRodAngles() = [0, 232, -232];
 function FrameRodOffset(receiver, rod=Spec_RodFiveSixteenthInch())
            = TeeRimRadius(receiver)
            + RodRadius(rod)
-           + FrameWall()
+           + WallFrameRod()
            ;
 
 module Frame(receiver=Spec_TeeThreeQuarterInch(),
@@ -17,7 +16,7 @@ module Frame(receiver=Spec_TeeThreeQuarterInch(),
              rodFnAngle=90) {
 
   render(convexity=4)
-  translate([-(TeeWidth(receiver)/2) -(TeeRimWidth(receiver)*1),0,0])
+  translate([-(TeeWidth(receiver)/2)-OffsetFrameBack(),0,0])
   rotate([0,90,0])
   linear_extrude(height=rodLength)
   for (angle = FrameRodAngles())

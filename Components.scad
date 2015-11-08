@@ -13,7 +13,7 @@ overall_length = 26.5;
 barrel_length = 18.5;
 
 // Configurable: Wall Thickness
-tee_overlap             = 3/16;
+tee_overlap             = 1/8; //3/16;
 
 rope_od                 = 6/32;
 

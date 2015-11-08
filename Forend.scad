@@ -1,81 +1,121 @@
-include <Vitamins/Pipe.scad>;
-include <Components.scad>;
-use <Cylinder.scad>;
-use <AR15 Grip Mount.scad>;
+use <Debug.scad>;
+use <Vitamins/Pipe.scad>;
+use <Vitamins/Rod.scad>;
+use <Forend Rail.scad>;
+use <Frame.scad>;
+use <Reference.scad>;
 
-module forend(spindleRod=RodOneQuarterInch, actuatorRod=RodOneEighthInch, gasSealingPipe=PipeOneInch, forend_extension = 1/2) {
-  forend_extra = 0.4;
+function BarrelLugLength() = 0.5;
+function ForendOffset() = 1;
+function ForendLugCount() = 3;
+function ForendLugLength() = 0.25;
 
-  echo("Forend Height", forend_length + forend_extension + revolver_cylinder_height + forend_extra);
 
-  pipe_diameter    = lookup(PipeOuterDiameter, gasSealingPipe);
-  pipe_radius      = lookup(PipeOuterDiameter, gasSealingPipe)/2;
-  spindle_diameter = lookup(RodDiameter, spindleRod);
-  spindle_radius   = lookup(RodDiameter, spindleRod)/2;
 
+module BarrelLug(wall=2/16, tabLength=0.12, length=BarrelLugLength(), hollow=true) {
+  tabRadius = PipeOuterRadius(BarrelPipe()) +wall+tabLength;
+  rotate([0,90,0])
   difference() {
     union() {
+      cylinder(r=PipeOuterRadius(BarrelPipe()) + wall,
+               h=length+ForendLugLength(), $fn=PipeFn(BarrelPipe()));
 
-      // Backstrap
-      translate([backstrap_offset,0,0])
-      backstrap(length=forend_length + forend_extension + revolver_cylinder_height + forend_extra);
 
-      // Barrel Sleeve
-      cylinder(r=pipe_radius + forend_wall_thickness, h=forend_length);
+      for (angle = ForendRodAngles())
+      rotate([0,0,90+angle+180-15])
+      intersection() {
+        cylinder(r=tabRadius, h=length, $fn=PipeFn(BarrelPipe()));
 
-      // Spindle-Barrel Infill
-      translate([-revolver_center_offset, -spindle_radius-cylinder_spindle_wall,0])
-      cube([pipe_radius + cylinder_spindle_wall,spindle_diameter+cylinder_spindle_wall*2, forend_length+forend_extension]);
-
-      // Spindle Sleeve
-      translate([-revolver_center_offset, 0,0])
-      cylinder(r=cylinder_spindle_diameter/2 + cylinder_spindle_wall, h=forend_length + forend_extension);
-
-      // AR15 Grip Mount
-      // HACK: This whole thing is just eye-balled
-      *intersection() {
-        rotate([0,0,-30])
-        translate([-revolver_center_offset,.25,.692])
-        rotate([0,45,0])
-        ar15_grip(mount_height = 1.5, mount_length=1.5);
-
-        translate([-3,-3,0])
-        cube([6,6,forend_length]);
+        translate([-tabRadius/4,0, -0.1])
+        cube([tabRadius/2, tabRadius, length+0.2]);
       }
     }
 
-     // Actuator Rod
-    translate([backstrap_offset - lookup(RodDiameter,backstrapRod) ,0,forend_length + forend_extension + revolver_cylinder_height])
-    rotate([0,-90,0])
-    Rod(rod=actuatorRod, length=1);
-
-    // Barrel/Gas-Sealing Pipe Hole
-    translate([0,0,-0.1])
-    Pipe(pipe=gasSealingPipe, clearance=PipeClearanceSnug, length=forend_length +forend_extension+ 0.2);
-
-    // Spindle Hole
-    translate([-revolver_center_offset, 0,-0.1])
-    Rod(rod=spindleRod, clearance=RodClearanceLoose, length=forend_length + forend_extension + 0.2);
-
-    // Revolver Cylinder Clearance
-    translate([-revolver_center_offset,0,forend_length + forend_extension])
-    cylinder(r=revolver_cylinder_od/2 + actuator_cylinder_clearance,
-             h=revolver_cylinder_height + chamber_protrusion*2 + 1/4 + 0.1);
+    if (hollow)
+    Pipe(pipe=BarrelPipe(), length=(length+ForendLugLength())*4, center=true);
   }
 }
 
+module ForendSegment(wall=3/16, length=1, $fn=50, deepLug=false, shallowLug=false, lugAngle=15) {
+  scaleFactor = 1.02;
+  
+  render(convexity=4)
+  difference() {
+    rotate([0,-90,180])
+    linear_extrude(height=length)
+    hull() {
+      ForendRail(ReceiverTee(), BarrelPipe(), FrameRod(), wall);
+
+      // Add some more material to the center for ergo and strength
+      circle(r=TeeRimRadius(ReceiverTee())+WallFrameRod(),
+             $fn=PipeFn(BarrelPipe()));
+
+    }
+
+    // Shallow cut
+    if (shallowLug)
+    rotate([lugAngle-0.5,0,0])
+    translate([-0.01,0,0])
+    scale([scaleFactor,scaleFactor,scaleFactor])
+    BarrelLug(hollow=false);
+
+    // Deep Cut
+    if (deepLug)
+    rotate([-lugAngle+0.5,0,0])
+    translate([-0.1,0,0])
+    scale([scaleFactor,scaleFactor,scaleFactor])
+    BarrelLug(length=length+0.2, hollow=false);
+
+    // Barrel Hole
+    Barrel();
+
+    // Forend Rod Holes
+    Frame();
+  }
+}
+
+module Forend() {
+  lugLength = ForendLugLength()+BarrelLugLength();
+  
+  // Forend Segments
+  translate([(TeeWidth(ReceiverTee())/2)
+             +BushingExtension(BreechBushing())
+             +ForendOffset(),0,0])
+  render(convexity=4)
+  for (i = [0:ForendLugCount()-1])
+  translate([(i*lugLength)+0.01,0,0])
+  ForendSegment(length=lugLength, deepLug=true, shallowLug=true);
+}
+
+module BarrelLugs() {
+  lugLength = ForendLugLength()+BarrelLugLength();
+  
+  render()
+  rotate([-14.5,0,0])
+  translate([(TeeWidth(ReceiverTee())/2)
+             +BushingExtension(BreechBushing())
+             +ForendOffset(),0,0])
+  render(convexity=4)
+  for (i = [0:ForendLugCount()-1])
+  translate([(i*lugLength)+0.01,0,0])
+  BarrelLug();
+}
+
+*!scale([25.4, 25.4, 25.4]) {
+  ForendSegment(length=ForendLugLength()+BarrelLugLength(),
+                deepLug=true, shallowLug=true);
+  
+  translate([ForendLugLength(),0,0])
+  rotate([-14.5,0,0])
+  BarrelLug();
+}
+
+
 // Scale up to metric for printing
-scale([25.4,25.4,25.4]) {
-  forend();
+{
+  BarrelLugs();
+  
+  Forend();
 
-  translate([-revolver_center_offset,0,forend_length + forend_extension + revolver_cylinder_height])
-  rotate([0,180,0])
-  *revolver_cylinder();
-
-  // Gas Sealing Pipe
-  %Pipe(PipeOneInch, length=forend_length + forend_extension);
-
-  // Barrel
-  translate([0,0,-barrel_length + forend_length])
-  *%Pipe(barrelPipe, length=barrel_length);
+  Reference();
 }

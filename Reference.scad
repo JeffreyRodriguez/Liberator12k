@@ -2,9 +2,28 @@ use <Vitamins/Pipe.scad>;
 use <Vitamins/Rod.scad>;
 
 DEFAULT_BARREL = Spec_TubingOnePointOneTwoFive();
+DEFAULT_STOCK = Spec_PipeThreeQuarterInch();
 DEFAULT_BREECH = Spec_BushingThreeQuarterInch();
+DEFAULT_FRAME_ROD = Spec_RodFiveSixteenthInch();
 DEFAULT_RECEIVER = Spec_TeeThreeQuarterInch();
 DEFAULT_BARREL_LENGTH = 18;
+
+
+// Settings: Walls
+function WallTee()              = 1/8;
+function WallTriggerGuardRod()  = 1/4;
+function WallFrameRod()         = 3/16;
+function WallFrameBack()        = 0.2;
+
+// Settings: Offsets
+function OffsetFrameBack() = 0.25;
+
+// Settings: Vitamins
+function BarrelPipe() = DEFAULT_BARREL;
+function BreechBushing() = DEFAULT_BREECH;
+function ReceiverTee() = DEFAULT_RECEIVER;
+function FrameRod() = DEFAULT_FRAME_ROD;
+function StockPipe() = DEFAULT_STOCK;
 
 module Barrel(barrel=DEFAULT_BARREL, barrelLength=DEFAULT_BARREL_LENGTH,
               breech=DEFAULT_BREECH,

@@ -4,22 +4,31 @@ include <Components.scad>;
 use <Vitamins/Pipe.scad>;
 use <Vitamins/Angle Stock.scad>;
 
-use <Cylinder.scad>;
-use <Forend.scad>;
-use <Forend_Single.scad>;
-use <Tee Housing.scad>;
 use <Reference.scad>;
+use <Frame.scad>;
+use <Tee Housing.scad>;
+
+use <Forend.scad>;
+
+use <Trigger.scad>;
+use <Trigger Guard.scad>;
 use <Firing Pin Guide.scad>;
 use <Striker.scad>;
-use <Striker Guide.scad>;
 use <Stock Spacer.scad>;
 use <Spring Cap.scad>;
-use <Ammo/Shell Slug.scad>;
-use <Trigger.scad>;
-use <Frame.scad>;
-use <Trigger Guard.scad>;
+use <Striker Guide.scad>;
 
-module Liberator12k_Base(receiverTee=TeeThreeQuarterInch) {
+module Liberator12k() {
+
+  translate([ForendOffset(),0,0])
+  rotate([-14+(30*$t),0,0])
+  BarrelLugs();
+
+  color("Lime")
+  render()
+  DebugHalf(dimension=20) {
+    Forend();
+  }
 
   Reference_TriggerGuard(debug=true);
 
@@ -39,31 +48,20 @@ module Liberator12k_Base(receiverTee=TeeThreeQuarterInch) {
     rotate([0,-90,0])
     SpringCartridge(debug=true);
   }
-  
+
   color("Gold")
-  translate([-TeeWidth(receiverTee)/2 -12,0,-(1/8)-TeeCenter(receiverTee)])
+  translate([-TeeWidth(ReceiverTee())/2 -12,0,-(1/8)-TeeCenter(ReceiverTee())])
   StrikerGuide();
-  
+
   color("Grey", 1)
-  *Frame();
-  
+  Frame();
+
   color("White", 0.2)
-  *Reference();
-}
-
-
-module Liberator12k_Single() {
-
-  color("Olive")
-  render()
-  translate([3,0,0 ])
-  forend_single(length=3.5);
-  
-  Liberator12k_Base();
+  Reference();
 }
 
 //rotate([0,0,360*$t])
-scale([25.4, 25.4, 25.4]) {
-  Liberator12k_Single();
-  //Liberator12k_Revolver();
+//scale([25.4, 25.4, 25.4])
+{
+  Liberator12k();
 }

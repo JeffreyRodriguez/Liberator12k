@@ -1,48 +1,41 @@
 use <Vitamins/Pipe.scad>;
 use <Vitamins/Rod.scad>;
+use <Reference.scad>;
 
-FOREND_RAIL_WALL_DEFAULT = 3/16;
-function ForendRailWall() = FOREND_RAIL_WALL_DEFAULT;
-function ForendRodAngles(receiver, rod, wall) = [180, 52, -52];
-function ForendRailOffset(receiver, rod, wall) = TeeRimRadius(receiver) + wall + RodRadius(rod);
+function ForendRodAngles() = [180, 52, -52];
+function ForendRailOffset() = TeeRimRadius(ReceiverTee())
+                            + WallFrameRod()
+                            + RodRadius(FrameRod());
 
-module ForendRods(receiver=Spec_TeeThreeQuarterInch(),
-                  rod=Spec_RodFiveSixteenthInch(),
-                  wall=ForendRailWall(),
-                  clearance=RodClearanceSnug(), angles=ForendRodAngles(), rodFnAngle=90) {
+module ForendRods() {
 
   // Rods
-  for (angle = angles)
+  for (angle = ForendRodAngles())
   rotate([0,0,angle])
-  translate([-ForendRailOffset(receiver, rod, wall), 0])
-  rotate([0,0,-angle+rodFnAngle])
-  Rod2d(rod=rod, clearance=clearance);
+  translate([-ForendRailOffset(), 0])
+  rotate([0,0,-angle])
+  Rod2d(rod=FrameRod());
 
   // Debugging aid
   //%TeeRim(receiver);
 
 }
 
-module ForendRail(receiver=Spec_TeeThreeQuarterInch(),
-                  barrel=Spec_PipeThreeQuarterInch(),
-                  rod=Spec_RodFiveSixteenthInch(),
-                  rodHoles=true,
-                  wall=ForendRailWall(),
-                  clearance=RodClearanceLoose(),
-                  angles=ForendRodAngles()) {
+module ForendRail(rodHoles=true,
+                  clearance=RodClearanceLoose()) {
 
   // Rail body
   difference() {
     hull()
     union() {
-      for (angle = angles)
+      for (angle = ForendRodAngles())
       rotate([0,0,angle])
-      translate([-ForendRailOffset(receiver, rod, wall), 0])
-      circle(r=RodRadius(rod) + wall, $fn=24);
+      translate([-ForendRailOffset(), 0])
+      circle(r=RodRadius(FrameRod()) + WallFrameRod(), $fn=24);
     }
 
     if (rodHoles)
-    ForendRods(receiver, rod, wall, clearance, angles);
+    ForendRods();
   }
 }
 
