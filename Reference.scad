@@ -1,7 +1,10 @@
 use <Vitamins/Pipe.scad>;
 use <Vitamins/Rod.scad>;
 
-DEFAULT_BARREL = Spec_TubingOnePointOneTwoFive();
+//DEFAULT_BARREL = Spec_PointFiveSix9mmBarrel();
+DEFAULT_BARREL = Spec_PipeThreeQuarterInch();
+//DEFAULT_BARREL = Spec_TubingOnePointOneTwoFive();
+
 DEFAULT_STOCK = Spec_PipeThreeQuarterInch();
 DEFAULT_BREECH = Spec_BushingThreeQuarterInch();
 DEFAULT_FRAME_ROD = Spec_RodFiveSixteenthInch();
@@ -10,7 +13,7 @@ DEFAULT_BARREL_LENGTH = 18;
 
 
 // Settings: Walls
-function WallTee()              = 1/8;
+function WallTee()              = 3/16;
 function WallTriggerGuardRod()  = 1/4;
 function WallFrameRod()         = 3/16;
 function WallFrameBack()        = 0.2;

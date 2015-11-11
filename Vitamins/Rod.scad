@@ -29,8 +29,8 @@ RodFiveSixteenthInch = [
   [RodDiameter,       5/16],
   [RodRadius,         5/16/2],
   [RodClearanceSnug,  0.025],
-  [RodClearanceLoose, 0.025],
-  [RodFn,             8]
+  [RodClearanceLoose, 0.035],
+  [RodFn,             12]
 ];
 function Spec_RodFiveSixteenthInch() = RodFiveSixteenthInch;
 

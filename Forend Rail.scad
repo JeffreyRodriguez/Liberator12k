@@ -35,7 +35,7 @@ module ForendRail(rodHoles=true,
     }
 
     if (rodHoles)
-    ForendRods();
+    *ForendRods();
   }
 }
 

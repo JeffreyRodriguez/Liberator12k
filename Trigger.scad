@@ -48,19 +48,15 @@ module sear(pin=RodOneEighthInch, pin_clearance=RodClearanceLoose, od=sear_major
         // Spindle
         circle(r=sear_minor_od/2);
 
-        // Body Infill + Front and Back Engagement Surfaces
-        rotate([0,0,160])
-        semicircle(od=sear_interface_extension*2, angle=15);
-
         // Overtravel Stop
         rotate([0,0,30])
         mirror([0,1])
-        square([.5,0.26]);
+        square([.39,0.26]);
 
         // Striker Engagement extension
-        translate([-1/32,0,0])
+        translate([1/16,0,0])
         mirror([1,0,0])
-        square([0.38, sear_minor_od]);
+        square([0.45, 0.45]);
       }
 
       // Clear the striker when engaged
@@ -93,13 +89,13 @@ module trigger(pin=RodOneEighthInch, pin_clearance=RodClearanceLoose, minor_od=.
 
   color("Gold")
   translate([0,0,center ? -height/2 : 0])
-  difference() {
     render(convexity=2)
     linear_extrude(height=height)
+  difference() {
     union() {
 
       // Sear Interface
-      translate([0,-0.05,0])
+      translate([0.016,-0.05,0])
       mirror([1,0,0])
       square([trigger_body_od/2,minor_od/2 + 0.05]);
 
@@ -110,32 +106,27 @@ module trigger(pin=RodOneEighthInch, pin_clearance=RodClearanceLoose, minor_od=.
       rotate([0,0,-45])
       semicircle(od=trigger_major_od, angle=135);
 
-
-      // Trigger (UI)
+      // Trigger body
       rotate([0,0,-25])
-      //translate([-0.1,-0.13,0])
-      difference() {
-
-        // Trigger body
-        translate([0,0.18,0])
-        mirror([0,1])
-        square([1.25,0.6]);
-
-        // Trigger Front Curve
-        translate([.45,-0.5,-0.1])
-        translate([TeeRimWidth(receiverTee),0,0])
-        circle(r=0.45);
-
-        // Trigger body
-        translate([0.9,0.25,0])
-        rotate([0,0,-45])
-        square([1,1]);
-      }
+      translate([-0.0625,0.5,0])
+      mirror([0,1])
+      square([1.3,0.8]);
     }
 
     // Spindle Hole
-    translate([0,0,-0.1])
-    Rod(rod=pin, clearance=pin_clearance, length=height + 0.2);
+    Rod2d(rod=pin, clearance=pin_clearance, length=height + 0.2);
+
+    // Trigger Front Curve
+    rotate([0,0,-25])
+    translate([.5,-0.3])
+    translate([TeeRimWidth(receiverTee),0])
+    circle(r=0.5);
+
+    // Trigger Back Curve
+    rotate([0,0,-25])
+    translate([0.8,0.6])
+    rotate([0,0,-45])
+    square([1,1]);
 
   }
 }
@@ -160,16 +151,10 @@ module FireControlPins(pin=RodOneEighthInch) {
 }
 
 module trigger_insert(pin=RodOneEighthInch,
-                      column_height=0.94,
-                      half=false,
-                      debug=false) {
-
-  if (debug) {
-    *%Tee(TeeThreeQuarterInch);
+                      column_height=0.94) {
 
     // Striker
-    //translate([-(0.5*$t),0,0])
-    //translate([-(0.5),0,0])
+    translate([-(0.5*$t),0,0])
     color("Orange")
     translate([(sear_minor_od/2) * 1.75,0,TeeCenter(receiverTee)])
     rotate([0,90,0])
@@ -178,44 +163,18 @@ module trigger_insert(pin=RodOneEighthInch,
     translate([0,0,TeeCenter(receiverTee)])
     translate([0,0,-trigger_offset])
     rotate([0,$t*sear_arc_angle,])
-    //rotate([0,sear_arc_angle,0])
     rotate([90,90,0])
     sear(center=true);
 
     translate([trigger_backset,0, -1/16])
     rotate([90,90,0])
     rotate([0,0,trigger_arc_angle*$t])
-    //rotate([0,0,trigger_arc_angle])
     trigger(center=true);
-  }
 }
 
 
 *!scale([25.4, 25.4, 25.4])
 trigger_insert(debug=true);
-
-module trigger_insert_2d(receiverTee=TeeThreeQuarterInch, slot_width=0.254,
-                         sideClearance=0, rimClearance=-0.01, $fn=60) {
-  intersection() {
-    translate([-TeeRimRadius(receiverTee),-TeeInnerRadius(receiverTee)])
-    square([TeeRimDiameter(receiverTee) - 1/8, TeeInnerDiameter(receiverTee)]);
-
-    difference() {
-      circle(r=TeeRimRadius(receiverTee) + rimClearance, $fn=$fn);
-
-      // Center Tabs
-      for (i = [0,180])
-      rotate([0,0,i])
-      translate([TeeInnerRadius(receiverTee),-slot_width/2])
-      square([TeeRimRadius(receiverTee), slot_width]);
-    }
-
-  }
-}
-
-*!scale([25.4, 25.4, 25.4])
-trigger_insert_2d();
-
 
 module trigger_plater() {
   scale([25.4, 25.4, 25.4]) {

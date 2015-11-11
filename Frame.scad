@@ -11,7 +11,7 @@ function FrameRodOffset(receiver, rod=Spec_RodFiveSixteenthInch())
 
 module Frame(receiver=Spec_TeeThreeQuarterInch(),
              rod=Spec_RodFiveSixteenthInch(),
-             clearance=RodClearanceSnug(),
+             clearance=RodClearanceLoose(),
              rodLength=10,
              rodFnAngle=90) {
 

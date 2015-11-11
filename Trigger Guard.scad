@@ -353,10 +353,10 @@ module Reference_TriggerGuard(receiver=Spec_TeeThreeQuarterInch(),
                               breechBushing=Spec_BushingThreeQuarterInch(),
                               stock=Spec_PipeThreeQuarterInch(), debug=false) {
   // Trigger
-  %translate([0,0,-TeeCenter(receiver)])
+  if (debug)
+  translate([0,0,-TeeCenter(receiver)])
   rotate([0,0,180])
-  render()
-  trigger_insert(debug=true);
+  trigger_insert();
 
   // Trigger Top
   color("Orange")
@@ -366,12 +366,12 @@ module Reference_TriggerGuard(receiver=Spec_TeeThreeQuarterInch(),
   // Trigger Guard Center
   color("CornflowerBlue")
   render()
-  *TriggerGuardCenter(receiver, debug=debug);
+  TriggerGuardCenter(receiver, debug=debug);
 
   // Trigger Guard Sides
   color("Khaki")
   render()
-  for (side=[1])
+  DebugHalf()
   TriggerGuardSides(receiver, debug=debug);
 }
 

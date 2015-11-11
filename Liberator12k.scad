@@ -20,7 +20,7 @@ use <Striker Guide.scad>;
 
 module Liberator12k() {
 
-  translate([ForendOffset(),0,0])
+  //translate([ForendOffset(),0,0])
   rotate([-14+(30*$t),0,0])
   BarrelLugs();
 
@@ -53,7 +53,7 @@ module Liberator12k() {
   translate([-TeeWidth(ReceiverTee())/2 -12,0,-(1/8)-TeeCenter(ReceiverTee())])
   StrikerGuide();
 
-  color("Grey", 1)
+  color("Grey", .7)
   Frame();
 
   color("White", 0.2)

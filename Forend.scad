@@ -1,44 +1,48 @@
 use <Debug.scad>;
+use <Components/Semicircle.scad>;
 use <Vitamins/Pipe.scad>;
 use <Vitamins/Rod.scad>;
 use <Forend Rail.scad>;
 use <Frame.scad>;
 use <Reference.scad>;
 
-function BarrelLugLength() = 0.5;
-function ForendOffset() = 1;
-function ForendLugCount() = 3;
+function ForendRearLength() = 0.25;
+function ForendFrontLength() = 0.25;
+function LugRadius() = TeeRimRadius(ReceiverTee());
+function LugAngle() = 45;
+function ForendOffset() = 2.8;
 function ForendLugLength() = 0.25;
+function BarrelLugLength() = 0.5;
+function LugSegmentLength() = ForendLugLength() + BarrelLugLength();
+function ForendLugCount() = ceil(ForendOffset()/LugSegmentLength());
 
-
-
-module BarrelLug(wall=2/16, tabLength=0.12, length=BarrelLugLength(), hollow=true) {
-  tabRadius = PipeOuterRadius(BarrelPipe()) +wall+tabLength;
+module BarrelLug(length=BarrelLugLength(), cutter=false) {
+  barrelLugDistance = LugRadius() - PipeOuterRadius(BarrelPipe());
+  
+  echo("Barrel Lug Distance ", barrelLugDistance);
+  
   rotate([0,90,0])
   difference() {
     union() {
-      cylinder(r=PipeOuterRadius(BarrelPipe()) + wall,
+      cylinder(r=PipeOuterRadius(BarrelPipe()) + (barrelLugDistance/2),
                h=length+ForendLugLength(), $fn=PipeFn(BarrelPipe()));
 
 
       for (angle = ForendRodAngles())
-      rotate([0,0,90+angle+180-15])
-      intersection() {
-        cylinder(r=tabRadius, h=length, $fn=PipeFn(BarrelPipe()));
-
-        translate([-tabRadius/4,0, -0.1])
-        cube([tabRadius/2, tabRadius, length+0.2]);
-      }
+      rotate([0,0,angle+(LugAngle()/2)])
+      linear_extrude(height=length)
+      semicircle(od=LugRadius()*2, angle=LugAngle() +(cutter?2:0), $fn=PipeFn(BarrelPipe()));
     }
 
-    if (hollow)
+    if (cutter==false)
     Pipe(pipe=BarrelPipe(), length=(length+ForendLugLength())*4, center=true);
   }
 }
 
-module ForendSegment(wall=3/16, length=1, $fn=50, deepLug=false, shallowLug=false, lugAngle=15) {
-  scaleFactor = 1.02;
-  
+module ForendSegment(wall=3/16, length=1, $fn=50,
+                     deepLug=false, shallowLug=false, open=false) {
+  scaleFactor = 1.05;
+
   render(convexity=4)
   difference() {
     rotate([0,-90,180])
@@ -54,67 +58,130 @@ module ForendSegment(wall=3/16, length=1, $fn=50, deepLug=false, shallowLug=fals
 
     // Shallow cut
     if (shallowLug)
-    rotate([lugAngle-0.5,0,0])
+    rotate([-1,0,0])
     translate([-0.01,0,0])
     scale([scaleFactor,scaleFactor,scaleFactor])
-    BarrelLug(hollow=false);
+    BarrelLug(cutter=true);
 
     // Deep Cut
     if (deepLug)
-    rotate([-lugAngle+0.5,0,0])
+    rotate([-LugAngle(),0,0])
     translate([-0.1,0,0])
     scale([scaleFactor,scaleFactor,scaleFactor])
-    BarrelLug(length=length+0.2, hollow=false);
+    BarrelLug(length=length+0.2, cutter=true);
 
     // Barrel Hole
+    translate([-ForendOffset(),0,0])
     Barrel();
 
     // Forend Rod Holes
     Frame();
+
+    // Open bottom
+    if(open==true)
+    translate([-0.1,-0.5,-TeeCenter(ReceiverTee())*1.1])
+    cube([length+0.2, 1, TeeCenter(ReceiverTee())]);
   }
 }
 
 module Forend() {
-  lugLength = ForendLugLength()+BarrelLugLength();
   
-  // Forend Segments
+  // Rear Segment
   translate([(TeeWidth(ReceiverTee())/2)
              +BushingExtension(BreechBushing())
              +ForendOffset(),0,0])
   render(convexity=4)
+  translate([0,0,0])
+  ForendSegment(length=ForendRearLength());
+
+  // Locking Segments
+  translate([(TeeWidth(ReceiverTee())/2)
+             +BushingExtension(BreechBushing())
+             +ForendOffset()
+             +ForendRearLength(),0,0])
+  render(convexity=4)
   for (i = [0:ForendLugCount()-1])
-  translate([(i*lugLength)+0.01,0,0])
-  ForendSegment(length=lugLength, deepLug=true, shallowLug=true);
+  translate([(i*LugSegmentLength())+0.01,0,0])
+  ForendSegment(length=LugSegmentLength(), deepLug=true, shallowLug=true);
+
+  // Open Segments
+  translate([(TeeWidth(ReceiverTee())/2)
+             +BushingExtension(BreechBushing())
+             +ForendOffset()
+             +ForendRearLength()
+             +(LugSegmentLength()*ForendLugCount()),0,0])
+  render(convexity=4)
+  for (i = [0:ForendLugCount()-1])
+  translate([(i*LugSegmentLength())+0.01,0,0])
+  ForendSegment(length=LugSegmentLength(), deepLug=true, open=true);
+
+  // Front Segment
+  translate([(TeeWidth(ReceiverTee())/2)
+             +BushingExtension(BreechBushing())
+             +ForendOffset()
+             +ForendRearLength()
+             +(LugSegmentLength()*ForendLugCount()),0,0])
+  render(convexity=4)
+  translate([0.01,0,0])
+  ForendSegment(length=ForendFrontLength(), open=false);
+  
+  echo("Forend OAL: ", ForendRearLength()
+             +(LugSegmentLength()*ForendLugCount()*2)
+             +ForendFrontLength());
+  echo("Forend Travel: ", (LugSegmentLength()*ForendLugCount()));
 }
 
 module BarrelLugs() {
-  lugLength = ForendLugLength()+BarrelLugLength();
-  
+
   render()
-  rotate([-14.5,0,0])
+  rotate([-LugAngle()+($t*LugAngle()),0,0])
   translate([(TeeWidth(ReceiverTee())/2)
              +BushingExtension(BreechBushing())
-             +ForendOffset(),0,0])
+             +ForendOffset()
+             +ForendRearLength(),0,0])
   render(convexity=4)
   for (i = [0:ForendLugCount()-1])
-  translate([(i*lugLength)+0.01,0,0])
+  translate([(i*LugSegmentLength())+0.01,0,0])
   BarrelLug();
 }
 
 *!scale([25.4, 25.4, 25.4]) {
+
+  // Rear Segment
+  translate([-TeeRimDiameter(ReceiverTee())*2,-3,0])
+  rotate([0,-90,0])
+  ForendSegment(length=ForendRearLength());
+
+  // Locking segment
+  translate([TeeRimDiameter(ReceiverTee())*2,-3,ForendLugLength()+BarrelLugLength()])
+  rotate([0,90,0])
   ForendSegment(length=ForendLugLength()+BarrelLugLength(),
                 deepLug=true, shallowLug=true);
-  
-  translate([ForendLugLength(),0,0])
-  rotate([-14.5,0,0])
+
+
+  // Open Segments
+  translate([TeeRimDiameter(ReceiverTee())*2,3,ForendLugLength()+BarrelLugLength()])
+  rotate([0,90,0])
+  ForendSegment(length=ForendLugLength()+BarrelLugLength(),
+                deepLug=true, open=true);
+
+  // Front Segment
+  translate([-TeeRimDiameter(ReceiverTee())*2,3,0])
+  rotate([0,-90,0])
+  ForendSegment(length=1);
+
+  rotate([0,-90,0])
   BarrelLug();
 }
 
 
 // Scale up to metric for printing
 {
+  color("Orange")
   BarrelLugs();
-  
+
+  color("Green", 0.5)
+  render()
   Forend();
 
   Reference();
