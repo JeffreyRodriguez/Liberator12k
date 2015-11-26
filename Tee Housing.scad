@@ -4,6 +4,7 @@ use <Vitamins/Rod.scad>;
 use <Forend Rail.scad>;
 use <Grip.scad>;
 use <Frame.scad>;
+use <Trigger.scad>;
 use <Trigger Guard.scad>;
 use <Reference.scad>;
 
@@ -12,8 +13,7 @@ module front_tee_housing(receiver=Spec_TeeThreeQuarterInch(),
                          forendRod=Spec_RodFiveSixteenthInch(),
                          forendPinRod=Spec_RodFiveSixteenthInch(),
                          breechBushing=BushingThreeQuarterInch,
-                         wall=tee_overlap, $fn=40) {
-  boltLength = 2; //TeeRimDiameter(receiver);
+                         wall=WallTee(), $fn=40) {
   length = BushingHeight(breechBushing) - BushingDepth(breechBushing)+TeeRimWidth(receiver);
 
   render(convexity=2)
@@ -24,33 +24,42 @@ module front_tee_housing(receiver=Spec_TeeThreeQuarterInch(),
       linear_extrude(height=length) {
         ForendRail(railClearance=RodClearanceSnug());
 
-        circle(r=TeeRimDiameter(receiver)/2 + wall);
+        circle(r=TeeRimDiameter(receiver)/2 + WallTee());
 
         // Trigger Fork Body
-        translate([TeeHousingBaseZ(receiver)-(TriggerGuardHole()/2),-TeeInnerRadius(receiver)])
-        square([TeeCenter(receiver), TeeInnerDiameter(receiver)]);
+        translate([TriggerGuardFrontPinZ()-RodDiameter(forendPinRod),
+                   -0.75])
+        square([TeeRimRadius(receiver),
+                1.5]);
       }
 
-      TeeHousingFrontPin(receiver, length=boltLength, extraRadius=wall, $fn=30);
+      TeeHousingFrontPin(receiver, length=2.4,
+                         extraRadius=WallTriggerGuardRod(),
+                         $fn=Resolution(20,60));
     }
-    
-   difference() {
-      TriggerGuardBlock(receiver);
 
-      TriggerGuardSplitter(receiver, clearance=0);
-    }
+    // Rear cutout
+    translate([0,
+               -(GripWidth()/2) -0.002,
+               -TeeCenter(receiver) - 1])
+    cube([TeeWidth(receiver)/2, GripWidth()+0.004, TeeCenter(receiver)+1]);
+
+    // Front cutout
+    translate([0,
+               -(GripWidth()/2) -0.002,
+               -TeeCenter(receiver) - 1])
+    cube([TeeWidth(receiver), GripWidth()+0.004, TeeCenter(receiver)+1-TeeRimRadius(receiver)]);
 
     Frame(receiver);
 
-    TeeHousingFrontPin(receiver, length=boltLength, flat=true);
+    TeeHousingFrontPin(receiver, length=3) {
+      TeeHousingPinFlat(offset=01, length=1);
+    }
 
     Breech(receiver, breechBushing);
 
     // Tee
-    ReferenceTeeCutter(receiver);
-
-
-    TriggerGuardFingerSlot(receiver, chamfer=true);
+    ReferenceTeeCutter();
   }
 }
 
@@ -60,11 +69,10 @@ module back_tee_housing(receiver=Spec_TeeThreeQuarterInch(),
                         spin=Spec_RodFiveSixteenthInch(),
                         rod=Spec_RodFiveSixteenthInch(),
                         support=true, gripExtension=0.85) {
-  boltLength = 2.2; //TeeRimDiameter(receiver);
+  boltLength = 2.5; //TeeRimDiameter(receiver);
   block_length = TeeRimWidth(receiver)
-               + OffsetFrameBack()
-               + WallFrameBack();
-  
+               +WallFrameBack();
+
   render(convexity=4)
   difference() {
     union() {
@@ -80,24 +88,27 @@ module back_tee_housing(receiver=Spec_TeeThreeQuarterInch(),
 
           circle(r=TeeRimDiameter(receiver)/2 + WallTee());
         }
-        
+
         TeeHousingRearPin(receiver, length=boltLength, extraRadius=WallTriggerGuardRod(), $fn=30);
       }
     }
 
-    TeeHousingRearPin(receiver, length=boltLength, flat=true);
+    TeeHousingRearPin(receiver, length=3) {
+      TeeHousingPinFlat(offset=1);
+    }
 
     // Cutout
     translate([-(TeeWidth(receiver)/2) -(WallTriggerGuardRod()*2) -RodDiameter(rod) -0.1,
                -(GripWidth()/2) -0.002,
-               -TeeCenter(receiver) - 0.1])
-    cube([TeeWidth(receiver), GripWidth()+0.004, TeeCenter(receiver)]);
+               -TeeCenter(receiver) - 1])
+    cube([TeeWidth(receiver), GripWidth()+0.004, TeeCenter(receiver)+1]);
 
     Stock(receiver, stock);
 
-    ReferenceTeeCutter(receiver);
+    ReferenceTeeCutter();
 
-    Frame(receiver);
+    translate([-0.001,0,0])
+    Frame();
 
   }
 }
@@ -130,13 +141,17 @@ module Reference_TeeHousing(receiver=Spec_TeeThreeQuarterInch(),
 
 scale([25.4, 25.4, 25.4]) {
 
+  %Sear();
+
+  %Trigger();
+
   color("Purple", 0.5)
   Reference_TeeHousing();
 
-  color("Green", 0.5);
+  color("Green", 0.2);
   %Reference_TriggerGuard(debug=true);
 
-  %Frame();
+  *%Frame();
 
-  %Reference();
+  *%Reference();
 }

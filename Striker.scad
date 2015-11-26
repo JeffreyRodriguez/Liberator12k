@@ -1,7 +1,47 @@
 use <Vitamins/Pipe.scad>;
 use <Vitamins/Rod.scad>;
+use <Reference.scad>;
 
-module striker(length=4, od=0.75, id=0.53,
+function StrikerRadius() = 0.375;
+function StrikerX() = -TeeInnerRadius(ReceiverTee());
+
+function FiringPinGuideHeight() = 13/32;// (TeeWidth(ReceiverTee())/2)-BushingDepth(BreechBushing())
+
+module FiringPin() {
+    Rod(rod=FiringPinRod(), clearance=RodClearanceLoose, length=height+0.2);
+}
+
+
+
+module FiringPinGuide(height=FiringPinGuideHeight(), od=TeeInnerDiameter(ReceiverTee()), $fn=20) {
+  offsetX = (TeeWidth(ReceiverTee())/2) -BushingDepth(BreechBushing());
+
+  color("Orange")
+  render()
+  difference() {
+    translate([offsetX,0,0])
+    rotate([0,-90,0])
+    cylinder(r=od/2, h=height, $fn=RodFn(FiringPinRod())*4);
+
+    // Tapered Entrance
+    translate([offsetX - (height/3*2),0,0])
+    rotate([0,-90,0])
+    cylinder(r1=RodRadius(FiringPinRod()), r2=1/4, h=height/3, $fn=RodFn(FiringPinRod())*2);
+
+    // Firing Pin Hole
+    translate([offsetX+0.1,0,0])
+    rotate([0,-90,0])
+    Rod(rod=FiringPinRod(), length=height+0.2, clearance=RodClearanceLoose());
+  }
+}
+
+module Striker() {
+  translate([StrikerX(),0,0])
+  rotate([0,-90,0])
+  striker();
+}
+
+module striker(length=4, od=StrikerRadius()*2, id=0.53,
                firingPin = Spec_RodOneEighthInch(),
                linePin = Spec_RodOneEighthInch(),
                depth=0.8,
@@ -41,6 +81,9 @@ module striker(length=4, od=0.75, id=0.53,
   }
 }
 
-translate([0,50,0])
-scale([25.4, 25.4, 25.4])
-striker();
+//translate([0,50,0])
+scale([25.4, 25.4, 25.4]) {
+  FiringPinGuide();
+  Striker();
+  Reference();
+}

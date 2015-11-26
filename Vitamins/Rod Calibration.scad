@@ -34,6 +34,6 @@ scale([25.4,25.4,25.4]) {
   }
 
   // 3/4" Tubing
-  RodCalibration(rod=RodThreeQuarterInchTubing, clearance=RodClearanceLoose);
+  RodCalibration(rod=RodFiveSixteenthInch, clearance=RodClearanceLoose, height=2);
 
 }

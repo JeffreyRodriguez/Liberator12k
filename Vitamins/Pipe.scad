@@ -248,8 +248,8 @@ BushingCapHeight = 5;
 // 3/4" Bushing
 BushingThreeQuarterInch = [
   [BushingHeight,    0.955],
-  [BushingDiameter,  1.05],
-  [BushingDepth,     0.49],
+  [BushingDiameter,  1.06], // Measured 1.05, adding clearance
+  [BushingDepth,     0.42],
   [BushingCapWidth,  1.227],
   [BushingCapHeight, 0.215]
 ];

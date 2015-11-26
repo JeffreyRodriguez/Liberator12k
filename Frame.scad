@@ -3,7 +3,7 @@ use <Vitamins/Rod.scad>;
 use <Reference.scad>;
 
 function FrameRodAngles() = [0, 232, -232];
-function FrameRodOffset(receiver, rod=Spec_RodFiveSixteenthInch())
+function FrameRodOffset(receiver=ReceiverTee(), rod=FrameRod())
            = TeeRimRadius(receiver)
            + RodRadius(rod)
            + WallFrameRod()
@@ -12,7 +12,7 @@ function FrameRodOffset(receiver, rod=Spec_RodFiveSixteenthInch())
 module Frame(receiver=Spec_TeeThreeQuarterInch(),
              rod=Spec_RodFiveSixteenthInch(),
              clearance=RodClearanceLoose(),
-             rodLength=10,
+             rodLength=12,
              rodFnAngle=90) {
 
   render(convexity=4)

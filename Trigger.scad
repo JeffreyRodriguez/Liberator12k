@@ -1,11 +1,11 @@
 //$t=0;
-//$t=1;
+//$t=0;
 include <Components.scad>;
 use <Components/Semicircle.scad>;
 use <Vitamins/Rod.scad>;
 use <Vitamins/Pipe.scad>;
 use <Striker.scad>;
-use <Firing Pin Guide.scad>;
+use <Reference.scad>;
 
 $fn=50;
 
@@ -28,6 +28,104 @@ trigger_height = 1/4;
 trigger_body_od = 1.17;
 trigger_major_od = .88;
 trigger_arc_angle = 24.5;
+
+function TriggerWidth() = 0.25;
+function SearPinX() = 0;
+function SearRadius() = TeeInnerRadius(ReceiverTee());
+function SearPinZ() = -TeeInnerRadius(ReceiverTee())
+                      -SearRadius()/2;
+function TriggerPinX() = -1/4;
+function TriggerPinZ() = -TeeCenter(ReceiverTee())-RodRadius(TriggerRod());
+function TriggerHyp() = sqrt(pow(abs(TriggerPinX()), 2) + pow(abs(TriggerPinZ())-abs(SearPinZ()), 2));
+function TriggerRadius() = (TriggerHyp()-SearRadius());
+
+echo("Trigger hyp: ", TriggerHyp());
+
+function SearArc() = 25;
+
+module SearPin() {
+    translate([0,0,SearPinZ()])
+    rotate([90,0,0])
+    Rod(rod=SearRod(), length=TeeInnerDiameter(ReceiverTee()) + 0.2, center=true);
+}
+
+module TriggerPin() {
+    translate([TriggerPinX(),0,TriggerPinZ()])
+    rotate([90,0,0])
+    Rod(rod=SearRod(), length=TeeInnerDiameter(ReceiverTee()) + 0.2, center=true);
+}
+
+module SearSpindle(clearance=0) {
+  rotate([90,0,0])
+  cylinder(r=SearRadius()+clearance, h=TriggerWidth(), center=true);
+}
+
+module TriggerSpindle(clearance=0) {
+  rotate([90,0,0])
+  cylinder(r=TriggerRadius()+clearance, h=TriggerWidth(), center=true);
+
+  children();
+}
+
+module Sear() {
+  triggerInterfaceOffset = 0.2;
+
+  difference() {
+      translate([0,0,SearPinZ()])
+      rotate([0,(SearArc()*(1-$t)),0])
+      difference() {
+        union() {
+          SearSpindle();
+
+          // Striker Interface Wedge
+          rotate([0,-90-SearArc(),0])
+          translate([0,-0.125,0])
+          cube([TeeInnerRadius(ReceiverTee()),0.25,TeeInnerRadius(ReceiverTee())*.9]);
+
+          // Trigger Interface Bar Front
+          mirror([1,0,0])
+          translate([-TeeInnerRadius(ReceiverTee()),-0.125,-TeeCenter(ReceiverTee()) - SearPinZ()])
+          cube([TeeInnerRadius(ReceiverTee()), 0.25, TeeCenter(ReceiverTee())+SearPinZ()]);
+
+          // Trigger Interface Bar Rear
+          *rotate([0,-SearArc(),0])
+          mirror([1,0,0])
+          translate([0,-0.125,-TeeCenter(ReceiverTee()) - SearPinZ()+triggerInterfaceOffset])
+          cube([TeeInnerRadius(ReceiverTee()), 0.25, TeeCenter(ReceiverTee())+SearPinZ()-triggerInterfaceOffset]);
+        }
+
+        // Striker clearance
+        translate([0,0,-SearPinZ()])
+        rotate([0,-90,0])
+        cylinder(r=StrikerRadius() + 0.02, h=TeeWidth(ReceiverTee()), center=true);
+      }
+
+    SearPin();
+
+    // Trigger clearance
+    translate([0,0,SearPinZ()])
+    rotate([0,180+SearArc()-(SearArc()*$t),0])
+    translate([-0.1,-(TriggerWidth()/2)-0.1,SearRadius()])
+    *cube([TriggerRadius()+0.2, TriggerWidth()+0.2, SearRadius()]);
+  }
+}
+
+module Trigger() {
+  difference() {
+    translate([TriggerPinX(),0,TriggerPinZ()])
+    union() {
+        // Spindle
+        TriggerSpindle();
+
+        rotate([0,(SearArc()*$t),0])
+        translate([0,-TriggerWidth()/2,0])
+        #cube([TriggerRadius(), TriggerWidth(), TriggerRadius()]);
+    }
+
+    TriggerPin();
+  }
+}
+
 
 
 
@@ -53,10 +151,11 @@ module sear(pin=RodOneEighthInch, pin_clearance=RodClearanceLoose, od=sear_major
         mirror([0,1])
         square([.39,0.26]);
 
-        // Striker Engagement extension
-        translate([1/16,0,0])
+        // Reset Extension
+        rotate(-15)
+        translate([0,-0.05])
         mirror([1,0,0])
-        square([0.45, 0.45]);
+        square([0.49, 0.45]);
       }
 
       // Clear the striker when engaged
@@ -94,10 +193,14 @@ module trigger(pin=RodOneEighthInch, pin_clearance=RodClearanceLoose, minor_od=.
   difference() {
     union() {
 
-      // Sear Interface
+      // Sear Interface Bar
       translate([0.016,-0.05,0])
       mirror([1,0,0])
       square([trigger_body_od/2,minor_od/2 + 0.05]);
+
+      // Reset Stop
+      rotate(angle+25)
+      square([trigger_body_od/2,0.25]);
 
       // Spindle Body
       circle(r=minor_od/2);
@@ -110,7 +213,7 @@ module trigger(pin=RodOneEighthInch, pin_clearance=RodClearanceLoose, minor_od=.
       rotate([0,0,-25])
       translate([-0.0625,0.5,0])
       mirror([0,1])
-      square([1.3,0.8]);
+      square([1.34,0.8]);
     }
 
     // Spindle Hole
@@ -124,7 +227,7 @@ module trigger(pin=RodOneEighthInch, pin_clearance=RodClearanceLoose, minor_od=.
 
     // Trigger Back Curve
     rotate([0,0,-25])
-    translate([0.8,0.6])
+    translate([0.9,0.6])
     rotate([0,0,-45])
     square([1,1]);
 
@@ -172,21 +275,19 @@ module trigger_insert(pin=RodOneEighthInch,
     trigger(center=true);
 }
 
-
-*!scale([25.4, 25.4, 25.4])
-trigger_insert(debug=true);
+scale([25.4, 25.4, 25.4]) {
+  translate([0,0,-TeeCenter(ReceiverTee())])
+  mirror([1,0,0])
+  trigger_insert(debug=false);
+  FiringPinGuide();
+  Striker();
+  *Sear();
+  *Trigger();
+  *Reference();
+}
 
 module trigger_plater() {
   scale([25.4, 25.4, 25.4]) {
-
-    translate([0,1,-slot_width/2])
-    rotate([90,0,180])
-    trigger_insert(debug=false, half=true);
-
-    translate([0,-1,-slot_width/2])
-    mirror([1,0,0])
-    rotate([90,0,0])
-    trigger_insert(debug=false, half=true);
 
     translate([1,-0.4,0])
     rotate([0,0,110])
@@ -198,4 +299,4 @@ module trigger_plater() {
   }
 }
 
-trigger_plater();
+*trigger_plater();
