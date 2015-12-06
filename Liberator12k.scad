@@ -30,8 +30,6 @@ module Liberator12k() {
   Reference_TeeHousing();
 
   color("HotPink")
-  translate([(TeeWidth(receiverTee)/2) - BushingDepth(breechBushing),0,0])
-  rotate([0,-90,0])
   FiringPinGuide();
 
   render() {
