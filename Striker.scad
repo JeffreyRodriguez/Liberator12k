@@ -36,6 +36,7 @@ module FiringPinGuide(height=FiringPinGuideHeight(), od=TeeInnerDiameter(Receive
 }
 
 module Striker() {
+  translate([(0.5*$t),0,0])
   translate([StrikerX(),0,0])
   rotate([0,-90,0])
   striker();
