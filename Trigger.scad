@@ -1,302 +1,525 @@
-//$t=0;
-//$t=0;
+//$t=1;
 include <Components.scad>;
 use <Components/Semicircle.scad>;
+use <Components/Spring.scad>;
 use <Vitamins/Rod.scad>;
 use <Vitamins/Pipe.scad>;
 use <Striker.scad>;
 use <Reference.scad>;
 
-$fn=50;
+SpringLengthExtended   = 0;
+SpringLengthCompressed = 1;
+SpringOD               = 2;
+SpringWireDiameter     = 3;
+
+function SpringLengthExtended(spring)   = lookup(SpringLengthExtended, spring);
+function SpringLengthCompressed(spring) = lookup(SpringLengthCompressed, spring);
+function SpringOD(spring)               = lookup(SpringOD, spring);
+function SpringWireDiameter(spring)     = lookup(SpringWireDiameter, spring);
+
+function SpringCompression(spring) = SpringLengthExtended(spring)-SpringLengthCompressed(spring);
+
+
+BicLighterThumbSpring = [
+  [SpringLengthExtended,0.63],
+  [SpringLengthCompressed,0.32],
+  [SpringOD, 0.145],
+  [SpringWireDiameter,0.019]
+];
+
+function TriggerSpring() = BicLighterThumbSpring;
 
 function sear_height() = 1/4;
 
-slot_width = 0.27;
-
-searPin = RodOneEighthInch;
-sear_arc_angle = 40;
-sear_height = sear_height();
-sear_major_od = 53/64;
-sear_minor_od = 0.52; //0.372;
-sear_interface_extension = 0.414;
-
-
-triggerPin = RodOneEighthInch;
-trigger_offset = 18/32; // 19/32; // Offset from center_z
-trigger_backset = TeeInnerDiameter(receiverTee)/2  -3/16;
-trigger_height = 1/4;
-trigger_body_od = 1.17;
-trigger_major_od = .88;
-trigger_arc_angle = 24.5;
-
+function TriggerAngle() = 360/16;
 function TriggerWidth() = 0.25;
-function SearPinX() = 0;
-function SearRadius() = TeeInnerRadius(ReceiverTee());
-function SearPinZ() = -TeeInnerRadius(ReceiverTee())
-                      -SearRadius()/2;
 function TriggerPinX() = -1/4;
+function SearPinX() = 0;
+function SearPinZ() = -StrikerRadius()-0.25;
 function TriggerPinZ() = -TeeCenter(ReceiverTee())-RodRadius(TriggerRod());
-function TriggerHyp() = sqrt(pow(abs(TriggerPinX()), 2) + pow(abs(TriggerPinZ())-abs(SearPinZ()), 2));
-function TriggerRadius() = (TriggerHyp()-SearRadius());
 
-echo("Trigger hyp: ", TriggerHyp());
+function SearTriggerZDistance() = abs(TriggerPinZ() - SearPinZ());
 
-function SearArc() = 25;
+// Angle from sear pin to trigger pin
+function SearTriggerAngle() = atan(abs(TriggerPinX())/SearTriggerZDistance());
 
-module SearPin() {
-    translate([0,0,SearPinZ()])
-    rotate([90,0,0])
-    Rod(rod=SearRod(), length=TeeInnerDiameter(ReceiverTee()) + 0.2, center=true);
-}
+function TriggerHyp() = sqrt(
+                          pow(abs(TriggerPinX()), 2)
+                         +pow(SearTriggerZDistance(), 2)
+                        );
 
-module TriggerPin() {
-    translate([TriggerPinX(),0,TriggerPinZ()])
-    rotate([90,0,0])
-    Rod(rod=SearRod(), length=TeeInnerDiameter(ReceiverTee()) + 0.2, center=true);
-}
 
-module SearSpindle(clearance=0) {
-  rotate([90,0,0])
-  cylinder(r=SearRadius()+clearance, h=TriggerWidth(), center=true);
-}
 
-module TriggerSpindle(clearance=0) {
-  rotate([90,0,0])
-  cylinder(r=TriggerRadius()+clearance, h=TriggerWidth(), center=true);
+function SearMajorRadius() = TriggerHyp()*0.56;
+function TriggerMajorRadius() = TriggerHyp()*0.56;
 
-  children();
-}
+function SearMinorRadius() = TriggerHyp()-TriggerMajorRadius();
+function TriggerIntermediateRadius() = (TriggerHyp()-SearMajorRadius());
+function TriggerMaxMajor() = 2.63;
 
-module Sear() {
-  triggerInterfaceOffset = 0.2;
+function TriggerInterfaceArc() = 3.14*pow(SearMajorRadius(),2)/360*TriggerAngle();
 
-  difference() {
-      translate([0,0,SearPinZ()])
-      rotate([0,(SearArc()*(1-$t)),0])
-      difference() {
-        union() {
-          SearSpindle();
+function SafetyPinX() = TriggerPinX() - (TriggerMaxMajor()/2*sqrt(2));
+function SafetyPinZ() = TriggerPinZ();
+function SafetyMajorOD() = 4;
+function SafetyInterfaceOD() = 2.63;
+function SafetyMinorRadius() = 0.45;
+function SafetyHoleRadius() = 0.2;
+function SafetyBarAngle() = 32;
+function SafetyBackAngle() = 3;
+function SafetyAngle() = 15;
 
-          // Striker Interface Wedge
-          rotate([0,-90-SearArc(),0])
-          translate([0,-0.125,0])
-          cube([TeeInnerRadius(ReceiverTee()),0.25,TeeInnerRadius(ReceiverTee())*.9]);
+function ResetPinX() = -1.8;
+function ResetPinZ() = -2.75;
 
-          // Trigger Interface Bar Front
-          mirror([1,0,0])
-          translate([-TeeInnerRadius(ReceiverTee()),-0.125,-TeeCenter(ReceiverTee()) - SearPinZ()])
-          cube([TeeInnerRadius(ReceiverTee()), 0.25, TeeCenter(ReceiverTee())+SearPinZ()]);
 
-          // Trigger Interface Bar Rear
-          *rotate([0,-SearArc(),0])
-          mirror([1,0,0])
-          translate([0,-0.125,-TeeCenter(ReceiverTee()) - SearPinZ()+triggerInterfaceOffset])
-          cube([TeeInnerRadius(ReceiverTee()), 0.25, TeeCenter(ReceiverTee())+SearPinZ()-triggerInterfaceOffset]);
-        }
+function ResetRadius() = 0.4;
+function ResetCircumference() = (2*3.14)*ResetRadius();
+function ResetAngleExtended() = 360/(ResetCircumference()/SpringLengthExtended(TriggerSpring()));
+function ResetAngleCompressed() = 360/(ResetCircumference()/SpringLengthCompressed(TriggerSpring()));
 
-        // Striker clearance
-        translate([0,0,-SearPinZ()])
-        rotate([0,-90,0])
-        cylinder(r=StrikerRadius() + 0.02, h=TeeWidth(ReceiverTee()), center=true);
-      }
 
-    SearPin();
+echo("SpringLengthExtended(spring)", SpringLengthExtended(TriggerSpring()));
+echo("SpringLengthCompressed(spring)", SpringLengthCompressed(TriggerSpring()));
+echo("SpringCompression(TriggerSpring())", SpringCompression(TriggerSpring()));
+echo("ResetRadius", ResetRadius());
+echo("ResetAngleExtended", ResetAngleExtended());
+echo("ResetAngleCompressed", ResetAngleCompressed());
+echo("SpringOD", SpringOD(TriggerSpring()));
+function TriggerMinorRadius() = 0.22;
+sear_height = sear_height();
+trigger_height = 1/4;
 
-    // Trigger clearance
-    translate([0,0,SearPinZ()])
-    rotate([0,180+SearArc()-(SearArc()*$t),0])
-    translate([-0.1,-(TriggerWidth()/2)-0.1,SearRadius()])
-    *cube([TriggerRadius()+0.2, TriggerWidth()+0.2, SearRadius()]);
+// Hackiest gear module you ever did see.
+module TriggerTeeth(teeth=[1:16], angle=1,
+                    major=SearMajorRadius()*2,
+                    minor=SearMajorRadius()*0.33) {
+  for (i = teeth)
+  hull() {
+    // Spindle
+    circle(r=minor);
+
+    // Tooth
+    rotate(i*TriggerAngle())
+    semicircle(od=major, angle=angle, center=true);
   }
 }
 
-module Trigger() {
-  difference() {
-    translate([TriggerPinX(),0,TriggerPinZ()])
-    union() {
-        // Spindle
-        TriggerSpindle();
-
-        rotate([0,(SearArc()*$t),0])
-        translate([0,-TriggerWidth()/2,0])
-        #cube([TriggerRadius(), TriggerWidth(), TriggerRadius()]);
-    }
-
-    TriggerPin();
-  }
-}
-
-
-
-
-interface_clearance=0.005;
-
-module sear(pin=RodOneEighthInch, pin_clearance=RodClearanceLoose, od=sear_major_od, height=sear_height, center=false, angle=230) {
-
+module Sear(width=sear_height, angle=230) {
   $fn=30;
 
   color("Red")
-  translate([0,0,center ? -height/2 : 0])
+  translate([0,SearPinZ()])
+  rotate(-TriggerAngle()*-$t)
   difference() {
-
-    render(convexity=2)
-    linear_extrude(height=height)
-    difference() {
-      union() {
+    union() {
+      hull() {
         // Spindle
-        circle(r=sear_minor_od/2);
+        circle(r=SearMinorRadius());
 
-        // Overtravel Stop
-        rotate([0,0,30])
-        mirror([0,1])
-        square([.39,0.26]);
-
-        // Reset Extension
-        rotate(-15)
-        translate([0,-0.05])
-        mirror([1,0,0])
-        square([0.49, 0.45]);
+        // Sear-striker interface
+        translate([0,-SearPinZ()-StrikerRadius()])
+        mirror([1,0])
+        square([SearMajorRadius(), SearMajorRadius()]);
       }
 
-      // Clear the striker when engaged
-      translate([-trigger_offset +3/4/2,(sear_minor_od/2)*1.3,0])
-      rotate([0,0,180])
-      semicircle(od=1, angle=130);
+      // Trigger Interface Teeth
+      rotate(-90-SearTriggerAngle()) // Point toward trigger pin
+      TriggerTeeth([-2,-1,0,1], angle=5);
 
-      // Clear the striker when disengaged
-      //-od-sear_minor_od/2
-      translate([0,-sear_minor_od/2,0])
-      rotate([0,0,180+sear_arc_angle])
-      translate([0,-od,0])
-      square([od, od*2]);
+      // Trigger Stop
+      mirror([0,1])
+      square([SearMinorRadius(), SearTriggerZDistance()]);
+    }
 
-      // Overtravel Trigger Clearance
-      translate([-trigger_offset + TeeCenter(receiverTee) + 1/16,trigger_backset])
-      circle(r=trigger_major_od/2 + interface_clearance);
+    // Clear the striker when disengaged
+    rotate([0,0,-TriggerAngle()])
+    translate([-1,-SearPinZ()-StrikerRadius()-0.01])
+    square([2, 1]);
 
+
+    // Trigger stop interface
+    translate([TriggerPinX(), TriggerPinZ()])
+    translate([-SearPinX(), -SearPinZ()]) {
+      rotate(90-SearTriggerAngle()-TriggerAngle())
+      semicircle(od=TriggerIntermediateRadius()*2, angle=90);
+
+      translate([TeeInnerRadius(ReceiverTee())*0.9,0])
+      rotate(-TriggerAngle())
+      square([1,TeeCenter(ReceiverTee())]);
     }
 
     // Pin Hole
-    translate([0,0,-0.1])
-    Rod(rod=pin, clearance=pin_clearance, length=height + 0.2);
+    Rod2d(rod=SearRod(), clearance=RodClearanceLoose());
   }
 }
 
-module trigger(pin=RodOneEighthInch, pin_clearance=RodClearanceLoose, minor_od=.34, id=7/8, height=trigger_height, center=false, angle=196) {
-
-  od=3/4;
+module Trigger(pin=RodOneEighthInch, height=trigger_height) {
+  safetyAngle = 70;
 
   color("Gold")
-  translate([0,0,center ? -height/2 : 0])
-    render(convexity=2)
-    linear_extrude(height=height)
+  render(convexity=2)
+  translate([TriggerPinX(), 0, TriggerPinZ()])
+  rotate([-90,(TriggerAngle()*$t),0])
+  linear_extrude(center=true, height=height)
+  union() {
+    difference() {
+      union() {
+
+        // Spindle Body
+        circle(r=TriggerMinorRadius());
+
+        // Finger Body
+        rotate(115+SearTriggerAngle())
+        semidonut(minor=0, major=2.6, angle=80+SearTriggerAngle());
+
+        // Teeth
+        rotate(-90+SearTriggerAngle()+(TriggerAngle()/2)) // Point toward trigger pin
+        TriggerTeeth([-2,-1,0], angle=5, major=TriggerMajorRadius()*2);
+
+        // Tooth and front face infill
+        rotate(90-SearTriggerAngle())
+        semicircle(od=TriggerIntermediateRadius()*2, angle=180);
+
+        // Reset Bar
+        rotate(122)
+        square([1.5,TriggerMinorRadius()]);
+
+        // Spring
+        color("Silver")
+        rotate(-(TriggerAngle()*$t))
+        rotate(134)
+        rotate(180)
+        mirror(){
+        *%semidonut(minor=ResetRadius()*2,
+                   major=(ResetRadius()+SpringOD(TriggerSpring()))*2,
+                   //angle=ResetAngleCompressed());
+                   //angle=ResetAngleExtended()-((ResetAngleExtended()-ResetAngleCompressed())*$t));
+                   angle=ResetAngleExtended());
+        * %semidonut(minor=ResetRadius()*1.95,
+                    major=(ResetRadius()+SpringOD(TriggerSpring()))*2.05,
+                    angle=ResetAngleCompressed());
+                    //angle=ResetAngleExtended()-((ResetAngleExtended()-ResetAngleCompressed())*$t));
+        }
+
+      }
+
+      // Spindle Hole
+      Rod2d(rod=SearRod(), clearance=RodClearanceLoose());
+
+      // Trigger Front Curve
+      rotate(90)
+      rotate(-60)
+      translate([.80,0])
+      translate([TeeRimWidth(receiverTee),0])
+      circle(r=0.8);
+
+      // Safety-engagement surface
+      rotate(-45/2)
+      translate([SafetyPinX(), SafetyPinZ()])
+      translate([-TriggerPinX(), -TriggerPinZ()])
+      rotate(SafetyBarAngle()+1.8)
+      semicircle(od=SafetyInterfaceOD()+0.02, angle=30, $fn=Resolution(30, 100));
+    }
+  }
+}
+
+module Safety(width=0.25) {
+  springAngle = 20;
+
+  translate([SafetyPinX(), 0, SafetyPinZ()])
+  rotate([90,-(SafetyAngle()*$t),0])
+  render()
+  linear_extrude(height=width, center=true)
   difference() {
     union() {
 
-      // Sear Interface Bar
-      translate([0.016,-0.05,0])
-      mirror([1,0,0])
-      square([trigger_body_od/2,minor_od/2 + 0.05]);
+      // Spindle
+      circle(r=SafetyMinorRadius());
 
-      // Reset Stop
-      rotate(angle+25)
-      square([trigger_body_od/2,0.25]);
+      // Trigger-engagement surface
+      rotate(134)
+      mirror()
+      semicircle(od=SafetyInterfaceOD()-0.08, angle=10, $fn=Resolution(30, 100));
 
-      // Spindle Body
-      circle(r=minor_od/2);
+      // Safety Trap Top
+      rotate(142)
+      mirror()
+      semicircle(od=SafetyInterfaceOD(), angle=SafetyBarAngle()-10, $fn=Resolution(30, 100));
 
-      // Trigger Bar Infill
-      rotate([0,0,-45])
-      semicircle(od=trigger_major_od, angle=135);
+      // Safety Trap Bottom
+      rotate(135-SafetyBackAngle())
+      mirror()
+      semicircle(od=SafetyInterfaceOD(), angle=SafetyBackAngle(), $fn=Resolution(30, 100));
 
-      // Trigger body
-      rotate([0,0,-25])
-      translate([-0.0625,0.5,0])
-      mirror([0,1])
-      square([1.34,0.8]);
+      rotate(90+30+SafetyAngle())
+      {
+        // Hand-web tab
+        difference() {
+          square([SafetyMinorRadius(), SafetyMajorOD()/2]);
+
+          // Cut off that sharp tip
+          translate([SafetyMinorRadius()*0.3, SafetyMajorOD()/2])
+          rotate(65)
+          translate([0,-0.5])
+          square([1,1]);
+        }
+
+        // Travel stop
+        rotate(-90)
+        mirror()
+        semidonut(major=SafetyMajorOD(), minor=SafetyMajorOD()-0.6, angle=SafetyAngle());
+      }
+
+      // Spring Depressor
+      *translate([-TriggerPinX(), -TriggerPinZ()])
+      translate([SafetyPinX(), SafetyPinZ()])
+      rotate(134)
+      rotate(180)
+      mirror()
+      semidonut(minor=ResetRadius()*2.01,
+                major=(ResetRadius()+SpringOD(TriggerSpring()))*1.99,
+                angle=ResetAngleExtended());
+
+    }
+
+    difference() {
+      circle(r=SafetyHoleRadius()+0.01);
+      circle(r=SafetyHoleRadius());
     }
 
     // Spindle Hole
-    Rod2d(rod=pin, clearance=pin_clearance, length=height + 0.2);
-
-    // Trigger Front Curve
-    rotate([0,0,-25])
-    translate([.5,-0.3])
-    translate([TeeRimWidth(receiverTee),0])
-    circle(r=0.5);
-
-    // Trigger Back Curve
-    rotate([0,0,-25])
-    translate([0.9,0.6])
-    rotate([0,0,-45])
-    square([1,1]);
-
+    Rod2d(rod=SafetyRod() );
   }
 }
 
-module FireControlPins(pin=RodOneEighthInch) {
+module ResetSpring(left=true, right=true) {
+  height=0.24;
+  sidePlateHeight = (height-SpringOD(TriggerSpring()))/2;
+  
+  heightMinusOD = height-SpringOD(TriggerSpring());
+  spindleRadius = 0.07;
+  spindleOuterRadius = 0.25;
+  spindleFn = 8;//Resolution(20,40);
+  angle=-90;
+  
+  wall=0.08;
+          
+  // Spring
+  translate([ResetPinX(), 0, ResetPinZ()])
+  %rotate([90,angle,0])
+  linear_extrude(height=SpringOD(TriggerSpring()), center=true)
+  semidonut(minor=ResetRadius()*2,
+            major=(ResetRadius()+SpringOD(TriggerSpring()))*2,
+            angle=ResetAngleExtended());
+  
+  // Left side
+  if (left)
+  render()
+  translate([ResetPinX(), 0, ResetPinZ()])
+  rotate([0,angle,0])
+  difference() {
+    union() {
+      
+      // Spindle
+      translate([0,1/8,0])
+      rotate([90,0,0])
+      cylinder(r=spindleOuterRadius, h=height-sidePlateHeight-0.002, $fn=Resolution(20,50));
+      
+      // Side plate
+      translate([0,1/8,0])
+      rotate([90,-10,0])
+      linear_extrude(height=height-sidePlateHeight-0.002)
+      semicircle(od=(ResetRadius()+SpringOD(TriggerSpring())+wall)*2,
+                 angle=ResetAngleExtended()+20, $fn=Resolution(40,80));
+      
+      // End cap
+      translate([0,1/8,0])
+      rotate([90,ResetAngleExtended()+8,0])
+      linear_extrude(height=height-sidePlateHeight-0.002)
+      semidonut(minor=spindleOuterRadius*2,
+                major=(ResetRadius()+SpringOD(TriggerSpring())+wall)*3,
+                angle=10, $fn=Resolution(40,80));
+    }
+      
+    // Spring cutout
+    translate([0,SpringOD(TriggerSpring())*0.51,0])
+    rotate([90,0,0])
+    linear_extrude(height=SpringOD(TriggerSpring())*1.03)
+    semidonut(minor=ResetRadius()*1.90,
+              major=(ResetRadius()+SpringOD(TriggerSpring()))*2.1,
+              angle=ResetAngleExtended()+30);
+
+    // Spindle hole
+    rotate([90,0,0])
+    cylinder(r=spindleRadius, center=true, $fn=spindleFn);
+  }
+  
+  // Right side
+  if (right)
+  render()
+  translate([ResetPinX(), 0, ResetPinZ()])
+  rotate([0,angle,0])
+  difference() {
+    union() {
+      
+      // Spindle
+      translate([0,-1/8,0])
+      rotate([-90,0,0])
+      cylinder(r=spindleOuterRadius, h=sidePlateHeight-0.002, $fn=Resolution(20,50));
+      
+      // Side plate
+      mirror([0,1])
+      translate([0,1/8,0])
+      rotate([90,-10.2,0])
+      linear_extrude(height=sidePlateHeight-0.002)
+      semicircle(od=(ResetRadius()+SpringOD(TriggerSpring())+wall)*2,
+                 angle=ResetAngleExtended()+30.2, $fn=Resolution(40,80));
+      
+      // End cap
+      mirror([0,1])
+      translate([0,1/8,0])
+      rotate([90,-20+0.01,0])
+      linear_extrude(height=height)
+      semidonut(minor=spindleOuterRadius*2.01,
+                major=(ResetRadius()+SpringOD(TriggerSpring())+wall)*3,
+                angle=10, $fn=Resolution(40,80));
+      
+      // Spring Tab
+      translate([0,(SpringOD(TriggerSpring())/2)-0.01,0])
+      rotate([90,ResetAngleExtended()-2,0])
+      linear_extrude(height=SpringOD(TriggerSpring())+sidePlateHeight-0.01)
+      semidonut(minor=ResetRadius()*2,
+                major=(ResetRadius()+SpringOD(TriggerSpring()))*2,
+                angle=22);
+    }
+
+    // Spindle hole
+    rotate([90,0,0])
+    cylinder(r=spindleRadius, center=true, $fn=spindleFn);
+  }
+}
+
+module SearPin(clearance=RodClearanceSnug()) {
+  translate([SearPinX(),0,SearPinZ()])
+  rotate([90,0,0])
+  Rod(rod=SearRod(), clearance=clearance,
+      length=TeeRimDiameter(receiverTee),
+      center=true);
+}
+
+
+module FireControlPins(clearance=RodClearanceSnug()) {
 
     // Sear Pin
-    translate([0,0,TeeCenter(receiverTee) - trigger_offset])
+    translate([SearPinX(),0,SearPinZ()])
     rotate([90,0,0])
-    Rod(rod=pin, clearance=RodClearanceSnug, length=TeeRimDiameter(receiverTee), center=true);
+    Rod(rod=SearRod(), clearance=clearance,
+        length=TeeRimDiameter(receiverTee),
+        center=true);
 
-    // Trigger Pin (offset)
-    translate([trigger_backset,0,-RodRadius(pin)])
+    // Trigger Pin
+    translate([TriggerPinX(),0,TriggerPinZ()])
     rotate([90,0,0])
-    Rod(rod=pin, clearance=RodClearanceSnug, length=TeeRimDiameter(receiverTee), center=true);
-
-    // Trigger Pin (Centered)
-    translate([0,0,-RodRadius(pin)])
-    rotate([90,0,0])
-    Rod(rod=pin, clearance=RodClearanceSnug, length=TeeRimDiameter(receiverTee), center=true);
+    Rod(rod=TriggerRod(), clearance=clearance,
+        length=TeeRimDiameter(receiverTee),
+        center=true);
 
 }
 
-module trigger_insert(pin=RodOneEighthInch,
-                      column_height=0.94) {
+module TriggerGeometry() {
+  echo("Trigger Geometry");
+  echo("================");
+  echo("Hypotenuse: ", TriggerHyp());
+  echo("Sear-Trigger angle: ", SearTriggerAngle());
+  echo("Interface arc: ", TriggerInterfaceArc());
 
-    // Striker
-    translate([-(0.5*$t),0,0])
-    color("Orange")
-    translate([(sear_minor_od/2) * 1.75,0,TeeCenter(receiverTee)])
-    rotate([0,90,0])
-    striker();
+  rotate([90,0,0]) {
+    // Polygon based on pin coordinates
+    color("White", 0.25)
+    polygon(points=[
+      [SearPinX(), TriggerPinZ()],
+      [TriggerPinX(), TriggerPinZ()],
+      [SearPinX(), SearPinZ()]
+    ]);
 
-    translate([0,0,TeeCenter(receiverTee)])
-    translate([0,0,-trigger_offset])
-    rotate([0,$t*sear_arc_angle,])
-    rotate([90,90,0])
-    sear(center=true);
+    // Hypotenuse from Sear
+    color("Yellow", 0.25)
+    translate([0, SearPinZ()])
+    rotate(90-SearTriggerAngle())
+    mirror([1,0])
+    square([TriggerHyp(),.1]);
 
-    translate([trigger_backset,0, -1/16])
-    rotate([90,90,0])
-    rotate([0,0,trigger_arc_angle*$t])
-    trigger(center=true);
+    // Hypotenuse from Trigger
+    color("Red", 0.25)
+    translate([TriggerPinX(), TriggerPinZ()])
+    rotate(90-SearTriggerAngle())
+    //mirror([1,0])
+    square([TriggerHyp(),.1]);
+
+    // SearTriggerZDistance
+    color("Green", 0.25)
+    translate([0,TriggerPinZ()])
+    square([.1, SearTriggerZDistance()]);
+
+    // Trigger Pin X
+    color("Blue", 0.25)
+    translate([0, TriggerPinZ()])
+    rotate(180)
+    square([abs(TriggerPinX()), .1]);
+  }
+
+  // Tee Column
+  translate([0,0,-TeeCenter(ReceiverTee())])
+  cylinder(r=TeeInnerRadius(ReceiverTee()), h=TeeCenter(ReceiverTee()));
+}
+
+module TriggerGroup() {
+
+    %Striker();
+
+    %FiringPinGuide();
+
+    color("Red")
+    rotate([90,0,0])
+    render(convexity=2)
+    linear_extrude(height=0.25, center=true)
+    Sear();
+
+    Trigger();
+
+    ResetSpring();
+
+    color("Lime")
+    render(convexity=3)
+    Safety();
 }
 
 scale([25.4, 25.4, 25.4]) {
-  translate([0,0,-TeeCenter(ReceiverTee())])
-  mirror([1,0,0])
-  trigger_insert(debug=false);
-  FiringPinGuide();
-  Striker();
-  *Sear();
-  *Trigger();
+  TriggerGroup();
+  %TriggerGeometry();
   *Reference();
 }
 
 module trigger_plater() {
+  render()
   scale([25.4, 25.4, 25.4]) {
 
-    translate([1,-0.4,0])
-    rotate([0,0,110])
-    trigger();
+    translate([-1,-0.4,1/8])
+    rotate([90,0,0])
+    Trigger();
 
     translate([-1,0,0])
-    rotate([0,0,140])
-    sear();
+    *Sear();
+    
+    translate([-ResetPinX(),1-ResetPinZ(),1/8])
+    rotate([-90,0,0])
+    ResetSpring(left=true, right=false);
+    
+    rotate([90,0,0])
+    translate([1-ResetPinX(),1/8,-ResetPinZ()])
+    ResetSpring(left=false, right=true);
   }
 }
 
-*trigger_plater();
+!trigger_plater();
