@@ -141,10 +141,6 @@ module Reference_TeeHousing(receiver=Spec_TeeThreeQuarterInch(),
 
 scale([25.4, 25.4, 25.4]) {
 
-  %Sear();
-
-  %Trigger();
-
   color("Purple", 0.5)
   Reference_TeeHousing();
 
