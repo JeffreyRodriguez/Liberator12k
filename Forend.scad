@@ -204,11 +204,11 @@ scale([25.4, 25.4, 25.4]) {
   translate([-2,2,0])
   rotate([0,-90,0])
   difference() {
-    ForendSegment(length=0.6);
+    ForendSegment(length=0.8);
 
     for (angle = ForendRodAngles())
     rotate([180+angle,0,0])
-    translate([0.34, 0,ForendRailOffset()])
+    translate([0.54, 0,ForendRailOffset()])
     rotate([0,90,0])
     cylinder(r=0.59/2, h=0.28, $fn=6);
   }
