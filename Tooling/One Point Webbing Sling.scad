@@ -1,7 +1,7 @@
 webbing = 28;
 gap = 4;
 wall = 5;
-height = 8;
+height = 5;
 hole = 6;
 
 %cube([webbing, webbing, gap/2]);
