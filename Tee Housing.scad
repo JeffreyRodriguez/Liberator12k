@@ -2,7 +2,6 @@ include <Components.scad>;
 use <Vitamins/Pipe.scad>;
 use <Vitamins/Rod.scad>;
 use <Forend Rail.scad>;
-use <Grip.scad>;
 use <Frame.scad>;
 use <Trigger.scad>;
 use <Trigger Guard.scad>;

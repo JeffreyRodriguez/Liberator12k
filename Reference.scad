@@ -11,9 +11,11 @@ DEFAULT_STOCK = Spec_PipeThreeQuarterInch();
 DEFAULT_BREECH = Spec_BushingThreeQuarterInch();
 DEFAULT_FRAME_ROD = Spec_RodFiveSixteenthInch();
 DEFAULT_SEAR_ROD = Spec_RodOneEighthInch();
-DEFAULT_SAFETY_ROD = Spec_RodOneEighthInch();
+DEFAULT_SAFETY_ROD = Spec_RodBicFlint();
+DEFAULT_RESET_ROD = Spec_RodBicNozzle();
 DEFAULT_TRIGGER_ROD = Spec_RodOneEighthInch();
 DEFAULT_FIRING_PIN_ROD = Spec_RodOneEighthInch();
+DEFAULT_GRIP_ROD = Spec_RodFiveSixteenthInch();
 DEFAULT_RECEIVER = Spec_TeeThreeQuarterInch();
 DEFAULT_BARREL_LENGTH = 18;
 
@@ -40,8 +42,10 @@ function StockPipe() = DEFAULT_STOCK;
 function FrameRod() = DEFAULT_FRAME_ROD;
 function SearRod() = DEFAULT_SEAR_ROD;
 function SafetyRod() = DEFAULT_SAFETY_ROD;
+function ResetRod() = DEFAULT_RESET_ROD;
 function TriggerRod() = DEFAULT_TRIGGER_ROD;
 function FiringPinRod() = DEFAULT_FIRING_PIN_ROD;
+function GripRod() = DEFAULT_GRIP_ROD;
 
 module Barrel(barrel=DEFAULT_BARREL, barrelLength=DEFAULT_BARREL_LENGTH,
               breech=DEFAULT_BREECH,

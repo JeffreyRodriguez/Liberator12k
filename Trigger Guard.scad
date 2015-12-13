@@ -1,33 +1,48 @@
-//$t = 1;
+//$t = 0;
 include <Components.scad>;
 use <Components/Semicircle.scad>;
 use <Debug.scad>;
 use <Vitamins/Pipe.scad>;
 use <Vitamins/Rod.scad>;
-use <Grip.scad>;
 use <Frame.scad>;
 use <Forend Rail.scad>;
 use <Trigger.scad>;
 use <Reference.scad>;
 
+function GripPinOffsetX() = TeeRimRadius(ReceiverTee())
+                          + RodRadius(GripRod())
+                          + WallTriggerGuardRod();
+
+function GripFloor() = 0.32;
+function GripWidth() = 0.9;
+function GripOffsetX(receiver=Spec_TeeThreeQuarterInch()) = -(TeeWidth(receiver)/2)+0.1;
+function GripOffsetZ(receiver=Spec_TeeThreeQuarterInch()) = -TeeCenter(receiver)-GripFloor();
+
 function TriggerGuardPinZ() = -TeeRimRadius(ReceiverTee()) -RodRadius(FrameRod()) -0.14;
 function TriggerGuardFrontPinZ() = TriggerGuardPinZ()-0.05;
 
-function TeeHousingBaseZ(receiver) = -TeeCenter(receiver)-TeeRimWidth(receiver);
+function TeeHousingBaseZ(receiver) = -TeeCenter(receiver)-GripFloor();
 
 function TeeHousingBottomExtension() = 0.27;
 function TeeHousingFrontExtension(bushing=breechBushing) = BushingHeight(bushing) - BushingDepth(bushing);
 
+
 module TriggerGuardAlignmentPins(receiver, length=GripWidth()-0.22, nutOd=0.25, pin=Spec_RodOneEighthInch()) {
+  ResetPin();
 
-  for (xz = [[(TeeWidth(receiver)/2) -0.1, TeeHousingBaseZ(receiver)-0.4],
+  for (xz = [
+    
+     // Front
+     [(TeeWidth(receiver)/2) -0.1, TeeHousingBaseZ(receiver)-0.4],
 
-             [SafetyPinX(), SafetyPinZ()], 
-  
-             [ResetPinX(), ResetPinZ()],
+     // TODO: Remove these two? We have the Bic pins in the code
+     [SafetyPinX(), SafetyPinZ()],
+     [ResetPinX(), ResetPinZ()],
 
-             [-(TeeWidth(receiver)/2)-1.75,
-              TeeHousingBaseZ(receiver)-TriggerGuardHeight()-1]])
+     // Bottom-rear
+     [-(TeeWidth(receiver)/2)-2.2,
+      TeeHousingBaseZ(receiver)-TriggerGuardHeight()-1]
+  ])
   translate([xz[0],0,xz[1]]) {
     rotate([90,0,0])
     Rod(rod=pin, center=true, clearance=RodClearanceLoose(),
@@ -45,14 +60,13 @@ module TeeHousingPins(receiver, pin=Spec_RodFiveSixteenthInch(), clearance=RodCl
   TeeHousingRearPin(receiver, pin=pin, clearance=clearance);
 }
 
-module TeeHousingFrontPin(receiver, length=2.5, extraRadius=0, enabled=true,
-                          pin=Spec_RodFiveSixteenthInch(),
+module TeeHousingFrontPin(receiver=ReceiverTee(), length=2.5, extraRadius=0, enabled=true,
                           clearance=RodClearanceLoose(), $fn=undef) {
-  translate([TeeRimRadius(receiver) +RodRadius(pin)+WallTriggerGuardRod(),
+  translate([GripPinOffsetX(),
              0,TriggerGuardFrontPinZ()])
     rotate([90,0,0]) {
       if (enabled)
-      cylinder(r=RodRadius(pin, clearance)+extraRadius, center=true,
+      cylinder(r=RodRadius(GripRod(), clearance)+extraRadius, center=true,
                h=length, $fn=($fn != undef ? $fn : RodFn(pin)));
       children();
     }
@@ -86,9 +100,10 @@ module TriggerGuardSplitter(receiver, triggerGuardHole=TriggerGuardHole(),
   cube([20, 0.25+(clearance*2), 20]);
 }
 
-module ReferenceTeeCutter() {
-  translate([0,0,-TeeCenter(ReceiverTee())])
-  TeeRim(ReceiverTee(), height=TeeCenter(ReceiverTee()));
+module ReferenceTeeCutter(centerLength = TeeRimDiameter(ReceiverTee())) {
+  translate([-centerLength/2,-centerLength/2,-TeeCenter(ReceiverTee())])
+  cube([centerLength, centerLength, TeeCenter(ReceiverTee())]);
+  //TeeRim(ReceiverTee(), height=TeeCenter(ReceiverTee()));
 
   translate([-TeeWidth(ReceiverTee())/2,0,0])
   rotate([0,90,0])
@@ -102,7 +117,7 @@ module TriggerGuardFingerSlot(receiver, length=0.5, chamfer=true, $fn=Resolution
 
     render()
     union()
-    translate([-(TriggerGuardHole()/2)+0.4,0,-TeeCenter(receiver)-(TriggerGuardHole()/2) - TeeRimWidth(receiver)]) {
+    translate([-(TriggerGuardHole()/2)+0.4,0,-TeeCenter(receiver)-(TriggerGuardHole()/2) - GripFloor()]) {
 
       // Trigger guard hole
       hull()
@@ -138,8 +153,8 @@ module TriggerGuardFingerSlot(receiver, length=0.5, chamfer=true, $fn=Resolution
 }
 
 module TriggerGuardBlock(receiver, stock=stockPipe) {
-  height = TriggerGuardHeight()+abs(TeeHousingBaseZ(receiver));//(TeeRimWidth(receiver)*2);
-  rearLength = TeeRimWidth(receiver)+.4;
+  height = TriggerGuardHeight()+abs(TeeHousingBaseZ(receiver));
+  rearLength = 0.72;
 
   difference() {
     union() {
@@ -167,12 +182,12 @@ module TriggerGuardBlock(receiver, stock=stockPipe) {
     ReferenceTeeCutter();
 
     // Cut down the front top
-    translate([(TeeWidth(ReceiverTee())/2)-0.01, -(GripWidth()/2)-0.1,-TeeRimRadius(ReceiverTee())])
+    translate([TeeInnerRadius(ReceiverTee()), -(GripWidth()/2)-0.1,-TeeRimRadius(ReceiverTee())])
     cube([TeeWidth(ReceiverTee()), GripWidth()+0.2, TeeCenter(ReceiverTee())]);
 
     // Cut down the rear top
     translate([-(TeeWidth(ReceiverTee())/2)-WallFrameBack()-0.01, -(GripWidth()/2)-0.1,-TeeRimRadius(ReceiverTee())])
-    cube([WallFrameBack()+0.02, GripWidth()+0.2, TeeCenter(ReceiverTee())]);
+    cube([WallFrameBack()+(TeeWidth(ReceiverTee())/2)-TeeInnerRadius(ReceiverTee()), GripWidth()+0.2, TeeCenter(ReceiverTee())]);
 
     TriggerGuardFingerSlot(receiver);
 
@@ -219,13 +234,7 @@ module TriggerGuardSides(receiver,
   // Trigger Guard Sides
   difference() {
     union() {
-      difference() {
         TriggerGuardBlock(receiver);
-
-        translate([-ReceiverInnerWidth(receiver)/2,-2,
-                   TeeHousingBaseZ(receiver)+(TeeRimWidth(receiver)*2)])
-        *cube([ReceiverInnerWidth(receiver), 4,4]);
-      }
 
       // Inner plug
       translate([0,0,TeeHousingBaseZ(receiver)-0.001])
@@ -234,7 +243,7 @@ module TriggerGuardSides(receiver,
                $fn=Resolution(25, 60));
 
       // Bottom Chamfer
-      translate([0,0,TeeHousingBaseZ(receiver)+TeeRimWidth(receiver)-0.001])
+      translate([0,0,TeeHousingBaseZ(receiver)+GripFloor()-0.001])
       intersection() {
         cylinder(r1=TeeInnerRadius(receiver)*1.1,
                   r2=TeeInnerRadius(receiver),
@@ -249,7 +258,6 @@ module TriggerGuardSides(receiver,
     // Shave the tips
     translate([-TeeWidth(receiver)-1, -TeeRimRadius(receiver), -TeeInnerRadius(receiver)])
     cube([TeeWidth(receiver),TeeRimDiameter(receiver),TeeInnerRadius(receiver)]);
-
 
     TeeHousingPins(receiver);
 
@@ -277,28 +285,36 @@ module TriggerGuardCenter(receiver) {
     translate([-TeeRimRadius(receiver)-0.03,
                -2,TeeHousingBaseZ(receiver) -(TriggerGuardHole()/2)])
     cube([TeeRimDiameter(receiver)-0.25, 4,4]);
-    
+
     // Trigger Front reset spring interface
-    translate([TeeRimRadius(receiver)-0.01,-0.5,TeeHousingBaseZ(receiver)+TeeRimWidth(receiver)+0.001])
+    translate([TeeRimRadius(receiver)-0.01,-0.5,TeeHousingBaseZ(receiver)+GripFloor()+0.001])
     rotate([0,220,0])
     cube([0.5, 1, 1]);
-    
-    // Trigger Reset Spring Track
-    *rotate([90,0,0])
-    linear_extrude(center=true)
-    polygon(points=[
-      [-(TeeWidth(receiver)/2)-0.25,TeeHousingBaseZ(receiver)],
-      [0,TeeHousingBaseZ(receiver)-0.25],
-      [-(TeeWidth(receiver)/2)-1,TeeHousingBaseZ(receiver)-2]
-    ]);
+
+    // Reset Spring Body OD
+    translate([ResetPinX(), 0, ResetPinZ()])
+    rotate([90,-112])
+    hull() {
+      cylinder(r=0.6, center=true);
+
+      linear_extrude(center=true)
+      semicircle(od=5, angle=64);
+    }
 
     // Trigger Travel Cutout
     translate([TriggerPinX(),0,TriggerPinZ()])
     rotate([90,60,0])
     linear_extrude(height=1, center=true) {
+
+      // Main body track
       semicircle(od=TriggerMaxMajor(), angle=100);
+
+      // Reset spring extension track
+      rotate(-61.7)
+      semicircle(od=3.24, angle=15);
     }
 
+    // Safety Travel Cutout
     translate([SafetyPinX(), 0, SafetyPinZ()])
     rotate([90,0,0])
     linear_extrude(height=1, center=true) {
@@ -312,12 +328,12 @@ module TriggerGuardCenter(receiver) {
 
       // Hand-engagement surface
       //rotate(SafetyAngle())
-      rotate(-40)
+      rotate(-50)
       mirror()
-      semicircle(od=SafetyMajorOD()+0.02, angle=100+SafetyAngle(), $fn=Resolution(30, 100));
+      semicircle(od=SafetyMajorOD()+0.1, angle=110+SafetyAngle(), $fn=Resolution(30, 100));
 
       // Safety Spindle
-      circle(r=SafetyMinorRadius()+0.015);
+      circle(r=SafetyMinorRadius()+0.02);
     }
 
 
@@ -329,13 +345,45 @@ module TriggerGuardCenter(receiver) {
   }
 }
 
+module Reference_TriggerGuard(receiver=Spec_TeeThreeQuarterInch(),
+                              breechBushing=Spec_BushingThreeQuarterInch(),
+                              stock=Spec_PipeThreeQuarterInch(), debug=false) {
+  // Trigger
+  if (debug)
+  TriggerGroup();
+
+  // Trigger Guard Center
+  color("White")
+  render()
+  TriggerGuardCenter(receiver, debug=debug);
+
+  // Trigger Guard Sides
+  color("Khaki", 0.5)
+  render()
+  DebugHalf()
+  TriggerGuardSides(receiver, debug=debug);
+
+}
+//rotate([30,0,120+(15*-$t)])
+scale([25.4, 25.4, 25.4])
+//render() DebugHalf(dimension=1500)
+{
+  Reference_TriggerGuard(debug=true);
+
+  *%color("DarkGrey", 0.5) {
+    Reference();
+    Frame();
+  }
+}
+
+
 module Plater_TriggerGuard() {
 
   // Trigger Guard Center
   color("CornflowerBlue")
   render()
-  rotate([-90,0,-90])
-  translate([1,-0.25/2,0])
+  rotate([90,0,-70])
+  translate([1,-0.25/2,5])
   TriggerGuardCenter(ReceiverTee());
 
   // Trigger Guard Sides
@@ -351,38 +399,7 @@ module Plater_TriggerGuard() {
   }
 }
 
-module Reference_TriggerGuard(receiver=Spec_TeeThreeQuarterInch(),
-                              breechBushing=Spec_BushingThreeQuarterInch(),
-                              stock=Spec_PipeThreeQuarterInch(), debug=false) {
-  // Trigger
-  if (debug)
-  %TriggerGroup();
-
-  // Trigger Guard Center
-  color("CornflowerBlue")
-  render()
-  TriggerGuardCenter(receiver, debug=debug);
-
-  // Trigger Guard Sides
-  color("Khaki")
-  render()
-  DebugHalf()
-  TriggerGuardSides(receiver, debug=debug);
-
-}
-
-scale([25.4, 25.4, 25.4])
-//render() DebugHalf(dimension=1500)
-{
-  Reference_TriggerGuard(debug=true);
-
-  *%color("DarkGrey", 0.5) {
-    Reference();
-    Frame();
-  }
-}
-
-*!scale([25.4, 25.4, 25.4]) {
+!scale([25.4, 25.4, 25.4]) {
   intersection() {
     Plater_TriggerGuard();
     //#cube([4, 3, 0.4]);

@@ -7,6 +7,24 @@ RodFn             = 5;
 function RodClearanceSnug()  = RodClearanceSnug;
 function RodClearanceLoose() = RodClearanceLoose;
 
+RodBicNozzle = [
+  [RodDiameter, 0.093],
+  [RodRadius, 0.093/2],
+  [RodClearanceSnug, 0.04],
+  [RodClearanceLoose, 0.06],
+  [RodFn, 5]
+];
+function Spec_RodBicNozzle() = RodBicNozzle;
+
+RodBicFlint = [
+  [RodDiameter, 0.0985],
+  [RodRadius, 0.0985/2],
+  [RodClearanceSnug, 0.04],
+  [RodClearanceLoose, 0.06],
+  [RodFn, 5]
+];
+function Spec_RodBicFlint() = RodBicFlint;
+
 RodOneEighthInch = [
   [RodDiameter, 1/8],
   [RodRadius, 1/8/2],

@@ -23,11 +23,11 @@ function PipeInnerRadius(pipe, clearance)   = PipeInnerDiameter(pipe, clearance)
 function PipeWall(pipe)                     = PipeOuterRadius(pipe) - PipeInnerRadius(pipe);
 function PipeFn(pipe)                       = lookup(PipeFn, pipe);
 
-module Pipe2d(pipe, clearance=PipeClearanceSnug) {
+module Pipe2d(pipe, clearance=PipeClearanceSnug()) {
   echo("PipeOuterRadius,PipeClearance: ", PipeOuterRadius(pipe=pipe, clearance=clearance), clearance);
-  circle(r=PipeOuterRadius(pipe=pipe, clearance=PipeClearanceSnug), $fn=lookup(PipeFn, pipe));
+  circle(r=PipeOuterRadius(pipe=pipe, clearance=clearance), $fn=lookup(PipeFn, pipe));
 };
-module Pipe(pipe, length = 1, clearance=PipeClearanceSnug, center=false) {
+module Pipe(pipe, length = 1, clearance=PipeClearanceSnug(), center=false) {
   translate([0,0,center ? -length/2 : 0])
   linear_extrude(height=length)
   Pipe2d(pipe=pipe, clearance=clearance);
@@ -69,7 +69,7 @@ PipeThreeQuarterInch = [
   [PipeFn,              30],
   [PipeWeightPerUnit,   40]
 ];
-function Spec_PipeThreeQuarterInch() = PipeThreeQuarterInch;
+  function Spec_PipeThreeQuarterInch() = PipeThreeQuarterInch;
 
 // 1" Pipe
 PipeOneInch = [

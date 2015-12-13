@@ -7,8 +7,6 @@ function GripSlotAngle() = 30;
 function GripWidth() = 0.9;
 function GripExtensionX(extension=GripExtension(), angle=GripSlotAngle()) = extension * sin(angle);
 function GripExtensionZ(extension=GripExtension(), angle=GripSlotAngle()) = extension * cos(angle);
-function GripOffsetX(receiver=Spec_TeeThreeQuarterInch()) = -(TeeWidth(receiver)/2)+0.1;
-function GripOffsetZ(receiver=Spec_TeeThreeQuarterInch()) = -TeeCenter(receiver)-TeeRimWidth(receiver);
 
 module GripBolt(length=0.73,
                 bolt_od=0.255, bolt_offset_x=-0.22,
