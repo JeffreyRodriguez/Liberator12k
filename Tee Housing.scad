@@ -7,9 +7,9 @@ use <Trigger.scad>;
 use <Trigger Guard.scad>;
 use <Reference.scad>;
 
-module front_tee_housing(receiver=Spec_TeeThreeQuarterInch(),
-                         barrelPipe=Spec_PipeThreeQuarterInch(),
-                         forendRod=Spec_RodFiveSixteenthInch(),
+module front_tee_housing(receiver=ReceiverTee(),
+                         barrelPipe=BarrelPipe(),
+                         forendRod=FrameRod(),
                          forendPinRod=Spec_RodFiveSixteenthInch(),
                          breechBushing=BushingThreeQuarterInch,
                          wall=WallTee(), $fn=40) {
@@ -26,13 +26,13 @@ module front_tee_housing(receiver=Spec_TeeThreeQuarterInch(),
         circle(r=TeeRimDiameter(receiver)/2 + WallTee());
 
         // Trigger Fork Body
-        translate([TriggerGuardFrontPinZ()-RodDiameter(forendPinRod),
+        translate([TriggerGuardFrontPinZ()-RodDiameter(GripRod()),
                    -0.75])
         square([TeeRimRadius(receiver),
                 1.5]);
       }
 
-      TeeHousingFrontPin(receiver, length=2.4,
+      TeeHousingFrontPin(length=2.4,
                          extraRadius=WallTriggerGuardRod(),
                          $fn=Resolution(20,60));
     }
@@ -51,8 +51,8 @@ module front_tee_housing(receiver=Spec_TeeThreeQuarterInch(),
 
     Frame(receiver);
 
-    TeeHousingFrontPin(receiver, length=3) {
-      TeeHousingPinFlat(offset=01, length=1);
+    TeeHousingFrontPin(length=3) {
+      TeeHousingPinFlat(offset=1, length=1);
     }
 
     Breech(receiver, breechBushing);
