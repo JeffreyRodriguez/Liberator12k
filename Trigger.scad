@@ -1,4 +1,4 @@
-//$t=0;
+//$t=1;
 include <Components.scad>;
 use <Debug.scad>;
 use <Components/Semicircle.scad>;
@@ -67,7 +67,7 @@ function TriggerInterfaceArc() = 3.14*pow(SearMajorRadius(),2)/360*TriggerAngle(
 
 function SafetyPinX() = TriggerPinX() - (TriggerMaxMajor()/2*sqrt(2));
 function SafetyPinZ() = TriggerPinZ();
-function SafetyMajorOD() = 2.25;
+function SafetyMajorOD() = 3;
 function SafetyInterfaceOD() = 2.63;
 function SafetyMinorRadius() = 0.45;
 function SafetyHoleRadius() = 0.2;
@@ -227,12 +227,12 @@ module Trigger(pin=RodOneEighthInch, height=0.24) {
           translate([TeeRimWidth(receiverTee),0])
           circle(r=1.4);
 
-          // Safety-engagement surface
-          rotate(-18)
+          // Safety cutout
+          rotate(-8-SafetyAngle())
           translate([SafetyPinX(), SafetyPinZ()])
           translate([-TriggerPinX(), -TriggerPinZ()])
           rotate(SafetyBarAngle()+1.8)
-          #semicircle(od=SafetyInterfaceOD()+0.02, angle=30, $fn=Resolution(30, 100));
+          semicircle(od=SafetyInterfaceOD()+0.02, angle=30, $fn=Resolution(30, 100));
 
           // Test Rope Hole
           rotate(90)
