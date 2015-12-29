@@ -1,4 +1,4 @@
-$t=0;
+//$t=0;
 include <Components.scad>;
 use <Debug.scad>;
 use <Components/Semicircle.scad>;
