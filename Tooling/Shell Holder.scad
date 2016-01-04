@@ -13,7 +13,7 @@ module ShellHolder(count=4, shellOd=0.79, wall=1/16, height=1/2, base=3/16, widt
 
         // Base
         translate([(shellOd/2), -(shellOd/2) -wall])
-        #square([max(base, wall), width]);
+        square([max(base, wall), width]);
 
         // Infill
         translate([0,-(shellOd/2) - wall])
