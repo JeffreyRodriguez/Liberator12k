@@ -140,7 +140,7 @@ TeeRimWidth        = 7; // Width of the tee rim
 TeeInfillSphere    = 8; // Diameter of the infill sphere, cuts out the casting infill between the tee sections
 TeeInfillOffset    = 9; // Offset for the infill sphere from center
 
-// Anvil USA 3/4" Pipe Tee
+// Anvil USA 3/4" Cast Iron Pipe Tee (DANGEROUS, OUTSIDE SPEC)
 TeeThreeQuarterInch = [
   [TeeOuterDiameter,   1.41],
   [TeeWidth,           2.64],
@@ -153,6 +153,21 @@ TeeThreeQuarterInch = [
   [TeeInfillOffset,    0.41]
 ];
 function Spec_TeeThreeQuarterInch() = TeeThreeQuarterInch;
+
+// Anvil USA 3/4" Forged Steel Pipe Tee
+AnvilForgedSteel_TeeThreeQuarterInch = [
+  [TeeOuterDiameter,   1.37],
+  [TeeWidth,           2.765],
+  [TeeHeight,          2],     // Measured 1.998-2.042
+  [TeeHeightClearance, 0.022], // Derived from (height range/2)
+  [TeeInnerDiameter,   0.88],
+  [TeeRimDiameter,     1.556],
+  [TeeRimWidth,        0.9],
+  [TeeInfillSphere,    0.10],
+  [TeeInfillOffset,    0.41]
+];
+function Spec_AnvilForgedSteel_TeeThreeQuarterInch() = AnvilForgedSteel_TeeThreeQuarterInch;
+
 
 // Chinese 304SS-150 3/4" Tee
 304SS_150_TeeThreeQuarterInch = [

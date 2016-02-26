@@ -3,9 +3,9 @@ use <Vitamins/Rod.scad>;
 use <Reference Build Area.scad>;
 
 //DEFAULT_BARREL = Spec_PointFiveSix9mmBarrel();
-DEFAULT_BARREL = Spec_PipeThreeQuarterInch();
+//DEFAULT_BARREL = Spec_PipeThreeQuarterInch();
 //DEFAULT_BARREL = Spec_PipeOneInch(); // Trying a 1" pipe sleeve around the shell
-//DEFAULT_BARREL = Spec_TubingOnePointOneTwoFive();
+DEFAULT_BARREL = Spec_TubingOnePointOneTwoFive();
 
 DEFAULT_STOCK = Spec_PipeThreeQuarterInch();
 DEFAULT_BREECH = Spec_BushingThreeQuarterInch();
@@ -16,7 +16,7 @@ DEFAULT_RESET_ROD = Spec_RodBicNozzle();
 DEFAULT_TRIGGER_ROD = Spec_RodOneEighthInch();
 DEFAULT_FIRING_PIN_ROD = Spec_RodOneEighthInch();
 DEFAULT_GRIP_ROD = Spec_RodFiveSixteenthInch();
-DEFAULT_RECEIVER = Spec_TeeThreeQuarterInch();
+DEFAULT_RECEIVER = Spec_AnvilForgedSteel_TeeThreeQuarterInch();
 DEFAULT_BARREL_LENGTH = 18;
 
 

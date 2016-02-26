@@ -571,15 +571,15 @@ module trigger_plater($t=0) {
   scale([25.4, 25.4, 25.4]) {
     for (i=[[0, SafetyRod()], [1, ResetRod()]])
     translate([i[0],-1/4,0])
-    *Spindle(pin=i[1], height=0.28, center=false);
+    Spindle(pin=i[1], height=0.28, center=false);
 
     translate([1/8,1/2,1/8])
     rotate([90,0,0])
-    *Trigger();
+    Trigger();
 
     translate([1/8,-1/8,1/8])
     rotate([90,0,0])
-    *Sear();
+    Sear();
 
     translate([0,0,1/8])
     rotate([90,0,0])
