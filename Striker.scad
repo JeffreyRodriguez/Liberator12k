@@ -13,7 +13,7 @@ module FiringPin() {
 
 
 
-module FiringPinGuide(height=FiringPinGuideHeight(), od=TeeInnerDiameter(ReceiverTee()), $fn=20) {
+module FiringPinGuide(height=FiringPinGuideHeight(), od=TeeInnerDiameter(ReceiverTee())) {
   offsetX = (TeeWidth(ReceiverTee())/2) -BushingDepth(BreechBushing());
 
   color("Orange")
@@ -21,12 +21,12 @@ module FiringPinGuide(height=FiringPinGuideHeight(), od=TeeInnerDiameter(Receive
   difference() {
     translate([offsetX,0,0])
     rotate([0,-90,0])
-    cylinder(r=od/2, h=height, $fn=RodFn(FiringPinRod())*4);
+    cylinder(r=od/2, h=height, $fn=RodFn(FiringPinRod())*Resolution(2, 4));
 
     // Tapered Entrance
     translate([offsetX - (height/3*2),0,0])
     rotate([0,-90,0])
-    cylinder(r1=RodRadius(FiringPinRod()), r2=1/4, h=height/3, $fn=RodFn(FiringPinRod())*2);
+    cylinder(r1=RodRadius(FiringPinRod()), r2=1/4, h=height/3, $fn=RodFn(FiringPinRod())*Resolution(1, 2));
 
     // Firing Pin Hole
     translate([offsetX+0.1,0,0])
@@ -36,7 +36,7 @@ module FiringPinGuide(height=FiringPinGuideHeight(), od=TeeInnerDiameter(Receive
 }
 
 module Striker() {
-  translate([(0.5*$t),0,0])
+  translate([((-StrikerX())+0.0)*$t,0,0])
   translate([StrikerX(),0,0])
   rotate([0,-90,0])
   striker();
@@ -46,7 +46,8 @@ module striker(length=4, od=StrikerRadius()*2, id=0.53,
                firingPin = Spec_RodOneEighthInch(),
                linePin = Spec_RodOneEighthInch(),
                depth=0.8,
-               rope_width = 1/8, rope_depth=1/4, $fn=30) {
+               rope_width = 1/8, rope_depth=1/4,
+               $fn=RodFn(FiringPinRod())*Resolution(2, 4)) {
 
   difference() {
 
@@ -86,5 +87,7 @@ module striker(length=4, od=StrikerRadius()*2, id=0.53,
 scale([25.4, 25.4, 25.4]) {
   FiringPinGuide();
   Striker();
+  
+  color("Grey", 0.15)
   Reference();
 }

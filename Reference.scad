@@ -10,9 +10,11 @@ DEFAULT_BARREL = Spec_TubingOnePointOneTwoFive();
 DEFAULT_STOCK = Spec_PipeThreeQuarterInch();
 DEFAULT_BREECH = Spec_BushingThreeQuarterInch();
 DEFAULT_FRAME_ROD = Spec_RodFiveSixteenthInch();
+DEFAULT_ACTUATOR_ROD = Spec_RodFiveSixteenthInch(); // Revolver Setting
+DEFAULT_CYLINDER_ROD = Spec_RodFiveSixteenthInch(); // Revolver Setting
 DEFAULT_SEAR_ROD = Spec_RodOneEighthInch();
-DEFAULT_SAFETY_ROD = Spec_RodBicFlint();
-DEFAULT_RESET_ROD = Spec_RodBicNozzle();
+DEFAULT_SAFETY_ROD = Spec_RodOneEighthInch();
+DEFAULT_RESET_ROD = Spec_RodOneEighthInch();
 DEFAULT_TRIGGER_ROD = Spec_RodOneEighthInch();
 DEFAULT_FIRING_PIN_ROD = Spec_RodOneEighthInch();
 DEFAULT_GRIP_ROD = Spec_RodFiveSixteenthInch();
@@ -24,15 +26,22 @@ DEFAULT_BARREL_LENGTH = 18;
 RESOLUTION = 1;
 function Resolution(low, high) = RESOLUTION == 0 ? low : high;
 
+// Settings: Manifold Gap
+MANIFOLD_GAP = 0.0009;
+function ManifoldGap(n=1) = MANIFOLD_GAP*n;
+
 // Settings: Walls
-function WallTee()              = 3/16;
-function WallTriggerGuardRod()  = 0.2;
-function WallFrameRod()         = 0.18;
-function WallFrameBack()        = 0.5;
+function WallTee()              = 0.1;
+function WallTriggerGuardRod()  = 0.35;
+function WallFrameRod()         = 0.2;
+function WallFrameFront()       = 0.215;
+function WallFrameBack()        = 0.25;
 function WallBarrelLug()        = 0.1;
 
 // Settings: Offsets
+function OffsetFrameRod() = 0.4;
 function OffsetFrameBack() = 0.315 + WallFrameBack();
+function FrameRodMatchedAngle() = 45;
 
 // Settings: Vitamins
 function BarrelPipe() = DEFAULT_BARREL;
@@ -40,6 +49,8 @@ function BreechBushing() = DEFAULT_BREECH;
 function ReceiverTee() = DEFAULT_RECEIVER;
 function StockPipe() = DEFAULT_STOCK;
 function FrameRod() = DEFAULT_FRAME_ROD;
+function ActuatorRod() = DEFAULT_ACTUATOR_ROD;
+function CylinderRod() = DEFAULT_CYLINDER_ROD;
 function SearRod() = DEFAULT_SEAR_ROD;
 function SafetyRod() = DEFAULT_SAFETY_ROD;
 function ResetRod() = DEFAULT_RESET_ROD;
@@ -56,9 +67,9 @@ module Barrel(barrel=DEFAULT_BARREL, barrelLength=DEFAULT_BARREL_LENGTH,
 
 }
 
-module Receiver(receiver=Spec_TeeThreeQuarterInch()) {
+module Receiver(receiver=ReceiverTee()) {
   translate([0,0,-TeeCenter(receiver)])
-  Tee(receiver);
+  CrossFitting(receiver);
 }
 
 function ReceiverInnerWidth(receiver) = TeeWidth(receiver) - (TeeRimWidth(receiver)*2);
@@ -82,9 +93,9 @@ module Breech(receiver, breech) {
   Bushing(spec=breech);
 }
 
-module Reference(barrel=Spec_TubingOnePointOneTwoFive(), barrelLength=18,
+module Reference(barrel=BarrelPipe(), barrelLength=18,
                  breech=Spec_BushingThreeQuarterInch(),
-                 receiver=Spec_TeeThreeQuarterInch(),
+                 receiver=ReceiverTee(),
                  stock=Spec_PipeThreeQuarterInch(), stockLength=12,
                  butt=Spec_TeeThreeQuarterInch()) {
 

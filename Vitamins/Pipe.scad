@@ -99,6 +99,34 @@ TubingOnePointOneTwoFive = [
 ];
 function Spec_TubingOnePointOneTwoFive() = TubingOnePointOneTwoFive;
 
+// 0.75x0.410" DOM Tubing (Just guessing)
+TubingZeroPointSevenFive = [
+  [PipeInnerDiameter,   0.410],
+  [PipeOuterDiameter,   0.750],
+  [PipeTaperedDiameter, 0.750],
+  [PipeThreadLength,    0.0],
+  [PipeThreadDepth,     0.0],
+  [PipeClearanceSnug,   0.020],
+  [PipeClearanceLoose,  0.022],
+  [PipeFn,              30],
+  [PipeWeightPerUnit,   42]
+];
+function Spec_TubingZeroPointSevenFive() = TubingZeroPointSevenFive;
+
+// 0.375" OD DOM Tubing (Just guessing)
+TubingThreeEighthsInch = [
+  [PipeInnerDiameter,   0.23],
+  [PipeOuterDiameter,   0.375],
+  [PipeTaperedDiameter, 0.375],
+  [PipeThreadLength,    0.0],
+  [PipeThreadDepth,     0.0],
+  [PipeClearanceSnug,   0.020],
+  [PipeClearanceLoose,  0.022],
+  [PipeFn,              20],
+  [PipeWeightPerUnit,   0]
+];
+function Spec_TubingThreeEighthsInchh() = TubingThreeEighthsInch;
+
 // 5/16" Brake Line, for .22LR
 FiveSixteenthInchBrakeLine = [
   [PipeInnerDiameter,   0.22],
@@ -192,7 +220,7 @@ function TeeInnerRadius(tee)   = lookup(TeeInnerDiameter, tee)/2;
 function TeeRimDiameter(tee)   = lookup(TeeRimDiameter, tee);
 function TeeRimRadius(tee)     = lookup(TeeRimDiameter, tee)/2;
 function TeeRimWidth(tee)      = lookup(TeeRimWidth, tee);
-function TeeCenter(tee)        = lookup(TeeHeight, tee) - TeeOuterRadius(tee);
+function TeeCenter(tee)        = lookup(TeeWidth, tee)/2; //lookup(TeeHeight, tee) - TeeOuterRadius(tee);
 
 module TeeTetris_Side(tee) {
   rotate([0,90,0])
@@ -229,14 +257,64 @@ module Tee(tee, $fn=40) {
       translate([0,0,TeeRimWidth(tee)])
       cylinder(r1=TeeRimRadius(tee),
                r2=TeeOuterRadius(tee),
-                h=TeeRimWidth(tee)*1/4,
+                h=0.05,
                 $fn=36);
       }
     }
 
     // Tee Body Casting Infill
     // TODO: Tweak this? Could be better, could be worse.
-    intersection() {
+    *intersection() {
+      translate([0,0,TeeCenter(tee) + lookup(TeeInfillSphere, tee)])
+      sphere(r=TeeRimRadius(tee) + lookup(TeeInfillOffset, tee), $fn=36);
+
+      translate([-TeeRimRadius(tee),-TeeOuterRadius(tee),0])
+      cube([TeeRimDiameter(tee),TeeOuterDiameter(tee),TeeCenter(tee)]);
+    }
+   }
+};
+
+module CrossFitting(tee, $fn=40) {
+   render()
+   union() {
+
+     // Horizontal Body
+     rotate([0,-90,0])
+     translate([TeeHeight(tee) - (TeeOuterDiameter(tee)/2),0,0])
+     cylinder(r=TeeOuterRadius(tee), h=TeeWidth(tee) * 0.99, center=true, $fn=36);
+
+     // Vertical Body
+     translate([0,0,TeeCenter(tee) * 0.01])
+     cylinder(r=TeeOuterRadius(tee), h=TeeCenter(tee) * 0.98, $fn=36);
+
+     // Bottom Vertical Rim
+     cylinder(r=TeeRimRadius(tee), h=TeeRimWidth(tee), $fn=36);
+
+     // Top Vertical Rim
+     translate([0,0,TeeWidth(tee)-TeeRimWidth(tee)])
+     cylinder(r=TeeRimRadius(tee), h=TeeRimWidth(tee), $fn=36);
+
+
+    // Rims
+    for (i = [1, -1]) {
+
+      // Rim
+      translate([i*TeeWidth(tee)/2,0,TeeCenter(tee)])
+      rotate([0,i*-90,0]) {
+      cylinder(r=TeeRimRadius(tee), h=TeeRimWidth(tee), $fn=36);
+
+      // Casting Infill
+      translate([0,0,TeeRimWidth(tee)])
+      cylinder(r1=TeeRimRadius(tee),
+               r2=TeeOuterRadius(tee),
+                h=0.05,
+                $fn=36);
+      }
+    }
+
+    // Tee Body Casting Infill
+    // TODO: Tweak this? Could be better, could be worse.
+    *intersection() {
       translate([0,0,TeeCenter(tee) + lookup(TeeInfillSphere, tee)])
       sphere(r=TeeRimRadius(tee) + lookup(TeeInfillOffset, tee), $fn=36);
 

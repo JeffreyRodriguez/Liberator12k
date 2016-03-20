@@ -1,148 +1,185 @@
 use <Vitamins/Rod.scad>;
 use <Vitamins/Pipe.scad>;
-include <Components.scad>;
+use <Reference.scad>;
 
-module revolver_cylinder(chamber=PipeThreeQuarterInch, spindleRod=RodOneQuarterInch, debug=false, $fn=30) {
+function CylinderWall() = 0.01;
+function CylinderOuterWall() = 3/64;
+function CylinderChamberOffset() = PipeOuterDiameter(BarrelPipe()) + CylinderWall();
+shots = 6;
+function ZigZagDepth() = 3/16;
+zigzag_clearance = 0.00;
+function CylinderRadius() = CylinderChamberOffset() +PipeOuterRadius(BarrelPipe())
+                            + CylinderOuterWall() + ZigZagDepth();
 
-  echo("Cylinder OD:", revolver_cylinder_od);
-  echo("Cylinder Circ:", cylinder_circumference);
-  echo("Rotation Arc:", rotation_arc);
-  echo("ZigZag Height:", zigzag_height);
-  echo("Cylinder Height:", revolver_cylinder_height);
 
-zigzag_cutter_width = zigzag_width + revolver_zigzag_pin_diameter/2.5; // ???: Eyeballed this one
+cylinder_radius = (PipeOuterDiameter(BarrelPipe())*1.5)+CylinderWall() + CylinderOuterWall() + ZigZagDepth();
+//cylinder_od   = cylinder_radius*2;
 
-union() {
-  difference() {
+// Calculated: Revolver Cylinder
+zigzag_width = RodDiameter(ActuatorRod()) + (zigzag_clearance*2);
+cylinder_circumference = 3.14 * pow(cylinder_radius, 2);
+center_offset = PipeOuterDiameter(BarrelPipe()) + CylinderWall();
+rotation_angle = 360/shots;
+rotation_arc_length = cylinder_circumference/shots;
+zigzag_height = (rotation_arc_length/2) + (RodDiameter(ActuatorRod())*sqrt(2));
+cylinder_height = zigzag_height + (RodDiameter(ActuatorRod())*2.5);
 
-    // Body
-    color("Gold")
-    cylinder(r=revolver_cylinder_od/2, h=revolver_cylinder_height, $fn=60);
+top_slot_height = RodDiameter(ActuatorRod())*2;
+bottom_slot_height = RodDiameter(ActuatorRod())*2;
 
-    for (i=[0:revolver_shots-1]) {
+zigzag_cutter_width = zigzag_width + RodDiameter(ActuatorRod())/2.5; // ???: Eyeballed this one
+
+function ZigZagMajorArcLength() = cylinder_circumference/zigzag_width;
+function ZigZagMajorArcAngle() = cylinder_circumference/360*ZigZagMajorArcLength();
+
+module CylinderSpindle(nutHeight=0.23) {
+
+    // Spindle Rod
+    translate([0,0,-CylinderChamberOffset()])
+    rotate([0,90,0])
+    linear_extrude(height=TeeWidth(ReceiverTee()))
+    Rod2d(rod=CylinderRod(),clearance=RodClearanceLoose());
+
+    // Spindle Nut
+    translate([TeeRimRadius(ReceiverTee())+0.22,0,-CylinderChamberOffset()])
+    rotate([0,-90,0])
+    rotate(360/6/2)
+    cylinder(r=0.58/2, $fn=6, h=nutHeight);
+}
+
+module ZigZag() {
+    for (i=[0:shots-1]) {
       rotate([0,0,rotation_angle*i]) {
 
-        // Pins
-        if (debug)
-        translate([revolver_cylinder_od/2 - revolver_zigzag_depth,0,revolver_zigzag_pin_diameter/2])
-        rotate([0,90,0])
-        %cylinder(r=revolver_zigzag_pin_diameter/2, h=revolver_zigzag_depth*2);
-
         // Chamber Holes
-        translate([PipeOuterDiameter(PipeThreeQuarterInch) + revolver_cylinder_wall,0,-0.1])
-        Pipe(pipe=chamber, clearance=PipeClearanceSnug, length=revolver_cylinder_height + 0.2);
-
-        // Chamber Mocks
-        if (debug)
-        translate([
-          PipeOuterDiameter(PipeThreeQuarterInch) + revolver_cylinder_wall,
-          0,
-          0])//-chamber_length/2 + revolver_cylinder_height/2])
-        *%Pipe(clearance=PipeClearanceSnug, length=chamber_length);
-
-        // Flutes
-        rotate([0,0,360/12])
-        translate([(revolver_cylinder_od/2) + revolver_cylinder_wall,0,0])
-        *sphere(r=PipeOuterRadius(PipeThreeQuarterInch), $fn=20);
+        translate([CylinderChamberOffset(),0,-0.1])
+        Pipe(pipe=BarrelPipe(), clearance=PipeClearanceSnug(), length=cylinder_height + 0.2);
 
         // Zig (push)
-        render()
-        translate([0,0,bottom_slot_height])
+        #translate([0,0,bottom_slot_height-RodRadius(ActuatorRod())])
         difference() {
           linear_extrude(height = zigzag_height,
                          center = false,
                          convexity = 1,
-                         slices=25,
-                         twist = rotation_angle/2 + 360/(1*(cylinder_circumference/zigzag_width)))
-          translate([revolver_cylinder_od/2 -revolver_zigzag_depth,-zigzag_width/2, 0])
-          square([revolver_zigzag_depth*2, zigzag_cutter_width]);
+                         slices=Resolution(8,20),
+                         twist = rotation_angle/2)
+          translate([cylinder_radius -ZigZagDepth(),-zigzag_width/2, 0])
+          square([ZigZagDepth()*2, zigzag_cutter_width]);
 
           // Chop off the top tip
-          rotate([0,0,-rotation_angle/2  +  360/(4*(cylinder_circumference/zigzag_width))])
-          translate([revolver_cylinder_od/2 - revolver_zigzag_depth*2,
+          rotate([0,0,-(rotation_angle/2)-ZigZagMajorArcAngle()])
+          translate([cylinder_od/2 - ZigZagDepth()*2,
                      -zigzag_cutter_width*1.5,
                      zigzag_height - top_slot_height + zigzag_clearance])
-          cube([revolver_zigzag_depth*4,
+          cube([ZigZagDepth()*4,
                 zigzag_cutter_width*1.5,
-                top_slot_height]);
+                top_slot_height+0.1]);
 
           // Chop off the bottom tip
-          translate([revolver_cylinder_od/2 - revolver_zigzag_depth*2,
+          translate([cylinder_od/2 - ZigZagDepth()*2,
                      zigzag_width/2,
-                     -revolver_zigzag_pin_diameter/2])
-          cube([revolver_zigzag_depth*4,
+                     -RodDiameter(ActuatorRod())/2])
+          cube([ZigZagDepth()*4,
                 zigzag_cutter_width,
-                revolver_zigzag_pin_diameter*2]);
+                RodDiameter(ActuatorRod())*2]);
         }
 
         // Zag (pull)
-        render()
-        rotate([0,0,rotation_angle])
-        translate([0,0,revolver_zigzag_pin_diameter])
+        #rotate([0,0,-rotation_angle-1])
+        translate([0,0,RodRadius(ActuatorRod())])
         difference() {
           linear_extrude(height = zigzag_height,
                           center = false,
                           convexity = 3,
-                          slices=25,
-                          twist = -rotation_angle/2 -360/(1*(cylinder_circumference/zigzag_width)))
-          translate([revolver_cylinder_od/2-revolver_zigzag_depth, -(zigzag_cutter_width) + zigzag_width/2, 0])
-          square([revolver_zigzag_depth*2, zigzag_cutter_width]);
+                          slices=Resolution(8,20),
+                          twist = -rotation_angle/2)
+          translate([cylinder_radius-ZigZagDepth(), -(zigzag_cutter_width) + zigzag_width/2, 0])
+          square([ZigZagDepth()*2, zigzag_cutter_width]);
 
           // Chop off the top tip
           rotate([0,0,rotation_angle/2 + 360/(1.8*(cylinder_circumference/zigzag_width))])
-          translate([revolver_cylinder_od/2 - revolver_zigzag_depth*2,
+          translate([cylinder_od/2 - ZigZagDepth()*2,
                      0,
                      zigzag_height-top_slot_height + zigzag_clearance])
-          cube([revolver_zigzag_depth*4,
+          cube([ZigZagDepth()*4,
                 zigzag_cutter_width,
                 top_slot_height]);
 
           // Chop off the bottom tip
-          translate([revolver_cylinder_od/2 - revolver_zigzag_depth*2,
+          translate([cylinder_od/2 - ZigZagDepth()*2,
                      -zigzag_cutter_width + zigzag_width/2 - zigzag_clearance,
-                     -revolver_zigzag_pin_diameter/2])
-          cube([revolver_zigzag_depth*4,
+                     -RodDiameter(ActuatorRod())/2])
+          cube([ZigZagDepth()*4,
                 zigzag_cutter_width,
-                revolver_zigzag_pin_diameter*3]);
+                RodDiameter(ActuatorRod())*3]);
         }
 
         // Vertical slot top
-        rotate([0,0,rotation_angle/2])
+        rotate([0,0,-rotation_angle/2])
         translate([
-          revolver_cylinder_od/2 - revolver_zigzag_depth + 0.001,
+          cylinder_od/2 - ZigZagDepth() + 0.001,
           -zigzag_width/2,
-          revolver_cylinder_height - top_slot_height - zigzag_clearance*2])
-        cube([revolver_zigzag_depth*2, zigzag_width, top_slot_height + zigzag_clearance*3]);
+          cylinder_height - top_slot_height - zigzag_clearance*2])
+        cube([ZigZagDepth()*2, zigzag_width, top_slot_height + zigzag_clearance*3]);
 
         // Vertical slot bottom
         translate([
-          revolver_cylinder_od/2 - revolver_zigzag_depth + 0.001,
+          cylinder_radius - ZigZagDepth() + 0.001,
           -zigzag_width/2,
           -zigzag_clearance])
-        cube([revolver_zigzag_depth*2, zigzag_width, bottom_slot_height + zigzag_clearance*2]);
+        cube([ZigZagDepth()*2, zigzag_width, bottom_slot_height + zigzag_clearance*2]);
       }
     }
-
-    // Spindle
-    translate([0,0,-2])
-    Rod(rod=spindleRod, clearance=RodClearanceLoose, length=7);
-
-    // Gas Sealing Pipe
-    translate([revolver_center_offset,0,revolver_cylinder_height])
-    *%Pipe(PipeOneInch, length=1);
-  }
-
 }
 
+module RevolverCylinder(shots=6, debug=false) {
 
-  // Support Material
-  color("Black")
-  for (i=[0:revolver_shots-1]) {
-    rotate([0,0,rotation_angle*i])
-    translate([revolver_cylinder_od/2 - revolver_zigzag_depth - 0.008,zigzag_width/2,revolver_zigzag_pin_diameter])
-    cube([revolver_zigzag_depth, 0.01, revolver_zigzag_pin_diameter * 1.75]);
+  echo("Cylinder OD:", cylinder_radius);
+  echo("Cylinder Circ:", cylinder_circumference);
+  echo("Rotation Arc:", rotation_arc_length);
+  echo("ZigZag Height:", zigzag_height);
+  echo("Cylinder Height:", cylinder_height);
+  echo ("ZigZagMajorArcAngle(): ", ZigZagMajorArcAngle());
+
+  union() {
+    difference() {
+
+      // Body
+      color("Gold")
+      linear_extrude(height=cylinder_height)
+      difference() {
+        circle(r=cylinder_radius, $fn=Resolution(30,120));
+
+        // Chambers
+        for (i=[0:shots-1])
+        rotate([0,0,rotation_angle*i]) {
+          translate([CylinderChamberOffset(),0])
+          Pipe2d(pipe=BarrelPipe(), clearance=PipeClearanceSnug());
+        }
+
+        // Spindle
+        Rod2d(rod=CylinderRod(), clearance=RodClearanceLoose());
+
+        // Trim the tips between the chambers, it's a donut shape
+        difference() {
+          circle(r=CylinderChamberOffset(), $fn=Resolution(30,50));
+          circle(r=CylinderChamberOffset()*0.7, $fn=Resolution(30,50));
+        }
+      }
+
+      ZigZag();
+    }
+
+    // Support Material
+    *color("Black")
+    for (i=[0:shots-1]) {
+      rotate([0,0,rotation_angle*i])
+      translate([cylinder_radius - ZigZagDepth() - 0.008,zigzag_width/2,RodDiameter(ActuatorRod())])
+      cube([ZigZagDepth(), 0.031, RodDiameter(ActuatorRod()) * 1.75]);
+    }
   }
 }
 
 scale([25.4, 25.4, 25.4])
-revolver_cylinder(debug=true);
+render()
+RevolverCylinder(debug=true);

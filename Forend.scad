@@ -2,18 +2,19 @@ use <Debug.scad>;
 use <Components/Semicircle.scad>;
 use <Vitamins/Pipe.scad>;
 use <Vitamins/Rod.scad>;
-use <Forend Rail.scad>;
 use <Frame.scad>;
 use <Reference.scad>;
 use <Reference Build Area.scad>;
 use <Ammo/Shell Slug.scad>;
 
+use <Cylinder.scad>;
+
 function ForendRearLength() = 1;
 function ForendFrontLength() = 0.6;
 function LugRadius() = TeeRimRadius(ReceiverTee())+(WallFrameRod()*0.6);
 function LugAngle() = 45;
-function ForendOffset() = 2.5;
-function ForendTravel() = 3;
+function ForendOffset() = 3;
+function ForendTravel() = 2;
 function BarrelLugLength() = 1;
 
 module BarrelLug(length=BarrelLugLength(), wide=false, cutter=false) {
@@ -31,7 +32,7 @@ module BarrelLug(length=BarrelLugLength(), wide=false, cutter=false) {
       circle(r=minorOR +(cutter?0.02:0),
            $fn=Resolution(PipeFn(BarrelPipe()), PipeFn(BarrelPipe())*2));
 
-      for (angle = ForendRodAngles())
+      for (angle = FrameRodAngles())
       rotate(wide?LugAngle():0)
       rotate(-LugAngle()*.7)
       rotate(angle)
@@ -56,14 +57,17 @@ module BarrelLug(length=BarrelLugLength(), wide=false, cutter=false) {
 module ForendSegment(wall=3/16, length=1, $fn=50, track=false, wide=false, open=false) {
   render(convexity=4)
   difference() {
-    rotate([0,-90,180])
+    rotate([0,90,0])
     linear_extrude(height=length)
     hull() {
-      ForendRail(ReceiverTee(), BarrelPipe(), FrameRod(), wall);
+      FrameRodSleeves();
+      //ForendRail(ReceiverTee(), BarrelPipe(), FrameRod(), wall);
 
       // Add some more material to the center for ergo and strength
       circle(r=TeeRimRadius(ReceiverTee())+0.25,
              $fn=PipeFn(BarrelPipe()));
+      
+      children();
     }
 
     // Lug track
@@ -99,12 +103,17 @@ module ForendRear() {
               h=ForendRearLength(),
             $fn=PipeFn(BarrelPipe()));
 
-    // Side cutouts
-    difference() {
+    // Cutouts
+    *difference() {
+      // Side Cutouts
       for (i= [1,-1])
-      rotate([(FrameRodAngles()[1]+165)*i,0,0])
+      rotate([(FrameRodAngles()[1]+100)*i,0,0])
       translate([-0.3,-2,0])
       cube([ForendRearLength(), 4, 2]);
+      
+      // Bottom Cutout
+      translate([-0.3,-2,-2-(PipeOuterRadius(BarrelPipe())/2)])
+      *cube([ForendRearLength(), 4, 2]);
 
       // Taper the spacers
       for (angle = FrameRodAngles())
@@ -119,7 +128,80 @@ module ForendRear() {
   }
 }
 
-module Forend() {
+module ForendRevolverRear() {
+  render()
+  union() {
+    difference() {
+      ForendSegment(length=ForendRearLength()) {
+        
+          // Revolver Spindle
+          translate([CylinderChamberOffset(),0])
+          circle(r=RodRadius(CylinderRod())+WallFrameRod(),
+                   $fn=Resolution(10,30));
+        };
+    
+    
+      // Revolver Spindle
+      translate([-ForendRearLength(),0,-CylinderChamberOffset()])
+      rotate([0,90,0])
+      linear_extrude(height=ForendRearLength()*3)
+      Rod2d(CylinderRod(), clearance=RodClearanceLoose());
+      
+      // Spindle Nut
+      translate([ForendRearLength()+FrameNutHeight()-1,0,-CylinderChamberOffset()])
+      rotate([0,-90,0])
+      rotate(360/6/2)
+      cylinder(r=0.3, $fn=6, h=1);
+      
+      // Frame Nuts
+      translate([FrameNutHeight(),0,0])
+      mirror([1,0,0])
+      FrameNuts(nutHeight=1);
+        
+      // Barrel Shaft Collar
+      translate([ForendRearLength()+0.001,0,0])
+      rotate([0,-90,0])
+      cylinder(r=0.9375, h=0.5, $fn=Resolution(12,40));
+      
+      // Barrel Shaft Collar Screw Holes (single and double)
+      for (y = [-0.9375-0.6,0.9375-0.4])
+      translate([ForendRearLength() - 0.5,y,-3])
+      cube([0.5, 1, 3]);
+    }
+    
+    // Nut Hole Manual Support
+    translate([0.001,0,0])
+    mirror([1,0,0])
+    FrameHoleSupport();
+    
+    // Nut Hole Manual Support
+    translate([ForendRearLength()-1,0,-CylinderChamberOffset()])
+    rotate([0,90,0])
+    cylinder(r=RodRadius(FrameRod(), clearance=RodClearanceLoose())+0.005,
+              h=FrameNutHeight()+0.001, $fn=RodFn(FrameRod()));
+  }
+}
+
+module ForendRevolver(showLugs=false, frontLength=1) {
+
+  // Rear Faceplace
+  translate([(TeeWidth(ReceiverTee())/2)
+             +BushingExtension(BreechBushing())
+             +ForendOffset(),0,0])
+  render(convexity=4)
+  ForendRevolverRear();
+
+  // Front Faceplace
+  translate([(TeeWidth(ReceiverTee())/2)
+             +BushingExtension(BreechBushing())
+             +ForendOffset()
+             +ForendRearLength()
+             +0.03,0,0])
+  render(convexity=4)
+  *ForendSegment(length=frontLength);
+}
+
+module Forend(showLugs=false) {
 
   // Rear Faceplace
   translate([(TeeWidth(ReceiverTee())/2)
@@ -157,6 +239,10 @@ module Forend() {
              +0.04,0,0])
   render(convexity=4)
   ForendSegment(length=ForendFrontLength());
+  
+  if (showLugs)
+  color("Orange")
+  BarrelLugs();
 
   echo("Forend OAL: ", ForendRearLength()
              +ForendTravel()
@@ -206,9 +292,9 @@ scale([25.4, 25.4, 25.4]) {
   difference() {
     ForendSegment(length=0.8);
 
-    for (angle = ForendRodAngles())
+    for (angle = FrameRodAngles())
     rotate([180+angle,0,0])
-    translate([0.54, 0,ForendRailOffset()])
+    translate([0.54, 0,FrameRodOffset()])
     rotate([0,90,0])
     cylinder(r=0.59/2, h=0.28, $fn=6);
   }
@@ -218,16 +304,12 @@ scale([25.4, 25.4, 25.4]) {
 }
 
 
-*!render()
+!render()
 //DebugHalf()
 {
-  color("Orange")
-  BarrelLugs();
 
-  color("Green", 0.5)
-  render()
-  Forend();
+  ForendRevolver(showLugs=true);
 
-  Frame();
-  Reference();
+  *%Frame();
+  *%Reference();
 }

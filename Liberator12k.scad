@@ -17,15 +17,20 @@ use <Stock Spacer.scad>;
 use <Spring Cap.scad>;
 use <Striker Guide.scad>;
 
+use <Ammo/Magazines/Box Magazine.scad>;
+use <Ammo/Cartridges/Cartridge_12GA.scad>;
+
+use <Cylinder.scad>;
+
 module Liberator12k() {
 
-  //translate([ForendOffset(),0,0])
-  BarrelLugs();
+  //render() DebugHalf(dimension=30)
+  ForendRevolver();
 
-  //DebugHalf(dimension=30)
-  Forend();
+  *render() DebugHalf(dimension=30)
+  Forend(showLugs=true);
 
-  Reference_TriggerGuard(debug=true);
+  Grip(showTrigger=true);
 
   Reference_TeeHousing();
 
@@ -44,10 +49,10 @@ module Liberator12k() {
 
   color("Gold")
   translate([-TeeWidth(ReceiverTee())/2 -12,0,-(1/8)-TeeCenter(ReceiverTee())])
-  StrikerGuide();
+  *StrikerGuide();
 
   color("Grey", .7)
-  Frame();
+  %Frame();
 
   color("White", 0.2)
   Reference();
@@ -56,5 +61,20 @@ module Liberator12k() {
 //rotate([0,0,360*$t])
 //scale([25.4, 25.4, 25.4])
 {
+  render()
+  translate([BushingExtension(BreechBushing())+(TeeWidth(ReceiverTee())/2)+WallFrameFront(),0,-CylinderChamberOffset()])
+  rotate([0,90,0])
+  RevolverCylinder();
+  
+  color("Gold")
+  translate([(TeeWidth(ReceiverTee())/2)+WallFrameFront(),+(1/16)+(0.87/2),-(0.87*6)])
+  rotate(-90)
+  *BoxMagazine(cartridge=Spec_Cartridge_12GAx3(), capacity=5, angle=0,
+                   wallSide=1/16, wallFront=1/8, wallBack=1/8,
+                   floorHeight=1/8)
+  
+  *translate([TeeWidth(ReceiverTee())/2,-GripWidth()/2,-6])
+  #cube([1.25,GripWidth(), 6]);
+  
   Liberator12k();
 }

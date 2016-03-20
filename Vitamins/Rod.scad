@@ -28,8 +28,8 @@ function Spec_RodBicFlint() = RodBicFlint;
 RodOneEighthInch = [
   [RodDiameter, 1/8],
   [RodRadius, 1/8/2],
-  [RodClearanceSnug, 0.02],
-  [RodClearanceLoose, 0.03],
+  [RodClearanceSnug, 0.01],
+  [RodClearanceLoose, 0.02],
   [RodFn, 8]
 ];
 function Spec_RodOneEighthInch() = RodOneEighthInch;
