@@ -20,8 +20,10 @@ function PipeOuterDiameter(pipe, clearance) = lookup(PipeOuterDiameter, pipe) + 
 function PipeInnerDiameter(pipe, clearance) = lookup(PipeInnerDiameter, pipe) + PipeClearance(pipe, clearance);
 function PipeOuterRadius(pipe, clearance)   = PipeOuterDiameter(pipe, clearance)/2;
 function PipeInnerRadius(pipe, clearance)   = PipeInnerDiameter(pipe, clearance)/2;
+function PipeThreadDepth(pipe)              = lookup(PipeThreadDepth, pipe);
 function PipeWall(pipe)                     = PipeOuterRadius(pipe) - PipeInnerRadius(pipe);
 function PipeFn(pipe)                       = lookup(PipeFn, pipe);
+
 
 module Pipe2d(pipe, clearance=PipeClearanceSnug()) {
   echo("PipeOuterRadius,PipeClearance: ", PipeOuterRadius(pipe=pipe, clearance=clearance), clearance);
