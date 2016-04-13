@@ -1,4 +1,9 @@
-module spring_cap(base_length=0.1, cap_length=0.3, od=3/4, major_id=0.32, minor_id=0.3, $fn=20) {
+use <Vitamins/Rod.scad>;
+use <Reference.scad>;
+
+module spring_cap(base_length=0.25, cap_length=0.3, od=0.68,
+                  major_id=RodDiameter(FrameRod(),RodClearanceLoose())+0.05,
+                  minor_id=RodDiameter(FrameRod(),RodClearanceLoose()), $fn=20) {
   render()
   difference() {
     union() {

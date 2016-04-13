@@ -128,7 +128,7 @@ module ForendRear() {
   }
 }
 
-module ForendRevolverRear() {
+module ForendRevolverRear(shaftCollar=true) {
   render()
   union() {
     difference() {
@@ -146,43 +146,34 @@ module ForendRevolverRear() {
       rotate([0,90,0])
       linear_extrude(height=ForendRearLength()*3)
       Rod2d(CylinderRod(), clearance=RodClearanceLoose());
-      
-      // Spindle Nut
-      translate([ForendRearLength()+FrameNutHeight()-1,0,-CylinderChamberOffset()])
-      rotate([0,-90,0])
-      rotate(360/6/2)
-      cylinder(r=0.3, $fn=6, h=1);
-      
-      // Frame Nuts
-      translate([FrameNutHeight(),0,0])
-      mirror([1,0,0])
-      FrameNuts(nutHeight=1);
         
-      // Barrel Shaft Collar
-      translate([ForendRearLength()+0.001,0,0])
-      rotate([0,-90,0])
-      cylinder(r=0.9375, h=0.5, $fn=Resolution(12,40));
-      
-      // Barrel Shaft Collar Screw Holes (single and double)
-      for (y = [-0.9375-0.6,0.9375-0.4])
-      translate([ForendRearLength() - 0.5,y,-3])
-      cube([0.5, 1, 3]);
+      if (shaftCollar) {
+        // Barrel Shaft Collar
+        translate([ForendRearLength()+0.001,0,0])
+        rotate([0,-90,0])
+        cylinder(r=0.9375, h=0.5, $fn=Resolution(12,40));
+        
+        // Barrel Shaft Collar Screw Holes (single and double)
+        for (y = [-0.9375-0.6,0.9375-0.4])
+        translate([ForendRearLength() - 0.5,y,-3])
+        cube([0.5, 1, 3]);
+      }
     }
     
     // Nut Hole Manual Support
     translate([0.001,0,0])
     mirror([1,0,0])
-    FrameHoleSupport();
+    *FrameHoleSupport();
     
     // Nut Hole Manual Support
     translate([ForendRearLength()-1,0,-CylinderChamberOffset()])
     rotate([0,90,0])
-    cylinder(r=RodRadius(FrameRod(), clearance=RodClearanceLoose())+0.005,
+    *cylinder(r=RodRadius(FrameRod(), clearance=RodClearanceLoose())+0.005,
               h=FrameNutHeight()+0.001, $fn=RodFn(FrameRod()));
   }
 }
 
-module ForendRevolver(showLugs=false, frontLength=1) {
+module ForendRevolver(frontLength=1) {
 
   // Rear Faceplace
   translate([(TeeWidth(ReceiverTee())/2)
@@ -198,7 +189,7 @@ module ForendRevolver(showLugs=false, frontLength=1) {
              +ForendRearLength()
              +0.03,0,0])
   render(convexity=4)
-  *ForendSegment(length=frontLength);
+  ForendRevolverRear(shaftCollar=false);
 }
 
 module Forend(showLugs=false) {

@@ -1,4 +1,4 @@
-module stock_spacer(length=1, od=0.75, id=0.5, $fn=20) {
+module stock_spacer(length=1, od=0.6, id=11/32, $fn=20) {
   difference() {
     cylinder(r=od/2, h=length);
 
@@ -25,7 +25,7 @@ module stock_spacer(length=1, od=0.75, id=0.5, $fn=20) {
  *
  */
 scale([25.4, 25.4, 25.4]) {
-  stock_spacer(length=3.5);
+  stock_spacer(length=1);
   translate([2,2,0])
   *stock_spacer(length=1.5);
   translate([0,2,0])

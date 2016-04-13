@@ -55,8 +55,8 @@ module ZigZag() {
         translate([CylinderChamberOffset(),0,-0.1])
         Pipe(pipe=BarrelPipe(), clearance=PipeClearanceSnug(), length=cylinder_height + 0.2);
 
-        // Zig (push)
-        #translate([0,0,bottom_slot_height-RodRadius(ActuatorRod())])
+        // Zig
+        translate([0,0,bottom_slot_height-RodRadius(ActuatorRod())])
         difference() {
           linear_extrude(height = zigzag_height,
                          center = false,
@@ -68,7 +68,7 @@ module ZigZag() {
 
           // Chop off the top tip
           rotate([0,0,-(rotation_angle/2)-ZigZagMajorArcAngle()])
-          translate([cylinder_od/2 - ZigZagDepth()*2,
+          translate([cylinder_radius - ZigZagDepth()*2,
                      -zigzag_cutter_width*1.5,
                      zigzag_height - top_slot_height + zigzag_clearance])
           cube([ZigZagDepth()*4,
@@ -76,7 +76,7 @@ module ZigZag() {
                 top_slot_height+0.1]);
 
           // Chop off the bottom tip
-          translate([cylinder_od/2 - ZigZagDepth()*2,
+          translate([cylinder_radius - ZigZagDepth()*2,
                      zigzag_width/2,
                      -RodDiameter(ActuatorRod())/2])
           cube([ZigZagDepth()*4,
@@ -84,8 +84,8 @@ module ZigZag() {
                 RodDiameter(ActuatorRod())*2]);
         }
 
-        // Zag (pull)
-        #rotate([0,0,-rotation_angle-1])
+        // Zag
+        rotate([0,0,-rotation_angle])
         translate([0,0,RodRadius(ActuatorRod())])
         difference() {
           linear_extrude(height = zigzag_height,
@@ -98,7 +98,7 @@ module ZigZag() {
 
           // Chop off the top tip
           rotate([0,0,rotation_angle/2 + 360/(1.8*(cylinder_circumference/zigzag_width))])
-          translate([cylinder_od/2 - ZigZagDepth()*2,
+          translate([cylinder_radius - ZigZagDepth()*2,
                      0,
                      zigzag_height-top_slot_height + zigzag_clearance])
           cube([ZigZagDepth()*4,
@@ -106,7 +106,7 @@ module ZigZag() {
                 top_slot_height]);
 
           // Chop off the bottom tip
-          translate([cylinder_od/2 - ZigZagDepth()*2,
+          translate([cylinder_radius - ZigZagDepth()*2,
                      -zigzag_cutter_width + zigzag_width/2 - zigzag_clearance,
                      -RodDiameter(ActuatorRod())/2])
           cube([ZigZagDepth()*4,
@@ -117,7 +117,7 @@ module ZigZag() {
         // Vertical slot top
         rotate([0,0,-rotation_angle/2])
         translate([
-          cylinder_od/2 - ZigZagDepth() + 0.001,
+          cylinder_radius - ZigZagDepth() + 0.001,
           -zigzag_width/2,
           cylinder_height - top_slot_height - zigzag_clearance*2])
         cube([ZigZagDepth()*2, zigzag_width, top_slot_height + zigzag_clearance*3]);

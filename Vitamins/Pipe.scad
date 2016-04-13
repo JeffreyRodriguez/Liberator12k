@@ -224,6 +224,8 @@ function TeeRimRadius(tee)     = lookup(TeeRimDiameter, tee)/2;
 function TeeRimWidth(tee)      = lookup(TeeRimWidth, tee);
 function TeeCenter(tee)        = lookup(TeeWidth, tee)/2; //lookup(TeeHeight, tee) - TeeOuterRadius(tee);
 
+function TeePipeEndOffset(tee, pipe) = TeeCenter(tee)-PipeThreadDepth(pipe);
+
 module TeeTetris_Side(tee) {
   rotate([0,90,0])
   translate([TeeWidth(tee)/2,0,-TeeCenter(tee)])

@@ -1,5 +1,5 @@
-$t=1;
 include <Components.scad>;
+include <Components/Animation.scad>;
 use <Debug.scad>;
 use <Components/Semicircle.scad>;
 use <Components/Spring.scad>;
@@ -149,7 +149,7 @@ module Sear(width=0.24, angle=230) {
   rotate([90,0,0])
   linear_extrude(height=sear_height(), center=true)
   translate([0,SearPinZ()])
-  rotate(-TriggerAngle()*-$t)
+  rotate(-TriggerAngle()*-Animate(ANIMATION_STEP_TRIGGER))
   difference() {
     union() {
       hull() {
@@ -157,14 +157,8 @@ module Sear(width=0.24, angle=230) {
         circle(r=SearMinorRadius());
 
         // Sear-striker interface
-        rotate(-TriggerAngle())
-        translate([-SearMajorRadius()+0.02,0])
-        square([SearMajorRadius(), SearMajorRadius()]);
-
-        // Sear-striker interface
-        rotate(-TriggerAngle())
-        translate([-SearMajorRadius()+0.02,0])
-        square([SearMajorRadius(), SearMajorRadius()]);
+        rotate(90)
+        #square([SearMajorRadius()*0.81, SearMajorRadius()*0.8]);
       }
 
       // Trigger Interface Teeth
@@ -206,7 +200,7 @@ module Trigger(pin=RodOneEighthInch, height=0.24) {
   union() {
     difference() {
       translate([TriggerPinX(), 0, TriggerPinZ()])
-      rotate([-90,(TriggerAngle()*$t),0])
+      rotate([-90,(TriggerAngle()*Animate(ANIMATION_STEP_TRIGGER)),0])
       linear_extrude(center=true, height=height)
       union() {
 
@@ -232,7 +226,7 @@ module Trigger(pin=RodOneEighthInch, height=0.24) {
       }
 
       translate([TriggerPinX(), 0, TriggerPinZ()])
-      rotate([-90,(TriggerAngle()*$t),0])
+      rotate([-90,(TriggerAngle()*Animate(ANIMATION_STEP_TRIGGER)),0])
       linear_extrude(center=true, height=height) {
 
           // Spindle Hole
@@ -269,7 +263,7 @@ module Safety(width=0.24) {
   color("Lime")
   render(convexity=3)
   translate([SafetyPinX(), 0, SafetyPinZ()])
-  rotate([90,-(SafetyAngle()*$t),0])
+  rotate([90,-(SafetyAngle()*Animate(ANIMATION_STEP_SAFETY)),0])
   difference() {
     linear_extrude(height=width, center=true)
     union() {
@@ -292,6 +286,21 @@ module Safety(width=0.24) {
       mirror()
       semicircle(od=SafetyInterfaceOD(), angle=SafetyBackAngle(), $fn=Resolution(30, 100));
 
+      // Bottom Infill
+      rotate(162)
+      translate([SafetyMinorRadius()*sqrt(2)/2,0])
+      mirror()
+      square([(SafetyInterfaceOD()*0.35)+SafetyMinorRadius()*sqrt(2)/2,SafetyMinorRadius()]);
+
+
+      // Top Infill
+      *rotate(135)
+      translate([0,-SafetyMinorRadius()])
+      mirror([1,0])
+      square([SafetyInterfaceOD()*0.35,SafetyMinorRadius()]);
+
+
+      // Hand Tab
       rotate(90+30+SafetyAngle()) {
 
         difference() {
@@ -337,7 +346,7 @@ module ResetSpring(left=true, right=true) {
   color("Magenta", 0.5)
   render(convexity=5)
   translate([ResetPinX(), 0, ResetPinZ()])
-  rotate([0,resetAngle+(ResetAngle()*0.6*$t),0])
+  rotate([0,resetAngle+(ResetAngle()*0.6*Animate(ANIMATION_STEP_SAFETY)),0])
   union() {
     difference() {
       union() {
@@ -413,7 +422,7 @@ module ResetSpring(left=true, right=true) {
   render(convexity=4)
   //DebugHalf()
   translate([ResetPinX(), 0, ResetPinZ()])
-  rotate([0,resetAngle+(ResetAngle()*0.4*-$t),0])
+  rotate([0,resetAngle+(ResetAngle()*0.4*-Animate(ANIMATION_STEP_TRIGGER)),0])
   difference() {
     union() {
 
@@ -511,10 +520,6 @@ module FireControlPins(clearance=RodClearanceSnug()) {
         length=TeeRimDiameter(receiverTee),
         center=true);
 
-   SafetyPin();
-
-   ResetPin();
-
 }
 
 module TriggerGeometry() {
@@ -568,6 +573,69 @@ module TriggerGeometry() {
   cylinder(r=TeeInnerRadius(ReceiverTee()), h=TeeCenter(ReceiverTee())-TeeInnerRadius(ReceiverTee()), $fn=Resolution(12,36));
 }
 
+module Charger() {
+
+  translate([chargingWheelOffsetX,0,TeeInnerRadius(ReceiverTee())*sqrt(2)+RodRadius(chargingRod)])
+  rotate([90,0,0]) {
+
+    // Striker interface
+    linear_extrude(height=0.24, center=true) {
+      rotate(70*Animate(ANIMATION_STEP_CHARGE))
+      difference() {
+        union() {
+          rotate(65)
+          mirror()
+          semicircle(od=(chargingWheelRadius*2)-0.04,
+                     angle=90, h=0.24, $fn=Resolution(20,40));
+
+          // Spindle Body
+          circle(r=0.22, $fn=Resolution(15,30));
+
+          // Infill
+          rotate(-65)
+          square([chargingWheelRadius-(RodRadius(chargingRod)*5),0.25]);
+
+          // Pivot Boss
+          rotate(-25)
+          translate([chargingWheelRadius-RodRadius(chargingRod),0,0])
+          Rod2d(chargingRod, clearance=undef, center=true);
+
+          // Sear Interface
+          rotate(-25-90)
+          translate([chargingWheelRadius-RodRadius(chargingRod),0,0])
+          Rod2d(chargingRod, clearance=undef, center=true);
+        }
+
+        // Spindle Rod
+        Rod2d(chargingRod, center=true);
+
+        // Pivot Socket
+        rotate(-25)
+        translate([chargingWheelRadius-(RodRadius(chargingRod)*3),0,0])
+        Rod2d(chargingRod, clearance=undef, center=true);
+      }
+    }
+  }
+
+
+  // Charging Supports
+  color("Red", 0.25)
+  difference() {
+    union() {
+      translate([0,0,TeeInnerRadius(ReceiverTee())])
+      cylinder(r=TeeInnerRadius(ReceiverTee()), h=TeeCenter(ReceiverTee()), $fn=Resolution(12,30));
+
+      translate([0,0,TeeCenter(ReceiverTee())])
+      TeeRim(ReceiverTee(), height=0.5, $fn=Resolution(20,40));
+    }
+
+    translate([-2,-0.125,0])
+    cube([4, 0.25, TeeCenter(ReceiverTee())*2]);
+
+    ChargingRod(length=1);
+  }
+}
+
 module TriggerGroup() {
 
     %Striker();
@@ -581,75 +649,16 @@ module TriggerGroup() {
     ResetSpring();
 
     Safety();
-  
-    // Charging Wheel
-    translate([chargingWheelOffsetX,0,TeeInnerRadius(ReceiverTee())*sqrt(2)+RodRadius(chargingRod)])
-    rotate([90,0,0]) {
-      
-      // Striker interface
-      linear_extrude(height=0.24, center=true) {
-        rotate(70*$t)
-        difference() {
-          union() {
-            rotate(65)
-            mirror()
-            semicircle(od=(chargingWheelRadius*2)-0.04,
-                       angle=90, h=0.24, $fn=Resolution(20,40));
-                        
-            // Spindle Body
-            circle(r=0.22, $fn=Resolution(15,30));
-            
-            // Infill
-            rotate(-65)
-            square([chargingWheelRadius-(RodRadius(chargingRod)*5),0.25]);
-          
-            // Pivot Boss
-            rotate(-25)
-            translate([chargingWheelRadius-RodRadius(chargingRod),0,0])
-            Rod2d(chargingRod, clearance=undef, center=true);
-          
-            // Sear Interface
-            rotate(-25-90)
-            translate([chargingWheelRadius-RodRadius(chargingRod),0,0])
-            Rod2d(chargingRod, clearance=undef, center=true);
-          }
-          
-          // Spindle Rod
-          Rod2d(chargingRod, center=true);
-          
-          // Pivot Socket
-          rotate(-25)
-          translate([chargingWheelRadius-(RodRadius(chargingRod)*3),0,0])
-          Rod2d(chargingRod, clearance=undef, center=true);
-        }
-      }
-    }
-  
-  
-    // Charging Supports
-    color("Red", 0.25)
-    difference() {
-      union() {
-        translate([0,0,TeeInnerRadius(ReceiverTee())])
-        cylinder(r=TeeInnerRadius(ReceiverTee()), h=TeeCenter(ReceiverTee()), $fn=Resolution(12,30));
-        
-        translate([0,0,TeeCenter(ReceiverTee())])
-        TeeRim(ReceiverTee(), height=0.5, $fn=Resolution(20,40));
-      }
-      
-      translate([-2,-0.125,0])
-      cube([4, 0.25, TeeCenter(ReceiverTee())*2]);
-      
-      ChargingRod(length=1);
-    }
-    
+
+    *Charger();
+
 }
 
 scale([25.4, 25.4, 25.4]) {
 
   TriggerGroup();
-  %TriggerGeometry();
-  Reference();
+  *%TriggerGeometry();
+  *Reference();
 }
 
 module trigger_plater($t=0) {
@@ -680,4 +689,4 @@ module trigger_plater($t=0) {
   }
 }
 
-!trigger_plater();
+*!trigger_plater();

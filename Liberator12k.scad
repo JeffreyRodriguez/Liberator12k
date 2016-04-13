@@ -14,13 +14,14 @@ use <Trigger.scad>;
 use <Trigger Guard.scad>;
 use <Striker.scad>;
 use <Stock Spacer.scad>;
-use <Spring Cap.scad>;
 use <Striker Guide.scad>;
 
 use <Ammo/Magazines/Box Magazine.scad>;
 use <Ammo/Cartridges/Cartridge_12GA.scad>;
 
 use <Cylinder.scad>;
+
+use <Single Breech.scad>;
 
 module Liberator12k() {
 
@@ -36,16 +37,6 @@ module Liberator12k() {
 
   color("HotPink")
   FiringPinGuide();
-
-  render() {
-    translate([-4.5,0,0])
-    rotate([0,-90,0])
-    SpringCartridge(debug=true);
-
-    translate([-4.55-3,0,0])
-    rotate([0,-90,0])
-    SpringCartridge(debug=true);
-  }
 
   color("Gold")
   translate([-TeeWidth(ReceiverTee())/2 -12,0,-(1/8)-TeeCenter(ReceiverTee())])
@@ -65,6 +56,8 @@ module Liberator12k() {
   translate([BushingExtension(BreechBushing())+(TeeWidth(ReceiverTee())/2)+WallFrameFront(),0,-CylinderChamberOffset()])
   rotate([0,90,0])
   RevolverCylinder();
+  
+  DoubleStackBreech();
   
   color("Gold")
   translate([(TeeWidth(ReceiverTee())/2)+WallFrameFront(),+(1/16)+(0.87/2),-(0.87*6)])

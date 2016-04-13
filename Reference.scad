@@ -67,9 +67,8 @@ function FiringPinRod() = DEFAULT_FIRING_PIN_ROD;
 function GripRod() = DEFAULT_GRIP_ROD;
 
 // Calculated: Positions
-function ButtTeeCenterX() = TeeCenter(ReceiverTee())
-                          - (PipeThreadDepth(StockPipe()))
-                          + StockLength();
+function ButtTeeCenterX() = - StockLength()
+                            - (TeePipeEndOffset(ReceiverTee(),StockPipe())*2);
 
 module Barrel(barrel=DEFAULT_BARREL, barrelLength=DEFAULT_BARREL_LENGTH,
               breech=DEFAULT_BREECH,
@@ -88,13 +87,13 @@ module Receiver(receiver=ReceiverTee()) {
 function ReceiverInnerWidth(receiver) = TeeWidth(receiver) - (TeeRimWidth(receiver)*2);
 
 module Stock(receiver, stock, stockLength) {
-  translate([-TeeCenter(ReceiverTee()) +0.01,0,0])
+  translate([-TeeCenter(ReceiverTee())+PipeThreadDepth(stock),0,0])
   rotate([0,-90,0])
   Pipe(stock, clearance=PipeClearanceLoose(), length=stockLength+0.02);
 }
 
 module Butt(receiver, stockLength) {
-  translate([-ButtTeeCenterX(),0,0])
+  translate([ButtTeeCenterX()+TeeCenter(ReceiverTee()),0,0])
   rotate([0,-90,0])
   Tee(ButtTee());
 }
@@ -109,14 +108,18 @@ module Breech(receiver, breech) {
 module Reference(barrel=BarrelPipe(), barrelLength=18,
                  breech=Spec_BushingThreeQuarterInch(),
                  receiver=ReceiverTee(),
-                 stock=Spec_PipeThreeQuarterInch(), stockLength=12,
+                 stock=Spec_PipeThreeQuarterInch(), stockLength=StockLength(),
                  butt=Spec_TeeThreeQuarterInch()) {
 
-  %color("White", 0.25) {
-    Receiver(receiver);
-    Breech(receiver, breech);
-    Butt(receiver, stockLength);
+  %color("Black", 0.3) {
     Stock(receiver, stock, stockLength);
+    Breech(receiver, breech);
+  }
+
+  %color("White", 0.1) {
+    Receiver(receiver);
+    Butt(receiver, stockLength);
+    translate([ManifoldGap(),0,0])
     Barrel(receiver=receiver, breech=breech, barrel=barrel, barrelLength=barrelLength);
   }
 }
