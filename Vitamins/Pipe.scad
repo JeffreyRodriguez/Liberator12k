@@ -127,7 +127,7 @@ TubingThreeEighthsInch = [
   [PipeFn,              20],
   [PipeWeightPerUnit,   0]
 ];
-function Spec_TubingThreeEighthsInchh() = TubingThreeEighthsInch;
+function Spec_TubingThreeEighthsInch() = TubingThreeEighthsInch;
 
 // 5/16" Brake Line, for .22LR
 FiveSixteenthInchBrakeLine = [
