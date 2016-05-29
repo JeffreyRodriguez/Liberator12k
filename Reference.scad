@@ -22,7 +22,7 @@ DEFAULT_RECEIVER = Spec_AnvilForgedSteel_TeeThreeQuarterInch();
 DEFAULT_BUTT = Spec_AnvilForgedSteel_TeeThreeQuarterInch();
 DEFAULT_BARREL_LENGTH = 18;
 DEFAULT_STOCK_LENGTH = 12;
-
+DEFAULT_NOZZLE_DIAMETER=0.8/25.4; // I'm using an 0.8mm Volcano clone.
 
 // Settings: Resolution 0 = low, 1 = high
 RESOLUTION = 1;
@@ -31,6 +31,12 @@ function Resolution(low, high) = RESOLUTION == 0 ? low : high;
 // Settings: Manifold Gap
 MANIFOLD_GAP = 0.0001;
 function ManifoldGap(n=1) = MANIFOLD_GAP*n;
+
+// Settings: Nozzle
+function NozzleDiameter() = DEFAULT_NOZZLE_DIAMETER;
+function NozzleMultipleFloor(metric) = metric - (metric % DEFAULT_NOZZLE_DIAMETER);
+function NozzleMultipleCeiling(metric) = metric + (metric % DEFAULT_NOZZLE_DIAMETER);
+
 
 // Settings: Walls
 function WallTee()              = 0.1;
