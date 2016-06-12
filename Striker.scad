@@ -1,175 +1,110 @@
+//$t = 0.99;
+
 include <Components/Animation.scad>;
+include <Components/Manifold.scad>;
 
 use <Vitamins/Pipe.scad>;
 use <Vitamins/Rod.scad>;
+use <Debug.scad>;
 use <Reference.scad>;
 
-function StrikerX() = -TeeInnerRadius(ReceiverTee());
-function StrikerRod() = Spec_RodFiveSixteenthInch();
-function StrikerRadius() = 0.34;
-function StrikerInnerRadius(clearance=RodClearanceLoose()) = RodRadius(rod=StrikerRod(), clearance=clearance);
+function StrikerTravel() = (TeeWidth(ReceiverTee())/2) - BushingDepth(BreechBushing())
+                           -0.4+RodRadius(StrikerRod());                          
+function StrikerX() = -TeePipeEndOffset(ReceiverTee(),StockPipe())-(StrikerTravel()*(1+Animate(ANIMATION_STEP_CHARGE)));
+function StrikerInnerRadius() = RodRadius(StrikerRod(), RodClearanceLoose())*1.02;
+function StrikerSpacerRadius() = 0.34;
+function StrikerSpacerLength() = 3;
 
-function StrikerSpringPreloadLength() = 0.5;
-function StrikerFaceLength() = 3.45;
-function StrikerDepressorLength() = 3.45;
-function FiringPinDepth() = 0.85;
+function StrikerCollarLength() = RodDiameter(StrikerRod())*2;
+function StrikerSpringPreloadLength() = StrikerCollarLength();
+function StrikerSpringLength(extension=0) = 3
+                                          - StrikerSpringPreloadLength()
+                                          + (StrikerTravel()*extension);
 
-function FiringPinGuideHeight() = (TeeWidth(ReceiverTee())/2)-BushingDepth(BreechBushing());
-function FiringPinLength() = FiringPinDepth()
-                             + abs(StrikerX())
-                             + FiringPinGuideHeight()
-                             + (1/16);
-
-function SpringCapLength() = 0.1;
-
-function StrikerSpringLength(extension=0) = (3-StrikerSpringPreloadLength())
-                                            - (StrikerX()*extension);
-
-function StrikerSpacerLength() = abs(ButtTeeCenterX())
-                               - TeePipeEndOffset(ReceiverTee(),StockPipe())
-                               - StrikerFaceLength()
-                               + SpringCapLength()
-                               - StrikerSpringLength(1)
-                               - StrikerDepressorLength()
-                               - ManifoldGap(3);
-
-function SearTowerHeight() = TeeCenter(ReceiverTee()) - 0.35;
-
-module FiringPin() {
-  Rod(rod=FiringPinRod(), clearance=RodClearanceLoose(), length=FiringPinLength());
-}
-
-module FiringPinGuide(height=FiringPinGuideHeight(),
-                      od=TeeInnerDiameter(ReceiverTee())) {
-  offsetX = (TeeWidth(ReceiverTee())/2) -BushingDepth(BreechBushing());
-
-  color("Lime")
-  render(convexity=4)
-  difference() {
-    translate([offsetX,0,0])
-    rotate([0,-90,0])
-    cylinder(r=od/2, h=height, $fn=RodFn(FiringPinRod())*Resolution(2, 4));
-
-    // Tapered Entrance
-    translate([offsetX-height+(1/16)-0.01,0,0])
-    rotate([0,-90,0])
-    cylinder(r1=RodRadius(FiringPinRod()),
-             r2=RodRadius(FiringPinRod())*1.4,
-              h=1/16,
-            $fn=RodFn(FiringPinRod()));
-
-    // Firing Pin Hole
-    translate([offsetX+0.1,0,0])
-    rotate([0,-90,0])
-    Rod(rod=FiringPinRod(), length=height+0.2, clearance=RodClearanceLoose());
-
-    // Scoop out a path for the charging handle
-    translate([-0.01,
-               -RodRadius(StrikerRod(), RodClearanceLoose()),
-               RodRadius(FiringPinRod())*2])
-    rotate([0,-10,0])
-    cube([RodDiameter(StrikerRod())+0.11,
-          RodDiameter(StrikerRod(),
-          RodClearanceLoose()),1]);
-
-    // Clearance for the sear
-    translate([-0.01,-0.26/2,-0.3])
-    rotate([0,35,0])
-    mirror([0,0,1])
-    cube([RodDiameter(StrikerRod())+0.11,0.26,1]);
-
-    // Clear the top of the sear and it's support towers
-    translate([0,0,-TeeCenter(ReceiverTee())])
-    cylinder(r=TeeInnerRadius(ReceiverTee())+0.01, h=SearTowerHeight(), $fn=20);
-  }
-}
-
-
-
-module Striker() {
-  
-  echo("StrikerRadius", StrikerRadius());
-  echo("StrikerSpacerLength", StrikerSpacerLength());
-
-
-  translate([StrikerX()* (1-Animate(ANIMATION_STEP_STRIKER)),0,0])
-  rotate([0,-90,0])
-  {
-
-    // Mock Striker Rod
-    color("White")
-    translate([0,0,FiringPinDepth()])
-    %Rod(FrameRod(), length=12);
-
-    // Striker Face
-    StrikerFace();
-
-    // Position the spring
-    translate([0,0,StrikerFaceLength()-(SpringCapLength()/2)]) {
-        
-      // Mock Spring
-      color("Silver", 0.75)
-      %cylinder(r=StrikerRadius(),
-                h=StrikerSpringLength(Animate(ANIMATION_STEP_STRIKER)),
-                $fn=10);
-      
-      // Striker Depressor
-      translate([0,0,StrikerSpringLength(Animate(ANIMATION_STEP_STRIKER)) - (SpringCapLength()/2) + StrikerDepressorLength()])
-      mirror([0,0,1])
-      StrikerDepressor();
+module StrikerTop() {
+  color("Violet")
+  translate([StrikerX()-StrikerCollarLength(),0,0])
+  rotate([0,90,0])
+  linear_extrude(height=StrikerCollarLength()
+                       +TeePipeEndOffset(ReceiverTee(),StockPipe())
+                       +ReceiverIR()
+                       -RodDiameter(SearRod()))
+  intersection() {
+    
+    // The square we'll actually be using
+    rotate(90)
+    translate([-RodRadius(StrikerRod()),RodRadius(StrikerRod())*0.7])
+    square([RodDiameter(StrikerRod()),ReceiverIR()]);
+    
+    // Intersected with a donut shape
+    rotate(90)
+    difference() {
+      circle(r=StrikerSpacerRadius(), $fn=20);
+      Rod2d(StrikerRod());
     }
   }
-  
-  
-  translate([ButtTeeCenterX(),0,0]) {
-
-    // Striker Foot
-    translate([TeePipeEndOffset(ReceiverTee(),StockPipe()),0,0])
-    rotate([0,90,180])
-    StrikerFoot();
-
-    // Striker Spacer
-    translate([TeePipeEndOffset(ReceiverTee(),StockPipe())+ManifoldGap(),0,0])
-    rotate([0,90,0])
-    StrikerSpacer(length=StrikerSpacerLength());
-  }
-
 }
 
-module StrikerFace(length=StrikerFaceLength(),
-                   od=StrikerRadius()*2,
-                   id=StrikerInnerRadius(RodClearanceSnug()),
-               firingPin = Spec_RodOneEighthInch(),
-               depth=FiringPinDepth()) {
-
+module StrikerCollar(debug=true) {
+  
+  color("Lime")
   difference() {
-    // Body
-    color("Orange")
-    StrikerSpringCap(baseLength=length-SpringCapLength(), rodOffsetZ=FiringPinDepth());
     
-    // Firing Pin
-    translate([0,0,FiringPinDepth()+ManifoldGap()])
-    mirror([0,0,1])
-    #FiringPin();
+    // Body
+    translate([StrikerX(),0,0])
+    rotate([0,-90,0])
+    linear_extrude(height=StrikerCollarLength())
+    difference() {
+      circle(r=StrikerSpacerRadius(),
+           $fn=Resolution(20,30));
+
+      // Cap Hole
+      translate([0,-RodRadius(StrikerRod(), clearance=RodClearanceLoose())])
+      square(RodDiameter(StrikerRod(), clearance=RodClearanceLoose()));
+      
+      // Rod Hole
+      Rod2d(StrikerRod(), RodClearanceLoose());
+    }
+  }
+
+  if (debug==true)
+  translate([-StrikerTravel()*(1+Animate(ANIMATION_STEP_CHARGE)),0,0]) {
+      
+    // Mock Striker Rod
+    color("SteelBlue")
+    translate([BreechRearX()-0.4,0,0])
+    rotate([0,-90,0])
+    %Rod(FrameRod(), length=12);
+    
+    // Mock Spring
+    color("White", 0.5)
+    translate([StrikerX(),0,0])
+    rotate([0,-90,0])
+    %cylinder(r=StrikerSpacerRadius(),
+              h=StrikerSpringLength(Animate(ANIMATION_STEP_STRIKER)),
+            $fn=10);
   }
 }
 
-module StrikerDepressor($fn=RodFn(StrikerRod())*Resolution(1, 2)) {
-  color("Purple")
-  StrikerSpringCap(baseLength=StrikerDepressorLength()-SpringCapLength(), $fn=$fn);
-}
+module StrikerSpacer(length=2) {
+  difference() {
+      cylinder(r=StrikerSpacerRadius(), h=length, $fn=RodFn(StrikerRod())*Resolution(1, 2));
 
-module StrikerSpacer(length=2, $fn=RodFn(StrikerRod())*Resolution(1, 2)) {
-    color("Pink")
-    StrikerSpringCap(baseLength=length, cap_length=0, $fn=$fn);
+    // Rod
+    translate([0,0,-0.1])
+    cylinder(r=StrikerInnerRadius(),
+             h=length + 0.2,
+             $fn=RodFn(StrikerRod()));
+  }
 }
 
 module StrikerFoot() {
   color("Olive", 0.7)
   difference() {
     cylinder(r=TeeInnerRadius(ReceiverTee()),
-             h=TeePipeEndOffset(ReceiverTee(),StockPipe()) + TeeInnerRadius(ReceiverTee()),
-             $fn=Resolution(20,40));
+             h=TeePipeEndOffset(ReceiverTee(),StockPipe())
+               + TeeInnerRadius(ReceiverTee()),
+           $fn=Resolution(20,40));
 
     // Round the top
     translate([0,0,TeePipeEndOffset(ReceiverTee(),StockPipe())])
@@ -192,41 +127,45 @@ module StrikerFoot() {
 
     // Striker Rod Hole Taper
     translate([0,0,-0.01])
-    cylinder(r1 =NozzleMultipleCeiling(StrikerInnerRadius()+0.05),
+    cylinder(r1 =StrikerInnerRadius(),
              r2 =StrikerInnerRadius(),
              h  =RodDiameter(StrikerRod()),
              $fn=RodFn(StrikerRod()));
   }
 }
 
-module StrikerSpringCap(baseLength=0.25,
-                        cap_length=SpringCapLength(),
-                        wall=NozzleDiameter()*2,
-                        rodOffsetZ=-ManifoldGap(),
-                        clearance=RodClearanceLoose(),
-                        $fn=RodFn(StrikerRod())*Resolution(1, 2)) {
-  difference() {
-    union() {
-      if (baseLength > 0)
-      cylinder(r=StrikerRadius(), h=baseLength+ManifoldGap());
+module Striker(debug=true) {
+  
+  // Striker Collar and Top
+  translate([StrikerTravel()*(Animate(ANIMATION_STEP_STRIKER)),0,0]) {
+    StrikerTop();
+    StrikerCollar(debug=debug);
+  }
+  
+  translate([ButtTeeCenterX(),0,0]) {
 
-      if (cap_length > 0)
-      translate([0,0,baseLength])
-      cylinder(r1=StrikerRadius(), r2=StrikerInnerRadius(clearance)+wall, h=cap_length);
-    }
+    // Striker Foot
+    translate([TeePipeEndOffset(ReceiverTee(),StockPipe()),0,0])
+    rotate([0,90,180])
+    StrikerFoot();
 
-    // Rod
-    translate([0,0,rodOffsetZ])
-    cylinder(r=StrikerInnerRadius(clearance),
-             h=baseLength + cap_length + 0.2,
-             $fn=RodFn(StrikerRod()));
+    // Striker Spacers
+    for (i = [0,1,2])
+    color([0.2*(4-i),0.2*(4-i),0.2*(4-i)]) // Some colorization
+    translate([TeePipeEndOffset(ReceiverTee(),StockPipe())
+               +(StrikerSpacerLength()*i)
+               +ManifoldGap(1+i),0,0])
+    rotate([0,90,0])
+    StrikerSpacer(length=StrikerSpacerLength());
   }
 }
 
-//translate([0,50,0])
-scale([25.4, 25.4, 25.4]) {
-  FiringPinGuide();
+//!scale(25.4) rotate([90,0,0]) StrikerTop();
+
+{
   Striker();
+  
+  //rotate([90,0,0]) StrikerTop();
 
   Reference();
 }

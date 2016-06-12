@@ -33,6 +33,8 @@ Primer209 = [
   [PrimerFn,            12]
 ];
 
+function Spec_Primer209() = Primer209;
+
 // .22 cal "Powder Actuated Tool" aka. Ramset
 Primer22PAT = [
   [PrimerRimDiameter,   0.309],
@@ -43,6 +45,7 @@ Primer22PAT = [
   [PrimerClearance,     0.021],
   [PrimerFn,            12]
 ];
+function Spec_Primer22PAT() = Primer22PAT;
 
 // 12 gram CO2 cartridge mouth and neck
 Primer12gCO2 = [

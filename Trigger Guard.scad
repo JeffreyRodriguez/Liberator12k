@@ -1,4 +1,4 @@
-$t=0;
+//$t=0;
 include <Components.scad>;
 use <Components/Semicircle.scad>;
 use <Debug.scad>;
@@ -9,6 +9,7 @@ use <Cylinder.scad>;
 use <Trigger.scad>;
 use <Striker.scad>;
 use <Reference.scad>;
+use <Reset Spring.scad>;
 
 function GripFloor() = 0.32;
 function GripWidth() = 0.9;
@@ -104,18 +105,8 @@ module GripFrontRod(length=2.5, offsetZ=0,
                    extraRadius=0,
                    $fn=Resolution(8,30)) {
   
-  // Flat bolt
-  *translate([TeeCenter(ReceiverTee())-RodRadius(GripRod()),0,GripFloorZ()])
-  rotate([90,0,0]) {
-    cylinder(center=true,
-             r=RodRadius(GripRod(), RodClearanceSnug())+extraRadius,
-             h=length,
-             $fn=$fn);
-    children();
-  }
-  
-  
   radiusExtra = extraRadius;
+                     
   // Angled bolt
   translate([TeeRimRadius(ReceiverTee())+RodRadius(GripRod())+0.15,0,-TeeCenter(ReceiverTee())-RodRadius(GripRod())-0.07])
   rotate([0,0,-69])
@@ -228,7 +219,7 @@ module GripGuard(receiver, stock=stockPipe, showHandle=true) {
           cube([0.1,
                 GripWidth(),
                 GripTriggerFingerSlotDiameter()]);
-
+          
           // Front-bottom chamfered curve
           for (i = [1,-1])
           translate([GripTriggerFingerSlotDiameter()/2, -i*GripWidth()/4, GripFloorZ()-(GripTriggerFingerSlotDiameter()/2)])
@@ -311,7 +302,6 @@ module GripGuard(receiver, stock=stockPipe, showHandle=true) {
 
       }
 
-
       if (showHandle)
       GripHandle(ReceiverTee());
     }
@@ -342,12 +332,6 @@ module GripSides(showLeft=true, showRight=true) {
   difference() {
     union() {
         GripGuard(ReceiverTee());
-
-      // Inner plug
-      translate([0,0,GripFloorZ(ReceiverTee())-0.001])
-      cylinder(r=TeeInnerRadius(ReceiverTee()),
-               h=GripFloor()+SearTowerHeight(),
-               $fn=Resolution(25, 60));
 
       // Bottom Chamfer
       translate([0,0,GripFloorZ(ReceiverTee())+GripFloor()-0.001])

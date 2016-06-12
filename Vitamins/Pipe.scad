@@ -25,14 +25,21 @@ function PipeWall(pipe)                     = PipeOuterRadius(pipe) - PipeInnerR
 function PipeFn(pipe)                       = lookup(PipeFn, pipe);
 
 
-module Pipe2d(pipe, clearance=PipeClearanceSnug()) {
+module Pipe2d(pipe, clearance=PipeClearanceSnug(), hollow=false) {
   echo("PipeOuterRadius,PipeClearance: ", PipeOuterRadius(pipe=pipe, clearance=clearance), clearance);
-  circle(r=PipeOuterRadius(pipe=pipe, clearance=clearance), $fn=lookup(PipeFn, pipe));
+  difference() {
+    circle(r=PipeOuterRadius(pipe=pipe, clearance=clearance),
+         $fn=lookup(PipeFn, pipe));
+    
+    if (hollow)
+    circle(r=PipeInnerRadius(pipe, clearance),
+         $fn=lookup(PipeFn, pipe));
+  }
 };
-module Pipe(pipe, length = 1, clearance=PipeClearanceSnug(), center=false) {
+module Pipe(pipe, length = 1, clearance=PipeClearanceSnug(), center=false, hollow=false) {
   translate([0,0,center ? -length/2 : 0])
   linear_extrude(height=length)
-  Pipe2d(pipe=pipe, clearance=clearance);
+  Pipe2d(pipe=pipe, clearance=clearance, hollow=hollow);
 };
 
 //Pipe(PipeOneInch, clearance=PipeClearanceLoose);
@@ -59,7 +66,7 @@ function Spec_PipeOneQuarterInch() = PipeOneQuarterInch;
 ];
 function Spec_12GaugeChamber() = 12GaugeChamber;
 
-// 3/4" Pipe
+// 3/4" Sch40 Pipe
 PipeThreeQuarterInch = [
   [PipeInnerDiameter,   0.81],
   [PipeOuterDiameter,   1.07],
@@ -71,7 +78,21 @@ PipeThreeQuarterInch = [
   [PipeFn,              30],
   [PipeWeightPerUnit,   40]
 ];
-  function Spec_PipeThreeQuarterInch() = PipeThreeQuarterInch;
+function Spec_PipeThreeQuarterInch() = PipeThreeQuarterInch;
+
+// 3/4" Sch80 Pipe
+PipeThreeQuarterInchSch80 = [
+  [PipeInnerDiameter,   0.73],
+  [PipeOuterDiameter,   1.07],
+  [PipeTaperedDiameter, 1.018],
+  [PipeThreadLength,    0.9],
+  [PipeThreadDepth,     0.5],
+  [PipeClearanceSnug,   0.005],
+  [PipeClearanceLoose,  0.027],
+  [PipeFn,              30],
+  [PipeWeightPerUnit,   40]
+];
+function Spec_PipeThreeQuarterInchSch80() = PipeThreeQuarterInchSch80;
 
 // 1" Pipe
 PipeOneInch = [
@@ -199,7 +220,7 @@ AnvilForgedSteel_TeeThreeQuarterInch = [
 function Spec_AnvilForgedSteel_TeeThreeQuarterInch() = AnvilForgedSteel_TeeThreeQuarterInch;
 
 
-// Chinese 304SS-150 3/4" Tee
+// Chinese 304SS-150 3/4" Tee (DANGEROUS, OUTSIDE SPEC)
 304SS_150_TeeThreeQuarterInch = [
   [TeeOuterDiameter,   1.37],
   [TeeWidth,           2.64],
@@ -346,7 +367,7 @@ BushingCapHeight = 5;
 BushingThreeQuarterInch = [
   [BushingHeight,    0.955],
   [BushingDiameter,  1.06], // Measured 1.05, adding clearance
-  [BushingDepth,     0.42],
+  [BushingDepth,     0.48],
   [BushingCapWidth,  1.227],
   [BushingCapHeight, 0.215]
 ];

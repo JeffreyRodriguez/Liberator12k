@@ -39,15 +39,15 @@ RodOneQuarterInch = [
   [RodRadius,         1/4/2],
   [RodClearanceSnug,  0.027],
   [RodClearanceLoose, 0.035],
-  [RodFn,             8]
+  [RodFn,             12]
 ];
 function Spec_RodOneQuarterInch() = RodOneQuarterInch;
 
 RodFiveSixteenthInch = [
   [RodDiameter,       5/16],
   [RodRadius,         5/16/2],
-  [RodClearanceSnug,  0.025],
-  [RodClearanceLoose, 0.03],
+  [RodClearanceSnug,  0.04],
+  [RodClearanceLoose, 0.05],
   [RodFn,             12]
 ];
 function Spec_RodFiveSixteenthInch() = RodFiveSixteenthInch;

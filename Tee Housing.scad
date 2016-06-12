@@ -7,24 +7,6 @@ use <Trigger Guard.scad>;
 use <Reference.scad>;
 use <Cylinder.scad>;
 
-module ReferenceTeeCutter(centerLength = TeeRimDiameter(ReceiverTee()), $fn=Resolution(12,30)) {
-  
-  // Vertical
-  translate([0,0,-TeeCenter(ReceiverTee())])
-  TeeRim(ReceiverTee(), height=TeeWidth(ReceiverTee()));
-
-  // Horizontal
-  translate([-TeeWidth(ReceiverTee())/2,0,0])
-  rotate([0,90,0])
-  TeeRim(ReceiverTee(), height=TeeWidth(ReceiverTee()));
-  
-  // Corner Infill
-  for (n=[-1,1]) // Top of cross-fitting
-  for (i=[-1,1]) // Sides of tee-fitting
-  translate([i*TeeOuterRadius(ReceiverTee())/2,0,n*-TeeOuterRadius(ReceiverTee())/2])
-  rotate([0,n*i*45,0])
-  cylinder(r=TeeOuterRadius(ReceiverTee()), h=0.5, center=true);
-}
 
 
 

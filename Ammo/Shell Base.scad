@@ -54,3 +54,6 @@ scale([25.4, 25.4, 25.4])
 ShellBase() {
   %cylinder(r=ShellRadius(PipeThreeQuarterInch));
 };
+
+!scale([25.4, 25.4, 25.4])
+ShellBase(chargeHeight=0, wadHeight=0);

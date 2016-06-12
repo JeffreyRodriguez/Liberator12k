@@ -1,0 +1,32 @@
+use <../Components/Manifold.scad>;
+use <../Reference.scad>;
+use <../Vitamins/Pipe.scad>;
+use <../Vitamins/Rod.scad>;
+
+module ReceiverInsert() {
+  render(convexity=4)
+  difference() {
+    union() {
+      // Body
+      cylinder(r=ReceiverIR(),
+               h=(ReceiverLength()/2)-(ReceiverIR()*0.5),
+             $fn=Resolution(20,30));
+
+      // Front-bottom chamfered curve
+      cylinder(r1=ReceiverIR()+0.135,
+               r2=ReceiverIR(),
+               h=0.103,
+               $fn=Resolution(20,60));
+    }
+    
+    // Middle Clearance
+    translate([0,0,ReceiverLength()/2])
+    rotate([0,90,0])
+    cylinder(r=ReceiverIR()+ManifoldGap(),
+             h=ReceiverLength(),
+        center=true,
+           $fn=Resolution(20,60));
+  }
+}
+
+ReceiverInsert();

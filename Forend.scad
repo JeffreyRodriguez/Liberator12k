@@ -153,23 +153,17 @@ module ForendRevolverRear(shaftCollar=true) {
         rotate([0,-90,0])
         cylinder(r=0.9375, h=0.5, $fn=Resolution(12,40));
         
+        // Side cutout
+        rotate([-11,0,0])
+        translate([0.501,0,-0.9375])
+        *#cube([0.9,2,0.9375*2]);
+        
         // Barrel Shaft Collar Screw Holes (single and double)
         for (y = [-0.9375-0.6,0.9375-0.4])
         translate([ForendRearLength() - 0.5,y,-3])
         cube([0.5, 1, 3]);
       }
     }
-    
-    // Nut Hole Manual Support
-    translate([0.001,0,0])
-    mirror([1,0,0])
-    *FrameHoleSupport();
-    
-    // Nut Hole Manual Support
-    translate([ForendRearLength()-1,0,-CylinderChamberOffset()])
-    rotate([0,90,0])
-    *cylinder(r=RodRadius(FrameRod(), clearance=RodClearanceLoose())+0.005,
-              h=FrameNutHeight()+0.001, $fn=RodFn(FrameRod()));
   }
 }
 
@@ -189,7 +183,7 @@ module ForendRevolver(frontLength=1) {
              +ForendRearLength()
              +0.03,0,0])
   render(convexity=4)
-  ForendRevolverRear(shaftCollar=false);
+  *ForendRevolverRear(shaftCollar=false);
 }
 
 module Forend(showLugs=false) {

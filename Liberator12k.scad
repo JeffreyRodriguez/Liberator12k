@@ -13,8 +13,6 @@ use <Forend.scad>;
 use <Trigger.scad>;
 use <Trigger Guard.scad>;
 use <Striker.scad>;
-use <Stock Spacer.scad>;
-use <Striker Guide.scad>;
 
 use <Ammo/Magazines/Box Magazine.scad>;
 use <Ammo/Cartridges/Cartridge_12GA.scad>;
@@ -36,11 +34,7 @@ module Liberator12k() {
   Reference_TeeHousing();
 
   color("HotPink")
-  FiringPinGuide();
-
-  color("Gold")
-  translate([-TeeWidth(ReceiverTee())/2 -12,0,-(1/8)-TeeCenter(ReceiverTee())])
-  *StrikerGuide();
+  FiringPinGuide(debug=true);
 
   color("Grey", .7)
   %Frame();

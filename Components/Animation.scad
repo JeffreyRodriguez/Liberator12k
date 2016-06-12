@@ -3,10 +3,12 @@
 ANIMATION_STEP_SAFETY  = 0;
 ANIMATION_STEP_TRIGGER = 1;
 ANIMATION_STEP_STRIKER = 2;
+ANIMATION_STEP_CHARGE  = 3;
 
 ANIMATION_STEPS = [ANIMATION_STEP_SAFETY,
                    ANIMATION_STEP_TRIGGER,
-                   ANIMATION_STEP_STRIKER];
+                   ANIMATION_STEP_STRIKER,
+                   ANIMATION_STEP_CHARGE];
 
 function AnimationStepCount() = len(ANIMATION_STEPS);
 function AnimationStepTime() = 1/AnimationStepCount();
