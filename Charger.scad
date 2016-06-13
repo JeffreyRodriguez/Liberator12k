@@ -4,17 +4,16 @@
 include <Components/Animation.scad>;
 use <Components/Semicircle.scad>;
 use <Components/Receiver Insert.scad>;
+use <Components/Debug.scad>;
+
 use <Vitamins/Rod.scad>;
 use <Vitamins/Pipe.scad>;
 use <Vitamins/Spring.scad>;
 
-    
-
-use <Debug.scad>;
-use <Reference.scad>;
-
 use <Frame.scad>;
 use <Striker.scad>;
+
+use <Reference.scad>;
 
 
 chargingWheelOffsetX = -12/64;
@@ -111,7 +110,7 @@ module ChargingWheel(angle=90) {
 module ChargingSupports() {
 
   // Charging Supports
-  color("Moccasin")
+  color("Moccasin", 0.5)
   render(convexity=4)
   difference() {
     union() {
@@ -153,7 +152,7 @@ module ChargingSupports() {
     translate([-2,-RodRadius(ChargingRod(), RodClearanceLoose()),0])
     cube([4,
           RodDiameter(ChargingRod(), RodClearanceLoose()),
-          TeeCenter(ReceiverTee())-0.36]);
+          TeeCenter(ReceiverTee())-0.2]);
     
     
     // Charging Rod Hole
@@ -167,7 +166,7 @@ module ChargingSupports() {
     ChargingPivot(length=1) {
     
       // Charging Wheel Travel
-      rotate([90,-60,0])
+      rotate([90,-65,0])
       linear_extrude(height=RodDiameter(ChargingRod(), RodClearanceLoose()),
                      center=true) {
                        
@@ -184,7 +183,7 @@ module ChargingSupports() {
 }
 
 module ChargerRetainer() {
-  color("Teal")
+  color("LightSeaGreen", 0.1)
   render(convexity=4)
   difference() {
     hull() {
@@ -220,6 +219,11 @@ module ChargerRetainer() {
      length=ReceiverLength(),
      clearance=RodClearanceLoose(),
         $fn=4);
+    
+    translate([RodRadius(ChargingRod()),
+              -RodRadius(ChargingRod(), RodClearanceLoose()),
+               TeeCenter(ReceiverTee())])
+    cube([1, RodDiameter(ChargingRod(), RodClearanceLoose()), 1]);
   }
 }
 
@@ -231,17 +235,19 @@ module Charger() {
   DebugHalf(4)
   ChargingSupports();
   
-  //!scale(25.4) rotate([0,90,0])
-  *ChargerRetainer();
+  //!scale(25.4) rotate([0,-90,0])
+  DebugHalf(5)
+  ChargerRetainer();
   
   translate([1,0,(ReceiverLength()/2)])
   rotate([90,0,0])
-  cylinder(r=0.5, h=0.22, center=true, $fn=20);
+  *cylinder(r=0.5, h=0.22, center=true, $fn=20);
   
   // Charging Rod
+  color("Orange")
   translate([0,0,-0.75*Animate(ANIMATION_STEP_CHARGE)]) // TODO: Run the math on this, just roughed out for now.
   translate([RodDiameter(rod=ChargingRod()),0,(ReceiverLength()/2)-0.02])
-  %Rod(rod=ChargingRod(), length=0.75, $fn=Resolution(20,40));
+  Rod(rod=ChargingRod(), length=0.75, $fn=Resolution(20,40));
 }
 
 Striker();

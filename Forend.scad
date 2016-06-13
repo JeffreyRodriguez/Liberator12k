@@ -1,4 +1,4 @@
-use <Debug.scad>;
+use <Components/Debug.scad>;
 use <Components/Semicircle.scad>;
 use <Vitamins/Pipe.scad>;
 use <Vitamins/Rod.scad>;

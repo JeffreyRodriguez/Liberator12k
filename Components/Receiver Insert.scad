@@ -9,7 +9,7 @@ module ReceiverInsert() {
     union() {
       // Body
       cylinder(r=ReceiverIR(),
-               h=(ReceiverLength()/2)-(ReceiverIR()*0.5),
+               h=(ReceiverLength()/2)-(ReceiverIR()*0.6),
              $fn=Resolution(20,30));
 
       // Front-bottom chamfered curve

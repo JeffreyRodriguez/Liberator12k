@@ -1,7 +1,7 @@
 include <Components/Animation.scad>;
 use <Components/Semicircle.scad>;
 use <Components/Manifold.scad>;
-use <Debug.scad>;
+use <Components/Debug.scad>;
 
 use <Vitamins/Rod.scad>;
 use <Vitamins/Spring.scad>;

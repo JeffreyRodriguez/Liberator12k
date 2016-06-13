@@ -1,7 +1,7 @@
 //$t=0;
 include <Components.scad>;
 use <Components/Semicircle.scad>;
-use <Debug.scad>;
+use <Components/Debug.scad>;
 use <Vitamins/Pipe.scad>;
 use <Vitamins/Rod.scad>;
 use <Frame.scad>;
@@ -49,12 +49,12 @@ function GripPins() = [
 
      // Bottom-Back tip
      [-(TeeWidth(ReceiverTee())/2)-2.4,
-      GripFloorZ(ReceiverTee())-GripTriggerFingerSlotDiameter()-1.45,
+      GripFloorZ()-GripTriggerFingerSlotDiameter()-1.45,
       -0.03],
 
      // Bottom-Front tip
      [-(TeeWidth(ReceiverTee())/2)-1.08,
-      GripFloorZ(ReceiverTee())-GripTriggerFingerSlotDiameter()-1.90,
+      GripFloorZ()-GripTriggerFingerSlotDiameter()-1.90,
       -0.03]
   ];
 
@@ -334,7 +334,7 @@ module GripSides(showLeft=true, showRight=true) {
         GripGuard(ReceiverTee());
 
       // Bottom Chamfer
-      translate([0,0,GripFloorZ(ReceiverTee())+GripFloor()-0.001])
+      translate([0,0,GripFloorZ()+GripFloor()-0.001])
       intersection() {
         cylinder(r1=TeeInnerRadius(ReceiverTee())*1.1,
                   r2=TeeInnerRadius(ReceiverTee()),
@@ -371,9 +371,10 @@ module GripMiddle(safetyCutout=true, resetCutout=true) {
     }
 
     // Tigger Group Cutout
-    translate([-TeeRimRadius(ReceiverTee())-0.03,
-               -2,GripFloorZ(ReceiverTee()) -(GripTriggerFingerSlotDiameter()/2)])
-    cube([TeeRimDiameter(ReceiverTee())-0.25, 4,4]);
+    translate([-ReceiverOR(),
+               -2,
+               GripFloorZ() -(GripTriggerFingerSlotDiameter()/2)])
+    cube([ReceiverOR()+RodRadius(SearRod(), RodClearanceLoose()), 4,4]);
 
     // Reset Spring Body OD
     if (resetCutout)
