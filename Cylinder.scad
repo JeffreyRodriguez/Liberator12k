@@ -32,12 +32,12 @@ zigzag_cutter_width = zigzag_width + RodDiameter(ActuatorRod())/2.5; // ???: Eye
 function ZigZagMajorArcLength() = cylinder_circumference/zigzag_width;
 function ZigZagMajorArcAngle() = cylinder_circumference/360*ZigZagMajorArcLength();
 
-module CylinderSpindle(nutHeight=0.23) {
+module CylinderSpindle(length=12, nutHeight=0.23) {
 
     // Spindle Rod
     translate([0,0,-CylinderChamberOffset()])
     rotate([0,90,0])
-    linear_extrude(height=TeeWidth(ReceiverTee()))
+    linear_extrude(height=length)
     Rod2d(rod=CylinderRod(),clearance=RodClearanceLoose());
 
     // Spindle Nut
