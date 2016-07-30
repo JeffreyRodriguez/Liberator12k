@@ -110,7 +110,7 @@ module ChargingWheel(angle=90) {
 module ChargingSupports() {
 
   // Charging Supports
-  color("Moccasin", 0.5)
+  color("Moccasin")
   render(convexity=4)
   difference() {
     union() {
@@ -183,7 +183,7 @@ module ChargingSupports() {
 }
 
 module ChargerRetainer() {
-  color("LightSeaGreen", 0.1)
+  color("LightSeaGreen")
   render(convexity=4)
   difference() {
     hull() {
@@ -232,11 +232,11 @@ module Charger() {
   ChargingWheel();
   
   //!scale(25.4) rotate([180,0,0])
-  DebugHalf(4)
+  //DebugHalf(4)
   ChargingSupports();
   
   //!scale(25.4) rotate([0,-90,0])
-  DebugHalf(5)
+  //DebugHalf(5)
   ChargerRetainer();
   
   translate([1,0,(ReceiverLength()/2)])
