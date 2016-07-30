@@ -2,6 +2,7 @@ use <Components/Manifold.scad>;
 use <Reference Build Area.scad>;
 use <Vitamins/Pipe.scad>;
 use <Vitamins/Rod.scad>;
+use <Frame.scad>;
 
 //DEFAULT_BARREL = Spec_PointFiveSix9mmBarrel();
 //DEFAULT_BARREL = Spec_PipeThreeQuarterInch();
@@ -120,13 +121,13 @@ module Receiver(receiver=ReceiverTee()) {
 
 function ReceiverInnerWidth(receiver=ReceiverTee()) = TeeWidth(receiver) - (TeeRimWidth(receiver)*2);
 
-module Stock(receiver, stock, stockLength) {
+module Stock(receiver, stock, stockLength, hollow=true) {
   translate([-TeeCenter(ReceiverTee())+PipeThreadDepth(stock),0,0])
   rotate([0,-90,0])
   Pipe(pipe=stock,
   clearance=PipeClearanceLoose(),
      length=stockLength+0.02,
-     hollow=true);
+     hollow=hollow);
 }
 
 module Butt(receiver, stockLength) {
@@ -147,25 +148,31 @@ module Reference(barrel=BarrelPipe(),
                  breech=Spec_BushingThreeQuarterInch(),
                receiver=ReceiverTee(),
                   stock=Spec_PipeThreeQuarterInch(),
-            stockLength=StockLength(),
+            stockLength=StockLength(), hollowStock=false,
                    butt=Spec_TeeThreeQuarterInch()) {
 
-  %color("Black", 0.3) {
-    Stock(receiver, stock, stockLength);
-    Breech(receiver, breech);
-  }
+  Stock(receiver, stock, stockLength, hollow=hollowStock);
 
-  %color("White", 0.1) {
-    Receiver(receiver);
-    Butt(receiver, stockLength);
-    translate([ManifoldGap(),0,0])
-    Barrel(receiver=receiver, breech=breech, barrel=barrel, barrelLength=barrelLength);
-  }
+  color("Black")
+  Breech(receiver, breech);
+
+  color("DimGray")
+  Receiver(receiver);
+
+  color("SteelBlue")
+  Frame();
+
+  color("DimGray")
+  Butt(receiver, stockLength);
+
+  color("Silver")
+  translate([ManifoldGap()+3,0,0])
+  Barrel(receiver=receiver, breech=breech, barrel=barrel, barrelLength=barrelLength);
 }
 
 
 module ReferenceTeeCutter(centerLength = ReceiverOD(), $fn=Resolution(12,30)) {
-  
+
   // Vertical
   translate([0,0,-TeeCenter(ReceiverTee())])
   TeeRim(ReceiverTee(), height=TeeWidth(ReceiverTee()));
@@ -174,16 +181,21 @@ module ReferenceTeeCutter(centerLength = ReceiverOD(), $fn=Resolution(12,30)) {
   translate([-TeeWidth(ReceiverTee())/2,0,0])
   rotate([0,90,0])
   TeeRim(ReceiverTee(), height=TeeWidth(ReceiverTee()));
-  
+
   // Corner Infill
   for (n=[-1,1]) // Top of cross-fitting
   for (i=[-1,1]) // Sides of tee-fitting
   translate([i*TeeOuterRadius(ReceiverTee())/2,0,n*-TeeOuterRadius(ReceiverTee())/2])
   rotate([0,n*i*45,0])
   cylinder(r=TeeOuterRadius(ReceiverTee()), h=0.5, center=true);
+
+  // Stock
+  rotate([0,-90,0])
+  Pipe(StockPipe(), length=StockLength());
+
 }
 
 scale([25.4, 25.4, 25.4]) {
   Reference();
-  ReferenceBuildArea();
+  *ReferenceBuildArea();
 }
