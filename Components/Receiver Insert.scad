@@ -3,13 +3,13 @@ use <../Reference.scad>;
 use <../Vitamins/Pipe.scad>;
 use <../Vitamins/Rod.scad>;
 
-module ReceiverInsert() {
+module ReceiverInsert(topFactor=0.6) {
   render(convexity=4)
   difference() {
     union() {
       // Body
       cylinder(r=ReceiverIR(),
-               h=(ReceiverLength()/2)-(ReceiverIR()*0.6),
+               h=(ReceiverLength()/2)-(ReceiverIR()*topFactor),
              $fn=Resolution(20,30));
 
       // Front-bottom chamfered curve
