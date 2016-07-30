@@ -13,7 +13,7 @@ function ForendRearLength() = 1;
 function ForendFrontLength() = 0.6;
 function LugRadius() = TeeRimRadius(ReceiverTee())+(WallFrameRod()*0.6);
 function LugAngle() = 45;
-function ForendOffset() = 3;
+function ForendOffset() = 4;
 function ForendTravel() = 2;
 function BarrelLugLength() = 1;
 
@@ -168,22 +168,25 @@ module ForendRevolverRear(shaftCollar=true) {
 }
 
 module ForendRevolver(frontLength=1) {
+  
+  color("Tomato") {
 
-  // Rear Faceplace
-  translate([(TeeWidth(ReceiverTee())/2)
-             +BushingExtension(BreechBushing())
-             +ForendOffset(),0,0])
-  render(convexity=4)
-  ForendRevolverRear();
+    // Rear Faceplace
+    translate([(TeeWidth(ReceiverTee())/2)
+               +BushingExtension(BreechBushing())
+               +ForendOffset(),0,0])
+    render(convexity=4)
+    ForendRevolverRear();
 
-  // Front Faceplace
-  translate([(TeeWidth(ReceiverTee())/2)
-             +BushingExtension(BreechBushing())
-             +ForendOffset()
-             +ForendRearLength()
-             +0.03,0,0])
-  render(convexity=4)
-  *ForendRevolverRear(shaftCollar=false);
+    // Front Faceplace
+    translate([(TeeWidth(ReceiverTee())/2)
+               +BushingExtension(BreechBushing())
+               +ForendOffset()
+               +ForendRearLength()
+               +0.03,0,0])
+    render(convexity=4)
+    ForendRevolverRear(shaftCollar=false);
+  }
 }
 
 module Forend(showLugs=false) {
