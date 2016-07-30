@@ -1,21 +1,23 @@
 //$t=0.999999999;
-$t=0;
+//$t=0;
 include <Components/Animation.scad>;
 
-use <Components/Receiver Insert.scad>;
-use <Components/Semicircle.scad>;
 use <Components/Manifold.scad>;
 use <Components/Debug.scad>;
+use <Components/Semicircle.scad>;
+use <Components/Spindle.scad>;
+use <Components/Receiver Insert.scad>;
 
 use <Vitamins/Rod.scad>;
 use <Vitamins/Pipe.scad>;
 use <Vitamins/Spring.scad>;
 
-use <Firing Pin.scad>;
+use <Firing Pin Guide.scad>;
 use <Striker.scad>;
 use <Charger.scad>;
 
 use <Reset Spring.scad>;
+use <Sear.scad>;
 
 use <Reference.scad>;
 
@@ -30,6 +32,7 @@ function TriggerAngle() = 360/16;
 function TriggerWidth() = 0.25;
 function TriggerPinX() = -1/4;
 function TriggerPinZ() = -TeeCenter(ReceiverTee())-RodRadius(TriggerRod());
+function TriggerTravel() = RodDiameter(StrikerRod())*1.75;
 
 function TriggerMaxMajor() = 2.63;
 
@@ -43,140 +46,52 @@ function SafetyBarAngle() = 32;
 function SafetyBackAngle() = 3;
 function SafetyAngle() = 15;
 
+module TriggerBar() {
+  
+  color("OliveDrab")
+  render()
+  translate([-(TriggerTravel()*Animate(ANIMATION_STEP_TRIGGER)),0,0])
+  rotate([90,0,0])
+  linear_extrude(center=true, height=0.24)
+  translate([0,-ReceiverCenter()])
+  polygon([[-ReceiverCenter(),
+            -0.25+RodRadius(PivotRod())],
+  
+           [RodRadius(SearRod()),
+            -0.25+RodRadius(PivotRod())],
+  
+           [RodRadius(SearRod())+TriggerTravel(),
+            -0.25+RodRadius(PivotRod())-RodDiameter(StrikerRod())],
+  
+           [RodDiameter(SearRod())+TriggerTravel(),
+            -0.25+RodRadius(PivotRod())-RodDiameter(StrikerRod())],
+  
+           [RodDiameter(SearRod())+TriggerTravel(),
+            ManifoldGap()],
+  
+           [-ReceiverCenter(),ManifoldGap()]
+  ]);
 
-module Spindle(pin=SafetyRod(), center=false, cutter=false,
-               radius=0.2, clearance=0.015, height=0.27,
-               $fn=Resolution(12,12)) {
-    difference() {
-      cylinder(r=radius+(cutter==true ? clearance : 0), h=height, center=center);
-
-      if (cutter==false)
-      Rod(rod=pin, clearance=RodClearanceLoose(), length=height*3, center=true);
-    }
 }
 
-
-
-module SearArm() {
-  translate([RodRadius(SearRod()),0,-RodDiameter(StrikerRod())*Animate(ANIMATION_STEP_TRIGGER)])
-  // Sear Arm
-  color("Lime")
-  mirror([0,0,1])
+module Trigger(pin=Spec_RodOneEighthInch(), width=0.3+0.3125) {
+  height = (RodDiameter(StrikerRod())*2)+(RodDiameter(PivotRod())*1.5);
+  
+  color("Yellow")
+  render()
+  translate([-(TriggerTravel()*Animate(ANIMATION_STEP_TRIGGER)),0,0])
   difference() {
     union() {
-      translate([0,-RodRadius(SearRod()),ReceiverIR()])
-      mirror([1,0,0])
-      cube([0.25,
-            RodDiameter(SearRod()),
-            TeeCenter(ReceiverTee())-ReceiverIR()+0.32]);
       
-      translate([0,-RodRadius(SearRod()),ReceiverIR()])
-      mirror([1,0,0])
-      cube([RodRadius(SearRod())+(ReceiverIR()*.9),
-            RodDiameter(SearRod()),
-            RodDiameter(StrikerRod())]);
+      rotate([90,0,0])
+      linear_extrude(center=true, height=0.24) {
+        translate([-ReceiverCenter()-0.7,-ReceiverCenter()-0.18])
+        mirror([1,0])
+        square([1,0.3+ReceiverCenter()-PipeOuterRadius(StockPipe())]);
+      }
     }
     
-    translate([0,0,-RodRadius(StrikerRod())-ManifoldGap()])
-    Rod(rod=SearRod(),
-  clearance=RodClearanceLoose(),
-     length=TeeCenter(ReceiverTee())+RodRadius(StrikerRod()));
-    
-    translate([-RodRadius(SearRod()),0,TeeCenter(ReceiverTee()) +0.15])
-    rotate([90,0,0])
-    Rod(PivotRod(), center=true);
-    
-  }
-}
-
-module Sear(clearance=undef) {
-  // Sear Rod
-  translate([0,0,-RodDiameter(StrikerRod())*Animate(ANIMATION_STEP_TRIGGER)])
-  mirror([0,0,1])
-  color("Orange")
-  translate([RodRadius(SearRod()),0,-RodRadius(StrikerRod())])
-  Rod(rod=SearRod(),
-   length=TeeCenter(ReceiverTee())+RodRadius(StrikerRod()));
-  
-  SearArm();
-}
-
-module SearGuide() {
-  
-  color("LightSeaGreen", 0.5)
-  render(convexity=4)
-  translate([0,0,-TeeCenter(ReceiverTee())])
-  difference() {
-    ReceiverInsert();
-    
-    // Sear hole
-    translate([RodRadius(SearRod()),0,-ManifoldGap()])
-    cylinder(r=RodRadius(SearRod(), RodClearanceLoose()),
-        length=TeeWidth(ReceiverTee()),
-           $fn=RodFn(SearRod()));
-    
-    // Sear hole slot
-    translate([RodRadius(SearRod()),-0.15, -ManifoldGap()])
-    mirror([1,0,0])
-    cube([0.27, 0.30, TeeCenter(ReceiverTee())]);
-    
-    translate([RodRadius(SearRod()),-0.15, TeeCenter(ReceiverTee())-ReceiverIR()-(RodDiameter(StrikerRod())*2)])
-    mirror([1,0,0])
-    cube([ReceiverID(), 0.30, TeeCenter(ReceiverTee())]);
-    
-    translate([-RodRadius(PivotRod()),0,TeeCenter(ReceiverTee())-ReceiverIR()-RodRadius(PivotRod())])
-    rotate([90,0,0])
-    Rod(PivotRod(), center=true);
-  }
-}
-
-
-
-module Trigger(pin=Spec_RodOneEighthInch(), height=0.24) {
-  safetyAngle = 70;
-
-  //color("Gold")
-  //render(convexity=6)
-  translate([TriggerPinX(), 0, TriggerPinZ()])
-  rotate([-90,(TriggerAngle()*Animate(ANIMATION_STEP_TRIGGER))])
-  linear_extrude(center=true, height=height)
-  difference() {
-    union() {
-
-      // Spindle Body
-      circle(r=TriggerMinorRadius(), $fn=20);
-
-      // Finger Body
-      rotate(120)
-      semidonut(minor=0, major=2.6, angle=114, $fn=Resolution(20,60));
-
-      // Reset Spring-engagement surface
-      rotate(122)
-      square([1.6,TriggerMinorRadius()]);
-    }
-
-    // Spindle Hole
-    Rod2d(rod=PivotRod(), clearance=RodClearanceLoose());
-
-    // Trigger Front Curve
-    rotate(90)
-    rotate(-70)
-    translate([1.0,-0.5])
-    translate([TeeRimWidth(ReceiverTee()),0])
-    circle(r=1.4,$fn=Resolution(20,60));
-
-    // Safety cutout
-    rotate(-8-SafetyAngle())
-    translate([SafetyPinX(), SafetyPinZ()])
-    rotate(SafetyBarAngle()+1.8)
-    semicircle(od=SafetyInterfaceOD()+0.02, angle=30, $fn=Resolution(20, 60));
-
-    // Test Rope Hole
-    rotate(90)
-    rotate(-18)
-    translate([0.8,0])
-    translate([TeeRimWidth(ReceiverTee()),0])
-    circle(r=0.1, $fn=8);
+    ReferenceTeeCutter();
   }
 }
 
@@ -263,21 +178,13 @@ module ResetPin(clearance=RodClearanceSnug()) {
 }
 
 
-module FireControlPins(clearance=RodClearanceSnug()) {
-
-    // Trigger Pin
-    translate([TriggerPinX(),0,TriggerPinZ()])
-    rotate([90,0,0])
-    Rod(rod=TriggerRod(), clearance=clearance,
-        length=TeeRimDiameter(ReceiverTee()),
-        center=true);
-}
-
 //$t=0.0;
 
 module TriggerGroup(debug=true) {
-
-    *Trigger();
+    TriggerBar();
+  
+    //scale(25.4) rotate([90,0,0])
+    Trigger();
   
     Striker(debug=debug);
 
@@ -287,16 +194,16 @@ module TriggerGroup(debug=true) {
     Sear();
     //!scale(25.4)
     //DebugHalf(3)
-    SearGuide(debug=debug);
+    %SearGuide(debug=debug);
   
     //!scale(25.4) rotate([90,0,0])
-    SearArm();
+    SearYoke();
   
     //color("lightgreen")
     //render() 
     //!scale(25.4) rotate([0,90,180])
     //DebugHalf(2)
-    FiringPinInsert(debug=true);
+    %FiringPinGuide(debug=true);
 
     *ResetSpring();
 
@@ -310,6 +217,8 @@ module TriggerGroup(debug=true) {
 
   TriggerGroup();
   *Reference();
+  
+  echo("ReceiverCenter()-ReceiverIR()",ReceiverCenter());
 }
 
 module trigger_plater($t=0) {
