@@ -30,7 +30,7 @@ module Pipe2d(pipe, clearance=PipeClearanceSnug(), hollow=false) {
   difference() {
     circle(r=PipeOuterRadius(pipe=pipe, clearance=clearance),
          $fn=lookup(PipeFn, pipe));
-    
+
     if (hollow)
     circle(r=PipeInnerRadius(pipe, clearance),
          $fn=lookup(PipeFn, pipe));
@@ -163,6 +163,20 @@ FiveSixteenthInchBrakeLine = [
   [PipeWeightPerUnit,   42]
 ];
 function Spec_FiveSixteenthInchBrakeLine() = FiveSixteenthInchBrakeLine;
+
+// 3/4" OD x 5/8" ID Tube
+TubingThreeQuarterByFiveEighthInch = [
+  [PipeInnerDiameter,   0.645],
+  [PipeOuterDiameter,   0.75],
+  [PipeTaperedDiameter, 0.75],
+  [PipeThreadLength,    0],
+  [PipeThreadDepth,     0],
+  [PipeClearanceSnug,   0.03],
+  [PipeClearanceLoose,  0.035],
+  [PipeFn,              20],
+  [PipeWeightPerUnit,   0] // TODO
+];
+function Spec_TubingThreeQuarterByFiveEighthInch() = TubingThreeQuarterByFiveEighthInch;
 
 // 0.56x9mm Barrel Blank
 PointFiveSix9mmBarrel = [
@@ -299,8 +313,9 @@ module Tee(tee, $fn=40) {
    }
 };
 
-module CrossFitting(tee, $fn=40) {
-   render()
+module CrossFitting(tee, infill=true, hollow=false, $fn=40) {
+  render()
+  difference()
    union() {
 
      // Horizontal Body
@@ -310,7 +325,7 @@ module CrossFitting(tee, $fn=40) {
 
      // Vertical Body
      translate([0,0,TeeCenter(tee) * 0.01])
-     cylinder(r=TeeOuterRadius(tee), h=TeeCenter(tee) * 0.98, $fn=36);
+     cylinder(r=TeeOuterRadius(tee), h=TeeWidth(tee) * 0.98, $fn=36);
 
      // Bottom Vertical Rim
      cylinder(r=TeeRimRadius(tee), h=TeeRimWidth(tee), $fn=36);
@@ -328,7 +343,7 @@ module CrossFitting(tee, $fn=40) {
       rotate([0,i*-90,0]) {
       cylinder(r=TeeRimRadius(tee), h=TeeRimWidth(tee), $fn=36);
 
-      // Casting Infill
+      // Rim-Body Fillet
       translate([0,0,TeeRimWidth(tee)])
       cylinder(r1=TeeRimRadius(tee),
                r2=TeeOuterRadius(tee),
@@ -337,16 +352,16 @@ module CrossFitting(tee, $fn=40) {
       }
     }
 
-    // Tee Body Casting Infill
-    // TODO: Tweak this? Could be better, could be worse.
-    *intersection() {
-      translate([0,0,TeeCenter(tee) + lookup(TeeInfillSphere, tee)])
-      sphere(r=TeeRimRadius(tee) + lookup(TeeInfillOffset, tee), $fn=36);
+    for (n=[-1,1]) // Top of cross-fitting
+    for (i=[-1,1]) { // Sides of tee-fitting
 
-      translate([-TeeRimRadius(tee),-TeeOuterRadius(tee),0])
-      cube([TeeRimDiameter(tee),TeeOuterDiameter(tee),TeeCenter(tee)]);
+      // Body-Corner Infill
+      translate([0,0,TeeCenter(tee)])
+      translate([i*TeeOuterRadius(tee)/2,0,n*-TeeOuterRadius(tee)/2])
+      rotate([0,n*i*45,0])
+      cylinder(r=TeeOuterRadius(tee), h=0.5, center=true);
     }
-   }
+  }
 };
 
 //Tee(TeeThreeQuarterInch);
@@ -398,3 +413,5 @@ module Bushing(spec=BushingThreeQuarterInch) {
     cylinder(r=BushingCapWidth(spec)/2, h=BushingCapHeight(spec), $fn=6);
   }
 }
+
+CrossFitting(AnvilForgedSteel_TeeThreeQuarterInch);
