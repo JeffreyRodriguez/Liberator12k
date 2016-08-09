@@ -89,6 +89,7 @@ module StrikerCollar(debug=true) {
 }
 
 module StrikerSpacer(length=2) {
+  render()
   difference() {
       cylinder(r=StrikerSpacerRadius(), h=length, $fn=RodFn(StrikerRod())*Resolution(1, 2));
 
@@ -169,6 +170,6 @@ module Striker(debug=true) {
   Striker();
 
   //rotate([90,0,0]) StrikerTop();
-
+  DebugHalf(dimension=50)
   Reference();
 }
