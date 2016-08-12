@@ -29,12 +29,12 @@ SquareTubeOneInch = [
 ];
 function Spec_SquareTubeOneInch() = SquareTubeOneInch;
 
-module Tubing2D(spec=Spec_SquareTubeOneInch(), clearance=SquareTubeClearanceSnug(), solid=false) {
+module Tubing2D(spec=Spec_SquareTubeOneInch(), clearance=SquareTubeClearanceSnug(), hollow=false) {
   union() {
     difference() {
       square([SquareTubeOuter(spec, clearance), SquareTubeOuter(spec, clearance)]);
 
-      if (solid==false)
+      if (hollow==true)
       translate([SquareTubeWall(spec),SquareTubeWall(spec),0])
       square([SquareTubeInner(spec), SquareTubeInner(spec)]);
     }
@@ -51,7 +51,8 @@ module Tubing2D(spec=Spec_SquareTubeOneInch(), clearance=SquareTubeClearanceSnug
   }
 }
 
-Tubing2D(spec=Spec_SquareTubeOneInch());
+
+Tubing2D(spec=Spec_SquareTubeOneInch(), hollow=true);
 
 module TubingInsert2D(spec=Spec_SquareTubeOneInch()) {
   difference() {
