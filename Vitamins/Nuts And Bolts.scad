@@ -1,4 +1,5 @@
 use <../Components/Units.scad>;
+use <../Components/Manifold.scad>;
 
 BoltDiameter    = 1;
 BoltCapDiameter = 2;
@@ -78,29 +79,35 @@ module Bolt2d(bolt=Spec_BoltM3(), clearance=false, $fn=undef) {
 }
 
 
-module Bolt(bolt=Spec_BoltM3(), length=1, clearance=false, cap=false, center=false, $fn=undef) {
+module Bolt(bolt=Spec_BoltM3(), length=1, clearance=false, cap=true, capRadiusExtra=0, capHeightExtra=0, center=false, $fn=undef) {
   union() {
     linear_extrude(height=length, center=center)
     Bolt2d(bolt, clearance, $fn=$fn);
 
     // Cap
-    //if (cap)
-    //translate([0,0,-capHeight-capHeightExtra])
-    //cylinder(r=capRadius+capRadiusExtra, h=capHeight+capHeightExtra+ManifoldGap(), $fn=12);
+    if (cap)
+    translate([0,0,length-ManifoldGap()])
+    cylinder(r=BoltCapRadius(bolt)+capRadiusExtra,
+             h=BoltCapHeight(bolt)+capHeightExtra, $fn=BoltFn(bolt)*2);
   }
 
 
 }
 
-module NutAndBolt(bolt=Spec_BoltM3(), boltLength=1, nutHeight=1, clearance=true) {
+module NutAndBolt(bolt=Spec_BoltM3(), boltLength=1,
+                  capRadiusExtra=0, capHeightExtra=0,
+                  nutHeightExtra=0, clearance=true) {
   union() {
 
     // Bolt Body
-    Bolt(bolt=bolt, length=boltLength+BoltNutHeight(bolt), clearance=clearance);
+    Bolt(bolt=bolt, length=boltLength,
+         capHeightExtra=capHeightExtra, capRadiusExtra=capRadiusExtra,
+         clearance=clearance);
 
     // Nut
-    translate([0,0,-nutHeight])
-    cylinder(r=BoltNutRadius(bolt, clearance), h=BoltNutHeight(bolt)+nutHeight, $fn=6);
+    translate([0,0,-nutHeightExtra])
+    cylinder(r=BoltNutRadius(bolt, clearance),
+             h=BoltNutHeight(bolt)+nutHeightExtra, $fn=6);
   }
 }
 
