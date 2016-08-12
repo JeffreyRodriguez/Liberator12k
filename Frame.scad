@@ -3,7 +3,14 @@ use <Vitamins/Rod.scad>;
 use <Reference.scad>;
 
 function FrameNutHeight() = 0.28;
-function FrameRodAngles() = [FrameRodMatchedAngle(), -FrameRodMatchedAngle()];
+
+function FrameRodAngles() = [
+                    FrameRodMatchedAngle(),
+                    -FrameRodMatchedAngle(),
+                    FrameRodMatchedAngle()+180,
+                    -FrameRodMatchedAngle()-180
+                   ];
+
 function FrameRodOffset()
            = TeeRimRadius(ReceiverTee())
            + RodRadius(FrameRod())

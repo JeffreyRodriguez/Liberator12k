@@ -160,7 +160,7 @@ module Reference(barrel=BarrelPipe(),
   Receiver(receiver);
 
   color("SteelBlue")
-  Frame();
+  Frame(clearance=undef);
 
   color("DimGray")
   Butt(receiver, stockLength);

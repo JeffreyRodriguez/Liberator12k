@@ -1,5 +1,4 @@
-//$t=0;
-include <Components.scad>;
+//$t=0.8;
 use <Components/Semicircle.scad>;
 use <Components/Debug.scad>;
 use <Vitamins/Pipe.scad>;
@@ -8,11 +7,14 @@ use <Frame.scad>;
 use <Cylinder.scad>;
 use <Trigger.scad>;
 use <Striker.scad>;
+use <Sear.scad>
 use <Reference.scad>;
+use <Grip Tabs.scad>;
 use <Reset Spring.scad>;
 
-function GripFloor() = 0;
-function GripWidth() = 0.9;
+function GripHandleOffsetX() = -0.125;
+function GripFloor() = 0.6;
+function GripWidth() = 1;
 
 function GripRodOffset() = TeeRimRadius(ReceiverTee())
                           + RodRadius(GripRod())
@@ -22,28 +24,39 @@ function GripFloorZ() = -ReceiverCenter()-GripFloor();
 
 function TeeHousingBottomExtension() = 0.27;
 
-function GripTriggerFingerSlotDiameter() = 0.8;
-function GripTriggerFingerSlotWall() = 0.35;
+function GripTriggerFingerSlotDiameter() = 0.9;
+function GripTriggerFingerSlotRadius() = GripTriggerFingerSlotDiameter()/2;
+function GripTriggerFingerSlotOffsetZ() = -ReceiverCenter() -GripFloor() -GripTriggerFingerSlotRadius();
+function GripTriggerFingerSlotWall() = 0.25;
+
+function GripPinX(pin) = GripPins()[pin][0];
+function GripPinY(pin) = GripPins()[pin][2];
+function GripPinZ(pin) = GripPins()[pin][1];
+
 
 // XZY
 function GripPins() = [
      
-     // Top-Back, above safety
-     [-TeeCenter(ReceiverTee())-0.35, -TeeRimRadius(ReceiverTee()) + 0.1, -0.03],
-
-     [SafetyPinX(), SafetyPinZ(), -0.03],
+     // Behind front grip tab
+     //[ReceiverOR(),GripFloorZ()+0.375, 0],
      
-     [ResetPinX(), ResetPinZ(), 0.215],
-
-     // Bottom-Back tip
-     [-(ReceiverLength()/2)-2.4,
-      GripFloorZ()-GripTriggerFingerSlotDiameter()-1.45,
-      -0.03],
-
-     // Bottom-Front tip
-     [-(ReceiverLength()/2)-1.08,
-      GripFloorZ()-GripTriggerFingerSlotDiameter()-1.90,
-      -0.03]
+     // Front-Top
+     [BreechFrontX(),-ReceiverCenter()-(GripFloor()/2), 0],
+     
+     // Front-Bottom
+     [BreechFrontX(),GripFloorZ()-GripTriggerFingerSlotDiameter()+0.125, 0],
+     
+     // Back-Top
+     [-ReceiverCenter()-WallFrameBack()+0.5,GripFloorZ()+0.375, 0],
+     
+     // Behind Trigger Finger Slot
+     [-0.5,GripFloorZ()-0.5, 0],
+     
+     // Handle Bottom-Rear
+     [GripHandleOffsetX()-ReceiverOR()-1.75,GripFloorZ()-2.4, 0],
+     
+     // Handle Bottom-Front
+     [GripHandleOffsetX()-ReceiverOR()-0.5,GripFloorZ()-2.9, 0]
   ];
 
 
@@ -53,13 +66,13 @@ function GripPins() = [
 /* M3: radius=0.115/2, capRadius=0.212/2, nutRadius=0.247/2, nutHeight=0.096
    M8: radius=0.3,     capRadius=0.29,    nutRadius=0.29,  nutHeight=0.3,
 */
-module GripMX(length=20/25.4,
+module GripMX(length=25/25.4,
               radius=(0.115/2)+0.02, radiusExtra=0,
               capEnabled=true,
-              capRadius=(0.212/2)+0.01, capRadiusExtra=0,
+              capRadius=(0.212/2)+0.01, capRadiusExtra=0.001,
               capHeight=0.123, capHeightExtra=0,
               nutEnabled=true,
-              nutRadius=0.247/2, nutRadiusExtra=0,
+              nutRadius=0.247/2, nutRadiusExtra=0.002,
               nutHeight=0.096, nutHeightExtra=0,
               $fn=8) {
   union() {
@@ -79,252 +92,179 @@ module GripMX(length=20/25.4,
   
 }
 
+module GripScrew() {
+  translate([0,-(GripWidth()/2)+0.055,0])
+  rotate([-90,0,0])
+  GripMX(nutHeightExtra=GripWidth(), capHeightExtra=GripWidth());
+}
+
 module GripBodyScrews() {
-  translate([0,-(GripWidth()/2)+0.115,0])
   for (xzy = GripPins())
-  translate([xzy[0],xzy[2],xzy[1]]) {
-    rotate([-90,0,0])
-    GripMX(nutHeightExtra=GripWidth(), capHeightExtra=GripWidth());
-  }
+  translate([xzy[0],xzy[2],xzy[1]])
+  GripScrew();
 }
 
-module GripFrontRod(length=2.5, offsetZ=0,
-                   radius=RodRadius(GripRod(), RodClearanceLoose),
-                   extraRadius=0,
-                   $fn=Resolution(8,30)) {
-  
-  radiusExtra = extraRadius;
-                     
-  // Angled bolt
-  translate([TeeRimRadius(ReceiverTee())+RodRadius(GripRod())+0.15,0,-TeeCenter(ReceiverTee())-RodRadius(GripRod())-0.07])
-  rotate([0,0,-69])
-  rotate([0,-90+5,0]) {
-    translate([0,0,offsetZ])
-    cylinder(r=radius+radiusExtra, h=length, center=true);
-  
-    children();
-  }
-}
-
-module GripRearRod(length=2.5,
-                   radius=RodRadius(GripRod(), RodClearanceLoose),
-                   radiusExtra=0,
-                   $fn=Resolution(8,30)) {
-  translate([-TeeCenter(ReceiverTee())+0.27,0,-TeeRimRadius(ReceiverTee())-0.35])
-  rotate([0,0,-69])
-  rotate([0,-90+5,0]) {
-    cylinder(r=radius+radiusExtra, h=length, center=true);
-  
-    children();
-  }
-}
-
-module GripTriggerFingerSlot(receiver=ReceiverTee(), length=0.6, chamfer=true, $fn=Resolution(12, 60)) {
+module GripTriggerFingerSlot(receiver=ReceiverTee(), length=0.7, chamfer=false, $fn=Resolution(12, 60)) {
   render()
   union()
-  translate([-GripTriggerFingerSlotDiameter()-ReceiverOR(),
+  translate([0.45,
              0,
-             GripFloorZ()]) {
+             GripTriggerFingerSlotOffsetZ()]) {
 
     // Trigger guard hole
     hull()
     for (i = [0,length])
     translate([i,0,0])
     rotate([90,0,0])
-    cylinder(r=(GripTriggerFingerSlotDiameter()/2),
-             h=4, $fn=$fn, center=true);
-
-    // Chamfer the rim
+    cylinder(r=GripTriggerFingerSlotRadius(),
+             h=2, $fn=$fn, center=true);
+    
     if (chamfer)
-    difference() {
-      for (side = [1, 0])
-      mirror([0,side,0])
-      hull()
-      for (i = [0,length]) {
+    for (side = [1, 0])
+    mirror([0,side,0])
+    hull()
+    for (i = [0,length]) {
 
-        translate([i,0.125 + (GripWidth()/2)])
-        rotate([-90,0,0])
-        cylinder(r=GripTriggerFingerSlotDiameter()*0.6,
-                 h=2, $fn=$fn);
-        
-        translate([i,0.125 + (GripWidth()/8)])
-        rotate([-90,0,0])
-        cylinder(r1=GripTriggerFingerSlotDiameter()*0.5,
-                 r2=GripTriggerFingerSlotDiameter()*0.6,
-                 h=(GripWidth()/2)-0.125, $fn=$fn);
-      }
-
-      translate([-ReceiverLength()*2,-5,GripTriggerFingerSlotDiameter()/2])
-      cube([ReceiverLength()*4, 10, 4]);
+      translate([i,0.125 + (GripWidth()/2)])
+      rotate([-90,0,0])
+      cylinder(r=GripTriggerFingerSlotDiameter()*0.6,
+               h=2, $fn=$fn);
+      
+      translate([i,0.125 + (GripWidth()/8)])
+      rotate([-90,0,0])
+      cylinder(r1=GripTriggerFingerSlotRadius(),
+               r2=GripTriggerFingerSlotDiameter()*0.6,
+               h=(GripWidth()/2)-0.125, $fn=$fn);
     }
   }
 }
 
-module GripHandle(receiver, angle=30, length=1.3, height=4.75) {
-  translate([-(ReceiverLength()/2)-1.5,0,-TeeCenter(ReceiverTee())])
-  rotate([0,angle,0])
+module GripHandle(receiver, angle=25, length=1.3, height=5.5) {
+  handleOffsetZ = -GripFloor();
+  palmSwellOffsetZ=-3.0-GripFloor();
+  fingerSwellOffsetZ=-2.4-GripFloor();
+  
+  render()
   difference() {
     union() {
-      hull()
-      for (i=[0,length])
-      translate([i,0,-3.25])
-      cylinder(r=GripWidth()/2, h=height, $fn=Resolution(20, 60));
+      
+      // Main body of the grip
+      translate([GripHandleOffsetX(),0,handleOffsetZ])
+      rotate([0,angle,0]) {
+        
+        // Grip Body
+        translate([-length/2,0,-height])
+        hull()
+        for (i=[0,length])
+        translate([i,0,0])
+        cylinder(r=GripWidth()/2, h=height, $fn=Resolution(20, 60));
 
-      // Palm swell
-      translate([0,0,0])
-      translate([0.6,0,-1.1875])
-      rotate([0,0,0])
-      scale([2.5,1.7,4.25/GripWidth()])
-      sphere(r=GripWidth()/2, $fn=Resolution(12, 60));
+        // Palm swell
+        translate([0,0,palmSwellOffsetZ])
+        scale([2.5,1.7,4.5])
+        sphere(r=0.45, $fn=Resolution(12, 60));
 
-      // Finger swell
-      translate([length,0,-0.8])
-      scale([1,1.05,0.5])
-      sphere(r=GripWidth()*0.7, $fn=Resolution(12, 60));
+        // Finger swell
+        translate([length/2,0,fingerSwellOffsetZ])
+        scale([1,1.05,0.5])
+        sphere(r=0.63, $fn=Resolution(12, 60));
+      }
+      
+      // Backstrap
+      translate([GripHandleOffsetX()-length-0.125,0,-ReceiverCenter()-GripFloor()-GripTriggerFingerSlotDiameter()])
+      rotate([0,-5,0]) {
+        cylinder(r=GripWidth()/2, h=1.7, $fn=Resolution(20,60));
+        
+        translate([0,-GripWidth()/2, 0])
+        cube([1, GripWidth(), 1.7]);
+      }
     }
 
     // Flatten the bottom
-    translate([-4,-2,-1-height])
-    rotate([0,-10,0]) // TODO: Parameterize this with angle?
-    cube([8, 4, 2]);
+    translate([-4.5,-1,handleOffsetZ-6.5])
+    rotate([0,5,0])
+    cube([4, 2, 2]);
   }
 }
 
-module GripGuard(receiver, stock=stockPipe, showHandle=true) {
+module GripGuard(showHandle=true) {
   height = GripTriggerFingerSlotDiameter()+GripTriggerFingerSlotWall()+GripFloor();
 
   difference() {
     union() {
-
-      // Main block
-      difference() {
+      intersection() {
         hull() {
-
-          // Trigger side plate area
-          translate([-1.5,
-                     (-GripWidth()/2)+0.1,
-                     GripFloorZ()-(GripTriggerFingerSlotDiameter()/2)])
-          cube([0.1,
-                GripWidth()-0.2,
-                GripTriggerFingerSlotDiameter()]);
-          
-          // Front-bottom chamfered curve
-          for (i = [1,-1])
-          translate([-(GripTriggerFingerSlotDiameter()/2),
-                     -i*GripWidth()/4,
-                     GripFloorZ()-(GripTriggerFingerSlotDiameter()/2)])
-          rotate([i*90,0,0])
-          cylinder(r1=(GripTriggerFingerSlotDiameter()/2)+GripTriggerFingerSlotWall(),
-                   r2=(GripTriggerFingerSlotDiameter()/2)+GripTriggerFingerSlotWall()-0.05,
-                   h=GripWidth()/4,
-                   $fn=Resolution(20,60));
-          
-          // Tee Bottom Flats
-          translate([-TeeRimRadius(ReceiverTee())-0.25, -GripWidth()/2,
-                     GripFloorZ()])
-          cube([TeeRimDiameter(ReceiverTee())+0.25,
-          
-                GripWidth(),
-                GripFloor()]);
-          
-          // Front flat
-          translate([ReceiverOR(),-GripWidth()/2,-TeeCenter(ReceiverTee())])
-          mirror([0,0,1])
-          cube([ReceiverCenter()-ReceiverOR()+WallFrameFront(),
-                GripWidth(),
-                RodDiameter(GripRod())+WallFrontGripRod()]);
         
-          // Grip Block Rear
-          #translate([-TeeRimRadius(ReceiverTee()),-GripWidth()/2,0])
-          mirror([1,0,1])
-          cube([abs(GripFloorZ())
-                +(GripTriggerFingerSlotDiameter()/2)
-                +GripTriggerFingerSlotWall(),
+          // Main block
+          translate([-ReceiverOR(), -GripWidth()/2,
+                     -ReceiverCenter()-height])
+          cube([ReceiverOR()+BreechFrontX()+0.25,
                 GripWidth(),
-                ReceiverCenter()]);
+                height]);
         }
+    
+        // Bottom curve
+        translate([0,0,-ReceiverCenter()-height+0.125])
+        rotate([0,90,0])
+        linear_extrude(height=ReceiverLength()*2, center=true)
+        hull() {
+          for (i = [-1, 1])
+          translate([0,((GripWidth()/2)-0.09)*i])
+          circle(r=0.1, $fn=Resolution(12,24));
+          
+          translate([-height-0.125,(-GripWidth()/2)-ManifoldGap()])
+          square([height,GripWidth()+ManifoldGap(2)]);
+        }
+      }
+          
+      // Front grip tab support
+      hull() {
+        for (i=[-0.125,-1.0])
+        translate([ReceiverCenter()+WallFrameFront()+i,0,-ReceiverCenter()])
+        mirror([0,0,1])
+        cylinder(r=0.625, h=GripFloor(), $fn=Resolution(12,60));
         
-        // Trigger Guard Bottom Edge Chamfer
-        translate([0,0,GripFloorZ()-(GripTriggerFingerSlotDiameter()/2)-GripTriggerFingerSlotWall()-0.05])
-        difference() {
-          translate([-ReceiverLength(),-(GripWidth()/2)-1,-1])
-          cube([ReceiverLength()*2, GripWidth()+2, 1+(GripWidth()/2)]);
-
-          translate([0,0,(GripWidth()/2)])
-          rotate([0,-90,0])
-          cylinder(r=GripWidth()*0.6, h=ReceiverLength()*2.1,
-                   center=true, $fn=Resolution(20,60));
-        }
+        // Hull-smoothing block
+        translate([0,-0.25,GripFloorZ()-GripTriggerFingerSlotDiameter()])
+        cube([BreechFrontX(), 0.5, 0.1]);
       }
 
       if (showHandle)
       GripHandle(ReceiverTee());
     }
+      
     
-    ReferenceTeeCutter();
+    // Flatten the top
+    translate([-ReceiverLength(),-ReceiverOR(), -ReceiverCenter()-ManifoldGap()])
+    cube([ReceiverLength()*2, ReceiverOD(), ReceiverCenter()]);
     
-    // Flatten the front-top
-    translate([0,-ReceiverOR(), -ReceiverCenter()-ManifoldGap()])
-    cube([ReceiverLength(), ReceiverOD(), ReceiverCenter()]);
-
-    // Flatten the back tee rim tips
-    translate([-ReceiverLength()/2,
-               -GripWidth(),
-               -TeeRimRadius(ReceiverTee())*0.85])
-    cube([TeeRimWidth(ReceiverTee()), GripWidth()*2, 1]);
-
-    // Flatten the stock tips
-    translate([-ReceiverLength()-1,
-               -TeeRimRadius(ReceiverTee()),
-               -PipeOuterRadius(StockPipe())*0.7])
-    cube([ReceiverLength(),
-          TeeRimDiameter(ReceiverTee()),
-          TeeInnerRadius(ReceiverTee())]);
-
-    rotate([0,-90,0])
-    Pipe(StockPipe(), length=3);
-
-    GripTriggerFingerSlot(receiver);
-    
-    GripFrontRod();
-    GripRearRod();
-    
-    CylinderSpindle();
+    GripTabFront(clearance=0.005);
+    GripTabRear(clearance=0.005);
 
     GripBodyScrews(ReceiverTee());
-
-    GripTriggerFingerSlot(ReceiverTee());
+    
+    GripTriggerFingerSlot();
     
     GripText();
+    
+    Reference();
   }
 }
 
 module GripSplitter(clearance=0) {
-  translate([-10, -0.125 -clearance, -10])
-  cube([20, 0.25+(clearance*2), 20]);
+  translate([-10, -0.25 -clearance, -10])
+  cube([20, 0.5+(clearance*2), 20]);
 }
 
 module GripSides(showLeft=true, showRight=true) {
 
   // Trigger Guard Sides
+  render()
   difference() {
-    union() {
-        GripGuard(ReceiverTee());
+    
+    GripGuard(ReceiverTee());
 
-      // Bottom Chamfer
-      translate([0,0,GripFloorZ()+GripFloor()-0.001])
-      intersection() {
-        cylinder(r1=TeeInnerRadius(ReceiverTee())*1.1,
-                  r2=TeeInnerRadius(ReceiverTee()),
-                  h=0.05,
-                  $fn=Resolution(25, 60));
-
-        // Chop off the sides
-        cube([ReceiverInnerWidth(ReceiverTee()), GripWidth(), 0.2], center=true);
-      }
-    }
-
-    GripSplitter(ReceiverTee(), clearance=0.0000001);
+    GripSplitter(ReceiverTee(), clearance=0.001);
     
     if (showLeft == false)
     translate([-10,0,-10])
@@ -338,65 +278,30 @@ module GripSides(showLeft=true, showRight=true) {
 }
 
 module GripMiddle(safetyCutout=true, resetCutout=true) {
+  render()
   difference() {
     intersection() {
       GripGuard(ReceiverTee());
 
       // Just the middle
-      GripSplitter(ReceiverTee(), clearance=0);
+      GripSplitter(clearance=0);
     }
 
     // Tigger Group Cutout
-    translate([-ReceiverOR(),
-               -2,
-               GripFloorZ() -(GripTriggerFingerSlotDiameter()/2)])
-    #cube([ReceiverOR()+RodDiameter(SearRod()), 4,4]);
-
-    // Reset Spring Body OD
-    *if (resetCutout)
-    translate([ResetPinX(), 0, ResetPinZ()])
-    rotate([90,-112])
-    hull() {
-      cylinder(r=0.6, center=true, $fn=Resolution(12, 40));
-
-      linear_extrude(center=true)
-      semicircle(od=5, angle=64);
-    }
-
-    // Trigger Travel Cutout
-    *translate([TriggerPinX(),0,TriggerPinZ()])
-    rotate([90,60,0])
-    linear_extrude(height=1, center=true) {
-
-      // Main body track
-      semicircle(od=TriggerMaxMajor(), angle=90+TriggerAngle());
-
-      // Reset spring extension track
-      rotate(-61.7)
-      semicircle(od=3.24, angle=15+TriggerAngle());
-    }
-
-    // Safety Travel Cutout
-    *if (safetyCutout)
-    translate([SafetyPinX(), 0, SafetyPinZ()])
+    translate([-1.7,
+               -GripWidth()/2,-ReceiverCenter()])
+    mirror([0,0,1])
+    cube([2.7, GripWidth(), 1.505]);
+    
+    translate([-1.05, 0.22, -3.25])
+    rotate([0,-90+25,0])
+    rotate([0,0,180])
     rotate([90,0,0])
-    linear_extrude(height=1, center=true) {
-
-      // Trigger-engagement surface
-      //rotate(135)
-      //mirror()
-      rotate(135-SafetyBackAngle())
-      mirror()
-      semicircle(od=TriggerMaxMajor()+0.1, angle=SafetyAngle()+SafetyBarAngle(), $fn=Resolution(12, 100));
-
-      // Hand-engagement surface
-      //rotate(SafetyAngle())
-      rotate(-50)
-      mirror()
-      semicircle(od=SafetyMajorOD()+0.1, angle=110+SafetyAngle(), $fn=Resolution(12, 100));
-
-      // Safety Spindle Body
-      circle(r=SafetyMinorRadius()+0.02, $fn=Resolution(12, 40));
+    linear_extrude(height=0.25) {
+      text("#", size=0.6);
+      
+      translate([0.6, 0.08])
+      text("L12K", size=0.4);
     }
   }
 }
@@ -405,38 +310,38 @@ module GripMiddle(safetyCutout=true, resetCutout=true) {
 module GripText() {
   
   // Text
-  translate([-(ReceiverLength()/2)-0.1,
+  translate([-0.25,
              (GripWidth()/2)-0.02,
-             -TeeRimRadius(ReceiverTee())-0.1])
+             -ReceiverCenter()-0.45])
   rotate([90,0,180])
   linear_extrude(height=0.1)
-  text("L", size=0.3);
+  text("L", size=0.35);
 
-  translate([-(ReceiverLength()/2)-0.2,
+  translate([-0.25,
              -(GripWidth()/2)+0.02,
-             -TeeRimRadius(ReceiverTee())-0.35])
+             -ReceiverCenter()-0.45])
   rotate([90,0,0])
   linear_extrude(height=0.1)
-  text("R", size=0.3);
+  text("R", size=0.35);
 }
 
 
 
-module Grip(showTrigger=false, showLeft=true, showRight=true) {
+module Grip(showTrigger=false, debugTrigger=false, showMiddle=true, showLeft=true, showRight=true) {
 
 
   // Trigger
   if (showTrigger)
-  TriggerGroup();
+  TriggerGroup(debug=debugTrigger);
 
   // Trigger Guard Center
   color("White")
   render()
+  if (showMiddle)
   GripMiddle();
 
   // Trigger Guard Sides
   color("Khaki")
-  render()
   GripSides(showLeft=showLeft, showRight=showRight);
 
 }
@@ -447,13 +352,37 @@ module Grip(showTrigger=false, showLeft=true, showRight=true) {
 {
 
   translate([0,0,0]) {
-    Grip(showTrigger=true, showLeft=false, showRight=true);
+    Grip(showTrigger=true,
+            showLeft=false,
+          showMiddle=true,
+           showRight=true);
 
-    Reference();
-    %Frame();
-    
-    translate([0,0,-CylinderChamberOffset()])
-    rotate([0,90,0])
-    %Rod(CylinderRod(),length=12);
+    color("white", 0.1)
+    render()
+    *%Reference();
   }
 }
+
+// Left-side plater
+*!scale(25.4)
+rotate([90,0,0])
+Grip(showTrigger=false,
+        showLeft=true,
+      showMiddle=false,
+       showRight=false);
+
+// Middle-side plater
+*!scale(25.4)
+rotate([90,0,0])
+Grip(showTrigger=false,
+        showLeft=false,
+      showMiddle=true,
+       showRight=false);
+
+// Right-side plater
+*!scale(25.4)
+rotate([-90,0,0])
+Grip(showTrigger=false,
+        showLeft=false,
+      showMiddle=false,
+       showRight=true);

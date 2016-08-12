@@ -64,11 +64,22 @@ module ForendSegment(wall=3/16, length=1, $fn=50, track=false, wide=false, open=
       //ForendRail(ReceiverTee(), BarrelPipe(), FrameRod(), wall);
 
       // Add some more material to the center for ergo and strength
-      circle(r=TeeRimRadius(ReceiverTee())+0.25,
+      circle(r=TeeRimRadius(ReceiverTee())+wall,
              $fn=PipeFn(BarrelPipe()));
+        
+      // Revolver Spindle
+      translate([CylinderChamberOffset(),0])
+      circle(r=RodRadius(CylinderRod())+WallFrameRod(),
+               $fn=Resolution(10,30));
       
       children();
     }
+        
+    // Revolver Spindle
+    translate([-ForendRearLength(),0,-CylinderChamberOffset()])
+    rotate([0,90,0])
+    linear_extrude(height=ForendRearLength()*3)
+    Rod2d(CylinderRod(), clearance=RodClearanceLoose());
 
     // Lug track
     if (track)
@@ -85,8 +96,9 @@ module ForendSegment(wall=3/16, length=1, $fn=50, track=false, wide=false, open=
 
     // Open bottom
     if(open==true)
-    translate([-0.1,-0.5,-TeeCenter(ReceiverTee())*1.1])
-    cube([length+0.2, 1, TeeCenter(ReceiverTee())]);
+    rotate([90-11,0,0])
+    translate([-0.1,-PipeOuterRadius(BarrelPipe(), PipeClearanceLoose()),-TeeCenter(ReceiverTee())])
+    cube([length+0.2, PipeOuterDiameter(BarrelPipe(), PipeClearanceLoose()), TeeCenter(ReceiverTee())]);
   }
 }
 
@@ -124,45 +136,6 @@ module ForendRear() {
                r2=RodRadius(FrameRod()) + WallFrameRod(),
               h=ForendRearLength()+0.002,
               $fn=RodFn(FrameRod())*2);
-    }
-  }
-}
-
-module ForendRevolverRear(shaftCollar=true) {
-  render()
-  union() {
-    difference() {
-      ForendSegment(length=ForendRearLength()) {
-        
-          // Revolver Spindle
-          translate([CylinderChamberOffset(),0])
-          circle(r=RodRadius(CylinderRod())+WallFrameRod(),
-                   $fn=Resolution(10,30));
-        };
-    
-    
-      // Revolver Spindle
-      translate([-ForendRearLength(),0,-CylinderChamberOffset()])
-      rotate([0,90,0])
-      linear_extrude(height=ForendRearLength()*3)
-      Rod2d(CylinderRod(), clearance=RodClearanceLoose());
-        
-      if (shaftCollar) {
-        // Barrel Shaft Collar
-        translate([ForendRearLength()+0.001,0,0])
-        rotate([0,-90,0])
-        cylinder(r=0.9375, h=0.5, $fn=Resolution(12,40));
-        
-        // Side cutout
-        rotate([-11,0,0])
-        translate([0.501,0,-0.9375])
-        *#cube([0.9,2,0.9375*2]);
-        
-        // Barrel Shaft Collar Screw Holes (single and double)
-        for (y = [-0.9375-0.6,0.9375-0.4])
-        translate([ForendRearLength() - 0.5,y,-3])
-        cube([0.5, 1, 3]);
-      }
     }
   }
 }
@@ -254,7 +227,7 @@ module BarrelLugs() {
 
 
 // Plate
-scale([25.4, 25.4, 25.4]) {
+scale(25.4) {
   ReferenceBuildArea();
 
   // Rear (user-end) Segment
@@ -289,15 +262,4 @@ scale([25.4, 25.4, 25.4]) {
 
   rotate([0,-90,0])
   BarrelLug();
-}
-
-
-!render()
-//DebugHalf()
-{
-
-  ForendRevolver(showLugs=true);
-
-  *%Frame();
-  *%Reference();
 }

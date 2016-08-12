@@ -1,4 +1,5 @@
 use <Components/Debug.scad>;
+use <Components/Manifold.scad>;
 use <Components/Semicircle.scad>;
 use <Vitamins/Pipe.scad>;
 use <Vitamins/Rod.scad>;
@@ -156,44 +157,7 @@ module DoubleStackBreechMiddle(width=PipeOuterDiameter(BarrelPipe())) {
 
 }
 
-module Double90Breech(width=PipeOuterDiameter(BarrelPipe())+0.4) {
 
-    chamber2Offset = [2.06,2.06,-90];
-
-    translate([SingleBreechHandleLength()+TeeCenter(ReceiverTee())+BushingHeight(BreechBushing())-BushingDepth(BreechBushing()), 0,0])
-    rotate([0,-90,0])
-    linear_extrude(height=SingleBreechHandleLength())
-    difference() {
-      union() {
-          for (i = [[0,0,0], chamber2Offset])
-          translate(i)
-          circle(r=PipeOuterRadius(BarrelPipe())+0.2, $fn=PipeFn(BarrelPipe()));
-
-          // Outer Edge
-          hull()
-          for (i = [[0,0,0], chamber2Offset])
-          translate(i)
-          rotate(i[2])
-          translate([0,-PipeOuterRadius(BarrelPipe())-0.2*0.97])
-          square([1.25, PipeOuterDiameter(BarrelPipe())+0.4*0.97]);
-      }
-
-      // Barrel
-      for (i = [[0,0], chamber2Offset])
-      translate(i)
-      circle(r=PipeOuterRadius(BarrelPipe(), PipeClearanceLoose()), $fn=PipeFn(BarrelPipe()));
-
-      // Rod
-      for (i = [[2.3,-0.3], [chamber2Offset[0],1], [1, 0]])
-      translate(i)
-      circle(r=RodRadius(FrameRod(), RodClearanceLoose()), $fn=RodFn(FrameRod()));
-
-      // Forend Clearance
-      translate([0,width/2])
-      #square([width-0.22,2]);
-    }
-
-}
 // Plate
 *scale([25.4, 25.4, 25.4]) {
   ReferenceBuildArea();
@@ -217,8 +181,11 @@ render()
 
   *SingleBreechHandle();
 
-  *SingleBreech();
+  SingleBreech();
 
   %Frame();
   %Reference();
 }
+
+*!scale(25.4)
+DoubleStackBreech();
