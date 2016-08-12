@@ -15,7 +15,7 @@ module BoxMagazineSkew(angle) {
 
 module BoxMagazine(cartridge=Spec_Cartridge_22LR(), capacity=15, angle=10,
                    wallSide=1/16, wallFront=1/8, wallBack=1/8,
-                   floorHeight=1/8) {
+                   floorHeight=1/8, center=true) {
 
   majorWidth  = CartridgeRimDiameter(cartridge)+0.05;
   minorWidth  = CartridgeBulletDiameterMax(cartridge)+0.05;
@@ -24,6 +24,7 @@ module BoxMagazine(cartridge=Spec_Cartridge_22LR(), capacity=15, angle=10,
   widthDiff = majorWidth - minorWidth;
   halfDiff  = widthDiff/2;
 
+  translate([center ? (-wallBack-(majorWidth/2)) : 0,0,0])
   union() {
     BoxMagazineSkew(angle)
     difference() {
@@ -95,9 +96,16 @@ module BoxMagazineFollower(cartridge=Spec_Cartridge_22LR(),
 
 scale([25.4, 25.4, 25.4])
 {
+
+  color("Gold")
+  render()
+  BoxMagazine(cartridge=Spec_Cartridge_12GAx3(), capacity=5, angle=0,
+                   wallSide=1/8, wallFront=1/8, wallBack=1/8,
+                   floorHeight=1/8);
+
   //translate([-1/8, -1/8,0])
-  BoxMagazine();
+  *BoxMagazine();
 
   translate([-1/2,0,0])
-  BoxMagazineFollower();
+  *BoxMagazineFollower();
 }
