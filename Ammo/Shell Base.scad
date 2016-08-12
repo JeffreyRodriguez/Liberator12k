@@ -1,16 +1,17 @@
-include <../Vitamins/Pipe.scad>;
-include <Primer.scad>;
+use <../Vitamins/Pipe.scad>;
+use <Primer.scad>;
 
 function ShellRadius(chamber) = PipeInnerRadius(chamber);
 
-module ShellBase(chamber=12GaugeChamber, primer=Primer22PAT,
+module ShellBase(chamber=Spec_12GaugeChamber(), primer=Spec_Primer22PAT(),
                  chargeDiameter=0.6, chargeHeight=3/8, wadHeight=0.5,
                  rimDiameter=0.87, rimHeight=0.07,
                  dummy=false, $fn=50) {
 
-  shellBaseHeight = lookup(PrimerHeight, primer) + chargeHeight + wadHeight;
+  shellBaseHeight = PrimerHeight(primer) + chargeHeight + wadHeight;
   echo("ShellBase Height: ", shellBaseHeight);
 
+  render()
   union() {
 
     // Base and rim, minus charge pocket and primer hole
@@ -35,7 +36,7 @@ module ShellBase(chamber=12GaugeChamber, primer=Primer22PAT,
 
         // Charge Pocket
         color("Green")
-        translate([0,0,lookup(PrimerHeight, primer)])
+        translate([0,0,PrimerHeight(primer)])
         cylinder(r=chargeDiameter/2, h=chargeHeight);
 
         // Primer
@@ -45,15 +46,15 @@ module ShellBase(chamber=12GaugeChamber, primer=Primer22PAT,
     }
 
     // Payload
-    translate([0,0,lookup(PrimerHeight, primer) + chargeHeight + wadHeight])
+    translate([0,0,PrimerHeight(primer) + chargeHeight + wadHeight])
     children();
   }
 }
 
-scale([25.4, 25.4, 25.4])
+!scale([25.4, 25.4, 25.4])
 ShellBase() {
-  %cylinder(r=ShellRadius(PipeThreeQuarterInch));
+  %cylinder(r=ShellRadius(Spec_PipeThreeQuarterInch()));
 };
 
-!scale([25.4, 25.4, 25.4])
+*!scale([25.4, 25.4, 25.4])
 ShellBase(chargeHeight=0, wadHeight=0);

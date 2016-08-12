@@ -6,6 +6,7 @@ module ShellShot(chamber=PipeThreeQuarterInch, primer=Primer209, wall=3/64) {
     radius = PipeInnerRadius(pipe=chamber, clearance=lookup(PipeClearanceLoose, chamber));
     
     color("Orange")
+    render()
     linear_extrude(height=2) 
     difference() {
       circle(r=radius);
