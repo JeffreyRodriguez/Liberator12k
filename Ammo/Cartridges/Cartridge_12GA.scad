@@ -1,7 +1,7 @@
 include <Cartridge.scad>
 
 // 12 Gauge, 3"
-Cartridge_12GAx3 = [
+function Spec_Cartridge_12GAx3() = [
   [CartridgeBulletDiameterMin, 0.780],
   [CartridgeBulletDiameterMax, 0.780],
   [CartridgeNeckDiameter,      0.780],
@@ -11,8 +11,6 @@ Cartridge_12GAx3 = [
   [CartridgeCaseLength,        2.970],
   [CartridgeOverallLength,     3.000]
 ];
-
-function Spec_Cartridge_12GAx3() = Cartridge_12GAx3;
 
 cartridge=Spec_Cartridge_12GAx3();
 echo("Loaded Spec: Cartridge_12GAx3", cartridge);

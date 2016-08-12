@@ -1,5 +1,4 @@
 // Cartridge Specification
-
 CartridgeBulletDiameterMin = 2;
 CartridgeBulletDiameterMax = 3;
 CartridgeNeckDiameter      = 4;
@@ -9,14 +8,14 @@ CartridgeRimThickness      = 7;
 CartridgeCaseLength        = 8;
 CartridgeOverallLength     = 9;
 
-function CartridgeBulletDiameterMin(spec) =  lookup(CartridgeBulletDiameterMin, spec);
-function CartridgeBulletDiameterMax(spec) =  lookup(CartridgeBulletDiameterMax, spec);
-function CartridgeNeckDiameter(spec)      =  lookup(CartridgeNeckDiameter,      spec);
-function CartridgeBaseDiameter(spec)      =  lookup(CartridgeBaseDiameter,      spec);
-function CartridgeRimDiameter(spec)       =  lookup(CartridgeRimDiameter,       spec);
-function CartridgeRimThickness(spec)      =  lookup(CartridgeRimThickness,      spec);
-function CartridgeCaseLength(spec)        =  lookup(CartridgeCaseLength,        spec);
-function CartridgeOverallLength(spec)     =  lookup(CartridgeOverallLength,     spec);
+function CartridgeBulletDiameterMin(spec=undef) =  lookup(CartridgeBulletDiameterMin, spec);
+function CartridgeBulletDiameterMax(spec=undef) =  lookup(CartridgeBulletDiameterMax, spec);
+function CartridgeNeckDiameter(spec=undef)      =  lookup(CartridgeNeckDiameter,      spec);
+function CartridgeBaseDiameter(spec=undef)      =  lookup(CartridgeBaseDiameter,      spec);
+function CartridgeRimDiameter(spec=undef)       =  lookup(CartridgeRimDiameter,       spec);
+function CartridgeRimThickness(spec=undef)      =  lookup(CartridgeRimThickness,      spec);
+function CartridgeCaseLength(spec=undef)        =  lookup(CartridgeCaseLength,        spec);
+function CartridgeOverallLength(spec=undef)     =  lookup(CartridgeOverallLength,     spec);
 
 /**************************************************
  * Cartridge Spec Template                        *
