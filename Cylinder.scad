@@ -141,11 +141,12 @@ module RevolverCylinder(shots=6, debug=false) {
   echo("Cylinder Height:", cylinder_height);
   echo ("ZigZagMajorArcAngle(): ", ZigZagMajorArcAngle());
 
+  color("Gold")
+  render()
   union() {
     difference() {
 
       // Body
-      color("Gold")
       linear_extrude(height=cylinder_height)
       difference() {
         circle(r=cylinder_radius, $fn=Resolution(30,120));
@@ -171,15 +172,27 @@ module RevolverCylinder(shots=6, debug=false) {
     }
 
     // Support Material
-    *color("Black")
+    color("Black")
     for (i=[0:shots-1]) {
       rotate([0,0,rotation_angle*i])
       translate([cylinder_radius - ZigZagDepth() - 0.008,zigzag_width/2,RodDiameter(ActuatorRod())])
       cube([ZigZagDepth(), 0.031, RodDiameter(ActuatorRod()) * 1.75]);
     }
   }
+  
+  color("grey")
+  if (debug) {
+    
+    // Chambers
+    translate([0,0,-0.2])
+    linear_extrude(height=3)
+    for (i=[0:shots-1])
+    rotate([0,0,rotation_angle*i]) {
+      translate([CylinderChamberOffset(),0])
+      Pipe2d(pipe=BarrelPipe(), clearance=PipeClearanceSnug(), hollow=true);
+    }
+  }
 }
 
 scale([25.4, 25.4, 25.4])
-render()
 RevolverCylinder(debug=true);
