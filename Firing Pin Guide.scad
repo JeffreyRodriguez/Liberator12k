@@ -9,29 +9,13 @@ use <Vitamins/Pipe.scad>;
 
 use <Reference.scad>;
 
+use <Sear Bolts.scad>;
 
 function FiringPinProtrusion() = 3/32;
 function FiringPinHeadLength() = 0.4;
 function FiringPinLength() = BushingHeight(BreechBushing())
                            + FiringPinProtrusion()
                            + FiringPinHeadLength();
-
-
-
-module FiringPinGuideScrew(nutHeight=0.1) {
-
-  // M3 Nut and Screw Hole
-  translate([-ReceiverIR()/2,0,-RodRadius(StrikerRod())])
-  mirror([0,0,1])
-  union() {
-    cylinder(r=0.065, h=1.282, $fn=5);
-
-    // Nut Slot
-    translate([0,0,-RodRadius(StrikerRod())])
-    rotate(90)
-    cylinder(r=0.15, h=nutHeight+RodRadius(StrikerRod()), $fn=6);
-  }
-}
 
 module FiringPin() {
   color("Red")
@@ -50,7 +34,7 @@ module FiringPin() {
   }
 }
 
-module FiringPinGuide(od=ReceiverID(),
+module FiringPinGuide(od=ReceiverID()-0.01,
                     debug=true) {
   height = ReceiverLength()
          - PipeThreadDepth(StockPipe())
@@ -95,7 +79,7 @@ module FiringPinGuide(od=ReceiverID(),
 
     // Sear Hole
     mirror([0,0,1])
-    translate([RodRadius(SearRod()),0,-RodRadius(StrikerRod())*0.9])
+    translate([0,0,-RodRadius(StrikerRod())*0.9])
     Rod(rod=SearRod(), clearance=RodClearanceLoose(), length=(od/2)+(RodRadius(StrikerRod())*0.9));
 
     // Firing Pin Retaining Pin Holes
@@ -106,7 +90,7 @@ module FiringPinGuide(od=ReceiverID(),
     Rod(FiringPinRod(), RodClearanceLoose(), length=1, center=true);
 
     // Bottom Bolt
-    FiringPinGuideScrew();
+    SearBolts(cutter=true);
   }
 }
 
