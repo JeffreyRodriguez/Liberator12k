@@ -58,6 +58,14 @@ Primer12gCO2 = [
   [PrimerFn,            12]
 ];
 
+function PrimerRimDiameter(primer=undef)   = lookup(PrimerRimDiameter, primer);
+function PrimerRimHeight(primer=undef)     = lookup(PrimerRimHeight, primer);
+function PrimerHeight(primer=undef)        = lookup(PrimerHeight, primer);
+function PrimerMajorDiameter(primer=undef) = lookup(PrimerMajorDiameter, primer);
+function PrimerMinorDiameter(primer=undef) = lookup(PrimerMinorDiameter, primer);
+function PrimerClearance(primer=undef)     = lookup(PrimerClearance, primer);
+function PrimerFn(primer=undef)            = lookup(PrimerFn, primer);
+
 function PrimerOAHeight(primer=undef) = lookup(PrimerHeight, primer) + lookup(PrimerRimHeight, primer);
 
 module Primer(primer=Primer209, extend=0.001) {
