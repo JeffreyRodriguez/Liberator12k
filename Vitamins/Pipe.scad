@@ -22,18 +22,18 @@ function PipeOuterRadius(pipe, clearance)   = PipeOuterDiameter(pipe, clearance)
 function PipeInnerRadius(pipe, clearance)   = PipeInnerDiameter(pipe, clearance)/2;
 function PipeThreadDepth(pipe)              = lookup(PipeThreadDepth, pipe);
 function PipeWall(pipe)                     = PipeOuterRadius(pipe) - PipeInnerRadius(pipe);
-function PipeFn(pipe)                       = lookup(PipeFn, pipe);
+function PipeFn(pipe, fn)                   = (fn == undef) ? lookup(PipeFn, pipe) : fn;
 
 
-module Pipe2d(pipe, clearance=PipeClearanceSnug(), hollow=false) {
+module Pipe2d(pipe, clearance=PipeClearanceSnug(), hollow=false, $fn=undef) {
   echo("PipeOuterRadius,PipeClearance: ", PipeOuterRadius(pipe=pipe, clearance=clearance), clearance);
   difference() {
     circle(r=PipeOuterRadius(pipe=pipe, clearance=clearance),
-         $fn=lookup(PipeFn, pipe));
+         $fn=PipeFn(pipe, $fn));
 
     if (hollow)
     circle(r=PipeInnerRadius(pipe, clearance),
-         $fn=lookup(PipeFn, pipe));
+         $fn=PipeFn(pipe, $fn));
   }
 };
 module Pipe(pipe, length = 1, clearance=PipeClearanceSnug(), center=false, hollow=false) {
