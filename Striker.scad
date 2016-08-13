@@ -1,11 +1,11 @@
 //$t = 0.99;
 
 include <Components/Animation.scad>;
-include <Components/Manifold.scad>;
+use <Components/Debug.scad>;
+use <Components/Manifold.scad>;
 
 use <Vitamins/Pipe.scad>;
 use <Vitamins/Rod.scad>;
-use <Components/Debug.scad>;
 use <Reference.scad>;
 
 function StrikerTravel() = (TeeWidth(ReceiverTee())/2) - BushingDepth(BreechBushing())
@@ -170,6 +170,7 @@ module Striker(debug=true) {
   Striker();
 
   //rotate([90,0,0]) StrikerTop();
-  DebugHalf(dimension=50)
-  Reference();
+  //DebugHalf(dimension=50)
+  color("black", 0.25)
+  %Reference();
 }
