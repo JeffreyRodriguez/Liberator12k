@@ -37,17 +37,14 @@ function GripPinZ(pin) = GripPins()[pin][1];
 // XZY
 function GripPins() = [
      
-     // Behind front grip tab
-     //[ReceiverOR(),GripFloorZ()+0.375, 0],
-     
      // Front-Top
-     [BreechFrontX(),-ReceiverCenter()-(GripFloor()/2), 0],
+     //[BreechFrontX(),-ReceiverCenter()-(GripFloor()/2), 0],
+     
+     // Back-Top
+     //[-ReceiverCenter()-WallFrameBack()+0.5,GripFloorZ()+0.375, 0],
      
      // Front-Bottom
      [BreechFrontX(),GripFloorZ()-GripTriggerFingerSlotDiameter()+0.125, 0],
-     
-     // Back-Top
-     [-ReceiverCenter()-WallFrameBack()+0.5,GripFloorZ()+0.375, 0],
      
      // Behind Trigger Finger Slot
      [-0.5,GripFloorZ()-0.5, 0],
@@ -66,7 +63,7 @@ function GripPins() = [
 /* M3: radius=0.115/2, capRadius=0.212/2, nutRadius=0.247/2, nutHeight=0.096
    M8: radius=0.3,     capRadius=0.29,    nutRadius=0.29,  nutHeight=0.3,
 */
-module GripMX(length=25/25.4,
+module GripMX(length=23/25.4,
               radius=(0.115/2)+0.02, radiusExtra=0,
               capEnabled=true,
               capRadius=(0.212/2)+0.01, capRadiusExtra=0.001,
@@ -203,7 +200,7 @@ module GripGuard(showHandle=true) {
                 height]);
         }
     
-        // Bottom curve
+        // Bottom curve cutter
         translate([0,0,-ReceiverCenter()-height+0.125])
         rotate([0,90,0])
         linear_extrude(height=ReceiverLength()*2, center=true)
@@ -216,9 +213,21 @@ module GripGuard(showHandle=true) {
           square([height,GripWidth()+ManifoldGap(2)]);
         }
       }
-          
-      // Front grip tab support
+      
+      // Front grip tab support (block)
       hull() {
+        
+        // Front cube
+        translate([BreechFrontX()-1.25,-0.625,-ReceiverCenter()-GripFloor()])
+        cube([1.5, 1.25, GripFloor()]);
+        
+        // Rear cube
+        translate([0.125,-0.5,-ReceiverCenter()-GripFloor()-GripTriggerFingerSlotRadius()])
+        cube([BreechFrontX()+0.125, 1, GripFloor()+GripTriggerFingerSlotRadius()]);
+      }
+      
+      // Front grip tab support (smooth)
+      *hull() {
         for (i=[-0.125,-1.0])
         translate([ReceiverCenter()+WallFrameFront()+i,0,-ReceiverCenter()])
         mirror([0,0,1])
@@ -227,6 +236,17 @@ module GripGuard(showHandle=true) {
         // Hull-smoothing block
         translate([0,-0.25,GripFloorZ()-GripTriggerFingerSlotDiameter()])
         cube([BreechFrontX(), 0.5, 0.1]);
+      }
+      
+      // Rear Grip Tab Bolt Support
+      hull() {
+        
+        translate([GripTabBoltX(GripTabBoltsArray()[1])-0.5,-GripWidth()/2,-ReceiverCenter()-0.49]) 
+        cube([1, GripWidth(), 0.49]);
+        
+        translate([GripTabBoltX(GripTabBoltsArray()[1]),0,GripTabBoltZ(GripTabBoltsArray()[1])]) 
+        rotate([90,0,0])
+        cylinder(r=0.225, h=1.25, center=true, $fn=Resolution(12,24));
       }
 
       if (showHandle)
@@ -242,6 +262,8 @@ module GripGuard(showHandle=true) {
     GripTabRear(clearance=0.005);
 
     GripBodyScrews(ReceiverTee());
+    
+    GripTabBoltHoles();
     
     GripTriggerFingerSlot();
     
