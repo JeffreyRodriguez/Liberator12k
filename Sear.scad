@@ -4,14 +4,11 @@ include <Components/Animation.scad>;
 
 use <Components/Manifold.scad>;
 use <Components/Debug.scad>;
-use <Components/Semicircle.scad>;
-use <Components/Spindle.scad>;
 use <Components/Receiver Insert.scad>;
 
 use <Vitamins/Rod.scad>;
 use <Vitamins/Pipe.scad>;
 use <Vitamins/Spring.scad>;
-
 
 use <Reference.scad>;
 
@@ -22,7 +19,6 @@ function SearPinOffsetZ() = -ReceiverCenter()-0.125-RodRadius(PivotRod());
 function SearYokeWidth() = ReceiverID() - RodDiameter(SearRod()) -0.125; // Leave a sixteenth inch on each side (roughly)
 
 function SearTravel() = RodDiameter(StrikerRod());
-
 
 function SearLength() = ReceiverCenter()+RodRadius(StrikerRod())+0.6+0.9-0.3125;
 module Sear(clearance=undef) {
