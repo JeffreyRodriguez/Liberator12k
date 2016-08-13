@@ -1,7 +1,8 @@
+use <Components/Manifold.scad>;
 use <Trigger Guard.scad>;
 use <Reference.scad>;
-use <Components/Manifold.scad>;
 
+function GripTabBoltRadius() = 0.0775;
 
 function GripTabBoltX(bolt) = bolt[0];
 function GripTabBoltY(bolt) = bolt[1];
@@ -10,9 +11,6 @@ function GripTabBoltZ(bolt) = bolt[2];
 // XYZ
 function GripTabBoltsArray() = [
    
-   // Behind front grip tab
-   [ReceiverOR(),0,GripFloorZ()+0.375],
-   
    // Front-Top
    [BreechFrontX(),0,-ReceiverCenter()-(GripFloor()/2)],
    
@@ -20,7 +18,7 @@ function GripTabBoltsArray() = [
    [-ReceiverCenter()-WallFrameBack()+0.5, 0, GripFloorZ()+0.375]
 ];
 
-module GripTabBoltHoles(radius=0.0775, length=2, $fn=8) {
+module GripTabBoltHoles(radius=GripTabBoltRadius(), length=2, $fn=8) {
   for (bolt = GripTabBoltsArray())
   translate([GripTabBoltX(bolt), GripTabBoltY(bolt), GripTabBoltZ(bolt)])
   rotate([90,0,0])
@@ -30,13 +28,22 @@ module GripTabBoltHoles(radius=0.0775, length=2, $fn=8) {
 
 function GripTabWidth() = 1;
 
-module GripTab(length=1, width=0.5, height=.75,
-               tabHeight=0.25, tabWidth=GripTabWidth(),
+module GripTab(length=1, width=0.5, height=0.75, extraTop=ManifoldGap(),
+               tabHeight=0.25, tabWidth=GripTabWidth(), hole=false,
                clearance=0.005) {
-  
-  // Vertical
-  translate([0,-width/2,-ReceiverCenter()-height])
-  cube([length, width, height+ManifoldGap()]);
+  render()
+  difference() {
+    
+    // Vertical
+    translate([0,-width/2,-ReceiverCenter()-height])
+    cube([length, width, height+extraTop]);
+    
+    // Grip Bolt Hole
+    if (hole)
+    translate([length/2,0,-ReceiverCenter()-0.225])
+    rotate([90,0,0])
+    cylinder(r=GripTabBoltRadius(), h=width*2, center=true, $fn=8);
+  }
   
   // Horizontal
   translate([-clearance,-(tabWidth/2)-clearance,-ReceiverCenter()-height-clearance])
@@ -47,9 +54,9 @@ function GripTabRearLength() = 1;
 function GripTabRearMinX() = -ReceiverCenter()-WallFrameBack();
 function GripTabRearMaxX() = GripTabRearMinX()+GripTabRearLength();
 
-module GripTabRear(clearance=0) {
+module GripTabRear(clearance=0, height=.75, hole=true) {
   translate([GripTabRearMinX(),0,0])
-  GripTab(length=GripTabRearLength(), clearance=clearance);
+  GripTab(length=GripTabRearLength(), height=height, hole=hole, clearance=clearance);
 }
 
 function GripTabFrontLength() = 0.75;
@@ -68,5 +75,5 @@ GripTabRear();
 color("Orange")
 GripTabFront();
 
-color("Red")
+color("Grey", 0.25)
 GripTabBoltHoles();
