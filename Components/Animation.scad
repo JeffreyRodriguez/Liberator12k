@@ -22,3 +22,8 @@ echo("Animate(AnimationStep($t)):", Animate(AnimationStep($t)));
 
 for (i = [0 : AnimationStepCount() -1])
 echo("Animate ", i, ":", Animate(i));
+
+module AnimateSpin() {
+  rotate([0,0,360*$t])
+  children();
+}
