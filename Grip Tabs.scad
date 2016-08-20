@@ -1,6 +1,24 @@
 use <Components/Manifold.scad>;
-use <Trigger Guard.scad>;
+use <Vitamins/Nuts And Bolts.scad>;
 use <Reference.scad>;
+
+
+function GripWidth() = 1;
+function GripFloor() = 0.6;
+function GripOffsetZ() = -ReceiverCenter();
+function GripFloorZ() = -GripFloor()+GripOffsetZ();
+
+
+function GripTabWidth() = 1;
+function GripTabRearLength() = 1;
+function GripTabFrontLength() = 0.75;
+
+function GripTabRearMinX() = -ReceiverCenter()-WallFrameBack();
+function GripTabRearMaxX() = GripTabRearMinX()+GripTabRearLength();
+
+function GripTabFrontMaxX() = ReceiverCenter()+WallFrameFront();
+function GripTabFrontMinX() = GripTabFrontMaxX()-GripTabFrontLength();
+
 
 function GripTabBoltRadius() = 0.0775;
 
@@ -12,68 +30,72 @@ function GripTabBoltZ(bolt) = bolt[2];
 function GripTabBoltsArray() = [
    
    // Front-Top
-   [BreechFrontX(),0,-ReceiverCenter()-(GripFloor()/2)],
+   [BreechFrontX(),(GripWidth()/2)+0.125,GripFloorZ()+(GripFloor()/2)],
    
    // Back-Top
-   [-ReceiverCenter()-WallFrameBack()+0.5, 0, GripFloorZ()+0.375]
+   [GripTabRearMinX()+(GripTabRearLength()/2), (GripWidth()/2)+0.125, GripFloorZ()+0.375]
 ];
 
-module GripTabBoltHoles(radius=GripTabBoltRadius(), length=2, $fn=8) {
+module GripTabBoltHoles(boltSpec=Spec_BoltM3(),
+                        capHeightExtra=1, nutHeightExtra=1,
+                        length=30/25.4, $fn=8) {
+  color("SteelBlue")
   for (bolt = GripTabBoltsArray())
   translate([GripTabBoltX(bolt), GripTabBoltY(bolt), GripTabBoltZ(bolt)])
   rotate([90,0,0])
-  cylinder(r=radius, h=length, center=true);
+  rotate(90)
+  NutAndBolt(bolt=boltSpec, boltLength=length, clearance=true,
+              capHeightExtra=capHeightExtra, nutHeightExtra=nutHeightExtra);
 }
 
 
-function GripTabWidth() = 1;
 
 module GripTab(length=1, width=0.5, height=0.75, extraTop=ManifoldGap(),
                tabHeight=0.25, tabWidth=GripTabWidth(), hole=false,
-               clearance=0.005) {
+               clearance=0.007) {
   render()
+  translate([0,0,GripOffsetZ()])
   difference() {
     
-    // Vertical
-    translate([0,-width/2,-ReceiverCenter()-height])
-    cube([length, width, height+extraTop]);
+    // Grip Tab
+    union() {
+      
+      // Vertical
+      translate([-clearance,-width/2,-height])
+      cube([length+(clearance*2), width, height+extraTop]);
     
+      // Horizontal
+      translate([-clearance,-(tabWidth/2)-clearance,-height-clearance])
+      cube([length+(clearance*2), tabWidth+(clearance*2), tabHeight+(clearance*2)]);
+    }    
+      
     // Grip Bolt Hole
     if (hole)
-    translate([length/2,0,-ReceiverCenter()-0.225])
+    translate([length/2,0,-0.225])
     rotate([90,0,0])
     cylinder(r=GripTabBoltRadius(), h=width*2, center=true, $fn=8);
   }
-  
-  // Horizontal
-  translate([-clearance,-(tabWidth/2)-clearance,-ReceiverCenter()-height-clearance])
-  cube([length+(clearance*2), tabWidth+(clearance*2), tabHeight+(clearance*2)]);
 }
 
-function GripTabRearLength() = 1;
-function GripTabRearMinX() = -ReceiverCenter()-WallFrameBack();
-function GripTabRearMaxX() = GripTabRearMinX()+GripTabRearLength();
-
-module GripTabRear(clearance=0, height=.75, hole=true) {
+module GripTabRear(clearance=0, height=.75, extraTop=ManifoldGap(), hole=true) {
+  color("LightGreen")
   translate([GripTabRearMinX(),0,0])
-  GripTab(length=GripTabRearLength(), height=height, hole=hole, clearance=clearance);
+  GripTab(length=GripTabRearLength(),
+          height=height, extraTop=extraTop,
+          hole=hole, clearance=clearance);
 }
 
-function GripTabFrontLength() = 0.75;
-function GripTabFrontMaxX() = ReceiverCenter()+WallFrameFront();
-function GripTabFrontMinX() = GripTabFrontMaxX()-GripTabFrontLength();
-
-module GripTabFront(clearance=0) {
-  translate([ReceiverCenter()+WallFrameFront(),0,0])
+module GripTabFront(clearance=0, extraTop=ManifoldGap()) {
+  color("Orange")
+  translate([GripTabFrontMaxX(),0,0])
   mirror([1,0,0])
-  GripTab(length=GripTabFrontLength(), tabWidth=1.25, height=0.5, clearance=clearance);
+  GripTab(length=GripTabFrontLength(), tabWidth=1.25,
+          height=0.5, extraTop=extraTop,
+         clearance=clearance);
 }
 
-color("LightGreen")
 GripTabRear();
 
-color("Orange")
 GripTabFront();
 
-color("Grey", 0.25)
-GripTabBoltHoles();
+GripTabBoltHoles(capHeightExtra=0, nutHeightExtra=0, clearance=false);
