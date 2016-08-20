@@ -37,47 +37,7 @@ function GripPins() = [
    [GripHandleOffsetX()-ReceiverOR()-0.5,GripFloorZ()-2.9, 0]
 ];
 
-
-
-// TODO: Find/make a public domain metric screw library.
-
-/* M3: radius=0.115/2, capRadius=0.212/2, nutRadius=0.247/2, nutHeight=0.096
-   M8: radius=0.3,     capRadius=0.29,    nutRadius=0.29,  nutHeight=0.3,
-*/
-module GripMX(length=24/25.4,
-              radius=(0.115/2)+0.02, radiusExtra=0,
-              capEnabled=true,
-              capRadius=(0.212/2)+0.01, capRadiusExtra=0.001,
-              capHeight=0.123, capHeightExtra=0,
-              nutEnabled=true,
-              nutRadius=0.247/2, nutRadiusExtra=0.002,
-              nutHeight=0.096, nutHeightExtra=0,
-              $fn=8) {
-  union() {
-    // Screw Body
-    cylinder(r=radius+radiusExtra, h=length, $fn=$fn);
-    
-    // Cap
-    if (capEnabled)
-    translate([0,0,-capHeight-capHeightExtra])
-    cylinder(r=capRadius+capRadiusExtra, h=capHeight+capHeightExtra+ManifoldGap(), $fn=12);
-    
-    // Nut
-    if (nutEnabled)
-    translate([0,0,length-nutHeight])
-    cylinder(r=nutRadius+nutRadiusExtra, h=nutHeight+nutHeightExtra, $fn=6);
-  }
-  
-}
-
 module GripBodyScrews(boltSpec=TriggerBoltSpec(), length=24/25.4, cutter=1) {
-  *for (xzy = GripPins())
-  translate([xzy[0],xzy[2],xzy[1]])
-  translate([0,-(GripWidth()/2)+0.055,0])
-  rotate([-90,0,0])
-  GripMX(nutHeightExtra=GripWidth(), capHeightExtra=GripWidth());
-  
-  //translate([TriggerBoltX(), GripWidth()/2, TriggerBoltZ()])
   color("SteelBlue")
   for (xzy = GripPins())
   translate([xzy[0],xzy[2],xzy[1]])
