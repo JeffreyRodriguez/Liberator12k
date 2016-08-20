@@ -46,7 +46,7 @@ module Pipe(pipe, length = 1, clearance=PipeClearanceSnug(), center=false, hollo
 
 
 // 1/4" Pipe
-PipeOneQuarterInch = [
+function Spec_PipeOneQuarterInch() = [
   [PipeInnerDiameter,   0.265],
   [PipeOuterDiameter,   0.415],
   [PipeTaperedDiameter, 0.415], // TODO: Verify
@@ -57,17 +57,15 @@ PipeOneQuarterInch = [
   [PipeFn,              20],
   [PipeWeightPerUnit,   0] // TODO
 ];
-function Spec_PipeOneQuarterInch() = PipeOneQuarterInch;
 
 // 12GaugeChamber - 12ga Chamber tolerances are much pickier than ERW pipe
-12GaugeChamber = [
+function Spec_12GaugeChamber() = [
   [PipeInnerDiameter,   0.78],
   [PipeFn,              30]
 ];
-function Spec_12GaugeChamber() = 12GaugeChamber;
 
 // 3/4" Sch40 Pipe
-PipeThreeQuarterInch = [
+function Spec_PipeThreeQuarterInch() = [
   [PipeInnerDiameter,   0.81],
   [PipeOuterDiameter,   1.07],
   [PipeTaperedDiameter, 1.018],
@@ -78,10 +76,9 @@ PipeThreeQuarterInch = [
   [PipeFn,              30],
   [PipeWeightPerUnit,   40]
 ];
-function Spec_PipeThreeQuarterInch() = PipeThreeQuarterInch;
 
 // 3/4" Sch80 Pipe
-PipeThreeQuarterInchSch80 = [
+function Spec_PipeThreeQuarterInchSch80() = [
   [PipeInnerDiameter,   0.73],
   [PipeOuterDiameter,   1.07],
   [PipeTaperedDiameter, 1.018],
@@ -92,10 +89,9 @@ PipeThreeQuarterInchSch80 = [
   [PipeFn,              30],
   [PipeWeightPerUnit,   40]
 ];
-function Spec_PipeThreeQuarterInchSch80() = PipeThreeQuarterInchSch80;
 
 // 1" Pipe
-PipeOneInch = [
+function Spec_PipeOneInch() = [
   [PipeInnerDiameter,   1.055],
   [PipeOuterDiameter,   1.315],
   [PipeTaperedDiameter, 1.285],
@@ -106,10 +102,22 @@ PipeOneInch = [
   [PipeFn,              30],
   [PipeWeightPerUnit,   0] // TODO
 ];
-function Spec_PipeOneInch() = PipeOneInch;
+
+// 1" Pipe Sch80
+function Spec_PipeOneInchSch80() = [
+  [PipeInnerDiameter,   0.958],
+  [PipeOuterDiameter,   1.315],
+  [PipeTaperedDiameter, 1.285],
+  [PipeThreadLength,    0.982],
+  [PipeThreadDepth,     0.5], // TODO: Verify
+  [PipeClearanceSnug,   0.02],
+  [PipeClearanceLoose,  0.03],
+  [PipeFn,              30],
+  [PipeWeightPerUnit,   0] // TODO
+];
 
 // 1.125x0.813" DOM Tubing
-TubingOnePointOneTwoFive = [
+function Spec_TubingOnePointOneTwoFive() = [
   [PipeInnerDiameter,   0.813],
   [PipeOuterDiameter,   1.125],
   [PipeTaperedDiameter, 1.018],
@@ -120,10 +128,9 @@ TubingOnePointOneTwoFive = [
   [PipeFn,              30],
   [PipeWeightPerUnit,   42]
 ];
-function Spec_TubingOnePointOneTwoFive() = TubingOnePointOneTwoFive;
 
 // 0.75x0.410" DOM Tubing (Just guessing)
-TubingZeroPointSevenFive = [
+function Spec_TubingZeroPointSevenFive() = [
   [PipeInnerDiameter,   0.410],
   [PipeOuterDiameter,   0.750],
   [PipeTaperedDiameter, 0.750],
@@ -134,10 +141,9 @@ TubingZeroPointSevenFive = [
   [PipeFn,              30],
   [PipeWeightPerUnit,   42]
 ];
-function Spec_TubingZeroPointSevenFive() = TubingZeroPointSevenFive;
 
 // 0.375" OD DOM Tubing (Just guessing)
-TubingThreeEighthsInch = [
+function Spec_TubingThreeEighthsInch() = [
   [PipeInnerDiameter,   0.23],
   [PipeOuterDiameter,   0.375],
   [PipeTaperedDiameter, 0.375],
@@ -148,10 +154,9 @@ TubingThreeEighthsInch = [
   [PipeFn,              20],
   [PipeWeightPerUnit,   0]
 ];
-function Spec_TubingThreeEighthsInch() = TubingThreeEighthsInch;
 
 // 5/16" Brake Line, for .22LR
-FiveSixteenthInchBrakeLine = [
+function Spec_FiveSixteenthInchBrakeLine() = [
   [PipeInnerDiameter,   0.22],
   [PipeOuterDiameter,   0.3125],
   [PipeTaperedDiameter, 0.3125],
@@ -162,10 +167,9 @@ FiveSixteenthInchBrakeLine = [
   [PipeFn,              10],
   [PipeWeightPerUnit,   42]
 ];
-function Spec_FiveSixteenthInchBrakeLine() = FiveSixteenthInchBrakeLine;
 
 // 3/4" OD x 5/8" ID Tube
-TubingThreeQuarterByFiveEighthInch = [
+function Spec_TubingThreeQuarterByFiveEighthInch() = [
   [PipeInnerDiameter,   0.645],
   [PipeOuterDiameter,   0.75],
   [PipeTaperedDiameter, 0.75],
@@ -176,10 +180,9 @@ TubingThreeQuarterByFiveEighthInch = [
   [PipeFn,              20],
   [PipeWeightPerUnit,   0] // TODO
 ];
-function Spec_TubingThreeQuarterByFiveEighthInch() = TubingThreeQuarterByFiveEighthInch;
 
 // 0.56x9mm Barrel Blank
-PointFiveSix9mmBarrel = [
+function Spec_PointFiveSix9mmBarrel() = [
   [PipeInnerDiameter,   0.0],
   [PipeOuterDiameter,   0.56],
   [PipeTaperedDiameter, 0.56],
@@ -190,8 +193,6 @@ PointFiveSix9mmBarrel = [
   [PipeFn,              25],
   [PipeWeightPerUnit,   0]
 ];
-function Spec_PointFiveSix9mmBarrel() = PointFiveSix9mmBarrel;
-
 
 
 // Fittings: Tee
@@ -206,7 +207,7 @@ TeeInfillSphere    = 8; // Diameter of the infill sphere, cuts out the casting i
 TeeInfillOffset    = 9; // Offset for the infill sphere from center
 
 // Anvil USA 3/4" Cast Iron Pipe Tee (DANGEROUS, OUTSIDE SPEC)
-TeeThreeQuarterInch = [
+function Spec_TeeThreeQuarterInch() = [
   [TeeOuterDiameter,   1.41],
   [TeeWidth,           2.64],
   [TeeHeight,          2],     // Measured 1.998-2.042
@@ -217,10 +218,9 @@ TeeThreeQuarterInch = [
   [TeeInfillSphere,    0.10],
   [TeeInfillOffset,    0.41]
 ];
-function Spec_TeeThreeQuarterInch() = TeeThreeQuarterInch;
 
 // Anvil USA 3/4" Forged Steel Pipe Tee
-AnvilForgedSteel_TeeThreeQuarterInch = [
+function Spec_AnvilForgedSteel_TeeThreeQuarterInch() = [
   [TeeOuterDiameter,   1.37],
   [TeeWidth,           2.765],
   [TeeHeight,          2],     // Measured 1.998-2.042
@@ -231,11 +231,9 @@ AnvilForgedSteel_TeeThreeQuarterInch = [
   [TeeInfillSphere,    0.10],
   [TeeInfillOffset,    0.41]
 ];
-function Spec_AnvilForgedSteel_TeeThreeQuarterInch() = AnvilForgedSteel_TeeThreeQuarterInch;
-
 
 // Chinese 304SS-150 3/4" Tee (DANGEROUS, OUTSIDE SPEC)
-304SS_150_TeeThreeQuarterInch = [
+function Spec_304SS_150_TeeThreeQuarterInch() = [
   [TeeOuterDiameter,   1.37],
   [TeeWidth,           2.64],
   [TeeHeight,          2],     // Measured 1.998-2.042
@@ -246,7 +244,6 @@ function Spec_AnvilForgedSteel_TeeThreeQuarterInch() = AnvilForgedSteel_TeeThree
   [TeeInfillSphere,    0.10],
   [TeeInfillOffset,    0.41]
 ];
-function Spec_304SS_150_TeeThreeQuarterInch() = 304SS_150_TeeThreeQuarterInch;
 
 function TeeOuterDiameter(tee) = lookup(TeeOuterDiameter, tee);
 function TeeOuterRadius(tee)   = lookup(TeeOuterDiameter, tee)/2;
@@ -260,12 +257,6 @@ function TeeRimWidth(tee)      = lookup(TeeRimWidth, tee);
 function TeeCenter(tee)        = lookup(TeeWidth, tee)/2; //lookup(TeeHeight, tee) - TeeOuterRadius(tee);
 
 function TeePipeEndOffset(tee, pipe) = TeeCenter(tee)-PipeThreadDepth(pipe);
-
-module TeeTetris_Side(tee) {
-  rotate([0,90,0])
-  translate([TeeWidth(tee)/2,0,-TeeCenter(tee)])
-  Tee(tee=tee);
-}
 
 module Tee(tee, $fn=40) {
    render()
@@ -299,16 +290,6 @@ module Tee(tee, $fn=40) {
                 h=0.05,
                 $fn=36);
       }
-    }
-
-    // Tee Body Casting Infill
-    // TODO: Tweak this? Could be better, could be worse.
-    *intersection() {
-      translate([0,0,TeeCenter(tee) + lookup(TeeInfillSphere, tee)])
-      sphere(r=TeeRimRadius(tee) + lookup(TeeInfillOffset, tee), $fn=36);
-
-      translate([-TeeRimRadius(tee),-TeeOuterRadius(tee),0])
-      cube([TeeRimDiameter(tee),TeeOuterDiameter(tee),TeeCenter(tee)]);
     }
    }
 };
@@ -366,7 +347,7 @@ module CrossFitting(tee, infill=true, hollow=false, $fn=40) {
 
 //Tee(TeeThreeQuarterInch);
 
-module TeeRim(tee=TeeThreeQuarterInch, height=1, clearance=0) {
+module TeeRim(tee=Spec_TeeThreeQuarterInch(), height=1, clearance=0) {
   cylinder(r=TeeRimRadius(tee) + clearance, h=height, $fn=36);
 }
 
@@ -379,14 +360,13 @@ BushingCapHeight = 5;
 
 
 // 3/4" Bushing
-BushingThreeQuarterInch = [
+function Spec_BushingThreeQuarterInch() = [
   [BushingHeight,    0.955],
   [BushingDiameter,  1.06], // Measured 1.05, adding clearance
   [BushingDepth,     0.48],
   [BushingCapWidth,  1.227],
   [BushingCapHeight, 0.215]
 ];
-function Spec_BushingThreeQuarterInch() = BushingThreeQuarterInch;
 
 function BushingHeight(bushing)    = lookup(BushingHeight, bushing);
 function BushingDiameter(bushing)  = lookup(BushingDiameter, bushing);
@@ -396,7 +376,7 @@ function BushingExtension(bushing) = BushingHeight(bushing) - BushingDepth(bushi
 function BushingCapWidth(bushing)  = lookup(BushingCapWidth, bushing);
 function BushingCapHeight(bushing) = lookup(BushingCapHeight, bushing);
 
-module Bushing(spec=BushingThreeQuarterInch) {
+module Bushing(spec=Spec_BushingThreeQuarterInch()) {
 
   od        = lookup(BushingDiameter, spec);
   height    = lookup(BushingHeight, spec);
@@ -414,4 +394,4 @@ module Bushing(spec=BushingThreeQuarterInch) {
   }
 }
 
-CrossFitting(AnvilForgedSteel_TeeThreeQuarterInch);
+CrossFitting(Spec_AnvilForgedSteel_TeeThreeQuarterInch());
