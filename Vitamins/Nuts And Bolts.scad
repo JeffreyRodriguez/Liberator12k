@@ -15,13 +15,13 @@ BoltFn          = 7;
 function BoltClearance() = BoltClearance;
 
 function Spec_BoltM3() = [
-  [BoltDiameter,    UnitsMetric(3)],
+  [BoltDiameter,    UnitsMetric(3+0.8)],
   [BoltCapDiameter, UnitsMetric(5.4)],
   [BoltCapHeight,   UnitsMetric(2.6)],
   [BoltNutDiameter, UnitsMetric(6.28)],
   [BoltNutHeight,   UnitsMetric(2.5)],
   [BoltClearance,   UnitsMetric(0.3)],
-  [BoltFn, 6]
+  [BoltFn, 8]
 ];
 
 /**
@@ -87,7 +87,7 @@ module Bolt(bolt=Spec_BoltM3(), length=1, clearance=false, cap=true, capRadiusEx
     // Cap
     if (cap)
     translate([0,0,length-ManifoldGap()])
-    cylinder(r=BoltCapRadius(bolt)+capRadiusExtra,
+    cylinder(r=BoltCapRadius(bolt, clearance)+capRadiusExtra,
              h=BoltCapHeight(bolt)+capHeightExtra, $fn=BoltFn(bolt)*2);
   }
 
