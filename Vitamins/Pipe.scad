@@ -16,10 +16,10 @@ function PipeClearanceLoose() = PipeClearanceLoose;
 
 
 function PipeClearance(pipe, clearance)     = (clearance != undef) ? lookup(clearance, pipe) : 0;
-function PipeOuterDiameter(pipe, clearance) = lookup(PipeOuterDiameter, pipe) + PipeClearance(pipe, clearance);
-function PipeInnerDiameter(pipe, clearance) = lookup(PipeInnerDiameter, pipe) + PipeClearance(pipe, clearance);
-function PipeOuterRadius(pipe, clearance)   = PipeOuterDiameter(pipe, clearance)/2;
-function PipeInnerRadius(pipe, clearance)   = PipeInnerDiameter(pipe, clearance)/2;
+function PipeOuterDiameter(pipe, clearance, clearanceSign=1) = lookup(PipeOuterDiameter, pipe) + (PipeClearance(pipe, clearance)*clearanceSign);
+function PipeInnerDiameter(pipe, clearance, clearanceSign=1) = lookup(PipeInnerDiameter, pipe) + (PipeClearance(pipe, clearance)*clearanceSign);
+function PipeOuterRadius(pipe, clearance, clearanceSign=1)   = PipeOuterDiameter(pipe, clearance, clearanceSign)/2;
+function PipeInnerRadius(pipe, clearance, clearanceSign=1)   = PipeInnerDiameter(pipe, clearance, clearanceSign)/2;
 function PipeThreadDepth(pipe)              = lookup(PipeThreadDepth, pipe);
 function PipeWall(pipe)                     = PipeOuterRadius(pipe) - PipeInnerRadius(pipe);
 function PipeFn(pipe, fn)                   = (fn == undef) ? lookup(PipeFn, pipe) : fn;
