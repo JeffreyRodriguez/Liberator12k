@@ -51,10 +51,6 @@ module ZigZag() {
     for (i=[0:shots-1]) {
       rotate([0,0,rotation_angle*i]) {
 
-        // Chamber Holes
-        translate([CylinderChamberOffset(),0,-0.1])
-        Pipe(pipe=BarrelPipe(), clearance=PipeClearanceSnug(), length=cylinder_height + 0.2);
-
         // Zig
         translate([0,0,bottom_slot_height-RodRadius(ActuatorRod())])
         difference() {
@@ -195,4 +191,4 @@ module RevolverCylinder(shots=6, debug=false) {
 }
 
 scale([25.4, 25.4, 25.4])
-RevolverCylinder(debug=true);
+RevolverCylinder(debug=false);
