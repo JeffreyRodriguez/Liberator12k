@@ -1,5 +1,3 @@
-use <Components/Manifold.scad>;
-
 module DebugHalf(dimension=100, mirrorArray=[0,0,0]) {
   difference() {
     children();
