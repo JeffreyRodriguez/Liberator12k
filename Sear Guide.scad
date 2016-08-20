@@ -43,8 +43,17 @@ scale([25.4, 25.4, 25.4])
   
   //DebugHalf(3)
   
-  SearGuide();
-  
+  *SearGuide();
   
   *Reference();
+
+  render()  
+  difference() {
+    SearSupportTab();
+    
+    for (i = [0,1])
+    mirror([i,0,0])
+    translate([SearBoltOffset()-0.125,-0.5,-ReceiverCenter()-0.15])
+    cube([0.25, 1, 0.3]);
+  }
 }

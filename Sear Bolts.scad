@@ -1,18 +1,18 @@
 include <Components/Animation.scad>;
 
 use <Components/Manifold.scad>;
-
-use <Vitamins/Rod.scad>;
+use <Components/Units.scad>;
+use <Vitamins/Nuts And Bolts.scad>;
 use <Vitamins/Pipe.scad>;
+use <Vitamins/Rod.scad>;
 
 use <Reference.scad>;
 
-module SearBolts(boltDiameter = 0.116+0.03, boltLength=(30/25.4), nutHeight=0.11,
-                 nutDiameter=0.247+0.04, nutMinorRadius=0.11+0.015,
+function SearBoltSpec() = Spec_BoltM3();
+function SearBoltOffset() = ReceiverIR()-BoltRadius(SearBoltSpec());
+
+module SearBolts(boltLength=UnitsMetric(30), nutMinorRadius=0.11+0.015,
                  cutter=false) {
-  boltRadius = boltDiameter/2;
-  nutRadius = nutDiameter/2;
-  searBoltOffset = ReceiverIR()-boltRadius;
 
   // M3 Nut and Screw Hole
   translate([0,0,-RodRadius(StrikerRod(), RodClearanceLoose())-0.0255])
@@ -21,17 +21,17 @@ module SearBolts(boltDiameter = 0.116+0.03, boltLength=(30/25.4), nutHeight=0.11
     if (cutter==false)
     for (i = [1,0])
     mirror([i,0,0])
-    translate([searBoltOffset,0,0]) {
+    translate([SearBoltOffset(),0,0]) {
       
       // Bolt
       color("White")
       mirror([0,0,1])
-      cylinder(r=boltRadius, h=boltLength, $fn=5);
+      cylinder(r=BoltRadius(SearBoltSpec()), h=boltLength, $fn=5);
       
       // Nut
       color("Silver")
-      translate([0,0,-nutHeight+ManifoldGap()])
-      cylinder(r=nutRadius, h=nutHeight, $fn=6);
+      translate([0,0,-BoltNutHeight(SearBoltSpec())+ManifoldGap()])
+      cylinder(r=BoltNutRadius(SearBoltSpec()), h=BoltNutHeight(SearBoltSpec()), $fn=6);
     }
     
     
@@ -40,13 +40,13 @@ module SearBolts(boltDiameter = 0.116+0.03, boltLength=(30/25.4), nutHeight=0.11
     mirror([i,0,0]) {
       
       // Bolt Slot
-      translate([searBoltOffset-(boltRadius*1.1),-boltRadius,-ManifoldGap()])
+      translate([SearBoltOffset()-(BoltRadius(SearBoltSpec())*1.1),-BoltRadius(SearBoltSpec()),-ManifoldGap()])
       mirror([0,0,1])
-      cube([boltDiameter*1.2, boltDiameter, boltLength]);
+      cube([BoltDiameter(SearBoltSpec())*1.2, BoltDiameter(SearBoltSpec()), boltLength]);
       
       // Nut Slot
-      translate([searBoltOffset-nutRadius,-nutMinorRadius,-nutHeight+ManifoldGap()])
-      cube([nutDiameter, nutMinorRadius*2, nutHeight+RodRadius(SearRod())]);
+      translate([SearBoltOffset()-BoltNutRadius(SearBoltSpec()),-nutMinorRadius,-BoltNutHeight(SearBoltSpec())+ManifoldGap()])
+      cube([BoltNutDiameter(SearBoltSpec()), nutMinorRadius*2, BoltNutHeight(SearBoltSpec())+RodRadius(SearRod())]);
     }
   }
 }
