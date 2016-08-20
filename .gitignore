@@ -1,3 +1,5 @@
 *.gcode
 *.stl
 frame*.png
+animation.gif
+animation.mp4
