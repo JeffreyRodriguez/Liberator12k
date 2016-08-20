@@ -3,6 +3,7 @@ use <../Vitamins/Pipe.scad>;
 use <../Vitamins/Square Tube.scad>;
 use <../Grip Tabs.scad>;
 use <../Trigger Guard.scad>;
+use <../Trigger.scad>;
 
 module SquareTubeHousingTop(squareTube=Spec_SquareTubeOneInch(),
                             tubeClearance=SquareTubeClearanceSnug()) {
@@ -11,12 +12,32 @@ module SquareTubeHousingTop(squareTube=Spec_SquareTubeOneInch(),
   Tubing2D(spec=squareTube, hollow=false);
 }
 
-module PipeHousingTop(pipeSpec=Spec_PipeThreeQuarterInch(),
+//Spec_PipeThreeQuarterInchSch80()
+//Spec_PipeOneInch()
+module PipeHousingTop(pipeSpec=Spec_PipeThreeQuarterInchSch80(), 
                       pipeClearance=PipeClearanceSnug()) {
   
   translate([PipeOuterRadius(pipeSpec),0])
   Pipe2d(pipe=pipeSpec, clearance=pipeClearance, $fn=40);
 }
+
+module TubeHousing2d(wall=0.25, tabWidth=1) {
+  difference() {
+    hull() {
+      minkowski() {
+        children();
+        
+        circle(r=wall, $fn=24);
+      }
+      
+      translate([-wall,-tabWidth/2])
+      square([wall, tabWidth]);
+    }
+    
+    children();
+  }
+}
+
 
 module TubeHousing(housingFront=0.25, housingRear=0.25, wall=0.25,
                    tabLength=1, tabWidth=1, tabHeight=0.5, hole=false) {
@@ -26,20 +47,8 @@ module TubeHousing(housingFront=0.25, housingRear=0.25, wall=0.25,
     rotate([0,-90,180]) {
       translate([wall,0, -housingRear])
       linear_extrude(height=housingFront+tabLength+housingRear)
-      difference() {
-        hull() {
-          minkowski() {
-            children();
-            
-            circle(r=wall, $fn=24);
-          }
-          
-          translate([-wall,-tabWidth/2])
-          square([wall, tabWidth]);
-        }
-        
-        children();
-      }
+      TubeHousing2d(wall, tabWidth)
+      children();
     }
       
     translate([0,0,1.3825]) {
@@ -63,19 +72,64 @@ module TubeHousingRear() {
   PipeHousingTop();
 }
 
+module TubeHousingSearJig(wall=0.25, tabWidth=1) {
+  render()
+  difference() {
+    rotate([0,-90,180]) {
+      translate([wall,0, GripTabRearMaxX()])
+      linear_extrude(height=GripTabFrontMinX()+abs(GripTabRearMaxX())-0.05) {
+        TubeHousing2d(wall, tabWidth) {
+          PipeHousingTop();
+        }
+        
+        difference() {
+          hull() {
+            translate([PipeOuterDiameter(Spec_PipeOneInch())+wall,-1.5])
+            square([0.1,3]);
+            
+            translate([0,-GripWidth()/2])
+            mirror([1,0])
+            square([0.1,GripWidth()]);
+          }
+          
+          PipeHousingTop();
+        }
+      }
+    }
+    
+    SearCutter();
+  }
+  
+}
+
+*color("Black", 0.25) {
+  TubeHousingSearJig();
+}
+
 color("Tan")
 TubeHousingFront();
+
+// Middle... work-in-progresss
+color("Olive")
+linear_extrude(height=GripTabFrontMinX()+abs(GripTabRearMaxX()))
+*TubeHousing2d();
 
 color("Tan")
 TubeHousingRear();
 
 translate([0,0,1.3825])
-Grip(showLeft=true, showTrigger=true, debugTrigger=false);
+Grip(showLeft=false, showTrigger=true, debugTrigger=false);
 
-*!scale(25.4)
-rotate([0,90,0])
-TubeHousingRear();
+*!scale(25.4) {
+  translate([0,0,GripTabFrontMinX()-0.05])
+  rotate([0,90,0])
+  TubeHousingSearJig();
+}
 
 *!scale(25.4)
 rotate([0,-90,0])
 TubeHousingFront();
+
+*!scale(25.4)
+rotate([0,90,0])
+TubeHousingRear();

@@ -1,8 +1,6 @@
 use <Components/Debug.scad>;
 
-//include <Components.scad>;
 use <Vitamins/Pipe.scad>;
-use <Vitamins/Angle Stock.scad>;
 
 use <Reference.scad>;
 use <Frame.scad>;
@@ -15,7 +13,9 @@ use <Forend Tube.scad>;
 
 use <Trigger.scad>;
 use <Trigger Guard.scad>;
+use <Sear Guide.scad>;
 use <Striker.scad>;
+use <Charger.scad>;
 use <Firing Pin Guide.scad>;
 
 //echo($vpr);
@@ -25,20 +25,28 @@ use <Firing Pin Guide.scad>;
 
 module Liberator12k() {
 
-  //color("White", 0.2)
-  Reference(hollow=true);
-
   Forend(debug=true);
   
-  TeeHousingFront();
-  TeeHousingBack();
+  //TeeHousingFront();
+  
+  //TeeHousingBack();
+  
+  Charger(showRetainer=false);
 
-  Grip(showTrigger=true);
+  Grip(showLeft=false);
+  
+  Striker();
 
   FiringPinGuide(debug=true);
+  
+  SearGuide();
+
 
   color("Grey")
   Frame();
+
+  color("Black", 0.25)
+  Reference(hollow=true);
 }
 
 //rotate([0,0,360*$t])

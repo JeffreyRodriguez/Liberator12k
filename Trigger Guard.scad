@@ -1,60 +1,41 @@
 //$t=0.8;
+use <Components/Manifold.scad>;
 use <Components/Semicircle.scad>;
 use <Components/Debug.scad>;
+use <Vitamins/Nuts And Bolts.scad>;
 use <Vitamins/Pipe.scad>;
 use <Vitamins/Rod.scad>;
 use <Frame.scad>;
 use <Cylinder.scad>;
 use <Trigger.scad>;
 use <Striker.scad>;
-use <Sear.scad>
+use <Sear Guide.scad>
 use <Reference.scad>;
 use <Grip Tabs.scad>;
 use <Reset Spring.scad>;
 
 function GripHandleOffsetX() = -0.125;
-function GripFloor() = 0.6;
-function GripWidth() = 1;
 
-function GripRodOffset() = TeeRimRadius(ReceiverTee())
-                          + RodRadius(GripRod())
-                          + WallTriggerGuardRod();
-
-function GripFloorZ() = -ReceiverCenter()-GripFloor();
-
-function TeeHousingBottomExtension() = 0.27;
-
-function GripTriggerFingerSlotDiameter() = 0.9;
-function GripTriggerFingerSlotRadius() = GripTriggerFingerSlotDiameter()/2;
-function GripTriggerFingerSlotOffsetZ() = -ReceiverCenter() -GripFloor() -GripTriggerFingerSlotRadius();
-function GripTriggerFingerSlotWall() = 0.25;
 
 function GripPinX(pin) = GripPins()[pin][0];
 function GripPinY(pin) = GripPins()[pin][2];
 function GripPinZ(pin) = GripPins()[pin][1];
 
-
 // XZY
 function GripPins() = [
-     
-     // Front-Top
-     //[BreechFrontX(),-ReceiverCenter()-(GripFloor()/2), 0],
-     
-     // Back-Top
-     //[-ReceiverCenter()-WallFrameBack()+0.5,GripFloorZ()+0.375, 0],
-     
-     // Front-Bottom
-     [BreechFrontX(),GripFloorZ()-GripTriggerFingerSlotDiameter()+0.125, 0],
-     
-     // Behind Trigger Finger Slot
-     [-0.5,GripFloorZ()-0.5, 0],
-     
-     // Handle Bottom-Rear
-     [GripHandleOffsetX()-ReceiverOR()-1.75,GripFloorZ()-2.4, 0],
-     
-     // Handle Bottom-Front
-     [GripHandleOffsetX()-ReceiverOR()-0.5,GripFloorZ()-2.9, 0]
-  ];
+
+   // Front-Bottom
+   [BreechFrontX(),GripFloorZ()-GripTriggerFingerSlotDiameter()+0.125, 0],
+   
+   // Behind Trigger Finger Slot
+   [TriggerBoltX(),TriggerBoltZ(), 0],
+   
+   // Handle Bottom-Rear
+   [GripHandleOffsetX()-ReceiverOR()-1.75,GripFloorZ()-2.4, 0],
+   
+   // Handle Bottom-Front
+   [GripHandleOffsetX()-ReceiverOR()-0.5,GripFloorZ()-2.9, 0]
+];
 
 
 
@@ -63,7 +44,7 @@ function GripPins() = [
 /* M3: radius=0.115/2, capRadius=0.212/2, nutRadius=0.247/2, nutHeight=0.096
    M8: radius=0.3,     capRadius=0.29,    nutRadius=0.29,  nutHeight=0.3,
 */
-module GripMX(length=23/25.4,
+module GripMX(length=24/25.4,
               radius=(0.115/2)+0.02, radiusExtra=0,
               capEnabled=true,
               capRadius=(0.212/2)+0.01, capRadiusExtra=0.001,
@@ -89,22 +70,28 @@ module GripMX(length=23/25.4,
   
 }
 
-module GripScrew() {
+module GripBodyScrews(boltSpec=TriggerBoltSpec(), length=24/25.4, cutter=1) {
+  *for (xzy = GripPins())
+  translate([xzy[0],xzy[2],xzy[1]])
   translate([0,-(GripWidth()/2)+0.055,0])
   rotate([-90,0,0])
   GripMX(nutHeightExtra=GripWidth(), capHeightExtra=GripWidth());
-}
-
-module GripBodyScrews() {
+  
+  //translate([TriggerBoltX(), GripWidth()/2, TriggerBoltZ()])
+  color("SteelBlue")
   for (xzy = GripPins())
   translate([xzy[0],xzy[2],xzy[1]])
-  GripScrew();
+  translate([0,(GripWidth()/2),0])
+  rotate([90,0,0])
+  color("SteelBlue")
+  NutAndBolt(bolt=TriggerBoltSpec(), boltLength=length, clearance=true,
+              capHeightExtra=cutter, nutHeightExtra=cutter);
 }
 
-module GripTriggerFingerSlot(receiver=ReceiverTee(), length=0.7, chamfer=false, $fn=Resolution(12, 60)) {
+module GripTriggerFingerSlot(receiver=ReceiverTee(), length=0.525, chamfer=false, $fn=Resolution(12, 60)) {
   render()
   union()
-  translate([0.45,
+  translate([0.65,
              0,
              GripTriggerFingerSlotOffsetZ()]) {
 
@@ -176,6 +163,8 @@ module GripHandle(receiver, angle=25, length=1.3, height=5.5) {
         cube([1, GripWidth(), 1.7]);
       }
     }
+    
+    VerticalSearPinTrack();
 
     // Flatten the bottom
     translate([-4.5,-1,handleOffsetZ-6.5])
@@ -222,20 +211,8 @@ module GripGuard(showHandle=true) {
         cube([1.5, 1.25, GripFloor()]);
         
         // Rear cube
-        translate([0.125,-0.5,-ReceiverCenter()-GripFloor()-GripTriggerFingerSlotRadius()])
-        cube([BreechFrontX()+0.125, 1, GripFloor()+GripTriggerFingerSlotRadius()]);
-      }
-      
-      // Front grip tab support (smooth)
-      *hull() {
-        for (i=[-0.125,-1.0])
-        translate([ReceiverCenter()+WallFrameFront()+i,0,-ReceiverCenter()])
-        mirror([0,0,1])
-        cylinder(r=0.625, h=GripFloor(), $fn=Resolution(12,60));
-        
-        // Hull-smoothing block
-        translate([0,-0.25,GripFloorZ()-GripTriggerFingerSlotDiameter()])
-        cube([BreechFrontX(), 0.5, 0.1]);
+        translate([0.25,-0.5,-ReceiverCenter()-GripFloor()-GripTriggerFingerSlotRadius()])
+        cube([BreechFrontX(), 1, GripFloor()+GripTriggerFingerSlotRadius()]);
       }
       
       // Rear Grip Tab Bolt Support
@@ -252,7 +229,6 @@ module GripGuard(showHandle=true) {
       if (showHandle)
       GripHandle(ReceiverTee());
     }
-      
     
     // Flatten the top
     translate([-ReceiverLength(),-ReceiverOR(), -ReceiverCenter()-ManifoldGap()])
@@ -267,6 +243,9 @@ module GripGuard(showHandle=true) {
     
     GripTriggerFingerSlot();
     
+    VerticalSearPinTrack();
+    
+    if (Resolution(false, true))
     GripText();
     
     Reference();
@@ -299,35 +278,43 @@ module GripSides(showLeft=true, showRight=true) {
 
 }
 
-module GripMiddle(safetyCutout=true, resetCutout=true) {
+module GripMiddle() {
   render()
-  difference() {
-    intersection() {
-      GripGuard(ReceiverTee());
+  union() {
+    difference() {
+      intersection() {
+        GripGuard(ReceiverTee());
 
-      // Just the middle
-      GripSplitter(clearance=0);
-    }
+        // Just the middle
+        GripSplitter(clearance=0);
+      }
 
-    // Tigger Group Cutout
-    translate([-1.7,
-               -GripWidth()/2,-ReceiverCenter()])
-    mirror([0,0,1])
-    cube([2.7, GripWidth(), 1.505]);
-    
-    translate([-1.05, 0.22, -3.25])
-    rotate([0,-90+25,0])
-    rotate([0,0,180])
-    rotate([90,0,0])
-    linear_extrude(height=0.25) {
-      text("#", size=0.6);
+      // Tigger Body Cutout
+      translate([GripTabRearMinX(),
+                 -GripWidth()/2,-ReceiverCenter()])
+      mirror([0,0,1])
+      cube([GripTabFrontMaxX()+abs(GripTabRearMinX())-GripTriggerFingerSlotRadius(), GripWidth(), 1.50]);
       
-      translate([0.6, 0.08])
-      text("L12K", size=0.4);
+      // Trigger Front Extension Cutout
+      translate([0,-0.5, GripOffsetZ()+ManifoldGap()])
+      mirror([0,0,1])
+      cube([GripTabFrontMaxX(), 1, GripFloor()+GripTriggerFingerSlotRadius()]);
+      
+      // #L12K easter egg
+      if (Resolution(false, true))
+      translate([-1.05, 0.22, -3.25])
+      rotate([0,-90+25,0])
+      rotate([0,0,180])
+      rotate([90,0,0])
+      linear_extrude(height=0.25) {
+        text("#", size=0.6);
+        
+        translate([0.6, 0.08])
+        text("L12K", size=0.4);
+      }
     }
   }
 }
-
 
 module GripText() {
   
@@ -347,15 +334,14 @@ module GripText() {
   text("R", size=0.35);
 }
 
+module Grip(showGripTabBolts=true,
+            showTrigger=true, showTriggerLeft=true, showTriggerRight=true,
+            showMiddle=true, showLeft=true, showRight=true) {
+              
+  if (showGripTabBolts)
+  GripTabBoltHoles(capHeightExtra=0, nutHeightExtra=0, clearance=false);
 
-
-module Grip(showTrigger=false, debugTrigger=false, showMiddle=true, showLeft=true, showRight=true) {
-
-
-  // Trigger
-  if (showTrigger)
-  TriggerGroup(debug=debugTrigger);
-
+  
   // Trigger Guard Center
   color("White")
   render()
@@ -366,24 +352,22 @@ module Grip(showTrigger=false, debugTrigger=false, showMiddle=true, showLeft=tru
   color("Khaki")
   GripSides(showLeft=showLeft, showRight=showRight);
 
-}
-
-//vpr = [$vpr[0], $vpr[1], $t * 360];
-//rotate([30,0,120+(15*-$t)])
-//render() DebugHalf(dimension=1500)
-{
-
-  translate([0,0,0]) {
-    Grip(showTrigger=true,
-            showLeft=false,
-          showMiddle=true,
-           showRight=true);
-
-    color("white", 0.1)
-    render()
-    *%Reference();
+  // Trigger
+  //color("Black", 0.25)
+  if (showTrigger) {
+    TriggerGroup(left=showTriggerLeft, right=showTriggerRight);
   }
 }
+
+
+Grip(showTrigger=true, showTriggerLeft=true, showTriggerRight=true,
+        showLeft=true,
+      showMiddle=true,
+       showRight=true);
+
+*color("Black", 0.25)
+render()
+%Reference();
 
 // Left-side plater
 *!scale(25.4)
