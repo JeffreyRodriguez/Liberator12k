@@ -1,4 +1,5 @@
 //$t=0.8;
+use <Components/Manifold.scad>;
 use <Vitamins/Pipe.scad>;
 use <Vitamins/Rod.scad>;
 use <Frame.scad>;
@@ -7,7 +8,6 @@ use <Trigger Guard.scad>;
 use <Grip Tabs.scad>;
 use <Reference.scad>;
 use <Cylinder.scad>;
-use <Components/Manifold.scad>;
 
 module TeeHousingPinFlat(offset=0.3, diameter=0.58, length=1, $fn=6) {
   translate([0,0,offset])
