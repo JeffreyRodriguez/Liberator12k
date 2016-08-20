@@ -227,16 +227,18 @@ module ChargerRetainer() {
   }
 }
 
-module Charger() {
+module Charger(showSupports=true, showRetainer=false) {
   //!scale(25.4) rotate([90,0,0])
   ChargingWheel();
   
   //!scale(25.4) rotate([180,0,0])
   //DebugHalf(4)
+  if (showSupports==true)
   ChargingSupports();
   
   //!scale(25.4) rotate([0,-90,0])
   //DebugHalf(5)
+  if (showRetainer==true)
   ChargerRetainer();
   
   translate([1,0,(ReceiverLength()/2)])
