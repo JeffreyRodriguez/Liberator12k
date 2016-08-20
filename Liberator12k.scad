@@ -27,9 +27,9 @@ module Liberator12k() {
 
   Forend(debug=true);
   
-  //TeeHousingFront();
+  TeeHousingFront();
   
-  //TeeHousingBack();
+  TeeHousingBack();
   
   Charger(showRetainer=false);
 
