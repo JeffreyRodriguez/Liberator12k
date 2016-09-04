@@ -2,6 +2,7 @@
 use <Components/Manifold.scad>;
 use <Components/Semicircle.scad>;
 use <Components/Debug.scad>;
+use <Components/Units.scad>;
 use <Vitamins/Nuts And Bolts.scad>;
 use <Vitamins/Pipe.scad>;
 use <Vitamins/Rod.scad>;
@@ -18,33 +19,30 @@ function GripHandleOffsetX() = -0.125;
 
 
 function GripPinX(pin) = GripPins()[pin][0];
-function GripPinY(pin) = GripPins()[pin][2];
+function GripPinY(pin) = 0;
 function GripPinZ(pin) = GripPins()[pin][1];
 
-// XZY
+// XZ
 function GripPins() = [
 
    // Front-Bottom
-   [BreechFrontX(),GripFloorZ()-GripTriggerFingerSlotDiameter()+0.125, 0],
-   
-   // Behind Trigger Finger Slot
-   [TriggerBoltX(),TriggerBoltZ(), 0],
+   [BreechFrontX(),GripFloorZ()-GripTriggerFingerSlotDiameter()+0.125],
    
    // Handle Bottom-Rear
-   [GripHandleOffsetX()-ReceiverOR()-1.75,GripFloorZ()-2.4, 0],
+   [GripHandleOffsetX()-ReceiverOR()-1.75,GripFloorZ()-2.4],
    
    // Handle Bottom-Front
-   [GripHandleOffsetX()-ReceiverOR()-0.5,GripFloorZ()-2.9, 0]
+   [GripHandleOffsetX()-ReceiverOR()-0.5,GripFloorZ()-2.9]
 ];
 
-module GripBodyScrews(boltSpec=TriggerBoltSpec(), length=24/25.4, cutter=1) {
+module GripBodyScrews(boltSpec=TriggerBoltSpec(), length=24.5/25.4, clearance=true, cutter=1) {
   color("SteelBlue")
   for (xzy = GripPins())
-  translate([xzy[0],xzy[2],xzy[1]])
+  translate([xzy[0],0.025,xzy[1]])
   translate([0,(GripWidth()/2),0])
   rotate([90,0,0])
   color("SteelBlue")
-  NutAndBolt(bolt=TriggerBoltSpec(), boltLength=length, clearance=true,
+  NutAndBolt(bolt=TriggerBoltSpec(), boltLength=length, clearance=clearance,
               capHeightExtra=cutter, nutHeightExtra=cutter);
 }
 
@@ -138,32 +136,32 @@ module GripGuard(showHandle=true) {
 
   difference() {
     union() {
-      intersection() {
-        hull() {
+      difference() {
+      
+        // Main block
+        translate([-ReceiverOR(), -GripWidth()/2,
+                   -ReceiverCenter()-height])
+        cube([ReceiverOR()+BreechFrontX()+0.25,
+              GripWidth(),
+              height]);
         
-          // Main block
-          translate([-ReceiverOR(), -GripWidth()/2,
-                     -ReceiverCenter()-height])
-          cube([ReceiverOR()+BreechFrontX()+0.25,
-                GripWidth(),
-                height]);
-        }
     
-        // Bottom curve cutter
-        translate([0,0,-ReceiverCenter()-height+0.125])
-        rotate([0,90,0])
+        // Bottom chamfer
+        translate([0,0,-ReceiverCenter()-height+0.1])
+        rotate([0,-90,0])
         linear_extrude(height=ReceiverLength()*2, center=true)
-        hull() {
+        difference() {
+          translate([-height,-GripWidth()])
+          square([height,GripWidth()*2]);
+          
+          hull()
           for (i = [-1, 1])
           translate([0,((GripWidth()/2)-0.09)*i])
           circle(r=0.1, $fn=Resolution(12,24));
-          
-          translate([-height-0.125,(-GripWidth()/2)-ManifoldGap()])
-          square([height,GripWidth()+ManifoldGap(2)]);
         }
       }
       
-      // Front grip tab support (block)
+      // Front grip tab support
       hull() {
         
         // Front cube
@@ -175,7 +173,7 @@ module GripGuard(showHandle=true) {
         cube([BreechFrontX(), 1, GripFloor()+GripTriggerFingerSlotRadius()]);
       }
       
-      // Rear Grip Tab Bolt Support
+      // Rear Grip Tab Support
       hull() {
         
         translate([GripTabBoltX(GripTabBoltsArray()[1])-0.5,-GripWidth()/2,-ReceiverCenter()-0.49]) 
@@ -194,12 +192,14 @@ module GripGuard(showHandle=true) {
     translate([-ReceiverLength(),-ReceiverOR(), -ReceiverCenter()-ManifoldGap()])
     cube([ReceiverLength()*2, ReceiverOD(), ReceiverCenter()]);
     
-    GripTabFront(clearance=0.005);
-    GripTabRear(clearance=0.005);
+    GripTabFront(clearance=0.008);
+    GripTabRear(clearance=0.008);
 
-    GripBodyScrews(ReceiverTee());
+    GripBodyScrews(cutter=1);
     
     GripTabBoltHoles();
+    
+    TriggerBolt();
     
     GripTriggerFingerSlot();
     
@@ -238,7 +238,32 @@ module GripSides(showLeft=true, showRight=true) {
 
 }
 
+function GripAccessoryBossOffsets() = [-0.5,-GripTriggerFingerSlotDiameter()-GripTriggerFingerSlotWall()-GripFloor()];
+
+module GripAccessoryBossBolts(boltSpec=Spec_BoltM3(), length=UnitsMetric(24), clearance=true) {
+  color("SteelBlue")
+  for (offsetZ = GripAccessoryBossOffsets())
+  translate([GripTabFrontMaxX(),0, -ReceiverCenter()+offsetZ])
+  translate([0.75,0.54,0.25])
+  rotate([90,0,0])
+  NutAndBolt(bolt=boltSpec, clearance=clearance);
+}
+module GripAccessoryBosses(holes=true, cutter=false) {
+  clearance = cutter ? 0.005 : 0;
+  
+  for (offsetZ = GripAccessoryBossOffsets())
+  difference() {
+    translate([GripTabFrontMaxX()+0.5,-clearance, -ReceiverCenter()+offsetZ-clearance])
+    translate([0,-0.25,0])
+    cube([0.51+clearance, (GripWidth()/2)+(clearance*2)+ManifoldGap(), 0.5+(clearance*2)]);
+  
+    if (holes)
+    GripAccessoryBossBolts(clearance=true);
+  }
+}
+
 module GripMiddle() {
+  color("White")
   render()
   union() {
     difference() {
@@ -273,6 +298,8 @@ module GripMiddle() {
         text("L12K", size=0.4);
       }
     }
+    
+    GripAccessoryBosses(holes=true);
   }
 }
 
@@ -294,17 +321,20 @@ module GripText() {
   text("R", size=0.35);
 }
 
-module Grip(showGripTabBolts=true,
+module Grip(showGripTabBolts=true, showGripAccessoryBolts=true, showGripBodyBolts=true,
             showTrigger=true, showTriggerLeft=true, showTriggerRight=true,
             showMiddle=true, showLeft=true, showRight=true) {
               
   if (showGripTabBolts)
   GripTabBoltHoles(capHeightExtra=0, nutHeightExtra=0, clearance=false);
-
+  
+  if (showGripAccessoryBolts)
+  GripAccessoryBossBolts(clearance=false);
+  
+  if (showGripBodyBolts)
+  GripBodyScrews(cutter=0);
   
   // Trigger Guard Center
-  color("White")
-  render()
   if (showMiddle)
   GripMiddle();
 
@@ -332,15 +362,17 @@ render()
 // Left-side plater
 *!scale(25.4)
 rotate([90,0,0])
-Grip(showTrigger=false,
+Grip(showGripTabBolts=false,showGripAccessoryBolts=false,showGripBodyBolts=false,
+     showTrigger=false,
         showLeft=true,
       showMiddle=false,
        showRight=false);
 
-// Middle-side plater
+// Middle plater
 *!scale(25.4)
 rotate([90,0,0])
-Grip(showTrigger=false,
+Grip(showGripTabBolts=false,showGripAccessoryBolts=false,showGripBodyBolts=false,
+     showTrigger=false,
         showLeft=false,
       showMiddle=true,
        showRight=false);
@@ -348,7 +380,8 @@ Grip(showTrigger=false,
 // Right-side plater
 *!scale(25.4)
 rotate([-90,0,0])
-Grip(showTrigger=false,
+Grip(showGripTabBolts=false,showGripAccessoryBolts=false,showGripBodyBolts=false,
+     showTrigger=false,
         showLeft=false,
       showMiddle=false,
        showRight=true);
