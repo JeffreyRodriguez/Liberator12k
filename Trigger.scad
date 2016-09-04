@@ -4,7 +4,7 @@ include <Components/Animation.scad>;
 
 use <Components/Manifold.scad>;
 use <Components/Debug.scad>;
-use <Components/Spindle.scad>;
+use <Components/Units.scad>;
 
 use <Vitamins/Nuts And Bolts.scad>;
 use <Vitamins/Pipe.scad>;
@@ -41,12 +41,12 @@ function TriggerBoltX() = -0.5;
 function TriggerBoltZ() = GripFloorZ()-0.5;
 function TriggerSpindleRadius() = 0.13;
 
-module TriggerBolt(length=25/25.4, cutter=1) {
-  translate([TriggerBoltX(), (GripWidth()/2)+0.025, TriggerBoltZ()])
+module TriggerBolt(length=UnitsMetric(25), cutter=1) {
+  translate([TriggerBoltX(), (GripWidth()/2), TriggerBoltZ()])
   rotate([90,0,0])
   color("SteelBlue")
   NutAndBolt(bolt=TriggerBoltSpec(), boltLength=length, clearance=true,
-              capHeightExtra=cutter, nutHeightExtra=cutter);
+              capHeightExtra=cutter, nutHeightExtra=cutter, nutBackset=0.02);
 }
 
 module Sear() {

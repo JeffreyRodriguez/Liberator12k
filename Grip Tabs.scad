@@ -45,7 +45,8 @@ module GripTabBoltHoles(boltSpec=Spec_BoltM3(),
   rotate([90,0,0])
   rotate(90)
   NutAndBolt(bolt=boltSpec, boltLength=length, clearance=true,
-              capHeightExtra=capHeightExtra, nutHeightExtra=nutHeightExtra);
+              capHeightExtra=capHeightExtra,
+              nutHeightExtra=nutHeightExtra, nutBackset=0.02);
 }
 
 

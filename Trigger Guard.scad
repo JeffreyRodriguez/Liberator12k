@@ -35,15 +35,15 @@ function GripPins() = [
    [GripHandleOffsetX()-ReceiverOR()-0.5,GripFloorZ()-2.9]
 ];
 
-module GripBodyScrews(boltSpec=TriggerBoltSpec(), length=24.5/25.4, clearance=true, cutter=1) {
-  color("SteelBlue")
+module GripBodyScrews(boltSpec=TriggerBoltSpec(), length=UnitsMetric(25), clearance=true, cutter=1) {
+  color("SteelBlue", 0.5)
   for (xzy = GripPins())
-  translate([xzy[0],0.025,xzy[1]])
+  translate([xzy[0],0,xzy[1]])
   translate([0,(GripWidth()/2),0])
   rotate([90,0,0])
   color("SteelBlue")
   NutAndBolt(bolt=TriggerBoltSpec(), boltLength=length, clearance=clearance,
-              capHeightExtra=cutter, nutHeightExtra=cutter);
+              capHeightExtra=cutter, nutBackset=0.02, nutHeightExtra=cutter);
 }
 
 module GripTriggerFingerSlot(receiver=ReceiverTee(), length=0.525, chamfer=false, $fn=Resolution(12, 60)) {
