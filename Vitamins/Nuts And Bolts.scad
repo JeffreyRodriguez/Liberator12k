@@ -15,13 +15,23 @@ BoltFn          = 7;
 function BoltClearance() = BoltClearance;
 
 function Spec_BoltM3() = [
-  [BoltDiameter,    UnitsMetric(3+0.8)],
+  [BoltDiameter,    UnitsMetric(3)],
   [BoltCapDiameter, UnitsMetric(5.4)],
   [BoltCapHeight,   UnitsMetric(2.6)],
   [BoltNutDiameter, UnitsMetric(6.28)],
   [BoltNutHeight,   UnitsMetric(2.5)],
-  [BoltClearance,   UnitsMetric(0.3)],
+  [BoltClearance,   UnitsMetric(0.7)],
   [BoltFn, 8]
+];
+
+function Spec_BoltM8() = [
+  [BoltDiameter,    UnitsMetric(8)],
+  [BoltCapDiameter, UnitsMetric(13.1)],
+  [BoltCapHeight,   UnitsMetric(8)],
+  [BoltNutDiameter, UnitsMetric(14.75)],
+  [BoltNutHeight,   UnitsMetric(6.3)],
+  [BoltClearance,   UnitsMetric(0.7)],
+  [BoltFn, 10]
 ];
 
 /**
@@ -55,6 +65,9 @@ function BoltNutDiameter(bolt=undef, clearance=false)
            + (clearance == true ? lookup(BoltClearance, bolt) : 0);
 
 function BoltNutRadius(bolt, clearance=false) = BoltNutDiameter(bolt, clearance)/2;
+
+function BoltNutMinor(bolt=undef, clearance=false)
+          = (BoltNutDiameter(bolt=bolt, clearance=clearance) * sqrt(3))/2;
 
 function BoltNutHeight(bolt) = lookup(BoltNutHeight, bolt);
 
@@ -95,13 +108,13 @@ module Bolt(bolt=Spec_BoltM3(), length=1, clearance=false, cap=true, capRadiusEx
 }
 
 module NutAndBolt(bolt=Spec_BoltM3(), boltLength=1,
-                  capRadiusExtra=0, capHeightExtra=0,
+                  cap=true, capRadiusExtra=0, capHeightExtra=0,
                   nutHeightExtra=0, clearance=true) {
   union() {
 
     // Bolt Body
     Bolt(bolt=bolt, length=boltLength,
-         capHeightExtra=capHeightExtra, capRadiusExtra=capRadiusExtra,
+         cap=cap, capHeightExtra=capHeightExtra, capRadiusExtra=capRadiusExtra,
          clearance=clearance);
 
     // Nut
