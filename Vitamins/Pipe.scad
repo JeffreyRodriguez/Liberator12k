@@ -15,20 +15,41 @@ function PipeClearanceSnug()  = PipeClearanceSnug;
 function PipeClearanceLoose() = PipeClearanceLoose;
 
 
-function PipeClearance(pipe, clearance)     = (clearance != undef) ? lookup(clearance, pipe) : 0;
-function PipeOuterDiameter(pipe, clearance, clearanceSign=1) = lookup(PipeOuterDiameter, pipe) + (PipeClearance(pipe, clearance)*clearanceSign);
-function PipeInnerDiameter(pipe, clearance, clearanceSign=1) = lookup(PipeInnerDiameter, pipe) + (PipeClearance(pipe, clearance)*clearanceSign);
-function PipeOuterRadius(pipe, clearance, clearanceSign=1)   = PipeOuterDiameter(pipe, clearance, clearanceSign)/2;
-function PipeInnerRadius(pipe, clearance, clearanceSign=1)   = PipeInnerDiameter(pipe, clearance, clearanceSign)/2;
-function PipeThreadDepth(pipe)              = lookup(PipeThreadDepth, pipe);
-function PipeWall(pipe)                     = PipeOuterRadius(pipe) - PipeInnerRadius(pipe);
-function PipeFn(pipe, fn)                   = (fn == undef) ? lookup(PipeFn, pipe) : fn;
+function PipeClearance(pipe, clearance) =
+           (clearance != undef) ? lookup(clearance, pipe) : 0;
+
+function PipeOuterDiameter(pipe, clearance, clearanceSign=1) =
+           lookup(PipeOuterDiameter, pipe) + (PipeClearance(pipe, clearance)*clearanceSign);
+
+function PipeInnerDiameter(pipe, clearance, clearanceSign=1) =
+           lookup(PipeInnerDiameter, pipe) + (PipeClearance(pipe, clearance)*clearanceSign);
+
+function PipeOuterRadius(pipe, clearance, clearanceSign=1) =
+           PipeOuterDiameter(pipe, clearance, clearanceSign)/2;
+
+function PipeInnerRadius(pipe, clearance, clearanceSign=1) =
+           PipeInnerDiameter(pipe, clearance, clearanceSign)/2;
+
+function PipeThreadDepth(pipe) =
+           lookup(PipeThreadDepth, pipe);
+
+function PipeWall(pipe) =
+           PipeOuterRadius(pipe) - PipeInnerRadius(pipe);
+
+function PipeFn(pipe, fn) =
+           (fn == undef) ? lookup(PipeFn, pipe) : fn;
+
+function PipeOuterCircumference(pipe, clearance, clearanceSign=1) =
+           3.14*PipeOuterDiameter(pipe, clearance, clearanceSign);
+
+function PipeInnerCircumference(pipe, clearance, clearanceSign=1) =
+           3.14*PipeInnerDiameter(pipe, clearance, clearanceSign);
 
 
-module Pipe2d(pipe, clearance=PipeClearanceSnug(), hollow=false, $fn=undef) {
+module Pipe2d(pipe, clearance=PipeClearanceSnug(), clearanceSign=1, hollow=false, $fn=undef) {
   echo("PipeOuterRadius,PipeClearance: ", PipeOuterRadius(pipe=pipe, clearance=clearance), clearance);
   difference() {
-    circle(r=PipeOuterRadius(pipe=pipe, clearance=clearance),
+    circle(r=PipeOuterRadius(pipe=pipe, clearance=clearance, clearanceSign=clearanceSign),
          $fn=PipeFn(pipe, $fn));
 
     if (hollow)
@@ -67,12 +88,12 @@ function Spec_12GaugeChamber() = [
 // 3/4" Sch40 Pipe
 function Spec_PipeThreeQuarterInch() = [
   [PipeInnerDiameter,   0.81],
-  [PipeOuterDiameter,   1.07],
+  [PipeOuterDiameter,   1.05],
   [PipeTaperedDiameter, 1.018],
   [PipeThreadLength,    0.9],
   [PipeThreadDepth,     0.5],
-  [PipeClearanceSnug,   0.005],
-  [PipeClearanceLoose,  0.027],
+  [PipeClearanceSnug,   0.002],
+  [PipeClearanceLoose,  0.01],
   [PipeFn,              30],
   [PipeWeightPerUnit,   40]
 ];
@@ -80,13 +101,26 @@ function Spec_PipeThreeQuarterInch() = [
 // 3/4" Sch80 Pipe
 function Spec_PipeThreeQuarterInchSch80() = [
   [PipeInnerDiameter,   0.73],
-  [PipeOuterDiameter,   1.07],
+  [PipeOuterDiameter,   1.05],
   [PipeTaperedDiameter, 1.018],
   [PipeThreadLength,    0.9],
   [PipeThreadDepth,     0.5],
-  [PipeClearanceSnug,   0.005],
-  [PipeClearanceLoose,  0.027],
-  [PipeFn,              30],
+  [PipeClearanceSnug,   0.002],
+  [PipeClearanceLoose,  0.01],
+  [PipeFn,              40],
+  [PipeWeightPerUnit,   40]
+];
+
+// 3/4" Sch80 Stainless Pipe
+function Spec_PipeThreeQuarterInchSch80Stainless() = [
+  [PipeInnerDiameter,   0.76],
+  [PipeOuterDiameter,   1.05],
+  [PipeTaperedDiameter, 1.018],
+  [PipeThreadLength,    0.9],
+  [PipeThreadDepth,     0.5],
+  [PipeClearanceSnug,   0.002],
+  [PipeClearanceLoose,  0.01],
+  [PipeFn,              40],
   [PipeWeightPerUnit,   40]
 ];
 
@@ -97,9 +131,9 @@ function Spec_PipeOneInch() = [
   [PipeTaperedDiameter, 1.285],
   [PipeThreadLength,    0.982],
   [PipeThreadDepth,     0.5], // TODO: Verify
-  [PipeClearanceSnug,   0.02],
-  [PipeClearanceLoose,  0.03],
-  [PipeFn,              30],
+  [PipeClearanceSnug,   0.002],
+  [PipeClearanceLoose,  0.01],
+  [PipeFn,              50],
   [PipeWeightPerUnit,   0] // TODO
 ];
 
@@ -110,9 +144,9 @@ function Spec_PipeOneInchSch80() = [
   [PipeTaperedDiameter, 1.285],
   [PipeThreadLength,    0.982],
   [PipeThreadDepth,     0.5], // TODO: Verify
-  [PipeClearanceSnug,   0.02],
-  [PipeClearanceLoose,  0.03],
-  [PipeFn,              30],
+  [PipeClearanceSnug,   0.002],
+  [PipeClearanceLoose,  0.01],
+  [PipeFn,              50],
   [PipeWeightPerUnit,   0] // TODO
 ];
 
@@ -125,7 +159,7 @@ function Spec_TubingOnePointOneTwoFive() = [
   [PipeThreadDepth,     0.5],
   [PipeClearanceSnug,   0.020],
   [PipeClearanceLoose,  0.022],
-  [PipeFn,              30],
+  [PipeFn,              50],
   [PipeWeightPerUnit,   42]
 ];
 
@@ -177,7 +211,7 @@ function Spec_TubingThreeQuarterByFiveEighthInch() = [
   [PipeThreadDepth,     0],
   [PipeClearanceSnug,   0.03],
   [PipeClearanceLoose,  0.035],
-  [PipeFn,              20],
+  [PipeFn,              40],
   [PipeWeightPerUnit,   0] // TODO
 ];
 
@@ -193,6 +227,10 @@ function Spec_PointFiveSix9mmBarrel() = [
   [PipeFn,              25],
   [PipeWeightPerUnit,   0]
 ];
+
+
+
+echo (PipeOuterCircumference(Spec_PointFiveSix9mmBarrel()));
 
 
 // Fittings: Tee
