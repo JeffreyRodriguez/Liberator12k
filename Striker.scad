@@ -3,6 +3,7 @@
 include <Components/Animation.scad>;
 use <Components/Debug.scad>;
 use <Components/Manifold.scad>;
+use <Components/Pipe Insert.scad>;
 
 use <Vitamins/Pipe.scad>;
 use <Vitamins/Rod.scad>;
@@ -88,17 +89,12 @@ module StrikerCollar(debug=true) {
   }
 }
 
-module StrikerSpacer(length=2) {
+module StrikerSpacer(length=2, rodClearance=RodClearanceLoose()) {
   render()
-  difference() {
-      cylinder(r=StrikerSpacerRadius(), h=length, $fn=RodFn(StrikerRod())*Resolution(1, 2));
-
-    // Rod
-    translate([0,0,-0.1])
-    cylinder(r=StrikerInnerRadius(),
-             h=length + 0.2,
-             $fn=RodFn(StrikerRod()));
-  }
+  linear_extrude(height=length) {
+    PipeInsert2d(pipeSpec=StockPipe(), pipeClearance=PipeClearanceLoose())
+    Rod2d(rod=StrikerRod(), clearance=rodClearance);
+  };
 }
 
 module StrikerFoot() {
