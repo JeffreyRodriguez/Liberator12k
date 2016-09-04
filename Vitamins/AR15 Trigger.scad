@@ -43,7 +43,7 @@ module triggerPack(pinWidth=20) {
     
     // Rear pin
     translate([rearPinOffsetX,rearPinOffsetY,0])
-    #cylinder(r=pinRadius, h=pinWidth, center=true);
+    cylinder(r=pinRadius, h=pinWidth, center=true);
     
     // Sear Extension
     translate([0,3,0-hammerWidth/2])
@@ -61,7 +61,7 @@ module triggerPack(pinWidth=20) {
 
 module triggerHousing(wall=2) {
   difference() {
-    cube([85,42,18 + (wall*2)]);
+    cube([85,42,(18 + (wall*2))/2]);
     
     translate([8,5,wall])
     triggerPack(pinWidth=100);
