@@ -22,17 +22,12 @@ module SearGuide() {
   
   color("LightSeaGreen", 0.5)
   render(convexity=4)
-  translate([0,0,-ReceiverCenter()])
   difference() {
+    translate([0,0,-ReceiverCenter()])
     ReceiverInsert(topFactor=0.6);
     
-    // Sear hole
-    translate([0,0,-0.5-ManifoldGap()])
-    cylinder(r=RodRadius(SearRod(), RodClearanceLoose()),
-             length=ReceiverLength()+0.5,
-             $fn=RodFn(SearRod()));
+    SearCutter();
     
-    translate([0,0,ReceiverCenter()])
     SearBolts(cutter=true);
   }
 }
@@ -43,11 +38,12 @@ scale([25.4, 25.4, 25.4])
   
   //DebugHalf(3)
   
-  *SearGuide();
+  SearGuide();
   
   *Reference();
 
-  render()  
+  *render()
+  rotate([90,0,0])
   difference() {
     SearSupportTab();
     
