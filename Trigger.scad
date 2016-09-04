@@ -33,7 +33,7 @@ function GripTriggerFingerSlotWall() = 0.25;
 
 function GripBottomZ() = GripFloorZ()-GripTriggerFingerSlotDiameter();
 
-function TriggerWidth() = 0.45;
+function TriggerWidth() = 0.49;
 function TriggerTravel() = SearTravel()*1.5;
 
 function TriggerBoltSpec() = Spec_BoltM3();
@@ -41,8 +41,8 @@ function TriggerBoltX() = -0.5;
 function TriggerBoltZ() = GripFloorZ()-0.5;
 function TriggerSpindleRadius() = 0.13;
 
-module TriggerBolt(length=23/25.4, cutter=1) {
-  translate([TriggerBoltX(), GripWidth()/2, TriggerBoltZ()])
+module TriggerBolt(length=25/25.4, cutter=1) {
+  translate([TriggerBoltX(), (GripWidth()/2)+0.025, TriggerBoltZ()])
   rotate([90,0,0])
   color("SteelBlue")
   NutAndBolt(bolt=TriggerBoltSpec(), boltLength=length, clearance=true,
@@ -243,7 +243,7 @@ module Trigger(left=true, right=true) {
       translate([0,TriggerWidth()/2,0])
       rotate([90,0,0])
       linear_extrude(height=sideplateWidth+0.01)
-      TriggerSideCutter(clearance=0.005);
+      TriggerSideCutter();
     }
     
     if (left)
@@ -265,7 +265,7 @@ module TriggerGroup() {
   SearSupportTab();
   TriggerBolt(cutter=0);
   Trigger(left=true, right=true);
-  //%SearCutter();
+  %SearCutter();
 }
 
 //AnimateSpin()
@@ -291,5 +291,5 @@ module trigger_plater($t=0) {
 }
 
 
-!scale(25.4)
+*!scale(25.4)
 trigger_plater();
