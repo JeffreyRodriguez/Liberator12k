@@ -109,7 +109,7 @@ module Bolt(bolt=Spec_BoltM3(), length=1, clearance=false, cap=true, capRadiusEx
 
 module NutAndBolt(bolt=Spec_BoltM3(), boltLength=1,
                   cap=true, capRadiusExtra=0, capHeightExtra=0,
-                  nutHeightExtra=0, clearance=true) {
+                  nutHeightExtra=0, nutBackset=0, clearance=true) {
   union() {
 
     // Bolt Body
@@ -118,7 +118,7 @@ module NutAndBolt(bolt=Spec_BoltM3(), boltLength=1,
          clearance=clearance);
 
     // Nut
-    translate([0,0,-nutHeightExtra])
+    translate([0,0,-nutHeightExtra+nutBackset])
     cylinder(r=BoltNutRadius(bolt, clearance),
              h=BoltNutHeight(bolt)+nutHeightExtra, $fn=6);
   }
