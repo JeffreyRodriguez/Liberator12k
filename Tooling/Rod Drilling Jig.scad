@@ -5,7 +5,7 @@ use <../Vitamins/Rod.scad>;
 use <../Vitamins/Spring.scad>;
 use <../Reference.scad>;
 
-module RodDrillingJig(rodSpec=Spec_RodOneQuarterInch(),
+module RodDrillingJig(rodSpec=Spec_RodFiveSixteenthInch(),
                       holeSpec=Spec_RodOneEighthInch(),
                       setScrewSpec=Spec_BoltM3(),
                       extension=0.75, extensionWidth=0.5,
@@ -34,7 +34,6 @@ module RodDrillingJig(rodSpec=Spec_RodOneQuarterInch(),
         Rod2d(rod=rodSpec, clearance=RodClearanceSnug());
       }
       
-      //translate([RodRadius(rod=rodSpec, clearance=RodClearanceLoose()),0,0])
       rotate([0,0,45])
       translate([RodRadius(rod=rodSpec, clearance=RodClearanceLoose()),-0.3,0])
       cube([0.5,0.6,length/2]);
@@ -49,9 +48,11 @@ module RodDrillingJig(rodSpec=Spec_RodOneQuarterInch(),
     
     // Set-screw
     rotate([0,0,45])
-    translate([BoltNutHeight(setScrewSpec)+0.005,0,length/4])
+    translate([RodRadius(rodSpec)+0.01,0,length/4])
     rotate([0,90,0])
-    NutAndBolt(bolt=setScrewSpec, nutHeightExtra=RodRadius(rod=holeSpec, clearance=RodClearanceLoose()), clearance=true);
+    NutAndBolt(bolt=setScrewSpec,
+               nutHeightExtra=RodRadius(rod=rodSpec, clearance=RodClearanceLoose()),
+               clearance=true);
   }
 }
 
