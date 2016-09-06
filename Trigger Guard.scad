@@ -35,8 +35,10 @@ function GripPins() = [
    [GripHandleOffsetX()-ReceiverOR()-0.5,GripFloorZ()-2.9]
 ];
 
-module GripBodyScrews(boltSpec=TriggerBoltSpec(), length=UnitsMetric(25), clearance=true, cutter=1) {
-  color("SteelBlue", 0.5)
+module GripBodyScrews(boltSpec=TriggerBoltSpec(), length=UnitsMetric(25), clearance=true) {
+  cutter = (clearance) ? 1 : 0;
+  
+  color("SteelBlue")
   for (xzy = GripPins())
   translate([xzy[0],0,xzy[1]])
   translate([0,(GripWidth()/2),0])
@@ -199,7 +201,7 @@ module GripGuard(showHandle=true) {
     
     GripTabBoltHoles();
     
-    TriggerBolt();
+    TriggerBolt(clearance=true);
     
     GripTriggerFingerSlot();
     
@@ -326,13 +328,13 @@ module Grip(showGripTabBolts=true, showGripAccessoryBolts=true, showGripBodyBolt
             showMiddle=true, showLeft=true, showRight=true) {
               
   if (showGripTabBolts)
-  GripTabBoltHoles(capHeightExtra=0, nutHeightExtra=0, clearance=false);
+  GripTabBoltHoles(clearance=false);
   
   if (showGripAccessoryBolts)
   GripAccessoryBossBolts(clearance=false);
   
   if (showGripBodyBolts)
-  GripBodyScrews(cutter=0);
+  GripBodyScrews(clearance=false);
   
   // Trigger Guard Center
   if (showMiddle)

@@ -1,4 +1,6 @@
 use <Components/Manifold.scad>;
+use <Components/Units.scad>;
+
 use <Vitamins/Nuts And Bolts.scad>;
 use <Reference.scad>;
 
@@ -28,23 +30,26 @@ function GripTabBoltZ(bolt) = bolt[2];
 
 // XYZ
 function GripTabBoltsArray() = [
-   
+
    // Front-Top
    [BreechFrontX(),(GripWidth()/2)+0.125,GripFloorZ()+(GripFloor()/2)],
-   
+
    // Back-Top
    [GripTabRearMinX()+(GripTabRearLength()/2), (GripWidth()/2)+0.125, GripFloorZ()+0.375]
 ];
 
-module GripTabBoltHoles(boltSpec=Spec_BoltM3(),
-                        capHeightExtra=1, nutHeightExtra=1,
-                        length=30/25.4, $fn=8) {
+module GripTabBoltHoles(boltSpec=Spec_BoltM3(), length=UnitsMetric(30),
+                        clearance=true, $fn=8) {
+
+  capHeightExtra = clearance ? 1 : 0;
+  nutHeightExtra = clearance ? 1 : 0;
+
   color("SteelBlue")
   for (bolt = GripTabBoltsArray())
   translate([GripTabBoltX(bolt), GripTabBoltY(bolt), GripTabBoltZ(bolt)])
   rotate([90,0,0])
   rotate(90)
-  NutAndBolt(bolt=boltSpec, boltLength=length, clearance=true,
+  NutAndBolt(bolt=boltSpec, boltLength=length, clearance=clearance,
               capHeightExtra=capHeightExtra,
               nutHeightExtra=nutHeightExtra, nutBackset=0.02);
 }
@@ -57,19 +62,19 @@ module GripTab(length=1, width=0.5, height=0.75, extraTop=ManifoldGap(),
   render()
   translate([0,0,GripOffsetZ()])
   difference() {
-    
+
     // Grip Tab
     union() {
-      
+
       // Vertical
       translate([-clearance,-width/2,-height])
       cube([length+(clearance*2), width, height+extraTop]);
-    
+
       // Horizontal
       translate([-clearance,-(tabWidth/2)-clearance,-height-clearance])
       cube([length+(clearance*2), tabWidth+(clearance*2), tabHeight+(clearance*2)]);
-    }    
-      
+    }
+
     // Grip Bolt Hole
     if (hole)
     translate([length/2,0,-0.225])
@@ -99,4 +104,4 @@ GripTabRear();
 
 GripTabFront();
 
-GripTabBoltHoles(capHeightExtra=0, nutHeightExtra=0, clearance=false);
+GripTabBoltHoles(clearance=false);
