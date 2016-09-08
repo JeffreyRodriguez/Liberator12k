@@ -3,6 +3,7 @@ include <Components/Animation.scad>;
 use <Components/Semicircle.scad>;
 use <Components/Manifold.scad>;
 use <Components/Debug.scad>;
+use <Components/Firing Pin Retainer.scad>;
 
 use <Vitamins/Rod.scad>;
 use <Vitamins/Pipe.scad>;
@@ -10,17 +11,21 @@ use <Vitamins/Pipe.scad>;
 use <Reference.scad>;
 
 use <Sear Bolts.scad>;
+use <Trigger.scad>;
 
+function FiringPinOffsetX() = BreechRearX()-0.75;
 function FiringPinProtrusion() = 3/32;
 function FiringPinHeadLength() = 0.4;
-function FiringPinLength() = BushingHeight(BreechBushing())
+function FiringPinLength() = BreechFrontX()
                            + FiringPinProtrusion()
-                           + FiringPinHeadLength();
+                           - RodRadius(SearRod())
+                           -0.125;
+
 
 module FiringPin() {
   color("Red")
   render(convexity=4)
-  translate([BreechFrontX() - FiringPinLength()+FiringPinProtrusion(),0,0])
+  translate([FiringPinOffsetX(),0,0])
   rotate([0,90,0])
   union() {
 
@@ -39,10 +44,7 @@ module FiringPinGuide(od=ReceiverID()-0.01,
   height = ReceiverLength()
          - PipeThreadDepth(StockPipe())
          - BushingDepth(BreechBushing());
-
-  if (debug==true)
-  color("Red")
-  FiringPin();
+  echo("Firing Pin Guide Length", height);
 
   color("PaleTurquoise",0.5)
   render(convexity=4)
@@ -51,14 +53,13 @@ module FiringPinGuide(od=ReceiverID()-0.01,
     // Body
     translate([BreechRearX(),0,0])
     rotate([0,-90,0])
-    linear_extrude(height=height)
-    difference() {
-      circle(r=od/2,
-           $fn=Resolution(20,30));
+    cylinder(r=od/2, h=height, $fn=Resolution(20,30));
 
-      // Striker Hole
-      Rod2d(rod=StrikerRod(), clearance=RodClearanceLoose());
-    }
+    // Striker Hole
+    translate([-0.25,0,0])
+    translate([BreechRearX(),0,0])
+    rotate([0,-90,0])
+    Rod(rod=StrikerRod(), clearance=RodClearanceLoose(), length=height);
 
     // Tapered Striker Entrance
     translate([-height+BreechRearX()+RodDiameter(StrikerRod()),0,0])
@@ -77,22 +78,20 @@ module FiringPinGuide(od=ReceiverID()-0.01,
           RodDiameter(StrikerRod(), RodClearanceLoose()),
           od]);
 
-    // Sear Hole
-    mirror([0,0,1])
-    translate([0,0,-RodRadius(StrikerRod())*0.9])
-    Rod(rod=SearRod(), clearance=RodClearanceLoose(), length=(od/2)+(RodRadius(StrikerRod())*0.9));
-
-    // Firing Pin Retaining Pin Holes
-    for (i=[1,-1])
-    translate([BreechRearX()-0.3,0,
-               RodDiameter(FiringPinRod(),RodClearanceLoose())*i*1.23])
-    rotate([90,0,0])
-    Rod(FiringPinRod(), RodClearanceLoose(), length=1, center=true);
+    SearCutter();
+    
+    
+    translate([FiringPinOffsetX()+FiringPinHeadLength()-0.125,0,0])
+    FiringPinRetainer(gap=0.14);
 
     // Bottom Bolt
     SearBolts(cutter=true);
   }
 }
 
-//scale(25.4) rotate([0,90,0])
+FiringPin();
+SearBolts();
+FiringPinGuide();
+
+!scale(25.4) rotate([0,90,0])
 FiringPinGuide(debug=false);
