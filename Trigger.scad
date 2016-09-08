@@ -78,7 +78,7 @@ module SearCutter() {
   }
 }
 
-module VerticalSearPinTrack(width=GripWidth()-0.25) {
+module VerticalSearPinTrack(width=0.8) {
   rotate([90,0,0])
   linear_extrude(height=width, center=true)
   translate([-RodRadius(PivotRod(), RodClearanceLoose()),
@@ -293,5 +293,5 @@ module trigger_plater($t=0) {
 }
 
 
-!scale(25.4)
+*!scale(25.4)
 trigger_plater();
