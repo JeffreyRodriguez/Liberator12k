@@ -2,6 +2,7 @@
 //$t=0;
 include <Components/Animation.scad>;
 
+use <Components/Resolution.scad>;
 use <Components/Manifold.scad>;
 use <Components/Debug.scad>;
 use <Components/Units.scad>;
@@ -13,14 +14,18 @@ use <Vitamins/Spring.scad>;
 
 use <Grip Tabs.scad>;
 
-use <Reference.scad>;
+
+DEFAULT_SEAR_ROD = Spec_RodOneQuarterInch();
+DEFAULT_SEAR_PIN_ROD = Spec_RodOneEighthInch();
+function SearRod() = DEFAULT_SEAR_ROD;
+function SearPinRod() = DEFAULT_SEAR_PIN_ROD;
 
 //function TriggerSpring() = Spec_BicSoftFeelFinePenSpring();
 function TriggerSpring() = Spec_BicLighterThumbSpring();
 
-function SearPinOffsetZ() = GripOffsetZ()-0.33;
+function SearPinOffsetZ() = -0.33;
 function SearOverTravel() = -0.75;
-function SearLength() = ReceiverCenter()+0.6+0.9+SearOverTravel();
+function SearLength() = 1+0.6+0.9+SearOverTravel();
 
 function SearTravel() = 0.25; //RodDiameter(StrikerRod());
 
@@ -65,7 +70,7 @@ module Sear() {
   translate([0,0,SearPinOffsetZ()])
   rotate([90,0,0])
   color("Red")
-  %Rod(rod=PivotRod(), length=0.75, center=true);
+  %Rod(rod=SearPinRod(), length=0.75, center=true);
 }
 
 module SearCutter() {
@@ -81,15 +86,15 @@ module SearCutter() {
 module VerticalSearPinTrack(width=0.8) {
   rotate([90,0,0])
   linear_extrude(height=width, center=true)
-  translate([-RodRadius(PivotRod(), RodClearanceLoose()),
-             RodRadius(PivotRod(), RodClearanceLoose())+SearPinOffsetZ()])
+  translate([-RodRadius(SearPinRod(), RodClearanceLoose()),
+             RodRadius(SearPinRod(), RodClearanceLoose())+SearPinOffsetZ()])
   mirror([0,1])
-  square([RodDiameter(PivotRod(), RodClearanceLoose()),
-          RodDiameter(PivotRod(), RodClearanceLoose())+SearTravel()]);
+  square([RodDiameter(SearPinRod(), RodClearanceLoose()),
+          RodDiameter(SearPinRod(), RodClearanceLoose())+SearTravel()]);
 }
 
 module TriggerSearPinTrack() {
-  pinRadius   = RodRadius(PivotRod(), RodClearanceLoose());
+  pinRadius   = RodRadius(SearPinRod(), RodClearanceLoose());
   pinDiameter = pinRadius*2;
 
   translate([0,SearPinOffsetZ()+pinRadius])
@@ -129,7 +134,7 @@ module SearSupportTab() {
 
         // Sear Body
         translate([GripTabRearMaxX(),GripBottomZ()])
-        square([abs(GripTabRearMaxX())+0.3, GripOffsetZ()+abs(GripBottomZ())]);
+        square([abs(GripTabRearMaxX())+0.3, +abs(GripBottomZ())]);
 
         // Front Corner
         translate([0,GripFloorZ()])
@@ -153,7 +158,7 @@ module TriggerSideCutter(clearance=0) {
   difference() {
 
     // Trigger Body
-    translate([GripTabRearMinX(),GripOffsetZ()+ManifoldGap()])
+    translate([GripTabRearMinX(),ManifoldGap()])
     mirror([0,1])
     square([GripTabFrontMaxX()+abs(GripTabRearMinX()),2]);
 
@@ -171,7 +176,7 @@ module TriggerSideCutter(clearance=0) {
 
 module TriggerFingerCurve(fingerCurveRadius = 0.5, triggerFront) {
   translate([fingerCurveRadius+TriggerTravel()+RodRadius(SearRod())+triggerFront-0.2,
-             GripOffsetZ()-1.05])
+             -1.05])
   intersection() {
     circle(r=fingerCurveRadius, h=1, center=true, $fn=Resolution(16,30));
 
@@ -182,7 +187,7 @@ module TriggerFingerCurve(fingerCurveRadius = 0.5, triggerFront) {
 
 module Trigger2d() {
   triggerFront = 0.6;
-  triggerBack = 0.17;
+  triggerBack = abs(GripTabRearMaxX()+TriggerTravel());
   triggerLength = TriggerTravel()+RodDiameter(SearRod())+triggerFront+triggerBack;
   triggerHeight = 0.6+0.9-0.01;
 
@@ -190,13 +195,14 @@ module Trigger2d() {
     union() {
 
       // Trigger Body
-      translate([-triggerBack-RodRadius(SearRod()),GripOffsetZ()-0.01])
+      translate([-triggerBack-RodRadius(SearRod()),-0.01])
       mirror([0,1])
       square([triggerLength,triggerHeight-0.01]);
 
       // Trigger Rear Extension
-      translate([GripTabRearMinX()+TriggerTravel()+0.05,GripOffsetZ()-1.49])
-      square([abs(GripTabRearMinX()),0.72]);
+      translate([0,-1.49])
+      mirror([1,0])
+      square([abs(GripTabRearMinX())-TriggerTravel()-0.01,0.72]);
     }
 
     hull()
@@ -232,7 +238,7 @@ module Trigger(left=true, right=true) {
       Trigger2d();
 
       // Sear Slot (extended)
-      translate([GripTabRearMaxX(),-RodRadius(SearRod(), RodClearanceLoose()),GripOffsetZ()+ManifoldGap()])
+      translate([GripTabRearMaxX(),-RodRadius(SearRod(), RodClearanceLoose()),ManifoldGap()])
       mirror([0,0,1])
       cube([abs(GripTabRearMaxX())+TriggerTravel()+0.31,
             RodDiameter(SearRod(), RodClearanceLoose()), 2+ManifoldGap()]);
@@ -280,10 +286,10 @@ module trigger_plater($t=0) {
   rotate([90,0,0]) {
 
     // Plating note: The left-side plate should print right-side-down
-    translate([0,-RodRadius(SearRod(), RodClearanceLoose()),-GripOffsetZ()+2.7])
+    translate([0,-RodRadius(SearRod(), RodClearanceLoose()),2.7])
     Trigger(left=true, right=false);
 
-    translate([0,TriggerWidth()/2,-GripOffsetZ()-0.25])
+    translate([0,TriggerWidth()/2,-0.25])
     Trigger(left=false, right=true);
   }
 

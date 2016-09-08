@@ -2,24 +2,22 @@ use <Components/Manifold.scad>;
 use <Components/Units.scad>;
 
 use <Vitamins/Nuts And Bolts.scad>;
-use <Reference.scad>;
 
 
 function GripWidth() = 1;
 function GripFloor() = 0.6;
-function GripOffsetZ() = -ReceiverCenter();
-function GripFloorZ() = -GripFloor()+GripOffsetZ();
+function GripFloorZ() = -GripFloor();
 
 
 function GripTabWidth() = 1;
-function GripTabRearLength() = 1;
+
 function GripTabFrontLength() = 0.75;
-
-function GripTabRearMinX() = -ReceiverCenter()-WallFrameBack();
-function GripTabRearMaxX() = GripTabRearMinX()+GripTabRearLength();
-
-function GripTabFrontMaxX() = ReceiverCenter()+WallFrameFront();
+function GripTabFrontMaxX() = 1.6;
 function GripTabFrontMinX() = GripTabFrontMaxX()-GripTabFrontLength();
+
+function GripTabRearLength() = 0.75;
+function GripTabRearMinX() = -1.5;
+function GripTabRearMaxX() = GripTabRearMinX()+GripTabRearLength();
 
 
 function GripTabBoltRadius() = 0.0775;
@@ -32,7 +30,7 @@ function GripTabBoltZ(bolt) = bolt[2];
 function GripTabBoltsArray() = [
 
    // Front-Top
-   [BreechFrontX(),(GripWidth()/2)+0.125,GripFloorZ()+(GripFloor()/2)],
+   [GripTabFrontMaxX()+0.25,(GripWidth()/2)+0.125,GripFloorZ()+(GripFloor()/2)],
 
    // Back-Top
    [GripTabRearMinX()+(GripTabRearLength()/2), (GripWidth()/2)+0.125, GripFloorZ()+0.375]
@@ -60,7 +58,6 @@ module GripTab(length=1, width=0.5, height=0.75, extraTop=ManifoldGap(),
                tabHeight=0.25, tabWidth=GripTabWidth(), hole=false,
                clearance=0.007) {
   render()
-  translate([0,0,GripOffsetZ()])
   difference() {
 
     // Grip Tab

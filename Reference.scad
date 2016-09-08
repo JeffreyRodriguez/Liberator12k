@@ -1,4 +1,5 @@
 use <Components/Manifold.scad>;
+use <Components/Resolution.scad>;
 use <Reference Build Area.scad>;
 use <Vitamins/Pipe.scad>;
 use <Vitamins/Rod.scad>;
@@ -16,7 +17,6 @@ DEFAULT_ACTUATOR_ROD = Spec_RodFiveSixteenthInch(); // Revolver Setting
 DEFAULT_CYLINDER_ROD = Spec_RodFiveSixteenthInch(); // Revolver Setting
 DEFAULT_CHARGING_ROD = Spec_RodOneQuarterInch();
 DEFAULT_PIVOT_ROD = Spec_RodOneEighthInch();
-DEFAULT_SEAR_ROD = Spec_RodOneQuarterInch();
 DEFAULT_STRIKER_ROD = Spec_RodFiveSixteenthInch();
 DEFAULT_SAFETY_ROD = Spec_RodOneEighthInch();
 DEFAULT_RESET_ROD = Spec_RodOneEighthInch();
@@ -28,10 +28,6 @@ DEFAULT_BUTT = Spec_AnvilForgedSteel_TeeThreeQuarterInch();
 DEFAULT_BARREL_LENGTH = 18;
 DEFAULT_STOCK_LENGTH = 12;
 DEFAULT_NOZZLE_DIAMETER=0.8/25.4; // I'm using an 0.8mm Volcano clone.
-
-// Settings: Resolution 0 = low, 1 = high
-RESOLUTION = 1;
-function Resolution(low, high) = RESOLUTION == 0 ? low : high;
 
 // Settings: Nozzle
 function NozzleDiameter() = DEFAULT_NOZZLE_DIAMETER;
@@ -69,7 +65,6 @@ function ChargingRod() = DEFAULT_CHARGING_ROD;
 function PivotRod() = DEFAULT_PIVOT_ROD;
 function CylinderRod() = DEFAULT_CYLINDER_ROD;
 function StrikerRod() = DEFAULT_STRIKER_ROD;
-function SearRod() = DEFAULT_SEAR_ROD;
 function SafetyRod() = DEFAULT_SAFETY_ROD;
 function ResetRod() = DEFAULT_RESET_ROD;
 function TriggerRod() = DEFAULT_TRIGGER_ROD;
