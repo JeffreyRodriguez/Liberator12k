@@ -1,5 +1,3 @@
-include <Components.scad>;
-
 ar15_grip_POSITION_FRONT   = 0; // Default
 ar15_grip_POSITION_REAR    = 1;
   slot_width = .35;

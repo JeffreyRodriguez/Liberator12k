@@ -1,4 +1,3 @@
-include <Components.scad>;
 
 laser_od = 0.532 + 0.02;
 laser_button_width = 0.227 + 0.015;

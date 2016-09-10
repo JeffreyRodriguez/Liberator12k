@@ -1,8 +1,8 @@
 //$t = 0.99;
 
-include <Components/Animation.scad>;
-use <Components/Debug.scad>;
-use <Components/Manifold.scad>;
+include <Meta/Animation.scad>;
+use <Meta/Debug.scad>;
+use <Meta/Manifold.scad>;
 use <Components/Pipe Insert.scad>;
 
 use <Vitamins/Pipe.scad>;

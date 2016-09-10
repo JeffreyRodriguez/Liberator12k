@@ -1,9 +1,8 @@
-use <Components/Manifold.scad>;
-use <Components/Resolution.scad>;
-use <Reference Build Area.scad>;
+use <Meta/Manifold.scad>;
+use <Meta/Resolution.scad>;
+
 use <Vitamins/Pipe.scad>;
 use <Vitamins/Rod.scad>;
-use <Frame.scad>;
 
 //DEFAULT_BARREL = Spec_PointFiveSix9mmBarrel();
 //DEFAULT_BARREL = Spec_PipeThreeQuarterInch();
@@ -154,9 +153,6 @@ module Reference(barrel=BarrelPipe(),
   color("DimGray")
   Receiver(receiver);
 
-  color("SteelBlue")
-  Frame(clearance=undef);
-
   color("DimGray")
   Butt(receiver, stockLength);
 
@@ -192,5 +188,4 @@ module ReferenceTeeCutter(centerLength = ReceiverOD(), $fn=Resolution(12,30)) {
 
 scale([25.4, 25.4, 25.4]) {
   Reference();
-  *ReferenceBuildArea();
 }

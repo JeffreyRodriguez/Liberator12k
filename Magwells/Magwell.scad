@@ -1,5 +1,5 @@
-use <../Components/Manifold.scad>;
-use <../Components/Units.scad>;
+use <../Meta/Manifold.scad>;
+use <../Meta/Units.scad>;
 use <../Trigger Guard.scad>;
 use <../Reference.scad>;
 

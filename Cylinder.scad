@@ -1,5 +1,6 @@
 use <Vitamins/Rod.scad>;
 use <Vitamins/Pipe.scad>;
+use <Meta/Resolution.scad>;
 use <Reference.scad>;
 
 function CylinderWall() = 0.01;
@@ -8,12 +9,11 @@ function CylinderChamberOffset() = PipeOuterDiameter(BarrelPipe()) + CylinderWal
 shots = 6;
 function ZigZagDepth() = 3/16;
 zigzag_clearance = 0.00;
-function CylinderRadius() = CylinderChamberOffset() +PipeOuterRadius(BarrelPipe())
-                            + CylinderOuterWall() + ZigZagDepth();
 
-
-cylinder_radius = (PipeOuterDiameter(BarrelPipe())*1.5)+CylinderWall() + CylinderOuterWall() + ZigZagDepth();
-//cylinder_od   = cylinder_radius*2;
+cylinder_radius = (PipeOuterDiameter(BarrelPipe())*1.5)
+                  +CylinderWall() 
+                  +CylinderOuterWall()
+                  +ZigZagDepth();
 
 // Calculated: Revolver Cylinder
 zigzag_width = RodDiameter(ActuatorRod()) + (zigzag_clearance*2);

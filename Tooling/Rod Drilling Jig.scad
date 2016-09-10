@@ -1,4 +1,4 @@
-use <../Components/Debug.scad>;
+use <../Meta/Debug.scad>;
 use <../Vitamins/Nuts And Bolts.scad>;
 use <../Vitamins/Pipe.scad>;
 use <../Vitamins/Rod.scad>;

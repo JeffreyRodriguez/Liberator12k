@@ -1,5 +1,5 @@
-use <../Components/Debug.scad>;
-use <../Components/Units.scad>;
+use <../Meta/Debug.scad>;
+use <../Meta/Units.scad>;
 use <../Vitamins/Nuts And Bolts.scad>;
 use <../Vitamins/Pipe.scad>;
 use <../Vitamins/Rod.scad>;

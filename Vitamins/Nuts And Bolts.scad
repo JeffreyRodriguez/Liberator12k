@@ -1,5 +1,5 @@
-use <../Components/Units.scad>;
-use <../Components/Manifold.scad>;
+use <../Meta/Units.scad>;
+use <../Meta/Manifold.scad>;
 
 BoltDiameter    = 1;
 BoltCapDiameter = 2;

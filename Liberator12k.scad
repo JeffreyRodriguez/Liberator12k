@@ -1,10 +1,10 @@
-use <Components/Debug.scad>;
+use <Meta/Debug.scad>;
 
 use <Vitamins/Pipe.scad>;
 
 use <Reference.scad>;
 use <Frame.scad>;
-use <Tee Housing.scad>;
+use <Upper Receiver.scad>;
 
 use <Forend Tube.scad>;
 //use <Forend Box.scad>;
@@ -27,9 +27,9 @@ module Liberator12k() {
 
   Forend(debug=true);
   
-  TeeHousingFront();
+  UpperReceiverFront();
   
-  TeeHousingBack();
+  UpperReceiverBack();
   
   Charger(showRetainer=false);
 

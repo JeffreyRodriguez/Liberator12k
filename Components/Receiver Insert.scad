@@ -1,4 +1,5 @@
-use <../Components/Manifold.scad>;
+use <../Meta/Manifold.scad>;
+use <../Meta/Resolution.scad>;
 use <../Reference.scad>;
 use <../Vitamins/Pipe.scad>;
 use <../Vitamins/Rod.scad>;

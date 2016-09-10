@@ -90,8 +90,8 @@ function RodFn(rod=undef, $fn=undef) = ($fn == undef) ? lookup(RodFn, rod) : $fn
  * @param clearance The RodClearance to use.
  * @param $fn Override the RodFn value of the rod.
  */
-module Rod2d(rod=RodOneQuarterInch, clearance=undef, $fn=undef) {
-  circle(r=RodRadius(rod, clearance),
+module Rod2d(rod=RodOneQuarterInch, clearance=undef, extraWall=0, $fn=undef) {
+  circle(r=RodRadius(rod, clearance)+extraWall,
          $fn=RodFn(rod, $fn));
 }
 
