@@ -13,6 +13,7 @@ function CartridgeBulletDiameterMax(spec=undef) =  lookup(CartridgeBulletDiamete
 function CartridgeNeckDiameter(spec=undef)      =  lookup(CartridgeNeckDiameter,      spec);
 function CartridgeBaseDiameter(spec=undef)      =  lookup(CartridgeBaseDiameter,      spec);
 function CartridgeRimDiameter(spec=undef)       =  lookup(CartridgeRimDiameter,       spec);
+function CartridgeRimRadius(spec=undef)         =  lookup(CartridgeRimDiameter,       spec)/2;
 function CartridgeRimThickness(spec=undef)      =  lookup(CartridgeRimThickness,      spec);
 function CartridgeCaseLength(spec=undef)        =  lookup(CartridgeCaseLength,        spec);
 function CartridgeOverallLength(spec=undef)     =  lookup(CartridgeOverallLength,     spec);
