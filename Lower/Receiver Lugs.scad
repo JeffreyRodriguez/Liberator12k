@@ -5,8 +5,8 @@ use <../Vitamins/Nuts And Bolts.scad>;
 
 
 function GripWidth() = 1;
-function GripFloor() = 0.6;
-function GripFloorZ() = -GripFloor();
+function GripCeiling() = 0.6;
+function GripCeilingZ() = -GripCeiling();
 
 
 function ReceiverLugWidth() = 1;
@@ -14,10 +14,12 @@ function ReceiverLugWidth() = 1;
 function ReceiverLugFrontLength() = 0.75;
 function ReceiverLugFrontMaxX() = 1.6;
 function ReceiverLugFrontMinX() = ReceiverLugFrontMaxX()-ReceiverLugFrontLength();
+function ReceiverLugFrontZ() = -0.5;
 
 function ReceiverLugRearLength() = 0.75;
 function ReceiverLugRearMinX() = -1.625;
 function ReceiverLugRearMaxX() = ReceiverLugRearMinX()+ReceiverLugRearLength();
+function ReceiverLugRearZ() = -1;
 
 
 function ReceiverLugBoltRadius() = 0.0775;
@@ -30,10 +32,10 @@ function ReceiverLugBoltZ(bolt) = bolt[2];
 function ReceiverLugBoltsArray() = [
 
    // Front-Top
-   [ReceiverLugFrontMaxX()+0.25,(GripWidth()/2)+0.125,GripFloorZ()+(GripFloor()/2)],
+   [ReceiverLugFrontMaxX()+0.25,(GripWidth()/2)+0.125,GripCeilingZ()+(GripCeiling()/2)],
 
    // Back-Top
-   [ReceiverLugRearMinX()+(ReceiverLugRearLength()/2), (GripWidth()/2)+0.125, GripFloorZ()+0.375]
+   [ReceiverLugRearMinX()+(ReceiverLugRearLength()/2), (GripWidth()/2)+0.125, GripCeilingZ()+0.375]
 ];
 
 module ReceiverLugBoltHoles(boltSpec=Spec_BoltM3(), length=UnitsMetric(30),
@@ -57,6 +59,7 @@ module ReceiverLugBoltHoles(boltSpec=Spec_BoltM3(), length=UnitsMetric(30),
 module ReceiverLug(length=1, width=0.5, height=0.75, extraTop=ManifoldGap(),
                tabHeight=0.25, tabWidth=ReceiverLugWidth(), hole=false,
                clearance=0.007) {
+  color("Gold")
   render()
   difference() {
 
@@ -84,20 +87,18 @@ module ReceiverLug(length=1, width=0.5, height=0.75, extraTop=ManifoldGap(),
   }
 }
 
-module ReceiverLugRear(clearance=0, height=1, extraTop=ManifoldGap(), hole=true) {
-  color("LightGreen")
+module ReceiverLugRear(clearance=0, extraTop=ManifoldGap(), hole=true) {
   translate([ReceiverLugRearMinX(),0,0])
   ReceiverLug(length=ReceiverLugRearLength(),
-          height=height, extraTop=extraTop,
+          height=abs(ReceiverLugRearZ()), extraTop=extraTop,
           hole=hole, clearance=clearance);
 }
 
 module ReceiverLugFront(clearance=0, extraTop=ManifoldGap()) {
-  color("Orange")
   translate([ReceiverLugFrontMaxX(),0,0])
   mirror([1,0,0])
   ReceiverLug(length=ReceiverLugFrontLength(), tabWidth=1.25,
-          height=0.5, extraTop=extraTop,
+          height=abs(ReceiverLugFrontZ()), extraTop=extraTop,
          clearance=clearance);
 }
 

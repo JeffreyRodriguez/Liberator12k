@@ -1,17 +1,18 @@
-include <Meta/Animation.scad>;
+include <../../Meta/Animation.scad>;
 
-use <Components/Semicircle.scad>;
-use <Meta/Manifold.scad>;
-use <Meta/Debug.scad>;
-use <Components/Firing Pin Retainer.scad>;
+use <../../Components/Semicircle.scad>;
+use <../../Meta/Manifold.scad>;
+use <../../Meta/Resolution.scad>;
+use <../../Meta/Debug.scad>;
+use <../../Components/Firing Pin Retainer.scad>;
 
-use <Vitamins/Rod.scad>;
-use <Vitamins/Pipe.scad>;
+use <../../Vitamins/Rod.scad>;
+use <../../Vitamins/Pipe.scad>;
 
-use <Reference.scad>;
+use <../../Reference.scad>;
+use <../../Lower/Trigger.scad>;
 
 use <Sear Bolts.scad>;
-use <Trigger.scad>;
 
 function FiringPinOffsetX() = BreechRearX()-0.75;
 function FiringPinProtrusion() = 3/32;
@@ -20,7 +21,6 @@ function FiringPinLength() = BreechFrontX()
                            + FiringPinProtrusion()
                            - RodRadius(SearRod())
                            -0.125;
-
 
 module FiringPin() {
   color("Red")
@@ -40,11 +40,22 @@ module FiringPin() {
 }
 
 module FiringPinGuide(od=ReceiverID()-0.01,
-                    debug=true) {
+                    debug=false) {
   height = ReceiverLength()
          - PipeThreadDepth(StockPipe())
          - BushingDepth(BreechBushing());
   echo("Firing Pin Guide Length", height);
+
+  if (debug) {
+    color("SteelBlue")
+    translate([FiringPinOffsetX()+FiringPinHeadLength()-0.125,0,0])
+    FiringPinRetainerPins();
+
+
+    color("SteelBlue")
+    FiringPin();
+  }
+
 
   color("PaleTurquoise",0.5)
   render(convexity=4)
@@ -78,7 +89,8 @@ module FiringPinGuide(od=ReceiverID()-0.01,
           RodDiameter(StrikerRod(), RodClearanceLoose()),
           od]);
 
-    SearCutter();
+    translate([0,0,-ReceiverCenter()])
+    SearCutter(searLengthExtra=1);
 
 
     translate([FiringPinOffsetX()+FiringPinHeadLength()-0.125,0,0])
@@ -93,5 +105,5 @@ FiringPin();
 SearBolts();
 FiringPinGuide();
 
-!scale(25.4) rotate([0,90,0])
+*!scale(25.4) rotate([0,90,0])
 FiringPinGuide(debug=false);

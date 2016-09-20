@@ -35,10 +35,10 @@ function NozzleMultipleCeiling(metric) = metric + (metric % DEFAULT_NOZZLE_DIAME
 
 
 // Settings: Walls
-function WallTee()              = 0.1;
+function WallTee()              = 0.7;//0.1;
 function WallTriggerGuardRod()  = 0.35;
 function WallFrontGripRod()     = 0.25;
-function WallFrameRod()         = 0.2;
+function WallFrameRod()         = 0.25;
 function WallFrameFront()       = 0.215;
 function WallFrameBack()        = 0.3;
 function WallBarrelLug()        = 0.1;
@@ -46,11 +46,6 @@ function WallBarrelLug()        = 0.1;
 // Settings: Lengths
 function StockLength() = DEFAULT_STOCK_LENGTH;
 function BarrelLength() = DEFAULT_BARREL_LENGTH;
-
-// Settings: Offsets
-function OffsetFrameRod() = 0.4;
-function OffsetFrameBack() = 0.315 + WallFrameBack();
-function FrameRodMatchedAngle() = 45;
 
 // Settings: Vitamins
 function BarrelPipe() = DEFAULT_BARREL;
@@ -99,42 +94,47 @@ function StrikerDiameter(clearance) = RodDiameter(StrikerRod(), clearance);
 
 
 // Component Modules
-module Barrel(barrel=BarrelPipe(), barrelLength=DEFAULT_BARREL_LENGTH,
-              breech=BreechBushing(),
-              receiver=DEFAULT_RECEIVER) {
-  translate([(TeeWidth(receiver)/2) + BushingHeight(breech) - BushingDepth(breech),0,0])
+module Barrel(barrel=BarrelPipe(), barrelLength=DEFAULT_BARREL_LENGTH, hollow=false,
+              clearance=PipeClearanceLoose(), alpha=1) {
+  color("Silver", alpha)
+  translate([BreechFrontX(),0,0])
   rotate([0,90,0])
-  Pipe(barrel, length=barrelLength);
+  Pipe(pipe=barrel, clearance=clearance, hollow=hollow, length=barrelLength);
 
 }
 
-module Receiver(receiver=ReceiverTee()) {
-  translate([0,0,-TeeCenter(receiver)])
-  CrossFitting(receiver);
+module Receiver(alpha=1) {
+  color("DarkSlateGray", alpha)
+  translate([0,0,-ReceiverCenter()])
+  CrossFitting(ReceiverTee());
 }
 
 function ReceiverInnerWidth(receiver=ReceiverTee()) = TeeWidth(receiver) - (TeeRimWidth(receiver)*2);
 
-module Stock(receiver, stock, stockLength, hollow=true) {
-  translate([-TeeCenter(ReceiverTee())+PipeThreadDepth(stock),0,0])
+module Stock(stockLength, hollow=true, alpha=1) {
+  color("SlateGray", alpha)
+  render()
+  translate([-ReceiverCenter()+PipeThreadDepth(StockPipe()),0,0])
   rotate([0,-90,0])
-  Pipe(pipe=stock,
-  clearance=PipeClearanceLoose(),
-     length=stockLength+0.02,
-     hollow=hollow);
+  Pipe(pipe=StockPipe(),
+       clearance=PipeClearanceLoose(),
+       length=stockLength+0.02,
+       hollow=hollow);
 }
 
-module Butt(receiver, stockLength) {
-  translate([ButtTeeCenterX()+TeeCenter(ReceiverTee()),0,0])
+module Butt(alpha=0.25) {
+  color("DarkSlateGray", alpha)
+  translate([ButtTeeCenterX()+ReceiverCenter(),0,0])
   rotate([0,-90,0])
   Tee(ButtTee());
 }
 
-module Breech(receiver, breech) {
+module Breech() {
+  color("DarkSlateGray")
   translate([BreechFrontX(),0,0])
   rotate([0,-90,0])
   rotate([0,0,90])
-  Bushing(spec=breech);
+  Bushing(spec=BreechBushing());
 }
 
 module Reference(barrel=BarrelPipe(),
@@ -145,20 +145,13 @@ module Reference(barrel=BarrelPipe(),
             stockLength=StockLength(), hollowStock=false,
                    butt=Spec_TeeThreeQuarterInch()) {
 
-  Stock(receiver, stock, stockLength, hollow=hollowStock);
+  Stock(stockLength=stockLength, hollow=hollowStock);
 
-  color("Black")
-  Breech(receiver, breech);
+  Breech();
 
-  color("DimGray")
-  Receiver(receiver);
+  Receiver();
 
-  color("DimGray")
   Butt(receiver, stockLength);
-
-  color("Silver")
-  translate([ManifoldGap()+3,0,0])
-  Barrel(receiver=receiver, breech=breech, barrel=barrel, barrelLength=barrelLength);
 }
 
 

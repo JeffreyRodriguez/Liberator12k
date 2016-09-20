@@ -1,14 +1,14 @@
-use <Meta/Debug.scad>;
-use <Meta/Manifold.scad>;
-use <Components/Semicircle.scad>;
-use <Vitamins/Pipe.scad>;
-use <Vitamins/Rod.scad>;
+use <../../Meta/Debug.scad>;
+use <../../Meta/Manifold.scad>;
+use <../../Meta/Resolution.scad>;
+use <../../Components/Semicircle.scad>;
+use <../../Vitamins/Pipe.scad>;
+use <../../Vitamins/Rod.scad>;
 use <Frame.scad>;
-use <Reference.scad>;
-use <Reference Build Area.scad>;
-use <Ammo/Cartridges/Cartridge.scad>;
-use <Ammo/Cartridges/Cartridge_12GA.scad>;
-use <Ammo/Shell Base.scad>;
+use <../../Reference.scad>;
+use <../../Ammo/Cartridges/Cartridge.scad>;
+use <../../Ammo/Cartridges/Cartridge_12GA.scad>;
+use <../../Ammo/Shell Base.scad>;
 
 function ForendRearLength() = 1;
 function ForendFrontLength() = 0.6;
@@ -151,7 +151,7 @@ Forend(debug=true);
 
 
 // Plate
-!scale(25.4) {
+*!scale(25.4) {
 
   // Rear (user-end) Segment
   translate([2,1.5,1])
@@ -162,5 +162,4 @@ Forend(debug=true);
                     shaftCollar=false, shaftCollarThrough=true,
                     shells=true, shellHoles=false, shellSlots=false);
   
-  *ReferenceBuildArea();
 }

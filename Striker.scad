@@ -1,15 +1,21 @@
 //$t = 0.99;
 
 include <Meta/Animation.scad>;
+
 use <Meta/Debug.scad>;
 use <Meta/Manifold.scad>;
+use <Meta/Resolution.scad>;
 use <Components/Pipe Insert.scad>;
 
 use <Vitamins/Pipe.scad>;
 use <Vitamins/Rod.scad>;
-use <Reference.scad>;
 
-function StrikerTravel() = (TeeWidth(ReceiverTee())/2) - BushingDepth(BreechBushing())
+use <Reference.scad>;
+use <Lower/Trigger.scad>;
+
+
+function StrikerRodLength() = StockLength();
+function StrikerTravel() = ReceiverCenter() - BushingDepth(BreechBushing())
                            -0.4;
 function StrikerX() = -TeePipeEndOffset(ReceiverTee(),StockPipe())-(StrikerTravel()*(1+Animate(ANIMATION_STEP_CHARGE)));
 function StrikerInnerRadius() = RodRadius(StrikerRod(), RodClearanceLoose())*1.02;
@@ -54,18 +60,18 @@ module StrikerCollar(debug=true) {
 
     // Mock Striker Rod
     color("Orange")
-    translate([BreechRearX()-0.4,0,0])
+    translate([BreechRearX()-0.4-RodRadius(SearRod()),0,0])
     rotate([0,-90,0])
-    Rod(FrameRod(), length=12);
-
-    // Mock Spring
-    color("White", 0.5)
-    translate([StrikerX(),0,0])
-    rotate([0,-90,0])
-    cylinder(r=StrikerSpacerRadius(),
-              h=StrikerSpringLength(Animate(ANIMATION_STEP_STRIKER)),
-            $fn=10);
+    Rod(FrameRod(), length=StrikerRodLength());
   }
+
+  // Mock Spring
+  color("White", 0.5)
+  translate([StrikerX(),0,0])
+  rotate([0,-90,0])
+  cylinder(r=StrikerSpacerRadius(),
+            h=StrikerSpringLength(Animate(ANIMATION_STEP_STRIKER)),
+          $fn=10);
 
   color("Magenta")
   render(convexity=4)
@@ -167,6 +173,6 @@ module Striker(debug=true) {
 
   //rotate([90,0,0]) StrikerTop();
   //DebugHalf(dimension=50)
-  color("black", 0.25)
+  *color("black", 0.25)
   %Reference();
 }

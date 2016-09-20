@@ -1,19 +1,25 @@
 //$t=0.9999999999;
 //$t=0.75;
 //$t=0;
-include <Meta/Animation.scad>;
-use <Components/Semicircle.scad>;
-use <Components/Receiver Insert.scad>;
-use <Meta/Debug.scad>;
+include <../../Meta/Animation.scad>;
+use <../../Meta/Debug.scad>;
+use <../../Meta/Manifold.scad>;
+use <../../Meta/Resolution.scad>;
 
-use <Vitamins/Rod.scad>;
-use <Vitamins/Pipe.scad>;
-use <Vitamins/Spring.scad>;
+use <../../Components/Semicircle.scad>;
+use <../../Components/Receiver Insert.scad>;
+
+use <../../Vitamins/Rod.scad>;
+use <../../Vitamins/Pipe.scad>;
+use <../../Vitamins/Spring.scad>;
+
+use <../../Lower/Trigger.scad>;
+
+use <../../Striker.scad>;
+use <../../Reference.scad>;
 
 use <Frame.scad>;
-use <Striker.scad>;
-
-use <Reference.scad>;
+use <Cross Upper.scad>;
 
 
 chargingWheelOffsetX = -12/64;
@@ -113,33 +119,11 @@ module ChargingSupports() {
   color("Moccasin")
   render(convexity=4)
   difference() {
-    union() {
 
-      // Rim
-      translate([0,0,TeeCenter(ReceiverTee())])
-      intersection() {
-        union() {
-
-          // Insert
-          mirror([0,0,1])
-          ReceiverInsert();
-
-          translate([0,0,-ManifoldGap()])
-          TeeRim(ReceiverTee(), height=0.5, $fn=Resolution(20,40));
-        }
-
-        translate([0,0,-0.45])
-        rotate([0,45,0])
-        cube([2,4,2], center=true);
-
-        // Fit into retainer
-        translate([-ReceiverOR()-ManifoldGap(),
-                   -ReceiverIR(),
-                   -ReceiverLength()+0.5])
-        cube([ReceiverOD()+ManifoldGap(2), ReceiverID(), ReceiverLength()]);
-
-      }
-    }
+    // Insert
+    translate([0,0,ReceiverCenter()+ManifoldGap()])
+    mirror([0,0,1])
+    ReceiverInsert();
 
     // Firing Pin Guide Clearance
     rotate([0,90,0])
@@ -183,51 +167,41 @@ module ChargingSupports() {
 }
 
 module ChargerRetainer() {
-  color("LightSeaGreen")
+  color("DimGrey")
   render(convexity=4)
   difference() {
     hull() {
+      UpperReceiverCenter();
+      
       // Rails
       render(convexity=4)
       rotate([0,90,0])
-      linear_extrude(height=ReceiverLength()-(TeeRimWidth(ReceiverTee())*2),
+      linear_extrude(height=ReceiverID(),
                      center=true) {
         translate([-ReceiverLength()/2,-ReceiverOR()-WallFrameRod()])
         mirror([1,0])
-        square([0.75,ReceiverOD()+(WallFrameRod()*2)]);
-
-        FrameRodSleeves();
+        square([0.3,ReceiverOD()+(WallFrameRod()*2)]);
       }
     }
-
-    // Charging Support Cutout
-    translate([-ReceiverOR()-ManifoldGap(),
-               -ReceiverIR()-0.005,
-               TeeCenter(ReceiverTee())-ManifoldGap()])
-    cube([ReceiverOD()+ManifoldGap(2), ReceiverID()+0.01, 0.5+ManifoldGap()]);
-
+    
     ReferenceTeeCutter();
 
 
     translate([-0.001,0,0])
     Frame();
+    
+    CrossInserts(clearance=0.003);
 
     // Charging Rod Hole
-    translate([RodRadius(rod=SearRod())
-               +RodRadius(rod=ChargingRod()),0,0.1])
-    Rod(rod=ChargingRod(),
-     length=ReceiverLength(),
-     clearance=RodClearanceLoose(),
-        $fn=4);
-
-    translate([RodRadius(ChargingRod()),
+    translate([-ReceiverIR()-ManifoldGap(),
               -RodRadius(ChargingRod(), RodClearanceLoose()),
-               TeeCenter(ReceiverTee())])
-    cube([1, RodDiameter(ChargingRod(), RodClearanceLoose()), 1]);
+               ReceiverCenter()-ManifoldGap()])
+    cube([ReceiverID()+ManifoldGap(2), RodDiameter(ChargingRod(), RodClearanceLoose()), 1]);
+
   }
 }
 
-module Charger(showSupports=true, showRetainer=false) {
+module Charger(showSupports=true, showRetainer=true) {
   //!scale(25.4) rotate([90,0,0])
   ChargingWheel();
 
@@ -247,6 +221,7 @@ module Charger(showSupports=true, showRetainer=false) {
 
   // Charging Rod
   color("Orange")
+  render()
   translate([0,0,-0.75*Animate(ANIMATION_STEP_CHARGE)]) // TODO: Run the math on this, just roughed out for now.
   translate([RodDiameter(rod=ChargingRod()),0,(ReceiverLength()/2)-0.02])
   Rod(rod=ChargingRod(), length=0.75, $fn=Resolution(20,40));
@@ -255,3 +230,13 @@ module Charger(showSupports=true, showRetainer=false) {
 Striker();
 Charger();
 //Reference();
+
+
+*!scale(25.4) rotate([90,0,0])
+ChargingWheel();
+
+*!scale(25.4) rotate([180,0,0])
+ChargingSupports();
+
+!scale(25.4) rotate([0,-90,0])
+ChargerRetainer();

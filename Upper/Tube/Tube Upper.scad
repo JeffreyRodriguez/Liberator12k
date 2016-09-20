@@ -4,17 +4,11 @@ use <../../Vitamins/Square Tube.scad>;
 use <../../Lower/Receiver Lugs.scad>;
 use <../../Lower/Lower.scad>;
 
-module SquareTubeHousingTop(squareTube=Spec_SquareTubeOneInch(),
-                            tubeClearance=SquareTubeClearanceSnug()) {
-  
-  translate([0,-(SquareTubeOuter(squareTube)/2)])
-  Tubing2D(spec=squareTube, hollow=false);
-}
-
 //Spec_PipeThreeQuarterInchSch80()
 //Spec_PipeOneInch()
 //Spec_PipeOneInchSch80()
-module PipeHousingTop(pipeSpec=Spec_PipeOneInchSch80(), 
+//Spec_Tubing1628x1125()
+module PipeHousingTop(pipeSpec=Spec_Tubing1628x1125(), 
                       pipeClearance=PipeClearanceSnug()) {
   
   translate([PipeOuterRadius(pipeSpec),0])
@@ -50,24 +44,29 @@ module TubeHousing(housingFront=0.25, housingRear=0.25, wall=0.25,
       TubeHousing2d(wall, tabWidthTop)
       children();
     }
-      
-    ReceiverLug(length=tabLength, height=tabHeight, tabWidth=tabWidth,
-            extraTop=wall/2, hole=hole, clearance=0);
   }
 }
 
 module TubeHousingFront(extraFront=0.5) {
-  translate([ReceiverLugFrontMinX(),0,0])
-  TubeHousing(housingFront=extraFront, housingRear=0,
-              tabLength=ReceiverLugFrontLength(), tabWidth=1.5, tabHeight=0.5)
-  PipeHousingTop();
+  union() {
+    translate([ReceiverLugFrontMinX(),0,0])
+    TubeHousing(housingFront=extraFront, housingRear=0,
+                tabLength=ReceiverLugFrontLength(), tabWidth=1.5, tabHeight=0.5)
+      PipeHousingTop();
+    
+    ReceiverLugFront(extraHeight=ManifoldGap(2));
+  }
 }
 
 module TubeHousingRear(extraRear=0.5) {
-  translate([ReceiverLugRearMinX(),0,0])
-  TubeHousing(housingFront=0, housingRear=extraRear, hole=true,
-              tabLength=ReceiverLugRearLength(), tabHeight=0.75)
-  PipeHousingTop();
+  union() {
+    translate([ReceiverLugRearMinX(),0,0])
+    TubeHousing(housingFront=0, housingRear=extraRear, hole=true,
+                tabLength=ReceiverLugRearLength(), tabHeight=0.75)
+    PipeHousingTop();
+    
+    ReceiverLugRear();
+  }
 }
 
 module TubeHousingSearJig(wall=0.25, tabWidth=1) {

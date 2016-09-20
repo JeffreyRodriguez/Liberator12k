@@ -36,25 +36,23 @@ module SearGuide() {
   }
 }
 
-scale([25.4, 25.4, 25.4])
-{
-    translate([0,0,-ReceiverCenter()])
-  %Sear();
-  
-  //DebugHalf(3)
-  
-  SearGuide();
-  
-  *Reference();
 
-  *render()
-  rotate([90,0,0])
+module SearSupportTabWithBoltCutouts() {
+  render()
   difference() {
     SearSupportTab();
     
     for (i = [0,1])
     mirror([i,0,0])
-    translate([SearBoltOffset()-0.125,-0.5,-ReceiverCenter()-0.15])
+    translate([SearBoltOffset()-0.125,-0.5,-0.15])
     cube([0.25, 1, 0.3]);
   }
 }
+
+translate([0,0,-ReceiverCenter()])
+%Sear();
+
+SearGuide();
+
+!scale(25.4) rotate([90,0,0])
+SearSupportTabWithBoltCutouts();

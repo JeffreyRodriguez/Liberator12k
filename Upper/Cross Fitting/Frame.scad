@@ -1,8 +1,18 @@
+use <../../Meta/Manifold.scad>;
+use <../../Meta/Resolution.scad>;
+
 use <../../Vitamins/Pipe.scad>;
 use <../../Vitamins/Rod.scad>;
+use <../../Vitamins/Nuts And Bolts.scad>;
+
+use <../../Lower/Receiver Lugs.scad>;
 use <../../Reference.scad>;
 
+function FrameRodLength() = 11.75;
 function FrameNutHeight() = 0.28;
+function OffsetFrameRod() = 0.4;
+function OffsetFrameBack() = ReceiverLugRearMinX()-0.25;
+function FrameRodMatchedAngle() = 45;
 
 function FrameRodAngles() = [
                     FrameRodMatchedAngle(),
@@ -18,13 +28,12 @@ function FrameRodOffset()
            ;
 
 module Frame(clearance=RodClearanceLoose(),
-             rodLength=12,
              rodFnAngle=90) {
 
   render(convexity=4)
-  translate([-(TeeWidth(ReceiverTee())/2)-OffsetFrameBack(),0,0])
+  translate([OffsetFrameBack(),0,0])
   rotate([0,90,0])
-  linear_extrude(height=rodLength)
+  linear_extrude(height=FrameRodLength())
   FrameRods(clearance=clearance);
 }
 
@@ -50,32 +59,48 @@ module FrameNuts(nutHeight=FrameNutHeight(), nutRadius=0.3) {
   }
 }
 
-module FrameHoleSupport(height=FrameNutHeight()+0.001, extraRadius=0.01) {
-  for (angle = FrameRodAngles())
-  rotate([angle,0,0])
-  translate([0, 0,FrameRodOffset()])
-  rotate([0,-90,0])
-  cylinder(r=RodRadius(FrameRod(), clearance=RodClearanceLoose())+extraRadius, h=height, $fn=RodFn(FrameRod()));
-}
+module Quadrail2d(rod=Spec_RodFiveSixteenthInch(), rodClearance=RodClearanceLoose(),
+                  wallTee=WallTee(), wallRod=WallFrameRod(), clearFloor=false, clearCeiling=false) {
+
+  difference() {
+    for (angle = FrameRodAngles())
+    hull() {
+
+      // Tee Rim
+      circle(r=ReceiverOR() + wallTee, $fn=Resolution(20,80));
+
+      // Rod
+      rotate([0,0,angle])
+      translate([-FrameRodOffset(ReceiverTee()), 0])
+      Rod2d(rod=FrameRod(), extraWall=wallRod, clearance=rodClearance, $fn=Resolution(20,50));
+    }
 
 
-module FrameRodSleeves(radiusExtra=0, rodFnAngle=90) {
+    // Clear the floor for the lower receiver
+    if (clearFloor)
+    translate([ReceiverCenter()-0.005,-2])
+    square([1,4]);
 
-  for (angle = FrameRodAngles())
-  rotate([0,0,angle])
-  translate([-FrameRodOffset(ReceiverTee()), 0])
-  rotate([0,0,-angle+rodFnAngle]) {
-    circle(r=RodRadius(FrameRod())+WallFrameRod()+radiusExtra,
-           $fn=RodFn(FrameRod())*Resolution(1,3));
-    
-    children();
+    // Clear the ceiling
+    if (clearCeiling)
+    mirror([1,0])
+    translate([ReceiverCenter()-0.005,-2])
+    square([1,4]);
   }
 }
 
-
 scale([25.4, 25.4, 25.4]) {
-  %Reference();
-  *Frame();
-  FrameNuts();
-  #FrameHoleSupport();
+
+  render()
+  difference() {
+
+    rotate([0,90,0])
+    linear_extrude(height=1)
+    Quadrail2d();
+
+    #Frame();
+
+    translate([-ManifoldGap(),0,0])
+    #FrameNuts();
+  }
 }

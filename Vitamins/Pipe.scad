@@ -46,10 +46,9 @@ function PipeInnerCircumference(pipe, clearance, clearanceSign=1) =
            3.14*PipeInnerDiameter(pipe, clearance, clearanceSign);
 
 
-module Pipe2d(pipe, clearance=PipeClearanceSnug(), clearanceSign=1, hollow=false, $fn=undef) {
-  echo("PipeOuterRadius,PipeClearance: ", PipeOuterRadius(pipe=pipe, clearance=clearance), clearance);
+module Pipe2d(pipe, clearance=PipeClearanceSnug(), clearanceSign=1, hollow=false, extraRadius=0, $fn=undef) {
   difference() {
-    circle(r=PipeOuterRadius(pipe=pipe, clearance=clearance, clearanceSign=clearanceSign),
+    circle(r=PipeOuterRadius(pipe=pipe, clearance=clearance, clearanceSign=clearanceSign)+extraRadius,
          $fn=PipeFn(pipe, $fn));
 
     if (hollow)
@@ -161,6 +160,19 @@ function Spec_TubingOnePointOneTwoFive() = [
   [PipeClearanceLoose,  0.022],
   [PipeFn,              50],
   [PipeWeightPerUnit,   42]
+];
+
+// 1.628x0.1.125" DOM Tubing
+function Spec_Tubing1628x1125() = [
+  [PipeInnerDiameter,   1.125],
+  [PipeOuterDiameter,   1.628],
+  [PipeTaperedDiameter, 0.0],
+  [PipeThreadLength,    0.0],
+  [PipeThreadDepth,     0.0],
+  [PipeClearanceSnug,   0.020],
+  [PipeClearanceLoose,  0.022],
+  [PipeFn,              40],
+  [PipeWeightPerUnit,   0]
 ];
 
 // 0.75x0.410" DOM Tubing (Just guessing)
@@ -399,11 +411,11 @@ BushingCapHeight = 5;
 
 // 3/4" Bushing
 function Spec_BushingThreeQuarterInch() = [
-  [BushingHeight,    0.955],
+  [BushingHeight,    1.165],
   [BushingDiameter,  1.06], // Measured 1.05, adding clearance
   [BushingDepth,     0.48],
   [BushingCapWidth,  1.227],
-  [BushingCapHeight, 0.215]
+  [BushingCapHeight, 0.425]
 ];
 
 function BushingHeight(bushing)    = lookup(BushingHeight, bushing);
