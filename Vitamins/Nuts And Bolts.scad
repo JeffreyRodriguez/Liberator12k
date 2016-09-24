@@ -107,13 +107,14 @@ module Bolt(bolt=Spec_BoltM3(), length=1, clearance=false, cap=true, capRadiusEx
 
 }
 
-module NutAndBolt(bolt=Spec_BoltM3(), boltLength=1,
+module NutAndBolt(bolt=Spec_BoltM3(), boltLength=1, boltLengthExtra=0,
                   cap=true, capRadiusExtra=0, capHeightExtra=0,
                   nutHeightExtra=0, nutBackset=0, clearance=true) {
   union() {
 
     // Bolt Body
-    Bolt(bolt=bolt, length=boltLength,
+    translate([0,0,-boltLengthExtra])
+    Bolt(bolt=bolt, length=boltLength+boltLengthExtra,
          cap=cap, capHeightExtra=capHeightExtra, capRadiusExtra=capRadiusExtra,
          clearance=clearance);
 
