@@ -37,41 +37,40 @@ module Frame(clearance=RodClearanceLoose(),
   FrameRods(clearance=clearance);
 }
 
+module FrameIterator() {
+  for (angle = FrameRodAngles())
+  rotate(angle)
+  translate([-FrameRodOffset(ReceiverTee()), 0])
+  rotate(-angle)
+  children();
+}
 
 module FrameRods(clearance=RodClearanceLoose(),
-                 squared=false,
                  rodFnAngle=90) {
 
-  for (angle = FrameRodAngles())
-  rotate([0,0,angle])
-  translate([-FrameRodOffset(ReceiverTee()), 0])
-  rotate([0,0,-angle+rodFnAngle])
+  FrameIterator()
+  rotate(rodFnAngle)
   Rod2d(rod=FrameRod(), clearance=clearance);
 }
 
 module FrameNuts(nutHeight=FrameNutHeight(), nutRadius=0.3) {
-  for (angle = FrameRodAngles())
-  rotate([angle,0,0])
-  translate([0, 0,FrameRodOffset()])
-  rotate([0,90,0]) {
-    cylinder(r=nutRadius, h=nutHeight, $fn=6);
-    children();
-  }
+  rotate([0,90,0])
+  FrameIterator()
+  cylinder(r=nutRadius, h=nutHeight, $fn=6);
 }
 
 module Quadrail2d(rod=Spec_RodFiveSixteenthInch(), rodClearance=RodClearanceLoose(),
-                  wallTee=WallTee(), wallRod=WallFrameRod(), clearFloor=false, clearCeiling=false) {
+                  wallTee=WallTee(), wallRod=WallFrameRod(),
+                  clearFloor=false, clearCeiling=false) {
 
   difference() {
-    for (angle = FrameRodAngles())
     hull() {
 
-      // Tee Rim
+      // Cross-fitting walls
       circle(r=ReceiverOR() + wallTee, $fn=Resolution(20,80));
-
-      // Rod
-      rotate([0,0,angle])
-      translate([-FrameRodOffset(ReceiverTee()), 0])
+      
+      // Frame Walls
+      FrameIterator()
       Rod2d(rod=FrameRod(), extraWall=wallRod, clearance=rodClearance, $fn=Resolution(20,50));
     }
 
@@ -89,9 +88,25 @@ module Quadrail2d(rod=Spec_RodFiveSixteenthInch(), rodClearance=RodClearanceLoos
   }
 }
 
-scale([25.4, 25.4, 25.4]) {
-
+module CarriageBoltPlate(height=0.2, rodClearance=undef) {
   render()
+  linear_extrude(height=height)
+  difference() {
+    Quadrail2d(clearFloor=true, clearCeiling=true);
+
+    FrameIterator()
+    rotate(45)
+    square(RodDiameter(FrameRod(), rodClearance), center=true);
+    
+    Pipe2d(pipe=StockPipe(), clearance=PipeClearanceLoose());
+  }
+}
+
+scale(25.4) {
+  
+  CarriageBoltPlate();
+
+  *render()
   difference() {
 
     rotate([0,90,0])
