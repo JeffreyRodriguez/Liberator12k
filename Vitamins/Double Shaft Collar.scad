@@ -6,7 +6,7 @@ use <../Vitamins/Pipe.scad>;
 use <../Vitamins/Rod.scad>;
 
 module DoubleShaftCollar2d(od=1.875+0.02,
-                           boltWidth=1.857+0.04, boltLength=0.37, boltOffset=0.2) {
+                           boltWidth=1.857+0.04, boltLength=0.34, boltOffset=0.22) {
   outsideRadius = od/2;
   
   union() {
@@ -46,5 +46,5 @@ difference() {
   DoubleShaftCollar();
   
   translate([-ManifoldGap(),0,0])
-  DoubleShaftCollar(extend=1);
+  DoubleShaftCollar(extend=0);
 }

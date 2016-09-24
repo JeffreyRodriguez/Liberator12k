@@ -1,15 +1,15 @@
 //$t=0.8;
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Resolution.scad>;
-use <../../Vitamins/Pipe.scad>;
-use <../../Vitamins/Rod.scad>;
-use <../../Vitamins/Double Shaft Collar.scad>;
-use <../../Lower/Receiver Lugs.scad>;
-use <../../Lower/Lower.scad>;
-use <../../Lower/Trigger.scad>;
-use <../../Reference.scad>;
-use <Frame.scad>;
-use <Cross Upper.scad>;
+use <../../../Meta/Manifold.scad>;
+use <../../../Meta/Resolution.scad>;
+use <../../../Vitamins/Pipe.scad>;
+use <../../../Vitamins/Rod.scad>;
+use <../../../Vitamins/Double Shaft Collar.scad>;
+use <../../../Lower/Receiver Lugs.scad>;
+use <../../../Lower/Lower.scad>;
+use <../../../Lower/Trigger.scad>;
+use <../../../Reference.scad>;
+use <../Frame.scad>;
+use <../Cross Upper.scad>;
 
 module ForendAlignmentLugs(barrelSpec=BarrelPipe(), wall=WallTee(),
                            alignmentSide=0.25, clearance=0) {
@@ -97,12 +97,6 @@ module ForendBaseplate(length=0.5) {
   }
 }
 
-translate([0,0,-ReceiverCenter()]) {
-  Trigger();
-  Lower();
-}
-
-
 UpperReceiverFront();
 UpperReceiverBack();
 
@@ -129,5 +123,5 @@ render()
 ForendFront();
 
 // Plated Forend Baseplate
-!scale(25.4) rotate([0,90,0]) translate([-LowerWallFront(),0,0])
+*!scale(25.4) rotate([0,90,0]) translate([-LowerWallFront(),0,0])
 ForendBaseplate();

@@ -68,7 +68,7 @@ module Quadrail2d(rod=Spec_RodFiveSixteenthInch(), rodClearance=RodClearanceLoos
 
       // Cross-fitting walls
       circle(r=ReceiverOR() + wallTee, $fn=Resolution(20,80));
-      
+
       // Frame Walls
       FrameIterator()
       Rod2d(rod=FrameRod(), extraWall=wallRod, clearance=rodClearance, $fn=Resolution(20,50));
@@ -88,34 +88,16 @@ module Quadrail2d(rod=Spec_RodFiveSixteenthInch(), rodClearance=RodClearanceLoos
   }
 }
 
-module CarriageBoltPlate(height=0.2, rodClearance=undef) {
-  render()
-  linear_extrude(height=height)
-  difference() {
-    Quadrail2d(clearFloor=true, clearCeiling=true);
+scale(25.4)
+render()
+difference() {
 
-    FrameIterator()
-    rotate(45)
-    square(RodDiameter(FrameRod(), rodClearance), center=true);
-    
-    Pipe2d(pipe=StockPipe(), clearance=PipeClearanceLoose());
-  }
-}
+  rotate([0,90,0])
+  linear_extrude(height=1)
+  Quadrail2d();
 
-scale(25.4) {
-  
-  CarriageBoltPlate();
+  #Frame();
 
-  *render()
-  difference() {
-
-    rotate([0,90,0])
-    linear_extrude(height=1)
-    Quadrail2d();
-
-    #Frame();
-
-    translate([-ManifoldGap(),0,0])
-    #FrameNuts();
-  }
+  translate([-ManifoldGap(),0,0])
+  #FrameNuts();
 }

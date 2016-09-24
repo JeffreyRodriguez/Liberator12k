@@ -1,25 +1,18 @@
-$t=0;
-include <../../Meta/Animation.scad>;
+include <../../../Meta/Animation.scad>;
 
-use <../../Meta/Debug.scad>;
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Resolution.scad>;
+use <../../../Meta/Debug.scad>;
+use <../../../Meta/Manifold.scad>;
+use <../../../Meta/Resolution.scad>;
 
-use <../../Vitamins/Pipe.scad>;
-use <../../Vitamins/Rod.scad>;
-use <../../Vitamins/Double Shaft Collar.scad>;
+use <../../../Vitamins/Pipe.scad>;
+use <../../../Vitamins/Rod.scad>;
+use <../../../Vitamins/Double Shaft Collar.scad>;
 
-use <../../Lower/Receiver Lugs.scad>;
-use <../../Lower/Lower.scad>;
-use <../../Lower/Trigger.scad>;
+use <../../../Reference.scad>;
 
-use <../../Reference.scad>;
+use <../Frame.scad>;
+use <../Cross Upper.scad>;
 
-use <../../Striker.scad>;
-
-use <Charger.scad>;
-use <Frame.scad>;
-use <Cross Upper.scad>;
 use <Forend.scad>;
 
 function BarrelLugAngle() = -35;
@@ -85,17 +78,9 @@ module BarrelLugTrack(length=1, open=true) {
 }
 
 {
-  translate([0,0,-ReceiverCenter()]) {
-    Lower(showTrigger=true);
-  }
-
   color("SteelBlue")
   Frame();
   
-  Striker();
-  Charger();
-
-
   UpperReceiverFront();
   
   UpperReceiverBack();
@@ -125,7 +110,6 @@ module BarrelLugTrack(length=1, open=true) {
     
   }
 
-  color("Black", 0.25)
   Reference();
 }
 
@@ -149,7 +133,7 @@ rotate([0,90,0])
 LuggedForend();
 
 // Lugs
-!scale(25.4)
+*!scale(25.4)
 translate([0,0,1])
 rotate([0,90,0])
 BarrelLugs(length=1);
