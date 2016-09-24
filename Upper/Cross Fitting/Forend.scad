@@ -106,7 +106,7 @@ translate([0,0,-ReceiverCenter()]) {
 UpperReceiverFront();
 UpperReceiverBack();
 
-translate([ReceiverLugFrontMaxX()+0.5+ManifoldGap(),0,0])
+translate([ReceiverLugFrontMaxX()+LowerWallFront()+ManifoldGap(),0,0])
 ForendFront();
 
 translate([ReceiverLugFrontMaxX(),0,0])
@@ -128,7 +128,6 @@ rotate([0,-90,0])
 render()
 ForendFront();
 
-
 // Plated Forend Baseplate
-*!scale(25.4) rotate([0,90,0]) translate([-LowerWallFront(),0,0])
+!scale(25.4) rotate([0,90,0]) translate([-LowerWallFront(),0,0])
 ForendBaseplate();

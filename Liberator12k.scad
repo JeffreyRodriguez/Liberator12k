@@ -56,7 +56,7 @@ module Liberator12k() {
   
   Striker();
   Charger(showRetainer=false);
-  //ChargerRetainer();
+  //ChargerSideplates();
   translate([0,0,-ManifoldGap()])
   SearGuide();
   SearBolts();
@@ -65,7 +65,7 @@ module Liberator12k() {
   
   UpperReceiverFront();
   UpperReceiverBack();
-  ChargerRetainer();
+  ChargerSideplates();
   
   CrossInserts();
 
@@ -109,5 +109,5 @@ module Liberator12k() {
   ForendSlotted(slotAngles=[90,270]);
 }
 
-//rotate([0,0,360*$t])
+//rotate([0,0,360*$t])s
 Liberator12k();

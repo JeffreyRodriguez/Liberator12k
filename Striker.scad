@@ -1,12 +1,15 @@
-//$t = 0.99;
+//$t = 0;
 
 include <Meta/Animation.scad>;
 
 use <Meta/Debug.scad>;
 use <Meta/Manifold.scad>;
 use <Meta/Resolution.scad>;
+use <Meta/Units.scad>;
+
 use <Components/Pipe Insert.scad>;
 
+use <Vitamins/Nuts And Bolts.scad>;
 use <Vitamins/Pipe.scad>;
 use <Vitamins/Rod.scad>;
 
@@ -16,8 +19,9 @@ use <Lower/Trigger.scad>;
 
 function StrikerRodLength() = StockLength();
 function StrikerTravel() = ReceiverCenter() - BushingDepth(BreechBushing())
-                           -0.4;
-function StrikerX() = -TeePipeEndOffset(ReceiverTee(),StockPipe())-(StrikerTravel()*(1+Animate(ANIMATION_STEP_CHARGE)));
+                           -0.4+RodRadius(SearRod());
+function StrikerX() = -TeePipeEndOffset(ReceiverTee(),StockPipe())
+                      -(StrikerTravel()*(1+Animate(ANIMATION_STEP_CHARGE)));
 function StrikerInnerRadius() = RodRadius(StrikerRod(), RodClearanceLoose())*1.02;
 function StrikerSpacerRadius() = 0.34;
 function StrikerSpacerLength() = 3;
@@ -28,51 +32,48 @@ function StrikerSpringLength(extension=0) = 3
                                           - StrikerSpringPreloadLength()
                                           + (StrikerTravel()*extension);
 
+function StrikerBoltSpec() = Spec_BoltM3();
+
+module StrikerBolt(cutter=true) {
+  clearance = cutter ? 1 : 0;
+  
+  translate([StrikerX()-(StrikerCollarLength()/2),0,
+             -BoltNutHeight(StrikerBoltSpec())])
+  NutAndBolt(bolt=StrikerBoltSpec(), boltLength=UnitsMetric(5),
+             capHeightExtra=clearance, nutHeightExtra=RodRadius(StrikerRod()),
+             boltLengthExtra=clearance);
+}
+
 module StrikerTop() {
   color("Violet")
   render(convexity=4)
-  translate([StrikerX()-StrikerCollarLength(),0,0])
-  rotate([0,90,0])
-  linear_extrude(height=StrikerCollarLength()
-                       +TeePipeEndOffset(ReceiverTee(),StockPipe())
-                       +ReceiverIR()
-                       -RodDiameter(SearRod()))
-  intersection() {
+  difference() {
+    translate([StrikerX()-StrikerCollarLength(),0,0])
+    rotate([0,90,0])
+    linear_extrude(height=StrikerCollarLength()
+                         +TeePipeEndOffset(ReceiverTee(),StockPipe())
+                         +ReceiverIR()
+                         -RodDiameter(SearRod()))
+    intersection() {
 
-    // The square we'll actually be using
-    rotate(90)
-    translate([-RodRadius(StrikerRod()),RodRadius(StrikerRod())*0.7])
-    square([RodDiameter(StrikerRod()),ReceiverIR()]);
+      // The square we'll actually be using
+      rotate(90)
+      translate([-RodRadius(StrikerRod()),RodRadius(StrikerRod())*0.7])
+      square([RodDiameter(StrikerRod()),ReceiverIR()]);
 
-    // Intersected with a donut shape
-    rotate(90)
-    difference() {
-      circle(r=StrikerSpacerRadius(), $fn=20);
-      Rod2d(StrikerRod());
+      // Intersected with a donut shape
+      rotate(90)
+      difference() {
+        circle(r=StrikerSpacerRadius(), $fn=20);
+        Rod2d(StrikerRod());
+      }
     }
+    
+    StrikerBolt(cutter=true);
   }
 }
 
-module StrikerCollar(debug=true) {
-
-  if (debug==true)
-  translate([-StrikerTravel()*(1+Animate(ANIMATION_STEP_CHARGE)),0,0]) {
-
-    // Mock Striker Rod
-    color("Orange")
-    translate([BreechRearX()-0.4-RodRadius(SearRod()),0,0])
-    rotate([0,-90,0])
-    Rod(FrameRod(), length=StrikerRodLength());
-  }
-
-  // Mock Spring
-  color("White", 0.5)
-  translate([StrikerX(),0,0])
-  rotate([0,-90,0])
-  cylinder(r=StrikerSpacerRadius(),
-            h=StrikerSpringLength(Animate(ANIMATION_STEP_STRIKER)),
-          $fn=10);
-
+module StrikerCollar(debug=false) {
   color("Magenta")
   render(convexity=4)
   difference() {
@@ -87,11 +88,13 @@ module StrikerCollar(debug=true) {
 
       // Cap Hole
       translate([0,-RodRadius(StrikerRod(), clearance=RodClearanceLoose())])
-      square(RodDiameter(StrikerRod(), clearance=RodClearanceLoose()));
+      square(StrikerSpacerRadius());
 
       // Rod Hole
       Rod2d(StrikerRod(), RodClearanceLoose());
     }
+    
+    StrikerBolt(cutter=true);
   }
 }
 
@@ -140,7 +143,26 @@ module StrikerFoot() {
   }
 }
 
-module Striker(debug=true) {
+module Striker(debug=false) {
+
+  if (debug==true) {
+    translate([-StrikerTravel()*(1+Animate(ANIMATION_STEP_CHARGE)),0,0]) {
+
+      // Mock Striker Rod
+      color("Orange")
+      translate([BreechRearX()-0.4-RodRadius(SearRod()),0,0])
+      rotate([0,-90,0])
+      Rod(FrameRod(), length=StrikerRodLength());
+    }
+
+    // Mock Spring
+    color("White", 0.5)
+    translate([StrikerX(),0,0])
+    rotate([0,-90,0])
+    cylinder(r=StrikerSpacerRadius(),
+              h=StrikerSpringLength(Animate(ANIMATION_STEP_STRIKER)),
+            $fn=10);
+  }
 
   // Striker Collar and Top
   translate([StrikerTravel()*(Animate(ANIMATION_STEP_STRIKER)),0,0]) {
@@ -167,9 +189,11 @@ module Striker(debug=true) {
 }
 
 //!scale(25.4) rotate([90,0,0]) StrikerTop();
+*!scale(25.4) rotate([0,90,0]) StrikerCollar();
 
 {
-  Striker();
+  Striker(debug=true);
+  StrikerBolt(cutter=false);
 
   //rotate([90,0,0]) StrikerTop();
   //DebugHalf(dimension=50)

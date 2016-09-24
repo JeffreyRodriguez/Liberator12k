@@ -81,7 +81,7 @@ module FiringPinGuide(od=ReceiverID()-0.01,
             $fn=RodFn(StrikerRod()));
 
     // Scoop out a path for the charging wheel
-    translate([BreechRearX()-FiringPinHeadLength(),
+    translate([ReceiverIR()-0.07,
                -RodRadius(StrikerRod(), RodClearanceLoose()),
                0])
     mirror([1,0,0])
