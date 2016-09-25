@@ -54,7 +54,7 @@ module CrossUpperCenter() {
     translate([-0.001,0,0])
     Frame();
 
-    CrossInserts(clearance=0.003);
+    CrossInserts(clearance=0.005);
 
     // Tee
     ReferenceTeeCutter();
@@ -81,7 +81,7 @@ module CrossUpperFront($fn=40) {
 
     Breech();
 
-    CrossInserts(clearance=0.003);
+    CrossInserts(clearance=0.005);
 
     // Tee
     ReferenceTeeCutter();
