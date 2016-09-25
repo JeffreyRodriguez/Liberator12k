@@ -119,13 +119,6 @@ module UpperReceiverBack(receiver=ReceiverTee(),
   }
 }
 
-translate([0,0,-ReceiverCenter()]) {
-  Trigger();
-  Lower();
-}
-
-
-
 UpperReceiverFront();
 UpperReceiverBack();
 Frame();
@@ -143,9 +136,3 @@ UpperReceiverFront();
 translate([0,0,ReceiverCenter()+WallFrameBack()])
 rotate([0,-90,0])
 UpperReceiverBack();
-
-// Plated Center
-*!scale(25.4)
-translate([0,0,ReceiverIR()])
-rotate([0,-90,0])
-UpperReceiverCenter();

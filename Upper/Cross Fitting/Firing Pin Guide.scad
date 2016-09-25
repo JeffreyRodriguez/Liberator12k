@@ -106,4 +106,4 @@ SearBolts();
 FiringPinGuide();
 
 *!scale(25.4) rotate([0,90,0])
-FiringPinGuide(debug=false);
+FiringPinGuide();
