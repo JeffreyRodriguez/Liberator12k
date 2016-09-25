@@ -97,8 +97,8 @@ module ForendBaseplate(length=0.5) {
   }
 }
 
-UpperReceiverFront();
-UpperReceiverBack();
+CrossUpperFront();
+CrossUpperBack();
 
 translate([ReceiverLugFrontMaxX()+LowerWallFront()+ManifoldGap(),0,0])
 ForendFront();

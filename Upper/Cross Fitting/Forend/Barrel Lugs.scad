@@ -81,9 +81,9 @@ module BarrelLugTrack(length=1, open=true) {
   color("SteelBlue")
   Frame();
   
-  UpperReceiverFront();
+  CrossUpperFront();
   
-  UpperReceiverBack();
+  CrossUpperBack();
 
    {
     

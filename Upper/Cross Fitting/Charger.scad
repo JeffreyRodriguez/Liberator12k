@@ -139,7 +139,7 @@ module ChargerSideplates() {
   render(convexity=4)
   difference() {
     hull() {
-      UpperReceiverCenter();
+      CrossUpperCenter();
       
       // Rails
       render(convexity=4)

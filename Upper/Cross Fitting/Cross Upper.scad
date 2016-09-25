@@ -42,7 +42,7 @@ module CrossInserts(width=0.25, height=0.75, slotHeight=1.25,
   }
 }
 
-module UpperReceiverCenter() {
+module CrossUpperCenter() {
   color("DimGrey")
   render(convexity=4)
   difference() {
@@ -61,7 +61,7 @@ module UpperReceiverCenter() {
   }
 }
 
-module UpperReceiverFront($fn=40) {
+module CrossUpperFront($fn=40) {
   color("Gold")
   render(convexity=4)
   difference() {
@@ -88,7 +88,7 @@ module UpperReceiverFront($fn=40) {
   }
 }
 
-module UpperReceiverBack(receiver=ReceiverTee(),
+module CrossUpperBack(receiver=ReceiverTee(),
                         stock=Spec_PipeThreeQuarterInch(),
                         spin=Spec_RodFiveSixteenthInch(),
                         rod=Spec_RodFiveSixteenthInch(),
@@ -119,8 +119,8 @@ module UpperReceiverBack(receiver=ReceiverTee(),
   }
 }
 
-UpperReceiverFront();
-UpperReceiverBack();
+CrossUpperFront();
+CrossUpperBack();
 Frame();
 Reference();
 
@@ -129,10 +129,10 @@ Reference();
 *!scale(25.4)
 translate([0,0,ReceiverCenter()+WallFrameFront()])
 rotate([0,90,0])
-UpperReceiverFront();
+CrossUpperFront();
 
 // Plated Back
 *!scale(25.4)
 translate([0,0,ReceiverCenter()+WallFrameBack()])
 rotate([0,-90,0])
-UpperReceiverBack();
+CrossUpperBack();

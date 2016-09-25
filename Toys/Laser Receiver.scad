@@ -81,7 +81,7 @@ module TLP_Receiver_Front(wall = 0.25) {
   render(convexity=4)
   difference() {
     hull() {
-    UpperReceiverFrontPin(ReceiverTee(), length=GripWidth()+0.4,
+    CrossUpperFrontPin(ReceiverTee(), length=GripWidth()+0.4,
                        extraRadius=wall*0.9,
                        $fn=Resolution(20,60))
 
@@ -103,7 +103,7 @@ module TLP_Receiver_Front(wall = 0.25) {
 
     TLP_Receiver_Cutouts();
 
-    UpperReceiverPins(receiver=ReceiverTee());
+    CrossUpperPins(receiver=ReceiverTee());
 
     // Laser body
     translate([0,0,0])
@@ -146,7 +146,7 @@ module TLP_Receiver_Rear(wall = 0.25) {
   difference() {
 
     hull() {
-      UpperReceiverRearPin(ReceiverTee(), length=GripWidth()+0.4,
+      CrossUpperRearPin(ReceiverTee(), length=GripWidth()+0.4,
                         extraRadius=wall*0.9,
                         $fn=Resolution(20,60)) {
 
@@ -172,7 +172,7 @@ module TLP_Receiver_Rear(wall = 0.25) {
 
     TLP_Receiver_Cutouts();
 
-    UpperReceiverPins(receiver=ReceiverTee());
+    CrossUpperPins(receiver=ReceiverTee());
 
     // Laser body
     rotate([0,90,0])

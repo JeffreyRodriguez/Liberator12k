@@ -37,8 +37,8 @@ translate([0,0,-ReceiverCenter()]) {
 }
 
 
-UpperReceiverFront();
-UpperReceiverBack();
+CrossUpperFront();
+CrossUpperBack();
 
 translate([3,0,0])
 ForendCollar();

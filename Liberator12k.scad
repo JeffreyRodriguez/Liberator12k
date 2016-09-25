@@ -63,8 +63,8 @@ module Liberator12k() {
 
   FiringPinGuide(debug=true);
 
-  UpperReceiverFront();
-  UpperReceiverBack();
+  CrossUpperFront();
+  CrossUpperBack();
   ChargerSideplates();
 
   CrossInserts();
