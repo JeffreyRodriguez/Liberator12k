@@ -1,5 +1,6 @@
 use <../Meta/Units.scad>;
 use <../Meta/Manifold.scad>;
+use <../Components/Teardrop.scad>;
 
 BoltDiameter    = 1;
 BoltCapDiameter = 2;
@@ -86,16 +87,24 @@ function BoltFn(bolt, $fn=undef) = ($fn == undef) ? lookup(BoltFn, bolt) : $fn;
  * @param clearance Add clearance for holes with 'true'
  * @param $fn Override the BoltFn value of the bolt.
  */
-module Bolt2d(bolt=Spec_BoltM3(), clearance=false, $fn=undef) {
-  circle(r=BoltRadius(bolt, clearance),
-         $fn=BoltFn(bolt, $fn));
+module Bolt2d(bolt=Spec_BoltM3(), clearance=false, teardrop=false, teardropAngle=0, $fn=undef) {
+  if (teardrop) {
+    Teardrop(r=BoltRadius(bolt, clearance), rotation=teardropAngle,
+             $fn=BoltFn(bolt, $fn));
+  } else {
+    circle(r=BoltRadius(bolt, clearance),
+           $fn=BoltFn(bolt, $fn));
+  }
 }
 
 
-module Bolt(bolt=Spec_BoltM3(), length=1, clearance=false, cap=true, capRadiusExtra=0, capHeightExtra=0, center=false, $fn=undef) {
+module Bolt(bolt=Spec_BoltM3(), length=1,
+            clearance=false, teardrop=false, teardropAngle=0,
+            cap=true, capRadiusExtra=0, capHeightExtra=0,
+            center=false, $fn=undef) {
   union() {
     linear_extrude(height=length, center=center)
-    Bolt2d(bolt, clearance, $fn=$fn);
+    Bolt2d(bolt, clearance, teardrop=teardrop, teardropAngle=teardropAngle, $fn=$fn);
 
     // Cap
     if (cap)
@@ -103,20 +112,19 @@ module Bolt(bolt=Spec_BoltM3(), length=1, clearance=false, cap=true, capRadiusEx
     cylinder(r=BoltCapRadius(bolt, clearance)+capRadiusExtra,
              h=BoltCapHeight(bolt)+capHeightExtra, $fn=BoltFn(bolt)*2);
   }
-
-
 }
 
 module NutAndBolt(bolt=Spec_BoltM3(), boltLength=1, boltLengthExtra=0,
                   cap=true, capRadiusExtra=0, capHeightExtra=0,
-                  nutHeightExtra=0, nutBackset=0, clearance=true) {
+                  nutHeightExtra=0, nutBackset=0,
+                  clearance=true, teardrop=false, teardropAngle=0) {
   union() {
 
     // Bolt Body
     translate([0,0,-boltLengthExtra])
     Bolt(bolt=bolt, length=boltLength+boltLengthExtra,
          cap=cap, capHeightExtra=capHeightExtra, capRadiusExtra=capRadiusExtra,
-         clearance=clearance);
+         clearance=clearance, teardrop=teardrop, teardropAngle=teardropAngle);
 
     // Nut
     translate([0,0,-nutHeightExtra+nutBackset])

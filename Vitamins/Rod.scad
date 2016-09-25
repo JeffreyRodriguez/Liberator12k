@@ -36,68 +36,62 @@ function RodClearanceLoose() = RodClearanceLoose;
  * @param clearance The RodClearance to use.
  * @param $fn Override the RodFn value of the rod.
  */
-module Rod2d(rod=RodOneQuarterInch, clearance=undef, extraWall=0, $fn=undef) {
+module Rod2d(rod=Spec_RodOneQuarterInch(), clearance=undef, extraWall=0, $fn=undef) {
   circle(r=RodRadius(rod, clearance)+extraWall,
          $fn=RodFn(rod, $fn));
 }
 
 
-module Rod(rod=RodOneQuarterInch, length=1, clearance=undef, center=false, $fn=undef) {
+module Rod(rod=Spec_RodOneQuarterInch(), length=1, clearance=undef, center=false, $fn=undef) {
   render(convexity=1)
   linear_extrude(height=length, center=center)
   Rod2d(rod, clearance, $fn=$fn);
 }
 
-RodBicNozzle = [
+function Spec_RodBicNozzle() = [
   [RodDiameter, 0.093],
   [RodRadius, 0.093/2],
   [RodClearanceSnug, 0.04],
   [RodClearanceLoose, 0.06],
   [RodFn, 5]
 ];
-function Spec_RodBicNozzle() = RodBicNozzle;
 
-RodBicFlint = [
+function Spec_RodBicFlint() = [
   [RodDiameter, 0.0985],
   [RodRadius, 0.0985/2],
   [RodClearanceSnug, 0.04],
   [RodClearanceLoose, 0.06],
   [RodFn, 5]
 ];
-function Spec_RodBicFlint() = RodBicFlint;
 
-RodOneEighthInch = [
+function Spec_RodOneEighthInch() = [
   [RodDiameter, 1/8],
   [RodRadius, 1/8/2],
   [RodClearanceSnug, 0.01],
   [RodClearanceLoose, 0.02],
   [RodFn, 8]
 ];
-function Spec_RodOneEighthInch() = RodOneEighthInch;
 
-RodOneQuarterInch = [
+function Spec_RodOneQuarterInch() = [
   [RodDiameter,       1/4],
   [RodRadius,         1/4/2],
   [RodClearanceSnug,  0.027],
   [RodClearanceLoose, 0.035],
   [RodFn,             12]
 ];
-function Spec_RodOneQuarterInch() = RodOneQuarterInch;
 
-RodFiveSixteenthInch = [
+function Spec_RodFiveSixteenthInch() = [
   [RodDiameter,       5/16],
   [RodRadius,         5/16/2],
   [RodClearanceSnug,  0.022],
   [RodClearanceLoose, 0.025],
   [RodFn,             16]
 ];
-function Spec_RodFiveSixteenthInch() = RodFiveSixteenthInch;
 
-RodThreeQuarterInchTubing = [
+function Spec_RodThreeQuarterInchTubing() = [
   [RodDiameter,       0.758],
   [RodRadius,         0.758/2],
   [RodClearanceSnug,  0.023],
   [RodClearanceLoose, 0.029],
   [RodFn,             30]
 ];
-function Spec_RodThreeQuarterInchTubing() = RodThreeQuarterInchTubing;

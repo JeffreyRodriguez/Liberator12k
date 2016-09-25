@@ -3,13 +3,18 @@ include <../Meta/Animation.scad>;
 use <../Meta/Manifold.scad>;
 use <../Meta/Debug.scad>;
 
+use <../Components/Teardrop.scad>;
+
 use <../Vitamins/Rod.scad>;
 use <../Vitamins/Pipe.scad>;
 
 function FiringPinSpringLength() = 0.3;
 function FiringPinHeadLength() = 0.4;
 
-module FiringPinRetainerPins(rodSpec=Spec_RodOneEighthInch(), gap=0.15, retainingPinLength=1) {
+module FiringPinRetainerPins(rodSpec=Spec_RodOneEighthInch(),
+                             gap=0.15, teardrop=false,
+                             retainingPinLength=1) {
+
   color("SteelBlue")
   render()
   translate([FiringPinSpringLength()+(FiringPinHeadLength()/2),0,0])
@@ -18,19 +23,29 @@ module FiringPinRetainerPins(rodSpec=Spec_RodOneEighthInch(), gap=0.15, retainin
   for (i=[1,-1])
   translate([gap*i,0,0])
   rotate([90,0,0])
-  Rod(rodSpec, RodClearanceLoose(), length=retainingPinLength, center=true);
+  if (teardrop) {
+    linear_extrude(height=retainingPinLength, center=true)
+    Teardrop(r=RodRadius(rodSpec, RodClearanceLoose()), rotation=90);
+  } else {
+    Rod(rod=rodSpec,
+        clearance=RodClearanceLoose(),
+        length=retainingPinLength,
+        center=true);
+  }
+
 
 }
 
-module FiringPinRetainer(rimfireOffset=0.11) {
+module FiringPinRetainer(rimfireOffset=0.11, teardrop=false) {
 
   // Retaining Pins
-  FiringPinRetainerPins();
+  FiringPinRetainerPins(teardrop=teardrop);
 
   translate([FiringPinSpringLength()+(FiringPinHeadLength()/2),0,0])
   rotate([0,-90,0]) {
 
     // Firing Pin Hole
+    color("SteelBlue")
     translate([0,0,ManifoldGap()])
     mirror([0,0,1])
     cylinder(r=0.085, h=3, $fn=8);
@@ -40,8 +55,4 @@ module FiringPinRetainer(rimfireOffset=0.11) {
   }
 }
 
-FiringPinRetainer();
-
-!scale(25.4) render() {
-  FiringPinRetainer();
-}
+FiringPinRetainer(teardrop=true);

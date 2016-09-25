@@ -1,10 +1,12 @@
 include <../../Meta/Animation.scad>;
 
+use <../../Components/Firing Pin Retainer.scad>;
 use <../../Components/Semicircle.scad>;
+use <../../Components/Teardrop.scad>;
+
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Resolution.scad>;
 use <../../Meta/Debug.scad>;
-use <../../Components/Firing Pin Retainer.scad>;
 
 use <../../Vitamins/Rod.scad>;
 use <../../Vitamins/Pipe.scad>;
@@ -81,20 +83,22 @@ module FiringPinGuide(od=ReceiverID()-0.01,
             $fn=RodFn(StrikerRod()));
 
     // Scoop out a path for the charging wheel
-    translate([ReceiverIR()-0.07,
+    translate([BreechRearX()+ManifoldGap(),
                -RodRadius(StrikerRod(), RodClearanceLoose()),
                0])
     mirror([1,0,0])
-    cube([height,
+    cube([height+ManifoldGap(2),
           RodDiameter(StrikerRod(), RodClearanceLoose()),
           od]);
 
     translate([0,0,-ReceiverCenter()])
-    SearCutter(searLengthExtra=1);
+    linear_extrude(height=ReceiverCenter())
+    Teardrop(r=RodRadius(SearRod(), RodClearanceLoose()),
+             rotation=180);
 
 
     translate([FiringPinOffsetX()+FiringPinHeadLength()-0.125,0,0])
-    FiringPinRetainer(gap=0.14);
+    FiringPinRetainer(gap=0.14, teardrop=true);
 
     // Bottom Bolt
     SearBolts(cutter=true);
@@ -102,7 +106,7 @@ module FiringPinGuide(od=ReceiverID()-0.01,
 }
 
 FiringPin();
-SearBolts();
+SearBolts(cutter=false);
 FiringPinGuide();
 
 *!scale(25.4) rotate([0,90,0])
