@@ -78,6 +78,9 @@ function BreechRearX(receiver=ReceiverTee(),
                               breech=BreechBushing()) = (TeeWidth(receiver)/2)
                                                        - BushingDepth(breech);
 
+
+
+
 // Shorthand: Measurements
 function ReceiverLength() = TeeWidth(ReceiverTee());
 function ReceiverCenter() = TeeCenter(ReceiverTee());
@@ -85,6 +88,7 @@ function ReceiverIR()     = TeeInnerRadius(ReceiverTee());
 function ReceiverID()     = TeeInnerDiameter(ReceiverTee());
 function ReceiverOR()     = TeeRimRadius(ReceiverTee());
 function ReceiverOD()     = TeeRimDiameter(ReceiverTee());
+function ReceiverInnerWidth(receiver=ReceiverTee()) = TeeWidth(receiver) - (TeeRimWidth(receiver)*2);
 
 function SearRadius(clearance)   = RodRadius(SearRod(), clearance);
 function SearDiameter(clearance) = RodDiameter(SearRod(), clearance);
@@ -108,9 +112,6 @@ module Receiver(alpha=1) {
   translate([0,0,-ReceiverCenter()])
   CrossFitting(ReceiverTee());
 }
-
-function ReceiverInnerWidth(receiver=ReceiverTee()) = TeeWidth(receiver) - (TeeRimWidth(receiver)*2);
-
 module Stock(stockLength, hollow=true, alpha=1) {
   color("SlateGray", alpha)
   render()
@@ -155,11 +156,11 @@ module Reference(barrel=BarrelPipe(),
 }
 
 
-module ReferenceTeeCutter(centerLength = ReceiverOD(), $fn=Resolution(12,30)) {
+module ReferenceTeeCutter(topLength = ReceiverCenter(), $fn=Resolution(12,30)) {
 
   // Vertical
   translate([0,0,-TeeCenter(ReceiverTee())])
-  TeeRim(ReceiverTee(), height=TeeWidth(ReceiverTee()));
+  TeeRim(ReceiverTee(), height=TeeWidth(ReceiverTee())+topLength);
 
   // Horizontal
   translate([-TeeWidth(ReceiverTee())/2,0,0])

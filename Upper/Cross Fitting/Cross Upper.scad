@@ -57,7 +57,7 @@ module CrossUpperCenter() {
     CrossInserts(clearance=0.005);
 
     // Tee
-    ReferenceTeeCutter();
+    ReferenceTeeCutter(topLength=1);
   }
 }
 
@@ -101,12 +101,25 @@ module CrossUpperBack(receiver=ReceiverTee(),
 
       translate([ReceiverLugRearMinX(),0,0])
       rotate([0,90,0])
-      linear_extrude(height=abs(ReceiverLugRearMinX())-ReceiverIR())
-      CrossFittingQuadrail2d();
+      hull() {
+        linear_extrude(height=abs(ReceiverLugRearMinX())-ReceiverIR())
+        CrossFittingQuadrail2d();
+        
+        
+        // Protect the charging handle
+        linear_extrude(height=0.25)
+        translate([0,-ReceiverOR()])
+        mirror([1,0])
+        square([ReceiverCenter()+0.5,ReceiverOD()]);
+      }
 
       translate([0,0,-ReceiverCenter()])
       ReceiverLugRear(extraTop=1);
     }
+    
+    // Charging handle cutout
+    translate([-ReceiverLength(), -RodRadius(StrikerRod())*1.1, ReceiverCenter()])
+    cube([ReceiverLength(), RodDiameter(StrikerRod())*1.1, 0.75]);
 
     Stock(ReceiverTee(), StockPipe());
 

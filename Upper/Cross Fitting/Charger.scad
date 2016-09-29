@@ -1,5 +1,5 @@
 //$t=0.9999999999;
-//$t=0.36;
+//$t=0.25;
 //$t=0.395;
 //$t=0.455;
 //$t=0.75;
@@ -18,12 +18,12 @@ use <../../Vitamins/Spring.scad>;
 
 use <../../Lower/Trigger.scad>;
 
-use <../../Striker.scad>;
 use <../../Reference.scad>;
 
 use <Frame.scad>;
 use <Cross Upper.scad>;
 use <Firing Pin Guide.scad>;
+use <Striker.scad>;
 
 chargingWheelOffsetX  = -3/16;
 chargingWheelOffsetZ  = ReceiverIR()+(ReceiverCenter()/2);
@@ -49,30 +49,30 @@ module ChargingHandle(angle=35) {
   rotate([0,(angle*Animate(ANIMATION_STEP_CHARGE)),0])
   rotate([90,0,0]) {
     union() {
-      
+
       linear_extrude(height=RodDiameter(StrikerRod())*0.9, center=true) {
-        
+
         // Charging handle body
         translate([-chargingWheelOffsetX,ReceiverCenter()-chargingWheelOffsetZ])
         mirror([1,0])
         square([ReceiverCenter()+1, 0.75-chargingSpindleRadius]);
-        
-        
-        
+
+
+
         difference() {
           hull() {
-        
+
             // Stick out the top, so the charging handle can be attached
             translate([-chargingWheelOffsetX,0])
             mirror([1,0])
             square([abs(chargingWheelOffsetX)+chargingSpindleRadius, 0.75]);
-            
+
             // Charger supporting infill
             rotate(70+angle)
             semidonut(major=(ReceiverIR()+abs(chargingWheelOffsetX))*2,
                       minor=chargingSpindleRadius,
                       angle=80+angle, $fn=Resolution(20,40));
-            
+
             // StrikerTop interface
             rotate(-51)
             semicircle(od=(chargingWheelRadius*2),
@@ -140,7 +140,7 @@ module ChargerSideplates() {
   difference() {
     hull() {
       CrossUpperCenter();
-      
+
       // Rails
       render(convexity=4)
       rotate([0,90,0])
@@ -151,13 +151,13 @@ module ChargerSideplates() {
         square([0.3,ReceiverOD()+(WallFrameRod()*2)]);
       }
     }
-    
+
     ReferenceTeeCutter();
 
 
     translate([-0.001,0,0])
     Frame();
-    
+
     CrossInserts(clearance=0.003);
 
     // Charging Rod Hole
@@ -170,37 +170,26 @@ module ChargerSideplates() {
 }
 
 module Charger(showSupports=true, showRetainer=true) {
-  
-  //!scale(25.4) rotate([90,0,0])
   ChargingHandle();
 
-  //!scale(25.4) rotate([180,0,0])
-  //DebugHalf(4)
   if (showSupports==true)
   ChargingInsert();
 
-  //!scale(25.4) rotate([0,-90,0])
-  //DebugHalf(5)
   if (showRetainer==true)
   ChargerSideplates();
-
-  translate([1,0,(ReceiverLength()/2)])
-  rotate([90,0,0])
-  *cylinder(r=0.5, h=0.22, center=true, $fn=20);
 }
 
 Charger(showSupports=true, showRetainer=false);
 
-//color("Silver", 0.5)
-*Striker(debug=true);
+Striker();
 
 translate([0,0,-ReceiverCenter()])
-*TriggerGroup();
+TriggerGroup();
 
-*FiringPinGuide(debug=true);
+FiringPinGuide(debug=true);
 
 color("black", 0.25)
-*Reference();
+Reference();
 
 
 *!scale(25.4) rotate([90,0,0])

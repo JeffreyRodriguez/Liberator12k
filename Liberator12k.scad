@@ -15,17 +15,16 @@ use <Lower/Lower.scad>;
 
 use <Reference.scad>;
 
-use <Striker.scad>;
 
 use <Upper/Cross Fitting/Charger.scad>;
 use <Upper/Cross Fitting/Cross Upper.scad>;
 use <Upper/Cross Fitting/Frame.scad>;
 use <Upper/Cross Fitting/Forend/Barrel Lugs.scad>;
 use <Upper/Cross Fitting/Forend/Forend.scad>;
-use <Upper/Cross Fitting/Forend/Forend Slotted.scad>;
-use <Upper/Cross Fitting/Sear Bolts.scad>;
 use <Upper/Cross Fitting/Firing Pin Guide.scad>;
+use <Upper/Cross Fitting/Sear Bolts.scad>;
 use <Upper/Cross Fitting/Sear Guide.scad>;
+use <Upper/Cross Fitting/Striker.scad>;
 
 //echo($vpr);
 
@@ -71,18 +70,13 @@ module Liberator12k() {
 
   Reference();
 
-
-  translate([ReceiverLugFrontMaxX(),0,0])
   ForendBaseplate();
-
-  color("DimGrey")
-  translate([LowerMaxX()+ForendSlottedLength(),0,0])
-  Forend(length=ForendUnslottedLength());
-
-  translate([LowerMaxX()+ForendSlottedLength()+ForendSlottedLength()+BarrelLugLength()+0.05+ForendUnslottedLength(),0,0])
+  LuggedForend();
+  ForendMidsection();
+  ForendSlotted(slotAngles=[90,270]);
   ForendFront();
 
-  translate([LowerMaxX()+ForendUnslottedLength()+ForendSlottedLength(),0]) {
+  translate([LowerMaxX()+ForendMidsectionLength()+ForendSlottedLength(),0]) {
 
     translate([ForendSlottedLength()*Animate(ANIMATION_STEP_UNLOAD),0,0])
     translate([-ForendSlottedLength()*Animate(ANIMATION_STEP_LOAD),0,0]) {
@@ -100,13 +94,7 @@ module Liberator12k() {
       translate([-(LowerMaxX()+0.25)-ForendSlottedLength(),0,0])
       Barrel(hollow=true);
     }
-
-    translate([ManifoldGap(),0,0])
-    LuggedForend(lengthClosed=ForendSlottedLength());
   }
-
-  color("Gold")
-  ForendSlotted(slotAngles=[90,270]);
 }
 
 //rotate([0,0,360*$t])s

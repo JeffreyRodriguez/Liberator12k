@@ -105,9 +105,9 @@ module FiringPinGuide(od=ReceiverID()-0.01,
   }
 }
 
-FiringPin();
+//FiringPin();
 SearBolts(cutter=false);
-FiringPinGuide();
+FiringPinGuide(debug=true);
 
 *!scale(25.4) rotate([0,90,0])
 FiringPinGuide();

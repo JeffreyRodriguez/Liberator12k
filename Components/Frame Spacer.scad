@@ -1,7 +1,7 @@
 use <Vitamins/Pipe.scad>;
 use <Vitamins/Rod.scad>;
 use <Reference.scad>;
-use <Striker.scad>;
+use <Upper/Cross Fitting/Striker.scad>;
 
 module FrameSpacer2D(od=StrikerRadius()*2, rod=FrameRod(), $fn=Resolution(12, 30)) {
   difference() {

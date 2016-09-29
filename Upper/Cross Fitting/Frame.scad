@@ -8,8 +8,8 @@ use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Lower/Receiver Lugs.scad>;
 use <../../Reference.scad>;
 
-function FrameRodLength() = 11.75;
-function FrameNutHeight() = 0.28;
+function FrameRodLength() = 12;
+function FrameNutHeight() = 0.25;
 function OffsetFrameRod() = 0.4;
 function OffsetFrameBack() = ReceiverLugRearMinX()-0.25;
 function FrameRodMatchedAngle() = 45;
