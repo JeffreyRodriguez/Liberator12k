@@ -100,17 +100,26 @@ module Bolt2d(bolt=Spec_BoltM3(), clearance=false, teardrop=false, teardropAngle
 
 module Bolt(bolt=Spec_BoltM3(), length=1,
             clearance=false, teardrop=false, teardropAngle=0,
-            cap=true, capRadiusExtra=0, capHeightExtra=0,
-            center=false, $fn=undef) {
+            cap=true, capRadiusExtra=0, capHeightExtra=0, $fn=undef) {
   union() {
-    linear_extrude(height=length, center=center)
+    linear_extrude(height=length)
     Bolt2d(bolt, clearance, teardrop=teardrop, teardropAngle=teardropAngle, $fn=$fn);
 
     // Cap
-    if (cap)
-    translate([0,0,length-ManifoldGap()])
-    cylinder(r=BoltCapRadius(bolt, clearance)+capRadiusExtra,
-             h=BoltCapHeight(bolt)+capHeightExtra, $fn=BoltFn(bolt)*2);
+    if (cap) {
+      if (teardrop) {
+        translate([0,0,length-ManifoldGap()])
+        linear_extrude(height=BoltCapHeight(bolt)+capHeightExtra)
+        Teardrop(r=BoltCapRadius(bolt, clearance)+capRadiusExtra,
+                 rotation=teardropAngle,
+                 $fn=BoltFn(bolt, $fn)*2);
+      } else {
+        translate([0,0,length-ManifoldGap()])
+        cylinder(r=BoltCapRadius(bolt, clearance)+capRadiusExtra,
+                h=BoltCapHeight(bolt)+capHeightExtra, $fn=BoltFn(bolt, $fn)*2);
+
+      }
+    }
   }
 }
 
