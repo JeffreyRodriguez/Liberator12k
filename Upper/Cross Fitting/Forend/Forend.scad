@@ -228,7 +228,7 @@ rotate([0,90,0])
 LuggedForend();
 
 // Plated Far Forend
-!scale(25.4)
+*!scale(25.4)
 rotate([0,-90,0])
 translate([-ForendFrontMinX(),0,0])
 ForendFront();
