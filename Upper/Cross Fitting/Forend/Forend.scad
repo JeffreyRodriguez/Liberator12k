@@ -18,13 +18,12 @@ use <../../../Lower/Trigger.scad>;
 use <../../../Reference.scad>;
 
 use <../Frame.scad>;
-use <../Cross Upper.scad>;
 
 use <Barrel Lugs.scad>;
 
 function ForendSlottedLength() = 3;
 function ForendMidsectionLength() = 0.375;
-function ForendFrontLength() = 0.5;
+function ForendFrontLength() = 0.4;
 
 function ForendFrontMinX() = LowerMaxX()
                              +ForendSlottedLength()
@@ -55,13 +54,17 @@ module Forend(barrelSpec=BarrelPipe(), length=1,
   difference() {
     union() {
       rotate([0,90,0])
-      linear_extrude(height=length)
-      Quadrail2d(wall=wall, wallTee=wallTee,
-                 clearCeiling=clearCeiling, clearFloor=clearFloor);
+      linear_extrude(height=length) {
+        Quadrail2d(wall=wall, wallTee=wallTee,
+                   clearCeiling=clearCeiling, clearFloor=clearFloor);
+        
+        children();
+      }
 
       if (alignmentLugs)
       translate([length,0,0])
       ForendAlignmentLugs(barrelSpec=barrelSpec, wall=wall);
+      
     }
 
     if (alignmentSlots)
@@ -80,7 +83,7 @@ module ForendBaseplate(length=LowerWallFront()) {
   translate([LowerMaxX()-LowerWallFront(),0,0])
   difference() {
     hull() {
-      Forend(length=ManifoldGap(), clearFloor=true, clearCeiling=true);
+      Forend(length=ManifoldGap(), clearFloor=true, clearCeiling=false);
 
       translate([length,0,0])
       Forend(length=ManifoldGap(), clearFloor=true, clearCeiling=false);
@@ -146,14 +149,14 @@ module BarrelLugTrack(length=1, open=true) {
   }
 }
 
-module LuggedForend(lengthOpen=BarrelLugLength()+0.05, lengthClosed=3) {
+module LuggedForend(lengthOpen=BarrelLugLength(), lengthClosed=3) {
   echo("Lugged Forend Length", lengthOpen+lengthClosed);
 
   translate([LowerMaxX()+ForendMidsectionLength()+ForendSlottedLength(),0])
   color("Gold")
   render(convexity=4)
   union() {
-    BarrelLugTrack(open=true, length=lengthOpen+ManifoldGap());
+    BarrelLugTrack(open=true, length=lengthOpen+0.05+ManifoldGap());
   
     translate([lengthOpen,0,0])
     BarrelLugTrack(open=false, length=lengthClosed);
@@ -167,9 +170,22 @@ module ForendFront() {
   difference() {
     translate([ForendFrontMinX(),0,0])
     union() {
-      Forend(length=ForendFrontLength());
+      Forend(length=ForendFrontLength()) {
+        
+        // Front bead sight
+        hull() {
+          mirror([1,0])
+          translate([0,-0.125])
+          square([ReceiverCenter()+0.5,0.25]);
+          
+          mirror([1,0])
+          translate([0,-ReceiverOR()])
+          square([ReceiverCenter(),ReceiverOD()]);
+        }
+      }
+      
 
-    // Barrel-supporting cone
+      // Barrel-supporting cone
       rotate([0,90,0])
       cylinder(r1=FrameRodOffset()-RodRadius(FrameRod(), RodClearanceLoose()),
                r2=PipeOuterRadius(BarrelPipe())+0.25,
@@ -181,19 +197,14 @@ module ForendFront() {
   }
 }
 
-
-
-CrossUpperFront();
-CrossUpperBack();
-
 ForendBaseplate();
 ForendSlotted();
 ForendMidsection();
 ForendFront();
 
-%Frame();
-
-Reference();
+Frame();
+Receiver();
+Breech();
 
 // Plated Forend Baseplate
 *!scale(25.4) rotate([0,90,0]) translate([-LowerWallFront(),0,0])
@@ -217,8 +228,8 @@ rotate([0,90,0])
 LuggedForend();
 
 // Plated Far Forend
-*!scale(25.4)
+!scale(25.4)
 rotate([0,-90,0])
-render()
+translate([-ForendFrontMinX(),0,0])
 ForendFront();
 
