@@ -25,14 +25,13 @@ use <Cross Upper.scad>;
 use <Firing Pin Guide.scad>;
 use <Striker.scad>;
 
-chargingWheelOffsetX  = -3/16;
-chargingWheelOffsetZ  = ReceiverIR()+(ReceiverCenter()/2);
-chargingWheelRadius   = chargingWheelOffsetZ-RodRadius(StrikerRod());
-chargingSpindleRadius = ReceiverIR()-abs(chargingWheelOffsetX)-(0.03);
+chargerPivotX  = -3/16;
+chargerPivotZ  = ReceiverIR()+(ReceiverCenter()/2);
+chargingSpindleRadius = ReceiverIR()-abs(chargerPivotX)-(0.03);
 
 module ChargingPivot(rod=PivotRod(), clearance=RodClearanceSnug(),
                    length=ReceiverIR()+0.2) {
-  translate([chargingWheelOffsetX, 0, chargingWheelOffsetZ]) {
+  translate([chargerPivotX, 0, chargerPivotZ]) {
     rotate([90,0,0])
     Rod(rod=rod, center=true, length=length);
 
@@ -42,9 +41,12 @@ module ChargingPivot(rod=PivotRod(), clearance=RodClearanceSnug(),
 
 
 module ChargingHandle(angle=35) {
+  
+  chargingWheelRadius   = chargerPivotZ-RodRadius(StrikerRod());
+  
   color("OrangeRed")
   render(convexity=4)
-  translate([chargingWheelOffsetX,0,chargingWheelOffsetZ])
+  translate([chargerPivotX,0,chargerPivotZ])
   rotate([0,-(angle*Animate(ANIMATION_STEP_CHARGER_RESET)),0])
   rotate([0,(angle*Animate(ANIMATION_STEP_CHARGE)),0])
   rotate([90,0,0]) {
@@ -53,7 +55,7 @@ module ChargingHandle(angle=35) {
       linear_extrude(height=RodDiameter(StrikerRod())*0.9, center=true) {
 
         // Charging handle body
-        translate([-chargingWheelOffsetX,ReceiverCenter()-chargingWheelOffsetZ])
+        translate([-chargerPivotX,ReceiverCenter()-chargerPivotZ])
         mirror([1,0])
         square([ReceiverCenter()+1, 0.75-chargingSpindleRadius]);
 
@@ -63,13 +65,13 @@ module ChargingHandle(angle=35) {
           hull() {
 
             // Stick out the top, so the charging handle can be attached
-            translate([-chargingWheelOffsetX,0])
+            translate([-chargerPivotX,0])
             mirror([1,0])
-            square([abs(chargingWheelOffsetX)+chargingSpindleRadius, 0.75]);
+            square([abs(chargerPivotX)+chargingSpindleRadius, 0.75]);
 
             // Charger supporting infill
             rotate(70+angle)
-            semidonut(major=(ReceiverIR()+abs(chargingWheelOffsetX))*2,
+            semidonut(major=(ReceiverIR()+abs(chargerPivotX))*2,
                       minor=chargingSpindleRadius,
                       angle=80+angle, $fn=Resolution(20,40));
 
@@ -102,40 +104,18 @@ module ChargingInsert() {
     mirror([0,0,1])
     ReceiverInsert();
 
-    // Firing Pin Guide Clearance
-    *rotate([0,90,0])
-    cylinder(r=ReceiverIR()-ManifoldGap(),
-             h=TeeCenter(ReceiverTee()),
-        center=true,
-           $fn=Resolution(12,30));
-
     // Charging Wheel Travel Path
     translate([-2,-RodRadius(StrikerRod(), RodClearanceLoose()),0])
     cube([4,
           RodDiameter(StrikerRod(), RodClearanceLoose()),
           ReceiverCenter()+ManifoldGap(2)]);
 
-    ChargingPivot(length=1) {
-
-      // Charging Wheel Travel
-      rotate([90,-50,0])
-      linear_extrude(height=RodDiameter(StrikerRod(), RodClearanceLoose()),
-                     center=true) {
-
-        // Outer clearance
-        semicircle(od=(abs(chargingWheelOffsetX)+ReceiverIR())*2,
-                 $fn=Resolution(20,60));
-
-        // Spindle clearance
-        circle(r=chargingSpindleRadius+0.07,
-                 $fn=Resolution(20,60));
-      }
-    }
+    ChargingPivot(length=1);
   }
 }
 
-module ChargerSideplates() {
-  color("DimGrey")
+module ChargerSideplates(alpha=1) {
+  color("DimGrey", alpha)
   render(convexity=4)
   difference() {
     hull() {
@@ -146,9 +126,9 @@ module ChargerSideplates() {
       rotate([0,90,0])
       linear_extrude(height=ReceiverID(),
                      center=true) {
-        translate([-ReceiverLength()/2,-ReceiverOR()-WallFrameRod()])
+        translate([-ReceiverLength()/2,-ReceiverIR()])
         mirror([1,0])
-        square([0.3,ReceiverOD()+(WallFrameRod()*2)]);
+        square([0.5,ReceiverID()]);
       }
     }
 
@@ -169,17 +149,11 @@ module ChargerSideplates() {
   }
 }
 
-module Charger(showSupports=true, showRetainer=true) {
-  ChargingHandle();
+ChargingHandle();
 
-  if (showSupports==true)
-  ChargingInsert();
+ChargingInsert();
 
-  if (showRetainer==true)
-  ChargerSideplates();
-}
-
-Charger(showSupports=true, showRetainer=false);
+ChargerSideplates();
 
 Striker();
 
