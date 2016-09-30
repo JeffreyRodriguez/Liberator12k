@@ -346,52 +346,58 @@ module Tee(tee, $fn=40) {
 
 module CrossFitting(tee, infill=true, hollow=false, $fn=40) {
   render()
-  difference()
-   union() {
+  difference() {
+    union() {
 
-     // Horizontal Body
-     rotate([0,-90,0])
-     translate([TeeHeight(tee) - (TeeOuterDiameter(tee)/2),0,0])
-     cylinder(r=TeeOuterRadius(tee), h=TeeWidth(tee) * 0.99, center=true, $fn=36);
+      // Horizontal Body
+      rotate([0,-90,0])
+      translate([TeeHeight(tee) - (TeeOuterDiameter(tee)/2),0,0])
+      cylinder(r=TeeOuterRadius(tee), h=TeeWidth(tee) * 0.99, center=true, $fn=36);
 
-     // Vertical Body
-     translate([0,0,TeeCenter(tee) * 0.01])
-     cylinder(r=TeeOuterRadius(tee), h=TeeWidth(tee) * 0.98, $fn=36);
+      // Vertical Body
+      translate([0,0,TeeCenter(tee) * 0.01])
+      cylinder(r=TeeOuterRadius(tee), h=TeeWidth(tee) * 0.98, $fn=36);
 
-     // Bottom Vertical Rim
-     cylinder(r=TeeRimRadius(tee), h=TeeRimWidth(tee), $fn=36);
-
-     // Top Vertical Rim
-     translate([0,0,TeeWidth(tee)-TeeRimWidth(tee)])
-     cylinder(r=TeeRimRadius(tee), h=TeeRimWidth(tee), $fn=36);
-
-
-    // Rims
-    for (i = [1, -1]) {
-
-      // Rim
-      translate([i*TeeWidth(tee)/2,0,TeeCenter(tee)])
-      rotate([0,i*-90,0]) {
+      // Bottom Vertical Rim
       cylinder(r=TeeRimRadius(tee), h=TeeRimWidth(tee), $fn=36);
 
-      // Rim-Body Fillet
-      translate([0,0,TeeRimWidth(tee)])
-      cylinder(r1=TeeRimRadius(tee),
-               r2=TeeOuterRadius(tee),
-                h=0.05,
-                $fn=36);
-      }
-    }
+      // Top Vertical Rim
+      translate([0,0,TeeWidth(tee)-TeeRimWidth(tee)])
+      cylinder(r=TeeRimRadius(tee), h=TeeRimWidth(tee), $fn=36);
 
-    for (n=[-1,1]) // Top of cross-fitting
-    for (i=[-1,1]) { // Sides of tee-fitting
+      // Rims
+      for (i = [1, -1]) {
+
+        // Rim
+        translate([i*TeeWidth(tee)/2,0,TeeCenter(tee)])
+        rotate([0,i*-90,0]) {
+          cylinder(r=TeeRimRadius(tee), h=TeeRimWidth(tee), $fn=36);
+
+          // Rim-Body Fillet
+          translate([0,0,TeeRimWidth(tee)])
+          cylinder(r1=TeeRimRadius(tee),
+                   r2=TeeOuterRadius(tee),
+                   h=0.05,
+                   $fn=36);
+        }
+      }
+
+      for (n=[-1,1]) // Top of cross-fitting
+      for (i=[-1,1]) { // Sides of tee-fitting
 
       // Body-Corner Infill
       translate([0,0,TeeCenter(tee)])
       translate([i*TeeOuterRadius(tee)/2,0,n*-TeeOuterRadius(tee)/2])
       rotate([0,n*i*45,0])
       cylinder(r=TeeOuterRadius(tee), h=0.5, center=true);
+      }
     }
+
+    if (hollow)
+    translate([0,0,TeeCenter(tee)])
+    for (i=[0,1])
+    rotate([0,90*i,0])
+    cylinder(r=TeeInnerRadius(tee), h=TeeWidth(tee)*2, center=true);
   }
 };
 
