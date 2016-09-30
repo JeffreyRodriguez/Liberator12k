@@ -32,6 +32,13 @@ use <Upper/Cross Fitting/Striker.scad>;
 
 
 module Liberator12k() {
+  Stock();
+
+  Breech();
+
+  Receiver();
+
+  Butt();
 
   Frame();
 
@@ -46,6 +53,7 @@ module Liberator12k() {
   FrameNuts();
 
 
+  // Lower
   translate([0,0,-ReceiverCenter()]) {
     Lower(showTrigger=true);
     ReceiverLugBoltHoles(clearance=false);
@@ -54,22 +62,23 @@ module Liberator12k() {
   }
 
   Striker();
-  Charger(showRetainer=false);
-  //ChargerSideplates();
+  ChargingHandle();
+  ChargingInsert();
+  
   translate([0,0,-ManifoldGap()])
   SearGuide();
   SearBolts();
 
   FiringPinGuide(debug=true);
+  
+  CrossUpperFront(alpha=1);
+  CrossUpperBack(alpha=1);
+  CrossInserts(alpha=1);
+  ChargerSideplates(alpha=1);
 
-  CrossUpperFront();
-  CrossUpperBack();
-  ChargerSideplates();
-
-  CrossInserts();
-
-  Reference();
-
+  //
+  // Forend
+  //
   ForendBaseplate();
   LuggedForend();
   ForendMidsection();

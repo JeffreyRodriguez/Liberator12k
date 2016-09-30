@@ -100,7 +100,7 @@ function StrikerDiameter(clearance) = RodDiameter(StrikerRod(), clearance);
 // Component Modules
 module Barrel(barrel=BarrelPipe(), barrelLength=DEFAULT_BARREL_LENGTH, hollow=false,
               clearance=PipeClearanceLoose(), alpha=1) {
-  color("Silver", alpha)
+  color("SteelBlue", alpha)
   translate([BreechFrontX(),0,0])
   rotate([0,90,0])
   Pipe(pipe=barrel, clearance=clearance, hollow=hollow, length=barrelLength);
@@ -110,10 +110,10 @@ module Barrel(barrel=BarrelPipe(), barrelLength=DEFAULT_BARREL_LENGTH, hollow=fa
 module Receiver(alpha=1) {
   color("DarkSlateGray", alpha)
   translate([0,0,-ReceiverCenter()])
-  CrossFitting(ReceiverTee());
+  CrossFitting(ReceiverTee(), hollow=true);
 }
-module Stock(stockLength, hollow=true, alpha=1) {
-  color("SlateGray", alpha)
+module Stock(stockLength=12, hollow=true, alpha=1) {
+  color("SteelBlue", alpha)
   render()
   translate([-ReceiverCenter()+PipeThreadDepth(StockPipe()),0,0])
   rotate([0,-90,0])
@@ -123,7 +123,7 @@ module Stock(stockLength, hollow=true, alpha=1) {
        hollow=hollow);
 }
 
-module Butt(alpha=0.25) {
+module Butt(alpha=1) {
   color("DarkSlateGray", alpha)
   translate([ButtTeeCenterX()+ReceiverCenter(),0,0])
   rotate([0,-90,0])
@@ -131,7 +131,7 @@ module Butt(alpha=0.25) {
 }
 
 module Breech() {
-  color("DarkSlateGray")
+  color("SteelBlue")
   translate([BreechFrontX(),0,0])
   rotate([0,-90,0])
   rotate([0,0,90])
@@ -152,11 +152,11 @@ module Reference(barrel=BarrelPipe(),
 
   Receiver();
 
-  Butt(receiver, stockLength);
+  Butt();
 }
 
 
-module ReferenceTeeCutter(topLength = ReceiverCenter(), $fn=Resolution(12,30)) {
+module ReferenceTeeCutter(topLength = 0, $fn=Resolution(12,30)) {
 
   // Vertical
   translate([0,0,-TeeCenter(ReceiverTee())])
