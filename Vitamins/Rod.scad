@@ -25,7 +25,7 @@ function RodRadius(rod=undef, clearance=undef) = RodDiameter(rod, clearance)/2;
  * @param rod The rod to lookup.
  * @param $fn Override the RodFn. If defined, this will be the result. (convenience arg)
  **/
-function RodFn(rod=undef, $fn=undef) = ($fn == undef) ? lookup(RodFn, rod) : $fn;
+function RodFn(rod=undef, fn=undef) = ($fn == undef) ? lookup(RodFn, rod) : fn;
 
 function RodClearanceSnug()  = RodClearanceSnug;
 function RodClearanceLoose() = RodClearanceLoose;
@@ -38,7 +38,7 @@ function RodClearanceLoose() = RodClearanceLoose;
  */
 module Rod2d(rod=Spec_RodOneQuarterInch(), clearance=undef, extraWall=0, $fn=undef) {
   circle(r=RodRadius(rod, clearance)+extraWall,
-         $fn=RodFn(rod, $fn));
+         $fn=RodFn(rod=rod, fn=$fn));
 }
 
 
