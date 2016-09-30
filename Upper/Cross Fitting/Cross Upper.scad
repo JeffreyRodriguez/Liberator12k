@@ -9,10 +9,11 @@ use <../../Lower/Trigger.scad>;
 use <../../Reference.scad>;
 use <Frame.scad>;
 
-module CrossFittingQuadrail2d(rod=Spec_RodFiveSixteenthInch(), rodClearance=RodClearanceLoose()) {
+module CrossFittingQuadrail2d(rod=Spec_RodFiveSixteenthInch(),
+                     rodClearance=RodClearanceLoose()) {
   hull() {
     Quadrail2d(rod=rod, rodClearance=rodClearance, wallTee=WallTee(),
-               clearFloor=true, clearCeiling=true);
+               clearFloor=true, clearCeiling=false);
 
     // Grip flat
     translate([ReceiverCenter()-0.1,-GripWidth()/2])
@@ -21,7 +22,8 @@ module CrossFittingQuadrail2d(rod=Spec_RodFiveSixteenthInch(), rodClearance=RodC
 }
 
 module CrossInserts(width=0.25, height=0.75, slotHeight=1.25,
-                    angles=[0,180], clearance=0) {
+                    angles=[0,180], clearance=0, alpha=1) {
+  color("SteelBlue", alpha)
   render()
   for (a = angles)
   rotate([a,0,0]) {
@@ -57,20 +59,29 @@ module CrossUpperCenter() {
     CrossInserts(clearance=0.005);
 
     // Tee
-    ReferenceTeeCutter(topLength=1);
+    ReferenceTeeCutter(topLength=0);
   }
 }
 
-module CrossUpperFront($fn=40) {
-  color("Gold")
+module CrossUpperFront($fn=40, alpha=1) {
+  color("Gold", alpha)
   render(convexity=4)
   difference() {
     union() {
       translate([ReceiverLugFrontMaxX(),0,0])
       mirror([1,0,0])
       rotate([0,90,0])
-      linear_extrude(height=ReceiverLugFrontMaxX()-ReceiverIR())
-      CrossFittingQuadrail2d();
+      hull() {
+        linear_extrude(height=ReceiverLugFrontMaxX()-ReceiverIR())
+        CrossFittingQuadrail2d(clearCeiling=false);
+        
+        // Protect the charging handle
+        translate([0,0,ReceiverLugFrontMaxX()-ReceiverIR()-0.1])
+        linear_extrude(height=0.1)
+        translate([0,-ReceiverIR()])
+        mirror([1,0])
+        square([ReceiverCenter()+0.5,ReceiverID()]);
+      }
 
       translate([0,0,-ReceiverCenter()])
       ReceiverLugFront(extraTop=ManifoldGap());
@@ -84,33 +95,28 @@ module CrossUpperFront($fn=40) {
     CrossInserts(clearance=0.005);
 
     // Tee
-    ReferenceTeeCutter();
+    ReferenceTeeCutter(topLength=0.01);
   }
 }
 
-module CrossUpperBack(receiver=ReceiverTee(),
-                        stock=Spec_PipeThreeQuarterInch(),
-                        spin=Spec_RodFiveSixteenthInch(),
-                        rod=Spec_RodFiveSixteenthInch(),
-                        support=true, gripExtension=0.85) {
+module CrossUpperBack(alpha=1) {
 
-  color("Gold")
+  color("Gold", alpha)
   render(convexity=4)
   difference() {
     union() {
 
       translate([ReceiverLugRearMinX(),0,0])
       rotate([0,90,0])
-      hull() {
         linear_extrude(height=abs(ReceiverLugRearMinX())-ReceiverIR())
+      hull() {
         CrossFittingQuadrail2d();
         
         
         // Protect the charging handle
-        linear_extrude(height=0.25)
-        translate([0,-ReceiverOR()])
+        translate([0,-ReceiverIR()])
         mirror([1,0])
-        square([ReceiverCenter()+0.5,ReceiverOD()]);
+        square([ReceiverCenter()+0.5,ReceiverID()]);
       }
 
       translate([0,0,-ReceiverCenter()])
@@ -123,7 +129,7 @@ module CrossUpperBack(receiver=ReceiverTee(),
 
     Stock(ReceiverTee(), StockPipe());
 
-    ReferenceTeeCutter();
+    ReferenceTeeCutter(topLength=0.01);
 
     CrossInserts(clearance=0.002);
 
@@ -133,9 +139,13 @@ module CrossUpperBack(receiver=ReceiverTee(),
 }
 
 CrossUpperFront();
+CrossUpperCenter();
+CrossInserts();
 CrossUpperBack();
 Frame();
-Reference();
+Receiver();
+Breech();
+Stock();
 
 
 // Plated Front
