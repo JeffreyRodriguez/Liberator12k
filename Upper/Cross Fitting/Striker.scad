@@ -98,8 +98,10 @@ module StrikerCollar(debug=false) {
            $fn=Resolution(20,30));
 
       // Cap Hole
-      translate([0,-RodRadius(StrikerRod(), clearance=RodClearanceLoose())])
-      square(StrikerSpacerRadius());
+      translate([0,
+                 -RodRadius(StrikerRod(), clearance=RodClearanceLoose())])
+      square([StrikerSpacerRadius()*2,
+               RodDiameter(StrikerRod(), clearance=RodClearanceLoose())]);
 
       // Rod Hole
       Rod2d(StrikerRod(), RodClearanceLoose());
@@ -173,7 +175,7 @@ module Striker() {
     color("Orange")
     translate([-RodRadius(SearRod()),0,0])
     rotate([0,-90,0])
-    Rod(FrameRod(), length=StrikerRodLength());
+    Rod(StrikerRod(), length=StrikerRodLength());
     
     StrikerTop();
     StrikerCollar();
