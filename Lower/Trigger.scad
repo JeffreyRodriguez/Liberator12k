@@ -127,11 +127,11 @@ module SearSupportTab(cutter=false) {
       }
 
       translate([ReceiverLugRearMinX()-0.25-clearance,
-                 (GripWidth()/2)-RodDiameter(SearRod())+0.01+clearance,
+                 (GripWidth()/2)-RodDiameter(SearRod())+0.005+clearance,
                  -TriggerHeight()+ManifoldGap()+clearance])
       mirror([0,0,1])
       rotate([90,0,0])
-      linear_extrude(height=(GripWidth()/2)-RodRadius(SearRod())+0.005+clearance) {
+      linear_extrude(height=(GripWidth()/2)-RodRadius(SearRod())+clearance) {
 
         // Grip Middle Interface Lug Horizontal
         square([ReceiverLugRearLength()+0.45+(clearance*2),
@@ -162,7 +162,7 @@ module SearSupportTab(cutter=false) {
 
     ReceiverLugFront(clearance=0.01);
 
-    ReceiverLugRear(hole=false, clearance=0.01);
+    ReceiverLugRear(hole=false, clearance=0.0);
 
   }
 }

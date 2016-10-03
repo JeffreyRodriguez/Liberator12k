@@ -32,13 +32,17 @@ function ReceiverLugBoltZ(bolt) = bolt[2];
 function ReceiverLugBoltsArray() = [
 
    // Front-Top
-   [ReceiverLugFrontMaxX()+0.25,(GripWidth()/2)+0.125,GripCeilingZ()+(GripCeiling()/2)],
+   [ReceiverLugFrontMaxX()+0.25,
+    (GripWidth()/2)+0.125,
+    GripCeilingZ()+(GripCeiling()/2)],
 
    // Back-Top
-   [ReceiverLugRearMinX()+(ReceiverLugRearLength()/2), (GripWidth()/2)+0.125, GripCeilingZ()+0.375]
+   [ReceiverLugRearMinX()+(ReceiverLugRearLength()/2),
+    (GripWidth()/2)+0.125,
+    GripCeilingZ()+0.375]
 ];
 
-module ReceiverLugBoltHoles(boltSpec=Spec_BoltM3(), length=UnitsMetric(30),
+module ReceiverLugBoltHoles(boltSpec=Spec_BoltM4(), length=UnitsMetric(30),
                         clearance=true, $fn=8) {
 
   capHeightExtra = clearance ? 1 : 0;
@@ -46,7 +50,7 @@ module ReceiverLugBoltHoles(boltSpec=Spec_BoltM3(), length=UnitsMetric(30),
 
   color("SteelBlue")
   for (bolt = ReceiverLugBoltsArray())
-  translate([ReceiverLugBoltX(bolt), ReceiverLugBoltY(bolt), ReceiverLugBoltZ(bolt)])
+  translate([ReceiverLugBoltX(bolt), ReceiverLugBoltY(bolt)+(BoltNutHeight(boltSpec)/2), ReceiverLugBoltZ(bolt)])
   rotate([90,0,0])
   rotate(90)
   NutAndBolt(bolt=boltSpec, boltLength=length, clearance=clearance,

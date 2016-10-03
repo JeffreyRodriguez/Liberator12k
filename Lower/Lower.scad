@@ -15,19 +15,20 @@ use <Trigger.scad>;
 function LowerWallFront() = 0.5;
 function LowerMaxX() = ReceiverLugFrontMaxX()+LowerWallFront();
 
-module GuardBolt(boltSpec=Spec_BoltM3(), length=UnitsMetric(25), clearance=true) {
+module GuardBolt(boltSpec=Spec_BoltM4(), length=UnitsMetric(25), clearance=true) {
   cutter = (clearance) ? 1 : 0;
 
   color("SteelBlue")
   translate([ReceiverLugBoltX(ReceiverLugBoltsArray()[0]),
-             GripWidth()/2,
+             (GripWidth()/2)+(BoltNutHeight(boltSpec)/2),
              GripCeilingZ()-TriggerFingerDiameter()+0.125])
   rotate([90,0,0])
+  rotate([0,0,90])
   NutAndBolt(bolt=boltSpec, boltLength=length, clearance=clearance,
               capHeightExtra=cutter, nutBackset=0.02, nutHeightExtra=cutter);
 }
 
-module HandleBolts(boltSpec=Spec_BoltM3(), length=UnitsMetric(25), clearance=true) {
+module HandleBolts(boltSpec=Spec_BoltM4(), length=UnitsMetric(25), clearance=true) {
   cutter = (clearance) ? 1 : 0;
 
   boltsXZ = [
@@ -41,7 +42,7 @@ module HandleBolts(boltSpec=Spec_BoltM3(), length=UnitsMetric(25), clearance=tru
 
   color("SteelBlue")
   for (xz = boltsXZ)
-  translate([xz[0],GripWidth()/2,xz[1]])
+  translate([xz[0],(GripWidth()/2)+(BoltNutHeight(boltSpec)/2),xz[1]])
   rotate([90,0,0])
   NutAndBolt(bolt=boltSpec, boltLength=length, clearance=clearance,
               capHeightExtra=cutter, nutBackset=0.02, nutHeightExtra=cutter);
@@ -61,7 +62,7 @@ module TriggerFinger(length=0.525, $fn=Resolution(12, 60)) {
 module GripHandle(angle=25, length=1.3, height=5.5) {
   handleOffsetZ = 1.3825-GripCeiling();
   palmSwellOffsetZ=-3.0-GripCeiling();
-  fingerSwellOffsetZ=-2.4-GripCeiling();
+  fingerSwellOffsetZ=-2.5-GripCeiling();
 
   render()
   difference() {
