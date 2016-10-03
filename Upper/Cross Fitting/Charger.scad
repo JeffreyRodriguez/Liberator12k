@@ -10,7 +10,7 @@ use <../../Meta/Manifold.scad>;
 use <../../Meta/Resolution.scad>;
 
 use <../../Components/Semicircle.scad>;
-use <../../Components/Receiver Insert.scad>;
+use <../../Components/Tee Insert.scad>;
 
 use <../../Vitamins/Rod.scad>;
 use <../../Vitamins/Pipe.scad>;
@@ -22,12 +22,12 @@ use <../../Reference.scad>;
 
 use <Frame.scad>;
 use <Cross Upper.scad>;
-use <Firing Pin Guide.scad>;
 use <Striker.scad>;
 
 chargerPivotX  = -3/16;
 chargerPivotZ  = ReceiverIR()+(ReceiverCenter()/2);
 chargingSpindleRadius = ReceiverIR()-abs(chargerPivotX)-(0.03);
+function ChargingHandleWidth() = 5/16;
 
 module ChargingPivot(rod=PivotRod(), clearance=RodClearanceSnug(),
                    length=ReceiverIR()+0.2) {
@@ -52,7 +52,7 @@ module ChargingHandle(angle=35) {
   rotate([90,0,0]) {
     union() {
 
-      linear_extrude(height=RodDiameter(StrikerRod())*0.9, center=true) {
+      linear_extrude(height=ChargingHandleWidth(), center=true) {
 
         // Charging handle body
         translate([-chargerPivotX,ReceiverCenter()-chargerPivotZ])
@@ -102,12 +102,12 @@ module ChargingInsert() {
     // Insert
     translate([0,0,ReceiverCenter()+ManifoldGap()])
     mirror([0,0,1])
-    ReceiverInsert();
+    TeeInsert();
 
     // Charging Wheel Travel Path
-    translate([-2,-RodRadius(StrikerRod(), RodClearanceLoose()),0])
+    translate([-2,-(ChargingHandleWidth()/2)-0.01,0])
     cube([4,
-          RodDiameter(StrikerRod(), RodClearanceLoose()),
+          ChargingHandleWidth()+0.02,
           ReceiverCenter()+ManifoldGap(2)]);
 
     ChargingPivot(length=1);
@@ -142,9 +142,11 @@ module ChargerSideplates(alpha=1) {
 
     // Charging Rod Hole
     translate([-ReceiverIR()-ManifoldGap(),
-              -RodRadius(ChargingRod(), RodClearanceLoose()),
+              -(ChargingHandleWidth()/2)-0.01,
                ReceiverCenter()-ManifoldGap()])
-    cube([ReceiverID()+ManifoldGap(2), RodDiameter(ChargingRod(), RodClearanceLoose()), 1]);
+    cube([ReceiverID()+ManifoldGap(2),
+          ChargingHandleWidth()+0.02,
+          1]);
 
   }
 }
@@ -159,8 +161,6 @@ Striker();
 
 translate([0,0,-ReceiverCenter()])
 TriggerGroup();
-
-FiringPinGuide(debug=true);
 
 color("black", 0.25)
 Reference();

@@ -11,7 +11,7 @@ use <../../Vitamins/Rod.scad>;
 use <../../Vitamins/Pipe.scad>;
 use <../../Vitamins/Spring.scad>;
 
-use <../../Components/Receiver Insert.scad>;
+use <../../Components/Tee Insert.scad>;
 
 use <../../Reference.scad>;
 
@@ -27,12 +27,12 @@ module SearGuide() {
   render(convexity=4)
   difference() {
     translate([0,0,-ReceiverCenter()])
-    ReceiverInsert(topFactor=0.6);
+    TeeInsert(topFactor=0.6);
     
     translate([0,0,-ReceiverCenter()])
     SearCutter();
     
-    SearBolts(cutter=true);
+    SearBolts(teardrop=false, cutter=true);
   }
 }
 
@@ -52,8 +52,9 @@ module SearSupportTabWithBoltCutouts() {
 translate([0,0,-ReceiverCenter()])
 %Sear();
 
+*!scale(25.4)
 SearGuide();
 
-//!scale(25.4) rotate([90,0,0])
+*!scale(25.4) rotate([90,0,0])
 translate([0,0,-ReceiverCenter()])
 SearSupportTabWithBoltCutouts();

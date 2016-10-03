@@ -15,6 +15,7 @@ use <../../Reference.scad>;
 use <../../Lower/Trigger.scad>;
 
 use <Sear Bolts.scad>;
+use <Charger.scad>;
 
 function FiringPinOffsetX() = BreechRearX()-0.75;
 function FiringPinProtrusion() = 3/32;
@@ -74,21 +75,13 @@ module FiringPinGuide(od=ReceiverID()-0.01,
     rotate([0,-90,0])
     Rod(rod=StrikerRod(), clearance=RodClearanceLoose(), length=height);
 
-    // Tapered Striker Entrance
-    translate([-height+BreechRearX()+RodDiameter(StrikerRod()),0,0])
-    rotate([0,-90,0])
-    cylinder(r1=RodRadius(StrikerRod()),
-             r2=RodRadius(StrikerRod(),RodClearanceLoose())*1.25,
-              h=RodDiameter(StrikerRod()),
-            $fn=RodFn(StrikerRod()));
-
-    // Scoop out a path for the charging wheel
+    // Scoop out a path for the charging handle
     translate([BreechRearX()+ManifoldGap(),
-               -RodRadius(StrikerRod(), RodClearanceLoose()),
+               -(ChargingHandleWidth()/2)-0.02,
                0])
     mirror([1,0,0])
     cube([height+ManifoldGap(2),
-          RodDiameter(StrikerRod(), RodClearanceLoose()),
+          ChargingHandleWidth()+0.04,
           od]);
 
     translate([0,0,-ReceiverCenter()])
@@ -100,8 +93,8 @@ module FiringPinGuide(od=ReceiverID()-0.01,
     translate([FiringPinOffsetX()+FiringPinHeadLength()-0.125,0,0])
     FiringPinRetainer(gap=0.14, teardrop=true);
 
-    // Bottom Bolt
-    SearBolts(cutter=true);
+    // Bolts
+    SearBolts(teardrop=true, cutter=true);
   }
 }
 
