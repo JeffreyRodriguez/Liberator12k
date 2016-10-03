@@ -1,12 +1,15 @@
-use <../Vitamins/Pipe.scad>;
 use <Primer.scad>;
 
-function ShellRadius(chamber) = PipeInnerRadius(chamber);
-
-module ShellBase(chamber=Spec_12GaugeChamber(), primer=Spec_Primer22PAT(),
-                 chargeDiameter=0.6, chargeHeight=3/8, wadHeight=0.5,
+module ShellBase(primer=Spec_Primer209(),
+                 chamberDiameter=0.75,
                  rimDiameter=0.87, rimHeight=0.07,
-                 dummy=false, $fn=50) {
+                 chargeDiameter=0.6, chargeHeight=3/8,
+                 wadHeight=0.5,
+                 $fn=50) {
+                   
+  chamberRadius = chamberDiameter/2;
+  rimRadius     = rimDiameter/2;
+  chargeRadius  = chargeDiameter/2;
 
   shellBaseHeight = PrimerHeight(primer) + chargeHeight + wadHeight;
   echo("ShellBase Height: ", shellBaseHeight);
@@ -20,41 +23,37 @@ module ShellBase(chamber=Spec_12GaugeChamber(), primer=Spec_Primer22PAT(),
         // Body
         color("Yellow")
         translate([0,0,rimHeight/2])
-        cylinder(r=ShellRadius(chamber),
+        cylinder(r=chamberRadius,
                  h=shellBaseHeight - (rimHeight/2));
 
         // Rim
         color("Blue")
-        cylinder(r=rimDiameter/2, h=rimHeight/2);
+        cylinder(r=rimRadius, h=rimHeight/2);
 
         // Rim Taper
         translate([0,0,rimHeight/2])
-        cylinder(r1=rimDiameter/2, r2=ShellRadius(chamber), h=rimHeight/2);
+        cylinder(r1=rimRadius, r2=chamberRadius, h=rimHeight/2);
       }
 
-      if (dummy == false) {
+      // Charge Pocket
+      color("Green")
+      translate([0,0,PrimerHeight(primer)])
+      cylinder(r=chargeRadius, h=chargeHeight);
 
-        // Charge Pocket
-        color("Green")
-        translate([0,0,PrimerHeight(primer)])
-        cylinder(r=chargeDiameter/2, h=chargeHeight);
-
-        // Primer
-        color("Red")
-        Primer(primer=primer);
-      }
+      // Primer
+      color("Red")
+      Primer(primer=primer);
     }
 
     // Payload
-    translate([0,0,PrimerHeight(primer) + chargeHeight + wadHeight])
+    translate([0,0,shellBaseHeight])
     children();
   }
 }
 
-!scale([25.4, 25.4, 25.4])
-ShellBase() {
-  %cylinder(r=ShellRadius(Spec_PipeThreeQuarterInch()));
-};
+ShellBase()
+%cylinder(r=0.78/2);
+
 
 *!scale([25.4, 25.4, 25.4])
 ShellBase(chargeHeight=0, wadHeight=0);

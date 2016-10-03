@@ -1,5 +1,8 @@
-module Fins(count=2, major=1, minor=0.75, width=.4, slices=20, twist=20, height=1.5, $fn=20) {
+module Fins(count=2, width=.4, height=1.5,
+            major=1, minor=0.75,
+            slices=20, twist=20, $fn=20) {
   color("Orange")
+  render()
   linear_extrude(height=height, twist=twist, slices=slices)
   intersection() {
 
