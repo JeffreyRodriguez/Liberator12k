@@ -18,7 +18,7 @@ module TeeInsert(tee=DEFAULT_TEE, topFactor=0.6, baseHeight=0) {
       // Body
       cylinder(r=innerRadius,
                h=height,
-             $fn=Resolution(20,30));
+             $fn=Resolution(20,60));
 
       // Front-bottom chamfered curve
       cylinder(r1=innerRadius+0.135,
