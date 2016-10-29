@@ -14,41 +14,42 @@ use <Trigger.scad>;
 
 function LowerWallFront() = 0.5;
 function LowerMaxX() = ReceiverLugFrontMaxX()+LowerWallFront();
+function LowerGuardHeight() = TriggerFingerDiameter()+TriggerFingerWall()+GripCeiling();
 
-module GuardBolt(boltSpec=Spec_BoltM4(), length=UnitsMetric(25), clearance=true) {
+module GuardBolt(boltSpec=Spec_BoltM4(), length=UnitsMetric(30), clearance=true) {
   cutter = (clearance) ? 1 : 0;
 
   color("SteelBlue")
   translate([ReceiverLugBoltX(ReceiverLugBoltsArray()[0]),
-             (GripWidth()/2)+(BoltNutHeight(boltSpec)/2),
-             GripCeilingZ()-TriggerFingerDiameter()+0.125])
+             length-(GripWidth()/2)-0.0625,
+             GripCeilingZ()-TriggerFingerDiameter()+0])
   rotate([90,0,0])
   rotate([0,0,90])
   NutAndBolt(bolt=boltSpec, boltLength=length, clearance=clearance,
               capHeightExtra=cutter, nutBackset=0.02, nutHeightExtra=cutter);
 }
 
-module HandleBolts(boltSpec=Spec_BoltM4(), length=UnitsMetric(25), clearance=true) {
+module HandleBolts(boltSpec=Spec_BoltM4(), length=UnitsMetric(30), clearance=true) {
   cutter = (clearance) ? 1 : 0;
 
   boltsXZ = [
 
      // Handle Bottom-Rear
-     [-2.653,GripCeilingZ()-2.4],
+     [-2.0,GripCeilingZ()-2.9],
 
      // Handle Bottom-Front
-     [-1.403,GripCeilingZ()-2.9]
+     [-1.125,GripCeilingZ()-1.375]
   ];
 
   color("SteelBlue")
   for (xz = boltsXZ)
-  translate([xz[0],(GripWidth()/2)+(BoltNutHeight(boltSpec)/2),xz[1]])
+  translate([xz[0],length-(GripWidth()/2)-0.0625,xz[1]])
   rotate([90,0,0])
   NutAndBolt(bolt=boltSpec, boltLength=length, clearance=clearance,
-              capHeightExtra=cutter, nutBackset=0.02, nutHeightExtra=cutter);
+              capHeightExtra=cutter, nutBackset=0.06, nutHeightExtra=cutter);
 }
 
-module TriggerFinger(length=0.525, $fn=Resolution(12, 60)) {
+module TriggerFinger(length=0.6, $fn=Resolution(12, 60)) {
   render()
   translate([0.65, 0, TriggerFingerOffsetZ()])
   hull()
@@ -95,7 +96,7 @@ module GripHandle(angle=25, length=1.3, height=5.5) {
       // Backstrap to meet the web of the hand
       translate([-length-0.25, 0, -GripCeiling()-TriggerFingerDiameter()])
       rotate([0,-5,0])
-      cylinder(r=GripWidth()/2, h=1.7, $fn=Resolution(20,60));
+      cylinder(r=GripWidth()/2, h=1.1+GripCeiling(), $fn=Resolution(20,60));
     }
 
     // Flatten the bottom
@@ -106,13 +107,11 @@ module GripHandle(angle=25, length=1.3, height=5.5) {
     // Flatten the top
     translate([-3,-2, -ManifoldGap()])
     cube([6, 4, 3]);
-
-    HandleBolts(clearance=true);
   }
 }
 
 module TriggerGuard() {
-  height = TriggerFingerDiameter()+TriggerFingerWall()+GripCeiling();
+  height = LowerGuardHeight();
 
   union() {
     difference() {
@@ -140,34 +139,115 @@ module TriggerGuard() {
 
     LowerReceiverSupports();
     GripHandle();
+
+    // Text
+    if (Resolution(false, true)) {
+      translate([-0.2,
+                 (GripWidth()/2)-0.05,
+                 -0.55])
+      rotate([90,0,180])
+      linear_extrude(height=0.07) {
+        difference() {
+          circle(r=0.43, $fn=30);
+          circle(r=0.35, $fn=30);
+        }
+
+        translate([-0.29,-0.29])
+        text("A", font="Arial Black", size=0.6); // Anarchism A
+      }
+
+      translate([-0.2,
+                 -(GripWidth()/2)+0.05,
+                 -0.55])
+      rotate([90,0,0])
+      linear_extrude(height=0.07) {
+        difference() {
+          circle(r=0.43, $fn=30);
+          circle(r=0.35, $fn=30);
+        }
+
+        translate([-0.35,-0.35])
+        text("V", font="Arial Black", size=0.6); // Voluntaryism V
+      }
+    }
   }
 }
 
 module LowerReceiverSupports() {
 
-  // Front grip tab support
+  // Front receiver lug support
   hull() {
 
-    // Front cube
-    translate([ReceiverLugFrontMaxX()+LowerWallFront(),-0.625,-GripCeiling()])
+    // Front Top cube
+    translate([LowerMaxX(),-0.625,0])
     mirror([1,0,0])
-    cube([1.5, 1.25, GripCeiling()]);
+    mirror([0,0,1])
+    cube([LowerMaxX()-0.5, 1.25, GripCeiling()+TriggerFingerRadius()]);
 
     // Rear cube
-    translate([0.25,-0.5,-GripCeiling()-TriggerFingerRadius()])
-    cube([ReceiverLugFrontMaxX()+0.25, 1, GripCeiling()+TriggerFingerRadius()]);
+    translate([LowerMaxX(),-0.5,0])
+    mirror([1,0,0])
+    mirror([0,0,1])
+    cube([LowerMaxX()-0.25, 1, GripCeiling()]);
   }
 
-  // Rear Grip Tab Support
+  // Front receiver lug support
+  hull() {
+    
+    // Front Bottom cube
+    translate([LowerMaxX(),
+               -0.625,
+               0])
+    mirror([1,0,0])
+    mirror([0,0,1])
+    cube([LowerWallFront(), 1.25, LowerGuardHeight()]);
+    
+    // Front Bottom Taper cube
+    translate([LowerMaxX(),
+               -0.25,
+               0])
+    mirror([1,0,0])
+    mirror([0,0,1])
+    cube([LowerWallFront()*2, 0.5, LowerGuardHeight()]);
+  }
+
+  // Rear receiver lug support
   hull() {
 
-    translate([ReceiverLugBoltX(ReceiverLugBoltsArray()[1])-0.5,-(GripWidth()/2)+0.05,0])
+    translate([ReceiverLugBoltX(ReceiverLugBoltsArray()[1])-0.4,-(GripWidth()/2)+ManifoldGap(),0])
     mirror([0,0,1])
-    cube([1, GripWidth()-0.1, 0.74]);
+    cube([1, GripWidth(), 0.74]);
 
     translate([ReceiverLugBoltX(ReceiverLugBoltsArray()[1]),0,ReceiverLugBoltZ(ReceiverLugBoltsArray()[1])])
     rotate([90,0,0])
     cylinder(r=0.225, h=1.25, center=true, $fn=Resolution(12,24));
+  }
+}
+
+module LowerTriggerPocket() {
+  render()
+  difference() {
+    union() {
+      translate([0,-0.25-ManifoldGap(), ManifoldGap()])
+      mirror([0,0,1]) {
+
+        // Tigger Body
+        translate([ReceiverLugRearMinX(),0,0])
+        cube([ReceiverLugFrontMinX()+abs(ReceiverLugRearMinX()),
+              0.5+ManifoldGap(2),
+              TriggerHeight()]);
+
+        // Trigger Front Extension Cutout
+        cube([ReceiverLugFrontMaxX(),
+              0.5+ManifoldGap(2),
+              TriggerHeight()-TriggerFingerRadius()]);
+      }
+      
+      translate([0,ManifoldGap(),0])
+      SearSupportTab(cutter=false);
+    }
+    
+    ReceiverLugBoltHoles();
   }
 }
 
@@ -177,42 +257,13 @@ module LowerCutouts() {
 
   GuardBolt(clearance=true);
 
+  HandleBolts(clearance=true);
+
   ReceiverLugBoltHoles();
 
   TriggerFinger();
 
   SearCutter();
-
-  // Text
-  if (Resolution(false, true)) {
-    translate([-0.25,
-               (GripWidth()/2)-0.05,
-               -0.55])
-    rotate([90,0,180])
-    linear_extrude(height=0.1) {
-      difference() {
-        circle(r=0.435, $fn=30);
-        circle(r=0.4, $fn=30);
-      }
-
-      translate([-0.23,-0.2])
-      text("A", font="Arial", size=0.5); // Anarchism A
-    }
-
-    translate([-0.25,
-               -(GripWidth()/2)+0.05,
-               -0.55])
-    rotate([90,0,0])
-    linear_extrude(height=0.1) {
-      difference() {
-        circle(r=0.435, $fn=30);
-        circle(r=0.4, $fn=30);
-      }
-
-      translate([-0.23,-0.32])
-      text("V", font="Arial", size=0.5); // Voluntaryism V
-    }
-  }
 }
 
 
@@ -248,42 +299,32 @@ module LowerSidePlates(showLeft=true, showRight=true) {
 module LowerMiddle() {
   color("DimGrey")
   render()
-  union() {
-    difference() {
-      intersection() {
-        TriggerGuard();
+  difference() {
+    intersection() {
+      TriggerGuard();
 
-        // Just the middle
-        GripSplitter(clearance=0);
-      }
+      // Just the middle
+      GripSplitter(clearance=0);
+    }
 
-      LowerCutouts();
+    LowerCutouts();
 
-      SearSupportTab(cutter=true);
+    SearSupportTab(cutter=true);
 
-      translate([0,-0.5, ManifoldGap()])
-      mirror([0,0,1]) {
+    // Trigger Pocket
+    LowerTriggerPocket();
 
-        // Tigger Body
-        translate([ReceiverLugRearMinX(),0,0])
-        cube([ReceiverLugFrontMinX()+abs(ReceiverLugRearMinX()), 1, TriggerHeight()]);
+    // #L12K easter egg
+    if (Resolution(false, true))
+    translate([-1.5, 0.2, -3.75])
+    rotate([0,45,0])
+    rotate([0,0,180])
+    rotate([90,0,0])
+    linear_extrude(height=0.25) {
+      text("#", font="Arial", size=0.35);
 
-        // Trigger Front Extension Cutout
-        cube([ReceiverLugFrontMaxX(), 1, TriggerHeight()-TriggerFingerRadius()]);
-      }
-
-      // #L12K easter egg
-      if (Resolution(false, true))
-      translate([-1.5, 0.2, -2.4])
-      rotate([0,-90+25,0])
-      rotate([0,0,180])
-      rotate([90,0,0])
-      linear_extrude(height=0.25) {
-        text("#", font="Arial", size=0.35);
-
-        translate([0.45, 0.08])
-        text("L12K", font="Arial", size=0.3);
-      }
+      translate([0.45, 0.08])
+      text("L12K", font="Arial", size=0.3);
     }
   }
 }

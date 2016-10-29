@@ -22,10 +22,10 @@ function SearPinRod() = DEFAULT_SEAR_PIN_ROD;
 // Spec_BicLighterThumbSpring
 // Spec_BicSoftFeelFinePenSpring
 function TriggerSpring() = Spec_BicLighterThumbSpring();
+function SearSpringCompressed() = 0.4;
 
 function SearPinOffsetZ() = -0.25-RodRadius(SearPinRod());
-function SearOverTravel() = -0.65;
-function SearLength() = 1+1.5+SearOverTravel();
+function SearBottomOffset() = 0.25;
 
 
 function TriggerFingerDiameter() = 1;
@@ -37,13 +37,14 @@ function TriggerHeight() = GripCeiling()+TriggerFingerDiameter();
 function TriggerWidth() = 0.49;
 function SearTravel() = 0.25;
 function TriggerTravel() = SearTravel()*1.5;
+function SearLength() = 1.5 + abs(SearPinOffsetZ()) + SearTravel();
 
 module Sear() {
 
   // Sear Rod
   translate([0,0,-SearTravel()*Animate(ANIMATION_STEP_TRIGGER)])
   translate([0,0,SearTravel()*Animate(ANIMATION_STEP_TRIGGER_RESET)])
-  translate([0,0,GripCeilingZ()-0.9-SearOverTravel()])
+  translate([0,0,SearPinOffsetZ()-SearBottomOffset()])
   color("LightGreen")
   Rod(rod=SearRod(), length=SearLength());
 
@@ -52,20 +53,22 @@ module Sear() {
   translate([0,0,SearPinOffsetZ()])
   rotate([90,0,0])
   color("Red")
-  %Rod(rod=SearPinRod(), length=0.75, center=true);
+  %Rod(rod=SearPinRod(), length=0.8, center=true);
 }
 
 module SearCutter(searLengthExtra=0) {
   color("Red", 0.25)
   union() {
-    translate([0,0,GripCeilingZ()-0.9-SearTravel()-SearOverTravel()])
-    Rod(rod=SearRod(), clearance=RodClearanceLoose(), length=SearLength()+SearTravel()+searLengthExtra);
+    translate([0,0,SearPinOffsetZ()-SearBottomOffset()-SearTravel()-SearSpringCompressed()])
+    Rod(rod=SearRod(),
+        clearance=RodClearanceLoose(),
+        length=SearLength()+SearTravel()+searLengthExtra);
 
     VerticalSearPinTrack();
   }
 }
 
-module VerticalSearPinTrack(width=0.8) {
+module VerticalSearPinTrack(width=0.9) {
   rotate([90,0,0])
   linear_extrude(height=width, center=true)
   translate([-RodRadius(SearPinRod(), RodClearanceLoose()),
@@ -109,7 +112,7 @@ module TriggerSearPinTrack() {
 module SearSupportTab(cutter=false) {
   clearance=cutter ? 0.01 : 0;
 
-  color("Lime")
+  color("LightGrey")
   render(convexity=4)
   difference() {
     union() {
@@ -127,7 +130,7 @@ module SearSupportTab(cutter=false) {
       }
 
       translate([ReceiverLugRearMinX()-0.25-clearance,
-                 (GripWidth()/2)-RodDiameter(SearRod())+0.005+clearance,
+                 (GripWidth()/2)-RodDiameter(SearRod())+clearance,
                  -TriggerHeight()+ManifoldGap()+clearance])
       mirror([0,0,1])
       rotate([90,0,0])
@@ -151,13 +154,14 @@ module SearSupportTab(cutter=false) {
 
       // Top-rear trigger retaining lug
       translate([ReceiverLugRearMaxX()-clearance,
-                 -RodRadius(rod=SearRod())+0.005,
+                 -RodRadius(rod=SearRod()),
                  ReceiverLugRearZ()-clearance+ManifoldGap()])
       cube([0.2+(TriggerTravel()*(cutter?1:0))+(clearance*2),
             (GripWidth()/2)-RodRadius(SearRod())+clearance,
             abs(ReceiverLugRearZ())+(clearance*2)]);
     }
 
+    if (!cutter)
     SearCutter();
 
     ReceiverLugFront(clearance=0.01);
@@ -174,7 +178,7 @@ module TriggerSideCutter(clearance=0) {
 }
 
 module Trigger2d() {
-  triggerFront = 0.3;
+  triggerFront = 0.5;
   triggerBack = abs(ReceiverLugRearMinX())-TriggerTravel()-0.01;
   triggerLength = TriggerTravel()+RodDiameter(SearRod())+triggerFront+triggerBack;
   triggerHeight = TriggerHeight()-0.01;
@@ -212,7 +216,7 @@ module Trigger(left=true, right=true) {
   translate([(TriggerTravel()*Animate(ANIMATION_STEP_TRIGGER_RESET)),0,0]) {
 
     if (right)
-    color("Salmon")
+    color("Gold")
     render(convexity=6)
     difference() {
       rotate([90,0,0])
@@ -237,7 +241,7 @@ module Trigger(left=true, right=true) {
     }
 
     if (left)
-    color("Black", 0.4)
+    color("Gold", 0.7)
     render(convexity=4)
     difference() {
       translate([0,(TriggerWidth()/2),0])
@@ -254,7 +258,6 @@ module TriggerGroup() {
   Sear();
   SearSupportTab();
   Trigger(left=true, right=true);
-  %SearCutter();
 }
 
 //AnimateSpin()
@@ -280,5 +283,7 @@ module trigger_plater($t=0) {
 }
 
 
-!scale(25.4)
+echo("Sear Length", SearLength());
+
+*!scale(25.4)
 trigger_plater();

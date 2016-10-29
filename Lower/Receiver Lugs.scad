@@ -5,7 +5,7 @@ use <../Vitamins/Nuts And Bolts.scad>;
 
 
 function GripWidth() = 1;
-function GripCeiling() = 0.6;
+function GripCeiling() = 0.75;
 function GripCeilingZ() = -GripCeiling();
 
 
@@ -33,27 +33,32 @@ function ReceiverLugBoltsArray() = [
 
    // Front-Top
    [ReceiverLugFrontMaxX()+0.25,
-    (GripWidth()/2)+0.125,
-    GripCeilingZ()+(GripCeiling()/2)],
+    UnitsMetric(30)-(GripWidth()/2)-0.0625,
+    -0.375],
 
    // Back-Top
    [ReceiverLugRearMinX()+(ReceiverLugRearLength()/2),
-    (GripWidth()/2)+0.125,
-    GripCeilingZ()+0.375]
+    UnitsMetric(30)-(GripWidth()/2)-0.0625,
+    -0.375]
 ];
 
-module ReceiverLugBoltHoles(boltSpec=Spec_BoltM4(), length=UnitsMetric(30),
-                        clearance=true, $fn=8) {
+module ReceiverLugBoltHoles(boltSpec=Spec_BoltM4(),
+                            length=UnitsMetric(30),
+                            clearance=true,
+                            teardrop=false,
+                            teardropAngle=90, $fn=8) {
 
   capHeightExtra = clearance ? 1 : 0;
   nutHeightExtra = clearance ? 1 : 0;
 
   color("SteelBlue")
   for (bolt = ReceiverLugBoltsArray())
-  translate([ReceiverLugBoltX(bolt), ReceiverLugBoltY(bolt)+(BoltNutHeight(boltSpec)/2), ReceiverLugBoltZ(bolt)])
+  translate([ReceiverLugBoltX(bolt), ReceiverLugBoltY(bolt), ReceiverLugBoltZ(bolt)])
   rotate([90,0,0])
   rotate(90)
-  NutAndBolt(bolt=boltSpec, boltLength=length, clearance=clearance,
+  NutAndBolt(bolt=boltSpec, boltLength=length,
+              teardrop=teardrop, teardropAngle=teardropAngle,
+              clearance=clearance,
               capHeightExtra=capHeightExtra,
               nutHeightExtra=nutHeightExtra, nutBackset=0.02);
 }
@@ -61,9 +66,8 @@ module ReceiverLugBoltHoles(boltSpec=Spec_BoltM4(), length=UnitsMetric(30),
 
 
 module ReceiverLug(length=1, width=0.5, height=0.75, extraTop=ManifoldGap(),
-               tabHeight=0.25, tabWidth=ReceiverLugWidth(), hole=false,
+               tabHeight=0.25, tabWidth=ReceiverLugWidth(),
                clearance=0.007) {
-  color("Gold")
   render()
   difference() {
 
@@ -82,23 +86,29 @@ module ReceiverLug(length=1, width=0.5, height=0.75, extraTop=ManifoldGap(),
     // Cut off the top (yes, this is ugly)
     translate([-clearance,-width,0])
     cube([length+(clearance*2), width*2, height+extraTop]);
-
-    // Grip Bolt Hole
-    if (hole)
-    translate([length/2,0,-0.225])
-    rotate([90,0,0])
-    cylinder(r=ReceiverLugBoltRadius(), h=width*2, center=true, $fn=8);
   }
 }
 
-module ReceiverLugRear(clearance=0, extraTop=ManifoldGap(), hole=true) {
-  translate([ReceiverLugRearMinX(),0,0])
-  ReceiverLug(length=ReceiverLugRearLength(),
-          height=abs(ReceiverLugRearZ()), extraTop=extraTop,
-          hole=hole, clearance=clearance);
+module ReceiverLugRear(clearance=0, extraTop=ManifoldGap(),
+                       teardrop=false, teardropAngle=90, hole=true) {
+  
+  color("DarkOrange")
+  render()
+  difference() {
+    translate([ReceiverLugRearMinX(),0,0])
+    ReceiverLug(length=ReceiverLugRearLength(),
+            height=abs(ReceiverLugRearZ()), extraTop=extraTop,
+            hole=hole, clearance=clearance);
+    
+    // Grip Bolt Hole
+    if (hole)
+    ReceiverLugBoltHoles(teardrop=teardrop, teardropAngle=teardropAngle, clearance=true);
+  }
 }
 
 module ReceiverLugFront(clearance=0, extraTop=ManifoldGap()) {
+  color("DarkOrange")
+  render()
   translate([ReceiverLugFrontMaxX(),0,0])
   mirror([1,0,0])
   ReceiverLug(length=ReceiverLugFrontLength(), tabWidth=1.25,
