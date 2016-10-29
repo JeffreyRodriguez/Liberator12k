@@ -36,9 +36,10 @@ module FiringPinRetainerPins(rodSpec=Spec_RodOneEighthInch(),
 
 }
 
-module FiringPinRetainer(rimfireOffset=0.11, teardrop=false) {
+module FiringPinRetainer(rimfireOffset=0.11, teardrop=false, showPins=true) {
 
   // Retaining Pins
+  if (showPins)
   FiringPinRetainerPins(teardrop=teardrop);
 
   translate([FiringPinSpringLength()+(FiringPinHeadLength()/2),0,0])
@@ -51,7 +52,7 @@ module FiringPinRetainer(rimfireOffset=0.11, teardrop=false) {
     cylinder(r=0.085, h=3, $fn=8);
 
     // Nail head hole
-    cylinder(r=0.18, h=FiringPinSpringLength()+FiringPinHeadLength(), $fn=12);
+    cylinder(r=0.18, h=FiringPinSpringLength()+(FiringPinHeadLength()*1.25), $fn=12);
   }
 }
 
