@@ -30,6 +30,15 @@ function PipeOuterRadius(pipe, clearance, clearanceSign=1) =
 function PipeInnerRadius(pipe, clearance, clearanceSign=1) =
            PipeInnerDiameter(pipe, clearance, clearanceSign)/2;
 
+function PipeTaperedDiameter(pipe) =
+           lookup(PipeTaperedDiameter, pipe);
+
+function PipeTaperedRadius(pipe, clearance, clearanceSign=1) =
+           PipeTaperedDiameter(pipe, clearance, clearanceSign)/2;
+
+function PipeThreadLength(pipe) =
+           lookup(PipeThreadLength, pipe);
+
 function PipeThreadDepth(pipe) =
            lookup(PipeThreadDepth, pipe);
 
@@ -113,12 +122,12 @@ function Spec_PipeThreeQuarterInchSch80() = [
 // 3/4" Sch80 Stainless Pipe
 function Spec_PipeThreeQuarterInchSch80Stainless() = [
   [PipeInnerDiameter,   0.76],
-  [PipeOuterDiameter,   1.05],
+  [PipeOuterDiameter,   1.055],
   [PipeTaperedDiameter, 1.018],
   [PipeThreadLength,    0.9],
   [PipeThreadDepth,     0.5],
   [PipeClearanceSnug,   0.002],
-  [PipeClearanceLoose,  0.01],
+  [PipeClearanceLoose,  0.02],
   [PipeFn,              40],
   [PipeWeightPerUnit,   40]
 ];
@@ -208,9 +217,9 @@ function Spec_FiveSixteenthInchBrakeLine() = [
   [PipeTaperedDiameter, 0.3125],
   [PipeThreadLength,    0],
   [PipeThreadDepth,     0],
-  [PipeClearanceSnug,   0.025],
-  [PipeClearanceLoose,  0.025],
-  [PipeFn,              10],
+  [PipeClearanceSnug,   0.02],
+  [PipeClearanceLoose,  0.035],
+  [PipeFn,              20],
   [PipeWeightPerUnit,   42]
 ];
 
