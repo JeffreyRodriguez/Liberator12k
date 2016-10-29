@@ -27,11 +27,11 @@ function Spec_BoltM3() = [
 
 function Spec_BoltM4() = [
   [BoltDiameter,    UnitsMetric(4)],
-  [BoltCapDiameter, UnitsMetric(6.8)],
+  [BoltCapDiameter, UnitsMetric(7.7)],
   [BoltCapHeight,   UnitsMetric(3.9)],
-  [BoltNutDiameter, UnitsMetric(7.75)],
+  [BoltNutDiameter, UnitsMetric(7.2)],
   [BoltNutHeight,   UnitsMetric(3)],
-  [BoltClearance,   UnitsMetric(0.7)],
+  [BoltClearance,   UnitsMetric(1)],
   [BoltFn, 8]
 ];
 
@@ -135,7 +135,7 @@ module Bolt(bolt=Spec_BoltM3(), length=1,
 
 module NutAndBolt(bolt=Spec_BoltM3(), boltLength=1, boltLengthExtra=0,
                   cap=true, capRadiusExtra=0, capHeightExtra=0,
-                  nutHeightExtra=0, nutBackset=0,
+                  nutRadiusExtra=0, nutHeightExtra=0, nutBackset=0, nutSideExtra=0,
                   clearance=true, teardrop=false, teardropAngle=0) {
   union() {
 
@@ -146,9 +146,16 @@ module NutAndBolt(bolt=Spec_BoltM3(), boltLength=1, boltLengthExtra=0,
          clearance=clearance, teardrop=teardrop, teardropAngle=teardropAngle);
 
     // Nut
-    translate([0,0,-nutHeightExtra+nutBackset])
-    cylinder(r=BoltNutRadius(bolt, clearance),
-             h=BoltNutHeight(bolt)+nutHeightExtra, $fn=6);
+    translate([0,0,-nutHeightExtra+nutBackset]) {
+      cylinder(r=BoltNutRadius(bolt, clearance)+nutRadiusExtra,
+               h=BoltNutHeight(bolt)+nutHeightExtra, $fn=6);
+
+      if (nutSideExtra > 0)
+      translate([-BoltNutRadius(bolt, clearance),0,])
+      cube([BoltNutDiameter(bolt, clearance),
+            BoltNutDiameter(bolt, clearance)+nutSideExtra,
+            BoltNutHeight(bolt)+nutHeightExtra]);
+    }
   }
 }
 
