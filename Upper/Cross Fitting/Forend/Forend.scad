@@ -22,8 +22,8 @@ use <../Frame.scad>;
 use <Barrel Lugs.scad>;
 
 function ForendSlottedLength() = 3;
-function ForendMidsectionLength() = 0.375;
-function ForendFrontLength() = 0.4;
+function ForendMidsectionLength() = 0.25;
+function ForendFrontLength() = 0.375;
 
 function ForendFrontMinX() = LowerMaxX()
                              +ForendSlottedLength()
@@ -102,7 +102,7 @@ module ForendBaseplate(length=LowerWallFront()) {
 
 module ForendSlotted(cartridgeSpec=Spec_Cartridge_12GAx3(),
                      length=ForendSlottedLength(),
-                     slotAngles=[90,270]) {
+                     slotAngles=[0,180]) {
 
   semiAngle=60;
 
@@ -111,6 +111,8 @@ module ForendSlotted(cartridgeSpec=Spec_Cartridge_12GAx3(),
   translate([LowerMaxX(),0,0])
   difference() {
     Forend(length=length);
+    
+    
 
     for(slotAngle = slotAngles)
     rotate([slotAngle,0,0]) {
@@ -200,6 +202,7 @@ module ForendFront() {
 ForendBaseplate();
 ForendSlotted();
 ForendMidsection();
+LuggedForend();
 ForendFront();
 
 Frame();
@@ -218,7 +221,7 @@ ForendSlotted();
 // Plated Forend-Midsection
 *!scale(25.4)
 rotate([0,-90,0])
-translate([LowerMaxX()+ForendSlottedLength(),0,0])
+translate([-LowerMaxX()-ForendSlottedLength(),0,0])
 ForendMidsection();
 
 // Plated Lugged Forend
