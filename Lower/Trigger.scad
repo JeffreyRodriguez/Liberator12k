@@ -12,6 +12,8 @@ use <../Vitamins/Pipe.scad>;
 use <../Vitamins/Rod.scad>;
 use <../Vitamins/Spring.scad>;
 
+use <../Components/Trigger Finger Slot.scad>;
+
 use <Receiver Lugs.scad>;
 
 DEFAULT_SEAR_ROD = Spec_RodOneQuarterInch();
@@ -28,9 +30,7 @@ function SearPinOffsetZ() = -0.25-RodRadius(SearPinRod());
 function SearBottomOffset() = 0.25;
 
 
-function TriggerFingerDiameter() = 1;
-function TriggerFingerRadius() = TriggerFingerDiameter()/2;
-function TriggerFingerOffsetZ() = GripCeilingZ() -TriggerFingerRadius();
+function TriggerFingerOffsetZ() = GripCeilingZ();
 function TriggerFingerWall() = 0.3;
 
 function TriggerHeight() = GripCeiling()+TriggerFingerDiameter();

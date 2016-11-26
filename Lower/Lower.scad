@@ -12,6 +12,9 @@ use <../Reference.scad>;
 use <Receiver Lugs.scad>;
 use <Trigger.scad>;
 
+use <../Components/Grip Handle.scad>;
+use <../Components/Trigger Finger Slot.scad>;
+
 function LowerWallFront() = 0.5;
 function LowerMaxX() = ReceiverLugFrontMaxX()+LowerWallFront();
 function LowerGuardHeight() = TriggerFingerDiameter()+TriggerFingerWall()+GripCeiling();
@@ -21,12 +24,13 @@ module GuardBolt(boltSpec=Spec_BoltM4(), length=UnitsMetric(30), clearance=true)
 
   color("SteelBlue")
   translate([ReceiverLugBoltX(ReceiverLugBoltsArray()[0]),
-             length-(GripWidth()/2)-0.0625,
+             -LowerMaxY()+0.07,
              GripCeilingZ()-TriggerFingerDiameter()+0])
   rotate([90,0,0])
   rotate([0,0,90])
   NutAndBolt(bolt=boltSpec, boltLength=length, clearance=clearance,
-              capHeightExtra=cutter, nutBackset=0.02, nutHeightExtra=cutter);
+             capOrientation=true,
+              capHeightExtra=cutter, nutBackset=0.05, nutHeightExtra=cutter);
 }
 
 module HandleBolts(boltSpec=Spec_BoltM4(), length=UnitsMetric(30), clearance=true) {
@@ -43,72 +47,19 @@ module HandleBolts(boltSpec=Spec_BoltM4(), length=UnitsMetric(30), clearance=tru
 
   color("SteelBlue")
   for (xz = boltsXZ)
-  translate([xz[0],length-(GripWidth()/2)-0.0625,xz[1]])
+  translate([xz[0],-LowerMaxY()+0.07,xz[1]])
   rotate([90,0,0])
   NutAndBolt(bolt=boltSpec, boltLength=length, clearance=clearance,
-              capHeightExtra=cutter, nutBackset=0.06, nutHeightExtra=cutter);
+              capOrientation=true,
+              capHeightExtra=cutter, nutBackset=0.05, nutHeightExtra=cutter);
 }
 
-module TriggerFinger(length=0.6, $fn=Resolution(12, 60)) {
+module TriggerFinger() {
   render()
   translate([0.65, 0, TriggerFingerOffsetZ()])
-  hull()
-  for (i = [0,length])
-  translate([i,0,0])
-  rotate([90,0,0])
-  cylinder(r=TriggerFingerRadius(),
-           h=2, $fn=$fn, center=true);
+  TriggerFingerSlot();
 }
 
-module GripHandle(angle=25, length=1.3, height=5.5) {
-  handleOffsetZ = 1.3825-GripCeiling();
-  palmSwellOffsetZ=-3.0-GripCeiling();
-  fingerSwellOffsetZ=-2.5-GripCeiling();
-
-  render()
-  difference() {
-
-
-    union() {
-
-      // Angled section of the grip
-      translate([-0.125,0,handleOffsetZ])
-      rotate([0,angle,0]) {
-
-        // Grip Body
-        translate([-length/2,0,-height])
-        hull()
-        for (i=[0,length])
-        translate([i,0,0])
-        cylinder(r=GripWidth()/2, h=height, $fn=Resolution(20, 60));
-
-        // Palm swell
-        translate([0,0,palmSwellOffsetZ])
-        scale([2.5,1.7,4.5])
-        sphere(r=0.45, $fn=Resolution(12, 60));
-
-        // Finger swell
-        translate([length/2,0,fingerSwellOffsetZ])
-        scale([1,1.05,0.5])
-        sphere(r=0.63, $fn=Resolution(12, 60));
-      }
-
-      // Backstrap to meet the web of the hand
-      translate([-length-0.25, 0, -GripCeiling()-TriggerFingerDiameter()])
-      rotate([0,-5,0])
-      cylinder(r=GripWidth()/2, h=1.1+GripCeiling(), $fn=Resolution(20,60));
-    }
-
-    // Flatten the bottom
-    translate([-4.5,-1,handleOffsetZ-6.5])
-    rotate([0,5,0])
-    cube([4, 2, 2]);
-
-    // Flatten the top
-    translate([-3,-2, -ManifoldGap()])
-    cube([6, 4, 3]);
-  }
-}
 
 module TriggerGuard() {
   height = LowerGuardHeight();
@@ -118,7 +69,7 @@ module TriggerGuard() {
 
       // Main block
       translate([ReceiverLugRearMinX(), -GripWidth()/2, -height])
-      cube([ReceiverLugFrontMaxX()+abs(ReceiverLugRearMinX())+LowerWallFront(),
+      cube([LowerMaxX()+abs(ReceiverLugRearMinX()),
             GripWidth(),
             height]);
 
@@ -193,7 +144,7 @@ module LowerReceiverSupports() {
 
   // Front receiver lug support
   hull() {
-    
+
     // Front Bottom cube
     translate([LowerMaxX(),
                -0.625,
@@ -201,7 +152,7 @@ module LowerReceiverSupports() {
     mirror([1,0,0])
     mirror([0,0,1])
     cube([LowerWallFront(), 1.25, LowerGuardHeight()]);
-    
+
     // Front Bottom Taper cube
     translate([LowerMaxX(),
                -0.25,
@@ -242,18 +193,18 @@ module LowerTriggerPocket() {
               0.5+ManifoldGap(2),
               TriggerHeight()-TriggerFingerRadius()]);
       }
-      
+
       translate([0,ManifoldGap(),0])
       SearSupportTab(cutter=false);
     }
-    
+
     ReceiverLugBoltHoles();
   }
 }
 
 module LowerCutouts() {
-  ReceiverLugFront(clearance=0.008);
-  ReceiverLugRear(clearance=0.008);
+  ReceiverLugFront(cutter=true);
+  ReceiverLugRear(cutter=true, hole=false);
 
   GuardBolt(clearance=true);
 

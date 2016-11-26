@@ -1,12 +1,16 @@
 use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
 
+use <../Components/T Lug.scad>;
 use <../Vitamins/Nuts And Bolts.scad>;
 
 
 function GripWidth() = 1;
 function GripCeiling() = 0.75;
 function GripCeilingZ() = -GripCeiling();
+
+function LowerMaxWidth() = GripWidth()+0.25;
+function LowerMaxY() = (GripWidth()/2)+0.125;
 
 
 function ReceiverLugWidth() = 1;
@@ -33,12 +37,12 @@ function ReceiverLugBoltsArray() = [
 
    // Front-Top
    [ReceiverLugFrontMaxX()+0.25,
-    UnitsMetric(30)-(GripWidth()/2)-0.0625,
+    -LowerMaxY()+0.07,
     -0.375],
 
    // Back-Top
    [ReceiverLugRearMinX()+(ReceiverLugRearLength()/2),
-    UnitsMetric(30)-(GripWidth()/2)-0.0625,
+    -LowerMaxY()+0.07,
     -0.375]
 ];
 
@@ -58,9 +62,9 @@ module ReceiverLugBoltHoles(boltSpec=Spec_BoltM4(),
   rotate(90)
   NutAndBolt(bolt=boltSpec, boltLength=length,
               teardrop=teardrop, teardropAngle=teardropAngle,
-              clearance=clearance,
+              clearance=clearance, capOrientation=true,
               capHeightExtra=capHeightExtra,
-              nutHeightExtra=nutHeightExtra, nutBackset=0.02);
+              nutHeightExtra=nutHeightExtra, nutBackset=0.05);
 }
 
 
@@ -82,38 +86,34 @@ module ReceiverLug(length=1, width=0.5, height=0.75, extraTop=ManifoldGap(),
       translate([-clearance,-(tabWidth/2)-clearance,-height-clearance])
       cube([length+(clearance*2), tabWidth+(clearance*2), tabHeight+(clearance*2)]);
     }
-
-    // Cut off the top (yes, this is ugly)
-    translate([-clearance,-width,0])
-    cube([length+(clearance*2), width*2, height+extraTop]);
   }
 }
 
-module ReceiverLugRear(clearance=0, extraTop=ManifoldGap(),
-                       teardrop=false, teardropAngle=90, hole=true) {
-  
+module ReceiverLugRear(extraTop=ManifoldGap(), cutter=false,
+                       teardrop=true, teardropAngle=90, hole=true) {
+
   color("DarkOrange")
   render()
   difference() {
-    translate([ReceiverLugRearMinX(),0,0])
-    ReceiverLug(length=ReceiverLugRearLength(),
+    translate([ReceiverLugRearMinX(),0,ReceiverLugRearZ()])
+    T_Lug(length=ReceiverLugRearLength(),
             height=abs(ReceiverLugRearZ()), extraTop=extraTop,
-            hole=hole, clearance=clearance);
-    
+            cutter=cutter);
+
     // Grip Bolt Hole
     if (hole)
     ReceiverLugBoltHoles(teardrop=teardrop, teardropAngle=teardropAngle, clearance=true);
   }
 }
 
-module ReceiverLugFront(clearance=0, extraTop=ManifoldGap()) {
+module ReceiverLugFront(cutter=false, extraTop=ManifoldGap()) {
   color("DarkOrange")
   render()
-  translate([ReceiverLugFrontMaxX(),0,0])
+  translate([ReceiverLugFrontMaxX(),0,ReceiverLugFrontZ()])
   mirror([1,0,0])
-  ReceiverLug(length=ReceiverLugFrontLength(), tabWidth=1.25,
+  T_Lug(length=ReceiverLugFrontLength(), tabWidth=1.25,
           height=abs(ReceiverLugFrontZ()), extraTop=extraTop,
-         clearance=clearance);
+          cutter=cutter);
 }
 
 ReceiverLugRear();
