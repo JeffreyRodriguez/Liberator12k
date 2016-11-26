@@ -43,8 +43,10 @@ module Bearing2D(spec=Spec_Bearing608(), clearance=BearingClearanceSnug(), solid
   }
 }
 
-module Bearing(spec=Spec_Bearing608(), clearance=BearingClearanceSnug(), solid=false) {
-  linear_extrude(height=BearingHeight(spec))
+module Bearing(spec=Spec_Bearing608(), clearance=BearingClearanceSnug(), extraHeight=0, solid=false) {
+  color("SteelBlue")
+  render()
+  linear_extrude(height=BearingHeight(spec)+extraHeight)
   Bearing2D(spec=spec, clearance=clearance, solid=solid);
 }
 
