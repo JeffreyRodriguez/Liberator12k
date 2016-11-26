@@ -8,18 +8,17 @@ use <../Components/Teardrop.scad>;
 use <../Vitamins/Rod.scad>;
 use <../Vitamins/Pipe.scad>;
 
-function FiringPinSpringLength() = 0.3;
 function FiringPinHeadLength() = 0.4;
 
 module FiringPinRetainerPins(rodSpec=Spec_RodOneEighthInch(),
-                             gap=0.15, teardrop=false,
+                             springLength=0.3, gap=0.15, teardrop=false,
                              retainingPinLength=1) {
 
   color("SteelBlue")
   render()
-  translate([FiringPinSpringLength()+(FiringPinHeadLength()/2),0,0])
+  translate([springLength+(FiringPinHeadLength()/2),0,0])
   rotate([0,-90,0])
-  translate([0,0,FiringPinSpringLength()+(FiringPinHeadLength()/2)])
+  translate([0,0,springLength+(FiringPinHeadLength()/2)])
   for (i=[1,-1])
   translate([gap*i,0,0])
   rotate([90,0,0])
@@ -36,23 +35,23 @@ module FiringPinRetainerPins(rodSpec=Spec_RodOneEighthInch(),
 
 }
 
-module FiringPinRetainer(rimfireOffset=0.11, teardrop=false, showPins=true) {
+module FiringPinRetainer(springLength=0.3, teardrop=false, showPins=true) {
 
   // Retaining Pins
   if (showPins)
-  FiringPinRetainerPins(teardrop=teardrop);
+  FiringPinRetainerPins(springLength=springLength, teardrop=teardrop);
 
-  translate([FiringPinSpringLength()+(FiringPinHeadLength()/2),0,0])
+  translate([springLength+(FiringPinHeadLength()/2),0,0])
   rotate([0,-90,0]) {
 
     // Firing Pin Hole
     color("SteelBlue")
     translate([0,0,ManifoldGap()])
     mirror([0,0,1])
-    cylinder(r=0.085, h=3, $fn=8);
+    cylinder(r=0.085, h=3-FiringPinHeadLength(), $fn=8);
 
     // Nail head hole
-    cylinder(r=0.18, h=FiringPinSpringLength()+(FiringPinHeadLength()*1.25), $fn=12);
+    cylinder(r=0.18, h=springLength+(FiringPinHeadLength()*1.25), $fn=12);
   }
 }
 
