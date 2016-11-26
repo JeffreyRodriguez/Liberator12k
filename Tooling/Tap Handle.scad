@@ -17,8 +17,11 @@ use <../Meta/Manifold.scad>;
 
 // Century 1" NPT
 // tapWidth=0.84, tapHeight=0.837,
-module TapHandle(tapWidth=0.33, tapHeight=0.4, tapWall=0.15,
-                 lobeRadius=0.4, lobes=2, lobeOffset=3.5) {
+
+// Rando amazon AR15 Buffer Tube (this is a bit tall...)
+// tapWidth=0.765, tapHeight=1.02
+module TapHandle(tapWidth=0.765, tapHeight=0.55, tapWall=0.15,
+                 lobeRadius=0.4, lobes=2, lobeOffset=2.5) {
   render()
   difference() {
       union()
