@@ -204,7 +204,7 @@ function Spec_TubingThreeEighthsInch() = [
   [PipeTaperedDiameter, 0.375],
   [PipeThreadLength,    0.0],
   [PipeThreadDepth,     0.0],
-  [PipeClearanceSnug,   0.020],
+  [PipeClearanceSnug,   0.01],
   [PipeClearanceLoose,  0.022],
   [PipeFn,              20],
   [PipeWeightPerUnit,   0]
