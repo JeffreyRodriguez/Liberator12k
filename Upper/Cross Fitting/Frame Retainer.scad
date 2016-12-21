@@ -8,8 +8,7 @@ module FrameRetainer() {
   difference() {
     rotate([0,90,0])
     linear_extrude(height=FrameNutHeight())
-    hull()
-    FrameRodSleeves(radiusExtra=0.1);
+    Quadrail2d(radiusExtra=0.1);
 
     rotate([0,90,0])
     Pipe(StockPipe(), center=true);
@@ -23,7 +22,7 @@ module FrameRetainer() {
 FrameRetainer();
 %Reference();
 
-!scale(25.4)
+*!scale(25.4)
 translate([0,0,-ReceiverCenter()-WallFrameBack()])
 rotate([0,90,0])
 FrameRetainer();
