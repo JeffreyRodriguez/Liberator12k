@@ -8,7 +8,7 @@ module LowerMiddlePlater() {
 }
 
 
-scale([25.4, 25.4, 25.4]) {
+scale(25.4) {
   
   // Trigger Guard Center
   LowerMiddlePlater()
