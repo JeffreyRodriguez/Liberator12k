@@ -44,27 +44,8 @@ module CrossInserts(width=0.25, height=0.75, slotHeight=1.25,
   }
 }
 
-module CrossUpperCenter() {
-  color("DimGrey")
-  render(convexity=4)
-  difference() {
-    translate([-ReceiverIR()+ManifoldGap(),0,0])
-    rotate([0,90,0])
-    linear_extrude(height=ReceiverID()-ManifoldGap(2))
-    CrossFittingQuadrail2d();
-
-    translate([-0.001,0,0])
-    Frame();
-
-    CrossInserts(clearance=0.005);
-
-    // Tee
-    ReferenceTeeCutter(topLength=0);
-  }
-}
-
 module CrossUpperFront($fn=40, alpha=1) {
-  color("Gold", alpha)
+  color("Orange", alpha)
   render(convexity=4)
   difference() {
     union() {
@@ -72,11 +53,11 @@ module CrossUpperFront($fn=40, alpha=1) {
       mirror([1,0,0])
       rotate([0,90,0])
       hull() {
-        linear_extrude(height=ReceiverLugFrontMaxX()-ReceiverIR())
-        CrossFittingQuadrail2d(clearCeiling=false);
-        
+        linear_extrude(height=ReceiverLugFrontMaxX())
+        CrossFittingQuadrail2d();
+
         // Protect the charging handle
-        translate([0,0,ReceiverLugFrontMaxX()-ReceiverIR()-0.1])
+        translate([0,0,ReceiverLugFrontMaxX()-0.1])
         linear_extrude(height=0.1)
         translate([0,-ReceiverIR()])
         mirror([1,0])
@@ -108,11 +89,11 @@ module CrossUpperBack(alpha=1) {
 
       translate([ReceiverLugRearMinX(),0,0])
       rotate([0,90,0])
-        linear_extrude(height=abs(ReceiverLugRearMinX())-ReceiverIR())
+        linear_extrude(height=abs(ReceiverLugRearMinX()))
       hull() {
         CrossFittingQuadrail2d();
-        
-        
+
+
         // Protect the charging handle
         translate([0,-ReceiverIR()])
         mirror([1,0])
@@ -120,9 +101,9 @@ module CrossUpperBack(alpha=1) {
       }
 
       translate([0,0,-ReceiverCenter()])
-      ReceiverLugRear(extraTop=1);
+      ReceiverLugRear(extraTop=1, teardropAngle=-90);
     }
-    
+
     // Charging handle cutout
     translate([-ReceiverLength(), -RodRadius(StrikerRod())*1.1, ReceiverCenter()])
     cube([ReceiverLength(), RodDiameter(StrikerRod())*1.1, 0.75]);
@@ -139,7 +120,6 @@ module CrossUpperBack(alpha=1) {
 }
 
 CrossUpperFront();
-CrossUpperCenter();
 CrossInserts();
 CrossUpperBack();
 Frame();
@@ -159,3 +139,15 @@ CrossUpperFront();
 translate([0,0,ReceiverCenter()+WallFrameBack()])
 rotate([0,-90,0])
 CrossUpperBack();
+
+// Plated Back Modifier
+*!scale(25.4)
+render()
+intersection() {
+  translate([0,0,ReceiverCenter()+WallFrameBack()])
+  rotate([0,-90,0])
+  CrossUpperBack();
+
+  translate([0.7,-2,-ManifoldGap()])
+  cube([2,4,0.75+ManifoldGap(2)]);
+}

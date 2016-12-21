@@ -114,48 +114,9 @@ module ChargingInsert() {
   }
 }
 
-module ChargerSideplates(alpha=1) {
-  color("DimGrey", alpha)
-  render(convexity=4)
-  difference() {
-    hull() {
-      CrossUpperCenter();
-
-      // Rails
-      render(convexity=4)
-      rotate([0,90,0])
-      linear_extrude(height=ReceiverID(),
-                     center=true) {
-        translate([-ReceiverLength()/2,-ReceiverIR()])
-        mirror([1,0])
-        square([0.5,ReceiverID()]);
-      }
-    }
-
-    ReferenceTeeCutter();
-
-
-    translate([-0.001,0,0])
-    Frame();
-
-    CrossInserts(clearance=0.003);
-
-    // Charging Rod Hole
-    translate([-ReceiverIR()-ManifoldGap(),
-              -(ChargingHandleWidth()/2)-0.01,
-               ReceiverCenter()-ManifoldGap()])
-    cube([ReceiverID()+ManifoldGap(2),
-          ChargingHandleWidth()+0.02,
-          1]);
-
-  }
-}
-
 ChargingHandle();
 
 ChargingInsert();
-
-ChargerSideplates();
 
 Striker();
 
@@ -171,6 +132,3 @@ ChargingHandle();
 
 *!scale(25.4) rotate([180,0,0])
 ChargingInsert();
-
-*!scale(25.4) rotate([0,-90,0])
-ChargerSideplates();

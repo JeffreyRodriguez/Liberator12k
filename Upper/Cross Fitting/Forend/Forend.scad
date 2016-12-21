@@ -21,33 +21,29 @@ use <../Frame.scad>;
 
 use <Barrel Lugs.scad>;
 
+use <Forend Slotted.scad>;
+
 function ForendSlottedLength() = 3;
 function ForendMidsectionLength() = 0.25;
 function ForendFrontLength() = 0.375;
+
+module ForendSlotted() {
+  translate([LowerMaxX(),0,0])
+  rotate([0,90,0])
+  color("Gold")
+  render()
+  linear_extrude(height=ForendSlottedLength())
+  ForendSlotted2d(slotAngles=[0,180]);
+}
 
 function ForendFrontMinX() = LowerMaxX()
                              +ForendSlottedLength()
                              +ForendMidsectionLength()
                              +ForendSlottedLength()+BarrelLugLength();
 
-module ForendAlignmentLugs(barrelSpec=BarrelPipe(), wall=WallTee(),
-                           alignmentSide=0.25, clearance=0) {
-  for (i = [0,180,90,270])
-  rotate([i,0,0])
-  hull()
-  //for (r = [15,-15]) rotate([r,0,0])
-  rotate([0,0,45])
-  translate([-(alignmentSide/2)-clearance,
-             -(alignmentSide/2)-clearance,
-             PipeOuterRadius(barrelSpec, PipeClearanceLoose())+wall-clearance])
-  cube([alignmentSide+(clearance*2),
-        alignmentSide+(clearance*2),
-        0.45+(clearance*2)]);
-}
 
 module Forend(barrelSpec=BarrelPipe(), length=1,
               wall=WallTee(), wallTee=0.7,
-              alignmentLugs=false, alignmentSlots=false,
               clearCeiling=false, clearFloor=false, $fn=40) {
   color("DimGrey")
   render(convexity=4)
@@ -60,20 +56,12 @@ module Forend(barrelSpec=BarrelPipe(), length=1,
         
         children();
       }
-
-      if (alignmentLugs)
-      translate([length,0,0])
-      ForendAlignmentLugs(barrelSpec=barrelSpec, wall=wall);
-      
     }
-
-    if (alignmentSlots)
-    ForendAlignmentLugs(barrelSpec=barrelSpec, clearance=0.01, wall=wall);
-
+      
     Frame();
 
     translate([-BreechFrontX()-ManifoldGap(),0,0])
-    Barrel();
+    Barrel(barrel=barrelSpec);
   }
 }
 
@@ -99,69 +87,23 @@ module ForendBaseplate(length=LowerWallFront()) {
   }
 }
 
-
-module ForendSlotted(cartridgeSpec=Spec_Cartridge_12GAx3(),
-                     length=ForendSlottedLength(),
-                     slotAngles=[0,180]) {
-
-  semiAngle=60;
-
-  color("Gold")
-  render()
-  translate([LowerMaxX(),0,0])
-  difference() {
-    Forend(length=length);
-    
-    
-
-    for(slotAngle = slotAngles)
-    rotate([slotAngle,0,0]) {
-      translate([-ManifoldGap(),-CartridgeRimRadius(cartridgeSpec)-0.05,0])
-      cube([length+ManifoldGap(2), CartridgeRimDiameter(cartridgeSpec)+0.1, 2]);
-
-      rotate([0,90,0])
-      translate([0,0,-ManifoldGap()])
-      linear_extrude(height=length+ManifoldGap(2))
-      rotate(-180+(semiAngle/2))
-      semidonut(major=4, minor=CartridgeRimDiameter(cartridgeSpec), angle=semiAngle);
-    }
-  }
-}
-
-module ForendMidsection() {
+module ForendMidsection(barrelSpec=BarrelPipe()) {
   translate([LowerMaxX()+ForendSlottedLength(),0,0])
-  Forend(length=ForendMidsectionLength());
+  Forend(barrelSpec=barrelSpec, length=ForendMidsectionLength());
 }
 
-module BarrelLugTrack(length=1, open=true) {
-  angles = open ? [0, BarrelLugAngle()/2, BarrelLugAngle()] : [0];
-  
-  color("Gold")
-  render()
-  difference() {
-    Forend(alignmentLugs=false, length=length);
-    
-    rotate([0,90,0])
-    translate([0,0,-ManifoldGap()])
-    linear_extrude(height=length+ManifoldGap(2))
-    for (i=angles)
-    rotate(i)
-    offset(r=0.02)
-    BarrelLugs2d(barrelHole=false); 
-  }
-}
-
-module LuggedForend(lengthOpen=BarrelLugLength(), lengthClosed=3) {
+module LuggedForend(lengthOpen=BarrelLugLength(), lengthClosed=3, alpha=1) {
   echo("Lugged Forend Length", lengthOpen+lengthClosed);
 
-  translate([LowerMaxX()+ForendMidsectionLength()+ForendSlottedLength(),0])
-  color("Gold")
+  color("Gold", alpha)
   render(convexity=4)
-  union() {
-    BarrelLugTrack(open=true, length=lengthOpen+0.05+ManifoldGap());
-  
-    translate([lengthOpen,0,0])
-    BarrelLugTrack(open=false, length=lengthClosed);
+  translate([LowerMaxX()+ForendMidsectionLength()+ForendSlottedLength(),0])
+  difference() {
+    Forend(length=lengthClosed+lengthOpen);
+    
+    rotate([0,90,0])
+    BarrelLugTrack(slideLength=lengthClosed,
+                   lugLength=lengthOpen+0.05+ManifoldGap());
   }
 }
 
@@ -213,16 +155,11 @@ Breech();
 *!scale(25.4) rotate([0,90,0]) translate([-LowerWallFront(),0,0])
 ForendBaseplate();
 
-*!scale(25.4)
-rotate([0,90,0])
-translate([-LowerMaxX()-ForendSlottedLength(),0,0])
-ForendSlotted();
-
 // Plated Forend-Midsection
 *!scale(25.4)
 rotate([0,-90,0])
 translate([-LowerMaxX()-ForendSlottedLength(),0,0])
-ForendMidsection();
+ForendMidsection(barrelSpec=Spec_Tubing1628x1125());
 
 // Plated Lugged Forend
 *!scale(25.4)
