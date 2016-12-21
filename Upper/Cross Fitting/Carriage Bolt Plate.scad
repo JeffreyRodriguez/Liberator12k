@@ -14,7 +14,7 @@ module CarriageBoltPlate(height=0.2, rodClearance=undef) {
   render()
   linear_extrude(height=height)
   difference() {
-    Quadrail2d(clearFloor=true, clearCeiling=true);
+    Quadrail2d(clearFloor=true);
 
     FrameIterator()
     rotate(45)
