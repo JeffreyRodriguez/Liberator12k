@@ -162,7 +162,7 @@ module RevolverFrameTop(width=1) {
   }
 }
 
-PivotedLowerMiddle();
+LowerPivotedMiddle();
 
 color("Silver")
 translate([BARREL_OFFSET_X,0,BARREL_OFFSET_Z])

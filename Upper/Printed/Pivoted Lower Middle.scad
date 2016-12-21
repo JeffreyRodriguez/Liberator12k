@@ -27,7 +27,7 @@ function LowerPivotBolt() = Spec_BoltM8();
 
 module LowerPivotLug(wall=PivotWall(), bearing=PivotBearing()) {
   height = TriggerFingerWall()
-         + TriggerFingerRadius();
+         + 0.5;
 
   render()
   difference() {
