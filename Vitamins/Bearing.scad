@@ -12,13 +12,14 @@ BearingClearanceSnug   = 7; // Added to width, should not slip (default)
 function BearingClearanceSnug()  = BearingClearanceSnug;
 function BearingClearanceLoose() = BearingClearanceLoose;
 
-function BearingClearance(spec, clearance)   = (clearance != undef) ? lookup(clearance, spec) : 0;
-function BearingInnerRadius(spec, clearance) = lookup(BearingInnerRadius, spec) + BearingClearance(spec, clearance);
-function BearingOuterRadius(spec, clearance) = lookup(BearingOuterRadius, spec) + BearingClearance(spec, clearance);
+function BearingClearance(spec, clearance)     = (clearance != undef) ? lookup(clearance, spec) : 0;
+function BearingInnerRadius(spec, clearance)   = lookup(BearingInnerRadius, spec) + BearingClearance(spec, clearance);
+function BearingInnerDiameter(spec, clearance) = BearingInnerRadius(spec, clearance)*2;
+function BearingOuterRadius(spec, clearance)   = lookup(BearingOuterRadius, spec) + BearingClearance(spec, clearance);
 function BearingOuterDiameter(spec, clearance) = BearingOuterRadius(spec, clearance)*2;
-function BearingHeight(spec)                 = lookup(BearingHeight, spec);
-function BearingRaceRadius(spec)             = lookup(BearingRaceRadius, spec);
-function BearingFn(spec)                     = lookup(BearingFn, spec);
+function BearingHeight(spec)                   = lookup(BearingHeight, spec);
+function BearingRaceRadius(spec)               = lookup(BearingRaceRadius, spec);
+function BearingFn(spec)                       = lookup(BearingFn, spec);
 
 
 // 608 Bearing
