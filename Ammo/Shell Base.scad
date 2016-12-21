@@ -1,11 +1,11 @@
 use <Primer.scad>;
 
 module ShellBase(primer=Spec_Primer209(),
-                 chamberDiameter=0.75,
+                 chamberDiameter=0.78,
                  rimDiameter=0.87, rimHeight=0.07,
-                 chargeDiameter=0.6, chargeHeight=3/8,
-                 wadHeight=0.5,
-                 $fn=50) {
+                 chargeDiameter=0.69, chargeHeight=0.7,
+                 wadHeight=0.3,
+                 $fn=60) {
                    
   chamberRadius = chamberDiameter/2;
   rimRadius     = rimDiameter/2;
@@ -38,11 +38,21 @@ module ShellBase(primer=Spec_Primer209(),
       // Charge Pocket
       color("Green")
       translate([0,0,PrimerHeight(primer)])
-      cylinder(r=chargeRadius, h=chargeHeight);
-
+      hull() {
+        cylinder(r1=PrimerMinorRadius(primer),
+                 r2=chargeRadius,
+                  h=chargeHeight,
+                $fn=20);
+      };
+      
       // Primer
       color("Red")
       Primer(primer=primer);
+      
+      cylinder(r1=PrimerRimRadius(primer)+PrimerClearance(primer),
+                r2=PrimerMinorRadius(primer),
+                h=0.06,
+              $fn=PrimerFn(primer));
     }
 
     // Payload
@@ -51,8 +61,13 @@ module ShellBase(primer=Spec_Primer209(),
   }
 }
 
-ShellBase()
-%cylinder(r=0.78/2);
+render()
+difference() {
+  ShellBase()
+  %cylinder(r=0.78/2);
+  
+  cube(4);
+}
 
 
 *!scale([25.4, 25.4, 25.4])
