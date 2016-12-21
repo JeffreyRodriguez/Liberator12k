@@ -9,44 +9,59 @@ module ShellSlug(primer=Spec_Primer209(),
                  chamberDiameter=0.78,
                  height=1.5, taperHeight=0.5,
                  slug_diameter=0.52,
-                 chargeDiameter=0.6, chargeHeight=0.25, wadHeight=0.25,
-                 rimDiameter=0.87, rimHeight=0.07) {
+                 fins=false,
+                 chargeDiameter=0.68, chargeHeight=0.7, wadHeight=0.25,
+                 rimDiameter=0.87, rimHeight=0.09) {
                    
   chamberRadius = chamberDiameter/2;
   rimRadius     = rimDiameter/2;
   chargeRadius  = chargeDiameter/2;
 
+  render()
   ShellBase(primer=primer,
             chamberDiameter=chamberDiameter,
             chargeDiameter=chargeDiameter,
             chargeHeight=chargeHeight, wadHeight=wadHeight,
             rimDiameter=rimDiameter, rimHeight=rimHeight)
 
-    color("Orange")
     render()
     difference() {
       intersection() {
-        ShellTopper(taperHeight=taperHeight);
-                     
+        ShellTopper(chamberDiameter=chamberDiameter, height=height, taperHeight=taperHeight);
+        
+        if (fins)
         Fins(major=chamberRadius,
-             minor=chamberRadius-0.125,
+             minor=0.23,
+             width=0.25,
             height=height);
       }
       
       translate([0,0,height])
-      #children();
+      children();
     }
     
     echo("Shell Top Height: ", height);
 }
 
-scale(25.4)
-ShellSlug(taperHeight=0.6) {
-  translate([0,0,-0.5]) {
-    sphere(r=0.26, $fn=20);
-    cylinder(r=.26, h=1);
+scale(25.4*1.015) // Taulman Bridge shrinkage factor
+render()
+difference() {
+  ShellSlug(fins=false, taperHeight=0.6) {
+    for (i = [1])
+    translate([0,0,-0.26 - (i*0.5)]) {
+      sphere(r=0.275, $fn=20);
+      cylinder(r=.24, h=0.5);
+    }
+    
+    // Flatten the tip
+    translate([0,0,-0.5])
+    cylinder(r=1, h=1);
+    
+    // Internal void for buffering and material savings
+    translate([0,0,-1.5])
+    cylinder(r=0.125, h=0.25);
+    
   }
   
-  translate([0,0,-0.4])
-  cylinder(r=1, h=1);
+  *cube(5);
 }
