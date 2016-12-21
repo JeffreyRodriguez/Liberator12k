@@ -59,10 +59,13 @@ Primer12gCO2 = [
 ];
 
 function PrimerRimDiameter(primer=undef)   = lookup(PrimerRimDiameter, primer);
+function PrimerRimRadius(primer=undef)     = lookup(PrimerRimDiameter, primer)/2;
 function PrimerRimHeight(primer=undef)     = lookup(PrimerRimHeight, primer);
 function PrimerHeight(primer=undef)        = lookup(PrimerHeight, primer);
 function PrimerMajorDiameter(primer=undef) = lookup(PrimerMajorDiameter, primer);
+function PrimerMajorRadius(primer=undef)   = lookup(PrimerMajorDiameter, primer)/2;
 function PrimerMinorDiameter(primer=undef) = lookup(PrimerMinorDiameter, primer);
+function PrimerMinorRadius(primer=undef)   = lookup(PrimerMinorDiameter, primer)/2;
 function PrimerClearance(primer=undef)     = lookup(PrimerClearance, primer);
 function PrimerFn(primer=undef)            = lookup(PrimerFn, primer);
 
