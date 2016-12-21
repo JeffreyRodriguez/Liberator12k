@@ -60,29 +60,24 @@ module FrameNuts(nutHeight=FrameNutHeight(), nutRadius=0.3) {
 }
 
 module Quadrail2d(rod=Spec_RodFiveSixteenthInch(), rodClearance=RodClearanceLoose(),
-                  wallTee=WallTee(), wallRod=WallFrameRod(),
-                  clearFloor=false, clearCeiling=false) {
-
+                  bodyRadius=1.478, wallRod=WallFrameRod(),
+                  clearFloor=false) {
   difference() {
     hull() {
 
       // Cross-fitting walls
-      circle(r=ReceiverOR() + wallTee, $fn=Resolution(20,80));
+      circle(r=bodyRadius, $fn=Resolution(20,80));
 
       // Frame Walls
       FrameIterator()
       Rod2d(rod=FrameRod(), extraWall=wallRod, clearance=rodClearance, $fn=Resolution(20,50));
+      
+      children();
     }
 
 
     // Clear the floor for the lower receiver
     if (clearFloor)
-    translate([ReceiverCenter()-0.005,-2])
-    square([1,4]);
-
-    // Clear the ceiling
-    if (clearCeiling)
-    mirror([1,0])
     translate([ReceiverCenter()-0.005,-2])
     square([1,4]);
   }
