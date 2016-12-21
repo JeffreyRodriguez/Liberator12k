@@ -67,28 +67,6 @@ module ReceiverLugBoltHoles(boltSpec=Spec_BoltM4(),
               nutHeightExtra=nutHeightExtra, nutBackset=0.05);
 }
 
-
-
-module ReceiverLug(length=1, width=0.5, height=0.75, extraTop=ManifoldGap(),
-               tabHeight=0.25, tabWidth=ReceiverLugWidth(),
-               clearance=0.007) {
-  render()
-  difference() {
-
-    // Grip Tab
-    union() {
-
-      // Vertical
-      translate([-clearance,-width/2,-height])
-      cube([length+(clearance*2), width, height+extraTop]);
-
-      // Horizontal
-      translate([-clearance,-(tabWidth/2)-clearance,-height-clearance])
-      cube([length+(clearance*2), tabWidth+(clearance*2), tabHeight+(clearance*2)]);
-    }
-  }
-}
-
 module ReceiverLugRear(extraTop=ManifoldGap(), cutter=false,
                        teardrop=true, teardropAngle=90, hole=true) {
 
@@ -97,7 +75,7 @@ module ReceiverLugRear(extraTop=ManifoldGap(), cutter=false,
   difference() {
     translate([ReceiverLugRearMinX(),0,ReceiverLugRearZ()])
     T_Lug(length=ReceiverLugRearLength(),
-            height=abs(ReceiverLugRearZ()), extraTop=extraTop,
+            height=abs(ReceiverLugRearZ())+extraTop,
             cutter=cutter);
 
     // Grip Bolt Hole
@@ -106,13 +84,14 @@ module ReceiverLugRear(extraTop=ManifoldGap(), cutter=false,
   }
 }
 
-module ReceiverLugFront(cutter=false, extraTop=ManifoldGap()) {
+module ReceiverLugFront(cutter=false, clearance=UnitsImperial(0.007), extraTop=ManifoldGap()) {
   color("DarkOrange")
   render()
   translate([ReceiverLugFrontMaxX(),0,ReceiverLugFrontZ()])
   mirror([1,0,0])
   T_Lug(length=ReceiverLugFrontLength(), tabWidth=1.25,
-          height=abs(ReceiverLugFrontZ()), extraTop=extraTop,
+          height=abs(ReceiverLugFrontZ())+extraTop,
+          clearance=clearance,
           cutter=cutter);
 }
 
