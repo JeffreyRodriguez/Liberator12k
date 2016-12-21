@@ -16,6 +16,7 @@ use <../../Components/Tee Insert.scad>;
 use <../../Reference.scad>;
 
 use <../../Lower/Trigger.scad>;
+use <../../Lower/Lower.scad>;
 
 use <Sear Bolts.scad>;
 
@@ -50,6 +51,8 @@ module SearSupportTabWithBoltCutouts() {
     mirror([i,0,0])
     translate([SearBoltOffset()-0.125,-0.5,-0.15])
     cube([0.25, 1, 0.3]);
+    
+    HandleBolts(clearance=true);
   }
 }
 
@@ -59,6 +62,6 @@ translate([0,0,-ReceiverCenter()])
 //*!scale(25.4)
 SearGuide();
 
-*!scale(25.4) rotate([90,0,0])
+!scale(25.4) rotate([90,0,0])
 translate([0,0,-ReceiverCenter()])
 SearSupportTabWithBoltCutouts();
