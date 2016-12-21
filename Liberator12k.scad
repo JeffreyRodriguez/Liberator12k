@@ -15,12 +15,13 @@ use <Lower/Lower.scad>;
 
 use <Reference.scad>;
 
-
 use <Upper/Cross Fitting/Charger.scad>;
 use <Upper/Cross Fitting/Cross Upper.scad>;
 use <Upper/Cross Fitting/Frame.scad>;
 use <Upper/Cross Fitting/Forend/Barrel Lugs.scad>;
 use <Upper/Cross Fitting/Forend/Forend.scad>;
+use <Upper/Cross Fitting/Forend/Forend Pivoted 608.scad>;
+use <Upper/Cross Fitting/Forend/Forend Slotted.scad>;
 use <Upper/Cross Fitting/Firing Pin Guide.scad>;
 use <Upper/Cross Fitting/Sear Bolts.scad>;
 use <Upper/Cross Fitting/Sear Guide.scad>;
@@ -30,13 +31,15 @@ use <Upper/Cross Fitting/Striker.scad>;
 
 //$vpr = [80, 0, 360*$t];
 
+function SearLength() = 2;
+
 
 module Liberator12k() {
-  Stock();
+  %Stock(alpha=0.25);
 
   Breech();
 
-  Receiver();
+  %Receiver();
 
   Butt();
 
@@ -52,40 +55,38 @@ module Liberator12k() {
   mirror([1,0,0])
   FrameNuts();
 
-
-  // Lower
-  translate([0,0,-ReceiverCenter()]) {
-    Lower(showTrigger=true);
-    ReceiverLugBoltHoles(clearance=false);
-    GuardBolt(clearance=false);
-    HandleBolts(clearance=false);
-  }
-
   Striker();
   ChargingHandle();
   ChargingInsert();
   
+  SearBolts();
+  
+  translate([0,0,-ReceiverCenter()]) {
+    Sear();
+    SearSupportTab();
+    Trigger();
+  }
+
   translate([0,0,-ManifoldGap()])
   SearGuide();
-  SearBolts();
 
   FiringPinGuide(debug=true);
-  
-  CrossUpperFront(alpha=1);
-  CrossUpperBack(alpha=1);
+
   CrossInserts(alpha=1);
-  ChargerSideplates(alpha=1);
+  CrossUpperFront(alpha=0.25);
+  CrossUpperBack(alpha=0.25);
 
   //
-  // Forend
+  // Twist-lock Forend
   //
   ForendBaseplate();
-  LuggedForend();
-  ForendMidsection();
-  ForendSlotted(slotAngles=[90,270]);
-  ForendFront();
+  *LuggedForend(alpha=0.25);
+  *ForendMidsection();
+  *ForendSlotted12k(alpha=0.25);
+  *ForendFront();
 
-  translate([LowerMaxX()+ForendMidsectionLength()+ForendSlottedLength(),0]) {
+  // Barrel, lugs and shaft collar (animated)
+  *translate([LowerMaxX()+ForendMidsectionLength()+ForendSlottedLength(),0]) {
 
     translate([ForendSlottedLength()*Animate(ANIMATION_STEP_UNLOAD),0,0])
     translate([-ForendSlottedLength()*Animate(ANIMATION_STEP_LOAD),0,0]) {
@@ -97,6 +98,7 @@ module Liberator12k() {
 
         color("Black")
         rotate([45+15,0,0])
+        rotate([0,90,0])
         DoubleShaftCollar();
       }
 
@@ -104,7 +106,50 @@ module Liberator12k() {
       Barrel(hollow=true);
     }
   }
+  
+  //
+  // Pivoted Forend
+  //
+  translate([LowerPivotX(),0,LowerPivotZ()])
+  rotate([0,-PivotAngle()*Animate(ANIMATION_STEP_LOAD),0])
+  rotate([0,PivotAngle()*Animate(ANIMATION_STEP_UNLOAD),0])
+  translate([-LowerPivotX(),0,-LowerPivotZ()]) {
+
+    BarrelPivotLug();
+    Barrel();
+
+    BarrelShaftCollar();
+    PivotBearings();
+  }
+
+  translate([LowerMaxX()+ManifoldGap(2),0,0])
+  rotate([0,90,0])
+  color("Gold",0.25)
+  render()
+  linear_extrude(height=ForendSlottedLength()-ManifoldGap(3))
+  ForendSlotted2d(slotAngles=[180]);
+
+  ForendPivoted(alpha=0.25);
+
+
+  // Lower
+  translate([0,0,-ReceiverCenter()]) {
+    ReceiverLugBoltHoles(clearance=false);
+    GuardBolt(clearance=false);
+    HandleBolts(clearance=false);
+    Lower(showTrigger=false);
+  }
 }
 
-//rotate([0,0,360*$t])s
+module ForendSlotted12k(alpha=1) {
+
+  translate([LowerMaxX()+ManifoldGap(2),0,0])
+  rotate([0,90,0])
+  color("Gold", alpha)
+  render()
+  linear_extrude(height=ForendSlottedLength()-ManifoldGap(3))
+  ForendSlotted2d(slotAngles=[0,180]);
+}
+
+//rotate([0,0,360*$t])
 Liberator12k();
