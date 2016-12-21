@@ -8,7 +8,6 @@ use <../Vitamins/Nuts And Bolts.scad>;
 use <../Vitamins/Pipe.scad>;
 use <../Vitamins/Rod.scad>;
 
-use <../Reference.scad>;
 use <Receiver Lugs.scad>;
 use <Trigger.scad>;
 
@@ -76,7 +75,7 @@ module TriggerGuard() {
       // Bottom chamfer
       translate([0,0,-height+0.1])
       rotate([0,-90,0])
-      linear_extrude(height=ReceiverLength()*2, center=true)
+      linear_extrude(height=5, center=true)
       difference() {
         translate([-height,-GripWidth()])
         square([height,GripWidth()*2]);
@@ -226,7 +225,7 @@ module GripSplitter(clearance=0) {
 module LowerSidePlates(showLeft=true, showRight=true) {
 
   // Trigger Guard Sides
-  color("DarkSlateBlue")
+  color("DarkSlateBlue", 0.25)
   render()
   difference() {
 
