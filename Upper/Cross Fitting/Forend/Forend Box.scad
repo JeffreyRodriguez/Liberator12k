@@ -1,14 +1,14 @@
-use <../../Meta/Debug.scad>;
-use <../../Meta/Resolution.scad>;
-use <../../Meta/Manifold.scad>;
+use <../../../Meta/Debug.scad>;
+use <../../../Meta/Resolution.scad>;
+use <../../../Meta/Manifold.scad>;
 
-use <../../Vitamins/Pipe.scad>;
-use <../../Vitamins/Rod.scad>;
+use <../../../Vitamins/Pipe.scad>;
+use <../../../Vitamins/Rod.scad>;
 
-use <Frame.scad>;
-use <../../Reference.scad>;
-use <../../Ammo/Magazines/Box Magazine.scad>;
-use <../../Ammo/Cartridges/Cartridge_12GA.scad>;
+use <../Frame.scad>;
+use <../../../Reference.scad>;
+use <../../../Ammo/Magazines/Box Magazine.scad>;
+use <../../../Ammo/Cartridges/Cartridge_12GA.scad>;
 
 function ForendRearLength() = 1;
 function ForendFrontLength() = 0.6;

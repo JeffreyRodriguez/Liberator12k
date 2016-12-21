@@ -1,14 +1,14 @@
-use <../../Meta/Debug.scad>;
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Resolution.scad>;
-use <../../Components/Semicircle.scad>;
-use <../../Vitamins/Pipe.scad>;
-use <../../Vitamins/Rod.scad>;
-use <Frame.scad>;
-use <../../Reference.scad>;
-use <../../Ammo/Cartridges/Cartridge.scad>;
-use <../../Ammo/Cartridges/Cartridge_12GA.scad>;
-use <../../Ammo/Shell Base.scad>;
+use <../../../Meta/Debug.scad>;
+use <../../../Meta/Manifold.scad>;
+use <../../../Meta/Resolution.scad>;
+use <../../../Components/Semicircle.scad>;
+use <../../../Vitamins/Pipe.scad>;
+use <../../../Vitamins/Rod.scad>;
+use <../../../Reference.scad>;
+use <../../../Ammo/Cartridges/Cartridge.scad>;
+use <../../../Ammo/Cartridges/Cartridge_12GA.scad>;
+use <../../../Ammo/Shell Base.scad>;
+use <../Frame.scad>;
 
 function ForendRearLength() = 1;
 function ForendFrontLength() = 0.6;
@@ -28,15 +28,8 @@ module ForendSegment(wall=3/16, length=1, $fn=50,
   difference() {
     rotate([0,90,0])
     linear_extrude(height=length)
-    hull() {
-      FrameRodSleeves();
-
-      // Add some more material to the center for ergo and strength
-      circle(r=TeeRimRadius(ReceiverTee())+wall,
-             $fn=PipeFn(BarrelPipe()));
-      
-      children();
-    }
+    Quadrail2d()
+    children();
 
     // Barrel Hole
     translate([-ForendOffset(),0,0])
@@ -45,30 +38,6 @@ module ForendSegment(wall=3/16, length=1, $fn=50,
     // Forend Rod Holes
     Frame();
 
-    // Open bottom
-    if(open==true)
-    rotate([openingAngle,0,0])
-    translate([-0.1,-(CartridgeRimDiameter(Spec_Cartridge_12GAx3())/2),-TeeCenter(ReceiverTee())])
-    cube([length+0.2, CartridgeRimDiameter(Spec_Cartridge_12GAx3()), TeeCenter(ReceiverTee())]);
-    //translate([-0.1,-PipeOuterRadius(BarrelPipe()),-TeeCenter(ReceiverTee())])
-    //cube([length+0.2, PipeOuterDiameter(BarrelPipe()), TeeCenter(ReceiverTee())]);
-    
-
-    // Shaft collar
-    if (shaftCollar)
-    translate([shaftCollarHeight+ManifoldGap(),0,0])
-    rotate([0,0,0])
-    rotate([0,-90,0])
-    linear_extrude(height=shaftCollarHeight+ManifoldGap(2)) {
-    
-      // Shaft Collar
-      circle(r=shaftCollarRadius+0.01, $fn=Resolution(12,40));
-    
-      // Screw Holes
-      for (y = [-shaftCollarRadius,shaftCollarRadius-0.375])
-      translate([0,y])
-      square([0.3,0.375]);
-    }
   }
 }
 
@@ -76,17 +45,7 @@ module ForendTubeSegment(length=1, debug=false,
                          shaftCollar=true, shaftCollarThrough=false,
                          open=false, openingAngle=90,
                          shells=true, shellHoles=false, shellSlots=false, shellSlotAngle=110) {
-  shellTubeOffsetY = (CartridgeRimDiameter(Spec_Cartridge_12GAx3())/2)+0.05;
-  shellTubeOffsetZ = 0.9375+(CartridgeRimDiameter(Spec_Cartridge_12GAx3())/2)+0.125;
-  shellTubeRadius = (CartridgeRimDiameter(Spec_Cartridge_12GAx3())/2);
   
-  if (debug==true)
-  color("Red")
-  for (m = [1,-1])
-  for (i = [0,1])
-  translate([i*2.655,shellTubeOffsetY*m,-shellTubeOffsetZ])
-  rotate([0,90,0])
-  ShellBase(wadHeight=2);
   
   // Front
   color("OliveDrab")
@@ -97,7 +56,6 @@ module ForendTubeSegment(length=1, debug=false,
                   open=open, openingAngle=openingAngle) {
       
       // Shell Tube
-      if (shells==true)
       for (i = [0, 1])
       mirror([0,i])
       translate([shellTubeOffsetZ,shellTubeOffsetY])
@@ -130,24 +88,47 @@ module ForendTubeSegment(length=1, debug=false,
   };
 }
 
-module Forend(debug=false) {
+module ForendShells(cartridge=Spec_Cartridge_12GAx275(), count=3) {
+  
+  shellTubeOffsetZ = 0.9375+(CartridgeRimDiameter(cartridge)/2)+0.125;
+  
+  color("Red")
+  for (i = [0:count-1])
+  translate([i*CartridgeOverallLength(cartridge),0,-shellTubeOffsetZ])
+  rotate([0,90,0])
+  ShellBase(wadHeight=CartridgeOverallLength(cartridge)-1);
+}
 
-  // Rear
-  translate([BreechFrontX()+0.05,0,0])
-  ForendTubeSegment(length=4, debug=debug, shellHoles=true,
-                    open=true, openingAngle=90);
+module Forend(barrelSpec=BarrelPipe(), cartridge=Spec_Cartridge_12GAx275(), alpha=1, debug=false) {
   
+  shellTubeOffsetZ = 0.9375+(CartridgeRimDiameter(cartridge)/2)+0.125;
+  shellTubeRadius = (CartridgeRimDiameter(cartridge)/2);
   
-  translate([BreechFrontX()+4.01,0,0])
-  ForendTubeSegment(length=3.5, debug=false, shellHoles=true);
-  
-  translate([BreechFrontX()+7.515,0,0])
-  ForendTubeSegment(length=0.25, debug=false, shaftCollar=false);
+  translate([BreechFrontX(),0,0])
+  rotate([0,90,0]) {
+    color("Gold", alpha)
+    render()
+    linear_extrude(height=7.5)
+    difference() {
+      Quadrail2d()
+      translate([shellTubeOffsetZ,0])
+      circle(r=shellTubeRadius+0.25, $fn=PipeFn(BarrelPipe()));
+      
+      Pipe2d(pipe=barrelSpec, clearance=PipeClearanceLoose());
+      
+      FrameRods();
+    }
+  }
   
 }
 
+translate([BreechFrontX(),0,0])
+ForendShells();
+
 Reference();
-Forend(debug=true);
+Frame();
+Forend(alpha=0.25, debug=true);
+
 
 
 // Plate
