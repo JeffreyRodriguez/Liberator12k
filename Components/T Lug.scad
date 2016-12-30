@@ -9,7 +9,7 @@ module T_Lug2d(
           clearance=UnitsImperial(0.007),
              cutter=false) {
   clearance = cutter ? clearance : 0;
-
+  render()
   union() {
 
     // Vertical
