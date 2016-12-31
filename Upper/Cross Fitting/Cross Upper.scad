@@ -57,8 +57,8 @@ module CrossUpperFront($fn=40, alpha=1) {
         CrossFittingQuadrail2d();
 
         // Protect the charging handle
-        translate([0,0,ReceiverLugFrontMaxX()-0.1])
-        linear_extrude(height=0.1)
+        translate([0,0,ReceiverLugFrontMaxX()-0.1-ReceiverIR()])
+        linear_extrude(height=ReceiverIR()+0.1)
         translate([0,-ReceiverIR()])
         mirror([1,0])
         square([ReceiverCenter()+0.5,ReceiverID()]);
@@ -74,10 +74,17 @@ module CrossUpperFront($fn=40, alpha=1) {
     Breech();
 
     CrossInserts(clearance=0.005);
+    
+    ChargingHandleCutout();
 
     // Tee
     ReferenceTeeCutter(topLength=0.01);
   }
+}
+
+module ChargingHandleCutout(width=0.25) {
+  translate([ReceiverLugRearMinX(), -width*0.55, ReceiverCenter()])
+  cube([abs(ReceiverLugRearMinX())+ReceiverIR(), width*1.1, 0.75]);
 }
 
 module CrossUpperBack(alpha=1) {
@@ -103,10 +110,8 @@ module CrossUpperBack(alpha=1) {
       translate([0,0,-ReceiverCenter()])
       ReceiverLugRear(extraTop=1, teardropAngle=-90);
     }
-
-    // Charging handle cutout
-    translate([-ReceiverLength(), -RodRadius(StrikerRod())*1.1, ReceiverCenter()])
-    cube([ReceiverLength(), RodDiameter(StrikerRod())*1.1, 0.75]);
+    
+    ChargingHandleCutout();
 
     Stock(ReceiverTee(), StockPipe());
 
