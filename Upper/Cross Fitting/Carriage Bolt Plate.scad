@@ -10,7 +10,7 @@ use <../../Reference.scad>;
 
 use <Frame.scad>;
 
-module CarriageBoltPlate(height=0.2, rodClearance=undef) {
+module CarriageBoltPlate(height=0.25, rodClearance=undef) {
   render()
   linear_extrude(height=height)
   difference() {
