@@ -1,4 +1,4 @@
-use <../Meta/Manifold.scad>;
+use <../../Meta/Manifold.scad>;
 
 // Century 1/8" NPT
 // tapWidth=0.33, tapHeight=0.4
@@ -30,10 +30,10 @@ module TapHandle(tapWidth=0.765, tapHeight=0.55, tapWall=0.15,
         rotate(360/lobes*i)
         translate([lobeOffset,0,0])
         cylinder(r=lobeRadius, h=tapHeight, $fn=30);
-        
+
         cylinder(r=tapWidth+tapWall, h=tapHeight, $fn=60);
       }
-    
+
     translate([-tapWidth/2,-tapWidth/2,-ManifoldGap()])
     cube([tapWidth, tapWidth, tapHeight+ManifoldGap(2)]);
   }

@@ -1,5 +1,5 @@
-include <../Vitamins/Pipe.scad>;
-include <../Vitamins/Rod.scad>;
+include <../../Vitamins/Pipe.scad>;
+include <../../Vitamins/Rod.scad>;
 
 module breech_jig(breechBushing=BushingThreeQuarterInch, wall=1/8, floor=1/4, $fn=50) {
   difference() {
