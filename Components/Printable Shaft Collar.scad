@@ -7,22 +7,20 @@ use <../Vitamins/Spring.scad>;
 use <../Reference.scad>;
 
 module PrintableShaftCollar(pipeSpec=Spec_TubingOnePointOneTwoFive(),
-                             rodSpec=Spec_RodOneQuarterInch(),
-                             holeSpec=Spec_RodOneEighthInch(),
                              setScrewSpec=Spec_BoltM4(),
                              length=0.25, wall=0.5, height=0.5) {
 
   render()
   difference() {
-    
+
     // Rod Holder Block
     union() {
       linear_extrude(height=height)
       difference() {
         hull() {
-            
+
           circle(r=PipeOuterRadius(pipeSpec)+wall, $fn=PipeFn(pipeSpec));
-          
+
           // Nut/bolt support
           rotate(-90)
           translate([PipeOuterRadius(pipeSpec, PipeClearanceLoose()),
@@ -30,11 +28,11 @@ module PrintableShaftCollar(pipeSpec=Spec_TubingOnePointOneTwoFive(),
           square([BoltNutHeight(setScrewSpec)+length,
                   BoltNutDiameter(setScrewSpec)+(wall*2)]);
         }
-        
+
         Pipe2d(pipe=pipeSpec, clearance=PipeClearanceLoose());
       }
     }
-    
+
     // Set-screw
     rotate([0,0,-90])
     translate([PipeOuterRadius(pipeSpec)+0.02,0,
@@ -49,4 +47,4 @@ module PrintableShaftCollar(pipeSpec=Spec_TubingOnePointOneTwoFive(),
 
 
 scale(25.4)
-PrintableShaftCollar(pipeSpec=Spec_TubingOnePointOneTwoFive());
+PrintableShaftCollar(pipeSpec=Spec_TubingZeroPointSevenFive());
