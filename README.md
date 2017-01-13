@@ -1,32 +1,39 @@
 # Welcome to #Liberator12k project!
 
-Everyone's Favorite 3D Printed Shotgun. Also, First ;)
+Everyone's Favorite 3D Printed Shotgun.
 
 Making a Gun
 ----------
-Impatient? Slow down there, Hoss - this is a work in progress, but here's the basics. This project contains more than one gun design. Basically, a pistol and a long-gun configuration.
+Impatient? Slow down there, Hoss - this is a work in progress, but here's the basics:
+
+This project contains more than one gun design; a pistol and a long-gun configuration.
 
 Each of these guns can be configured to whatever materials may be around.
 
 Start Here: \#Liberator12k Shotgun
 
-And Here: \#L12k Pipe Pistol
+And Here: \#L12k Pistol 22LR
+
+Tech Levels
+-----------
 
 Designing New Guns
 ---------------
 The real "secret sauce" of this project, is the software library I developed
-through the original shotgun design process. I tried a lot of different ideas, and what I came away with, is an OpenSCAD software library chock-full of useful *configurable* objects.
+during the design process of these guns. I tried a lot of different ideas,
+and what I came away with, is an OpenSCAD software library chock-full of
+useful *configurable* objects.
 
 If you browse through the code, you'll see the project has been grouped into
 major functional areas:
 
-  * Lower Receiver
-  * Upper Receiver
-  * Tooling
-  * Ammo
-  * Meta
-  * Vitamins
-  * Toys
+  * Tooling - Printable tools for gun making
+  * Vitamins - Store-bought parts, nut and bolts, etc.
+  * Lower - Grip with a simple trigger.
+  * Upper - Different uppers that work with the lower (maybe).
+  * Ammo - Printable Ammunition
+  * Meta - 3D modeling-specific code
+  * Toys - Things I've tried and thrown away (maybe)
 
 There are more directories than mentioned above, but this should give you a taste of what's in here.
 
