@@ -251,6 +251,23 @@ function Spec_PointFiveSix9mmBarrel() = [
 
 
 
+// 2.5" Sch40 PVC (ECM Water Jacket)
+function Spec_TwoPointFiveInchSch40PVC() = [
+  [PipeInnerDiameter,   2.5],
+  [PipeOuterDiameter,   2.88],
+  [PipeTaperedDiameter, 0.0],
+  [PipeThreadLength,    0],
+  [PipeThreadDepth,     0],
+  [PipeClearanceSnug,   0.020],
+  [PipeClearanceLoose,  0.022],
+  [PipeFn,              50],
+  [PipeWeightPerUnit,   0]
+];
+
+
+
+
+
 echo (PipeOuterCircumference(Spec_PointFiveSix9mmBarrel()));
 
 
