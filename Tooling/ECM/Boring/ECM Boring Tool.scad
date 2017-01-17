@@ -5,97 +5,79 @@ use <../../../Vitamins/Pipe.scad>;
 use <../../../Vitamins/Rod.scad>;
 use <../../../Vitamins/Nuts And Bolts.scad>;
 use <../../../Components/Pipe Cap.scad>;
+use <../../../Components/Semicircle.scad>;
 
 PIPE_SPEC = Spec_TubingZeroPointSevenFive();
 
 // Smoothbore 12ga stock (old test bits)
-BARREL_OD = 1.125+0.025;
 BARREL_ID = 0.813+0.01;
 
 // Rifled 12ga stock
-BARREL_OD = 1.125+0.025;
 BARREL_ID = 0.75+0.008;
 
 // .44 Spl stock
-BARREL_OD = 0.751+0.02;
-BARREL_ID = 0.375-0.003;
+BARREL_ID = 0.375;
+TARGET_ID = 0.430;
 
-module ECM_Boring_Insert(length=1.2,
-                             barrelInnerDiameter = BARREL_ID,
-                             electrodeDiameter=0.09375+0.005,
-                             wall=0.5,
-                             fluteDepth=0.05, fluteWidth=0.1, fluteCount=2) {
-
-  render()
-  difference() {
-    
-    // Center the insert in the bore
-    cylinder(r=barrelInnerDiameter/2,
-             h=length, $fn=50);
-    
-    // Electrode Hole
-    cylinder(r=electrodeDiameter/2,
-             h=length, $fn=10);
-    
-    // Bottom Water Cutouts
-    for (r = [1:fluteCount])
-    rotate(360/fluteCount*r)
-    translate([(barrelInnerDiameter/2)-fluteDepth,
-               -fluteWidth/2,
-               -ManifoldGap()])
-    cube([barrelInnerDiameter,
-          fluteWidth,
-          length+ManifoldGap(2)]);
-  }
-}
-
-module ECM_Boring_Cap(pipeSpec=PIPE_SPEC,
-                      electrodeDiameter=(1/16)+0.005,
-                      wall=0.125, base=0.5, length=1) {
+module ECM_Boring_Insert(startDiameter=BARREL_ID, startHeight=4.0,
+                         targetDiameter=TARGET_ID, targetHeight=0.25,
+                         electrodeDiameter=0.04, electrodeHeight=0.06,
+                         startFluteAngle=45, targetFluteAngle=90,
+                         $fn=16) {
+  
+  length = startHeight+targetHeight;
 
   render()
   difference() {
-    PipeCap(pipeSpec=pipeSpec,
-            length=length,
-            base=base,
-            wall=wall);
+    union() {
     
-    // Electrode Hole
-    translate([0,0,-ManifoldGap()])
-    cylinder(r=electrodeDiameter/2,
-             h=length, $fn=10);
-    
-    // Watering hole
-    translate([0,0,-ManifoldGap()])
-    difference() {
+      // Target ID guide
+      cylinder(r=targetDiameter/2, h=targetHeight);
       
-      // Pipe ID Cutaway
-      cylinder(r=PipeInnerRadius(pipeSpec),
-                h=length+ManifoldGap(),
-              $fn=Resolution(20,60));
-    
-      // Electrode support
-      translate([0,0,-ManifoldGap()])
-      cylinder(r=electrodeDiameter/2,
-               h=length, $fn=10);
-      
-      translate([-PipeInnerRadius(pipeSpec), -0.1,0])
-      cube([PipeInnerDiameter(pipeSpec), 0.2, length+ManifoldGap(2)]);
+      // Starting ID guide
+      translate([0,0,targetHeight-ManifoldGap()])
+      cylinder(r=startDiameter/2, h=startHeight);
     }
     
+    // Electrode ring, tapered for printing
+    translate([0,0,targetHeight-ManifoldGap()])
+    difference() {
+      
+      // Cutter
+      cylinder(r=(targetDiameter/2)-ManifoldGap(),
+               h=electrodeHeight);
+
+      // Taper the cutter
+      translate([0,0,-ManifoldGap()])
+      cylinder(r1=(startDiameter/2)-electrodeDiameter+ManifoldGap(),
+               r2=(startDiameter/2)+ManifoldGap(),
+                h=electrodeHeight+ManifoldGap(2));
+    }
+
+    // Electrode Hole
+    translate([0,0,targetHeight])
+    cylinder(r=0.04,h=length, $fn=$fn/2);
+
+    // Hex Bit Hole
+    translate([0,0,-ManifoldGap()])
+    cylinder(r=0.08,h=targetHeight/2, $fn=6);
+    
+    // Top Water Cutout
+    rotate(180)
+    translate([0,0,targetHeight-ManifoldGap()])
+    linear_extrude(height=startHeight+ManifoldGap(2))
+    semicircle(od=targetDiameter*2, angle=startFluteAngle, center=true);
+    
+    // Bottom Water Cutout
+    translate([0,0,-ManifoldGap()])
+    linear_extrude(height=targetHeight+ManifoldGap(2))
+    semidonut(minor=startDiameter-(electrodeDiameter*2),
+              major=targetDiameter*2,
+              angle=targetFluteAngle,
+              center=true, $fn=16);
   }
-
-}
-
-scale(25.4) {
-  translate([0,0,1])
-  ECM_Boring_Insert();
-
-  color("DimGrey", 0.5)
-  ECM_Boring_Cap();
 }
 
 // Plated insert
-*!scale(25.4) ECM_Boring_Insert();
-
-!scale(25.4) ECM_Boring_Cap();
+scale(25.4)
+ECM_Boring_Insert();
