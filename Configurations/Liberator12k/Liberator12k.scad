@@ -1,31 +1,31 @@
 //$t=0.7267;
-include <Meta/Animation.scad>;
+include <../../Meta/Animation.scad>;
 
-use <Meta/Debug.scad>;
-use <Meta/Manifold.scad>;
-use <Meta/Resolution.scad>;
+use <../../Meta/Debug.scad>;
+use <../../Meta/Manifold.scad>;
+use <../../Meta/Resolution.scad>;
 
-use <Vitamins/Pipe.scad>;
-use <Vitamins/Rod.scad>;
-use <Vitamins/Double Shaft Collar.scad>;
+use <../../Vitamins/Pipe.scad>;
+use <../../Vitamins/Rod.scad>;
+use <../../Vitamins/Double Shaft Collar.scad>;
 
-use <Lower/Receiver Lugs.scad>;
-use <Lower/Trigger.scad>;
-use <Lower/Lower.scad>;
+use <../../Lower/Receiver Lugs.scad>;
+use <../../Lower/Trigger.scad>;
+use <../../Lower/Lower.scad>;
 
-use <Reference.scad>;
+use <../../Reference.scad>;
 
-use <Upper/Cross Fitting/Charger.scad>;
-use <Upper/Cross Fitting/Cross Upper.scad>;
-use <Upper/Cross Fitting/Frame.scad>;
-use <Upper/Cross Fitting/Forend/Barrel Lugs.scad>;
-use <Upper/Cross Fitting/Forend/Forend.scad>;
-use <Upper/Cross Fitting/Forend/Forend Pivoted 608.scad>;
-use <Upper/Cross Fitting/Forend/Forend Slotted.scad>;
-use <Upper/Cross Fitting/Firing Pin Guide.scad>;
-use <Upper/Cross Fitting/Sear Bolts.scad>;
-use <Upper/Cross Fitting/Sear Guide.scad>;
-use <Upper/Cross Fitting/Striker.scad>;
+use <../../Upper/Cross Fitting/Charger.scad>;
+use <../../Upper/Cross Fitting/Cross Upper.scad>;
+use <../../Upper/Cross Fitting/Frame.scad>;
+use <../../Upper/Cross Fitting/Forend/Barrel Lugs.scad>;
+use <../../Upper/Cross Fitting/Forend/Forend.scad>;
+use <../../Upper/Cross Fitting/Forend/Forend Pivoted 608.scad>;
+use <../../Upper/Cross Fitting/Forend/Forend Slotted.scad>;
+use <../../Upper/Cross Fitting/Firing Pin Guide.scad>;
+use <../../Upper/Cross Fitting/Sear Bolts.scad>;
+use <../../Upper/Cross Fitting/Sear Guide.scad>;
+use <../../Upper/Cross Fitting/Striker.scad>;
 
 //echo($vpr);
 
