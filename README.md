@@ -1,21 +1,53 @@
-# Welcome to #Liberator12k project!
-
+Welcome to #Liberator12k project!
+=================================
 Everyone's Favorite 3D Printed Shotgun.
 
-Making a Gun
+DANGER: ART AT YOUR OWN RISK
+----------------------------
+Beware, this software can literally kill you and others.
+This isn't one of those bullshit government-mandated warnings. If you blow your
+hand or face off, I'm going to get very choked up - there could be tears.
+
+Safety precautions and procedures *are not fully documented here*.
+
+### Minimum Safety Standard
+Before you shoot a DIY gun from your hands, test it first. You will need:
+
+* A secure test rig to hold the gun pointed in a **safe direction**.
+* A bulletproof barrier, such as several feet of dirt or very large tree.
+* A string long enough to pull the trigger from behind cover.
+* At least 5 of the highest pressure cartridges you can find.
+
+Quick Start
 ----------
-Impatient? Slow down there, Hoss - this is a work in progress, but here's the basics:
+You will need to download [OpenSCAD](http://www.openscad.org) to open the files
+and render them printable.
 
-This project contains more than one gun design; a pistol and a long-gun configuration.
+This project contains more than one gun design; check out the "Configurations"
+directory for details. Start Here: [\#Liberator12k Shotgun Configuration](Configurations/Liberator12k/README.md)
 
-Each of these guns can be configured to whatever materials may be around.
-
-Start Here: \#Liberator12k Shotgun
-
-And Here: \#L12k Pistol 22LR
 
 Tech Levels
 -----------
+The original \#Liberator12k project goal was to design a safe and
+functional shotgun from readily available parts, assembled with hand tools
+and no drilling. I broke this no-drill rule twice - when safety *demanded* it;
+I created drill-guides to aid in proper hole placement.
+
+That original goal forbids many designs that are still very achievable for
+anyone with a few power tools. As the project continues to grow, I will be
+targeting advancing "tech levels", with a strong focus on simplicity and cost.
+
+Tech Level One assumes you have the tools of Tech Level Zero.
+A "Plus" tech level describes the 'better than minimal' tools for that level.
+
+| Tech Level | Tools                                                           |
+|------------|-----------------------------------------------------------------|
+| Zero       | Metal Hacksaw, Metal Files,  Drill (hand or power), Hex wrenches|
+| Zero Plus  | Cutoff Wheel, Bench Grinder, Drill Press, Bolt Cutters          |
+| One        | 12v power supply (battery, charger, 3D printer, or lab supply)  |
+| One Plus   | Lab power supply                                                |
+
 
 Designing New Guns
 ---------------
@@ -36,19 +68,6 @@ major functional areas:
   * Toys - Things I've tried and thrown away (maybe)
 
 There are more directories than mentioned above, but this should give you a taste of what's in here.
-
-
-ART AT YOUR OWN RISK
-====================
-
-Beware, this software can literally kill you and others.
-
-Building your own firearm can be **EXTREMELY DANGEROUS**. The necessary safety precautions and procedures *are not fully documented here*.
-
-Before holding or shouldering any home made firearm, repeated testing from behind a solid barrier (e.g. several feet of dirt) is a must. Material failure is still possible, even after extensive testing.
-
-One of the major goals of this project has been to improve on the safety of the sketchy 3/4" Schedule 40 pipe shotgun. Seriously - those are sketchy AF.
-
 
 Unlicense
 =======
