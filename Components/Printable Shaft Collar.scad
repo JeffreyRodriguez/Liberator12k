@@ -8,7 +8,7 @@ use <../Reference.scad>;
 
 module PrintableShaftCollar(pipeSpec=Spec_TubingOnePointOneTwoFive(),
                              setScrewSpec=Spec_BoltM4(),
-                             length=0.25, wall=0.5, height=0.5) {
+                             length=0.25, wall=0.125, height=0.5) {
 
   render()
   difference() {
