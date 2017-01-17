@@ -7,7 +7,7 @@ module PipeCap(pipeSpec=PIPE_SPEC,
           pipeClearance=PipeClearanceLoose(),
                    base=0.25,
                    wall=0.125,
-              extension=0.125) {
+              extension=0.25) {
   render()
   difference() {
 
@@ -19,7 +19,7 @@ module PipeCap(pipeSpec=PIPE_SPEC,
     // Pipe Cutout
     translate([0,0,base])
     Pipe(pipe=pipeSpec,
-       length=extension+ManifoldGap()
+       length=extension+ManifoldGap(),
        clearance=pipeClearance);
   }
 }
