@@ -7,8 +7,9 @@ use <../Vitamins/Spring.scad>;
 use <../Reference.scad>;
 
 module PrintableShaftCollar(pipeSpec=Spec_TubingOnePointOneTwoFive(),
-                             setScrewSpec=Spec_BoltM4(),
-                             length=0.25, wall=0.125, height=0.5) {
+                             setScrewSpec=Spec_BoltM4(), screwOffsetZ=0.25,
+                             length=0.25, wall=0.125, height=0.5,
+                             teardropAngle=90) {
 
   render()
   difference() {
@@ -19,7 +20,7 @@ module PrintableShaftCollar(pipeSpec=Spec_TubingOnePointOneTwoFive(),
       difference() {
         hull() {
 
-          circle(r=PipeOuterRadius(pipeSpec)+wall, $fn=PipeFn(pipeSpec));
+          circle(r=PipeOuterRadius(pipeSpec)+wall, $fn=PipeFn(pipeSpec)*2);
 
           // Nut/bolt support
           rotate(-90)
@@ -35,13 +36,12 @@ module PrintableShaftCollar(pipeSpec=Spec_TubingOnePointOneTwoFive(),
 
     // Set-screw
     rotate([0,0,-90])
-    translate([PipeOuterRadius(pipeSpec)+0.02,0,
-               height/2])
+    translate([PipeOuterRadius(pipeSpec)+0.02,0,screwOffsetZ])
     rotate([0,90,0])
     rotate([0,0,90])
     NutAndBolt(bolt=setScrewSpec, boltLength=UnitsImperial(2),
                nutHeightExtra=PipeOuterRadius(pipeSpec),
-               clearance=true);
+               teardrop=true, teardropAngle=90, clearance=true);
   }
 }
 
