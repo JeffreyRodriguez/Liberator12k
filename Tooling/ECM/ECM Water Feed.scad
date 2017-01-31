@@ -103,7 +103,7 @@ module ECM_WaterFeed(pipeSpec=PIPE_SPEC, rodSpec=ROD_SPEC, boltSpec=BOLT_SPEC,
         length=base);
 
     // Rod O-Ring
-    translate([0,0,wall+(rodORingSection/2)])
+    translate([0,0,wall])
     ORing(innerDiameter=RodDiameter(rodSpec),
                 section=rodORingSection);
 
