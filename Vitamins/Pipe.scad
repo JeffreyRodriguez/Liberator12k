@@ -192,7 +192,7 @@ function Spec_TubingZeroPointSevenFive() = [
   [PipeThreadLength,    0.0],
   [PipeThreadDepth,     0.0],
   [PipeClearanceSnug,   0.020],
-  [PipeClearanceLoose,  0.022],
+  [PipeClearanceLoose,  0.03],
   [PipeFn,              30],
   [PipeWeightPerUnit,   42]
 ];
