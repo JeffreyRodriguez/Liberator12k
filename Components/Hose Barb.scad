@@ -7,7 +7,7 @@ module HoseBarb(barbOuterMajorDiameter=0.6,
                 barbBottomAngle=60,
                 segments=4, segmentSpacing=0.125,
                 extraTop=0, extraBottom=0.25,
-                $fn=20) {
+                $fn=25) {
   
   /* FIXME: I know this is wrong.
    * I want barbBottomAngle so I can tweak minimum overhang angle.
