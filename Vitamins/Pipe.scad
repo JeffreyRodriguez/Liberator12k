@@ -158,29 +158,16 @@ function Spec_PipeOneInchSch80() = [
   [PipeWeightPerUnit,   0] // TODO
 ];
 
-// 1.125x0.813" DOM Tubing
-function Spec_TubingOnePointOneTwoFive() = [
-  [PipeInnerDiameter,   0.813],
-  [PipeOuterDiameter,   1.125],
-  [PipeTaperedDiameter, 1.018],
-  [PipeThreadLength,    0.9],
-  [PipeThreadDepth,     0.5],
-  [PipeClearanceSnug,   0.020],
-  [PipeClearanceLoose,  0.022],
-  [PipeFn,              50],
-  [PipeWeightPerUnit,   42]
-];
-
-// 1.628x0.1.125" DOM Tubing
-function Spec_Tubing1628x1125() = [
-  [PipeInnerDiameter,   1.125],
-  [PipeOuterDiameter,   1.628],
-  [PipeTaperedDiameter, 0.0],
+// 0.375" OD DOM Tubing (Just guessing)
+function Spec_TubingThreeEighthsInch() = [
+  [PipeInnerDiameter,   0.23],
+  [PipeOuterDiameter,   0.375],
+  [PipeTaperedDiameter, 0.375],
   [PipeThreadLength,    0.0],
   [PipeThreadDepth,     0.0],
-  [PipeClearanceSnug,   0.020],
+  [PipeClearanceSnug,   0.01],
   [PipeClearanceLoose,  0.022],
-  [PipeFn,              40],
+  [PipeFn,              20],
   [PipeWeightPerUnit,   0]
 ];
 
@@ -197,16 +184,42 @@ function Spec_TubingZeroPointSevenFive() = [
   [PipeWeightPerUnit,   42]
 ];
 
-// 0.375" OD DOM Tubing (Just guessing)
-function Spec_TubingThreeEighthsInch() = [
-  [PipeInnerDiameter,   0.23],
-  [PipeOuterDiameter,   0.375],
-  [PipeTaperedDiameter, 0.375],
+// 1.125x0.813" DOM Tubing
+function Spec_TubingOnePointOneTwoFive() = [
+  [PipeInnerDiameter,   0.813],
+  [PipeOuterDiameter,   1.125],
+  [PipeTaperedDiameter, 1.018],
+  [PipeThreadLength,    0.9],
+  [PipeThreadDepth,     0.5],
+  [PipeClearanceSnug,   0.020],
+  [PipeClearanceLoose,  0.03],
+  [PipeFn,              50],
+  [PipeWeightPerUnit,   42]
+];
+
+// 1.628" OD DOM Tubing
+function Spec_TubingOnePointSixTwoEight() = [
+  [PipeInnerDiameter,   1.125],
+  [PipeOuterDiameter,   1.628],
+  [PipeTaperedDiameter, 0.0],
   [PipeThreadLength,    0.0],
   [PipeThreadDepth,     0.0],
-  [PipeClearanceSnug,   0.01],
-  [PipeClearanceLoose,  0.022],
-  [PipeFn,              20],
+  [PipeClearanceSnug,   0.020],
+  [PipeClearanceLoose,  0.03],
+  [PipeFn,              70],
+  [PipeWeightPerUnit,   0]
+];
+
+// 1.628x0.1.125" DOM Tubing
+function Spec_Tubing1628x1125() = [
+  [PipeInnerDiameter,   1.125],
+  [PipeOuterDiameter,   1.628],
+  [PipeTaperedDiameter, 0.0],
+  [PipeThreadLength,    0.0],
+  [PipeThreadDepth,     0.0],
+  [PipeClearanceSnug,   0.020],
+  [PipeClearanceLoose,  0.03],
+  [PipeFn,              70],
   [PipeWeightPerUnit,   0]
 ];
 
