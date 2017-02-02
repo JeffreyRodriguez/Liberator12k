@@ -1,4 +1,5 @@
 use <../Meta/Debug.scad>;
+use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
 use <../Vitamins/Nuts And Bolts.scad>;
 use <../Vitamins/Pipe.scad>;
@@ -16,21 +17,27 @@ module PrintableShaftCollar(pipeSpec=Spec_TubingOnePointOneTwoFive(),
 
     // Rod Holder Block
     union() {
-      linear_extrude(height=height)
       difference() {
         hull() {
 
-          circle(r=PipeOuterRadius(pipeSpec)+wall, $fn=PipeFn(pipeSpec)*2);
+          cylinder(r=PipeOuterRadius(pipeSpec)+wall,
+                 h=height,
+               $fn=PipeFn(pipeSpec)*2);
 
           // Nut/bolt support
           rotate(-90)
           translate([PipeOuterRadius(pipeSpec, PipeClearanceLoose()),
-                    -BoltNutRadius(setScrewSpec)-wall,0])
-          square([BoltNutHeight(setScrewSpec)+length,
-                  BoltNutDiameter(setScrewSpec)+(wall*2)]);
+                    -BoltNutRadius(setScrewSpec)-wall,
+                    screwOffsetZ-BoltNutRadius(setScrewSpec)-wall])
+          cube([BoltNutHeight(setScrewSpec)+length,
+                BoltNutDiameter(setScrewSpec)+(wall*2),
+                BoltNutDiameter(setScrewSpec)+(wall*2)]);
         }
 
-        Pipe2d(pipe=pipeSpec, clearance=PipeClearanceLoose());
+        translate([0,0,-ManifoldGap()])
+        Pipe(pipe=pipeSpec,
+           length=height+ManifoldGap(2),
+        clearance=PipeClearanceLoose());
       }
     }
 
@@ -47,4 +54,6 @@ module PrintableShaftCollar(pipeSpec=Spec_TubingOnePointOneTwoFive(),
 
 
 scale(25.4)
-PrintableShaftCollar(pipeSpec=Spec_TubingZeroPointSevenFive());
+PrintableShaftCollar(pipeSpec=Spec_TubingZeroPointSevenFive(),
+                 screwOffsetZ=0.75,
+                       height=2);
