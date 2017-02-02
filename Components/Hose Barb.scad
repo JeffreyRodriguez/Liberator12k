@@ -8,7 +8,7 @@ module HoseBarb(barbOuterMajorDiameter=0.6,
                 segments=4, segmentSpacing=0.125,
                 extraTop=0, extraBottom=0.25,
                 $fn=25) {
-  
+
   /* FIXME: I know this is wrong.
    * I want barbBottomAngle so I can tweak minimum overhang angle.
    * I haven't bothered to figure out what I'm doing wrong yet.
@@ -16,7 +16,7 @@ module HoseBarb(barbOuterMajorDiameter=0.6,
    */
   segmentHeight = tan(barbBottomAngle)
                   * (barbOuterMajorDiameter-barbOuterMinorDiameter);
-                  
+
   height = ((segmentHeight+segmentSpacing)*segments)
          + extraTop
          + extraBottom;
@@ -24,7 +24,7 @@ module HoseBarb(barbOuterMajorDiameter=0.6,
   render()
   difference() {
     union() {
-      
+
       // Barb minor OD body
       cylinder(r=barbOuterMinorDiameter/2, h=height);
 
@@ -33,7 +33,7 @@ module HoseBarb(barbOuterMajorDiameter=0.6,
       for (s = [0:segments-1])
       translate ([0,0,(segmentHeight+segmentSpacing)*s])
       hull() {
-        
+
         // Segment bottom (support)
         cylinder(r1=barbOuterMinorDiameter/2,
                  r2=barbOuterMajorDiameter/2,
@@ -46,7 +46,7 @@ module HoseBarb(barbOuterMajorDiameter=0.6,
                   h=(segmentHeight*0.5)+segmentSpacing);
       }
     }
-    
+
     // Barb ID
     translate([0,0,-ManifoldGap()])
     cylinder(r=barbInnerDiameter/2,
