@@ -1,3 +1,5 @@
+use <../Components/Teardrop.scad>;
+
 RodDiameter       = 1;
 RodRadius         = 2;
 RodClearanceSnug  = 3;
@@ -36,16 +38,23 @@ function RodClearanceLoose() = RodClearanceLoose;
  * @param clearance The RodClearance to use.
  * @param $fn Override the RodFn value of the rod.
  */
-module Rod2d(rod=Spec_RodOneQuarterInch(), clearance=undef, extraWall=0, $fn=undef) {
-  circle(r=RodRadius(rod, clearance)+extraWall,
+module Rod2d(rod=Spec_RodOneQuarterInch(), clearance=undef, extraWall=0, teardrop=false, teardropRotation=0, teardropTruncated=true, $fn=undef) {
+  if (teardrop) {
+    Teardrop(r=RodRadius(rod, clearance)+extraWall,
+      rotation=teardropRotation,
+      truncated=teardropTruncated,
+           $fn=RodFn(rod=rod, fn=$fn));
+  } else {
+    circle(r=RodRadius(rod, clearance)+extraWall,
          $fn=RodFn(rod=rod, fn=$fn));
+  }
 }
 
 
-module Rod(rod=Spec_RodOneQuarterInch(), length=1, clearance=undef, center=false, $fn=undef) {
+module Rod(rod=Spec_RodOneQuarterInch(), length=1, clearance=undef, center=false, teardrop=false, teardropRotation=0, teardropTruncated=true, $fn=undef) {
   render(convexity=1)
   linear_extrude(height=length, center=center)
-  Rod2d(rod, clearance, $fn=$fn);
+  Rod2d(rod=rod, clearance=clearance, teardrop=teardrop, teardropRotation=teardropRotation, teardropTruncated=teardropTruncated, $fn=$fn);
 }
 
 function Spec_RodBicNozzle() = [
