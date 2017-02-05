@@ -40,20 +40,22 @@ module PivotRod(cutter=false, teardropAngle=180) {
   Rod(rod=Spec_PivotRod(),
    length=PipeOuterDiameter(DEFAULT_BARREL)+3.375,
 clearance=RodClearanceLoose(),
-   center=true, teardrop=true, teardropRotation=teardropAngle);
+   center=true,
+ teardrop=true, teardropRotation=teardropAngle, teardropTruncated=false);
 }
 
-module BarrelShaftCollar(cutter=false, extend=0, height=BarrelShaftCollarLength()) {
+module BarrelShaftCollar(cutter=false, extend=0,
+                         height=BarrelShaftCollarLength()) {
 
   render()
   union() {
-    scale(cutter ? 1.01 : 1)
     difference() {
       translate([BarrelShaftCollarX(),0,0])
       mirror([1,0,0])
       rotate([0,90,0])
       union() {
         rotate(90)
+        scale(cutter ? 1.01 : 1)
         PrintableShaftCollar(pipeSpec=DEFAULT_BARREL,
                                height=height,
                               screwOffsetZ=height-ShaftCollarWall(),
@@ -87,8 +89,8 @@ module Pivot(factor=1) {
 
 module ForendPivoted(barrelPipe=DEFAULT_BARREL, length=PivotedForendLength(),
                      forendOffsetX=ForendOffsetX(),
-                    wall=WallTee(), $fn=40) {
-  color("Purple", 0.25)
+                    wall=WallTee(), $fn=40, alpha=1) {
+  color("Purple", alpha)
   render(convexity=4)
   difference() {
     translate([forendOffsetX,0,0])
@@ -186,4 +188,4 @@ BarrelShaftCollar(cutter=false);
 *!scale(25.4)
 rotate([0,90,0])
 translate([-ForendOffsetX()-PivotedForendLength(),0,0])
-ForendPivoted();
+ForendPivoted(alpha=1);
