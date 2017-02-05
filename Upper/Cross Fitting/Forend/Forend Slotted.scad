@@ -4,9 +4,16 @@ use <../../../Components/Semicircle.scad>;
 use <../../../Vitamins/Pipe.scad>;
 use <../../../Vitamins/Rod.scad>;
 use <../Frame.scad>;
-use <../../../Reference.scad>;
 
-module ForendSlotCutter2d(barrelSpec=BarrelPipe(), semiAngle=90) {
+DEFAULT_BARREL = Spec_TubingOnePointOneTwoFive();
+DEFAULT_BARREL = Spec_TubingZeroPointSevenFive();
+DEFAULT_BARREL = Spec_PipeThreeQuarterInch();
+DEFAULT_BARREL = Spec_PipeOneInch();
+
+DEFAULT_BARREL = Spec_TubingOnePointOneTwoFive();
+
+
+module ForendSlotCutter2d(barrelSpec=DEFAULT_BARREL, semiAngle=90) {
                             
   pipeOD = PipeOuterDiameter(barrelSpec, clearance=PipeClearanceLoose());
   pipeOR = PipeOuterRadius(barrelSpec, clearance=PipeClearanceLoose());
@@ -25,7 +32,7 @@ module ForendSlotCutter2d(barrelSpec=BarrelPipe(), semiAngle=90) {
   }
 }
 
-module ForendSlotted2d(barrelSpec=BarrelPipe(),
+module ForendSlotted2d(barrelSpec=DEFAULT_BARREL,
                          length=1,
                       semiAngle=90,
                      slotAngles=[0,180]) {
@@ -48,4 +55,6 @@ module ForendSlotted2d(barrelSpec=BarrelPipe(),
 
 %ForendSlotCutter2d();
 
-ForendSlotted2d();
+scale(25.4)
+linear_extrude(height=1)
+ForendSlotted2d(, slotAngles=[0]);

@@ -20,12 +20,14 @@ use <../../Upper/Cross Fitting/Cross Upper.scad>;
 use <../../Upper/Cross Fitting/Frame.scad>;
 use <../../Upper/Cross Fitting/Forend/Barrel Lugs.scad>;
 use <../../Upper/Cross Fitting/Forend/Forend.scad>;
-use <../../Upper/Cross Fitting/Forend/Forend Pivoted 608.scad>;
+use <../../Upper/Cross Fitting/Forend/Forend Pivoted.scad>;
 use <../../Upper/Cross Fitting/Forend/Forend Slotted.scad>;
 use <../../Upper/Cross Fitting/Firing Pin Guide.scad>;
 use <../../Upper/Cross Fitting/Sear Bolts.scad>;
 use <../../Upper/Cross Fitting/Sear Guide.scad>;
 use <../../Upper/Cross Fitting/Striker.scad>;
+
+use <Liberator12k.scad>;
 
 //echo($vpr);
 
@@ -33,47 +35,34 @@ use <../../Upper/Cross Fitting/Striker.scad>;
 
 function SearLength() = 2;
 
-module Liberator12k_PlainFrame() {
-  Frame();
 
-  // Rear Frame Nuts
-  translate([ReceiverLugRearMinX(),0,0])
-  mirror([1,0,0])
-  FrameNuts();
+module Liberator12k_BreakAction() {
+  
+  ForendBaseplate();
 
-  // Front Frame Nuts
-  translate([FrameRodLength()+OffsetFrameBack()-ManifoldGap(),0,0])
-  mirror([1,0,0])
-  FrameNuts();
-}
+  translate([LowerPivotX(),0,LowerPivotZ()])
+  rotate([0,-PivotAngle()*Animate(ANIMATION_STEP_LOAD),0])
+  rotate([0,PivotAngle()*Animate(ANIMATION_STEP_UNLOAD),0])
+  translate([-LowerPivotX(),0,-LowerPivotZ()]) {
 
+    Barrel();
 
-module Liberator12k_Base() {
-
-  Breech();
-
-  ChargingHandle();
-  ChargingInsert();
-
-  Striker();
-  SearBolts();
-
-  translate([0,0,-ReceiverCenter()]) {
-    Sear();
-    SearSupportTab();
-    Trigger();
+    BarrelShaftCollar();
   }
+  
 
-  translate([0,0,-ManifoldGap()])
-  SearGuide();
+  Liberator12k_PlainFrame();
+  
+  Liberator12k_Base();
+  translate([LowerMaxX()+ManifoldGap(2),0,0])
+  rotate([0,90,0])
+  color("Gold",0.25)
+  render()
+  linear_extrude(height=ForendSlottedLength()-ManifoldGap(3))
+  ForendSlotted2d(slotAngles=[180]);
 
-  FiringPinGuide(debug=true);
+  ForendPivoted(alpha=0.25);
 
-  Receiver(alpha=0.5);
-
-  CrossInserts(alpha=0.5);
-  CrossUpperFront(alpha=0.25);
-  CrossUpperBack(alpha=0.25);
 
   // Lower
   translate([0,0,-ReceiverCenter()]) {
@@ -84,19 +73,15 @@ module Liberator12k_Base() {
   }
 }
 
-module Liberator12k_Stock() {
-  Stock(alpha=0.5);
-  Butt(alpha=0.5);
+module ForendSlotted12k(alpha=1) {
+
+  translate([LowerMaxX()+ManifoldGap(2),0,0])
+  rotate([0,90,0])
+  color("Gold", alpha)
+  render()
+  linear_extrude(height=ForendSlottedLength()-ManifoldGap(3))
+  ForendSlotted2d(slotAngles=[0,180]);
 }
 
-module Liberator12k_Pistol() {
-  Stock(alpha=0.5);
-  PipeCap(pipeSpec=DEFAULT_BARREL);
-  Butt(alpha=0.5);
-}
-
-Liberator12k_PlainFrame();
-Liberator12k_Base();
-Liberator12k_Stock();
-
-
+//rotate([0,0,360*$t])
+Liberator12k_BreakAction();

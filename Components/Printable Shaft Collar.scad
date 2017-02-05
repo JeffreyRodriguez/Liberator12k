@@ -28,16 +28,16 @@ module PrintableShaftCollar(pipeSpec=Spec_TubingOnePointOneTwoFive(),
           rotate(-90)
           translate([PipeOuterRadius(pipeSpec, PipeClearanceLoose()),
                     -BoltNutRadius(setScrewSpec)-wall,
-                    screwOffsetZ-BoltNutRadius(setScrewSpec)-wall])
+                    0])
           cube([BoltNutHeight(setScrewSpec)+length,
                 BoltNutDiameter(setScrewSpec)+(wall*2),
-                BoltNutDiameter(setScrewSpec)+(wall*2)]);
+                height]);
         }
 
-        translate([0,0,-ManifoldGap()])
         Pipe(pipe=pipeSpec,
-           length=height+ManifoldGap(2),
-        clearance=PipeClearanceLoose());
+           length=height*3,
+        clearance=PipeClearanceLoose(),
+           center=true);
       }
     }
 
@@ -48,7 +48,7 @@ module PrintableShaftCollar(pipeSpec=Spec_TubingOnePointOneTwoFive(),
     rotate([0,0,90])
     NutAndBolt(bolt=setScrewSpec, boltLength=UnitsImperial(2),
                nutHeightExtra=PipeOuterRadius(pipeSpec),
-               teardrop=true, teardropAngle=90, clearance=true);
+               teardrop=true, teardropAngle=teardropAngle, clearance=true);
   }
 }
 
