@@ -35,8 +35,11 @@ use <Liberator12k.scad>;
 
 function SearLength() = 2;
 
+DEFAULT_BARREL = Spec_TubingOnePointOneTwoFive();
+DEFAULT_BARREL = Spec_TubingZeroPointSevenFive();
 
-module Liberator12k_BreakAction() {
+
+module Liberator12k_BreakAction(barrel=DEFAULT_BARREL) {
   
   ForendBaseplate();
 

@@ -1,4 +1,4 @@
-//$t=0.755;
+$t=0.755;
 //$t=0;
 include <../../../Meta/Animation.scad>;
 use <../../../Meta/Manifold.scad>;
@@ -18,6 +18,7 @@ SET_SCREW_SPEC = Spec_BoltM4();
 function Spec_PivotRod() = Spec_RodFiveSixteenthInch();
 function PivotWall()    = 0.25;
 function ShaftCollarWall() = 0.375;
+function BarrelShaftCollarLength() = 0.5;
 
 function PivotAngle() = 30;
 function PivotOffset() = 5;
@@ -25,58 +26,54 @@ function LowerPivotX() = BreechFrontX()+PivotOffset();
 function LowerPivotZ() = -PipeOuterRadius(DEFAULT_BARREL)
                          -RodRadius(Spec_PivotRod(), RodClearanceLoose());
 
-function ForendOffsetX() = LowerPivotX()-1.125;
-function BarrelShaftCollarLength() = 1.375;
+function PivotedForendLength() = 
+                         + (PivotWall()*3)
+                         + BarrelShaftCollarLength()
+                         + RodDiameter(Spec_PivotRod());
+function ForendOffsetX() = LowerPivotX()
+                         - PivotedForendLength()
+                         + (PivotWall()*2)
+                         + RodRadius(Spec_PivotRod(), RodClearanceLoose());
 function BarrelShaftCollarX() = LowerPivotX()
-                              + RodDiameter(Spec_PivotRod(), RodClearanceLoose())
+                              - RodRadius(Spec_PivotRod(), RodClearanceLoose())
                               - ManifoldGap();
 
-function PivotedForendLength() = 2.25;
-module PivotRod(cutter=false, teardropAngle=180) {
+module PivotRod(cutter=false, teardropAngle=180, alpha=1) {
   clearance = cutter ? 0.005 : 0;
 
+  color("SteelBlue", alpha)
   translate([LowerPivotX(),0,LowerPivotZ()])
   rotate([90,0,0])
   Rod(rod=Spec_PivotRod(),
    length=PipeOuterDiameter(DEFAULT_BARREL)+3.375,
 clearance=RodClearanceLoose(),
    center=true,
- teardrop=true, teardropRotation=teardropAngle, teardropTruncated=false);
+ teardrop=cutter, teardropRotation=teardropAngle, teardropTruncated=false);
 }
 
-module BarrelShaftCollar(cutter=false, extend=0,
+module BarrelShaftCollar(diameter=1.5, cutter=false, extend=0,
                          height=BarrelShaftCollarLength()) {
 
   render()
+  translate([BarrelShaftCollarX(),0,0])
+  mirror([1,0,0])
+  rotate([0,90,0])
   union() {
-    difference() {
-      translate([BarrelShaftCollarX(),0,0])
-      mirror([1,0,0])
-      rotate([0,90,0])
-      union() {
-        rotate(90)
-        scale(cutter ? 1.01 : 1)
-        PrintableShaftCollar(pipeSpec=DEFAULT_BARREL,
-                               height=height,
-                              screwOffsetZ=height-ShaftCollarWall(),
-                                 wall=ShaftCollarWall(),
-                               length=UnitsMetric(10), teardropAngle=-90);
-        
-      
-        // Bolt Cutout
-        if (cutter)
-        translate([PipeOuterRadius(DEFAULT_BARREL),
-                  -BoltCapRadius(SET_SCREW_SPEC, true),
-                  height])
-        mirror([0,0,1])
-        cube([UnitsMetric(25),
-               BoltCapDiameter(SET_SCREW_SPEC, true),
-               ShaftCollarWall()+BoltCapDiameter(SET_SCREW_SPEC, true)]);
-      }
-      
-      if (cutter==false)
-      PivotRod(cutter=true);
-    }
+    scale(cutter ? 1.01 : 1)
+    cylinder(r=diameter/2,
+             h=height,
+           $fn=50);
+    
+  
+    // Bolt Cutout
+    if (cutter)
+    translate([PipeOuterRadius(DEFAULT_BARREL),
+              -BoltCapRadius(SET_SCREW_SPEC, true),
+              height])
+    mirror([0,0,1])
+    cube([ShaftCollarWall()+0.125,
+           BoltCapDiameter(SET_SCREW_SPEC, true),
+           ShaftCollarWall()+BoltCapDiameter(SET_SCREW_SPEC, true)]);
   }
 }
 
@@ -121,18 +118,18 @@ module ForendPivoted(barrelPipe=DEFAULT_BARREL, length=PivotedForendLength(),
         hull()
         for (z = [0,1.5])
         translate([0,0,z])
-        Barrel(barrelLength=2.5);
+        Barrel(barrel=barrelPipe, barrelLength=2.5);
 
         // Cutout for the barrel near breach
         hull() {
 
-          Barrel(barrelLength =
+          Barrel(barrel=barrelPipe, barrelLength =
                  LowerPivotX()
                - BreechFrontX()
                + PipeOuterRadius(DEFAULT_BARREL));
 
           Pivot()
-          Barrel(barrelLength =
+          Barrel(barrel=barrelPipe, barrelLength =
                  LowerPivotX()
                - BreechFrontX()
                + PipeOuterRadius(DEFAULT_BARREL));
@@ -141,14 +138,14 @@ module ForendPivoted(barrelPipe=DEFAULT_BARREL, length=PivotedForendLength(),
         // Cutout for the barrel near front
         hull() {
           translate([LowerPivotX()-BreechFrontX(),0,0])
-          Barrel(barrelLength = length
+          Barrel(barrel=barrelPipe, barrelLength = length
                               + forendOffsetX
                               - LowerPivotX()
                               + PipeOuterRadius(DEFAULT_BARREL));
 
           Pivot()
           translate([LowerPivotX()-BreechFrontX(),0,0])
-          Barrel(barrelLength = length
+          Barrel(barrel=barrelPipe, barrelLength = length
                               + forendOffsetX
                               - LowerPivotX()
                               + PipeOuterRadius(DEFAULT_BARREL));
@@ -164,7 +161,7 @@ rotate([0,-PivotAngle()*Animate(ANIMATION_STEP_LOAD),0])
 rotate([0,PivotAngle()*Animate(ANIMATION_STEP_UNLOAD),0])
 translate([-LowerPivotX(),0,-LowerPivotZ()]) {
 
-  Barrel();
+  Barrel(barrel=DEFAULT_BARREL, hollow=true);
   PivotRod();
 
   BarrelShaftCollar();
@@ -175,7 +172,7 @@ translate([0,0,0]) {
   Reference(barrelPipe=DEFAULT_BARREL);
 }
 
-ForendPivoted();
+ForendPivoted(alpha=0.5);
 
 
 *!scale(25.4)
