@@ -30,6 +30,7 @@ function FrameRodOffset()
 module Frame(clearance=RodClearanceLoose(),
              rodFnAngle=90) {
 
+  color("SteelBlue")
   render(convexity=4)
   translate([OffsetFrameBack(),0,0])
   rotate([0,90,0])
@@ -54,6 +55,7 @@ module FrameRods(clearance=RodClearanceLoose(),
 }
 
 module FrameNuts(nutHeight=FrameNutHeight(), nutRadius=0.3) {
+  color("SteelBlue")
   rotate([0,90,0])
   FrameIterator()
   cylinder(r=nutRadius, h=nutHeight, $fn=6);
@@ -84,10 +86,9 @@ module Quadrail2d(rod=Spec_RodFiveSixteenthInch(), rodClearance=RodClearanceLoos
 }
 
 scale(25.4)
-render()
-difference() {
+render() {
 
-  rotate([0,90,0])
+  %rotate([0,90,0])
   linear_extrude(height=1)
   Quadrail2d();
 
