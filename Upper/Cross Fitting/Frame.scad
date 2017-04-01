@@ -8,7 +8,7 @@ use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Lower/Receiver Lugs.scad>;
 use <../../Reference.scad>;
 
-function FrameRodLength() = 11.75;
+function FrameRodLength() = 10;
 function FrameNutHeight() = 0.25;
 function OffsetFrameRod() = 0.4;
 function OffsetFrameBack() = ReceiverLugRearMinX()-0.25;
@@ -28,13 +28,14 @@ function FrameRodOffset()
            ;
 
 module Frame(clearance=RodClearanceLoose(),
+             length=FrameRodLength(),
              rodFnAngle=90) {
 
   color("SteelBlue")
   render(convexity=4)
   translate([OffsetFrameBack(),0,0])
   rotate([0,90,0])
-  linear_extrude(height=FrameRodLength())
+  linear_extrude(height=length)
   FrameRods(clearance=clearance);
 }
 
@@ -73,7 +74,7 @@ module Quadrail2d(rod=Spec_RodFiveSixteenthInch(), rodClearance=RodClearanceLoos
       // Frame Walls
       FrameIterator()
       Rod2d(rod=FrameRod(), extraWall=wallRod, clearance=rodClearance, $fn=Resolution(20,50));
-      
+
       children();
     }
 
@@ -88,12 +89,12 @@ module Quadrail2d(rod=Spec_RodFiveSixteenthInch(), rodClearance=RodClearanceLoos
 scale(25.4)
 render() {
 
+  %Frame();
+
+  translate([-ManifoldGap(),0,0])
+  %FrameNuts();
+
   %rotate([0,90,0])
   linear_extrude(height=1)
   Quadrail2d();
-
-  #Frame();
-
-  translate([-ManifoldGap(),0,0])
-  #FrameNuts();
 }
