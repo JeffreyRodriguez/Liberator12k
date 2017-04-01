@@ -40,13 +40,13 @@ module BarrelLugs2d(barrelPipe=BarrelPipe(), barrelHole=true, accessHole=false,
   }
 }
 
-module BarrelLugs(length=BarrelLugLength()) {
+module BarrelLugs(barrelPipe=BarrelPipe(), length=BarrelLugLength()) {
   color("DimGrey")
   render()
   difference() {
     rotate([0,90,0])
     linear_extrude(height=length)
-    BarrelLugs2d();
+    BarrelLugs2d(barrelPipe=barrelPipe);
 
     translate([-ManifoldGap(),0,0])
     rotate([45+15,0,0])
