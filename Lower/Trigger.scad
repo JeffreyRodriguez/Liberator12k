@@ -56,17 +56,59 @@ module Sear() {
   %Rod(rod=SearPinRod(), length=0.8, center=true);
 }
 
-module SearCutter(searLengthExtra=0) {
+module SearCutter(searLengthExtra=0, wideTrack=false) {
   color("Red", 0.25)
   union() {
     translate([0,0,SearPinOffsetZ()-SearBottomOffset()-SearTravel()-SearSpringCompressed()])
     Rod(rod=SearRod(),
         clearance=RodClearanceLoose(),
         length=SearLength()+SearTravel()+searLengthExtra);
+  
+    if (wideTrack)
+    translate([-RodDiameter(SearRod())*0.4,
+               -RodRadius(SearRod()),
+               SearPinOffsetZ()-SearBottomOffset()-SearTravel()-SearSpringCompressed()])
+    cube([RodDiameter(SearRod())*0.8,
+          RodDiameter(SearRod()),
+          SearLength()+SearTravel()+searLengthExtra]);
 
     VerticalSearPinTrack();
   }
 }
+
+module SearJig(width=0.75, height=1) {
+  translate([0,0,SearPinOffsetZ()-SearBottomOffset()])
+  difference() {
+    translate([-RodRadius(SearRod())-0.125,-width/2,0])
+    cube([height,width,SearLength()]);
+    
+    // Sear Pin Hole
+    translate([-1,0,SearBottomOffset()])
+    rotate([0,90,0])
+    Rod(rod=SearPinRod(), cutter=true,
+         teardrop=true, teardropAngle=180,
+         length=3);
+    
+    // Sear Rod Hole
+    translate([0,0,-ManifoldGap()])
+    Rod(rod=SearRod(),
+        //teardrop=true, teardropTruncated=false,
+        clearance=RodClearanceLoose(),
+        length=SearLength()*2);
+    
+    // Set screw hole
+    translate([0,0,SearLength()-0.5])
+    rotate([0,90,0])
+    NutAndBolt(bolt=Spec_BoltM3(),
+            teardrop=true, teardropAngle=180,
+            nutBackset=RodRadius(SearRod()),
+            nutHeightExtra=RodRadius(SearRod()),
+    length=3);
+  }
+}
+
+*!scale(25.4) SearJig();
+
 
 module VerticalSearPinTrack(width=0.9) {
   rotate([90,0,0])
@@ -162,7 +204,7 @@ module SearSupportTab(cutter=false) {
     }
 
     if (!cutter)
-    SearCutter();
+    SearCutter(wideTrack=true);
 
     ReceiverLugFront(clearance=0.01);
 
@@ -270,15 +312,15 @@ module trigger_plater($t=0) {
   rotate([90,0,0]) {
 
     // Plating note: The left-side plate should print right-side-down
-    translate([0,-RodRadius(SearRod(), RodClearanceLoose()),2.7])
+    translate([0,-RodRadius(SearRod(), RodClearanceLoose()),1.8])
     Trigger(left=true, right=false);
 
-    translate([0,TriggerWidth()/2,-0.25])
+    translate([0,TriggerWidth()/2,0])
     Trigger(left=false, right=true);
   }
 
-  translate([-0.75,-0.15,0.12])
-  rotate([90,0,90])
+  translate([-1.75,0,0.12])
+  rotate([90,0,00])
   SearSupportTab(cutter=false);
 }
 
