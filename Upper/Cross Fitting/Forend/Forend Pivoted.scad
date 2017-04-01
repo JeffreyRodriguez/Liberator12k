@@ -13,8 +13,8 @@ use <../../../Reference.scad>;
 use <../Frame.scad>;
 use <Forend Slotted.scad>;
 
-DEFAULT_BARREL = Spec_TubingOnePointOneTwoFive();
 DEFAULT_BARREL = Spec_TubingZeroPointSevenFive();
+DEFAULT_BARREL = Spec_TubingOnePointOneTwoFive();
 DEFAULT_LOCK_ROD  = Spec_RodOneEighthInch();
 SET_SCREW_SPEC = Spec_BoltM4();
 
@@ -31,8 +31,8 @@ function Spec_PivotRod() = Spec_RodOneEighthInch();
 function PivotWall()    = 0.25;
 function ShaftCollarWall() = 0.375;
 
+//function BarrelShaftCollarDiameter() = 1.5;
 function BarrelShaftCollarDiameter() = 1.875;
-function BarrelShaftCollarDiameter() = 1.5;
 function BarrelShaftCollarLength() = 0.5;
 
 function PivotAngle() = 30;
@@ -40,7 +40,7 @@ function PivotOffset() = 5;
 function LowerPivotX() = BreechFrontX()+PivotOffset();
 function LowerPivotZ() = -PipeOuterRadius(DEFAULT_BARREL)
                          -RodRadius(Spec_PivotRod(), RodClearanceLoose());
-                         
+
 function BarrelShaftCollarX() = LowerPivotX()
                               - RodRadius(Spec_PivotRod(), RodClearanceLoose())
                               - BarrelShaftCollarLength()
@@ -52,14 +52,14 @@ function ForendOffsetX() = LowerPivotX()
                          + RodRadius(Spec_PivotRod(), RodClearanceLoose())
                          +0.27; // TODO: Calculate this from the shaft collar's bottom tip pivot
 
-function PivotedForendLength() = 
+function PivotedForendLength() =
                          + (PivotWall()*3)
                          + BarrelShaftCollarLength()
                          + RodDiameter(Spec_PivotRod())
                          +0.125;
 
 module PivotRod(cutter=false, nutEnable=false, teardropAngle=180, alpha=1) {
-  
+
   color("SteelBlue", alpha)
   translate([LowerPivotX(),1.45,LowerPivotZ()])
   rotate([90,0,0])
@@ -69,12 +69,12 @@ module PivotRod(cutter=false, nutEnable=false, teardropAngle=180, alpha=1) {
       teardrop=cutter,
       teardropRotation=teardropAngle,
       teardropTruncated=false);
-  
-  
+
+
 }
 
 module LockRod(cutter=false, teardropAngle=180, alpha=1) {
-  
+
   color("SteelBlue", alpha)
   translate([LockRodX(),0,LockRodZ()])
   rotate([90,0,0])
@@ -109,7 +109,7 @@ module ForendPivoted(barrelPipe=DEFAULT_BARREL, length=PivotedForendLength(),
                      forendOffsetX=ForendOffsetX(),
                      bolt=false,
                     wall=WallTee(), $fn=40, alpha=1) {
-  
+
   color("Purple", alpha)
   render(convexity=4)
   difference() {
@@ -119,19 +119,19 @@ module ForendPivoted(barrelPipe=DEFAULT_BARREL, length=PivotedForendLength(),
       difference() {
         linear_extrude(height=length)
         Quadrail2d();
-      
+
         translate([0,0,-ManifoldGap()])
         linear_extrude(height=length+ManifoldGap(2)) {
           FrameRods();
         }
       }
     }
-    
+
 
     union() {
-      
+
       PivotRod(cutter=true, nutEnable=bolt, teardropAngle=180);
-      
+
       BarrelShaftCollar(extend=2);
 
       // Printing-taper
@@ -146,7 +146,7 @@ module ForendPivoted(barrelPipe=DEFAULT_BARREL, length=PivotedForendLength(),
       Pivot(factor=f)
       difference() {
         BarrelShaftCollar(cutter=true);
-        
+
         translate([BarrelShaftCollarX()-ManifoldGap(),0,0])
         scale(1.01)
         translate([0,
@@ -157,7 +157,7 @@ module ForendPivoted(barrelPipe=DEFAULT_BARREL, length=PivotedForendLength(),
               BarrelShaftCollarDiameter(),
               BarrelShaftCollarDiameter()]);
       }
-      
+
       // Fully pivoted shaft collar position
       Pivot(factor=1)
       BarrelShaftCollar(cutter=true);
@@ -205,7 +205,7 @@ module ForendPivoted(barrelPipe=DEFAULT_BARREL, length=PivotedForendLength(),
 module ForendPivotLock(barrelPipe=DEFAULT_BARREL,
                            length=1,
                     wall=WallTee(), $fn=40, alpha=1) {
-  
+
   color("Purple", alpha)
   render(convexity=4)
   difference() {
@@ -214,7 +214,7 @@ module ForendPivotLock(barrelPipe=DEFAULT_BARREL,
     linear_extrude(height=length)
     ForendSlotted2d(barrelSpec=barrelPipe,
                     slotAngles=[180]);
-    
+
     LockRod(cutter=true, teardropAngle=180);
 
   }
@@ -233,7 +233,7 @@ translate([-LowerPivotX(),0,-LowerPivotZ()]) {
 }
 
 translate([0,0,0]) {
-  
+
   translate([0,-2.125*Animate(ANIMATION_STEP_UNLOCK),0])
   translate([0,2.125*Animate(ANIMATION_STEP_LOCK),0])
   LockRod();

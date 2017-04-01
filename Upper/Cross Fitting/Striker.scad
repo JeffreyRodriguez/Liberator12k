@@ -17,7 +17,7 @@ use <../../Reference.scad>;
 use <../../Lower/Trigger.scad>;
 
 
-function StrikerRodLength() = 4;
+function StrikerRodLength() = 6;
 //function StrikerTravel() = ReceiverCenter() - BushingDepth(BreechBushing()) -0.4+RodRadius(SearRod());
 function StrikerTravel() = ReceiverIR()+RodRadius(SearRod())-0.125;
 function StrikerCollarMaxX() = -TeePipeEndOffset(ReceiverTee(),StockPipe())-StrikerTravel();
@@ -163,7 +163,7 @@ module StrikerFoot() {
   }
 }
 
-module Striker() {
+module Striker(length=StrikerRodLength()) {
 
   // Mock Spring
   *color("SteelBlue")
@@ -183,27 +183,10 @@ module Striker() {
     color("Orange")
     translate([-RodRadius(SearRod()),0,0])
     rotate([0,-90,0])
-    Rod(StrikerRod(), length=StrikerRodLength());
+    Rod(StrikerRod(), length=length);
 
     StrikerCollar();
     StrikerTop();
-  }
-
-  *translate([ButtTeeCenterX(),0,0]) {
-
-    // Striker Foot
-    translate([TeePipeEndOffset(ReceiverTee(),StockPipe()),0,0])
-    rotate([0,90,180])
-    StrikerFoot();
-
-    // Striker Spacers
-    for (i = [0,1])
-    color([0.2*(4-i),0.2*(4-i),0.2*(4-i)]) // Some colorization
-    translate([TeePipeEndOffset(ReceiverTee(),StockPipe())
-               +(StrikerSpacerLength()*i)
-               +ManifoldGap(1+i),0,0])
-    rotate([0,90,0])
-    StrikerSpacer(length=StrikerSpacerLength());
   }
 }
 
@@ -212,12 +195,12 @@ module StrikerJig(width=1, height=0.75) {
     translate([-RodRadius(SearRod()),-width/2,-RodRadius(StrikerRod())-0.125])
     mirror([1,0,0])
     cube([abs(StrikerBoltX())+0.25,width,height]);
-    
+
     translate([StrikerBoltX(),0,-1])
     Bolt(bolt=StrikerBoltSpec(), cutter=true,
          teardrop=true, teardropAngle=180,
          length=3);
-    
+
     // Striker rod hole
     translate([ManifoldGap(),0,0])
     rotate([0,-90,0])
@@ -225,8 +208,8 @@ module StrikerJig(width=1, height=0.75) {
         //teardrop=true, teardropTruncated=false,
         clearance=RodClearanceLoose(),
         length=StrikerCollarLength()*2);
-    
-    
+
+
     // Set screw hole
     translate([-0.5,0,0])
     NutAndBolt(bolt=StrikerBoltSpec(),
@@ -253,6 +236,23 @@ StrikerCollar();
 *!scale(25.4) StrikerSpacer();
 
 Striker(debug=true);
+
+translate([ButtTeeCenterX(),0,0]) {
+
+  // Striker Foot
+  translate([TeePipeEndOffset(ReceiverTee(),StockPipe()),0,0])
+  rotate([0,90,180])
+  StrikerFoot();
+
+  // Striker Spacers
+  for (i = [0,1,2])
+  color([0.2*(4-i),0.2*(4-i),0.2*(4-i), 0.5]) // Some colorization
+  translate([TeePipeEndOffset(ReceiverTee(),StockPipe())
+             +(StrikerSpacerLength()*i)
+             +ManifoldGap(1+i),0,0])
+  rotate([0,90,0])
+  StrikerSpacer(length=StrikerSpacerLength(), alpha=0.5);
+}
 
 color("black", 0.25)
 *Reference();

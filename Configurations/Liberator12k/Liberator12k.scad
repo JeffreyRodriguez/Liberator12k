@@ -20,21 +20,13 @@ use <../../Upper/Cross Fitting/Cross Upper.scad>;
 use <../../Upper/Cross Fitting/Frame.scad>;
 use <../../Upper/Cross Fitting/Forend/Barrel Lugs.scad>;
 use <../../Upper/Cross Fitting/Forend/Forend.scad>;
-use <../../Upper/Cross Fitting/Forend/Forend Pivoted 608.scad>;
-use <../../Upper/Cross Fitting/Forend/Forend Slotted.scad>;
 use <../../Upper/Cross Fitting/Firing Pin Guide.scad>;
 use <../../Upper/Cross Fitting/Sear Bolts.scad>;
 use <../../Upper/Cross Fitting/Sear Guide.scad>;
 use <../../Upper/Cross Fitting/Striker.scad>;
 
-//echo($vpr);
-
-//$vpr = [80, 0, 360*$t];
-
-function SearLength() = 2;
-
-module Liberator12k_PlainFrame() {
-  Frame();
+module Liberator12k_PlainFrame(length=FrameRodLength()) {
+  Frame(length=length);
 
   // Rear Frame Nuts
   translate([ReceiverLugRearMinX(),0,0])
@@ -42,27 +34,22 @@ module Liberator12k_PlainFrame() {
   FrameNuts();
 
   // Front Frame Nuts
-  translate([FrameRodLength()+OffsetFrameBack()-ManifoldGap(),0,0])
+  translate([length+OffsetFrameBack()-ManifoldGap(),0,0])
   mirror([1,0,0])
   FrameNuts();
 }
 
 
-module Liberator12k_Base() {
+module Liberator12k_Base(strikerLength=StrikerRodLength(),
+                         lower=true, trigger=true) {
 
   Breech();
 
   ChargingHandle();
   ChargingInsert();
 
-  Striker();
+  Striker(length=strikerLength);
   SearBolts();
-
-  translate([0,0,-ReceiverCenter()]) {
-    Sear();
-    SearSupportTab();
-    Trigger();
-  }
 
   translate([0,0,-ManifoldGap()])
   SearGuide();
@@ -76,15 +63,33 @@ module Liberator12k_Base() {
   CrossUpperBack(alpha=0.25);
 
   // Lower
+  if (lower)
   translate([0,0,-ReceiverCenter()]) {
     ReceiverLugBoltHoles(clearance=false);
     GuardBolt(clearance=false);
     HandleBolts(clearance=false);
-    Lower(showTrigger=false);
+    Lower(showTrigger=trigger);
   }
 }
 
 module Liberator12k_Stock() {
+  translate([ButtTeeCenterX(),0,0]) {
+
+    // Striker Foot
+    translate([TeePipeEndOffset(ReceiverTee(),StockPipe()),0,0])
+    rotate([0,90,180])
+    StrikerFoot();
+
+    // Striker Spacers
+    for (i = [0,1,2])
+    color([0.2*(4-i),0.2*(4-i),0.2*(4-i), 0.5]) // Some colorization
+    translate([TeePipeEndOffset(ReceiverTee(),StockPipe())
+               +(StrikerSpacerLength()*i)
+               +ManifoldGap(1+i),0,0])
+    rotate([0,90,0])
+    StrikerSpacer(length=StrikerSpacerLength(), alpha=0.5);
+  }
+  
   Stock(alpha=0.5);
   Butt(alpha=0.5);
 }
