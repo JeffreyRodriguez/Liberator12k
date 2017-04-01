@@ -30,7 +30,9 @@ module CrossInserts(width=0.25, height=0.75, slotHeight=1.25,
     translate([-ReceiverCenter(),
                -ReceiverOR()-(WallTee()/2)-(width/2)-clearance,
                -(height/2)-clearance])
-    cube([ReceiverLength(), width+(clearance*2), height+(clearance*2)]);
+    cube([ReceiverLugFrontMaxX()+ReceiverCenter()+ManifoldGap(2),
+           width+(clearance*2),
+           height+(clearance*2)]);
 
     // Alignment Cutout
     if (clearance>0)
@@ -74,7 +76,7 @@ module CrossUpperFront($fn=40, alpha=1) {
     Breech();
 
     CrossInserts(clearance=0.005);
-    
+
     ChargingHandleCutout();
 
     // Tee
@@ -110,7 +112,7 @@ module CrossUpperBack(alpha=1) {
       translate([0,0,-ReceiverCenter()])
       ReceiverLugRear(extraTop=1, teardropAngle=-90);
     }
-    
+
     ChargingHandleCutout();
 
     Stock(ReceiverTee(), StockPipe());
@@ -124,13 +126,13 @@ module CrossUpperBack(alpha=1) {
   }
 }
 
-CrossUpperFront();
-CrossInserts();
-CrossUpperBack();
 Frame();
 Receiver();
 Breech();
 Stock();
+CrossInserts();
+CrossUpperFront(alpha=0.25);
+CrossUpperBack(alpha=0.25);
 
 
 // Plated Front
@@ -141,7 +143,7 @@ CrossUpperFront();
 
 // Plated Back
 *!scale(25.4)
-translate([0,0,ReceiverCenter()+WallFrameBack()])
+translate([0,0,-ReceiverLugRearMinX()])
 rotate([0,-90,0])
 CrossUpperBack();
 
