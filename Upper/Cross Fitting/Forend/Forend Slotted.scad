@@ -10,17 +10,18 @@ DEFAULT_BARREL = Spec_TubingZeroPointSevenFive();
 DEFAULT_BARREL = Spec_PipeThreeQuarterInch();
 DEFAULT_BARREL = Spec_PipeOneInch();
 
+DEFAULT_BARREL = Spec_TubingZeroPointSevenFive();
 DEFAULT_BARREL = Spec_TubingOnePointOneTwoFive();
 
 
 module ForendSlotCutter2d(barrelSpec=DEFAULT_BARREL, semiAngle=90) {
-                            
+
   pipeOD = PipeOuterDiameter(barrelSpec, clearance=PipeClearanceLoose());
   pipeOR = PipeOuterRadius(barrelSpec, clearance=PipeClearanceLoose());
 
   render()
   union() {
-      
+
     // Cutout from barrel center to outside
     translate([0, -pipeOR])
     square([2, pipeOD]);
@@ -39,11 +40,11 @@ module ForendSlotted2d(barrelSpec=DEFAULT_BARREL,
     render()
     difference() {
       Quadrail2d();
-      
+
       FrameRods();
-      
+
       Pipe2d(pipe=barrelSpec, clearance=PipeClearanceLoose());
-      
+
       for (slotAngle = slotAngles)
       rotate(slotAngle)
       ForendSlotCutter2d(barrelSpec=barrelSpec,
@@ -52,9 +53,8 @@ module ForendSlotted2d(barrelSpec=DEFAULT_BARREL,
     }
 }
 
-
-%ForendSlotCutter2d();
-
 scale(25.4)
-linear_extrude(height=1)
-ForendSlotted2d(, slotAngles=[0]);
+linear_extrude(height=1) {
+  ForendSlotted2d(, slotAngles=[0]);
+  %ForendSlotCutter2d();
+}
