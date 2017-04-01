@@ -78,18 +78,18 @@ module FiringPinGuide(od=ReceiverID()-0.01,
       translate([BreechRearX(),0,0])
       rotate([0,-90,0])
       Rod(rod=StrikerRod(), clearance=RodClearanceLoose(), length=height);
-      
+
       translate([FiringPinOffsetX()+FiringPinHeadLength(),0,0])
       FiringPinRetainer(showPins=false);
     }
 
     // Scoop out a path for the striker top
     translate([0.1,
-               -(StrikerTopWidth()/2)-0.03,
-               0])
+               -(StrikerTopWidth()/2)-0.02,
+               (RodRadius(StrikerRod())*sin(45))-0.01])
     mirror([1,0,0])
     cube([height+ManifoldGap(2),
-          StrikerTopWidth()+0.06,
+          StrikerTopWidth()+0.04,
           od]);
 
     // Scoop out a path for the charging handle
@@ -115,11 +115,10 @@ module FiringPinGuide(od=ReceiverID()-0.01,
   }
 }
 
+
 ChargingHandle();
 
-*ChargingInsert();
-
-*ChargerSideplates();
+ChargingInsert();
 
 Striker();
 
@@ -131,7 +130,7 @@ SearBolts(cutter=false);
 FiringPinGuide(debug=true);
 
 color("black", 0.25)
-*Reference();
+Reference();
 
 *!scale(25.4) rotate([0,90,0])
 FiringPinGuide();
