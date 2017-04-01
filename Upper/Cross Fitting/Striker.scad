@@ -17,33 +17,33 @@ use <../../Reference.scad>;
 use <../../Lower/Trigger.scad>;
 
 
-function StrikerRodLength() = StockLength();
+function StrikerRodLength() = 4;
 //function StrikerTravel() = ReceiverCenter() - BushingDepth(BreechBushing()) -0.4+RodRadius(SearRod());
 function StrikerTravel() = ReceiverIR()+RodRadius(SearRod())-0.125;
 function StrikerCollarMaxX() = -TeePipeEndOffset(ReceiverTee(),StockPipe())-StrikerTravel();
 function StrikerInnerRadius() = RodRadius(StrikerRod(), RodClearanceLoose())*1.02;
-function StrikerSpacerRadius() = PipeInnerRadius(pipe=StockPipe(), clearance=PipeClearanceLoose(), clearanceSign=-1);
+function StrikerSpacerRadius() = PipeInnerRadius(pipe=StockPipe(), clearance=PipeClearanceLoose(), clearanceSign=-1)*0.95;
 function StrikerSpacerLength() = 3;
 
 function StrikerTopWidth() = 0.5;
-function StrikerCollarLength() = 2.5;
+function StrikerCollarLength() = 1.5;
 function StrikerSpringPreloadLength() = 0.5;
 function StrikerSpringLength(extension=0) = 3
                                           - StrikerSpringPreloadLength()
                                           - StrikerTravel()
                                           + (StrikerTravel()*extension);
-                                          
+
 function StrikerTopExtension() = ReceiverIR()+0.1;
 function StrikerTopLength() = StrikerCollarLength()-0.5
                               +abs(StrikerTravel())+StrikerTopExtension();
 
 function StrikerBoltSpec() = Spec_BoltM3();
+function StrikerBoltX() = StrikerCollarMaxX()-0.5;
 
 module StrikerBolt(cutter=true, teardropAngle=0) {
   clearance = cutter ? 1 : 0;
-  boltOffsetX = 0.75;
-  
-  translate([StrikerCollarMaxX()-boltOffsetX,0,
+
+  translate([StrikerBoltX(),0,
              -UnitsMetric(15)+StrikerSpacerRadius()-BoltCapHeight(StrikerBoltSpec())])
   mirror([1,0,0])
   NutAndBolt(bolt=StrikerBoltSpec(), boltLength=UnitsMetric(15),
@@ -96,12 +96,12 @@ module StrikerCollar(debug=false) {
                 $fn=Resolution(20,40));
 
       linear_extrude(height=StrikerCollarLength()-0.5) {
-        
+
         // Striker Top
         mirror([1,0])
         offset(r=0.01)
         StrikerTop2d();
-        
+
         // Clear the tips from the top
         translate([(StrikerSpacerRadius()*sin(45))-0.05,
                    -StrikerSpacerRadius()])
@@ -109,7 +109,7 @@ module StrikerCollar(debug=false) {
                  StrikerSpacerRadius()*2]);
       }
     }
-    
+
     StrikerBolt(cutter=true, teardropAngle=180);
 
     // Rod Hole
@@ -184,7 +184,7 @@ module Striker() {
     translate([-RodRadius(SearRod()),0,0])
     rotate([0,-90,0])
     Rod(StrikerRod(), length=StrikerRodLength());
-    
+
     StrikerCollar();
     StrikerTop();
   }
@@ -206,6 +206,39 @@ module Striker() {
     StrikerSpacer(length=StrikerSpacerLength());
   }
 }
+
+module StrikerJig(width=1, height=0.75) {
+  difference() {
+    translate([-RodRadius(SearRod()),-width/2,-RodRadius(StrikerRod())-0.125])
+    mirror([1,0,0])
+    cube([abs(StrikerBoltX())+0.25,width,height]);
+    
+    translate([StrikerBoltX(),0,-1])
+    Bolt(bolt=StrikerBoltSpec(), cutter=true,
+         teardrop=true, teardropAngle=180,
+         length=3);
+    
+    // Striker rod hole
+    translate([ManifoldGap(),0,0])
+    rotate([0,-90,0])
+    Rod(rod=StrikerRod(),
+        //teardrop=true, teardropTruncated=false,
+        clearance=RodClearanceLoose(),
+        length=StrikerCollarLength()*2);
+    
+    
+    // Set screw hole
+    translate([-0.5,0,0])
+    NutAndBolt(bolt=StrikerBoltSpec(),
+            teardrop=true, teardropAngle=180,
+            nutBackset=RodRadius(StrikerRod()),
+            nutHeightExtra=RodRadius(StrikerRod()),
+    length=3);
+  }
+}
+
+//!scale(25.4)rotate([0,90,0]) translate([RodRadius(SearRod()),0,0])
+%StrikerJig(width=0.75);
 
 *!scale(25.4)
 rotate([90,0,0])
