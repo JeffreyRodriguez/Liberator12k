@@ -135,7 +135,7 @@ module Bolt(bolt=Spec_BoltM3(), length=1,
 
 module NutAndBolt(bolt=Spec_BoltM3(), boltLength=1, boltLengthExtra=0,
                   cap=true, capRadiusExtra=0, capHeightExtra=0,
-                  nutRadiusExtra=0, nutHeightExtra=0, nutBackset=0, nutSideExtra=0,
+                  nutRadiusExtra=0, nutHeightExtra=0, nutBackset=0, nutSideExtra=0, nutEnable=true,
                   clearance=true, teardrop=false, teardropAngle=0,
                   capOrientation=false) {
   zOrientation = capOrientation ? -boltLength : 0;
@@ -150,6 +150,7 @@ module NutAndBolt(bolt=Spec_BoltM3(), boltLength=1, boltLengthExtra=0,
          clearance=clearance, teardrop=teardrop, teardropAngle=teardropAngle);
 
     // Nut
+    if (nutEnable)
     translate([0,0,-nutHeightExtra+nutBackset]) {
       cylinder(r=BoltNutRadius(bolt, clearance)+nutRadiusExtra,
                h=BoltNutHeight(bolt)+nutHeightExtra, $fn=6);
