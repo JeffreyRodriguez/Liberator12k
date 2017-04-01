@@ -50,49 +50,45 @@ module ChargingHandle(angle=35) {
   rotate([0,-(angle*Animate(ANIMATION_STEP_CHARGER_RESET)),0])
   rotate([0,(angle*Animate(ANIMATION_STEP_CHARGE)),0])
   rotate([90,0,0]) {
-    union() {
+    union()
+    linear_extrude(height=ChargingHandleWidth(), center=true) {
 
-      linear_extrude(height=ChargingHandleWidth(), center=true) {
+      // Charging handle body
+      translate([-chargerPivotX,ReceiverCenter()-chargerPivotZ])
+      mirror([1,0])
+      square([ReceiverCenter()+1, 0.75-chargingSpindleRadius]);
 
-        // Charging handle body
-        translate([-chargerPivotX,ReceiverCenter()-chargerPivotZ])
-        mirror([1,0])
-        square([ReceiverCenter()+1, 0.75-chargingSpindleRadius]);
+      difference() {
+        hull() {
 
+          // Stick out the top, so the charging handle can be attached
+          translate([-chargerPivotX,0])
+          mirror([1,0])
+          square([abs(chargerPivotX)+chargingSpindleRadius, 0.75]);
 
+          // Charger supporting infill
+          rotate(70+angle)
+          semidonut(major=(ReceiverIR()+abs(chargerPivotX))*2,
+                    minor=chargingSpindleRadius,
+                    angle=80+angle, $fn=Resolution(20,40));
 
-        difference() {
-          hull() {
+          // StrikerTop interface
+          rotate(-51)
+          semicircle(od=(chargingWheelRadius*2),
+                  angle=16, $fn=Resolution(20,60));
 
-            // Stick out the top, so the charging handle can be attached
-            translate([-chargerPivotX,0])
-            mirror([1,0])
-            square([abs(chargerPivotX)+chargingSpindleRadius, 0.75]);
-
-            // Charger supporting infill
-            rotate(70+angle)
-            semidonut(major=(ReceiverIR()+abs(chargerPivotX))*2,
-                      minor=chargingSpindleRadius,
-                      angle=80+angle, $fn=Resolution(20,40));
-
-            // StrikerTop interface
-            rotate(-51)
-            semicircle(od=(chargingWheelRadius*2),
-                    angle=16, $fn=Resolution(20,60));
-
-            // Pivot body
-            circle(r=chargingSpindleRadius, $fn=Resolution(15,30));
-          }
-
-          // Pivot hole
-          Rod2d(PivotRod(), RodClearanceLoose(), center=true);
+          // Pivot body
+          circle(r=chargingSpindleRadius, $fn=Resolution(15,30));
         }
+
+        // Pivot hole
+        Rod2d(PivotRod(), RodClearanceLoose(), center=true);
       }
     }
   }
 }
 
-module ChargingInsert() {
+module ChargingInsert(single=true) {
 
   // Charging Supports
   color("Moccasin", 0.5)
@@ -102,12 +98,18 @@ module ChargingInsert() {
     // Insert
     translate([0,0,ReceiverCenter()+ManifoldGap()])
     mirror([0,0,1])
-    TeeInsert();
+    intersection() {
+      TeeInsert();
+      
+      translate([0,0,-ManifoldGap()])
+      cylinder(r=TeeInnerRadius(ReceiverTee())+0.1,
+               h=ReceiverCenter(), $fn=Resolution(20, 40));
+    }
 
     // Charging Wheel Travel Path
     translate([-2,-(ChargingHandleWidth()/2)-0.01,0])
     cube([4,
-          ChargingHandleWidth()+0.02,
+          ChargingHandleWidth()+0.02 + (single?1:0),
           ReceiverCenter()+ManifoldGap(2)]);
 
     ChargingPivot(length=1);
@@ -127,8 +129,10 @@ color("black", 0.25)
 Reference();
 
 
+// Plated charging handle
 *!scale(25.4) rotate([90,0,0])
 ChargingHandle();
 
-*!scale(25.4) rotate([180,0,0])
-ChargingInsert();
+// Plated charging insert
+*!scale(25.4) rotate([-90,0,0])
+ChargingInsert(left=true, right=false);
