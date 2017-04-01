@@ -33,10 +33,6 @@ module SearGuide() {
     translate([0,0,-ReceiverCenter()])
     SearCutter();
     
-    // Cutout for shaft collar
-    mirror([0,0,1])
-    cylinder(r=0.255, h=ReceiverIR()+SearTravel()+0.25, $fn=20);
-    
     SearBolts(teardrop=false, cutter=true);
   }
 }
@@ -59,9 +55,9 @@ module SearSupportTabWithBoltCutouts() {
 translate([0,0,-ReceiverCenter()])
 %Sear();
 
-//*!scale(25.4)
+//!scale(25.4)
 SearGuide();
 
-!scale(25.4) rotate([90,0,0])
+*!scale(25.4) rotate([90,0,0])
 translate([0,0,-ReceiverCenter()])
 SearSupportTabWithBoltCutouts();
