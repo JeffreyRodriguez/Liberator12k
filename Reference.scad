@@ -7,6 +7,7 @@ use <Vitamins/Rod.scad>;
 //DEFAULT_BARREL = Spec_PointFiveSix9mmBarrel();
 //DEFAULT_BARREL = Spec_PipeThreeQuarterInch();
 //DEFAULT_BARREL = Spec_PipeOneInch(); // Trying a 1" pipe sleeve around the shell
+//DEFAULT_BARREL = Spec_TubingZeroPointSevenFive(); // Tubing from .44 Magnum ECM - also .357 Magnum shotgun.
 DEFAULT_BARREL = Spec_TubingOnePointOneTwoFive();
 
 DEFAULT_STOCK = Spec_PipeThreeQuarterInchSch80();
@@ -98,7 +99,7 @@ function StrikerDiameter(clearance) = RodDiameter(StrikerRod(), clearance);
 
 
 // Component Modules
-module Barrel(barrel=BarrelPipe(), barrelLength=DEFAULT_BARREL_LENGTH, hollow=false,
+module Barrel(barrel=DEFAULT_BARREL, barrelLength=DEFAULT_BARREL_LENGTH, hollow=false,
               clearance=PipeClearanceLoose(), alpha=1) {
   color("SteelBlue", alpha)
   translate([BreechFrontX(),0,0])
@@ -138,7 +139,7 @@ module Breech() {
   Bushing(spec=BreechBushing());
 }
 
-module Reference(barrel=BarrelPipe(),
+module Reference(barrel=DEFAULT_BARREL,
            barrelLength=18,
                  breech=Spec_BushingThreeQuarterInch(),
                receiver=ReceiverTee(),
