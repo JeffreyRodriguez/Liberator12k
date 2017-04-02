@@ -12,9 +12,10 @@ use <../../Lower/Receiver Lugs.scad>;
 use <../../Lower/Lower.scad>;
 
 use <../../Upper/Cross/Cross Upper.scad>;
-use <../../Upper/Cross/Forend/Barrel Lugs.scad>;
 use <../../Upper/Cross/Forend/Forend.scad>;
 use <../../Upper/Cross/Forend/Forend Slotted.scad>;
+use <../../Upper/Cross/Forend/Single/Twist/Barrel Lugs.scad>;
+use <../../Upper/Cross/Forend/Single/Twist/Lugged Forend.scad>;
 
 use <../../Reference.scad>;
 
@@ -24,6 +25,7 @@ module Liberator12k_TwistAction(barrelLength=BarrelLength()) {
 
   // Barrel, lugs and shaft collar (animated)
   translate([LowerMaxX()+ForendMidsectionLength()+ForendSlottedLength(),0]) {
+    
 
     translate([ForendSlottedLength()*Animate(ANIMATION_STEP_UNLOAD),0,0])
     translate([-ForendSlottedLength()*Animate(ANIMATION_STEP_LOAD),0,0]) {
@@ -42,11 +44,13 @@ module Liberator12k_TwistAction(barrelLength=BarrelLength()) {
       translate([-(LowerMaxX()+0.25)-ForendSlottedLength(),0,0])
       Barrel(hollow=true, barrelLength=barrelLength);
     }
+    
+    LuggedForend(alpha=0.25);
   }
 
   ForendBaseplate();
+  translate([BarrelLugLength(),0,0])
   ForendFront();
-  LuggedForend(alpha=0.25);
   ForendMidsection();
   ForendSlotted12k(alpha=0.25);
 }

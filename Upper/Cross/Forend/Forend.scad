@@ -19,8 +19,6 @@ use <../../../Reference.scad>;
 
 use <../Frame.scad>;
 
-use <Barrel Lugs.scad>;
-
 use <Forend Slotted.scad>;
 
 function ForendSlottedLength() = 3;
@@ -39,7 +37,7 @@ module ForendSlotted() {
 function ForendFrontMinX() = LowerMaxX()
                              +ForendSlottedLength()
                              +ForendMidsectionLength()
-                             +ForendSlottedLength()+BarrelLugLength();
+                             +ForendSlottedLength();
 
 
 module Forend(barrelSpec=BarrelPipe(), length=1,
@@ -92,21 +90,6 @@ module ForendMidsection(barrelSpec=BarrelPipe()) {
   Forend(barrelSpec=barrelSpec, length=ForendMidsectionLength());
 }
 
-module LuggedForend(lengthOpen=BarrelLugLength(), lengthClosed=3, alpha=1) {
-  echo("Lugged Forend Length", lengthOpen+lengthClosed);
-
-  color("Gold", alpha)
-  render(convexity=4)
-  translate([LowerMaxX()+ForendMidsectionLength()+ForendSlottedLength(),0])
-  difference() {
-    Forend(length=lengthClosed+lengthOpen);
-    
-    rotate([0,90,0])
-    BarrelLugTrack(slideLength=lengthClosed,
-                   lugLength=lengthOpen+0.05+ManifoldGap());
-  }
-}
-
 module ForendFront() {
   
   color("DimGrey")
@@ -144,7 +127,6 @@ module ForendFront() {
 ForendBaseplate();
 ForendSlotted();
 ForendMidsection();
-LuggedForend();
 ForendFront();
 
 Frame();
@@ -160,12 +142,6 @@ ForendBaseplate();
 rotate([0,-90,0])
 translate([-LowerMaxX()-ForendSlottedLength(),0,0])
 ForendMidsection(barrelSpec=Spec_Tubing1628x1125());
-
-// Plated Lugged Forend
-*!scale(25.4)
-//translate([0,0,1])
-rotate([0,90,0])
-LuggedForend();
 
 // Plated Far Forend
 *!scale(25.4)

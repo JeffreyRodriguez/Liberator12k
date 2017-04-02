@@ -12,8 +12,8 @@ use <../../Reference.scad>;
 
 use <../../Upper/Cross/Cross Upper.scad>;
 use <../../Upper/Cross/Forend/Forend.scad>;
-use <../../Upper/Cross/Forend/Forend Pivoted.scad>;
 use <../../Upper/Cross/Forend/Forend Slotted.scad>;
+use <../../Upper/Cross/Forend/Single/Pivot/Forend Pivoted.scad>;
 
 use <Base.scad>;
 
@@ -28,7 +28,7 @@ module Liberator12k_BreakAction(barrelLength=18) {
 
     BarrelShaftCollar();
   }
-  
+
   PivotRod(cutter=false);
   LockRod(cutter=false);
 

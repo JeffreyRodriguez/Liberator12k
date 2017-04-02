@@ -17,7 +17,6 @@ use <../../Reference.scad>;
 
 use <../../Upper/Cross/Cross Upper.scad>;
 use <../../Upper/Cross/Frame.scad>;
-use <../../Upper/Cross/Forend/Barrel Lugs.scad>;
 use <../../Upper/Cross/Forend/Forend.scad>;
 use <../../Upper/Cross/Internals/Charger.scad>;
 use <../../Upper/Cross/Internals/Firing Pin Guide.scad>;
