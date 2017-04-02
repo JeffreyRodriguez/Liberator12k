@@ -18,8 +18,6 @@ use <../../../Vitamins/Rod.scad>;
 use <../../../Vitamins/Pipe.scad>;
 use <../../../Vitamins/Spring.scad>;
 
-use <../../../Lower/Trigger.scad>;
-
 use <../Reference.scad>;
 
 use <../Frame.scad>;
@@ -91,7 +89,7 @@ module ChargingHandle(angle=35) {
   }
 }
 
-module ChargingInsert(single=true) {
+module ChargingInsert(single=false) {
 
   // Charging Supports
   color("Moccasin", 0.5)
@@ -125,9 +123,6 @@ ChargingInsert();
 
 Striker();
 
-translate([0,0,-ReceiverCenter()])
-TriggerGroup();
-
 color("black", 0.25)
 Reference();
 
@@ -137,5 +132,5 @@ Reference();
 ChargingHandle();
 
 // Plated charging insert
-*!scale(25.4) rotate([-90,0,0])
-ChargingInsert(left=true, right=false);
+*!scale(25.4) for (m=[0,1]) mirror([0,m,0]) rotate([-90,0,0])
+ChargingInsert(single=true);
