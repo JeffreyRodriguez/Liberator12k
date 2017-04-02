@@ -10,7 +10,7 @@ use <../../../Vitamins/Rod.scad>;
 use <../../../Lower/Trigger.scad>;
 use <../../../Lower/Trigger.scad>;
 
-use <../../../Reference.scad>;
+use <../Reference.scad>;
 
 function SearBoltSpec() = Spec_BoltM3();
 function SearBoltOffset() = ReceiverIR()-BoltRadius(SearBoltSpec());

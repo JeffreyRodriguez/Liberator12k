@@ -13,8 +13,7 @@ use <../../Lower/Receiver Lugs.scad>;
 use <../../Lower/Trigger.scad>;
 use <../../Lower/Lower.scad>;
 
-use <../../Reference.scad>;
-
+use <../../Upper/Cross/Reference.scad>;
 use <../../Upper/Cross/Cross Upper.scad>;
 use <../../Upper/Cross/Frame.scad>;
 use <../../Upper/Cross/Forend/Forend.scad>;

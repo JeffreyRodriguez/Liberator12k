@@ -7,7 +7,7 @@ use <../../../Ammo/Shell Slug.scad>;
 use <../../../Components/Semicircle.scad>;
 use <../../../Components/Cylinder.scad>;
 use <../Frame.scad>;
-use <../../../Reference.scad>;
+use <../Reference.scad>;
 
 
 function ForendRearLength() = 1;

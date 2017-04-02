@@ -1,7 +1,7 @@
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Resolution.scad>;
 use <../../Vitamins/Pipe.scad>;
-use <../../Reference.scad>;
+use <Reference.scad>;
 
 module Sidebars2d(width=0.25, height=0.75, angles=[90,270],
                   clearance=0.005, cutter=false) {

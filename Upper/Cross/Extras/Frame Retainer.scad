@@ -1,6 +1,6 @@
-use <Frame.scad>;
-use <../../Reference.scad>;
 use <../../Vitamins/Pipe.scad>;
+use <../Frame.scad>;
+use <../Reference.scad>;
 
 module FrameRetainer() {
   render()

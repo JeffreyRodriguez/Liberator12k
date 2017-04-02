@@ -11,7 +11,7 @@ use <../../../Meta/Debug.scad>;
 use <../../../Vitamins/Rod.scad>;
 use <../../../Vitamins/Pipe.scad>;
 
-use <../../../Reference.scad>;
+use <../Reference.scad>;
 use <../../../Lower/Trigger.scad>;
 
 use <Sear Bolts.scad>;

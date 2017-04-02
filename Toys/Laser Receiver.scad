@@ -1,6 +1,6 @@
 $t=0;
 use <../Debug.scad>;
-use <../Reference.scad>;
+use <../Upper/Cross/Reference.scad>;
 use <../Striker.scad>;
 use <../Components/Semicircle.scad>;
 use <../Vitamins/Pipe.scad>;

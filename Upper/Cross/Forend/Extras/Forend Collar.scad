@@ -5,7 +5,7 @@ use <../../../../Vitamins/Pipe.scad>;
 use <../../../../Vitamins/Rod.scad>;
 use <../../../../Vitamins/Double Shaft Collar.scad>;
 use <../../../../Lower/Receiver Lugs.scad>;
-use <../../../../Reference.scad>;
+use <../../Reference.scad>;
 use <../../Frame.scad>;
 
 module ForendCollar(barrelSpec=BarrelPipe(), length=1, collarAngle=45,

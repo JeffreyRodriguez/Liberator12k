@@ -1,9 +1,8 @@
 use <../Vitamins/Rod.scad>;
-use <../Reference.scad>;
 
-module Spindle(pin=PivotRod(), center=false,
+module Spindle(pin=Spec_RodOneEighthInch(), center=false,
                radius=0.2, height=0.26,
-               $fn=Resolution(12,12)) {
+               $fn=12) {
     difference() {
       cylinder(r=radius, h=height, center=center);
 

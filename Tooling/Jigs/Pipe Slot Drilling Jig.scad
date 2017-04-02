@@ -4,7 +4,6 @@ use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/Pipe.scad>;
 use <../../Vitamins/Rod.scad>;
 use <../../Vitamins/Spring.scad>;
-use <../../Reference.scad>;
 
 module PipeSlotDrillingJig(pipeSpec=Spec_TubingOnePointOneTwoFive(),
                       holeSpec=Spec_RodOneEighthInch(),

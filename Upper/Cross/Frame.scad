@@ -5,13 +5,12 @@ use <../../Vitamins/Pipe.scad>;
 use <../../Vitamins/Rod.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;
 
-use <../../Lower/Receiver Lugs.scad>;
-use <../../Reference.scad>;
+use <Reference.scad>;
 
 function FrameRodLength() = 10;
 function FrameNutHeight() = 0.25;
 function OffsetFrameRod() = 0.4;
-function OffsetFrameBack() = ReceiverLugRearMinX()-0.25;
+function OffsetFrameBack() = -ReceiverCenter()-WallFrameBack()-FrameNutHeight();
 function FrameRodMatchedAngle() = 45;
 
 function FrameRodAngles() = [

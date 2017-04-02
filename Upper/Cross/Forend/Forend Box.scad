@@ -5,10 +5,11 @@ use <../../../Meta/Manifold.scad>;
 use <../../../Vitamins/Pipe.scad>;
 use <../../../Vitamins/Rod.scad>;
 
-use <../Frame.scad>;
-use <../../../Reference.scad>;
 use <../../../Ammo/Magazines/Box Magazine.scad>;
 use <../../../Ammo/Cartridges/Cartridge_12GA.scad>;
+
+use <../Frame.scad>;
+use <../Reference.scad>;
 
 function ForendRearLength() = 1;
 function ForendFrontLength() = 0.6;
@@ -21,7 +22,7 @@ module ForendSegment(wall=3/16, length=1, $fn=50, track=false, wide=false, open=
     rotate([0,90,0])
     linear_extrude(height=length)
     hull() {
-      FrameRodSleeves();
+      Quadrail2d();
       //ForendRail(ReceiverTee(), BarrelPipe(), FrameRod(), wall);
 
       // Add some more material to the center for ergo and strength

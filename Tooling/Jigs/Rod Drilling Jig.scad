@@ -1,9 +1,5 @@
-use <../../Meta/Debug.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;
-use <../Vitamins/Pipe.scad>;
 use <../../Vitamins/Rod.scad>;
-use <../../Vitamins/Spring.scad>;
-use <../../Reference.scad>;
 
 module RodDrillingJig(rodSpec=Spec_RodOneQuarterInch(),
                       holeSpec=Spec_RodOneEighthInch(),

@@ -8,7 +8,7 @@ use <../../../../../Vitamins/Pipe.scad>;
 use <../../../../../Vitamins/Rod.scad>;
 use <../../../../../Vitamins/Double Shaft Collar.scad>;
 
-use <../../../../../Reference.scad>;
+use <../../../Reference.scad>;
 use <../../Forend.scad>;
 
 use <Barrel Lugs.scad>;

@@ -6,9 +6,9 @@ use <../../Vitamins/Rod.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;
 
 use <../../Lower/Receiver Lugs.scad>;
-use <../../Reference.scad>;
 
-use <Frame.scad>;
+use <../Reference.scad>;
+use <../Frame.scad>;
 
 module CarriageBoltPlate(height=0.25, rodClearance=undef) {
   render()

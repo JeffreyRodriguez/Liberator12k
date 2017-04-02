@@ -4,7 +4,7 @@ use <../../../Meta/Resolution.scad>;
 use <../../../Components/Semicircle.scad>;
 use <../../../Vitamins/Pipe.scad>;
 use <../../../Vitamins/Rod.scad>;
-use <../../../Reference.scad>;
+use <../Reference.scad>;
 use <../../../Ammo/Cartridges/Cartridge.scad>;
 use <../../../Ammo/Cartridges/Cartridge_12GA.scad>;
 use <../../../Ammo/Shell Base.scad>;

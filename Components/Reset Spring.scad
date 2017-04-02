@@ -1,15 +1,17 @@
-include <Meta/Animation.scad>;
-use <Components/Semicircle.scad>;
-use <Meta/Manifold.scad>;
-use <Meta/Debug.scad>;
+include <../Meta/Animation.scad>;
+use <../Components/Semicircle.scad>;
+use <../Components/Spindle.scad>;
+use <../Meta/Manifold.scad>;
+use <../Meta/Debug.scad>;
+use <../Meta/Resolution.scad>;
 
-use <Vitamins/Rod.scad>;
-use <Vitamins/Spring.scad>;
-use <Reference.scad>;
-use <Trigger.scad>;
+use <../Vitamins/Rod.scad>;
+use <../Vitamins/Spring.scad>;
+use <../Upper/Cross/Reference.scad>;
+use <../Lower/Trigger.scad>;
 
-function ResetPinX() = -2.5;
-function ResetPinZ() = -3.75;
+function ResetPinX() = 0;
+function ResetPinZ() = 0;
 
 module ResetPin(clearance=RodClearanceSnug()) {
   translate([ResetPinX(), 0,ResetPinZ()])
@@ -53,7 +55,7 @@ module ResetSpring(left=true, right=true) {
   color("Magenta", 0.5)
   render(convexity=5)
   translate([ResetPinX(), 0, ResetPinZ()])
-  rotate([0,resetAngle+(ResetAngle()*0.6*Animate(ANIMATION_STEP_SAFETY)),0])
+  rotate([0,resetAngle+(ResetAngle()*0.6*Animate(ANIMATION_STEP_CHARGE)),0])
   union() {
     difference() {
       union() {

@@ -1,7 +1,5 @@
 use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
-use <../Lower/Lower.scad>;
-use <../Reference.scad>;
 
 function MagazineAngle() = 0;
 

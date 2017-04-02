@@ -13,7 +13,7 @@ use <../../../Vitamins/Nuts And Bolts.scad>;
 use <../../../Vitamins/Pipe.scad>;
 use <../../../Vitamins/Rod.scad>;
 
-use <../../../Reference.scad>;
+use <../Reference.scad>;
 use <../../../Lower/Trigger.scad>;
 
 

@@ -1,9 +1,10 @@
-use <Vitamins/Rod.scad>;
-use <Reference.scad>;
+use <../Vitamins/Rod.scad>;
+
+DEFAULT_ROD = Spec_RodFiveSixteenthInch();
 
 module spring_cap(base_length=0.25, cap_length=0.3, od=0.68,
-                  major_id=RodDiameter(FrameRod(),RodClearanceLoose())+0.05,
-                  minor_id=RodDiameter(FrameRod(),RodClearanceLoose()), $fn=20) {
+                  major_id=RodDiameter(DEFAULT_ROD,RodClearanceLoose())+0.05,
+                  minor_id=RodDiameter(DEFAULT_ROD,RodClearanceLoose()), $fn=20) {
   render()
   difference() {
     union() {
@@ -23,14 +24,16 @@ module SpringCartridge(debug=false) {
 
   // Spring
   if (debug)
-  cylinder(r=3/8, h=3);
+  color("Silver", 0.5)
+  translate([0,0,0.25+0.15])
+  %cylinder(r=3/8, h=3);
 
-  translate([0,0,3])
+  translate([0,0,3+0.5+0.3])
   mirror([0,0,1])
   spring_cap();
 }
 
-!SpringCartridge();
+!SpringCartridge(debug=true);
 
 !scale([25.4, 25.4, 25.4]) {
   spring_cap();

@@ -13,7 +13,7 @@ use <../../../Vitamins/Spring.scad>;
 
 use <../../../Components/Tee Insert.scad>;
 
-use <../../../Reference.scad>;
+use <../Reference.scad>;
 
 use <../../../Lower/Trigger.scad>;
 use <../../../Lower/Lower.scad>;

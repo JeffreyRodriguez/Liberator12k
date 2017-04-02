@@ -15,7 +15,7 @@ use <../../../Lower/Receiver Lugs.scad>;
 use <../../../Lower/Lower.scad>;
 use <../../../Lower/Trigger.scad>;
 
-use <../../../Reference.scad>;
+use <../Reference.scad>;
 
 use <../Frame.scad>;
 

@@ -1,7 +1,7 @@
 use <../Meta/Units.scad>;
 
 use <../Vitamins/Pipe.scad>;
-use <../Reference.scad>;
+use <../Upper/Cross/Reference.scad>;
 
 
 module ExtractorRing(barrel=BarrelPipe(),length=UnitsImperial(0.25), wall=UnitsImperial(0.125),

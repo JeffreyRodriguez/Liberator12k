@@ -1,7 +1,6 @@
 use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
-use <../Trigger Guard.scad>;
-use <../Reference.scad>;
+use <../Lower/Lower.scad>;
 
 function MagazineAngle() = 8;
 function MagazineOffsetX(height=0) = (sin(MagazineAngle())*height);
@@ -87,7 +86,7 @@ module Magwell(width=UnitsImperial(1), height=UnitsImperial(1.75),
   color("Orange")
   render()
   difference() {
-    translate([(BreechFrontX()+0.25),0,0])
+    translate([(LowerMaxX()+0.25),0,0])
     union() {
       // Magwell body
       mirror([0,0,1])  
@@ -106,19 +105,16 @@ module Magwell(width=UnitsImperial(1), height=UnitsImperial(1.75),
       cube([0.25, 0.25, 0.25]);
     }
     
-    translate([(BreechFrontX()+0.25),0,0])
+    translate([(LowerMaxX()+0.25),0,0])
     translate([magOffsetX,0,0])
     MagwellInsert(height=height);
     
-    translate([0,0,ReceiverCenter()]) {
-      GripAccessoryBosses(holes=false, cutter=true);
-      
-      GripAccessoryBossBolts(clearance=true);
-      
-      translate([magwellLength-0.5,0,0])
-      GripAccessoryBossBolts(clearance=true);
-    }
+    GripAccessoryBosses(holes=false, cutter=true);
     
+    GripAccessoryBossBolts(clearance=true);
+    
+    translate([magwellLength-0.5,0,0])
+    GripAccessoryBossBolts(clearance=true);
     
   }
 }
@@ -150,8 +146,7 @@ module PlateMagwell(left=true, right=true) {
   
 Magwell();
 
-translate([0,0,ReceiverCenter()])
-%Grip();
+%Lower();
 
 *!#scale(25.4) {
   translate([0,0.1,0])

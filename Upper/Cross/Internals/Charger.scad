@@ -20,7 +20,7 @@ use <../../../Vitamins/Spring.scad>;
 
 use <../../../Lower/Trigger.scad>;
 
-use <../../../Reference.scad>;
+use <../Reference.scad>;
 
 use <../Frame.scad>;
 use <../Cross Upper.scad>;

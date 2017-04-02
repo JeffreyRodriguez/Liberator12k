@@ -1,12 +1,10 @@
 use <Vitamins/Pipe.scad>;
 use <Vitamins/Rod.scad>;
-use <Reference.scad>;
-use <Upper/Cross/Striker.scad>;
 
-module FrameSpacer2D(od=StrikerRadius()*2, rod=FrameRod(), $fn=Resolution(12, 30)) {
+module FrameSpacer2D(od=0.7, rod=Spec_RodFiveSixteenthInch(), $fn=Resolution(12, 30)) {
   difference() {
-    circle(r=StrikerRadius());
-    Rod2d(FrameRod(), clearance=RodClearanceLoose());
+    circle(r=od/2);
+    Rod2d(rod, clearance=RodClearanceLoose());
   }
 }
 

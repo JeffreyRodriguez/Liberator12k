@@ -9,16 +9,14 @@ use <../../../../../Vitamins/Rod.scad>;
 use <../../../../../Vitamins/Nuts And Bolts.scad>;
 use <../../../../../Vitamins/Double Shaft Collar.scad>;
 use <../../../../../Components/Printable Shaft Collar.scad>;
-use <../../../../../Reference.scad>;
+use <../../../Reference.scad>;
 use <../../../Frame.scad>;
 use <../../Forend Slotted.scad>;
+use <../../Forend.scad>;
 
 DEFAULT_BARREL = Spec_TubingZeroPointSevenFive();
 DEFAULT_BARREL = Spec_TubingOnePointOneTwoFive();
 DEFAULT_LOCK_ROD  = Spec_RodOneEighthInch();
-SET_SCREW_SPEC = Spec_BoltM4();
-
-
 
 function LockRodX() = ReceiverCenter()
                     + RodRadius(DEFAULT_LOCK_ROD)
@@ -113,20 +111,8 @@ module ForendPivoted(barrelPipe=DEFAULT_BARREL, length=PivotedForendLength(),
   color("Purple", alpha)
   render(convexity=4)
   difference() {
-    union() {
-      translate([forendOffsetX,0,0])
-      rotate([0,90,0])
-      difference() {
-        linear_extrude(height=length)
-        Quadrail2d();
-
-        translate([0,0,-ManifoldGap()])
-        linear_extrude(height=length+ManifoldGap(2)) {
-          FrameRods();
-        }
-      }
-    }
-
+    translate([forendOffsetX,0,0])
+    Forend(barrelSpec=barrelPipe, length=length);
 
     union() {
 
@@ -162,25 +148,17 @@ module ForendPivoted(barrelPipe=DEFAULT_BARREL, length=PivotedForendLength(),
       Pivot(factor=1)
       BarrelShaftCollar(cutter=true);
 
-      // Square off the breech-end
-      hull()
-      for (z = [0,1.5])
-      translate([0,0,z])
-      Barrel(barrel=barrelPipe, barrelLength=2.5);
-
       // Cutout for the barrel near breach
       hull() {
 
         Barrel(barrel=barrelPipe, barrelLength =
                LowerPivotX()
-             - BreechFrontX()
-             + PipeOuterRadius(barrelPipe));
+             - BreechFrontX());
 
         Pivot()
         Barrel(barrel=barrelPipe, barrelLength =
                LowerPivotX()
-             - BreechFrontX()
-             + PipeOuterRadius(barrelPipe));
+             - BreechFrontX());
       }
 
       // Cutout for the barrel near front
@@ -200,6 +178,13 @@ module ForendPivoted(barrelPipe=DEFAULT_BARREL, length=PivotedForendLength(),
       }
     }
   }
+}
+
+module ForendPivotLockCollar(barrel=DEFAULT_BARREL,
+                             length=1) {
+  translate([BreechFaceX(),0,0])
+  rotate([90,0,90])
+  PrintableShaftCollar(length=length, pipeSpec=barrel);
 }
 
 module ForendPivotLock(barrelPipe=DEFAULT_BARREL,
@@ -226,6 +211,7 @@ rotate([0,-PivotAngle()*Animate(ANIMATION_STEP_LOAD),0])
 rotate([0,PivotAngle()*Animate(ANIMATION_STEP_UNLOAD),0])
 translate([-LowerPivotX(),0,-LowerPivotZ()]) {
 
+  ForendPivotLockCollar(barrel=DEFAULT_BARREL);
   Barrel(barrel=DEFAULT_BARREL, hollow=true);
   PivotRod(nutEnable=false);
 
