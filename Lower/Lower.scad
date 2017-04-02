@@ -222,10 +222,10 @@ module GripSplitter(clearance=0) {
   cube([20, 0.5+(clearance*2), 20]);
 }
 
-module LowerSidePlates(showLeft=true, showRight=true) {
+module LowerSidePlates(showLeft=true, showRight=true, alpha=1) {
 
   // Trigger Guard Sides
-  color("DarkSlateBlue", 0.25)
+  color("DarkSlateBlue", alpha)
   render()
   difference() {
 
@@ -282,7 +282,7 @@ module LowerMiddle() {
 module Lower(showReceiverLugs=false, showReceiverLugBolts=false,
             showGuardBolt=false, showHandleBolts=false,
             showTrigger=false, showTriggerLeft=true, showTriggerRight=true,
-            showMiddle=true, showLeft=true, showRight=true) {
+            showMiddle=true, showLeft=true, showRight=true, alpha=0.5) {
 
   // Trigger Guard Center
   if (showMiddle)
@@ -307,7 +307,7 @@ module Lower(showReceiverLugs=false, showReceiverLugBolts=false,
   if (showHandleBolts)
   HandleBolts(clearance=false);
 
-  LowerSidePlates(showLeft=showLeft, showRight=showRight);
+  LowerSidePlates(showLeft=showLeft, showRight=showRight, alpha=alpha);
 }
 
 Lower(showReceiverLugs=true, showReceiverLugBolts=true,
@@ -316,4 +316,4 @@ Lower(showReceiverLugs=true, showReceiverLugBolts=true,
       showTrigger=true, showTriggerLeft=true, showTriggerRight=true,
       showLeft=true,
       showMiddle=true,
-      showRight=true);
+      showRight=true, alpha=0.5);

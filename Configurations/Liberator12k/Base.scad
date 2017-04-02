@@ -40,7 +40,7 @@ module Liberator12k_PlainFrame(length=FrameRodLength()) {
 
 
 module Liberator12k_Base(strikerLength=StrikerRodLength(),
-                         lower=true, trigger=true) {
+                         lower=true, trigger=true, alpha=1) {
 
   Breech();
 
@@ -56,7 +56,7 @@ module Liberator12k_Base(strikerLength=StrikerRodLength(),
     ReceiverLugBoltHoles(clearance=false);
     GuardBolt(clearance=false);
     HandleBolts(clearance=false);
-    Lower(showTrigger=trigger);
+    Lower(alpha=alpha, showTrigger=trigger);
   }
 
   translate([0,0,-ManifoldGap()])
@@ -64,14 +64,14 @@ module Liberator12k_Base(strikerLength=StrikerRodLength(),
 
   FiringPinGuide(debug=true);
 
-  Receiver(alpha=0.5);
+  Receiver(alpha=alpha);
 
-  CrossInserts(alpha=0.5);
-  CrossUpperFront(alpha=0.25);
-  CrossUpperBack(alpha=0.25);
+  CrossInserts(alpha=alpha);
+  CrossUpperFront(alpha=alpha);
+  CrossUpperBack(alpha=alpha);
 }
 
-module Liberator12k_Stock() {
+module Liberator12k_Stock(alpha=1) {
   translate([ButtTeeCenterX(),0,0]) {
 
     // Striker Foot
@@ -89,14 +89,14 @@ module Liberator12k_Stock() {
     StrikerSpacer(length=StrikerSpacerLength(), alpha=0.5);
   }
 
-  Stock(alpha=0.5);
-  Butt(alpha=0.5);
+  Stock(alpha=alpha);
+  Butt(alpha=alpha);
 }
 
-module Liberator12k_Pistol() {
-  Stock(alpha=0.5);
+module Liberator12k_Pistol(alpha=1) {
+  Stock(alpha=alpha);
   PipeCap(pipeSpec=DEFAULT_BARREL);
-  Butt(alpha=0.5);
+  Butt(alpha=alpha);
 }
 
 Liberator12k_PlainFrame();

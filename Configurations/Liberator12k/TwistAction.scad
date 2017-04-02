@@ -21,12 +21,11 @@ use <../../Reference.scad>;
 
 use <Base.scad>;
 
-module Liberator12k_TwistAction(barrelLength=BarrelLength()) {
+module Liberator12k_TwistAction(barrelLength=BarrelLength(), alpha=1) {
 
   // Barrel, lugs and shaft collar (animated)
   translate([LowerMaxX()+ForendMidsectionLength()+ForendSlottedLength(),0]) {
     
-
     translate([ForendSlottedLength()*Animate(ANIMATION_STEP_UNLOAD),0,0])
     translate([-ForendSlottedLength()*Animate(ANIMATION_STEP_LOAD),0,0]) {
 
@@ -45,14 +44,14 @@ module Liberator12k_TwistAction(barrelLength=BarrelLength()) {
       Barrel(hollow=true, barrelLength=barrelLength);
     }
     
-    LuggedForend(alpha=0.25);
+    LuggedForend(alpha=alpha);
   }
 
   ForendBaseplate();
   translate([BarrelLugLength(),0,0])
   ForendFront();
   ForendMidsection();
-  ForendSlotted12k(alpha=0.25);
+  ForendSlotted12k(alpha=alpha);
 }
 
 module ForendSlotted12k(alpha=1) {
