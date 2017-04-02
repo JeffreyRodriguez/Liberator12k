@@ -256,4 +256,4 @@ ForendPivotLock(alpha=0.5);
 *!scale(25.4)
 rotate([0,90,0])
 translate([-ForendOffsetX()-PivotedForendLength(),0,0])
-ForendPivoted(bolt=true, sidebars=false, alpha=1);
+ForendPivoted(bolt=true, alpha=1);

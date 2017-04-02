@@ -8,7 +8,7 @@ use <../../Lower/Lower.scad>;
 use <../../Lower/Trigger.scad>;
 use <../../Reference.scad>;
 use <Frame.scad>;
-use <Sidebar.scad>;
+use <Sidebars.scad>;
 
 module CrossFittingQuadrail2d(rod=Spec_RodFiveSixteenthInch(),
                      rodClearance=RodClearanceLoose()) {
@@ -25,13 +25,13 @@ module CrossFittingQuadrail2d(rod=Spec_RodFiveSixteenthInch(),
 module CrossInserts(width=0.25, height=0.75, slotHeight=1.25,
                     angles=[90, 270], clearance=0.005,
                     cutter=false, alpha=1) {
-  
+
   color("SteelBlue", alpha)
   translate([-ReceiverCenter(),0,0])
   Sidebars(width=width, height=height,
            length=ReceiverLugFrontMaxX()+ReceiverCenter(),
            angles=angles, clearance=clearance);
-  
+
   if (cutter)
   translate([-slotHeight/2,0,0])
   Sidebars(width=width, height=height, length=slotHeight,

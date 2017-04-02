@@ -58,7 +58,7 @@ module Liberator12k_BreakAction(barrelLength=18) {
 }
 
 //rotate([0,0,360*$t])
-Liberator12k_BreakAction();
 Liberator12k_PlainFrame();
+Liberator12k_BreakAction();
 Liberator12k_Base();
 Liberator12k_Stock();
