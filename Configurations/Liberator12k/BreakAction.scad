@@ -61,4 +61,4 @@ module Liberator12k_BreakAction(barrelLength=18) {
 Liberator12k_BreakAction();
 Liberator12k_PlainFrame();
 Liberator12k_Base();
-//Liberator12k_Stock();
+Liberator12k_Stock();

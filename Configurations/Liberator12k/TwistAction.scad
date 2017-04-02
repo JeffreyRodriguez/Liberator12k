@@ -72,3 +72,4 @@ module ForendSlotted12k(alpha=1) {
 Liberator12k_TwistAction();
 Liberator12k_PlainFrame();
 Liberator12k_Base();
+Liberator12k_Stock();
