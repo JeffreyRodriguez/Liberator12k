@@ -26,7 +26,7 @@ use <../../Upper/Cross Fitting/Striker.scad>;
 
 use <../../Reference.scad>;
 
-use <Liberator12k.scad>;
+use <Base.scad>;
 
 module Liberator12k_TwistAction(barrelLength=BarrelLength()) {
 
@@ -51,7 +51,7 @@ module Liberator12k_TwistAction(barrelLength=BarrelLength()) {
       Barrel(hollow=true, barrelLength=barrelLength);
     }
   }
-  
+
   ForendBaseplate();
   ForendFront();
   LuggedForend(alpha=0.25);

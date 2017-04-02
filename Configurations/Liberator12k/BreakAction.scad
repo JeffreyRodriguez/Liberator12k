@@ -29,7 +29,7 @@ use <../../Upper/Cross Fitting/Sear Bolts.scad>;
 use <../../Upper/Cross Fitting/Sear Guide.scad>;
 use <../../Upper/Cross Fitting/Striker.scad>;
 
-use <Liberator12k.scad>;
+use <Base.scad>;
 
 module Liberator12k_BreakAction(barrelLength=18) {
 
