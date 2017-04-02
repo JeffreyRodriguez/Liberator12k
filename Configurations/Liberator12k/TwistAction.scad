@@ -28,13 +28,6 @@ use <../../Reference.scad>;
 
 use <Liberator12k.scad>;
 
-//echo($vpr);
-
-//$vpr = [80, 0, 360*$t];
-
-function SearLength() = 2;
-
-
 module Liberator12k_TwistAction(barrelLength=BarrelLength()) {
 
   // Barrel, lugs and shaft collar (animated)
@@ -58,10 +51,6 @@ module Liberator12k_TwistAction(barrelLength=BarrelLength()) {
       Barrel(hollow=true, barrelLength=barrelLength);
     }
   }
-
-  Liberator12k_PlainFrame();
-  
-  Liberator12k_Base();
   
   ForendBaseplate();
   ForendFront();
@@ -80,5 +69,6 @@ module ForendSlotted12k(alpha=1) {
   ForendSlotted2d(slotAngles=[0,180]);
 }
 
-//rotate([0,0,360*$t])
 Liberator12k_TwistAction();
+Liberator12k_PlainFrame();
+Liberator12k_Base();

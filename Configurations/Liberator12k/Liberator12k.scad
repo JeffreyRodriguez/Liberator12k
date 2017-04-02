@@ -51,6 +51,15 @@ module Liberator12k_Base(strikerLength=StrikerRodLength(),
   Striker(length=strikerLength);
   SearBolts();
 
+  // Lower
+  if (lower)
+  translate([0,0,-ReceiverCenter()]) {
+    ReceiverLugBoltHoles(clearance=false);
+    GuardBolt(clearance=false);
+    HandleBolts(clearance=false);
+    Lower(showTrigger=trigger);
+  }
+
   translate([0,0,-ManifoldGap()])
   SearGuide();
 
@@ -61,15 +70,6 @@ module Liberator12k_Base(strikerLength=StrikerRodLength(),
   CrossInserts(alpha=0.5);
   CrossUpperFront(alpha=0.25);
   CrossUpperBack(alpha=0.25);
-
-  // Lower
-  if (lower)
-  translate([0,0,-ReceiverCenter()]) {
-    ReceiverLugBoltHoles(clearance=false);
-    GuardBolt(clearance=false);
-    HandleBolts(clearance=false);
-    Lower(showTrigger=trigger);
-  }
 }
 
 module Liberator12k_Stock() {
