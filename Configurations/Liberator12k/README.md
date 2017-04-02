@@ -1,5 +1,9 @@
 \#Liberator12k - Basic
 ================
+This documentation is incomplete and out of date WRT the new break-action.
+It contains info for the twist-lock.
+
+
 The core of this configuration is based on a generic upper/lower receiver.
 
 This is the most basic \#Liberator12k configuration:
