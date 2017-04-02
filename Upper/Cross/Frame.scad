@@ -1,17 +1,27 @@
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Resolution.scad>;
+use <../../Meta/Units.scad>;
 
 use <../../Vitamins/Pipe.scad>;
 use <../../Vitamins/Rod.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;
 
+use <../../Lower/Receiver Lugs.scad>;
+
 use <Reference.scad>;
+
+DEFAULT_WASHER_HEIGHT       = UnitsImperial(0.07);
+DEFAULT_COUPLING_NUT_LENGTH = UnitsImperial(1);
 
 function FrameRodLength() = 10;
 function FrameNutHeight() = 0.25;
+function FrameWasherHeight() = DEFAULT_WASHER_HEIGHT;
 function OffsetFrameRod() = 0.4;
-function OffsetFrameBack() = -ReceiverCenter()-WallFrameBack()-FrameNutHeight();
+function OffsetFrameBack() = ReceiverLugRearMinX();
 function FrameRodMatchedAngle() = 45;
+
+function FrameCouplingNutLength(nutLength=DEFAULT_COUPLING_NUT_LENGTH,
+                                washerHeight=DEFAULT_WASHER_HEIGHT) = nutLength+(washerHeight*2)+ManifoldGap(3);
 
 function FrameRodAngles() = [
                     FrameRodMatchedAngle(),
@@ -25,18 +35,6 @@ function FrameRodOffset()
            + RodRadius(FrameRod())
            + OffsetFrameRod()
            ;
-
-module Frame(clearance=RodClearanceLoose(),
-             length=FrameRodLength(),
-             rodFnAngle=90) {
-
-  color("SteelBlue")
-  render(convexity=4)
-  translate([OffsetFrameBack(),0,0])
-  rotate([0,90,0])
-  linear_extrude(height=length)
-  FrameRods(clearance=clearance);
-}
 
 module FrameIterator() {
   for (angle = FrameRodAngles())
@@ -54,11 +52,52 @@ module FrameRods(clearance=RodClearanceLoose(),
   Rod2d(rod=FrameRod(), clearance=clearance);
 }
 
-module FrameNuts(nutHeight=FrameNutHeight(), nutRadius=0.3) {
+module Frame(clearance=RodClearanceLoose(),
+             length=FrameRodLength(),
+             rodFnAngle=90) {
+
   color("SteelBlue")
+  render(convexity=4)
+  rotate([0,90,0])
+  linear_extrude(height=length)
+  FrameRods(clearance=clearance);
+}
+
+module FrameNuts(nutHeight=FrameNutHeight(),
+                 nutRadius=0.25,
+                 washers=false,
+                 washerHeight=DEFAULT_WASHER_HEIGHT) {
+
+  color("DarkGoldenrod")
+  translate([washers ? washerHeight : 0,0,0])
   rotate([0,90,0])
   FrameIterator()
   cylinder(r=nutRadius, h=nutHeight, $fn=6);
+
+  if (washers)
+  FrameWashers();
+}
+
+module FrameWashers(washerDiameter=0.65, washerHeight=0.07) {
+  color("Silver")
+  rotate([0,90,0])
+  FrameIterator()
+  cylinder(r=washerDiameter/2, h=washerHeight, $fn=12);
+}
+
+module FrameCouplingNuts(length=DEFAULT_COUPLING_NUT_LENGTH,
+                         washerHeight=DEFAULT_WASHER_HEIGHT) {
+  translate([ReceiverLugFrontMaxX()+ManifoldGap(),0,0]) {
+
+    color("LightSlateGrey")
+    translate([washerHeight,0,0])
+    FrameNuts(nutHeight=length);
+
+    // Washers
+    for (X = [ManifoldGap(2), length+washerHeight+ManifoldGap(3)])
+    translate([X,0,0])
+    FrameWashers(washerHeight=washerHeight);
+  }
 }
 
 module Quadrail2d(rod=Spec_RodFiveSixteenthInch(), rodClearance=RodClearanceLoose(),
@@ -90,10 +129,13 @@ render() {
 
   %Frame();
 
-  translate([-ManifoldGap(),0,0])
-  %FrameNuts();
+  FrameCouplingNuts();
 
-  %rotate([0,90,0])
+  translate([-ManifoldGap(),0,0])
+  mirror([1,0,0])
+  %FrameNuts(washers=true);
+
+  *%rotate([0,90,0])
   linear_extrude(height=1)
   Quadrail2d();
 }

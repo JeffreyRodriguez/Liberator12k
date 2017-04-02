@@ -31,11 +31,11 @@ module Liberator12k_BreakAction(barrelLength=18, alpha=1) {
   PivotRod(cutter=false);
   LockRod(cutter=false);
 
-  translate([ReceiverLugFrontMaxX()+1.8125+ManifoldGap(2),0,0])
+  translate([ForendX()+1+ManifoldGap(1),0,0])
   rotate([0,90,0])
   color("Gold",alpha)
   render()
-  linear_extrude(height=ForendSlottedLength()-ManifoldGap(3))
+  linear_extrude(height=2.65-ManifoldGap(1))
   ForendSlotted2d(slotAngles=[180]);
 
   ForendPivoted(alpha=alpha);
@@ -43,7 +43,8 @@ module Liberator12k_BreakAction(barrelLength=18, alpha=1) {
 }
 
 //rotate([0,0,360*$t])
-Liberator12k_PlainFrame();
+//Liberator12k_PlainFrame(length=9.55);
+Liberator12k_CoupledFrame(length=5.75);
 Liberator12k_BreakAction();
 Liberator12k_Base();
 Liberator12k_Stock();

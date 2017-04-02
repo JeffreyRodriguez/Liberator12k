@@ -44,17 +44,18 @@ function BarrelShaftCollarX() = LowerPivotX()
                               - BarrelShaftCollarLength()
                               - ManifoldGap();
 
+function PivotedForendLength() =
+                         + (PivotWall()*3)
+                         + BarrelShaftCollarLength()
+                         + RodDiameter(Spec_PivotRod())
+                         +0.125;
+                         
 function ForendOffsetX() = LowerPivotX()
                          - PivotedForendLength()
                          + (PivotWall()*2)
                          + RodRadius(Spec_PivotRod(), RodClearanceLoose())
                          +0.27; // TODO: Calculate this from the shaft collar's bottom tip pivot
 
-function PivotedForendLength() =
-                         + (PivotWall()*3)
-                         + BarrelShaftCollarLength()
-                         + RodDiameter(Spec_PivotRod())
-                         +0.125;
 
 module PivotRod(cutter=false, nutEnable=false, teardropAngle=180, alpha=1) {
 
@@ -181,8 +182,8 @@ module ForendPivoted(barrelPipe=DEFAULT_BARREL, length=PivotedForendLength(),
 }
 
 module ForendPivotLockCollar(barrel=DEFAULT_BARREL,
-                             length=1) {
-  translate([BreechFaceX(),0,0])
+                             length=0.25) {
+  translate([BreechFrontX(),0,0])
   rotate([90,0,90])
   PrintableShaftCollar(length=length, pipeSpec=barrel);
 }
@@ -194,7 +195,7 @@ module ForendPivotLock(barrelPipe=DEFAULT_BARREL,
   color("Purple", alpha)
   render(convexity=4)
   difference() {
-    translate([LockRodX()-0.5,0,0])
+    translate([ForendX(),0,0])
     rotate([0,90,0])
     linear_extrude(height=length)
     ForendSlotted2d(barrelSpec=barrelPipe,
@@ -224,6 +225,7 @@ translate([0,0,0]) {
   translate([0,2.125*Animate(ANIMATION_STEP_LOCK),0])
   LockRod();
   Frame();
+  FrameCouplingNuts();
   Reference(barrelPipe=DEFAULT_BARREL);
 }
 

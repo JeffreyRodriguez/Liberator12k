@@ -2,6 +2,7 @@
 include <../../Meta/Animation.scad>;
 
 use <../../Meta/Debug.scad>;
+use <../../Meta/Units.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Resolution.scad>;
 
@@ -24,17 +25,46 @@ use <../../Upper/Cross/Internals/Sear Guide.scad>;
 use <../../Upper/Cross/Internals/Striker.scad>;
 
 module Liberator12k_PlainFrame(length=FrameRodLength()) {
-  Frame(length=length);
 
-  // Rear Frame Nuts
-  translate([ReceiverLugRearMinX(),0,0])
-  mirror([1,0,0])
-  FrameNuts();
+  // Frame
+  translate([OffsetFrameBack(),0,0]) {
+    Frame(length=length);
+    
+    // Rear Frame Nuts
+    mirror([1,0,0])
+    FrameNuts(washers=true);
+  }
+    
 
   // Front Frame Nuts
   translate([length+OffsetFrameBack()-ManifoldGap(),0,0])
-  mirror([1,0,0])
-  FrameNuts();
+  FrameNuts(washers=true);
+}
+
+module Liberator12k_CoupledFrame(length=6,couplerRecess=UnitsImperial(0.5)) {
+  
+  // Rear Frame
+  translate([OffsetFrameBack(),0,0]) {
+    Frame(length=4);
+
+    // Rear Frame Nuts  
+    mirror([1,0,0])
+    FrameNuts(washers=true);
+  }
+  
+  FrameCouplingNuts();
+
+  translate([ForendX()-couplerRecess,0,0])
+  Frame(length=length);
+
+
+  // Front Frame Nuts
+  translate([ForendX()
+             +length
+             -couplerRecess
+             -FrameWasherHeight()
+             +ManifoldGap(),0,0])
+  FrameNuts(washers=true);
 }
 
 
@@ -97,7 +127,7 @@ module Liberator12k_Pistol(alpha=1) {
   PipeCap(pipeSpec=DEFAULT_BARREL);
   Butt(alpha=alpha);
 }
-
-Liberator12k_PlainFrame(length=3.75);
+Liberator12k_CoupledFrame(length=6);
+//Liberator12k_PlainFrame(length=10);
 Liberator12k_Base();
 Liberator12k_Stock();

@@ -21,6 +21,8 @@ use <../Frame.scad>;
 
 use <Forend Slotted.scad>;
 
+function ForendX() = ReceiverLugFrontMaxX()+FrameCouplingNutLength()+ManifoldGap();
+
 function ForendSlottedLength() = 3;
 function ForendMidsectionLength() = 0.25;
 function ForendFrontLength() = 0.375;
@@ -51,11 +53,11 @@ module Forend(barrelSpec=BarrelPipe(), length=1,
       linear_extrude(height=length) {
         Quadrail2d(wall=wall, wallTee=wallTee,
                    clearCeiling=clearCeiling, clearFloor=clearFloor);
-        
+
         children();
       }
     }
-      
+
     Frame();
 
     translate([-BreechFrontX()-ManifoldGap(),0,0])
@@ -91,26 +93,26 @@ module ForendMidsection(barrelSpec=BarrelPipe()) {
 }
 
 module ForendFront() {
-  
+
   color("DimGrey")
   render()
   difference() {
     translate([ForendFrontMinX(),0,0])
     union() {
       Forend(length=ForendFrontLength()) {
-        
+
         // Front bead sight
         hull() {
           mirror([1,0])
           translate([0,-0.125])
           square([ReceiverCenter()+0.5,0.25]);
-          
+
           mirror([1,0])
           translate([0,-ReceiverOR()])
           square([ReceiverCenter(),ReceiverOD()]);
         }
       }
-      
+
 
       // Barrel-supporting cone
       rotate([0,90,0])
@@ -119,7 +121,7 @@ module ForendFront() {
                 h=1,
               $fn=PipeFn(BarrelPipe()));
     }
-    
+
     Barrel();
   }
 }
@@ -148,4 +150,3 @@ ForendMidsection(barrelSpec=Spec_Tubing1628x1125());
 rotate([0,-90,0])
 translate([-ForendFrontMinX(),0,0])
 ForendFront();
-
