@@ -17,17 +17,17 @@ use <../../Reference.scad>;
 
 use <../../Components/Pipe Cap.scad>;
 
-use <../../Upper/Cross Fitting/Charger.scad>;
-use <../../Upper/Cross Fitting/Cross Upper.scad>;
-use <../../Upper/Cross Fitting/Frame.scad>;
-use <../../Upper/Cross Fitting/Forend/Barrel Lugs.scad>;
-use <../../Upper/Cross Fitting/Forend/Forend.scad>;
-use <../../Upper/Cross Fitting/Forend/Forend Pivoted.scad>;
-use <../../Upper/Cross Fitting/Forend/Forend Slotted.scad>;
-use <../../Upper/Cross Fitting/Firing Pin Guide.scad>;
-use <../../Upper/Cross Fitting/Sear Bolts.scad>;
-use <../../Upper/Cross Fitting/Sear Guide.scad>;
-use <../../Upper/Cross Fitting/Striker.scad>;
+use <../../Upper/Cross/Charger.scad>;
+use <../../Upper/Cross/Cross Upper.scad>;
+use <../../Upper/Cross/Frame.scad>;
+use <../../Upper/Cross/Forend/Barrel Lugs.scad>;
+use <../../Upper/Cross/Forend/Forend.scad>;
+use <../../Upper/Cross/Forend/Forend Pivoted.scad>;
+use <../../Upper/Cross/Forend/Forend Slotted.scad>;
+use <../../Upper/Cross/Firing Pin Guide.scad>;
+use <../../Upper/Cross/Sear Bolts.scad>;
+use <../../Upper/Cross/Sear Guide.scad>;
+use <../../Upper/Cross/Striker.scad>;
 
 use <Base.scad>;
 
