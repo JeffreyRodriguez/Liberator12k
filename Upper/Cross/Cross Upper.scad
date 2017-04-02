@@ -76,7 +76,7 @@ module CrossUpperFront($fn=40, alpha=1) {
   }
 }
 
-module ChargingHandleCutout(width=0.25) {
+module ChargingHandleCutout(width=5/16) {
   translate([ReceiverLugRearMinX(), -width*0.55, ReceiverCenter()])
   cube([abs(ReceiverLugRearMinX())+ReceiverIR(), width*1.1, 0.75]);
 }
