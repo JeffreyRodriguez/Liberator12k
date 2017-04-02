@@ -98,6 +98,6 @@ module Liberator12k_Pistol(alpha=1) {
   Butt(alpha=alpha);
 }
 
-Liberator12k_PlainFrame();
+Liberator12k_PlainFrame(length=3.75);
 Liberator12k_Base();
 Liberator12k_Stock();
