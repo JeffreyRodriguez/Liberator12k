@@ -31,7 +31,7 @@ function Spec_BoltM4() = [
   [BoltCapHeight,   UnitsMetric(3.9)],
   [BoltNutDiameter, UnitsMetric(7.2)],
   [BoltNutHeight,   UnitsMetric(3)],
-  [BoltClearance,   UnitsMetric(1)],
+  [BoltClearance,   UnitsMetric(0.5)],
   [BoltFn, 8]
 ];
 

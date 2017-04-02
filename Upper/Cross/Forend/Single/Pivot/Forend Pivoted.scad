@@ -1,5 +1,5 @@
 //$t=0.70;
-//$t=0.755;
+$t=0.75;
 //$t=0;
 include <../../../../../Meta/Animation.scad>;
 use <../../../../../Meta/Clearance.scad>;
@@ -20,10 +20,16 @@ use <../../Forend.scad>;
 DEFAULT_BARREL = Spec_TubingZeroPointSevenFive();
 DEFAULT_BARREL = Spec_TubingOnePointOneTwoFive();
 DEFAULT_LOCK_ROD  = Spec_RodOneEighthInch();
+DEFAULT_LATCH_BOLT = Spec_BoltM4();
 
 function LatchWidth() = 0.75;
 function LatchHeight() = 0.25;
-function LatchLength() = 2;
+function LatchLength() = 2.5;
+
+function LatchSpringLength() = 1.5;
+function LatchSpringWidth() = 0.26;
+
+function ForendPivotLatchTravel() = 0.375;
 
 function Spec_PivotRod() = Spec_RodOneEighthInch();
 function PivotWall()    = 0.25;
@@ -34,7 +40,7 @@ function BarrelShaftCollarDiameter() = 1.875;
 function BarrelShaftCollarLength() = 0.5;
 
 function PivotAngle() = 30;
-function PivotOffset() = 5;
+function PivotOffset() = 6;
 function BarrelPivotX() = BreechFrontX()+PivotOffset();
 function BarrelPivotZ() = -PipeOuterRadius(DEFAULT_BARREL)
                          -RodRadius(Spec_PivotRod(), RodClearanceLoose());
@@ -57,13 +63,16 @@ function ForendOffsetX() = BarrelPivotX()
                          +0.27; // TODO: Calculate this from the shaft collar's bottom tip pivot
 
 
-function ForendPivotLatchTravel() = 0.25;
 function ForendPivotLatchX() = ForendX()
                              + 0.5
                              + 0.05;
 
 function ForendPivotLatchZ(barrel=DEFAULT_BARREL) = -PipeOuterRadius(pipe=barrel)
                                                   - 0.125;
+function LatchBoltX() = ForendPivotLatchX()
+                       +LatchSpringLength()
+                       +ForendPivotLatchTravel()
+                       + 0.25;
 
 module PivotRod(cutter=false, nutEnable=false, teardropAngle=180, alpha=1) {
 
@@ -98,10 +107,12 @@ module Pivot(factor=1) {
   children();
 }
 
-module ForendPivoted(barrelPipe=DEFAULT_BARREL, length=PivotedForendLength(),
+module ForendPivoted(barrelPipe=DEFAULT_BARREL,
+                     length=PivotedForendLength(),
                      forendOffsetX=ForendOffsetX(),
                      bolt=false,
-                    wall=WallTee(), $fn=40, alpha=1) {
+                     wall=WallTee(),
+                     $fn=40, alpha=1) {
 
   color("Purple", alpha)
   render(convexity=4)
@@ -177,59 +188,112 @@ module ForendPivoted(barrelPipe=DEFAULT_BARREL, length=PivotedForendLength(),
 
 module ForendPivotLatch(barrel=DEFAULT_BARREL,
                         length=LatchLength(), width=LatchWidth(), height=LatchHeight(),
-                        cutter=false, clearance=0.01) {
+                        cutter=false, clearance=0.01, alpha=1) {
   clear  = Clearance(clearance, cutter);
   clear2 = clear*2;
-
-  translate([ForendPivotLatchX()-clear,
-             -(width/2)-clear,
-             ForendPivotLatchZ(barrel)-clear])
-  mirror([0,0,1])
-  cube([length+clear2,
-        width+clear2,
-        height+clear2]);
+       
+  color("Green", alpha)
+  render()
+  difference() {
+    // Latch body
+    translate([ForendPivotLatchX()-clear,
+               -(width/2)-clear,
+               ForendPivotLatchZ(barrel)+clear])
+    mirror([0,0,1])
+    cube([length+clear2+(cutter ? ForendPivotLatchTravel() : 0),
+          width+clear2,
+          height+clear2]);
+    
+    if (!cutter) {
+      // Latch Spring Cutout
+      translate([ForendPivotLatchX()+ForendPivotLatchTravel()-ManifoldGap(1),
+                 -(LatchSpringWidth()/2)-ManifoldGap(1),
+                 ForendPivotLatchZ(barrel)+ManifoldGap(1)])
+      mirror([0,0,1])
+      cube([LatchSpringLength()+ManifoldGap(2),
+            LatchSpringWidth()+ManifoldGap(2),
+            height+ManifoldGap(2)]);
+      
+      // Latch Bolt Cutout
+      translate([LatchBoltX(),
+                 0,
+                 ForendPivotLatchZ()+ManifoldGap()])
+      mirror([0,0,1])
+      cylinder(r=BoltRadius(bolt=DEFAULT_LATCH_BOLT, clearance=true),
+               h=LatchHeight()+ManifoldGap(2), $fn=8);
+      
+      // Incline the tip
+      translate([ForendPivotLatchX()+(sin(15)*LatchHeight()),
+                  -(LatchWidth()/2)-ManifoldGap(),
+                  ForendPivotLatchZ(barrel)+ManifoldGap(1)])
+      rotate([0,180+25,0])
+      cube([1, LatchWidth()+ManifoldGap(2), LatchHeight()*2]);
+    }
+  }
 }
 
 module ForendPivotLockCollar(barrel=DEFAULT_BARREL,
                              wall=WallTee(),
-                             length=0.5, height=0.5+ForendPivotLatchTravel(),
-                             $fn=40, alpha=0.5) {
+                             length=UnitsMetric(15),
+                             height=0.5+ForendPivotLatchTravel(),
+                             cutter=false, $fn=40, alpha=1) {
+
+  radius = ReceiverOR() - 0.005;
+  
   color("Orange", alpha)
   render()
   difference() {
     translate([ForendX(),0,0])
     hull() {
+      
+      // For later... extractor support.
+      *translate([0,-radius,0])
+      cube([height,radius*2,ReceiverCenter()]);
+      
       rotate([0,90,0])
-      cylinder(r=ReceiverOR(), h=height);
+      cylinder(r=radius, h=height);
       
       // Set screw supports
       for (r = [-1,1])
       rotate([90,90+(r*22),90])
       SetScrewSupport(radius=PipeOuterRadius(barrel),
-                      length=length, height=height);
+                      length=length+UnitsMetric(1), height=height);
     }
     
-    translate([ForendX()+0.25,0,0])
-    for (r = [-1,1])
-    rotate([90,90+(r*22),90])
-    SetScrew(radius=PipeOuterRadius(barrel),
-              length=length*2, height=height);
-    
-    ForendPivotLatch(barrel=barrel, cutter=true);
-    
-    Barrel(cutter=true);
+    if (!cutter) {
+      translate([ForendX()+0.25,0,0])
+      for (r = [-1,1])
+      rotate([90,90+(r*20),90])
+      SetScrew(radius=PipeOuterRadius(barrel),
+                length=length, height=height);
+      
+      ForendPivotLatch(barrel=barrel, cutter=true);
+      
+      Barrel(clearance=PipeClearanceSnug(), cutter=true);
+    }
 
     // Cut an incline for the latch to ride on
     translate([ForendX()+height,
-                -ReceiverOR(),ForendPivotLatchZ(barrel)])
-    rotate([0,20,0])
+                -ReceiverOR(),
+                ForendPivotLatchZ(barrel) - (LatchHeight()*0.5)])
+    rotate([0,25,0])
     mirror([0,0,1])
-    cube([1, ReceiverOD(), 1]);
+    cube([1, ReceiverOD(), 2]);
+    
+    // Cut the walls with a slight incline for loading
+    for (m=[0,1])
+    mirror([0,m,0])
+    //translate([0,ReceiverOR(),0])
+    rotate([-10,0,0])
+    translate([ForendX()-ManifoldGap(),
+                radius,
+                ForendPivotLatchZ(barrel) -ReceiverLength()])
+    cube([height+ManifoldGap(2), radius, ReceiverLength()*2]);
   }
 }
 
 module ForendPivotLock(barrelPipe=DEFAULT_BARREL,
-                       length=1,
+                       length=3,
                        wall=WallTee(),
                        $fn=40, alpha=1) {
 
@@ -243,41 +307,48 @@ module ForendPivotLock(barrelPipe=DEFAULT_BARREL,
       ForendSlotted2d(barrelSpec=barrelPipe,
                       slotAngles=[180]);
       
-      for (r=[0,180])
+      for (r=[180])
       rotate(r)
       ForendSlotCutter2d(width=ReceiverOD(), semiAngle=108);
     }
+    
+    scale([1.00,1.01,1.01])
+    hull()
+    ForendPivotLockCollar(cutter=true);
+    
+    ForendPivotLatch(barrel=barrelPipe, cutter=true);
   }
 }
 
 translate([ForendPivotLatchTravel()*Animate(ANIMATION_STEP_UNLOCK),0,0])
+translate([-ForendPivotLatchTravel()*SubAnimate(ANIMATION_STEP_UNLOAD, start=0, end=0.3),0,0])
+translate([ForendPivotLatchTravel()*SubAnimate(ANIMATION_STEP_LOAD, start=0.7),0,0])
 translate([-ForendPivotLatchTravel()*Animate(ANIMATION_STEP_LOCK),0,0])
 ForendPivotLatch();
 
-translate([BarrelPivotX(),0,BarrelPivotZ()])
-rotate([0,-PivotAngle()*Animate(ANIMATION_STEP_LOAD),0])
-rotate([0,PivotAngle()*Animate(ANIMATION_STEP_UNLOAD),0])
-translate([-BarrelPivotX(),0,-BarrelPivotZ()]) {
+*color("Black", 0.25)
+Frame();
+
+*color("Black", 0.25)
+FrameCouplingNuts();
+
+
+Pivot(Animate(ANIMATION_STEP_UNLOAD)-Animate(ANIMATION_STEP_LOAD)) {
 
   ForendPivotLockCollar(barrel=DEFAULT_BARREL);
   
-  color("Black", 0.25)
   Barrel(barrel=DEFAULT_BARREL, clearance=undef, hollow=true);
+  
   PivotRod(nutEnable=false);
 
   BarrelShaftCollar();
 }
 
-ForendPivotLock(alpha=0.5);
+ForendPivotLock(alpha=1);
 
 ForendPivoted(bolt=false, alpha=1);
 
 translate([0,0,0]) {
-
-  color("Black", 0.25)
-  Frame();
-  color("Black", 0.25)
-  FrameCouplingNuts();
   Reference(barrelPipe=DEFAULT_BARREL);
 }
 
@@ -294,3 +365,9 @@ ForendPivotLock(alpha=0.5);
 rotate([0,90,0])
 translate([-ForendOffsetX()-PivotedForendLength(),0,0])
 ForendPivoted(bolt=true, alpha=1);
+
+// Plated Lock Collar
+*!scale(25.4)
+rotate([0,-90,0])
+translate([-ForendX(),0,0])
+ForendPivotLockCollar(barrel=DEFAULT_BARREL);

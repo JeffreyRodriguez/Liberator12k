@@ -30,6 +30,12 @@ function AnimationStepCount() = len(ANIMATION_STEPS);
 function AnimationStepTime() = 1/AnimationStepCount();
 function AnimationStep(t)    = ANIMATION_STEPS[floor(t / AnimationStepTime())];
 function Animate(step)       = step == AnimationStep($t) ? ($t/AnimationStepTime())-step : (step < AnimationStep($t) ? 1 : 0);
+function SubAnimate(step, start=0) = max(0, (Animate(step)-start))*(1/(1-start)); // Last known good
+
+
+// TODO: Add END support to subanimate, first stab:
+//function SubAnimate(step, end=1) = min(1, (Animate(step)+end))/(1/(1+end));
+//function SubAnimate(step, start=0, end=1) = max(0, (Animate(step)-start))*(1/(1-start));
 
 echo("AnimationStep($t):", AnimationStep($t));
 echo("Animate(AnimationStep($t)):", Animate(AnimationStep($t)));
