@@ -4,24 +4,27 @@
 //$t=0.455;
 //$t=0.75;
 //$t=0;
-include <../../Meta/Animation.scad>;
-use <../../Meta/Debug.scad>;
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Resolution.scad>;
 
-use <../../Components/Semicircle.scad>;
-use <../../Components/Tee Insert.scad>;
+include <../../../Meta/Animation.scad>;
 
-use <../../Vitamins/Rod.scad>;
-use <../../Vitamins/Pipe.scad>;
-use <../../Vitamins/Spring.scad>;
+use <../../../Meta/Debug.scad>;
+use <../../../Meta/Manifold.scad>;
+use <../../../Meta/Resolution.scad>;
 
-use <../../Lower/Trigger.scad>;
+use <../../../Components/Semicircle.scad>;
+use <../../../Components/Tee Insert.scad>;
 
-use <../../Reference.scad>;
+use <../../../Vitamins/Rod.scad>;
+use <../../../Vitamins/Pipe.scad>;
+use <../../../Vitamins/Spring.scad>;
 
-use <Frame.scad>;
-use <Cross Upper.scad>;
+use <../../../Lower/Trigger.scad>;
+
+use <../../../Reference.scad>;
+
+use <../Frame.scad>;
+use <../Cross Upper.scad>;
+
 use <Striker.scad>;
 
 chargerPivotX  = -3/16;
@@ -41,9 +44,9 @@ module ChargingPivot(rod=PivotRod(), clearance=RodClearanceSnug(),
 
 
 module ChargingHandle(angle=35) {
-  
+
   chargingWheelRadius   = chargerPivotZ-RodRadius(StrikerRod());
-  
+
   color("OrangeRed")
   render(convexity=4)
   translate([chargerPivotX,0,chargerPivotZ])
@@ -100,7 +103,7 @@ module ChargingInsert(single=true) {
     mirror([0,0,1])
     intersection() {
       TeeInsert();
-      
+
       translate([0,0,-ManifoldGap()])
       cylinder(r=TeeInnerRadius(ReceiverTee())+0.1,
                h=ReceiverCenter(), $fn=Resolution(20, 40));

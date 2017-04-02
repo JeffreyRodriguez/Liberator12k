@@ -15,15 +15,15 @@ use <../../Lower/Lower.scad>;
 
 use <../../Reference.scad>;
 
-use <../../Upper/Cross/Charger.scad>;
 use <../../Upper/Cross/Cross Upper.scad>;
 use <../../Upper/Cross/Frame.scad>;
 use <../../Upper/Cross/Forend/Barrel Lugs.scad>;
 use <../../Upper/Cross/Forend/Forend.scad>;
-use <../../Upper/Cross/Firing Pin Guide.scad>;
-use <../../Upper/Cross/Sear Bolts.scad>;
-use <../../Upper/Cross/Sear Guide.scad>;
-use <../../Upper/Cross/Striker.scad>;
+use <../../Upper/Cross/Internals/Charger.scad>;
+use <../../Upper/Cross/Internals/Firing Pin Guide.scad>;
+use <../../Upper/Cross/Internals/Sear Bolts.scad>;
+use <../../Upper/Cross/Internals/Sear Guide.scad>;
+use <../../Upper/Cross/Internals/Striker.scad>;
 
 module Liberator12k_PlainFrame(length=FrameRodLength()) {
   Frame(length=length);
@@ -89,7 +89,7 @@ module Liberator12k_Stock() {
     rotate([0,90,0])
     StrikerSpacer(length=StrikerSpacerLength(), alpha=0.5);
   }
-  
+
   Stock(alpha=0.5);
   Butt(alpha=0.5);
 }
@@ -103,5 +103,3 @@ module Liberator12k_Pistol() {
 Liberator12k_PlainFrame();
 Liberator12k_Base();
 Liberator12k_Stock();
-
-

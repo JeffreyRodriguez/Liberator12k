@@ -1,20 +1,20 @@
 //$t = 0;
 
-include <../../Meta/Animation.scad>;
+include <../../../Meta/Animation.scad>;
 
-use <../../Meta/Debug.scad>;
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Resolution.scad>;
-use <../../Meta/Units.scad>;
+use <../../../Meta/Debug.scad>;
+use <../../../Meta/Manifold.scad>;
+use <../../../Meta/Resolution.scad>;
+use <../../../Meta/Units.scad>;
 
-use <../../Components/Pipe Insert.scad>;
+use <../../../Components/Pipe Insert.scad>;
 
-use <../../Vitamins/Nuts And Bolts.scad>;
-use <../../Vitamins/Pipe.scad>;
-use <../../Vitamins/Rod.scad>;
+use <../../../Vitamins/Nuts And Bolts.scad>;
+use <../../../Vitamins/Pipe.scad>;
+use <../../../Vitamins/Rod.scad>;
 
-use <../../Reference.scad>;
-use <../../Lower/Trigger.scad>;
+use <../../../Reference.scad>;
+use <../../../Lower/Trigger.scad>;
 
 
 function StrikerRodLength() = 6;

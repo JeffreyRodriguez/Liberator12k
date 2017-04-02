@@ -1,18 +1,18 @@
-include <../../Meta/Animation.scad>;
+include <../../../Meta/Animation.scad>;
 
-use <../../Components/Firing Pin Retainer.scad>;
-use <../../Components/Semicircle.scad>;
-use <../../Components/Teardrop.scad>;
+use <../../../Components/Firing Pin Retainer.scad>;
+use <../../../Components/Semicircle.scad>;
+use <../../../Components/Teardrop.scad>;
 
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Resolution.scad>;
-use <../../Meta/Debug.scad>;
+use <../../../Meta/Manifold.scad>;
+use <../../../Meta/Resolution.scad>;
+use <../../../Meta/Debug.scad>;
 
-use <../../Vitamins/Rod.scad>;
-use <../../Vitamins/Pipe.scad>;
+use <../../../Vitamins/Rod.scad>;
+use <../../../Vitamins/Pipe.scad>;
 
-use <../../Reference.scad>;
-use <../../Lower/Trigger.scad>;
+use <../../../Reference.scad>;
+use <../../../Lower/Trigger.scad>;
 
 use <Sear Bolts.scad>;
 use <Charger.scad>;

@@ -5,29 +5,15 @@ use <../../Meta/Debug.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Resolution.scad>;
 
-use <../../Vitamins/Pipe.scad>;
-use <../../Vitamins/Rod.scad>;
-use <../../Vitamins/Double Shaft Collar.scad>;
-
 use <../../Lower/Receiver Lugs.scad>;
-use <../../Lower/Trigger.scad>;
 use <../../Lower/Lower.scad>;
 
 use <../../Reference.scad>;
 
-use <../../Components/Pipe Cap.scad>;
-
-use <../../Upper/Cross/Charger.scad>;
 use <../../Upper/Cross/Cross Upper.scad>;
-use <../../Upper/Cross/Frame.scad>;
-use <../../Upper/Cross/Forend/Barrel Lugs.scad>;
 use <../../Upper/Cross/Forend/Forend.scad>;
 use <../../Upper/Cross/Forend/Forend Pivoted.scad>;
 use <../../Upper/Cross/Forend/Forend Slotted.scad>;
-use <../../Upper/Cross/Firing Pin Guide.scad>;
-use <../../Upper/Cross/Sear Bolts.scad>;
-use <../../Upper/Cross/Sear Guide.scad>;
-use <../../Upper/Cross/Striker.scad>;
 
 use <Base.scad>;
 

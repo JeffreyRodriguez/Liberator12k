@@ -1,16 +1,16 @@
-include <../../Meta/Animation.scad>;
+include <../../../Meta/Animation.scad>;
 
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Units.scad>;
+use <../../../Meta/Manifold.scad>;
+use <../../../Meta/Units.scad>;
 
-use <../../Vitamins/Nuts And Bolts.scad>;
-use <../../Vitamins/Pipe.scad>;
-use <../../Vitamins/Rod.scad>;
+use <../../../Vitamins/Nuts And Bolts.scad>;
+use <../../../Vitamins/Pipe.scad>;
+use <../../../Vitamins/Rod.scad>;
 
-use <../../Lower/Trigger.scad>;
-use <../../Lower/Trigger.scad>;
+use <../../../Lower/Trigger.scad>;
+use <../../../Lower/Trigger.scad>;
 
-use <../../Reference.scad>;
+use <../../../Reference.scad>;
 
 function SearBoltSpec() = Spec_BoltM3();
 function SearBoltOffset() = ReceiverIR()-BoltRadius(SearBoltSpec());
