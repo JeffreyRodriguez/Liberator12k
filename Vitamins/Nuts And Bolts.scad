@@ -27,11 +27,11 @@ function Spec_BoltM3() = [
 
 function Spec_BoltM4() = [
   [BoltDiameter,    UnitsMetric(4)],
-  [BoltCapDiameter, UnitsMetric(7.7)],
+  [BoltCapDiameter, UnitsMetric(7.4+0.3)],
   [BoltCapHeight,   UnitsMetric(3.9)],
-  [BoltNutDiameter, UnitsMetric(7.2)],
+  [BoltNutDiameter, UnitsMetric(7.7)],
   [BoltNutHeight,   UnitsMetric(3)],
-  [BoltClearance,   UnitsMetric(0.5)],
+  [BoltClearance,   UnitsMetric(0.7)],
   [BoltFn, 8]
 ];
 
