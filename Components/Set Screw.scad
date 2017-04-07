@@ -8,11 +8,13 @@ module SetScrew(radius=1,
                 boltSpec=Spec_BoltM4(),
                 teardrop=true, teardropAngle=90,
                 nutBackset=UnitsMetric(1),
+                capHeightExtra=0,
                 cutter=false) {
   translate([radius+UnitsImperial(0.02),0,0])
   rotate([0,90,0])
   rotate([0,0,90])
   NutAndBolt(bolt=boltSpec, boltLength=length,
+             capHeightExtra=capHeightExtra,
              nutHeightExtra=radius, nutBackset=nutBackset,
              teardrop=teardrop, teardropAngle=teardropAngle,
              clearance=cutter);
