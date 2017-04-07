@@ -33,10 +33,11 @@ module ForendSlotCutter2d(width=PipeOuterDiameter(DEFAULT_BARREL, clearance=Pipe
 module ForendSlotted2d(barrelSpec=DEFAULT_BARREL,
                          length=1,
                       semiAngle=90,
-                     slotAngles=[0,180]) {
+                     slotAngles=[0,180],
+                    scallops=true) {
     render()
     difference() {
-      Quadrail2d();
+      Quadrail2d(clearFloor=true, scallops=scallops);
 
       FrameRods();
 
@@ -53,6 +54,6 @@ module ForendSlotted2d(barrelSpec=DEFAULT_BARREL,
 scale(25.4)
 linear_extrude(height=1) {
   ForendSlotted2d(slotAngles=[0]);
-  
+
   %ForendSlotCutter2d(width=ReceiverOD(), semiAngle=110);
 }
