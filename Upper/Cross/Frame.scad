@@ -102,7 +102,9 @@ module FrameCouplingNuts(length=DEFAULT_COUPLING_NUT_LENGTH,
 
 module Quadrail2d(rod=Spec_RodFiveSixteenthInch(), rodClearance=RodClearanceLoose(),
                   bodyRadius=1.478, wallRod=WallFrameRod(),
-                  clearFloor=false) {
+                  clearFloor=false,
+                  scallops=false, scallopOffset=ReceiverOR()+0.25, scallopRadius=1.125,
+                  $fn=Resolution(20, 60)) {
   difference() {
     hull() {
 
@@ -121,6 +123,14 @@ module Quadrail2d(rod=Spec_RodFiveSixteenthInch(), rodClearance=RodClearanceLoos
     if (clearFloor)
     translate([ReceiverCenter()-0.005,-2])
     square([1,4]);
+
+
+    // Scallops
+    if (scallops)
+    for (m = [0,1])
+    mirror([0,m,0])
+    translate([0,scallopRadius+scallopOffset])
+    circle(r=scallopRadius);
   }
 }
 
