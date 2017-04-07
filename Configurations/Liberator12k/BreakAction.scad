@@ -16,7 +16,7 @@ use <../../Upper/Cross/Forend/Single/Pivot/Forend Pivoted.scad>;
 
 use <Base.scad>;
 
-module Liberator12k_BreakAction(barrelLength=18, alpha=.25) {
+module Liberator12k_BreakAction(barrelLength=18, alpha=1) {
 
   Pivot(Animate(ANIMATION_STEP_UNLOAD)-Animate(ANIMATION_STEP_LOAD))
   {
@@ -25,31 +25,34 @@ module Liberator12k_BreakAction(barrelLength=18, alpha=.25) {
 
     BarrelShaftCollar();
 
-    ForendPivotLockCollar(barrel=BarrelPipe(), alpha=1);
+    PivotLatchCollar(barrel=BarrelPipe(), alpha=1);
+    PivotLatchCollarBolts(cutter=false);
   }
 
-  translate([ForendPivotLatchTravel()*Animate(ANIMATION_STEP_UNLOCK),0,0])
-  translate([-ForendPivotLatchTravel()*Animate(ANIMATION_STEP_LOCK),0,0])
-  ForendPivotLatch(alpha=alpha);
+  translate([PivotLatchTravel()*Animate(ANIMATION_STEP_UNLOCK),0,0])
+  translate([-PivotLatchTravel()*Animate(ANIMATION_STEP_LOCK),0,0]) {
+    PivotLatch();
+    PivotLatchHandle();
+    LatchBolt(cutter=false);
+  }
 
   PivotRod(cutter=false);
 
-  translate([ForendX()+1+ManifoldGap(1),0,0])
+  translate([ForendX()+ForendPivotedLatchLength()+ManifoldGap(1),0,0])
   rotate([0,90,0])
   color("Indigo",alpha)
   render()
-  linear_extrude(height=2.65-ManifoldGap(1))
-  ForendSlotted2d(slotAngles=[180]);
+  linear_extrude(height=1)
+  ForendSlotted2d(slotAngles=[180], scallops=true);
 
   ForendPivoted(alpha=alpha);
-  ForendPivotLock(alpha=alpha);
+  ForendPivotedLatch(alpha=alpha);
 }
 
-//rotate([0,0,360*$t])
-//Liberator12k_PlainFrame(length=9.55);
-color("Black", 0.1)
-Liberator12k_CoupledFrame(length=5.75);
 Liberator12k_Base();
 color("Silver", 0.1)
 Liberator12k_Stock();
 Liberator12k_BreakAction();
+color("Silver", 0.25)
+Liberator12k_CoupledFrame(length=5.75);
+//Liberator12k_PlainFrame(length=9.55);
