@@ -14,6 +14,7 @@ module CrossFittingQuadrail2d(rod=Spec_RodFiveSixteenthInch(),
                      rodClearance=RodClearanceLoose()) {
   hull() {
     Quadrail2d(rod=rod, rodClearance=rodClearance, wallTee=WallTee(),
+               scallops=false,
                clearFloor=true, clearCeiling=false);
 
     // Grip flat
