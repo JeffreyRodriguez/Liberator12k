@@ -94,10 +94,11 @@ module ChargingInsert(single=false) {
   // Charging Supports
   color("Moccasin", 0.5)
   render(convexity=4)
+  translate([0,0,ManifoldGap(2)])
   difference() {
 
     // Insert
-    translate([0,0,ReceiverCenter()+ManifoldGap()])
+    translate([0,0,ReceiverCenter()])
     mirror([0,0,1])
     intersection() {
       TeeInsert();
