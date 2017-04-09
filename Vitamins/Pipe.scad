@@ -167,7 +167,7 @@ function Spec_TubingThreeEighthsInch() = [
   [PipeTaperedDiameter, 0.375],
   [PipeThreadLength,    0.0],
   [PipeThreadDepth,     0.0],
-  [PipeClearanceSnug,   0.01],
+  [PipeClearanceSnug,   0.005],
   [PipeClearanceLoose,  0.022],
   [PipeFn,              20],
   [PipeWeightPerUnit,   0]
@@ -180,7 +180,7 @@ function Spec_TubingZeroPointSevenFive() = [
   [PipeTaperedDiameter, 0.750],
   [PipeThreadLength,    0.0],
   [PipeThreadDepth,     0.0],
-  [PipeClearanceSnug,   0.020],
+  [PipeClearanceSnug,   0.005],
   [PipeClearanceLoose,  0.03],
   [PipeFn,              30],
   [PipeWeightPerUnit,   42]
@@ -193,7 +193,7 @@ function Spec_TubingOnePointOneTwoFive() = [
   [PipeTaperedDiameter, 1.018],
   [PipeThreadLength,    0.9],
   [PipeThreadDepth,     0.5],
-  [PipeClearanceSnug,   0.020],
+  [PipeClearanceSnug,   0.010],
   [PipeClearanceLoose,  0.03],
   [PipeFn,              50],
   [PipeWeightPerUnit,   42]
