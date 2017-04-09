@@ -38,21 +38,14 @@ module Liberator12k_BreakAction(barrelLength=18, alpha=1) {
 
   PivotRod(cutter=false);
 
-  translate([ForendX()+ForendPivotedLatchLength()+ManifoldGap(1),0,0])
-  rotate([0,90,0])
-  color("Indigo",alpha)
-  render()
-  linear_extrude(height=1)
-  ForendSlotted2d(slotAngles=[180], scallops=true);
-
   ForendPivoted(alpha=alpha);
   ForendPivotedLatch(alpha=alpha);
 }
 
 Liberator12k_Base();
-color("Silver", 0.1)
+//color("Silver", 0.1)
 Liberator12k_Stock();
 Liberator12k_BreakAction();
-color("Silver", 0.25)
-Liberator12k_CoupledFrame(length=5.75);
+//color("Silver", 0.25)
+Liberator12k_CoupledFrame(length=6.5);
 //Liberator12k_PlainFrame(length=9.55);
