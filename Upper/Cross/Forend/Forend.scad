@@ -27,13 +27,13 @@ function ForendSlottedLength() = 3;
 function ForendMidsectionLength() = 0.25;
 function ForendFrontLength() = 0.375;
 
-module ForendSlotted(scallops=false) {
+module ForendSlotted(scallopAngles=[90,-90]) {
   translate([LowerMaxX(),0,0])
   rotate([0,90,0])
   color("Gold")
   render()
   linear_extrude(height=ForendSlottedLength())
-  ForendSlotted2d(scallops=scallops, slotAngles=[0,180]);
+  ForendSlotted2d(scallopAngles=scallopAngles, slotAngles=[0,180]);
 }
 
 function ForendFrontMinX() = LowerMaxX()
@@ -44,8 +44,6 @@ function ForendFrontMinX() = LowerMaxX()
 
 module Forend(barrelSpec=BarrelPipe(), length=1,
               wall=WallTee(), wallTee=0.7,
-              clearCeiling=false, clearFloor=true,
-              scallops=true, scallopOffset=ReceiverOR()+0.25, scallopRadius=1.125,
               $fn=40) {
   color("DimGrey")
   render(convexity=4)
@@ -53,9 +51,7 @@ module Forend(barrelSpec=BarrelPipe(), length=1,
     union() {
       rotate([0,90,0])
       linear_extrude(height=length) {
-          Quadrail2d(wall=wall, wallTee=wallTee,
-                    scallops=scallops, scallopOffset=scallopOffset, scallopRadius=scallopRadius,
-                   clearCeiling=clearCeiling, clearFloor=clearFloor);
+          Quadrail2d(wall=wall, wallTee=wallTee);
 
         children();
       }

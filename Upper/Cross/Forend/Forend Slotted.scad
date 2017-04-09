@@ -34,10 +34,11 @@ module ForendSlotted2d(barrelSpec=DEFAULT_BARREL,
                          length=1,
                       semiAngle=90,
                      slotAngles=[0,180],
-                    scallops=true) {
+                     flatAngles=[0,180],
+                     scallopAngles=[90,-90]) {
     render()
     difference() {
-      Quadrail2d(clearFloor=true, scallops=scallops);
+      Quadrail2d(flatAngles=flatAngles, scallopAngles=scallopAngles);
 
       FrameRods();
 
