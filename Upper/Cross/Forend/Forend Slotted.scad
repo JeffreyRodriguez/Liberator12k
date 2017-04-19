@@ -5,14 +5,14 @@ use <../../../Vitamins/Pipe.scad>;
 use <../../../Vitamins/Rod.scad>;
 use <../Frame.scad>;
 use <../Reference.scad>;
+use <Forend.scad>;
 
-DEFAULT_BARREL = Spec_TubingOnePointOneTwoFive();
-DEFAULT_BARREL = Spec_TubingZeroPointSevenFive();
 DEFAULT_BARREL = Spec_PipeThreeQuarterInch();
 DEFAULT_BARREL = Spec_PipeOneInch();
-
 DEFAULT_BARREL = Spec_TubingZeroPointSevenFive();
 DEFAULT_BARREL = Spec_TubingOnePointOneTwoFive();
+
+function ForendSlottedLength() = 3;
 
 module ForendSlotCutter2d(width=PipeOuterDiameter(DEFAULT_BARREL, clearance=PipeClearanceLoose()),
                           semiAngle=90) {
@@ -30,31 +30,35 @@ module ForendSlotCutter2d(width=PipeOuterDiameter(DEFAULT_BARREL, clearance=Pipe
   }
 }
 
-module ForendSlotted2d(barrelSpec=DEFAULT_BARREL,
-                         length=1,
+module ForendSlotted(length=1, barrelSpec=DEFAULT_BARREL,
                       semiAngle=90,
                      slotAngles=[0,180],
                      flatAngles=[0,180],
                      scallopAngles=[90,-90]) {
+  render()
+  difference() {
+    Forend(barrelSpec=barrelSpec, length=length,
+           flatAngles=flatAngles,
+           scallopAngles=scallopAngles)
+    children();
+  
+    translate([ForendX()-ManifoldGap(),0,0])
+    rotate([0,90,0])
+    color("Gold")
     render()
-    difference() {
-      Quadrail2d(flatAngles=flatAngles, scallopAngles=scallopAngles);
-
-      FrameRods();
-
-      Pipe2d(pipe=barrelSpec, clearance=PipeClearanceLoose());
-
-      for (slotAngle = slotAngles)
-      rotate(slotAngle)
-      ForendSlotCutter2d(width=PipeOuterDiameter(barrelSpec, clearance=PipeClearanceLoose()),
-                          semiAngle=semiAngle,
-                         slotAngles=slotAngles);
-    }
+    linear_extrude(height=length+ManifoldGap(2))
+    for (slotAngle = slotAngles)
+    rotate(slotAngle)
+    ForendSlotCutter2d(width=PipeOuterDiameter(pipe=barrelSpec, clearance=PipeClearanceLoose()),
+                        semiAngle=semiAngle);
+  }
 }
 
-scale(25.4)
-linear_extrude(height=1) {
-  ForendSlotted2d(slotAngles=[0]);
-
-  %ForendSlotCutter2d(width=ReceiverOD(), semiAngle=110);
+!scale(25.4) {
+  ForendSlotted(width=ReceiverOD(),
+                slotAngles=[0,180],
+                semiAngle=90);
+  
+  %ForendSlotCutter2d(width=ReceiverOD(),
+                      semiAngle=90);
 }
