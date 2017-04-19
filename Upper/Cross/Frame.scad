@@ -128,11 +128,10 @@ module Quadrail2d(rod=Spec_RodFiveSixteenthInch(), rodClearance=RodClearanceLoos
     translate([ReceiverCenter()-flatClearance-ManifoldGap(),-2])
     square([1,4]);
 
-
     // Scallops
-    for (flatAngle = flatAngles)
-    rotate(flatAngle)
-    translate([0,scallopRadius+scallopOffset])
+    for (scallopAngle = scallopAngles)
+    rotate(scallopAngle)
+    translate([scallopRadius+scallopOffset,0])
     circle(r=scallopRadius);
   }
 }
