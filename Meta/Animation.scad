@@ -9,9 +9,10 @@ ANIMATION_STEP_TRIGGER_RESET = 5;
 ANIMATION_STEP_CHARGER_RESET = 6;
 ANIMATION_STEP_UNLOCK        = 7;
 ANIMATION_STEP_UNLOAD        = 8;
-ANIMATION_STEP_LOAD          = 9;
-ANIMATION_STEP_LOCK          = 10;
-ANIMATION_STEP_SAFE          = 11;
+ANIMATION_STEP_EXTRACT       = 9;
+ANIMATION_STEP_LOAD          = 10;
+ANIMATION_STEP_LOCK          = 11;
+ANIMATION_STEP_SAFE          = 12;
 
 ANIMATION_STEPS = [ANIMATION_STEP_UNSAFE,
                    ANIMATION_STEP_TRIGGER,
@@ -22,6 +23,7 @@ ANIMATION_STEPS = [ANIMATION_STEP_UNSAFE,
                    ANIMATION_STEP_CHARGER_RESET,
                    ANIMATION_STEP_UNLOCK,
                    ANIMATION_STEP_UNLOAD,
+                   ANIMATION_STEP_EXTRACT,
                    ANIMATION_STEP_LOAD,
                    ANIMATION_STEP_LOCK,
                    ANIMATION_STEP_SAFE];
@@ -40,7 +42,8 @@ function SubAnimate(step, start=0) = max(0, (Animate(step)-start))*(1/(1-start))
 echo("AnimationStep($t):", AnimationStep($t));
 echo("Animate(AnimationStep($t)):", Animate(AnimationStep($t)));
 
-for (i = [0 : AnimationStepCount() -1])
+// Debug-level logging, show the value of each animation step.
+*for (i = [0 : AnimationStepCount() -1])
 echo("Animate ", i, ":", Animate(i));
 
 module AnimateSpin() {
