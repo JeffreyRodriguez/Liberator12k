@@ -3,16 +3,16 @@ use <../Meta/Units.scad>;
 
 function MagazineAngle() = 0;
 
-function MagazineRearTabLength() = 0.137;
-function MagazineBaseWidth() = 0.89;
-function MagazineBaseLength() = 2.4;
+function ARMagazineRearTabLength() = 0.137;
+function ARMagazineBaseWidth() = 0.89;
+function ARMagazineBaseLength() = 2.4;
 
 function AR15MagCatchZ() = -0.813;
 function AR15MagCatchX() = -0.058;
 
 function AR15MagwellDepth() = UnitsImperial(2.6); //UnitsImperial(2);
 
-module AR15MagwellTemplate(baseWidth=MagazineBaseWidth(), baseLength=MagazineBaseLength(),
+module AR15MagwellTemplate(baseWidth=ARMagazineBaseWidth(), baseLength=ARMagazineBaseLength(),
                        sideTrackOffset=0.825, sideTrackDepth=0.08, centerY=true,
                        widthClearance=0.008, backClearance=0.01,
                        showRearTab=true, showCatch=true) {
@@ -23,17 +23,17 @@ module AR15MagwellTemplate(baseWidth=MagazineBaseWidth(), baseLength=MagazineBas
     union() {
 
       // Main body section
-      translate([MagazineRearTabLength()-backClearance, -widthClearance])
+      translate([ARMagazineRearTabLength()-backClearance, -widthClearance])
       square([baseLength+backClearance, baseWidth+(widthClearance*2)]);
 
       // Rear alignment tab
       if (showRearTab)
       translate([-backClearance,(0.45/2)-widthClearance])
-      square([MagazineRearTabLength()+backClearance, 0.45+(widthClearance*2)]);
+      square([ARMagazineRearTabLength()+backClearance, 0.45+(widthClearance*2)]);
 
       // Magazine Catch Stop
       if (showCatch)
-      translate([MagazineRearTabLength()+0.4-backClearance,baseWidth+widthClearance])
+      translate([ARMagazineRearTabLength()+0.4-backClearance,baseWidth+widthClearance])
       square([0.55+backClearance,0.053]);
     }
   }
@@ -74,7 +74,7 @@ module AR15MagazineCatch(magHeight=1,
 module AR15MagwellInsert(height=AR15MagwellDepth(),
                      taperHeight=UnitsImperial(0.5)) {
   union() {
-    translate([MagazineRearTabLength(),0,-height])
+    translate([ARMagazineRearTabLength(),0,-height])
     multmatrix(m=[[1,0,sin(MagazineAngle()),0], // Here's where the magazine is angled
                   [0,1,0,0],
                   [0,0,1,0],
@@ -117,11 +117,11 @@ module AR15Magwell(width=UnitsImperial(1.25),
       linear_extrude(height=height)
       hull() {
 
-        translate([MagazineRearTabLength()-wallBack, -(width/2)-wall])
-        square([MagazineBaseLength()+MagazineRearTabLength()+wallBack, width+(wall*2)]);
+        translate([ARMagazineRearTabLength()-wallBack, -(width/2)-wall])
+        square([ARMagazineBaseLength()+ARMagazineRearTabLength()+wallBack, width+(wall*2)]);
 
         translate([0, -(width/2)])
-        square([MagazineBaseLength()+MagazineRearTabLength()+wallFront, width]);
+        square([ARMagazineBaseLength()+ARMagazineRearTabLength()+wallFront, width]);
       }
     }
 

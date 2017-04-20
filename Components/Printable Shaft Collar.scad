@@ -6,9 +6,9 @@ use <../Vitamins/Pipe.scad>;
 use <Set Screw.scad>;
 
 module PrintableShaftCollar(pipeSpec=Spec_TubingOnePointOneTwoFive(),
-                            length=UnitsMetric(8), height=UnitsMetric(12),
+                            length=UnitsMetric(10), height=UnitsMetric(12),
                             wall=UnitsMetric(5),
-                            setScrewSpec=Spec_BoltM4(),
+                            setScrewSpec=Spec_BoltM4(), setScrewLength=UnitsMetric(8),
                             screwOffsetZ=UnitsMetric(6),
                             teardropAngle=90) {
 
@@ -36,11 +36,11 @@ module PrintableShaftCollar(pipeSpec=Spec_TubingOnePointOneTwoFive(),
            center=true);
       }
     }
-    
+
     translate([0,0,screwOffsetZ])
     SetScrew(boltSpec=Spec_BoltM4(),
              radius=PipeOuterRadius(pipeSpec),
-             length=length+wall,
+             length=setScrewLength, capHeightExtra=wall,
              teardrop=true, teardropAngle=teardropAngle,
              clearance=true);
   }

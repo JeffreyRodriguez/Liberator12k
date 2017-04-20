@@ -4,6 +4,7 @@
 //$t=0;
 include <../../../../../Meta/Animation.scad>;
 use <../../../../../Meta/Clearance.scad>;
+use <../../../../../Meta/Debug.scad>;
 use <../../../../../Meta/Manifold.scad>;
 use <../../../../../Meta/Resolution.scad>;
 use <../../../../../Meta/Units.scad>;
@@ -47,6 +48,7 @@ function BarrelShaftCollarLength() = 0.5;
 
 function PivotAngle() = 30;
 function PivotOffset() = 5.625;
+function PivotOffset() = 5.375;
 function BarrelPivotX() = BreechFrontX()+PivotOffset();
 function BarrelPivotZ() = -PipeOuterRadius(DEFAULT_BARREL)
                          -RodRadius(Spec_PivotRod(), RodClearanceLoose());
@@ -144,14 +146,24 @@ module PivotRod(cutter=false, nutEnable=false, teardropAngle=180, alpha=1) {
 
 }
 
-module BarrelShaftCollar(diameter=BarrelShaftCollarDiameter(), cutter=false, extend=0,
-                         height=BarrelShaftCollarLength()) {
+module BarrelShaftCollar(barrelPipe=DEFAULT_BARREL,
+                         diameter=BarrelShaftCollarDiameter(),
+                         cutter=false, extend=0,
+                         height=BarrelShaftCollarLength()*2) {
+  clear = cutter ? 0.005 : 0;
 
   render()
   translate([BarrelShaftCollarX(),0,0])
   rotate([0,90,0])
+  rotate(90)
   scale(cutter ? 1.01 : 1) {
-    DoubleShaftCollar(od=diameter, height=height);
+    cylinder(r=diameter/2, h=height);
+    PrintableShaftCollar(pipeSpec=barrelPipe,
+                         height=height,
+                         length=UnitsMetric(10),
+                         setScrewLength=UnitsMetric(8),
+                         wall=0.375);
+    *DoubleShaftCollar(od=diameter, height=height);
   }
 }
 
@@ -183,7 +195,7 @@ module ForendPivoted(barrelPipe=DEFAULT_BARREL,
                      $fn=40, alpha=1) {
 
   color("Orange", alpha)
-  !render()
+  render()
   difference() {
     translate([ForendPivotedX(),0,0])
     Forend(barrelSpec=barrelPipe, length=length);
