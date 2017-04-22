@@ -45,9 +45,10 @@ module PrintableShaftCollar(pipeSpec=Spec_TubingOnePointOneTwoFive(),
     translate([0,0,screwOffsetZ])
     SetScrew(boltSpec=Spec_BoltM4(),
              radius=PipeOuterRadius(pipeSpec),
-             length=setScrewLength, capHeightExtra=wall,
+             length=setScrewLength,
+             capHeightExtra=wall,
              teardrop=true, teardropAngle=teardropAngle,
-             clearance=true);
+             cutter=true);
   }
 }
 
