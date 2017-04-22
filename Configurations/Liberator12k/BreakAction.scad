@@ -17,29 +17,7 @@ use <../../Upper/Cross/Forend/Single/Pivot/Forend Pivoted.scad>;
 use <Base.scad>;
 
 module Liberator12k_BreakAction(barrelLength=18, alpha=1) {
-
-  Pivot(Animate(ANIMATION_STEP_UNLOAD)-Animate(ANIMATION_STEP_LOAD))
-  {
-
-    Barrel(barrelLength=barrelLength, hollow=true);
-
-    BarrelShaftCollar();
-
-    PivotLatchCollar(barrel=BarrelPipe(), alpha=1);
-    PivotLatchCollarBolts(cutter=false);
-  }
-
-  translate([PivotLatchTravel()*Animate(ANIMATION_STEP_UNLOCK),0,0])
-  translate([-PivotLatchTravel()*Animate(ANIMATION_STEP_LOCK),0,0]) {
-    PivotLatch();
-    PivotLatchHandle();
-    LatchBolt(cutter=false);
-  }
-
-  PivotRod(cutter=false);
-
-  ForendPivoted(alpha=alpha);
-  ForendPivotedLatch(alpha=alpha);
+  ForendPivotedAssembly();
 }
 
 Liberator12k_Base();
