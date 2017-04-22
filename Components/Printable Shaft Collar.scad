@@ -11,7 +11,9 @@ module PrintableShaftCollar(pipeSpec=Spec_TubingOnePointOneTwoFive(),
                             wall=UnitsMetric(5),
                             setScrewSpec=Spec_BoltM4(), setScrewLength=UnitsMetric(8),
                             screwOffsetZ=UnitsMetric(6),
-                            teardropAngle=90, cutter=false) {
+                            teardropAngle=90, cutter=false, cutterClearance=0.007) {
+
+  clear = cutter ? cutterClearance : 0;
 
   render()
   rotate(-90)
@@ -22,7 +24,7 @@ module PrintableShaftCollar(pipeSpec=Spec_TubingOnePointOneTwoFive(),
       difference() {
         hull() {
 
-          cylinder(r=PipeOuterRadius(pipeSpec)+wall,
+          cylinder(r=PipeOuterRadius(pipeSpec)+wall+clear,
                  h=height,
                $fn=PipeFn(pipeSpec)*2);
 
