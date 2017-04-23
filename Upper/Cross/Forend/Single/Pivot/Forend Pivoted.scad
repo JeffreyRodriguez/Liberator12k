@@ -192,10 +192,14 @@ module BarrelPivotCollar(barrelPipe=DEFAULT_BARREL,
   }
 }
 
-module Pivot(factor=1, angle=PivotAngle()) {
-  translate([BarrelPivotX(),0,BarrelPivotZ()])
+module Pivot(factor=1,
+             angle=PivotAngle(),
+             pivotX=BarrelPivotX(),
+             pivotZ=BarrelPivotZ()) {
+
+  translate([pivotX,0,pivotZ])
   rotate([0,angle*factor,0])
-  translate([-BarrelPivotX(),0,-BarrelPivotZ()])
+  translate([-pivotX,0,-pivotZ])
   children();
 }
 
