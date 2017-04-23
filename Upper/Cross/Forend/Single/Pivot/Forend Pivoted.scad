@@ -192,9 +192,9 @@ module BarrelPivotCollar(barrelPipe=DEFAULT_BARREL,
   }
 }
 
-module Pivot(factor=1) {
+module Pivot(factor=1, angle=PivotAngle()) {
   translate([BarrelPivotX(),0,BarrelPivotZ()])
-  rotate([0,PivotAngle()*factor,0])
+  rotate([0,angle*factor,0])
   translate([-BarrelPivotX(),0,-BarrelPivotZ()])
   children();
 }
@@ -238,7 +238,7 @@ module ForendPivoted(barrelPipe=DEFAULT_BARREL,
 
       // Pivot collar installation tunnel
       // Note: back-pivoted so the collar is fully retained in normal operation
-      Pivot(factor=-0.25)
+      Pivot(factor=1, angle=-5)
       BarrelPivotCollar(cutter=true, extend=length);
       
       BarrelPivotCollarBolts(length=ReceiverCenter(),cutter=true);
