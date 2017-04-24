@@ -1,5 +1,5 @@
 //$t=0.70;
-//$t=0.75;
+$t=0.75;
 //$t=0.665;
 //$t=0;
 include <../../../../../Meta/Animation.scad>;
@@ -550,23 +550,29 @@ module ForendPivotedLatch(barrelPipe=DEFAULT_BARREL,
 
 
 module ExtractorPusher(pivotAngle=PivotAngle(), pivotFactor=1,
-                       width=0.5,
+                       width=0.5, height=0.25,
                        clearance=0.005,
                        $fn=Resolution(12,30), alpha=1) {
   backPivotAngle = 12;
-  barLength = ExtractorPusherX() - ForendX() - ForendPivotedLatchLength();
+  backPivotAngle = -12;
+  backPivotAngle = 0;
+  barLength = ExtractorPusherX()
+            - ForendPivotedLatchLength()
+            - ForendX()
+            + 1
+            + (1*sin(backPivotAngle));
 
   color("Gold", alpha)
   render()
   difference() {
     translate([ExtractorPusherX(), 0, ExtractorPusherZ()])
-    rotate([0,(-backPivotAngle*(1-pivotFactor))+(pivotAngle*pivotFactor),0])
+    rotate([0,(backPivotAngle*(1-pivotFactor))+((pivotAngle+(0))*pivotFactor),0])
     mirror([1,0,0])
     union() {
       
       // Push bar
-      translate([0,-width/2, -0.375/2])
-      cube([barLength,width, 0.375]);
+      translate([0,-width/2, -height/2])
+      cube([barLength,width, height]);
       
       rotate([90,0,0])
       linear_extrude(height=width, center=true)
@@ -605,7 +611,8 @@ module ExtractorGuideBolts(barrelPipe=DEFAULT_BARREL,
 module ExtractorGuide(barrelPipe=DEFAULT_BARREL,
                       guideRod=DEFAULT_EXTRACTOR_GUIDE_ROD,
                       sides=[0,1],
-                      cutter=false, clearance=0.02) {
+                      cutter=false, clearance=0.02,
+                      alpha=1) {
   guideWidth=0.1875;
   guideHeight=0.5;
   guideBlockLength = 1;
@@ -613,7 +620,7 @@ module ExtractorGuide(barrelPipe=DEFAULT_BARREL,
               + BarrelLatchCollarLength()
               + ExtractorTravel()
               + guideBlockLength
-              + 0.75;
+              + 0.25;
   
   extractorGuideOffsetY=0.5625+ManifoldGap();
   extractorGuideOffsetZ=0.125;
@@ -621,7 +628,7 @@ module ExtractorGuide(barrelPipe=DEFAULT_BARREL,
   clear  = Clearance(clearance, cutter);
   clear2 = clear*2;
 
-  color("DimGrey")
+  color("DimGrey", alpha)
   render()
   difference() {
     for (m = sides) mirror([0,m,0])
@@ -714,6 +721,9 @@ module Extractor(barrelPipe=DEFAULT_BARREL, guideSides=[0,1],
 
 module ForendPivotedAssembly() {
   
+  ExtractorPusher(pivotFactor = Animate(ANIMATION_STEP_UNLOAD)
+                              - Animate(ANIMATION_STEP_LOAD));
+  
   // Pivot Latch
   translate([PivotLatchTravel()*Animate(ANIMATION_STEP_UNLOCK),0,0])
   translate([-PivotLatchTravel()*SubAnimate(ANIMATION_STEP_UNLOAD, start=0, end=0.3),0,0])
@@ -739,7 +749,7 @@ module ForendPivotedAssembly() {
     //translate([ExtractorTravel()*Animate(ANIMATION_STEP_EXTRACT),0,0])
     {
       Extractor();
-      ExtractorGuide();
+      ExtractorGuide(alpha=0.5);
       ExtractorGuideBolts();
     }
 
@@ -749,9 +759,6 @@ module ForendPivotedAssembly() {
     BarrelPivotCollarBolts();
     BarrelPivotCollar(alpha=1);
   }
-  
-  ExtractorPusher(pivotFactor = Animate(ANIMATION_STEP_UNLOAD)
-                              - Animate(ANIMATION_STEP_LOAD));
 
   ForendPivotedLatch(alpha=0.25);
 
