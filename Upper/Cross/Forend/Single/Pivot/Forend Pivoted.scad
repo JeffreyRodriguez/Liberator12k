@@ -14,6 +14,7 @@ use <../../../../../Vitamins/Nuts And Bolts.scad>;
 use <../../../../../Vitamins/Double Shaft Collar.scad>;
 use <../../../../../Components/Printable Shaft Collar.scad>;
 use <../../../../../Components/Set Screw.scad>;
+use <../../../../../Components/Semicircle.scad>;
 use <../../../../../Components/Teardrop.scad>;
 use <../../../../../Lower/Receiver Lugs.scad>;
 use <../../../../../Lower/Lower.scad>;
@@ -79,6 +80,19 @@ function PivotedForendFrameLength() = 6.25;
 function PivotedForendLength() = PivotedForendFrameLength()
                                - ForendPivotedLatchLength()
                                - 0.4;
+                               
+function ExtractorTravel() = 0.5;
+function ExtractorPusherPivotRadius() = 0.375;
+
+function ExtractorPusherX() = ForendX()
+                            + ForendPivotedX()
+                            + PivotedForendLength()
+                            - (ExtractorPusherPivotRadius()*2);
+
+function ExtractorPusherZ() = ReceiverCenter();
+
+function ExtractorSpringLength() = LatchSpringLength();
+function ExtractorSpringOD() = LatchSpringOD();
 
 module LatchSlot(barrel=DEFAULT_BARREL,
                  slotWidth=LatchSlotWidth(),
@@ -162,7 +176,7 @@ module BarrelPivotCollarBolts(barrelPipe=DEFAULT_BARREL,
 module BarrelPivotCollar(barrelPipe=DEFAULT_BARREL,
                          pivotRadius = PivotRadius(),
                          height=BarrelPivotCollarLength(),
-                         cutter=false, clearance=0.005, extend=0,
+                         cutter=false, clearance=0.008, extend=0,
                          alpha=1) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
@@ -181,7 +195,7 @@ module BarrelPivotCollar(barrelPipe=DEFAULT_BARREL,
                            length=UnitsMetric(10),
                            setScrewLength=UnitsMetric(8),
                            screwOffsetZ=BarrelPivotInterface()+UnitsMetric(6),
-                           teardropAngle=-90,
+                           teardropAngle=90,
                            wall=BarrelPivotCollarWall(), cutter=cutter);
       
       if (extend == 0)
@@ -203,7 +217,7 @@ module Pivot(factor=1,
   children();
 }
 
-module ForendPivotHull(steps=PivotAngle()/2) {
+module ForendPivotHull(steps=Resolution(PivotAngle()/4, PivotAngle()/2)) {
   pivotStep = 1/steps;
   
   render()
@@ -227,11 +241,36 @@ module ForendPivoted(barrelPipe=DEFAULT_BARREL,
   color("Orange", alpha)
   render()
   difference() {
-    translate([ForendPivotedX(),0,0])
-    Forend(barrelSpec=barrelPipe, length=length);
+    union() {
+      translate([ForendPivotedX(),0,0])
+      Forend(barrelSpec=barrelPipe, length=length);
+      
+      // Extractor pusher support
+      hull() {
+        translate([ExtractorPusherX(),0,ExtractorPusherZ()])
+        rotate([90,0,0])
+        linear_extrude(height=1, center=true)
+        Teardrop(r=0.5, truncated=false);
+        
+        translate([ExtractorPusherX(),-ReceiverOR(),ReceiverOR()])
+        cube([0.5,ReceiverOD(),ManifoldGap()]);
+      }
+    }
 
     render()
     union() {
+      
+      // Extractor pusher pivot
+      translate([ExtractorPusherX(),0,ExtractorPusherZ()])
+      rotate([90,0,0])
+      linear_extrude(height=0.51, center=true) {
+        difference() {
+          rotate(-45)
+          semicircle(od=1*sqrt(2), angle=315, center=false);
+          
+          Teardrop(r=0.25);
+        }
+      }
 
       difference() {
         ForendPivotHull()
@@ -508,15 +547,53 @@ module ForendPivotedLatch(barrelPipe=DEFAULT_BARREL,
 
 
 
-function ExtractorTravel() = 0.5;
+
+
+module ExtractorPusher(pivotAngle=PivotAngle(), pivotFactor=1,
+                       width=0.5,
+                       clearance=0.005,
+                       $fn=Resolution(12,30), alpha=1) {
+  backPivotAngle = 12;
+  barLength = ExtractorPusherX() - ForendX() - ForendPivotedLatchLength();
+
+  color("Gold", alpha)
+  render()
+  difference() {
+    translate([ExtractorPusherX(), 0, ExtractorPusherZ()])
+    rotate([0,(-backPivotAngle*(1-pivotFactor))+(pivotAngle*pivotFactor),0])
+    mirror([1,0,0])
+    union() {
+      
+      // Push bar
+      translate([0,-width/2, -0.375/2])
+      cube([barLength,width, 0.375]);
+      
+      rotate([90,0,0])
+      linear_extrude(height=width, center=true)
+      difference() {
+        
+        // Merge smoothly with the push bar
+        Teardrop(r=ExtractorPusherPivotRadius());
+        
+        // Installation/pivot cutout
+        rotate(240)
+        semicircle(od=ExtractorPusherPivotRadius()*2, angle=120, center=false);
+      }
+    }
+    
+    translate([ExtractorPusherX(), 0, ExtractorPusherZ()])
+    rotate([90,0,0])
+    cylinder(r=0.255, h=1, center=true);
+  }
+}
 
 
 module ExtractorGuideBolts(barrelPipe=DEFAULT_BARREL,
                            boltSpec=Spec_BoltM3(),
                            cutter=false, teardrop=false, teardropAngle=0) {
   for (XYZL = [[BreechFrontX()+0.3125, 0.65, 0.375,  UnitsMetric(30)],
-               [ForendX()+1.75,        0.55, 0.3125, UnitsMetric(25)],
-               [ForendX()+2.25,        0.55, 0.3125, UnitsMetric(25)]])
+               [ForendX()+1.75+0.75,        0.55, 0.3125, UnitsMetric(25)],
+               [ForendX()+2.25+0.75,        0.55, 0.3125, UnitsMetric(25)]])
   translate([XYZL[0],XYZL[1],PipeOuterRadius(pipe=barrelPipe)+XYZL[2]])
   rotate([90,0,0])
   NutAndBolt(bolt=boltSpec,
@@ -531,10 +608,12 @@ module ExtractorGuide(barrelPipe=DEFAULT_BARREL,
                       cutter=false, clearance=0.02) {
   guideWidth=0.1875;
   guideHeight=0.5;
+  guideBlockLength = 1;
   guideLength = ForendBreechGap()
               + BarrelLatchCollarLength()
               + ExtractorTravel()
-              + 1.0;
+              + guideBlockLength
+              + 0.75;
   
   extractorGuideOffsetY=0.5625+ManifoldGap();
   extractorGuideOffsetZ=0.125;
@@ -556,11 +635,11 @@ module ExtractorGuide(barrelPipe=DEFAULT_BARREL,
       translate([0,0,extractorGuideOffsetZ])
       cube([guideLength+clear, guideWidth+clear2, guideHeight+clear2]);
       
-      // Guide Middle
+      // Guide Block (center chunk)
       hull() {
         translate([guideLength,0,0])
         mirror([1,0,0])
-        cube([1,
+        cube([guideBlockLength,
               extractorGuideOffsetY-ManifoldGap(),
               guideHeight+extractorGuideOffsetZ]);
         
@@ -664,22 +743,25 @@ module ForendPivotedAssembly() {
       ExtractorGuideBolts();
     }
 
-    BarrelLatchCollar(barrel=DEFAULT_BARREL, alpha=0.5);
+    BarrelLatchCollar(barrel=DEFAULT_BARREL, alpha=1);
     
 
     BarrelPivotCollarBolts();
     BarrelPivotCollar(alpha=1);
   }
+  
+  ExtractorPusher(pivotFactor = Animate(ANIMATION_STEP_UNLOAD)
+                              - Animate(ANIMATION_STEP_LOAD));
 
-  ForendPivotedLatch(alpha=0.3);
+  ForendPivotedLatch(alpha=0.25);
 
-  ForendPivoted(alpha=0.5);
-
-  Reference(barrelPipe=DEFAULT_BARREL);
+  ForendPivoted(alpha=0.25);
 
 }
 
 ForendPivotedAssembly();
+
+Reference(barrelPipe=DEFAULT_BARREL);
 
 // Plated Forend Pivoted
 *!scale(25.4)
@@ -689,7 +771,7 @@ ForendPivoted(bolt=true, alpha=1);
 
 // Plated Pivot Collar
 *!scale(25.4)
-rotate([0,-90,0])
+rotate([0,90,0])
 translate([-BarrelPivotX() + PivotRadius() - BarrelPivotInterface(),0,0])
 BarrelPivotCollar(barrel=DEFAULT_BARREL);
 
