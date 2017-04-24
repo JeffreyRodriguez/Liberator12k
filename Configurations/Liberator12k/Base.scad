@@ -29,12 +29,12 @@ module Liberator12k_PlainFrame(length=FrameRodLength()) {
   // Frame
   translate([OffsetFrameBack(),0,0]) {
     Frame(length=length);
-    
+
     // Rear Frame Nuts
     mirror([1,0,0])
     FrameNuts(washers=true);
   }
-    
+
 
   // Front Frame Nuts
   translate([length+OffsetFrameBack()-ManifoldGap(),0,0])
@@ -42,16 +42,16 @@ module Liberator12k_PlainFrame(length=FrameRodLength()) {
 }
 
 module Liberator12k_CoupledFrame(length=6,couplerRecess=UnitsImperial(0.5)) {
-  
+
   // Rear Frame
   translate([OffsetFrameBack(),0,0]) {
     Frame(length=4);
 
-    // Rear Frame Nuts  
+    // Rear Frame Nuts
     mirror([1,0,0])
     FrameNuts(washers=true);
   }
-  
+
   FrameCouplingNuts();
 
   translate([ForendX()-couplerRecess,0,0])
@@ -69,7 +69,8 @@ module Liberator12k_CoupledFrame(length=6,couplerRecess=UnitsImperial(0.5)) {
 
 
 module Liberator12k_Base(strikerLength=StrikerRodLength(),
-                         lower=true, trigger=true, alpha=1) {
+                         lower=true, lowerLeft=true, lowerRight=true,
+                         trigger=true, alpha=1) {
 
   Breech();
 
@@ -85,7 +86,9 @@ module Liberator12k_Base(strikerLength=StrikerRodLength(),
     ReceiverLugBoltHoles(clearance=false);
     GuardBolt(clearance=false);
     HandleBolts(clearance=false);
-    Lower(alpha=alpha, showTrigger=trigger);
+    Lower(alpha=alpha,
+          showTrigger=trigger,
+          showLeft=lowerLeft, showRight=lowerRight);
   }
 
   translate([0,0,-ManifoldGap()])
