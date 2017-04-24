@@ -15,8 +15,8 @@ module SetScrew(radius=1,
   rotate([0,0,90])
   NutAndBolt(bolt=boltSpec, boltLength=length,
              capHeightExtra=capHeightExtra,
-             boltLengthExtra=radius,
-             nutHeightExtra=radius,
+             boltLengthExtra=(cutter?radius:0),
+             nutHeightExtra=(cutter?radius:0),
              nutBackset=nutBackset,
              teardrop=teardrop, teardropAngle=teardropAngle,
              clearance=cutter);
