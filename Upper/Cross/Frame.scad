@@ -86,10 +86,11 @@ module FrameWashers(washerDiameter=0.65, washerHeight=0.07) {
 }
 
 module FrameCouplingNuts(length=DEFAULT_COUPLING_NUT_LENGTH,
-                         washerHeight=DEFAULT_WASHER_HEIGHT) {
+                         washerHeight=DEFAULT_WASHER_HEIGHT,
+                        alpha=1) {
   translate([ReceiverLugFrontMaxX()+ManifoldGap(),0,0]) {
 
-    color("LightSlateGrey")
+    color("LightSlateGrey", alpha)
     translate([washerHeight,0,0])
     FrameNuts(nutHeight=length);
 

@@ -1,4 +1,4 @@
-//$t=0.7267;
+$t=0.7267;
 include <../../Meta/Animation.scad>;
 
 use <../../Meta/Debug.scad>;
@@ -20,10 +20,11 @@ module Liberator12k_BreakAction(barrelLength=18, alpha=1) {
   ForendPivotedAssembly();
 }
 
-Liberator12k_Base();
+Liberator12k_Base(lowerLeft=false, lowerRight=false);
 //color("Silver", 0.1)
-Liberator12k_Stock();
-Liberator12k_BreakAction();
+//Liberator12k_Stock();
 //color("Silver", 0.25)
-Liberator12k_CoupledFrame(length=6.5);
+Liberator12k_CoupledFrame(length=PivotedForendFrameLength(), couplerAlpha=0.5);
 //Liberator12k_PlainFrame(length=9.55);
+
+Liberator12k_BreakAction();

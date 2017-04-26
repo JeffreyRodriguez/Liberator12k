@@ -41,22 +41,21 @@ module Liberator12k_PlainFrame(length=FrameRodLength()) {
   FrameNuts(washers=true);
 }
 
-module Liberator12k_CoupledFrame(length=6,couplerRecess=UnitsImperial(0.5)) {
+module Liberator12k_CoupledFrame(length=6,couplerRecess=UnitsImperial(0.5), couplerAlpha=1) {
 
   // Rear Frame
   translate([OffsetFrameBack(),0,0]) {
-    Frame(length=4);
+    Frame(length=3.75);
 
     // Rear Frame Nuts
     mirror([1,0,0])
     FrameNuts(washers=true);
   }
 
-  FrameCouplingNuts();
-
   translate([ForendX()-couplerRecess,0,0])
   Frame(length=length);
 
+  FrameCouplingNuts(alpha=couplerAlpha);
 
   // Front Frame Nuts
   translate([ForendX()
