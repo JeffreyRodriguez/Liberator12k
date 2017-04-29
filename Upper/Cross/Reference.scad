@@ -139,9 +139,7 @@ module Breech() {
   Bushing(spec=BreechBushing());
 }
 
-module Reference(barrel=DEFAULT_BARREL,
-           barrelLength=18,
-                 breech=Spec_BushingThreeQuarterInch(),
+module Reference(breech=Spec_BushingThreeQuarterInch(),
                receiver=ReceiverTee(),
                   stock=Spec_PipeThreeQuarterInch(),
             stockLength=StockLength(), hollowStock=false,

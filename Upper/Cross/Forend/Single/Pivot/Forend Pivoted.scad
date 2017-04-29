@@ -813,7 +813,7 @@ module ForendPivotedAssembly() {
 
 ForendPivotedAssembly();
 
-//Reference(barrelPipe=DEFAULT_BARREL);
+Reference(barrelPipe=DEFAULT_BARREL);
 
 // Plated Forend Pivoted
 *!scale(25.4)
@@ -866,7 +866,7 @@ translate([-BreechFrontX(),0,0]) {
 }
 
 // Extractor Pusher
-!scale(25.4) {
+*!scale(25.4) {
 rotate([90,0,0])
 translate([-ExtractorPusherX(), ExtractorPusherWidth()/2, -ExtractorPusherZ()])
 ExtractorPusher(barrelPipe=DEFAULT_BARREL);
