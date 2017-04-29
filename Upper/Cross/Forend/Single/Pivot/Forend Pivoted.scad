@@ -85,10 +85,11 @@ function ExtractorTravel()            = 0.5;
 function ExtractorPusherPivotRadius() = 0.25;
 function ExtractorPusherWall()        = 0.125;
 
-function ExtractorJointRadius()       = 0.125;
-function ExtractorJointWall()         = 0.1625;
-function ExtractorJointSlop()         = 0.375;
+function ExtractorJointRadius()       = 0.15625;
+function ExtractorJointWall()         = 0.125;
+function ExtractorJointSlop()         = 0.4375;
 
+function ExtractorPusherWidth() = 0.5;
 function ExtractorPusherX() = ForendX()
                             + ForendPivotedX()
                             + PivotedForendLength()
@@ -555,22 +556,6 @@ module ForendPivotedLatch(barrelPipe=DEFAULT_BARREL,
 
 
 
-function ExtractorGuideBoltArray(barrelPipe=DEFAULT_BARREL) = [
-  [BreechFrontX()+0.3125, 0.65, PipeOuterRadius(pipe=barrelPipe)+0.375,  UnitsMetric(30)],
-  [ForendX()+2.75,        0.55, ReceiverCenter(), UnitsMetric(25)]
-];
-
-module ExtractorGuideBolts(barrelPipe=DEFAULT_BARREL,
-                           boltSpec=Spec_BoltM3(),
-                           cutter=false, teardrop=false, teardropAngle=0) {
-  for (XYZL = ExtractorGuideBoltArray(barrelPipe=barrelPipe))
-  translate([XYZL[0],XYZL[1],XYZL[2]])
-  rotate([90,0,0])
-  NutAndBolt(bolt=boltSpec,
-             boltLength=XYZL[3], capHeightExtra=(cutter?1:0),
-             nutBackset=UnitsMetric(1), nutHeightExtra=(cutter?1:0),
-             clearance=cutter, teardrop=teardrop, teardropAngle=teardropAngle);
-}
 
 module ExtractorPusher(pivotAngle=PivotAngle(), pivotFactor=1,
                        width=0.5, barWidth=0.25,
@@ -582,7 +567,7 @@ module ExtractorPusher(pivotAngle=PivotAngle(), pivotFactor=1,
   barLength = ExtractorPusherX()
             - ForendPivotedLatchLength()
             - ForendX()
-            + 0.25;
+            + 0.125;
 
   color("Gold", alpha)
   render()
@@ -626,6 +611,22 @@ module ExtractorPusher(pivotAngle=PivotAngle(), pivotFactor=1,
   }
 }
 
+function ExtractorGuideBoltArray(barrelPipe=DEFAULT_BARREL) = [
+  [BreechFrontX()+0.3125, 0.65, PipeOuterRadius(pipe=barrelPipe)+0.375,  UnitsMetric(30)],
+  [ForendX()+2.75,        0.55, ReceiverCenter(), UnitsMetric(25)]
+];
+
+module ExtractorGuideBolts(barrelPipe=DEFAULT_BARREL,
+                           boltSpec=Spec_BoltM3(),
+                           cutter=false, teardrop=false, teardropAngle=0) {
+  for (XYZL = ExtractorGuideBoltArray(barrelPipe=barrelPipe))
+  translate([XYZL[0],XYZL[1],XYZL[2]])
+  rotate([90,0,0])
+  NutAndBolt(bolt=boltSpec,
+             boltLength=XYZL[3], capHeightExtra=(cutter?1:0),
+             nutBackset=UnitsMetric(1), nutHeightExtra=(cutter?1:0),
+             clearance=cutter, teardrop=teardrop, teardropAngle=teardropAngle);
+}
 module ExtractorGuide(barrelPipe=DEFAULT_BARREL,
                       guideRod=DEFAULT_EXTRACTOR_GUIDE_ROD,
                       sides=[0,1],
@@ -634,6 +635,7 @@ module ExtractorGuide(barrelPipe=DEFAULT_BARREL,
   guideWidth=0.1875;
   guideHeight=0.5;
   guideBlockLength = 1.25;
+  guideBlockHeight = 1;
   guideLength = ForendBreechGap()
               + BarrelLatchCollarLength()
               + ExtractorTravel()
@@ -646,7 +648,7 @@ module ExtractorGuide(barrelPipe=DEFAULT_BARREL,
   clear  = Clearance(clearance, cutter);
   clear2 = clear*2;
                         
-  pivotBoltXYZL = ExtractorGuideBoltArray(barrelPipe=barrelPipe)[0];
+  pivotBoltXYZL = ExtractorGuideBoltArray(barrelPipe=barrelPipe)[1];
 
   color("DimGrey", alpha)
   render()
@@ -668,7 +670,7 @@ module ExtractorGuide(barrelPipe=DEFAULT_BARREL,
         mirror([1,0,0])
         cube([guideBlockLength,
               extractorGuideOffsetY-ManifoldGap(),
-              guideHeight+extractorGuideOffsetZ]);
+              guideBlockHeight+extractorGuideOffsetZ]);
         
         translate([guideLength,
                    extractorGuideOffsetY-ManifoldGap(),
@@ -688,21 +690,28 @@ module ExtractorGuide(barrelPipe=DEFAULT_BARREL,
       
       // Extractor pusher cutout
       difference() {
-        translate([BreechFrontX()+guideLength+ManifoldGap(), -0.255, 0])
+        translate([BreechFrontX()+guideLength+ManifoldGap(),
+                   -0.26,
+                   PipeOuterRadius(barrelPipe)+0.125])
         mirror([1,0,0])
         cube([(ExtractorJointRadius()*3)+(ExtractorJointWall()*2)+ExtractorJointSlop(),
-               0.51, ReceiverCenter()]);
+              0.52,
+              guideBlockHeight+extractorGuideOffsetZ+ReceiverCenter()]);
         
         // Leave some meat for the joint to ride on
+        translate([pivotBoltXYZL[0], 0, pivotBoltXYZL[2]])
         rotate([90,0,0])
-        cylinder(r=ExtractorJointRadius()+clearance, h=ReceiverOD(), center=true);
+        cylinder(r=ExtractorJointRadius(),
+                  h=1,
+                  center=true,
+                  $fn=20);
       }
     }
   }
 }
 
 *!translate([]) {
-  ExtractorPusher(pivotFactor=0);
+  *ExtractorPusher(pivotFactor=0);
   ExtractorGuide();
 }
 
@@ -857,7 +866,17 @@ translate([-BreechFrontX(),0,0]) {
 }
 
 // Extractor Pusher
-*!scale(25.4)
+!scale(25.4) {
 rotate([90,0,0])
-translate([-ExtractorPusherX(), 0, -ExtractorPusherZ()])
+translate([-ExtractorPusherX(), ExtractorPusherWidth()/2, -ExtractorPusherZ()])
 ExtractorPusher(barrelPipe=DEFAULT_BARREL);
+  
+  
+  // Spacer... last one broke off :D
+  *difference() {
+    cylinder(r=ExtractorJointRadius(), h=0.5, $fn=20);
+    
+    cylinder(r=1/16, h=2,center=true, $fn=10);
+    
+  }
+}
