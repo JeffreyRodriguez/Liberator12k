@@ -96,9 +96,11 @@ function ExtractorPusherX() = ForendX()
                             - (ExtractorPusherPivotRadius()*2);
 
 function ExtractorPusherZ() = ReceiverCenter();
+function ExtractorPusherSightHeight() = 0.5;
 
 function ExtractorSpringLength() = LatchSpringLength();
 function ExtractorSpringOD() = LatchSpringOD();
+
 
 module LatchSlot(barrel=DEFAULT_BARREL,
                  slotWidth=LatchSlotWidth(),
@@ -197,12 +199,13 @@ module BarrelPivotCollar(barrelPipe=DEFAULT_BARREL,
       rotate([0,-90,0])
       rotate(-90)
       PrintableShaftCollar(pipeSpec=barrelPipe, pipeClearance=PipeClearanceSnug(),
-                           height=height+extend+clear2,
+                           height=height+extend+clear,
                            length=UnitsMetric(10),
                            setScrewLength=UnitsMetric(8),
                            screwOffsetZ=BarrelPivotInterface()+UnitsMetric(6),
                            teardropAngle=90,
-                           wall=BarrelPivotCollarWall(), cutter=cutter);
+                           wall=BarrelPivotCollarWall()+clear,
+                           cutter=cutter);
       
       if (extend == 0)
       BarrelPivotOuterRace(barrelPipe=barrelPipe, cutter=true);
@@ -257,7 +260,8 @@ module ForendPivoted(barrelPipe=DEFAULT_BARREL,
           translate([ExtractorPusherX(),0,ExtractorPusherZ()])
           rotate([90,0,0])
           linear_extrude(height=1, center=true)
-          Teardrop(r=ExtractorPusherPivotRadius()+ExtractorPusherWall(), truncated=false);
+          Teardrop(r=ExtractorPusherPivotRadius()
+                    + ExtractorPusherWall(), truncated=false);
           
           translate([ExtractorPusherX(),-ReceiverOR(),ReceiverOR()])
           cube([0.5,ReceiverOD(),ManifoldGap()]);
@@ -558,7 +562,7 @@ module ForendPivotedLatch(barrelPipe=DEFAULT_BARREL,
 
 
 module ExtractorPusher(pivotAngle=PivotAngle(), pivotFactor=1,
-                       width=0.5, barWidth=0.25,
+                       width=ExtractorPusherWidth(), barWidth=0.25,
                        clearance=0.005,
                        $fn=Resolution(12,30), alpha=1) {
  
@@ -816,9 +820,9 @@ ForendPivotedAssembly();
 Reference(barrelPipe=DEFAULT_BARREL);
 
 // Plated Forend Pivoted
-*!scale(25.4)
+!scale(25.4)
 rotate([0,90,0])
-translate([-ForendPivotedX()-PivotedForendLength(),0,0])
+translate([-ForendX()-ForendPivotedX()-PivotedForendLength(),0,0])
 ForendPivoted(bolt=true, alpha=1);
 
 // Plated Pivot Collar
@@ -869,7 +873,7 @@ translate([-BreechFrontX(),0,0]) {
 *!scale(25.4) {
 rotate([90,0,0])
 translate([-ExtractorPusherX(), ExtractorPusherWidth()/2, -ExtractorPusherZ()])
-ExtractorPusher(barrelPipe=DEFAULT_BARREL);
+ExtractorPusher(barrelPipe=DEFAULT_BARREL, width=0.48);
   
   
   // Spacer... last one broke off :D
