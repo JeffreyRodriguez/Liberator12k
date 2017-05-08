@@ -1,3 +1,5 @@
+use <../Meta/Manifold.scad>;
+
 //
 // Pipe dimensions
 //
@@ -165,7 +167,7 @@ function Spec_TubingThreeEighthsInch() = [
   [PipeTaperedDiameter, 0.375],
   [PipeThreadLength,    0.0],
   [PipeThreadDepth,     0.0],
-  [PipeClearanceSnug,   0.01],
+  [PipeClearanceSnug,   0.005],
   [PipeClearanceLoose,  0.022],
   [PipeFn,              20],
   [PipeWeightPerUnit,   0]
@@ -178,7 +180,7 @@ function Spec_TubingZeroPointSevenFive() = [
   [PipeTaperedDiameter, 0.750],
   [PipeThreadLength,    0.0],
   [PipeThreadDepth,     0.0],
-  [PipeClearanceSnug,   0.020],
+  [PipeClearanceSnug,   0.005],
   [PipeClearanceLoose,  0.03],
   [PipeFn,              30],
   [PipeWeightPerUnit,   42]
@@ -191,7 +193,7 @@ function Spec_TubingOnePointOneTwoFive() = [
   [PipeTaperedDiameter, 1.018],
   [PipeThreadLength,    0.9],
   [PipeThreadDepth,     0.5],
-  [PipeClearanceSnug,   0.020],
+  [PipeClearanceSnug,   0.010],
   [PipeClearanceLoose,  0.03],
   [PipeFn,              50],
   [PipeWeightPerUnit,   42]
@@ -391,11 +393,10 @@ module CrossFitting(tee, infill=true, hollow=false, $fn=40) {
       // Horizontal Body
       rotate([0,-90,0])
       translate([TeeHeight(tee) - (TeeOuterDiameter(tee)/2),0,0])
-      cylinder(r=TeeOuterRadius(tee), h=TeeWidth(tee) * 0.99, center=true, $fn=36);
+      cylinder(r=TeeOuterRadius(tee), h=TeeWidth(tee), center=true, $fn=36);
 
       // Vertical Body
-      translate([0,0,TeeCenter(tee) * 0.01])
-      cylinder(r=TeeOuterRadius(tee), h=TeeWidth(tee) * 0.98, $fn=36);
+      cylinder(r=TeeOuterRadius(tee), h=TeeWidth(tee), $fn=36);
 
       // Bottom Vertical Rim
       cylinder(r=TeeRimRadius(tee), h=TeeRimWidth(tee), $fn=36);
@@ -436,7 +437,7 @@ module CrossFitting(tee, infill=true, hollow=false, $fn=40) {
     translate([0,0,TeeCenter(tee)])
     for (i=[0,1])
     rotate([0,90*i,0])
-    cylinder(r=TeeInnerRadius(tee), h=TeeWidth(tee)*2, center=true);
+    cylinder(r=TeeInnerRadius(tee), h=(TeeWidth(tee)*2)+ManifoldGap(2), center=true);
   }
 };
 

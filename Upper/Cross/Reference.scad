@@ -39,7 +39,7 @@ function NozzleMultipleCeiling(metric) = metric + (metric % DEFAULT_NOZZLE_DIAME
 function WallTee()              = 0.7;//0.1;
 function WallTriggerGuardRod()  = 0.35;
 function WallFrontGripRod()     = 0.25;
-function WallFrameRod()         = 0.25;
+function WallFrameRod()         = 0.1875;
 function WallFrameFront()       = 0.215;
 function WallFrameBack()        = 0.3;
 function WallBarrelLug()        = 0.1;
@@ -139,9 +139,7 @@ module Breech() {
   Bushing(spec=BreechBushing());
 }
 
-module Reference(barrel=DEFAULT_BARREL,
-           barrelLength=18,
-                 breech=Spec_BushingThreeQuarterInch(),
+module Reference(breech=Spec_BushingThreeQuarterInch(),
                receiver=ReceiverTee(),
                   stock=Spec_PipeThreeQuarterInch(),
             stockLength=StockLength(), hollowStock=false,

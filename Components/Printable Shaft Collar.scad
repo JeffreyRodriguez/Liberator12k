@@ -3,15 +3,20 @@ use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
 use <../Vitamins/Nuts And Bolts.scad>;
 use <../Vitamins/Pipe.scad>;
+use <Set Screw.scad>;
 
 module PrintableShaftCollar(pipeSpec=Spec_TubingOnePointOneTwoFive(),
-                            length=UnitsMetric(8), height=UnitsMetric(12),
+                            pipeClearance=PipeClearanceLoose(),
+                            length=UnitsMetric(10), height=UnitsMetric(12),
                             wall=UnitsMetric(5),
-                            setScrewSpec=Spec_BoltM4(),
+                            setScrewSpec=Spec_BoltM4(), setScrewLength=UnitsMetric(8),
                             screwOffsetZ=UnitsMetric(6),
-                            teardropAngle=90) {
+                            teardropAngle=90, cutter=false, cutterClearance=0.007) {
+
+  clear = cutter ? cutterClearance : 0;
 
   render()
+  rotate(-90)
   difference() {
 
     // Holder Block
@@ -19,36 +24,31 @@ module PrintableShaftCollar(pipeSpec=Spec_TubingOnePointOneTwoFive(),
       difference() {
         hull() {
 
-          cylinder(r=PipeOuterRadius(pipeSpec)+wall,
+          cylinder(r=PipeOuterRadius(pipeSpec)+wall+clear,
                  h=height,
                $fn=PipeFn(pipeSpec)*2);
 
-          // Nut/bolt support
-          rotate(-90)
-          translate([PipeOuterRadius(pipeSpec, PipeClearanceLoose()),
-                    -BoltNutRadius(setScrewSpec)-wall,
-                    0])
-          cube([BoltNutHeight(setScrewSpec)+length,
-                BoltNutDiameter(setScrewSpec)+(wall*2),
-                height]);
+          SetScrewSupport(radius=PipeOuterRadius(pipeSpec, PipeClearanceLoose()),
+                          length=length, height=height, wall=wall,
+                          boltSpec=setScrewSpec);
         }
 
+        if (cutter==false)
         Pipe(pipe=pipeSpec,
            length=height*3,
-        clearance=PipeClearanceLoose(),
+        clearance=pipeClearance,
            center=true);
       }
     }
 
-    // Set-screw
-    rotate([0,0,-90])
-    translate([PipeOuterRadius(pipeSpec)+UnitsImperial(0.02),0,screwOffsetZ])
-    rotate([0,90,0])
-    rotate([0,0,90])
-    NutAndBolt(bolt=setScrewSpec, boltLength=length+wall,
-               nutHeightExtra=PipeOuterRadius(pipeSpec),
-               teardrop=true, teardropAngle=teardropAngle,
-               clearance=true);
+    if (cutter==false)
+    translate([0,0,screwOffsetZ])
+    SetScrew(boltSpec=Spec_BoltM4(),
+             radius=PipeOuterRadius(pipeSpec),
+             length=setScrewLength,
+             capHeightExtra=wall,
+             teardrop=true, teardropAngle=teardropAngle,
+             cutter=true);
   }
 }
 

@@ -14,6 +14,7 @@ module CrossFittingQuadrail2d(rod=Spec_RodFiveSixteenthInch(),
                      rodClearance=RodClearanceLoose()) {
   hull() {
     Quadrail2d(rod=rod, rodClearance=rodClearance, wallTee=WallTee(),
+               scallops=false,
                clearFloor=true, clearCeiling=false);
 
     // Grip flat
@@ -90,7 +91,7 @@ module CrossUpperBack(alpha=1) {
 
       translate([ReceiverLugRearMinX(),0,0])
       rotate([0,90,0])
-        linear_extrude(height=abs(ReceiverLugRearMinX()))
+      linear_extrude(height=abs(ReceiverLugRearMinX()))
       hull() {
         CrossFittingQuadrail2d();
 
@@ -113,11 +114,12 @@ module CrossUpperBack(alpha=1) {
 
     CrossInserts(cutter=true);
 
-    translate([-ManifoldGap(),0,0])
+    translate([OffsetFrameBack()-ManifoldGap(),0,0])
     Frame();
   }
 }
 
+translate([OffsetFrameBack()-ManifoldGap(),0,0])
 Frame();
 Receiver();
 Breech();
