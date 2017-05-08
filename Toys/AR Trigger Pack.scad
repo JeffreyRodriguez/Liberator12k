@@ -6,27 +6,27 @@ module TriggerPocket(pinWidth=20,
                    triggerHole=false,
                    triggerPocketModifier=0) {
 
-pinRadius = 2.4; // 0.1560*25.4/2;
-  
-frontPinOffsetX = 6.75;
-frontPinOffsetY = 16.25;
+  pinRadius = 2.4; // 0.1560*25.4/2;
+    
+  frontPinOffsetX = 6.75;
+  frontPinOffsetY = 16.25;
 
-rearPinOffsetX = 28.5;
-rearPinOffsetY = 8;
+  rearPinOffsetX = 28.5;
+  rearPinOffsetY = 8;
 
-selectorRadius = 5; // Diameter: .3760" = 9.55mm
-selectorOffsetX = frontPinOffsetX+(1.968*25.4) + 1.5;
-selectorOffsetY = 14;
+  selectorRadius = 5; // Diameter: .3760" = 9.55mm
+  selectorOffsetX = frontPinOffsetX+(1.968*25.4) + 1.5;
+  selectorOffsetY = 14;
 
-hammerLength = 41 + triggerPocketModifier;
-hammerWidth  = 9  + triggerPocketModifier;
-hammerPivotRadius = 10 + triggerPocketModifier;
+  hammerLength = 41 + triggerPocketModifier;
+  hammerWidth  = 9  + triggerPocketModifier;
+  hammerPivotRadius = 10 + triggerPocketModifier;
 
-triggerWidth      = 7;
+  triggerWidth      = 7;
 
-triggerPocketHeight = 43 + triggerPocketModifier;
-triggerPocketWidth  = 18 + triggerPocketModifier;
-triggerPocketLength = 45 + triggerPocketModifier;
+  triggerPocketHeight = 43 + triggerPocketModifier;
+  triggerPocketWidth  = 18 + triggerPocketModifier;
+  triggerPocketLength = 45 + triggerPocketModifier;
 
   render()
   difference() {
