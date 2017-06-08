@@ -31,10 +31,10 @@ module AR15_MatingPins(length=2, cutter=true) {
 
 }
 
-function AR15_MatingLugWidth() = UnitsImperial(0.4925);
+function AR15_MatingLugWidth() = UnitsImperial(0.49);
 
 module AR15_MatingLugRear(width = AR15_MatingLugWidth(), cutter=false,
-                          clearance=UnitsImperial(0.00375),
+                          clearance=UnitsImperial(0.004),
                           extraTop=0) {
   clear = Clearance(clearance, cutter);
   clear2 = clear*2;
