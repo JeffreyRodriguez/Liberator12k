@@ -81,6 +81,14 @@ function Spec_RodOneEighthInch() = [
   [RodFn, 8]
 ];
 
+function Spec_RodThreeSixteenthInch() = [
+  [RodDiameter,       3/16],
+  [RodRadius,         3/16/2],
+  [RodClearanceSnug,  0.027],
+  [RodClearanceLoose, 0.035],
+  [RodFn,             16]
+];
+
 function Spec_RodOneQuarterInch() = [
   [RodDiameter,       1/4],
   [RodRadius,         1/4/2],
@@ -103,6 +111,22 @@ function Spec_RodFiveSixteenthInch() = [
   [RodClearanceSnug,  0.022],
   [RodClearanceLoose, 0.025],
   [RodFn,             16]
+];
+
+function Spec_RodNineSixteenthInch() = [
+  [RodDiameter,       9/16],
+  [RodRadius,         9/16/2],
+  [RodClearanceSnug,  0.027],
+  [RodClearanceLoose, 0.035],
+  [RodFn,             24]
+];
+
+function Spec_RodThreeQuarterInch() = [
+  [RodDiameter,       3/4],
+  [RodRadius,         3/4/2],
+  [RodClearanceSnug,  0.027],
+  [RodClearanceLoose, 0.035],
+  [RodFn,             24]
 ];
 
 function Spec_RodThreeQuarterInchTubing() = [

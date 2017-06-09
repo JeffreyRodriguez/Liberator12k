@@ -186,6 +186,19 @@ function Spec_TubingZeroPointSevenFive() = [
   [PipeWeightPerUnit,   42]
 ];
 
+// 1.00x0.00" DOM Tubing
+function Spec_TubingOnePointZero() = [
+  [PipeInnerDiameter,   0.0],
+  [PipeOuterDiameter,   1.0],
+  [PipeTaperedDiameter, 0],
+  [PipeThreadLength,    0],
+  [PipeThreadDepth,     0],
+  [PipeClearanceSnug,   0.010],
+  [PipeClearanceLoose,  0.03],
+  [PipeFn,              50],
+  [PipeWeightPerUnit,   42]
+];
+
 // 1.125x0.813" DOM Tubing
 function Spec_TubingOnePointOneTwoFive() = [
   [PipeInnerDiameter,   0.813],
