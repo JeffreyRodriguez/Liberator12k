@@ -136,3 +136,20 @@ function Spec_RodThreeQuarterInchTubing() = [
   [RodClearanceLoose, 0.029],
   [RodFn,             30]
 ];
+
+function Spec_RodOnePointZeroInch() = [
+  [RodDiameter,       1.0],
+  [RodRadius,         1.0/2],
+  [RodClearanceSnug,  0.023],
+  [RodClearanceLoose, 0.029],
+  [RodFn,             50]
+];
+
+
+function Spec_RodOnePointOneTwoFiveInch() = [
+  [RodDiameter,       1.125],
+  [RodRadius,         1.125/2],
+  [RodClearanceSnug,  0.023],
+  [RodClearanceLoose, 0.029],
+  [RodFn,             50]
+];
