@@ -1,12 +1,13 @@
 use <../Meta/Manifold.scad>;
+use <../Meta/Resolution.scad>;
 
-module ORing(innerDiameter=3/4, section=1/8, clearance=0.005, $fn=20) {
+module ORing(innerDiameter=3/4, section=1/8, clearance=0.005, sectionFn=Resolution(8,20), $fn=Resolution(20,40)) {
 
   render()
-  rotate_extrude()
+  rotate_extrude($fn=$fn)
   translate([(innerDiameter/2)+(section/2)+ManifoldGap(),0])
   hull() {
-    circle(r=(section/2)+clearance, $fn=$fn);
+    circle(r=(section/2)+clearance, $fn=sectionFn);
 
     // Teardrop
     // FIXME: Having some trouble getting that 45deg pitch here. Greater ok

@@ -1,4 +1,5 @@
 use <../Components/Teardrop.scad>;
+use <../Meta/Resolution.scad>;
 
 module RoundedBoolean(edgeOffset=1, edgeSign=-1,
                       r=0.25,
@@ -6,7 +7,7 @@ module RoundedBoolean(edgeOffset=1, edgeSign=-1,
   difference() {
     translate([edgeOffset-r,-r])
     square([r*2, r*2]);
-    
+
     translate([edgeOffset+(edgeSign*r),r]) {
       if (teardrop){
         rotate(teardropAngle)
@@ -16,10 +17,10 @@ module RoundedBoolean(edgeOffset=1, edgeSign=-1,
       }
     }
   }
-  
+
 }
 
-module HoleChamfer(r1=0.5, r2=0.125, teardrop=false) {
+module HoleChamfer(r1=0.5, r2=0.125, teardrop=false, $fn=Resolution(12,20)) {
   rotate_extrude()
   RoundedBoolean(r=r2,
                  edgeOffset=r1,
@@ -33,7 +34,7 @@ module ChamferedSquare(xy=[1,1], r=0.25, teardrop=true, teardropTruncated=true, 
     // Top Circle
     translate([mX, xy[1]-r])
     circle(r);
-    
+
     // Bottom
     translate([mX, r])
     if (teardrop){
@@ -43,18 +44,18 @@ module ChamferedSquare(xy=[1,1], r=0.25, teardrop=true, teardropTruncated=true, 
       circle(r);
     }
   }
-    
+
 }
 
 module ChamferedCube(xyz=[1,1,1], r=0.25, fn=20) {
   intersection() {
     linear_extrude(height=xyz[2])
     ChamferedSquare(teardrop=false, $fn=fn);
-    
+
     rotate([90,0,90])
     linear_extrude(height=xyz[2])
     ChamferedSquare($fn=fn);
-    
+
     mirror([0,1,0])
     rotate([90,0,0])
     linear_extrude(height=xyz[2])
@@ -63,7 +64,7 @@ module ChamferedCube(xyz=[1,1,1], r=0.25, fn=20) {
 }
 
 
-module CylinderChamfer(r1=1, r2=0.25, teardrop=false) {
+module CylinderChamfer(r1=1, r2=0.25, teardrop=false, $fn=Resolution(20,60)) {
   rotate_extrude()
   RoundedBoolean(r=r2,
                  edgeOffset=r1,
@@ -73,10 +74,10 @@ module CylinderChamfer(r1=1, r2=0.25, teardrop=false) {
 
 module CylinderChamferEnds(r1=1, r2=0.25, h=1, $fn=40) {
   render() {
-    
+
     // Keep the bottom teardropped for printing
     CylinderChamfer(r1=r1, r2=r2, teardrop=true);
-    
+
     // We can round the top over
     translate([0,0,h])
     mirror([0,0,1])
