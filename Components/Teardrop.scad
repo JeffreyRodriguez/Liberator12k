@@ -5,7 +5,7 @@ module Teardrop(r=1, rotation=0, truncated=false, $fn=Resolution(15,30)) {
 
   render()
   difference() {
-    union() {
+    hull() {
       circle(r, $fn=$fn);
 
       rotate(rotation)
