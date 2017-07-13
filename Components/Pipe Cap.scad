@@ -1,43 +1,37 @@
 use <../Meta/Manifold.scad>;
-use <../Vitamins/Pipe.scad>;
 use <../Finishing/Chamfer.scad>;
 
-PIPE_SPEC = Spec_TubingZeroPointSevenFive();
-
-module PipeCap(pipeSpec=PIPE_SPEC,
-          pipeClearance=PipeClearanceLoose(),
+module PipeCap(pipeDiameter=1,
                    base=0.25,
                    wall=0.125,
               extension=0.25) {
 
-  bodyRadius = PipeOuterRadius(pipeSpec, undef)+wall;
+  pipeRadius = pipeDiameter/2;
+  bodyRadius = pipeRadius+wall;
+
   render()
   difference() {
 
     // Sleeve around the pipe
     cylinder(r=bodyRadius,
              h=base+extension,
-           $fn=PipeFn(pipeSpec)*2);
+             $fn=$fn*2);
 
     // Pipe Cutout
     translate([0,0,base])
-    Pipe(pipe=pipeSpec,
-       length=extension+ManifoldGap(),
-       clearance=pipeClearance);
+    cylinder(r=pipeRadius, h=extension+ManifoldGap());
 
     // Round the outside edges
     CylinderChamferEnds(r1=bodyRadius, r2=wall/2,
-                        h=base+extension,
-                       $fn=PipeFn(pipeSpec)*2);
+                        h=base+extension);
 
     // Round the inside edge
     translate([0,0,base+extension])
     mirror([0,0,1])
-    HoleChamfer(r1=PipeOuterRadius(pipeSpec, undef),
-                r2=wall/4,
-                $fn=PipeFn(pipeSpec));
+    HoleChamfer(r1=pipeRadius,
+                r2=wall/4);
   }
 }
 
 scale(25.4)
-PipeCap();
+PipeCap($fn=20);

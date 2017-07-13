@@ -20,7 +20,7 @@ module RoundedBoolean(edgeOffset=1, edgeSign=-1,
 
 }
 
-module HoleChamfer(r1=0.5, r2=0.125, teardrop=false, $fn=Resolution(12,20)) {
+module HoleChamfer(r1=0.5, r2=0.125, teardrop=false) {
   rotate_extrude()
   RoundedBoolean(r=r2,
                  edgeOffset=r1,
@@ -64,7 +64,7 @@ module ChamferedCube(xyz=[1,1,1], r=0.25, fn=20) {
 }
 
 
-module CylinderChamfer(r1=1, r2=0.25, teardrop=false, $fn=Resolution(20,60)) {
+module CylinderChamfer(r1=1, r2=0.25, teardrop=false) {
   rotate_extrude()
   RoundedBoolean(r=r2,
                  edgeOffset=r1,
@@ -72,7 +72,7 @@ module CylinderChamfer(r1=1, r2=0.25, teardrop=false, $fn=Resolution(20,60)) {
                  teardrop=teardrop);
 }
 
-module CylinderChamferEnds(r1=1, r2=0.25, h=1, $fn=40) {
+module CylinderChamferEnds(r1=1, r2=0.25, h=1) {
   render() {
 
     // Keep the bottom teardropped for printing
@@ -86,7 +86,7 @@ module CylinderChamferEnds(r1=1, r2=0.25, h=1, $fn=40) {
 }
 
 
-module ChamferedCylinder(r1=1, r2=0.25, h=1, $fn=40) {
+module ChamferedCylinder(r1=0.5, r2=0.25, h=1) {
   render()
   difference() {
     cylinder(r=r1, h=h);
@@ -106,4 +106,4 @@ RoundedBoolean(teardrop=true, $fn=20);
 
 // Chamfered Cylinder
 translate([3,0,0])
-ChamferedCylinder(r1=1, r2=0.25, h=1, $fn=40);
+ChamferedCylinder(r1=0.5, r2=0.25, h=1, $fn=50);

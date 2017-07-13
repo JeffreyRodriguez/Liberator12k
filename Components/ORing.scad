@@ -1,7 +1,7 @@
 use <../Meta/Manifold.scad>;
 use <../Meta/Resolution.scad>;
 
-module ORing(innerDiameter=3/4, section=1/8, clearance=0.005, sectionFn=Resolution(8,20), $fn=Resolution(20,40)) {
+module ORing(innerDiameter=3/4, section=1/8, clearance=0.005, sectionFn=Resolution(8,20)) {
 
   render()
   rotate_extrude($fn=$fn)
@@ -18,4 +18,4 @@ module ORing(innerDiameter=3/4, section=1/8, clearance=0.005, sectionFn=Resoluti
 }
 
 
-ORing(innerDiameter=0.125);
+ORing(innerDiameter=0.125, $fn=Resolution(20,40));
