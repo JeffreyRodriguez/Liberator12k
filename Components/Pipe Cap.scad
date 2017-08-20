@@ -23,7 +23,7 @@ module PipeCap(pipeDiameter=1,
 
     // Round the outside edges
     CylinderChamferEnds(r1=bodyRadius, r2=wall/2,
-                        h=base+extension);
+                        h=base+extension, $fn=$fn*2);
 
     // Round the inside edge
     translate([0,0,base+extension])
