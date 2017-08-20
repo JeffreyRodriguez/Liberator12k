@@ -47,19 +47,27 @@ module ChamferedSquare(xy=[1,1], r=0.25, teardrop=true, teardropTruncated=true, 
 
 }
 
-module ChamferedCube(xyz=[1,1,1], r=0.25, fn=20) {
+module ChamferedCube(xyz=[1,2,3], r=0.25, center=false, fn=20) {
+  
+  translate([center ? -xyz[0]/2 : 0,
+              center ? -xyz[1]/2 : 0,
+              center ? -xyz[2]/2 : 0])
   intersection() {
-    linear_extrude(height=xyz[2])
-    ChamferedSquare(teardrop=false, $fn=fn);
 
+    // X
     rotate([90,0,90])
-    linear_extrude(height=xyz[2])
-    ChamferedSquare($fn=fn);
+    linear_extrude(height=xyz[0])
+    ChamferedSquare(xy=[xyz[1], xyz[2]], r=r, $fn=fn);
 
+    // Y
     mirror([0,1,0])
     rotate([90,0,0])
+    linear_extrude(height=xyz[1])
+    ChamferedSquare(xy=[xyz[0], xyz[2]], r=r, $fn=fn);
+    
+    // Z
     linear_extrude(height=xyz[2])
-    ChamferedSquare($fn=fn);
+    ChamferedSquare(xy=[xyz[0], xyz[1]], r=r, teardrop=false, $fn=fn);
   }
 }
 
@@ -98,7 +106,7 @@ translate([0,2,0])
 ChamferedSquare(xy=[1,2]);
 
 translate([-3,0,0])
-ChamferedCube();
+ChamferedCube(r=0.125);
 
 HoleChamfer($fn=20);
 
