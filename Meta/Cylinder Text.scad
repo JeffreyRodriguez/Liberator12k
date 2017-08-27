@@ -1,5 +1,3 @@
-use <../Math/Circles.scad>;
-
 module CylinderTextSweep(t="Liberator12k.com", r=1, letterSpacing=1/25.4/2,
                          depth=0.025, sweep=90, offsetZ=0,
                          center=true, centerZ=true) {
@@ -7,7 +5,7 @@ module CylinderTextSweep(t="Liberator12k.com", r=1, letterSpacing=1/25.4/2,
     letterWidth  = 0.8314;
     letterCount  = len(t);
 
-    circumference = (2*r)*Pi();
+    circumference = (2*r)*PI;
     circSweep = circumference * (sweep/360);
     letterArc = sweep/letterCount;
     size = (circSweep/letterCount)+letterSpacing;
