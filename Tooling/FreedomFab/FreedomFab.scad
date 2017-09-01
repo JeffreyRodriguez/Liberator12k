@@ -1,11 +1,13 @@
-use <../Vitamins/Printed/SCSxUU.scad>;
+use <../../Vitamins/Printed/SCSxUU.scad>;
 
-use <../Components/Dovetail.scad>;
-use <../Components/Semicircle.scad>;
-use <../Components/Teardrop.scad>;
-use <../Vitamins/Rod.scad>;
-use <../Meta/Manifold.scad>;
-use <../Finishing/Chamfer.scad>;
+use <../../Components/Dovetail.scad>;
+use <../../Components/Semicircle.scad>;
+use <../../Components/Teardrop.scad>;
+use <../../Components/Set Screw.scad>;
+use <../../Vitamins/Rod.scad>;
+use <../../Vitamins/Nuts And Bolts.scad>;
+use <../../Meta/Manifold.scad>;
+use <../../Finishing/Chamfer.scad>;
 
 DEFAULT_BEARING_SPEC = Spec_SCS8LUU();
 
@@ -204,7 +206,7 @@ module FreedomFab_Carriage(spec=DEFAULT_BEARING_SPEC, wall=5, clearance=0.5) {
       translate([-width/2,-length/2,xRodOffsetZ-(height/2)])
       ChamferedCube(xyz=[width,length,height], r=1, $fn=30);
       
-      // HAAAAAAACK: Cut off the tips
+      // HAAAAAAACK: Cut off the tips to clear the bolt heads
       hull() {
         for (x = [1,-1])
         for (y = [1,-1])
@@ -222,9 +224,66 @@ module FreedomFab_Carriage(spec=DEFAULT_BEARING_SPEC, wall=5, clearance=0.5) {
   
 }
 
+module FreedomFab_DriveWheel(id=5, od=15, height=35, clearance=0.625, dWidth=4) {
+  setScrewOffsetZ = 5;
+  
+  render()
+  difference() {
+    ChamferedCylinder(r1=od/2, r2=1, h=height, $fn=40);
+    
+    // D-profile shaft
+    translate([0,0,-ManifoldGap()])
+    difference() {
+      cylinder(r=(id/2)+clearance, h=height+ManifoldGap(2), $fn=16);
+      
+      // D-cut
+      translate([-(id/2)+dWidth+clearance,-od/2, setScrewOffsetZ+3-ManifoldGap()])
+      cube([od, od, height+ManifoldGap(2)]);
+    }
+    
+    // Low area of the spool
+    rotate_extrude(angle=360, $fn=40)
+    hull()
+    for (Y = [setScrewOffsetZ+5, height-3])
+    translate([od/2,Y,0])
+    rotate(90)
+    Teardrop(r=1, $fn=40);
+    
+    // Spool 'threads'
+    threadCount = 5;
+    threadPitch = 1/20;
+    threadHeight = 10;
+    threadSteps = 4;
+    threadDepth = 1;
+    
+    // Beware: Hacky stepping in leiu of sweep()
+    render() union()
+    translate([0,0,height-threadHeight-4])
+    for (R = [1:threadSteps])
+    linear_extrude(twist=threadCount*360,
+                   height=threadHeight,
+                   slices=threadCount*40,
+                   scale=1)
+    rotate(180/threadSteps*R)
+    semidonut(minor=od-2-threadDepth+(threadDepth/threadSteps*R),
+              major=od,
+              angle=180/R, $fn=40);
+    
+    
+    // Set Screw hole
+    translate([0,0,setScrewOffsetZ])
+    rotate([0,90,0])
+    cylinder(r=1.25, h=od*2, center=true, $fn=20);
+  }
+}
+
+
+// Motors
+for (m = [-1,1]) translate([xRodLength/2*m,-(yRodLength/2) - 30,0]) mirror([m,0,0])
+!FreedomFab_DriveWheel();
+
 // Y-Slide
-//rotate([0,-90,0])
-for (m = [-1,1]) translate([xRodLength/2u*m,0,0]) mirror([m,0,0])
+for (m = [-1,1]) translate([xRodLength/2*m,0,0]) mirror([m,0,0])
 FreedomFab_SlideY(
   spec=yBearingSpec,
   xRodOffsetY=xRodOffsetY,
@@ -236,6 +295,6 @@ translate([0, xRodOffsetY*i, xRodOffsetZ])
 rotate([0,0,90+(90*i)])
 FreedomFab_SlideX(spec=xBearingSpec, dovetail=true, wall=wall);
 
-//translate([0, 0, xRodOffsetZ + (SCSxUU_Height(yBearingSpec)/2) + ManifoldGap()])
 //!mirror([0,0,1])
+translate([0, 0, xRodOffsetZ + (SCSxUU_Height(yBearingSpec)/2) + ManifoldGap()])
 FreedomFab_Carriage(spec=xBearingSpec, dovetail=true, wall=wall);
