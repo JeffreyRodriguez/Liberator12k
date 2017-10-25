@@ -1,14 +1,15 @@
 use <../Vitamins/Rod.scad>;
+use <../Finishing/Chamfer.scad>;
 
 module Spindle(pin=Spec_RodOneEighthInch(), center=false,
-               radius=0.2, height=0.26,
+               radius=0.2, height=0.3,
                $fn=12) {
     difference() {
-      cylinder(r=radius, h=height, center=center);
+      ChamferedCylinder(r1=radius, r2=0.05, h=height, center=center);
 
       if (pin != undef)
       Rod(rod=pin, clearance=RodClearanceLoose(), length=height*3, center=true);
     }
 }
 
-Spindle();
+Spindle(radius=0.3, $fn=30);
