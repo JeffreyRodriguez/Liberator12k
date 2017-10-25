@@ -10,37 +10,58 @@ use <../../../Vitamins/Nuts And Bolts.scad>;
 
 use <Trigger Pocket Ram.scad>;
 
-module AR15_TriggerPocketJigBody(clearance=UnitsImperial(0.005),
-                                  alpha=.5) {
+module AR15_BoltStop(extraTop=ManifoldGap(),
+                     clearance=UnitsMetric(0.4), cutter=false) {
+  
+  
+  clear = Clearance(clearance, cutter);
+  clear2 = clear*2;
+
+
+  translate([AR15_RearPinX()+UnitsImperial(3.2)-clear,
+             -(UnitsImperial(0.75)/2)-clear,
+             -UnitsImperial(0.3)-clear])
+  cube([UnitsImperial(0.15)+clear2,
+         UnitsImperial(0.75)+clear2,
+         UnitsImperial(0.3)+clear+extraTop]);
+}
+
+module AR15_TriggerPocketJigBody(height=UnitsImperial(0.75)
+                                       +TriggerPocketRamBumperHeight(),
+                                 clearance=UnitsImperial(0.005),
+                                 alpha=.5) {
   width=UnitsImperial(1.0625);
                                     
   color("White", alpha) render()
   difference() {
     union() {
-      hull() {
-        
-        // Bottom Rear
-        translate([AR15_RearPinX(),-0.25,0])
-        cube([AR15_TriggerPocketX(),
-              0.5,
-              UnitsMetric(10)]);
-        
-        // Top, to support insert
-        translate([AR15_TriggerPocketX(),-width/2,0])
-        cube([AR15_TriggerPocketOAL()+UnitsMetric(15),
-              width,
-              AR15_TriggerPocketDepth()+TriggerPocketRamBumperHeight()-ManifoldGap()-clearance]);
-      }
       
-      AR15_MatingLugRear(cutter=false, extraTop=UnitsMetric(10));
+      // Outline of the trigger pocket
+      linear_extrude(height=height)
+      hull()
+      AR15_TriggerPocket2d(clearance=UnitsMetric(4), cutter=true);
+      
+      AR15_MatingLugRear(cutter=false, extraTop=height);
+        
+      // Bottom Rear
+      translate([AR15_RearPinX(),-(AR15_MatingLugWidth()/2),0])
+      cube([AR15_TriggerPocketX(),
+            AR15_MatingLugWidth(),
+            height]);
+      
+      // Bottom Front
+      translate([AR15_TriggerPocketX()+AR15_TriggerPocketOAL(),
+                 -(AR15_MatingLugWidth()/4),0])
+      cube([UnitsImperial(0.75),
+            (AR15_MatingLugWidth()/2),
+            height]);
+      
+      AR15_BoltStop(extraTop=height, cutter=false);
     }
-    
-    
-    AR15_TriggerPocketJigFront(cutter=true);
 
     render()
-    translate([0,0,-ManifoldGap()])
-    linear_extrude(height=AR15_TriggerPocketDepth()+TriggerPocketRamBumperHeight())
+    linear_extrude(height=AR15_TriggerPocketDepth()
+                         +TriggerPocketRamBumperHeight())
     projection()
     TriggerPocketRam(cutter=true);
     
@@ -49,81 +70,38 @@ module AR15_TriggerPocketJigBody(clearance=UnitsImperial(0.005),
   }
 }
 
-
-module AR15_TriggerPocketJigFront(cutter=false,
-                                 clearance=UnitsImperial(0.008),
-                                 alpha=1) {
-                                   
-  clear = Clearance(clearance,cutter);
-  clear2 = clear*2;
-
-  color("Orange", alpha) render()
-  difference() {
-    union() {
-      
-      // Tapered point
-      translate([AR15_TriggerPocketX()+AR15_TriggerPocketOAL()-clear,
-                 -(AR15_MatingLugWidth()/2)-clear,
-                 UnitsImperial(0.625)])
-      rotate([0,45,0])
-      cube([(UnitsImperial(0.75)+clear2)/sqrt(2),
-             AR15_MatingLugWidth()+clear2,
-             (UnitsImperial(0.75)+clear2)/sqrt(2)]);
-      
-      // Supporting bar
-      translate([AR15_TriggerPocketX()+AR15_TriggerPocketOAL()+UnitsImperial(0.375),
-                 -(AR15_MatingLugWidth()/2)-clear,
-                 UnitsImperial(0.25)-clear])
-      cube([AR15_MatingPinDistance()-AR15_TriggerPocketOAL()-UnitsImperial(1.0),
-            AR15_MatingLugWidth()+clear2,
-            UnitsImperial(0.75)+clear2]);
-      
-      AR15_MatingLugFront(cutter=false, extraTop=abs(AR15_PinZ())+UnitsImperial(0.75));
-    }
-    
-    AR15_MatingPins(cutter=true);
-  }
-}
-
-module AR15_TriggerPocketTestJig(alpha=1) {
+module AR15_TriggerPocketTestJig(width=1.25, alpha=1) {
   render()
   difference() {
     union() {
-      
-      // Indexed point
-      intersection() {
-        AR15_TriggerPocketJigFront();
-        
-        // Supporting bar
-        translate([AR15_TriggerPocketX()+AR15_TriggerPocketOAL(),
-                   -AR15_MatingLugWidth(),
-                   UnitsImperial(0.25)])
-        cube([UnitsImperial(1.25),
-              AR15_MatingLugWidth()*2,
-              UnitsImperial(0.75)]);
-        
-      }
-
-      // Bottom Front
-      translate([AR15_TriggerPocketX()+AR15_TriggerPocketOAL()+UnitsImperial(0.6),
-                 -AR15_MatingLugWidth(),
-                 -UnitsImperial(0.255)])
-      cube([UnitsImperial(0.65),
-            AR15_MatingLugWidth()*2,
-            UnitsImperial(0.75)]);
-      
-      // Bottom
       translate([AR15_RearPinX()-UnitsImperial(0.25),
-                 -0.5,
+                 -(width/2),
                  AR15_PinZ()-UnitsImperial(0.25)])
-      cube([AR15_TriggerPocketX()+AR15_TriggerPocketOAL()+UnitsImperial(1.5),
-            1,
+      cube([AR15_TriggerPocketX()+AR15_TriggerPocketOAL()+UnitsImperial(0.625),
+            width,
             abs(AR15_PinZ())+UnitsImperial(0.25)]);
+      
+      // Horn for holding down the jig
+      translate([AR15_TriggerPocketX()+AR15_TriggerPocketOAL(),
+                 -(AR15_MatingLugWidth()/4),
+                 AR15_PinZ()-UnitsImperial(0.25)])
+      cube([UnitsImperial(0.75),
+            (AR15_MatingLugWidth()/2),
+            abs(AR15_PinZ())+UnitsImperial(0.25)]);
+      
     }
       
     AR15_MatingLugRear(cutter=true, extraTop=abs(AR15_PinZ()));
     
     AR15_MatingPins(cutter=true);
+    
+    AR15_BoltStop(cutter=true);
+    
+    // Wire holes
+    for (m = [0,1]) mirror([0,m,0])
+    translate([AR15_TriggerPocketX()+UnitsImperial(0.125),
+               -UnitsImperial(0.375),-1])
+    cylinder(r=0.0625, h=1, $fn=8);
       
     // Test bar
     translate([AR15_TriggerPocketX(),
@@ -140,7 +118,7 @@ module AR15_TriggerPocketJig(alpha=1) {
   TriggerPocketRam(cutter=false);
 
   //union() {
-    AR15_TriggerPocketJigFront(cutter=true);
+    *AR15_TriggerPocketJigFront(cutter=true);
     
     AR15_TriggerPocketJigBody();
   //}
@@ -148,15 +126,12 @@ module AR15_TriggerPocketJig(alpha=1) {
 
 
 *AR15_LiberatedLower();
-*AR15_TriggerPocketTestJig();
 
+AR15_TriggerPocketTestJig();
 AR15_TriggerPocketJig();
 
 *!scale(25.4) rotate([0,0,0])
 AR15_TriggerPocketTestJig();
-
-*!scale(25.4) rotate([90,0,0])
-AR15_TriggerPocketJigFront();
 
 *!scale(25.4) rotate([180,0,0])
 AR15_TriggerPocketJigBody();

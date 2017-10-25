@@ -40,7 +40,7 @@ module TriggerPocketRam(height=AR15_TriggerPocketDepth(),
       AR15_TriggerPocket2d(clearance=shrinkage, cutter=true);
 
       // Rear stop bumper
-      for (X = [-shrinkage-UnitsMetric(2), AR15_TriggerPocketLength()-UnitsMetric(10)+shrinkage-clear2])
+      *for (X = [-shrinkage-UnitsMetric(2), AR15_TriggerPocketLength()-UnitsMetric(10)+shrinkage-clear2])
       translate([X+AR15_TriggerPocketX()+AR15_TriggerSelectorLength(),
                  -(AR15_TriggerPocketSelectorWidth()/2)-UnitsMetric(2)-clear,
                  0])
@@ -89,7 +89,7 @@ module TriggerPocketRam(height=AR15_TriggerPocketDepth(),
 }
 
 
-!scale(25.4) rotate([180,0,0])
+//!scale(25.4) rotate([180,0,0])
 TriggerPocketRam(cutter=false);
 
 //!scale(25.4) translate([0,0,AR15_TriggerPocketDepth()])

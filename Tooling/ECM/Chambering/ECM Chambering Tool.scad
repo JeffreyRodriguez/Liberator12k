@@ -3,154 +3,100 @@ use <../../../Meta/Resolution.scad>;
 use <../../../Meta/Units.scad>;
 use <../../../Vitamins/Pipe.scad>;
 use <../../../Vitamins/Rod.scad>;
-use <../../../Vitamins/Nuts And Bolts.scad>;
-use <../../../Components/T Lug.scad>;
-use <../../../Components/Printable Shaft Collar.scad>;
+use <../../../Components/Semicircle.scad>;
+use <../../../Finishing/Chamfer.scad>;
 
-PIPE_SPEC = Spec_TubingOnePointOneTwoFive();
+
+PIPE_SPEC = Spec_TubingZeroPointSevenFive();
 
 // Smoothbore 12ga stock (old test bits)
-BARREL_OD = 1.125+0.025;
 BARREL_ID = 0.813+0.01;
 
 // Rifled 12ga stock
-BARREL_OD = 1.125+0.025;
 BARREL_ID = 0.75+0.008;
 
+// .12ga stock
+BARREL_ID = 0.75-0.003;
+BARREL_ID = 0.787; // Pre-bored
+
 // .44 Spl stock
-BARREL_OD = 0.765;
-BARREL_ID = 0.375-0.003;
 BARREL_ID = 0.402; // Pre-bored
 
+// .45ACP
+BARREL_ID = 0.44;
+
 function ECM_Chambering_Insert_Diameter(barrelInnerDiameter,
-                                        wireDiameter,
-                                        gapWidth)
+                                        fluteDepth)
     = barrelInnerDiameter
-    - (wireDiameter*2)
-    - (gapWidth*2);
+    - (fluteDepth*2);
 
-module ECM_Chambering_Insert(terminalSpec=Spec_BoltM3(),
-                             barrelOuterDiameter=BARREL_OD,
-                             barrelInnerDiameter = BARREL_ID,
-                             wireDiameter=0.015,
-                             gapWidth=0.03,
-                             chamberLength=1.285,
-                             wall=0.5, topLength=0.5,
-                             fluteWidth=0.1, fluteCount=3) {
+module ECM_Chambering_Insert(barrelInnerDiameter = BARREL_ID,
+                             rodMajorRadius = 0.2/2, rodMinorRadius = 0.1517/2,
+                             rodWall=0.125, rodTop=0.25,
+                             length=1.285, bottomWall=0.125, wall=0.125,
+                             fluteCount=6,
+                             $fn=50) {
 
-  insertDiameter = ECM_Chambering_Insert_Diameter(
-                               barrelInnerDiameter,
-                               wireDiameter,
-                               gapWidth);
-
+  insertDiameter = barrelInnerDiameter;
   insertRadius = insertDiameter/2;
+  
+  fluteWidth=min(insertDiameter*3.14/fluteCount/2, rodMajorRadius);
+  fluteDepth=(insertRadius-rodMajorRadius)-wall;
 
   render()
   difference() {
     
-    // Insert
+    // Centering guide
     union() {
+      
+      // Body
       cylinder(r=insertRadius,
-               h=chamberLength+wall, $fn=50);
+               h=length);
       
-      // Center the insert in the bore
-      cylinder(r=barrelInnerDiameter/2,
-               h=wall, $fn=50);
+      // Taper
+      translate([0,0,length])
+      cylinder(r1=barrelInnerDiameter/2, r2=rodMajorRadius,
+               h=rodTop);
       
-      // Top
-      translate([0,0,wall+chamberLength])
-      render()
-      linear_extrude(height=topLength)
-      difference() {
-        intersection() {
-          translate([-(insertDiameter/4), -insertRadius,0])
-          square([insertRadius, insertDiameter]);
-          
-          circle(r=insertRadius, $fn=50);
-        }
-        
-        for (m = [0:1])
-        mirror([m,0,0])
-        translate([wireDiameter,0])
-        rotate(-45)
-        square(insertRadius);
-      }
+      // Cylinder top
+      translate([0,0,length])
+      cylinder(r=rodMajorRadius+rodWall, h=rodTop);
     }
     
-    // Bottom Water Cutouts
+    // Chamfer the bottom
+    CylinderChamfer(r1=insertRadius, r2=0.05, teardrop=true);
+    
+    // Chamfer the top
+    translate([0,0,length+rodTop])
+    mirror([0,0,1])
+    CylinderChamfer(r1=rodMajorRadius+rodWall, r2=0.02, teardrop=false);
+    
+    // Rod hole
+    translate([0,0,wall])
+    cylinder(r1=rodMajorRadius,
+             r2=rodMinorRadius,
+             h=length+bottomWall+rodTop,
+             $fn=20);
+    
+    // Water Flutes
+    translate([0, 0, -ManifoldGap()])
     for (r = [1:fluteCount])
     rotate(360/fluteCount*r)
-    translate([insertRadius,
-               -fluteWidth/2,
-               -ManifoldGap()])
-    cube([barrelInnerDiameter,
-          fluteWidth,
-          wall+wireDiameter+ManifoldGap(2)]);
-    
-    // Bottom 'installation' hex bit hole
-    *translate([0,0,-ManifoldGap()])
-    cylinder(r=1/16, h=0.375, $fn=6);
+    linear_extrude(height=length+bottomWall+ManifoldGap(2),
+                   twist=(length+bottomWall)*90,
+                   slices=(length+bottomWall)*80)
+    translate([insertRadius-fluteDepth, -fluteWidth/2])
+    square([insertRadius, fluteWidth]);
   }
 
-}
-
-module ECM_Chambering_Base(barrelOuterDiameter=BARREL_OD,
-                             barrelInnerDiameter = BARREL_ID,
-                             wireDiameter=0.025,
-                             gapWidth=0.05,
-                             clearance=0.06,
-                             wall=0.125) {
-
-  insertDiameter = ECM_Chambering_Insert_Diameter(
-                               barrelInnerDiameter,
-                               wireDiameter,
-                               gapWidth)+0.01;
-
-
-  insertRadius = insertDiameter/2;
-  innerRadius = barrelInnerDiameter/2;
-  outerRadius = barrelOuterDiameter/2;
-                               
-  render()
-  difference() {
-    
-    // Insert
-    union() {
-      
-      // Pipe cap
-      cylinder(r=outerRadius+wall,
-               h=wall*3,
-             $fn=Resolution(20,60));
-    }
-      
-    // Pipe
-    translate([0,0,wall])
-    cylinder(r=outerRadius,
-              h=(wall*2)+ManifoldGap(),
-            $fn=Resolution(20,60));
-    
-    // Insert Passthrough Hole
-    translate([0,0,-ManifoldGap()])
-    translate([-(insertRadius/2)-(clearance/2), -insertRadius-(clearance/2),0])
-    cube([insertRadius+clearance, insertDiameter+clearance, wall+ManifoldGap(2)]);
-    
-    // Watering hole
-    translate([0,0,-ManifoldGap()])
-    translate([-outerRadius, -insertRadius/2,0])
-    cube([barrelOuterDiameter, insertRadius, wall+ManifoldGap(2)]);
-  }
 }
 
 scale(25.4) {
-  ECM_Chambering_Insert();
-
-  color("DimGrey", 0.5)
-  translate([0,0,2.25])
-  rotate([180.0,0])
-  ECM_Chambering_Base();
+  ECM_Chambering_Insert(barrelInnerDiameter=0.44,
+                        length=1.285,
+                        rodWall=0.0625,
+                        wall=0.0625);
 }
 
 // Plated insert
-!scale(25.4) ECM_Chambering_Insert();
-
-*!scale(25.4) ECM_Chambering_Base();
+*!scale(25.4) ECM_Chambering_Insert();
