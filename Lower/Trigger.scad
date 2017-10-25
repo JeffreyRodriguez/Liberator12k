@@ -56,13 +56,13 @@ module Sear() {
   %Rod(rod=SearPinRod(), length=0.8, center=true);
 }
 
-module SearCutter(searLengthExtra=0, wideTrack=false) {
+module SearCutter(length=SearLength()+SearTravel(), searLengthExtra=0, wideTrack=false) {
   color("Red", 0.25)
   union() {
     translate([0,0,SearPinOffsetZ()-SearBottomOffset()-SearTravel()-SearSpringCompressed()])
     Rod(rod=SearRod(),
         clearance=RodClearanceLoose(),
-        length=SearLength()+SearTravel()+searLengthExtra);
+        length=length+searLengthExtra);
   
     if (wideTrack)
     translate([-RodDiameter(SearRod())*0.4,
