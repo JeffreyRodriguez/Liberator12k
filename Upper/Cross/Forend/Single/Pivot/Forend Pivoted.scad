@@ -819,8 +819,26 @@ ForendPivotedAssembly();
 
 Reference(barrelPipe=DEFAULT_BARREL);
 
+module ShellRamp(width=0.5, height=0.25, length=ReceiverCenter(), $fn=20) {
+  render()
+  difference() {
+    hull() {
+      translate([0,-(width/2),0])
+      cube([length, width, 0.01]);
+    
+      cylinder(r=0.625, h=height);
+    }
+    
+    translate([0,0,-height])
+    cylinder(r=0.5, h=height*3);
+  }
+}
+
+*!scale(25.4)
+ShellRamp();
+
 // Plated Forend Pivoted
-!scale(25.4)
+*!scale(25.4)
 rotate([0,90,0])
 translate([-ForendX()-ForendPivotedX()-PivotedForendLength(),0,0])
 ForendPivoted(bolt=true, alpha=1);
