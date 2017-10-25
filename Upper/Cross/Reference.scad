@@ -119,7 +119,7 @@ module Stock(stockLength=12, hollow=true, alpha=1) {
   translate([-ReceiverCenter()+PipeThreadDepth(StockPipe()),0,0])
   rotate([0,-90,0])
   Pipe(pipe=StockPipe(),
-       clearance=PipeClearanceLoose(),
+       clearance=undef,
        length=stockLength+0.02,
        hollow=hollow);
 }
