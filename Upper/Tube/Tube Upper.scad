@@ -12,10 +12,14 @@ module PipeHousingTop(pipeSpec=Spec_Tubing1628x1125(),
                       pipeClearance=PipeClearanceSnug()) {
   
   translate([PipeOuterRadius(pipeSpec),0])
-  Pipe2d(pipe=pipeSpec, clearance=pipeClearance, $fn=40);
+  *Pipe2d(pipe=pipeSpec, clearance=pipeClearance, $fn=40);
+  
+  translate([0.75/2,0])
+  square([0.755, 0.755], center=true);
+
 }
 
-module TubeHousing2d(wall=0.25, tabWidthTop=1) {
+module TubeHousing2d(wall=0.25, tabWidthTop=1, flatBottom=true) {
   difference() {
     hull() {
       minkowski() {
@@ -24,6 +28,7 @@ module TubeHousing2d(wall=0.25, tabWidthTop=1) {
         circle(r=wall, $fn=24);
       }
       
+      if (flatBottom)
       translate([-wall,-tabWidthTop/2])
       square([wall, tabWidthTop]);
     }
@@ -34,14 +39,15 @@ module TubeHousing2d(wall=0.25, tabWidthTop=1) {
 
 
 module TubeHousing(housingFront=0.25, housingRear=0.25, wall=0.25,
-                   tabLength=1, tabWidth=1, tabWidthTop=1.25, tabHeight=0.5, hole=false) {
+                   tabLength=1, tabWidth=1, tabWidthTop=1.25, tabHeight=0.5,
+                   hole=false, flatBottom=true) {
 
   render(convexity=4)
   union() {
     rotate([0,-90,180]) {
       translate([wall,0, -housingRear])
       linear_extrude(height=housingFront+tabLength+housingRear)
-      TubeHousing2d(wall, tabWidthTop)
+      TubeHousing2d(wall, tabWidthTop, flatBottom)
       children();
     }
   }
@@ -58,11 +64,11 @@ module TubeHousingFront(extraFront=0.5) {
   }
 }
 
-module TubeHousingRear(extraRear=0.5) {
+module TubeHousingRear(extraRear=0.5, flatBottom=true) {
   union() {
     translate([ReceiverLugRearMinX(),0,0])
     TubeHousing(housingFront=0, housingRear=extraRear, hole=true,
-                tabLength=ReceiverLugRearLength(), tabHeight=0.75)
+                tabLength=ReceiverLugRearLength(), tabHeight=0.75, flatBottom=flatBottom)
     PipeHousingTop();
     
     ReceiverLugRear();
