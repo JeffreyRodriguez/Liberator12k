@@ -36,12 +36,12 @@ camPinShelfLength = 0.75;
 
 boltHeadDiameter = 0.75+0.008;
 boltHeadRadius = boltHeadDiameter/2;
-boltLugLength  = 0.28;
+boltLugLength  = 0.277;
 boltLength = 2.8;
 boltLockedLength = 2.3;// - 0.85;
 boltLockLengthDiff = boltLength - boltLockedLength;
 boltFrontRadius = 0.527/2;
-boltFrontLength = camPinOffset+0.01;
+boltFrontLength = camPinOffset+camPinDiameter+0.01;
 boltMiddleRadius = 0.49/2;
 boltMiddleLength = 0.95;
 boltBackRadius = 0.25/2;
@@ -197,30 +197,30 @@ module BARBB_UpperReceiver(pinRadius=0.125/2, pinHeight=0.09, pinDepth=0.162, ma
   difference() {
     translate([-upperLength,0,0])
     union() {
-          
-        // Barrel section
-        difference() {
-          union() {
-            translate([barrelExtensionLength,0,barrelZ])
-            rotate([0,90,0])
-            ChamferedCylinder(r1=barrelExtensionRadius+barrel_wall, r2=chamferRadius,
-                              h=upperLength);
-        
-            // Square Tube Body
-            translate([barrelExtensionLength,
-                       -(tube_offset/2)-tube_wall,
-                       tube_offset+tube_wall+barrel_offset])
-            rotate([0,90,0])
-            ChamferedCube([tube_offset+tube_wall+barrel_offset,
-                           tube_offset+(tube_wall*2),
-                           upperLength], r=chamferRadius);
-          }
-          
-          translate([upperLength+boltLockLengthDiff,0,barrelZ])
-          rotate([0,-90,0])
-          AR15_Bolt(camPinTravel=true, camPinTravelChamferBack=true,
-                    teardrop=false, firingPinRetainer=false);
+
+      // Barrel section
+      difference() {
+        union() {
+          translate([barrelExtensionLength,0,barrelZ])
+          rotate([0,90,0])
+          ChamferedCylinder(r1=barrelExtensionRadius+barrel_wall, r2=chamferRadius,
+                            h=upperLength);
+      
+          // Square Tube Body
+          translate([barrelExtensionLength,
+                     -(tube_offset/2)-tube_wall,
+                     tube_offset+tube_wall+barrel_offset])
+          rotate([0,90,0])
+          ChamferedCube([tube_offset+tube_wall+barrel_offset,
+                         tube_offset+(tube_wall*2),
+                         upperLength], r=chamferRadius);
         }
+        
+        translate([upperLength+boltLockLengthDiff,0,barrelZ])
+        rotate([0,-90,0])
+        AR15_Bolt(camPinTravel=true, camPinTravelChamferBack=true,
+                  teardrop=false, firingPinRetainer=false);
+      }
       
       // Bolt w/ Cam Pin Linear Section Support
       translate([barrelExtensionLength,0,barrelZ])
@@ -320,10 +320,24 @@ module BARBB_UpperReceiver(pinRadius=0.125/2, pinHeight=0.09, pinDepth=0.162, ma
         RoundedBoolean(edgeOffset=-ejectionPortWidth/2, r=chamferRadius, teardrop=true);
       }
 
-      // Ejection Port Cone
-      translate([-barrelExtensionLandingHeight, 0, barrelExtensionRadius+barrel_wall])
-      rotate([0,90,0])
-      cylinder(r1=ejectionPortWidth/2, r2=0, h=ejectionPortWidth);
+      // Ejection Port  Chamfer
+      translate([0, 0, barrelExtensionRadius+barrel_wall])
+      translate([camPinLockedMinX+camPinDiameter,0,0])
+      intersection() {
+      
+        // Chamfer the left and righ edges
+        rotate([0,90,0])
+        linear_extrude(height=abs(camPinLockedMinX)) {
+          for (m = [0,1]) mirror([0,m])
+          rotate(-90)
+          RoundedBoolean(edgeOffset=-ejectionPortWidth/2, r=barrel_wall, teardrop=false);
+          
+          square([barrel_wall*2, barrel_wall*2], center=true);
+        }
+        
+        rotate([0,90,0])
+        cylinder(r1=abs(camPinLockedMinX/2), r2=0, h=abs(camPinLockedMinX));
+      }
       
       translate([boltLockLengthDiff,0,0])
       rotate([0,-90,0])
@@ -520,7 +534,7 @@ module AR15_Bolt(camPinTravel=false, camPinTravelChamferBack=false, firingPinRet
     BARBB_CamPinCutout(chamferBack=camPinTravelChamferBack);
         
     // Front
-    translate([ManifoldGap(),0,0])
+    translate([0,0,boltLugLength])
     cylinder(r=boltFrontRadius+0.01, h=boltFrontLength+ManifoldGap());
     
     // Front Chamfer
