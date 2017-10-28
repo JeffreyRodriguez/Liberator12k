@@ -16,7 +16,7 @@ $fn=60;
 
 // Bullpup AR Barrel Bolt-action (BARBB)
 hammerWidth = (5/16)+0.02;
-hammerTravel = 0.5;
+hammerTravel = 0.5+0.1;
 
 tube_wall = 0.3;
 tube_offset = 0.75;
@@ -61,7 +61,7 @@ ejectionPortWidth = 0.375+0.025;
 
 
 firingPinRadius = 0.337/2;
-firingPinExtension = 0.65;      // From the back of the bolt
+firingPinExtension = 0.55;      // From the back of the bolt
 firingPinRetainerOffset = 0.35; // From the back of the bolt
 
 boltSleeveDiameter = barrelExtensionDiameter;
@@ -85,7 +85,6 @@ barbbBoltLength = boltLockedLength
                 + boltExtraTravel;
 
 magwellOffset = 1;
-
 
 module PicRailBolts() {
   translate([ReceiverLugRearMinX()+(ReceiverLugRearLength()/2),0,
@@ -437,7 +436,7 @@ module BARBB_Bolt(clearance=0.01) {
   
   translate([-upperLength+barrelExtensionLength-handleLength,0,barrelZ])
   rotate([0,90,0])
-  !render()
+  render()
   difference() {
     union() {
       
@@ -676,7 +675,7 @@ translate([ReceiverLugRearMinX()-4.5,0,0]) {
     cube([24, tube_offset, tube_offset]);
 
     //render() DebugHalf()
-    *BARBB_Stock();
+    BARBB_Stock();
   }
   
   translate([(boltLockLengthDiff),0,barrelZ])
