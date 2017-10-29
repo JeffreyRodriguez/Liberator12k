@@ -12,21 +12,41 @@ use <../../Lower/Trigger.scad>;
 use <../../Magwells/AR15 Magwell.scad>;
 use <../Tube/Tube Upper.scad>;
 
-$fn=60;
+$fn=20;
 
 // Bullpup AR Barrel Bolt-action (BARBB)
-hammerWidth = (5/16)+0.02;
-hammerTravel = 0.5+0.1;
 
+// Configured Values
+barrelLength = 16;
+hammerTravel = 0.5;
+hammerOvertravel=0.25;
 tube_wall = 0.3;
+barrel_wall = 0.1875;
+barrel_offset = 0.75;
+barrelExtensionLandingHeight = 0.3;
+chamferRadius = 0.1;
+
+magwellOffset = 1;
+barrelX = 0; // To the back of the barrel extension
+stockWall = 0.5;
+
+
+// Measured Values
+hammerWidth = (5/16)+0.02;
 tube_offset = 0.75;
 tube_width = 0.75+0.01;
 
-barrel_wall = 0.1875;
 barrelExtensionDiameter = 1;
 barrelExtensionRadius = barrelExtensionDiameter/2;
 barrelExtensionLength = 0.99;
-barrel_offset = 0.75;
+barrelExtensionLipDiameter=1.25;
+barrelExtensionLipRadius = barrelExtensionLipDiameter/2;
+barrelExtensionLipLength=0.125;
+barrelChamberDiameter = 1;
+barrelChamberRadius = barrelChamberDiameter/2;
+barrelGasLength = 7.8; // Back of the barrel extension to the gas block shelf
+barrelGasDiameter = 0.75;
+barrelGasRadius = barrelGasDiameter/2;
 
 camPinAngle    = 22.5;
 camPinAngleExtra = 22.5*4;
@@ -47,44 +67,45 @@ boltLockLengthDiff = boltLength - boltLockedLength;
 boltFrontRadius = 0.527/2;
 boltFrontLength = camPinOffset+camPinDiameter+0.01;
 boltMiddleRadius = 0.49/2;
-boltMiddleLength = 2.125;
+boltMiddleLength = 2.25;
 boltBackRadius = 0.25/2;
-
-boltExtraTravel = 1.625;
-boltExtraTravel = 1.25;
-boltExtraTravel = 0.15+hammerWidth;
-boltExtraTravel = 0.75;
-boltExtraTravel = -0.25;
-boltExtraTravel = -0.5;
-
-ejectionPortWidth = 0.375+0.025;
-
 
 firingPinRadius = 0.337/2;
 firingPinExtension = 0.55;      // From the back of the bolt
 firingPinRetainerOffset = 0.35; // From the back of the bolt
 
+
+
+// Calculated Values
 boltSleeveDiameter = barrelExtensionDiameter;
 boltSleeveRadius = boltSleeveDiameter/2;
-barrelExtensionLandingHeight = 0.3;
 
-chamferRadius = 0.1;
 
-handleLength=0.625;
-handleLength=0.84;
-handleLength=1.5-ManifoldGap();
-handleOffset=1;
-//handleLength=1.25;
+tubeCenterZ = tube_wall+(tube_offset/2);
+boltLockedMinX = barrelX-boltLockedLength;
+boltLockedMaxX = barrelX+boltLockLengthDiff;
+
 
 barrelZ = tube_offset+tube_wall+barrel_offset;
 lowerLength = LowerMaxX()+abs(ReceiverLugRearMinX());
-upperLength = barrelExtensionLength+boltLockedLength+boltExtraTravel;
-barbbBoltLength = boltLockedLength
-                - barrelExtensionLandingHeight
-                + handleLength
-                + boltExtraTravel;
+                
+camPinLockedMaxX = boltLockedMaxX -camPinOffset;
+camPinLockedMinX = camPinLockedMaxX -camPinDiameter;
 
-magwellOffset = 1;
+upperLength = barrelExtensionLength+abs(camPinLockedMaxX)-0.01;
+upperMinX = -upperLength+barrelExtensionLength;
+
+firingPinMinX  = boltLockedMinX -firingPinExtension;
+hammerMaxX = firingPinMinX + hammerOvertravel;
+hammerMinX = firingPinMinX -hammerWidth -hammerTravel;
+
+stockMinX = hammerMinX-stockWall;
+stockLength=abs(hammerMinX)+upperMinX+stockWall;
+
+barbbBoltLength = stockLength
+                + barrelExtensionLandingHeight;
+handleLength=abs(hammerMinX-hammerMaxX)+firingPinExtension-hammerOvertravel;
+
 
 module PicRailBolts() {
   translate([ReceiverLugRearMinX()+(ReceiverLugRearLength()/2),0,
@@ -97,7 +118,7 @@ module PicRailBolts() {
 }
 
 // m5x10 flat head
-module FlatHeadBolt(diameter=0.193, headDiameter=0.353, extraHead=1, length=0.3955, $fn=20, teardrop=true) {
+module FlatHeadBolt(diameter=0.193, headDiameter=0.353, extraHead=1, length=0.3955, teardrop=true) {
   radius = diameter/2;
   
   render()
@@ -105,15 +126,15 @@ module FlatHeadBolt(diameter=0.193, headDiameter=0.353, extraHead=1, length=0.39
     
     if (teardrop) {
       linear_extrude(height=length)
-      Teardrop(r=radius);
+      Teardrop(r=radius, $fn=20);
     } else {
-      cylinder(r=radius, h=length);
+      cylinder(r=radius, h=length, $fn=20);
     }
     
-    cylinder(r1=headDiameter/2, r2=0, h=headDiameter/2, $fn=$fn*2);
+    cylinder(r1=headDiameter/2, r2=0, h=headDiameter/2);
     
     translate([0,0,-extraHead])
-    cylinder(r=headDiameter/2, h=extraHead+ManifoldGap(), $fn=$fn*2);
+    cylinder(r=headDiameter/2, h=extraHead+ManifoldGap());
   }
 }
 
@@ -174,6 +195,12 @@ module BARBB_LowerReceiver(extraFront=0,wall=tube_wall) {
     
     // Barrel center axis
     translate([0,0,barrelZ]) {
+      
+      translate([LowerMaxX(),0,0])
+      rotate([0,-90,0])
+      ChamferedCircularHole(r1=barrelGasRadius+0.007, r2=chamferRadius,
+                            h=lowerLength,
+                            chamferTop=false, teardropBottom=true);
     
       // Barrel Hole
       translate([ReceiverLugFrontMinX()+ManifoldGap(),0,0])
@@ -188,7 +215,7 @@ module BARBB_LowerReceiver(extraFront=0,wall=tube_wall) {
       // Gas Block Hole
       translate([ReceiverLugFrontMinX()-ManifoldGap(),0,0])
       rotate([0,90,0])
-      cylinder(r=(0.75/2)+0.01, h=lowerLength);
+      cylinder(r=barrelGasRadius+0.01, h=lowerLength);
       
       // Chamfer the gas block entrance hole
       translate([LowerMaxX(),0,0])
@@ -200,12 +227,8 @@ module BARBB_LowerReceiver(extraFront=0,wall=tube_wall) {
   }
 }
 
-module BARBB_UpperReceiver(pinRadius=0.125/2, pinHeight=0.09, pinDepth=0.162, magwell=false) {
-  camPinLockedMinX = (boltLockLengthDiff)
-                     -camPinOffset
-                     -camPinDiameter;
+module BARBB_UpperReceiver(magwell=false) {
   
-  upperMinX = -upperLength+barrelExtensionLength;
   
   render()
   difference() {
@@ -213,44 +236,19 @@ module BARBB_UpperReceiver(pinRadius=0.125/2, pinHeight=0.09, pinDepth=0.162, ma
     union() {
 
       // Barrel section
-      difference() {
-        union() {
-          translate([barrelExtensionLength,0,barrelZ])
-          rotate([0,90,0])
-          ChamferedCylinder(r1=barrelExtensionRadius+barrel_wall, r2=chamferRadius,
-                            h=upperLength);
-      
-          // Square Tube Body
-          translate([barrelExtensionLength,
-                     -(tube_offset/2)-tube_wall,
-                     tube_offset+tube_wall+barrel_offset])
-          rotate([0,90,0])
-          ChamferedCube([tube_offset+tube_wall+barrel_offset,
-                         tube_offset+(tube_wall*2),
-                         upperLength], r=chamferRadius);
-        }
-        
-        translate([upperLength+boltLockLengthDiff,0,barrelZ])
-        rotate([0,-90,0])
-        AR15_Bolt(camPinTravel=true, camPinTravelChamferBack=true,
-                  teardrop=false, firingPinRetainer=false);
-      }
-      
-      // Bolt w/ Cam Pin Linear Section Support
       translate([barrelExtensionLength,0,barrelZ])
       rotate([0,90,0])
-      hull() {
-        rotate(180-camPinAngleExtra)
-        translate([0,-tube_wall-(camPinSquareWidth/2),0])
-        ChamferedCube([boltSleeveRadius+camPinSquareHeight+barrel_wall,
-                       camPinSquareWidth+(tube_wall*2),
-                       upperLength-barrelExtensionLength+camPinLockedMinX-camPinShelfLength-0.01],
-                      r=chamferRadius);
-        
-        ChamferedCylinder(r1=barrelExtensionRadius+barrel_wall,
-                          r2=chamferRadius,
-                           h=upperLength-barrelExtensionLength+camPinLockedMinX-camPinShelfLength-0.01);
-      }
+      ChamferedCylinder(r1=barrelExtensionRadius+barrel_wall, r2=chamferRadius,
+                        h=upperLength);
+  
+      // Square Tube Body
+      translate([barrelExtensionLength,
+                 -(tube_offset/2)-tube_wall,
+                 tube_offset+tube_wall+barrel_offset])
+      rotate([0,90,0])
+      ChamferedCube([tube_offset+tube_wall+barrel_offset,
+                     tube_offset+(tube_wall*2),
+                     upperLength], r=chamferRadius);
       
       if (magwell)
       translate([magwellOffset,0,barrelZ])
@@ -295,75 +293,30 @@ module BARBB_UpperReceiver(pinRadius=0.125/2, pinHeight=0.09, pinDepth=0.162, ma
       rotate([0,90,0])
       HoleChamfer(r1=boltSleeveRadius+0.015, r2=chamferRadius, teardrop=true);
     
-      // Bolt Head Passage
-      translate([tube_offset+barrel_offset-ManifoldGap(),0])
-      rotate([0,-90,0])
-      cylinder(r=boltHeadRadius+0.01, h=upperLength+ManifoldGap(2));
-    
-      // Bolt Sleeve Passage
+      // Bolt Passage
       translate([-barrelExtensionLandingHeight+ManifoldGap(),0])
       rotate([0,-90,0])
       cylinder(r=boltSleeveRadius+0.015,
                h=upperLength+ManifoldGap(2));
       
-      // Bolt Sleeve Taper
+      // Bolt  Taper
       translate([-barrelExtensionLandingHeight-ManifoldGap(),0])
       rotate([0,90,0])
       cylinder(r1=boltSleeveRadius+0.015, r2=boltHeadRadius+0.008,
                h=(barrelExtensionLandingHeight/2)+ManifoldGap(2));
-      
-      // Barrel Extension Locating Pin Cutout
-      translate([barrelExtensionLength-pinDepth,-pinRadius,-barrelExtensionRadius-pinHeight])
-      cube([pinDepth+ManifoldGap(),pinRadius*2,pinHeight+barrelExtensionRadius]);
-      
-      // Barrel Extension Cutout
-      rotate([0,90,0])
-      cylinder(r=barrelExtensionRadius+0.007,
-               h=barrelExtensionLength+ManifoldGap());
-
-      // Ejection Port
-      linear_extrude(height=barrelExtensionRadius+barrel_wall+ManifoldGap()) {
-        
-        // Printable tip
-        translate([-(ejectionPortWidth/2)-barrelExtensionLandingHeight,0])
-        rotate(-45)
-        square([ejectionPortWidth*sqrt(2)/2,ejectionPortWidth*sqrt(2)/2]);
-        
-        // Main ejection port section
-        translate([camPinLockedMinX,0,0])
-        translate([camPinDiameter-barrelExtensionLandingHeight,-ejectionPortWidth/2,0])
-        square([abs(camPinLockedMinX)-camPinDiameter, ejectionPortWidth]);
-        
-        // Round bottom edges
-        translate([camPinLockedMinX+camPinDiameter,0,0])
-        for (m = [0,1]) mirror([0,m])
-        rotate(-90)
-        RoundedBoolean(edgeOffset=-ejectionPortWidth/2, r=chamferRadius, teardrop=true);
-      }
-
-      // Ejection Port  Chamfer
-      translate([0, 0, barrelExtensionRadius+barrel_wall])
-      translate([camPinLockedMinX+camPinDiameter,0,0])
-      intersection() {
-      
-        // Chamfer the left and righ edges
-        rotate([0,90,0])
-        linear_extrude(height=abs(camPinLockedMinX)) {
-          for (m = [0,1]) mirror([0,m])
-          rotate(-90)
-          RoundedBoolean(edgeOffset=-ejectionPortWidth/2, r=barrel_wall, teardrop=false);
-          
-          square([barrel_wall*2, barrel_wall*2], center=true);
-        }
-        
-        rotate([0,90,0])
-        cylinder(r1=abs(camPinLockedMinX/2), r2=0, h=abs(camPinLockedMinX));
-      }
-      
-      translate([boltLockLengthDiff,0,0])
+    
+      // Bolt Head Passage
+      translate([tube_offset+barrel_offset-ManifoldGap(),0])
       rotate([0,-90,0])
-      AR15_Bolt(camPinTravel=true, camPinTravelChamferBack=false,
-                teardrop=false, firingPinRetainer=false);
+      cylinder(r=boltHeadRadius+0.01, h=upperLength+ManifoldGap(2));
+      
+      rotate([0,90,0])
+      AR15_Barrel(clearance=0.007);
+      
+      translate([boltLockedMaxX,0,0])
+      rotate([0,-90,0])
+      AR15_Bolt(clearance=0.05, camPin=false);
+
     }
   }
 }
@@ -382,7 +335,7 @@ module BARBB_CamPinCutout(clearance=0.01, chamferBack=false) {
     translate([0,-(camPinSquareWidth/2)-clearance,0])
     cube([camPinSquareOffset+camPinSquareHeight+clearance,
           camPinSquareWidth+clear2,
-          boltLength-camPinOffset+camPinDiameter+boltExtraTravel+clearance]);
+          abs(stockMinX-camPinLockedMaxX)+ManifoldGap()]);
     
     // Chamfered cam locking slot
     translate([0,0,camPinDiameter])
@@ -430,29 +383,53 @@ module BARBB_CamPinCutout(clearance=0.01, chamferBack=false) {
   }
 }
 
+module BARBB_HammerCutOut() {
+  
+  // X-Zero on the firing pin's back face
+  translate([hammerMinX,-hammerWidth/2,tubeCenterZ-(hammerWidth/2)]) {
+    
+    // Hammer linear track
+    cube([abs(hammerMaxX-hammerMinX),
+                    hammerWidth,
+                    barrelZ-tubeCenterZ+(hammerWidth/2)+firingPinRadius], r=chamferRadius);
+    
+    
+    // Hammer rotary track
+    rotate([0,90,0])
+    linear_extrude(height=hammerWidth)
+    rotate(-90)
+    semicircle(od=((barrelZ-tubeCenterZ+(hammerWidth/2)+firingPinRadius)*2), angle=90);
+    
+    // Hammer rotary track, rounded inside corner)
+    translate([hammerWidth,0,0])
+    linear_extrude(height=barrelZ-tubeCenterZ+(hammerWidth/2)+firingPinRadius)
+    rotate(180)
+    RoundedBoolean(edgeOffset=0, edgeSign=-1, r=hammerWidth);
+  }
+}
 
 module BARBB_Bolt(clearance=0.01) {
   chamferClearance = 0.01;
   
-  translate([-upperLength+barrelExtensionLength-handleLength,0,barrelZ])
-  rotate([0,90,0])
   render()
   difference() {
+    
+    translate([stockMinX,0,barrelZ])
+    rotate([0,90,0])
     union() {
       
       // Body
-      translate([0,0,-handleOffset])
       ChamferedCylinder(r1=boltSleeveRadius,
                         r2=chamferRadius,
-                        h=barbbBoltLength+handleOffset);
+                        h=barbbBoltLength);
       
       // Lever
-      translate([-barrelExtensionRadius,-(tube_wall*2)-(tube_offset/2),-handleOffset])
+      translate([-barrelExtensionRadius,-(tube_wall*2)-(tube_offset/2),stockWall])
       ChamferedCube([barrelZ,tube_wall,handleLength-chamferClearance], r=chamferRadius);
       
       // Lever Support
-      translate([-barrelExtensionRadius,-(tube_wall*2)-(tube_offset/2),-handleOffset])
-      ChamferedCube([barrelExtensionRadius+barrel_offset-tube_wall-0.01,
+      translate([-boltSleeveRadius,-(tube_wall*2)-(tube_offset/2),stockWall])
+      ChamferedCube([boltSleeveDiameter,
                      (tube_wall*2)+(tube_offset/2)+chamferRadius,
                      handleLength-chamferClearance],
                     r=chamferRadius);
@@ -471,97 +448,132 @@ module BARBB_Bolt(clearance=0.01) {
                      camPinShelfLength-clearance], r=camPinSquareHeight/3);
     }
     
-    translate([0,0,barbbBoltLength+barrelExtensionLandingHeight+(boltLockLengthDiff)])
-    rotate([180,0,180])
+    
+    // Firing Pin Rear Hole Chamfer
+    translate([stockMinX,0,barrelZ])
+    rotate([0,90,0])
+    HoleChamfer(r1=firingPinRadius+(clearance*2), r2=chamferRadius, teardrop=true);
+    
+    translate([boltLockedMaxX,0,barrelZ])
+    rotate([0,-90,0])
     AR15_Bolt();
     
-    translate([0,0,barbbBoltLength+barrelExtensionLandingHeight-boltLockedLength-firingPinExtension-hammerTravel]) {
+    // Hammer Track
+    translate([stockMinX,0,barrelZ])
+    rotate([0,90,0])
+    translate([0,0,barbbBoltLength+barrelExtensionLandingHeight-boltLockedLength-firingPinExtension-hammerTravel+hammerWidth]) {
     
       // Hammer Pin Cocking Ramp
       translate([0,0,-hammerWidth])
       intersection() {
         
         linear_extrude(height=hammerTravel+hammerWidth,
-                        twist=(camPinAngle+camPinAngleExtra),
-                       slices=$fn)
-        rotate(camPinAngle+camPinAngleExtra)
+                        twist=(camPinAngleExtra),
+                       slices=$fn*2)
+        rotate(camPinAngleExtra)
         translate([0,-hammerWidth*3.5])
         square([barrel_offset, hammerWidth*4]);
-        
-        translate([-hammerWidth/2,-hammerWidth/2,0])
-        linear_extrude(height=hammerTravel+hammerWidth)
-        rotate(camPinAngleExtra)
-        semicircle(od=(barrelExtensionRadius+barrel_wall)*3,
-                   angle=camPinAngleExtra);
+      
+        linear_extrude(height=hammerTravel+(hammerWidth*2))
+        translate([barrelZ,0])
+        rotate(180)
+        semicircle(od=(barrelZ+firingPinRadius)*2, angle=90);
       }
     
       // Hammer travel
       translate([0,-(hammerWidth/2), -hammerWidth])
       cube([barrel_offset, hammerWidth, hammerTravel+hammerWidth]);
-      
-      translate([0,-hammerWidth/2, -hammerWidth])
-      cube([barrel_offset, barrel_offset, hammerWidth/2]);
     }
   }
+}
+
+module BARBB_Hammer() {
+  color("Orange")
+  translate([0,0,tubeCenterZ])
+  rotate([0,-90,0])
+  cylinder(r=hammerWidth/2,
+           h=-ReceiverLugFrontMinX()
+            +barrelGasLength
+            +abs(hammerMinX)
+            -ManifoldGap());
+  
+  color("Red")
+  translate([ReceiverLugFrontMinX()-barrelGasLength+hammerMinX,0,tubeCenterZ])
+  translate([0, -hammerWidth/2, -hammerWidth/2])
+  cube([hammerWidth, hammerWidth, barrelZ-tubeCenterZ+(hammerWidth/2)]);
 }
 
 module BARBB_Stock(topDiameter=tube_offset+(tube_wall*2), bottomDiameter=1,
-                   length=0, extend=2.5, wall=0.25) {
-  translate([0,0,tube_wall+(tube_offset/2)])
-  rotate([0,90,0])
+                   length=2, wall=0.25) {
+                     
+  echo("stockLength = ", stockLength);
+
   render()
   difference() {
+    
+    translate([stockMinX,0,0])
+    rotate([0,90,0])
     hull() {
-      translate([-(topDiameter/2), -topDiameter/2,-ManifoldGap()])
-      ChamferedCube([topDiameter, topDiameter, extend+ManifoldGap()], r=chamferRadius);
       
+      // Square Tube Sleeve
+      translate([-tubeCenterZ-(topDiameter/2), -topDiameter/2,-ManifoldGap()])
+      ChamferedCube([topDiameter, topDiameter, stockLength+ManifoldGap()], r=chamferRadius);
+      
+      // Buttplate (optional)
       if (length>0)
       translate([length,0,0])
       ChamferedCylinder(r1=bottomDiameter/2, r2=chamferRadius, h=wall);
+      
+      // Bolt Linear Travel Support
+      translate([-barrelZ,0,0])
+      union() {
+        rotate(180-camPinAngleExtra)
+        translate([0,-tube_wall-(camPinSquareWidth/2),0])
+        ChamferedCube([boltSleeveRadius+camPinSquareHeight+barrel_wall,
+                       camPinSquareWidth+(tube_wall*2),
+                       stockLength],
+                      r=chamferRadius);
+        
+        ChamferedCylinder(r1=barrelExtensionRadius+barrel_wall,
+                          r2=chamferRadius,
+                           h=stockLength);
+      }
+    }
+      
+    translate([boltLockedMaxX,0,barrelZ])
+    rotate([0,-90,0]) {
+      AR15_Bolt(camPin=false, teardrop=false, firingPinRetainer=false);
+      
+      BARBB_CamPinCutout(chamferBack=true);
     }
     
-    // Bolt track
-    translate([-(tube_offset/2)-barrel_offset,0,-ManifoldGap()])
-    cylinder(r=boltSleeveRadius+0.01, h=extend+ManifoldGap(2));
+    // Bolt Track
+    translate([stockMinX-ManifoldGap(),0,barrelZ])
+    rotate([0,90,0])
+    ChamferedCircularHole(r1=boltSleeveRadius+0.01, r2=chamferRadius,
+                           h=stockLength+ManifoldGap(2));
     
-    // Square Tube
-    translate([0,0,1.375]) {
-    ChamferedSquareHole(side=tube_width, length=extend, center=true,
-                         chamferTop=true, chamferBottom=false, chamferRadius=chamferRadius,
-                         corners=true, cornerRadius=0.0625);
-    
-      // Hammer linear track
-      mirror([1,0,1])
-      translate([-hammerWidth-ManifoldGap(),-hammerWidth/2,-(hammerWidth/2)])
-      cube([hammerTravel+(hammerWidth*2)+ManifoldGap(),
-                      hammerWidth,
-                      barrel_offset+hammerWidth], r=chamferRadius);
-      
-      // Hammer rotary track, rounded inside corner)
-      translate([hammerWidth/2,-hammerWidth/2,-hammerWidth/2])
-      rotate([0,-90,0])
-      linear_extrude(height=(hammerTravel+(hammerWidth*3)*2))
-      rotate(180)
-      RoundedBoolean(edgeOffset=hammerWidth, edgeSign=-1, r=hammerWidth);
-      
-      
-      // Hammer rotary track (old and busted)
-      translate([hammerWidth/2,0,-hammerTravel-hammerWidth])
-      linear_extrude(height=hammerWidth)
-      rotate(-90)
-      semicircle(od=(hammerTravel+(hammerWidth*3)*2), angle=90);
-    }
+    // Square Tube Hole
+    translate([-boltLockedMinX,0,tubeCenterZ])
+    rotate([0,90,0])
+    translate([0,0,1.375])
+    ChamferedSquareHole(side=tube_width, length=stockLength, center=true,
+                       chamferTop=true, chamferBottom=false, chamferRadius=chamferRadius,
+                       corners=true, cornerRadius=0.0625);
     
     // Side Bolts
+    //translate([-boltLockedMinX,0,tubeCenterZ])
     for (m = [0,1]) mirror([0,m,0])
-    for (z = [extend-0.5])
-    translate([0,(tube_offset/2)+tube_wall,z])
+    for (x = [0.5, 1.5])
+    translate([stockMinX+stockLength-x,0,tubeCenterZ])
     rotate([90,-90,0])
     FlatHeadBolt();
+    
+    BARBB_HammerCutOut();
   }
 }
 
-module BARBB_Foregrip(topDiameter=tube_offset+(tube_wall*2), bottomDiameter=1, length=1.5, extend=2, wall=0.25) {
+module BARBB_Foregrip(topDiameter=tube_offset+(tube_wall*2), bottomDiameter=1, length=1.5, extend=3, wall=0.25) {
   translate([0,0,tube_wall+(tube_offset/2)])
   rotate([0,90,0])
   render()
@@ -588,9 +600,12 @@ module BARBB_Foregrip(topDiameter=tube_offset+(tube_wall*2), bottomDiameter=1, l
   }
 }
 
-module AR15_Bolt(camPinTravel=false, camPinTravelChamferBack=false, firingPinRetainer=true,
-                 extraFiringPin=hammerTravel+hammerWidth+handleOffset,
+module AR15_Bolt(clearance=0.007, camPin=true, firingPinRetainer=true,
+                 extraFiringPin=abs(stockMinX), // Ugly, but it'll do
                  teardrop=true) {
+  clear2 = clearance*2;
+               
+  color("Gold")
   render()
   union() {
     
@@ -598,49 +613,41 @@ module AR15_Bolt(camPinTravel=false, camPinTravelChamferBack=false, firingPinRet
     cylinder(r=boltHeadRadius, h=boltLugLength);
     
     // Bolt Cam Pin
+    if (camPin)
     translate([0,0,camPinOffset+camPinRadius])
     rotate([0,0,-camPinAngle])
     rotate([0,90,0])
     linear_extrude(height=camPinSquareOffset+camPinSquareHeight+ManifoldGap())
     if (teardrop)
-      Teardrop(r=camPinRadius+0.005);
+      Teardrop(r=camPinRadius+clearance);
     else
-      circle(r=camPinRadius+0.005);
-    
-    if (camPinTravel)
-    BARBB_CamPinCutout(chamferBack=camPinTravelChamferBack);
+      circle(r=camPinRadius+clearance);
         
     // Front
     translate([0,0,boltLugLength])
-    cylinder(r=boltFrontRadius+0.01, h=boltFrontLength+ManifoldGap());
+    cylinder(r=boltFrontRadius+clearance, h=boltFrontLength+ManifoldGap());
     
     // Front Chamfer
     translate([0,0,barrelExtensionLandingHeight])
-    HoleChamfer(r1=boltFrontRadius+0.01, r2=chamferRadius, teardrop=false);
+    HoleChamfer(r1=boltFrontRadius+clearance, r2=chamferRadius, teardrop=false);
     
     // Middle
-    cylinder(r=boltMiddleRadius+0.015, h=boltMiddleLength+ManifoldGap(2));
+    cylinder(r=boltMiddleRadius+clearance, h=boltMiddleLength+ManifoldGap(2));
     
     // Back
     translate([0,0,-ManifoldGap()])
-    cylinder(r=boltBackRadius+0.015, h=boltLength+ManifoldGap(2));
+    cylinder(r=boltBackRadius+clearance, h=boltLength+ManifoldGap(2));
     
     // Firing Pin-to-bolt-back taper
     translate([0,0,boltLength])
     rotate([180,0,0])
-    cylinder(r=firingPinRadius+0.025, r2=boltBackRadius+0.01,
+    cylinder(r=firingPinRadius+clear2, r2=boltBackRadius+clearance,
             h=firingPinRadius+ManifoldGap());
     
     // Firing Pin
     color("Silver")
     translate([0,0,boltLength-ManifoldGap()])
-    cylinder(r=firingPinRadius+0.025, h=firingPinExtension+extraFiringPin+ManifoldGap(2));
-    
-    // Firing Pin Chamfer
-    if (extraFiringPin>0)
-    translate([0,0,boltLength+firingPinExtension+extraFiringPin-ManifoldGap()])
-    rotate([0,180,0])
-    HoleChamfer(r1=firingPinRadius+0.025, r2=chamferRadius, teardrop=true);
+    cylinder(r=firingPinRadius+clear2, h=firingPinExtension+extraFiringPin+ManifoldGap(2));
     
     // Firing Pin Retainer
     if (firingPinRetainer)
@@ -654,47 +661,84 @@ module AR15_Bolt(camPinTravel=false, camPinTravelChamferBack=false, firingPinRet
   }
 }
 
+module AR15_Barrel(pinRadius=0.125/2, pinHeight=0.09, pinDepth=0.162, clearance=0.01) {
+  color("DimGrey")
+  render() union() {
+    
+    // Barrel Extension
+    cylinder(r=barrelExtensionRadius+clearance, h=barrelExtensionLength+ManifoldGap());
+    
+    // Barrel Locating Pin
+    translate([barrelExtensionRadius-pinHeight,-pinRadius,barrelExtensionLength-pinDepth])
+    cube([pinHeight*2,pinRadius*2,pinDepth+ManifoldGap()]);
+    
+    // Barrel Extension Lip
+    translate([0,0,barrelExtensionLength])
+    cylinder(r=barrelExtensionLipRadius+clearance, h=barrelExtensionLipLength);
+    
+    // Barrel, up to the gas block
+    cylinder(r=barrelChamberRadius+clearance, h=barrelGasLength+ManifoldGap());
+    
+    // Barrel, from the gas block on
+    cylinder(r=0.75/2, h=barrelLength);
+  }
+}
 
-translate([LowerMaxX()+3,0,0])
-BARBB_Foregrip();
 
-translate([ReceiverLugRearMinX()-4.5,0,0]) {
+// Lower/Front-end
+translate([-ReceiverLugFrontMinX()+barrelGasLength,0,0]) {
+  translate([LowerMaxX()+3,0,0])
+  BARBB_Foregrip();
+
+  color("Tan")
+  render() DebugHalf()
+  BARBB_LowerReceiver();
+
+  Lower(showReceiverLugBolts=true,showGuardBolt=true, showHandleBolts=true,
+        showTrigger=true, 
+        searLength=tubeCenterZ+abs(SearPinOffsetZ()) + SearTravel());
+  
+  BARBB_Hammer();
+}
+
+// Upper/Rear-end
+{
+  
+  translate([0,0,barrelZ])
+  rotate([0,90,0])
+  AR15_Barrel();
   
   // Hammer Mock
-  translate([-upperLength+barrelExtensionLength-handleLength,0,barrelZ])
-  rotate([0,90,0])
-  translate([0,0,barbbBoltLength+barrelExtensionLandingHeight-boltLockedLength-firingPinExtension-hammerTravel])
-  translate([0,-(hammerWidth/2), -hammerWidth])
-  %cube([barrel_offset, hammerWidth, hammerTravel+hammerWidth]);
+  *translate([hammerMinX,-hammerWidth/2,tubeCenterZ-(hammerWidth/2)])
+  %cube([hammerWidth+hammerTravel+hammerOvertravel, hammerWidth, barrelZ-tubeCenterZ+(hammerWidth/2)]);
 
-  translate([-upperLength+barrelExtensionLength-handleLength-handleOffset,0,0]) {
-  
-    // Square Tube
-    color("Silver")
-    translate([1.375,-tube_offset/2,tube_wall])
-    cube([24, tube_offset, tube_offset]);
-
-    //render() DebugHalf()
-    BARBB_Stock();
-  }
-  
-  translate([(boltLockLengthDiff),0,barrelZ])
+  translate([boltLockedMaxX,0,barrelZ])
   rotate([0,-90,0])
   AR15_Bolt(teardrop=false, firingPinRetainer=false, extraFiringPin=0);
   
-  color("Green")
-  //render() DebugHalf()
+  color("Lime", 0.25)
+  render() DebugHalf()
   BARBB_Bolt();
   
-  color("Tan")
-  //render() DebugHalf()
+  color("Tan", 0.75)
+  render() DebugHalf()
   BARBB_UpperReceiver(magwell=false);
+  
+  color("Olive", 0.5)
+  render() DebugHalf()
+  BARBB_Stock();
+  
+  // Square Tube
+  color("Silver", 0.5)
+  translate([hammerMaxX, ManifoldGap(), tubeCenterZ])
+  render() DebugHalf()
+  rotate([0,90,0])
+  linear_extrude(height=26)
+  difference() {
+    square(tube_width, center=true);
+    square(tube_width-0.25, center=true);
+  };
 }
-
-color("Tan")
-BARBB_LowerReceiver();
-
-Lower(showTrigger=false);
 
 
 // Hammer block
