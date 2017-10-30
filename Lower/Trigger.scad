@@ -39,14 +39,14 @@ function SearTravel() = 0.25;
 function TriggerTravel() = SearTravel()*1.5;
 function SearLength() = 1.5 + abs(SearPinOffsetZ()) + SearTravel();
 
-module Sear() {
+module Sear(length=SearLength()) {
 
   // Sear Rod
   translate([0,0,-SearTravel()*Animate(ANIMATION_STEP_TRIGGER)])
   translate([0,0,SearTravel()*Animate(ANIMATION_STEP_TRIGGER_RESET)])
   translate([0,0,SearPinOffsetZ()-SearBottomOffset()])
   color("LightGreen")
-  Rod(rod=SearRod(), length=SearLength());
+  Rod(rod=SearRod(), length=length);
 
   translate([0,0,-SearTravel()*Animate(ANIMATION_STEP_TRIGGER)])
   translate([0,0,SearTravel()*Animate(ANIMATION_STEP_TRIGGER_RESET)])
@@ -296,8 +296,8 @@ module Trigger(left=true, right=true) {
   }
 }
 
-module TriggerGroup() {
-  Sear();
+module TriggerGroup(searLength=SearLength()) {
+  Sear(length=searLength);
   SearSupportTab();
   Trigger(left=true, right=true);
 }

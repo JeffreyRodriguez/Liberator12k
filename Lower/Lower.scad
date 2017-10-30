@@ -282,7 +282,9 @@ module LowerMiddle() {
 module Lower(showReceiverLugs=false, showReceiverLugBolts=false,
             showGuardBolt=false, showHandleBolts=false,
             showTrigger=false, showTriggerLeft=true, showTriggerRight=true,
-            showMiddle=true, showLeft=true, showRight=true, alpha=0.5) {
+            showMiddle=true, showLeft=true, showRight=true,
+            searLength=SearLength(),
+            alpha=0.5) {
 
   // Trigger Guard Center
   if (showMiddle)
@@ -290,7 +292,7 @@ module Lower(showReceiverLugs=false, showReceiverLugBolts=false,
 
   // Trigger
   if (showTrigger) {
-    TriggerGroup(left=showTriggerLeft, right=showTriggerRight);
+    TriggerGroup(left=showTriggerLeft, right=showTriggerRight, searLength=searLength);
   }
 
   if (showReceiverLugs) {
