@@ -162,7 +162,7 @@ module FlatHeadBolt(diameter=0.193, headDiameter=0.353, extraHead=1, length=0.39
   }
 }
 
-module BARBB_LowerReceiver(extraFront=0,wall=tube_wall) {
+module BARBB_LowerReceiver(clearance=0.007, extraFront=0,wall=tube_wall) {
   
   render()
   difference() {
@@ -176,20 +176,22 @@ module BARBB_LowerReceiver(extraFront=0,wall=tube_wall) {
           rotate([0,-90,0])
           ChamferedCylinder(r1=0.5+wall,
                             r2=chamferRadius,
-                            h=LowerMaxX());
+                            h=LowerMaxX()-ReceiverLugFrontMinX());
           
           translate([0, -tubeCenterZ, 0])
           rotate([0,-90,0])
           ChamferedCube([tube_width+(tube_wall*2),
                          tube_width+(tube_wall*2),
-                         LowerMaxX()], r=chamferRadius, center=false);
+                         LowerMaxX()-ReceiverLugFrontMinX()],
+                        r=chamferRadius, center=false);
         
           // Flat top for pic rail
           translate([0, -(tube_width/2), tube_width+tube_wall+barrel_offset])
           rotate([0,-90,0])
           ChamferedCube([0.75+0.1,
                          tube_width,
-                         LowerMaxX()], r=chamferRadius, center=false);
+                         LowerMaxX()-ReceiverLugFrontMinX()],
+                        r=chamferRadius, center=false);
         }
         
         // Square Tube Body
@@ -230,18 +232,10 @@ module BARBB_LowerReceiver(extraFront=0,wall=tube_wall) {
       
       translate([LowerMaxX(),0,0])
       rotate([0,-90,0])
-      ChamferedCircularHole(r1=barrelGasRadius+0.007, r2=chamferRadius,
-                            h=lowerLength,
-                            chamferTop=false, teardropBottom=true);
+      ChamferedCircularHole(r1=barrelGasRadius+clearance, r2=chamferRadius,
+                            h=LowerMaxX()-ReceiverLugFrontMinX(),
+                            chamferTop=true, teardropBottom=true);
     
-      // Barrel Hole
-      translate([ReceiverLugFrontMinX()+ManifoldGap(),0,0])
-      rotate([0,-90,0])
-      cylinder(r=0.5, h=lowerLength);
-      
-      // Chamfer the barrel entrance hole
-      rotate([0,90,0])
-      HoleChamfer(r1=0.5, r2=chamferRadius, teardrop=true);
       
       // Gas Block Hole
       translate([ReceiverLugFrontMinX()-ManifoldGap(),0,0])
