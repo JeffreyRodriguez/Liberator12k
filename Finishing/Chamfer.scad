@@ -21,11 +21,19 @@ module RoundedBoolean(edgeOffset=1, edgeSign=-1,
 
 }
 
-module HoleChamfer(r1=0.5, r2=0.125, teardrop=false) {
+module HoleChamfer(r1=0.5, r2=0.125, teardrop=false, edgeSign=1) {
   rotate_extrude()
   RoundedBoolean(r=r2,
                  edgeOffset=r1,
                  edgeSign=1,
+                 teardrop=teardrop);
+}
+
+module CircularOuterEdgeChamfer(r1=0.5, r2=0.125, teardrop=false) {
+  rotate_extrude()
+  RoundedBoolean(r=r2,
+                 edgeOffset=r1,
+                 edgeSign=-1,
                  teardrop=teardrop);
 }
 
@@ -141,6 +149,7 @@ render() {
 
 module ChamferedSquareHole(side=1, length=1, center=true,
                            chamferTop=true, chamferBottom=true, chamferRadius=0.1,
+                           teardropTop=false, teardropBottom=true,
                            corners=true, cornerRadius=0.1) {
   render()
   union() {
@@ -161,15 +170,44 @@ module ChamferedSquareHole(side=1, length=1, center=true,
       
     // Chamfer the bottom
     if (chamferBottom)
-    SquareHoleEndChamfer(xy=side, r=chamferRadius, center=center);
+    SquareHoleEndChamfer(xy=side, r=chamferRadius, center=center, teardrop=teardropTop);
     
     // Chamfer the tube front
     if (chamferTop)
     translate([0,0,length])
     mirror([0,0,1])
-    SquareHoleEndChamfer(xy=side, r=chamferRadius, center=center, teardrop=true);
+    SquareHoleEndChamfer(xy=side, r=chamferRadius, center=center, teardrop=teardropBottom);
   }
 }
+
+module ChamferedCircularHole(r1=1, r2=0.1, h=1,
+                             chamferTop=true, chamferBottom=true,
+                             teardropBottom=true, teardropTop=false) {
+  union() {
+  
+    // Bottom Chamfer
+    if (chamferBottom)
+    HoleChamfer(r1=r1, r2=r2, teardrop=teardropBottom);
+    
+    // TopChamfer
+    if (chamferTop)
+    translate([0,0,h])
+    mirror([0,0,1])
+    HoleChamfer(r1=r1, r2=r2, teardrop=teardropTop);
+  
+    // Center
+    translate([0,0,-r2])
+    cylinder(r=r1, h=h+(r2*2));
+  }
+}
+
+module ChamferedToroidalCylinder(r1=1, r2=0.5, r3=0.1, h=1) {
+  difference() {
+    ChamferedCylinder(r1=r1, r2=r3, h=h);
+    ChamferedCircularHole(r1=r2, r2=r3, h=h);
+  }
+}
+
 
 translate([-1.5,0,0])
 ChamferedSquare(xy=[1,2]);
@@ -177,14 +215,16 @@ ChamferedSquare(xy=[1,2]);
 translate([-3,0,0])
 ChamferedCube(r=0.125);
 
-
 translate([0,-2,0]) {
   RoundedBoolean(teardrop=true, $fn=20);
+  
+  translate([0,-2,0])
+  CircularOuterEdgeChamfer(r1=0.5, r2=0.125, teardrop=false, $fn=20);
 
   translate([0,0,0])
   HoleChamfer($fn=20);
 
   // Chamfered Cylinder
-  translate([-1.5,0,0])
-  ChamferedCylinder(r1=0.5, r2=0.25, h=1, $fn=50);
+  translate([-2.5,0,0])
+  ChamferedToroidalCylinder(r1=1, r2=0.5, r3=0.1, h=1, $fn=50);
 }
