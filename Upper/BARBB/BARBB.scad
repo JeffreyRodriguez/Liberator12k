@@ -41,7 +41,7 @@ springLength = 3;
 barrelExtensionDiameter = 1;
 barrelExtensionRadius = barrelExtensionDiameter/2;
 barrelExtensionLength = 0.99;
-barrelExtensionLipDiameter=1.25;
+barrelExtensionLipDiameter=1.172;
 barrelExtensionLipRadius = barrelExtensionLipDiameter/2;
 barrelExtensionLipLength=0.125;
 barrelChamberDiameter = 1;
@@ -327,7 +327,7 @@ module BARBB_UpperReceiver(magwell=false) {
     
     translate([0,0,barrelZ])
     rotate([0,90,0])
-    AR15_Barrel(clearance=0.007);
+    AR15_Barrel(clearance=0.005);
   }
 }
 
@@ -341,15 +341,15 @@ module BARBB_CamPinCutout(clearance=0.01, chamferBack=false) {
   translate([0,0,camPinOffset])
   union() {
     
-    // Cam pin travel
+    // Cam pin linear travel
     translate([0,-(camPinSquareWidth/2)-clearance,0])
     cube([camPinSquareOffset+camPinSquareHeight+clearance,
           camPinSquareWidth+clear2,
           abs(stockMinX-camPinLockedMaxX)+ManifoldGap()]);
     
     // Cam pin rotation arc
-    translate([0,0,-chamferRadius-clearance-ManifoldGap()])
-    linear_extrude(height=(chamferRadius*2)+camPinDiameter+camPinShelfLength+clear2+ManifoldGap(2)) {
+    translate([0,0,-clearance-ManifoldGap()])
+    linear_extrude(height=camPinDiameter+camPinShelfLength+clear2+ManifoldGap(2)) {
       rotate(camPinSquareArc/2)
       semicircle(od=(camPinSquareOffset
                     +camPinSquareHeight
@@ -503,9 +503,10 @@ module BARBB_HammerSpringTrunnion(clearance=0.007) {
   echo("hammerSpringTrunnionLength", hammerSpringTrunnionLength);
   
   // Mock Spring
-  %translate([upperMaxX,0,tubeCenterZ])
+  %color("DimGrey", 0.8)
+  translate([upperMaxX,0,tubeCenterZ])
   rotate([0,90,0])
-  cylinder(r=springRadius*2, h=springLength);
+  cylinder(r=springRadius, h=springLength);
 
   difference() {
     
@@ -660,7 +661,7 @@ module BARBB_Stock(topDiameter=tube_width+(tube_wall*2), bottomDiameter=1,
     // Bolt Track
     translate([stockMinX-ManifoldGap(),0,barrelZ])
     rotate([0,90,0])
-    ChamferedCircularHole(r1=boltSleeveRadius+clear2, r2=barrel_wall,
+    ChamferedCircularHole(r1=boltSleeveRadius+clear2, r2=chamferRadius,
                            h=stockLength+ManifoldGap(2));
   
     // Bolt Lever Track
@@ -774,7 +775,7 @@ module AR15_Bolt(clearance=0.007, camPin=true, firingPinRetainer=true,
   }
 }
 
-module AR15_Barrel(pinRadius=0.125/2, pinHeight=0.09, pinDepth=0.162, clearance=0.01) {
+module AR15_Barrel(pinRadius=0.125/2, pinHeight=0.09, pinDepth=0.162, clearance=0.007) {
   color("DimGrey")
   render() union() {
     
