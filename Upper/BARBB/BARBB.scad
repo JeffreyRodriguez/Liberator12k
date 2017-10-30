@@ -111,15 +111,6 @@ handleLength=abs(hammerMinX-hammerMaxX)+firingPinExtension-hammerOvertravel;
 handleMinX = stockMinX;//+stockWall;
 
 
-module PicRailBolts() {
-  translate([ReceiverLugRearMinX()+(ReceiverLugRearLength()/2),0,
-             barrelZ+0.5])
-  for(x = [0,2.6])
-  translate([x,0,0])
-  NutAndBolt(bolt=Spec_BoltM4(), boltLength=10/25.4,
-              capHeightExtra=1, nutHeightExtra=0.5,
-              clearance=true, teardrop=true, teardropAngle=180);
-}
 
 // m5x10 flat head
 module FlatHeadBolt(diameter=0.193, headDiameter=0.353, extraHead=1, length=0.3955,
@@ -161,6 +152,105 @@ module FlatHeadBolt(diameter=0.193, headDiameter=0.353, extraHead=1, length=0.39
     }
   }
 }
+
+module PicRailBolts() {
+  translate([ReceiverLugRearMinX()+(ReceiverLugRearLength()/2),0,
+             barrelZ+0.5])
+  for(x = [0,2.6])
+  translate([x,0,0])
+  NutAndBolt(bolt=Spec_BoltM4(), boltLength=10/25.4,
+              capHeightExtra=1, nutHeightExtra=0.5,
+              clearance=true, teardrop=true, teardropAngle=180);
+}
+
+
+module BARBB_CamPinCutout(clearance=0.01, chamferBack=false) {
+  clear2 = clearance*2;
+  camPinSquareArc = 360/(PI*2*(barrelExtensionRadius+barrel_wall)/camPinSquareWidth);
+  
+  // Cam Pin cutout
+  render()
+  rotate(camPinAngleExtra)
+  translate([0,0,camPinOffset])
+  union() {
+    
+    // Cam pin linear travel
+    translate([0,-(camPinSquareWidth/2)-clearance,0])
+    cube([camPinSquareOffset+camPinSquareHeight+clearance,
+          camPinSquareWidth+clear2,
+          abs(stockMinX-camPinLockedMaxX)+ManifoldGap()]);
+    
+    // Cam pin rotation arc
+    translate([0,0,-clearance-ManifoldGap()])
+    linear_extrude(height=camPinDiameter+camPinShelfLength+clear2+ManifoldGap(2)) {
+      rotate(camPinSquareArc/2)
+      semicircle(od=(camPinSquareOffset
+                    +camPinSquareHeight
+                    +barrel_wall)*3,
+                 angle=camPinAngle+camPinAngleExtra+camPinSquareArc);
+      
+      // Cam Pin Square, locked position
+      rotate(-camPinAngleExtra-camPinAngle)
+      translate([0,-(camPinSquareWidth/2)-0.01])
+      square([camPinSquareOffset+camPinSquareHeight+barrel_wall, camPinSquareWidth+0.02]);
+      
+      // Cam Pin Square, Unlocked position
+      translate([0,-(camPinSquareWidth/2)-0.01])
+      square([camPinSquareOffset+camPinSquareHeight+barrel_wall, camPinSquareWidth+0.02]);
+    }
+  }
+}
+
+module BARBB_HammerCutOut(extraX=0) {
+  
+  // X-Zero on the firing pin's back face
+  translate([hammerMinX,-hammerWidth/2,tubeCenterZ-(hammerWidth/2)]) {
+    
+    // Hammer linear track
+    cube([abs(hammerMaxX-hammerMinX)+extraX,
+                    hammerWidth,
+                    barrelZ-tubeCenterZ+(hammerWidth/2)+firingPinRadius], r=chamferRadius);
+    
+    
+    // Hammer rotary track
+    rotate([0,90,0])
+    linear_extrude(height=hammerWidth)
+    rotate(-90)
+    semicircle(od=((barrelZ-tubeCenterZ+(hammerWidth/2)+firingPinRadius)*2), angle=90);
+    
+    // Hammer rotary track, rounded inside corner)
+    translate([hammerWidth,0,0])
+    linear_extrude(height=barrelZ-tubeCenterZ+(hammerWidth/2)+firingPinRadius)
+    rotate(180)
+    RoundedBoolean(edgeOffset=0, edgeSign=-1, r=hammerWidth);
+  }
+}
+
+module BARBB_ReceiverBolts(angle=0) {
+  
+  // Square Tube center axis
+  translate([0,0,tubeCenterZ]) {
+    
+    // Upper
+    translate([upperMinX,0,0])
+    for (xrz = [[0.5, 90, 0], [0.5, -90,0],
+                [1.25,90,0], [1.25,-90,0]])
+    rotate([xrz[1],0,0])
+    translate([xrz[0],0,-tubeCenterZ+xrz[2]])
+    rotate(angle)
+    FlatHeadBolt();
+  }
+  
+  
+  // Stock
+  for (m = [0,1]) mirror([0,m,0])
+  for (x = [0.5, 1.5])
+  translate([stockMinX+stockLength-x,tubeCenterZ,tubeCenterZ])
+  rotate([90,0,0])
+  rotate(angle)
+  FlatHeadBolt();
+}
+
 
 module BARBB_LowerReceiver(clearance=0.007, extraFront=0,wall=tube_wall) {
   
@@ -254,7 +344,6 @@ module BARBB_LowerReceiver(clearance=0.007, extraFront=0,wall=tube_wall) {
 
 module BARBB_UpperReceiver(magwell=false) {
   
-  
   render()
   difference() {
     translate([upperMinX,0,0])
@@ -322,68 +411,6 @@ module BARBB_UpperReceiver(magwell=false) {
     translate([0,0,barrelZ])
     rotate([0,90,0])
     AR15_Barrel(clearance=0.005);
-  }
-}
-
-module BARBB_CamPinCutout(clearance=0.01, chamferBack=false) {
-  clear2 = clearance*2;
-  camPinSquareArc = 360/(PI*2*(barrelExtensionRadius+barrel_wall)/camPinSquareWidth);
-  
-  // Cam Pin cutout
-  render()
-  rotate(camPinAngleExtra)
-  translate([0,0,camPinOffset])
-  union() {
-    
-    // Cam pin linear travel
-    translate([0,-(camPinSquareWidth/2)-clearance,0])
-    cube([camPinSquareOffset+camPinSquareHeight+clearance,
-          camPinSquareWidth+clear2,
-          abs(stockMinX-camPinLockedMaxX)+ManifoldGap()]);
-    
-    // Cam pin rotation arc
-    translate([0,0,-clearance-ManifoldGap()])
-    linear_extrude(height=camPinDiameter+camPinShelfLength+clear2+ManifoldGap(2)) {
-      rotate(camPinSquareArc/2)
-      semicircle(od=(camPinSquareOffset
-                    +camPinSquareHeight
-                    +barrel_wall)*3,
-                 angle=camPinAngle+camPinAngleExtra+camPinSquareArc);
-      
-      // Cam Pin Square, locked position
-      rotate(-camPinAngleExtra-camPinAngle)
-      translate([0,-(camPinSquareWidth/2)-0.01])
-      square([camPinSquareOffset+camPinSquareHeight+barrel_wall, camPinSquareWidth+0.02]);
-      
-      // Cam Pin Square, Unlocked position
-      translate([0,-(camPinSquareWidth/2)-0.01])
-      square([camPinSquareOffset+camPinSquareHeight+barrel_wall, camPinSquareWidth+0.02]);
-    }
-  }
-}
-
-module BARBB_HammerCutOut(extraX=0) {
-  
-  // X-Zero on the firing pin's back face
-  translate([hammerMinX,-hammerWidth/2,tubeCenterZ-(hammerWidth/2)]) {
-    
-    // Hammer linear track
-    cube([abs(hammerMaxX-hammerMinX)+extraX,
-                    hammerWidth,
-                    barrelZ-tubeCenterZ+(hammerWidth/2)+firingPinRadius], r=chamferRadius);
-    
-    
-    // Hammer rotary track
-    rotate([0,90,0])
-    linear_extrude(height=hammerWidth)
-    rotate(-90)
-    semicircle(od=((barrelZ-tubeCenterZ+(hammerWidth/2)+firingPinRadius)*2), angle=90);
-    
-    // Hammer rotary track, rounded inside corner)
-    translate([hammerWidth,0,0])
-    linear_extrude(height=barrelZ-tubeCenterZ+(hammerWidth/2)+firingPinRadius)
-    rotate(180)
-    RoundedBoolean(edgeOffset=0, edgeSign=-1, r=hammerWidth);
   }
 }
 
@@ -581,31 +608,6 @@ module BARBB_HammerGuide(clearance=0.015) {
   }
 }
 
-module BARBB_ReceiverBolts(angle=0) {
-  
-  // Square Tube center axis
-  translate([0,0,tubeCenterZ]) {
-    
-    // Upper
-    translate([upperMinX,0,0])
-    for (xrz = [[0.5, 90, 0], [0.5, -90,0],
-                [1.25,90,0], [1.25,-90,0]])
-    rotate([xrz[1],0,0])
-    translate([xrz[0],0,-tubeCenterZ+xrz[2]])
-    rotate(angle)
-    FlatHeadBolt();
-  }
-  
-  
-  // Stock
-  for (m = [0,1]) mirror([0,m,0])
-  for (x = [0.5, 1.5])
-  translate([stockMinX+stockLength-x,tubeCenterZ,tubeCenterZ])
-  rotate([90,0,0])
-  rotate(angle)
-  FlatHeadBolt();
-}
-
 module BARBB_Stock(topDiameter=tube_width+(tube_wall*2), bottomDiameter=1,
                   wall=0.25, clearance=0.01) {
                     
@@ -680,7 +682,7 @@ module BARBB_Stock(topDiameter=tube_width+(tube_wall*2), bottomDiameter=1,
   }
 }
 
-module BARBB_Foregrip(topDiameter=tube_width+(tube_wall*2), bottomDiameter=1, length=1.5, extend=3, wall=0.25) {
+module BARBB_Foregrip(topDiameter=tube_width+(tube_wall*2), bottomDiameter=1, length=2, extend=2, wall=0) {
   translate([0,0,tubeCenterZ])
   rotate([0,90,0])
   render()
@@ -694,9 +696,9 @@ module BARBB_Foregrip(topDiameter=tube_width+(tube_wall*2), bottomDiameter=1, le
     }
     
     // Square Tube cener axis
-    translate([0,0,-wall])
+    translate([0,0,-wall-ManifoldGap()])
     ChamferedSquareHole(side=tube_width, length=extend, center=true,
-                         chamferTop=true, chamferBottom=false, chamferRadius=chamferRadius,
+                         chamferTop=true, chamferBottom=true, chamferRadius=chamferRadius,
                          corners=true, cornerRadius=0.0625);
     
     // Side Bolts
