@@ -406,7 +406,7 @@ module BARBB_UpperReceiver(magwell=false) {
       translate([barrelExtensionLandingHeight,0,0])
       rotate([0,90,0])
       cylinder(r1=boltSleeveRadius+0.015, r2=boltHeadRadius+0.008,
-               h=boltSleeveRadius/4);
+               h=boltSleeveRadius/3);
     }
     
     translate([0,0,barrelZ])
@@ -602,9 +602,9 @@ module BARBB_HammerGuide(clearance=0.005) {
           
     // Lower Bolt Tracks
     for(m = [0,1]) mirror([0,m,0])
-    translate([ReceiverLugRearMaxX()-ManifoldGap(),(tubeInnerWidth/2)-(0.40-tube_wall)-clearance,tubeCenterZ-0.125])
+    translate([ManifoldGap(),(tubeInnerWidth/2)-0.34+tube_wall-clearance,tubeCenterZ-0.125])
     mirror([1,0,0])
-    cube([ReceiverLugRearMaxX()+hammerGuideLength+ManifoldGap(2),
+    cube([hammerGuideLength+ManifoldGap(2),
           tubeCenterZ,
           0.25]);
     
