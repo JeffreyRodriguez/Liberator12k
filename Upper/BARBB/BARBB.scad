@@ -2,6 +2,7 @@ use <../../Meta/Debug.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Components/Semicircle.scad>;
 use <../../Components/Teardrop.scad>;
+use <../../Components/T Lug.scad>;
 use <../../Finishing/Chamfer.scad>;
 use <../../Vitamins/Pipe.scad>;
 use <../../Vitamins/Square Tube.scad>;
@@ -175,7 +176,7 @@ module BARBB_CamPinCutout(clearance=0.01, chamferBack=false) {
   union() {
     
     // Cam pin linear travel
-    translate([0,-(camPinSquareWidth/2)-clearance,0])
+    translate([0,-(camPinSquareWidth/2)-clearance,ManifoldGap()])
     cube([camPinSquareOffset+camPinSquareHeight+clearance,
           camPinSquareWidth+clear2,
           abs(stockMinX-camPinLockedMaxX)+ManifoldGap()]);
@@ -616,8 +617,19 @@ module BARBB_HammerGuide(clearance=0.005) {
   }
 }
 
+module BARBB_Receiver_T_Lug(height=1+chamferRadius, cutter=false) {
+  render()
+  difference() {
+  
+    // T-Lug
+    translate([stockMinX+stockWall,0,chamferRadius])
+    translate([0,0,-height-ManifoldGap()])
+    T_Lug(length=2, height=height, clearVertical=true, cutter=cutter);
+  }
+}
+
 module BARBB_Stock(topDiameter=tube_width+(tube_wall*2), bottomDiameter=1,
-                  wall=0.25, clearance=0.01) {
+                  wall=0.25, clearance=0.008) {
                     
   clear2 = clearance*2;
                      
@@ -626,11 +638,10 @@ module BARBB_Stock(topDiameter=tube_width+(tube_wall*2), bottomDiameter=1,
 
   render()
   difference() {
-    
-    translate([stockMinX,0,0])
-    rotate([0,90,0])
     union() {
         
+      translate([stockMinX,0,0])
+      rotate([0,90,0])
       hull() {
 
         // Body
@@ -649,10 +660,14 @@ module BARBB_Stock(topDiameter=tube_width+(tube_wall*2), bottomDiameter=1,
                       r=chamferRadius);
       }
         
-        // Square Tube Sleeve
-        translate([-barrelZ, -topDiameter/2,-ManifoldGap()])
-        ChamferedCube([barrelZ, topDiameter,
-                        stockLength+ManifoldGap()], r=chamferRadius);
+      // Square Tube Sleeve
+      translate([stockMinX,0,0])
+      rotate([0,90,0])
+      translate([-barrelZ, -topDiameter/2,-ManifoldGap()])
+      ChamferedCube([barrelZ, topDiameter,
+                      stockLength+ManifoldGap()], r=chamferRadius);
+      
+      BARBB_Receiver_T_Lug();
     }
       
     translate([boltLockedMaxX,0,barrelZ])
@@ -680,7 +695,7 @@ module BARBB_Stock(topDiameter=tube_width+(tube_wall*2), bottomDiameter=1,
     // Square Tube Hole
     translate([hammerMaxX-ManifoldGap(),0,tubeCenterZ])
     rotate([0,90,0])
-    ChamferedSquareHole(side=tube_width, length=stockLength, center=true,
+    ChamferedSquareHole(side=tube_width+clear2, length=stockLength, center=true,
                        chamferTop=true, chamferBottom=false, chamferRadius=chamferRadius,
                        corners=true, cornerRadius=0.0625);
     
@@ -689,6 +704,25 @@ module BARBB_Stock(topDiameter=tube_width+(tube_wall*2), bottomDiameter=1,
     BARBB_HammerCutOut(extraX=1);
   }
 }
+
+module BARBB_Buttpad(topDiameter=tube_width+(tube_wall*2), bottomDiameter=1,
+                     length=2, extend=2+stockWall-ManifoldGap()) {
+  difference() {
+    translate([stockMinX,0,0])
+    rotate([0,90,0])
+    hull() {
+      translate([0.008, -topDiameter/2,-ManifoldGap()])
+      ChamferedCube([1+chamferRadius, topDiameter, extend+ManifoldGap()],
+                     r=chamferRadius);
+      
+      translate([length,0,0])
+      ChamferedCylinder(r1=bottomDiameter/2, r2=chamferRadius, h=extend/2);
+    }
+    
+    BARBB_Receiver_T_Lug(cutter=true);
+  }
+}
+  
 
 module BARBB_Foregrip(topDiameter=tube_width+(tube_wall*2), bottomDiameter=1,
                       length=2, extend=2, frontWall=0) {
@@ -716,6 +750,10 @@ module BARBB_Foregrip(topDiameter=tube_width+(tube_wall*2), bottomDiameter=1,
     rotate([90,-90,0])
     FlatHeadBolt();
   }
+}
+
+module BARBB_Bipod() {
+  
 }
 
 module AR15_Bolt(clearance=0.007, camPin=true, firingPinRetainer=true,
@@ -800,6 +838,10 @@ module AR15_Barrel(pinRadius=0.125/2, pinHeight=0.09, pinDepth=0.162, clearance=
     
     // Barrel, from the gas block on
     cylinder(r=0.75/2, h=barrelLength);
+    
+    // Suppressor
+    translate([0,0,barrelLength-0.5])
+    ChamferedCylinder(r1=(1.625/2)+clearance, r2=chamferRadius, h=9);
   }
 }
 
@@ -810,6 +852,8 @@ translate([0,0,barrelZ])
 rotate([0,90,0])
 AR15_Barrel();
 
+BARBB_Bipod();
+
 // Lower/Front-end
 translate([-ReceiverLugFrontMinX()+barrelGasLength,0,0])
 BARBB_Hammer();
@@ -817,42 +861,47 @@ BARBB_Hammer();
 translate([-ReceiverLugFrontMinX()+barrelGasLength,0,0])  
 BARBB_HammerGuide();
 
-translate([-ReceiverLugFrontMinX()+barrelGasLength,0,0])  
-translate([LowerMaxX()+3,0,0])
+color("Tan")
+translate([-ReceiverLugFrontMinX()+barrelGasLength-0.5,0,0])  
+translate([LowerMaxX()+5,0,0])
 BARBB_Foregrip();
 
 translate([-ReceiverLugFrontMinX()+barrelGasLength,0,0])
 Lower(showReceiverLugBolts=true,showGuardBolt=true, showHandleBolts=true,
         showTrigger=true, 
-        searLength=tubeCenterZ+abs(SearPinOffsetZ()) + SearTravel());
+        searLength=tubeCenterZ+abs(SearPinOffsetZ()) + SearTravel(), alpha=1);
 
 translate([-ReceiverLugFrontMinX()+barrelGasLength,0,0])
-color("Tan", 0.25)
+color("Tan")
 //render() DebugHalf()
 BARBB_LowerReceiver();
 
+color("Black")
 translate([boltLockedMaxX,0,barrelZ])
 rotate([0,-90,0])
 AR15_Bolt(teardrop=false, firingPinRetainer=false, extraFiringPin=0);
 
 BARBB_HammerSpringTrunnion();
 
-color("Salmon")
+color("Olive")
 //render() DebugHalf()
 BARBB_Bolt();
 
-color("Tan", 0.75)
+color("Tan")
 //render() DebugHalf()
 BARBB_UpperReceiver(magwell=false);
 
-color("Olive", 0.5)
+color("Olive")
+BARBB_Buttpad();
+
+color("Tan")
 //render() DebugHalf()
 BARBB_Stock();
 
 // Square Tube
-color("Silver", 0.5)
+color("Silver")
 translate([hammerMaxX, ManifoldGap(), tubeCenterZ])
-render() DebugHalf()
+//render() DebugHalf()
 rotate([0,90,0])
 linear_extrude(height=26)
 difference() {
@@ -882,7 +931,7 @@ BARBB_LowerReceiver(extraFront=0);
 rotate([0,-90,0])
 BARBB_UpperReceiver(extraRear=0);
 
-*!scale(25.4)
+!scale(25.4)
 rotate([0,-90,0])
 BARBB_Stock();
 
