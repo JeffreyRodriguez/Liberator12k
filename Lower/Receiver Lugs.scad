@@ -76,7 +76,7 @@ module ReceiverLugRear(extraTop=ManifoldGap(), cutter=false,
     translate([ReceiverLugRearMinX(),0,ReceiverLugRearZ()])
     T_Lug(length=ReceiverLugRearLength(),
             height=abs(ReceiverLugRearZ())+extraTop,
-            cutter=cutter);
+            cutter=cutter, clearVeritcal=false);
 
     // Grip Bolt Hole
     if (hole)
@@ -91,7 +91,7 @@ module ReceiverLugFront(cutter=false, clearance=UnitsImperial(0.007), extraTop=M
   mirror([1,0,0])
   T_Lug(length=ReceiverLugFrontLength(), tabWidth=1.25,
           height=abs(ReceiverLugFrontZ())+extraTop,
-          clearance=clearance,
+          clearance=clearance, clearVeritcal=false,
           cutter=cutter);
 }
 
