@@ -19,11 +19,11 @@ $fn=60;
 
 // Configured Values
 barrelLength = 16;
-hammerTravel = 0.5;
+hammerTravel = 1.5;
 hammerOvertravel=0.125;
-tube_wall = 0.25;
-barrel_wall = 0.25;
-barrel_offset = 1;
+tubeWall = 0.25;
+barrelWall = 0.25;
+barrelOffset = 1;
 barrelExtensionLandingHeight = 0.3;
 chamferRadius = 0.1;
 
@@ -38,6 +38,7 @@ tube_width =1.015;// 0.75;
 tubeInnerWidth = 1-(1/8);
 springRadius = 0.75/2;
 springLength = 3;
+gasShaftCollarWidth = 0.5;
 
 barrelExtensionDiameter = 1;
 barrelExtensionRadius = barrelExtensionDiameter/2;
@@ -84,13 +85,14 @@ boltSleeveDiameter = barrelExtensionDiameter;
 boltSleeveRadius = boltSleeveDiameter/2;
 
 
-tubeCenterZ = tube_wall+(tube_width/2);
+tubeCenterZ = tubeWall+(tube_width/2);
 boltLockedMinX = barrelX-boltLockedLength;
 boltLockedMaxX = barrelX+boltLockLengthDiff;
 
 
-barrelZ = tube_width+tube_wall+barrel_offset;
+barrelZ = tube_width+tubeWall+barrelOffset;
 lowerLength = LowerMaxX()+abs(ReceiverLugRearMinX())+0.25;
+lowerX = -ReceiverLugFrontMinX()+barrelGasLength+gasShaftCollarWidth;
                 
 camPinLockedMaxX = boltLockedMaxX -camPinOffset;
 camPinLockedMinX = camPinLockedMaxX -camPinDiameter;
@@ -167,7 +169,7 @@ module PicRailBolts() {
 
 module BARBB_CamPinCutout(clearance=0.01, chamferBack=false) {
   clear2 = clearance*2;
-  camPinSquareArc = 360/(PI*2*(barrelExtensionRadius+barrel_wall)/camPinSquareWidth);
+  camPinSquareArc = 360/(PI*2*(barrelExtensionRadius+barrelWall)/camPinSquareWidth);
   
   // Cam Pin cutout
   render()
@@ -187,17 +189,17 @@ module BARBB_CamPinCutout(clearance=0.01, chamferBack=false) {
       rotate(camPinSquareArc/2)
       semicircle(od=(camPinSquareOffset
                     +camPinSquareHeight
-                    +barrel_wall)*3,
+                    +barrelWall)*3,
                  angle=camPinAngle+camPinAngleExtra+camPinSquareArc);
       
       // Cam Pin Square, locked position
       rotate(-camPinAngleExtra-camPinAngle)
       translate([0,-(camPinSquareWidth/2)-0.01])
-      square([camPinSquareOffset+camPinSquareHeight+barrel_wall, camPinSquareWidth+0.02]);
+      square([camPinSquareOffset+camPinSquareHeight+barrelWall, camPinSquareWidth+0.02]);
       
       // Cam Pin Square, Unlocked position
       translate([0,-(camPinSquareWidth/2)-0.01])
-      square([camPinSquareOffset+camPinSquareHeight+barrel_wall, camPinSquareWidth+0.02]);
+      square([camPinSquareOffset+camPinSquareHeight+barrelWall, camPinSquareWidth+0.02]);
     }
   }
 }
@@ -253,7 +255,7 @@ module BARBB_ReceiverBolts(angle=0) {
 }
 
 
-module BARBB_LowerReceiver(clearance=0.007, extraFront=0,wall=tube_wall) {
+module BARBB_LowerReceiver(clearance=0.007, extraFront=0,wall=tubeWall) {
   
   render()
   difference() {
@@ -271,16 +273,8 @@ module BARBB_LowerReceiver(clearance=0.007, extraFront=0,wall=tube_wall) {
           
           translate([0, -tubeCenterZ, 0])
           rotate([0,-90,0])
-          ChamferedCube([tube_width+(tube_wall*2),
-                         tube_width+(tube_wall*2),
-                         LowerMaxX()-ReceiverLugFrontMinX()],
-                        r=chamferRadius, center=false);
-        
-          // Flat top for pic rail
-          translate([0, -(tube_width/2), tube_width+tube_wall+barrel_offset])
-          rotate([0,-90,0])
-          ChamferedCube([0.75+0.1,
-                         tube_width,
+          ChamferedCube([tube_width+(tubeWall*2),
+                         tube_width+(tubeWall*2),
                          LowerMaxX()-ReceiverLugFrontMinX()],
                         r=chamferRadius, center=false);
         }
@@ -288,17 +282,15 @@ module BARBB_LowerReceiver(clearance=0.007, extraFront=0,wall=tube_wall) {
         // Square Tube Body
         translate([0, -tubeCenterZ, 0])
         rotate([0,-90,0])
-        ChamferedCube([tube_width+(tube_wall*2),
-                       tube_width+(tube_wall*2),
+        ChamferedCube([tube_width+(tubeWall*2),
+                       tube_width+(tubeWall*2),
                        lowerLength], r=chamferRadius, center=false);
       }
       
-      ReceiverLugFront(extraTop=tube_wall);
+      ReceiverLugFront(extraTop=tubeWall);
       
-      ReceiverLugRear(extraTop=tube_wall);
+      ReceiverLugRear(extraTop=tubeWall);
     }
-    
-    PicRailBolts();
 
     // Square Tube center axis
     translate([0,0,tubeCenterZ]) {
@@ -353,14 +345,14 @@ module BARBB_UpperReceiver(magwell=false) {
       // Barrel section
       translate([0,0,barrelZ])
       rotate([0,90,0])
-      ChamferedCylinder(r1=barrelExtensionRadius+barrel_wall, r2=chamferRadius,
+      ChamferedCylinder(r1=barrelExtensionRadius+barrelWall, r2=chamferRadius,
                         h=upperLength-ManifoldGap());
   
       // Square Tube Body
       translate([0,-tubeCenterZ,barrelZ])
       rotate([0,90,0])
-      ChamferedCube([tube_width+tube_wall+barrel_offset,
-                     tube_width+(tube_wall*2),
+      ChamferedCube([tube_width+tubeWall+barrelOffset,
+                     tube_width+(tubeWall*2),
                      upperLength-ManifoldGap()], r=chamferRadius);
       
       if (magwell)
@@ -434,13 +426,13 @@ module BARBB_Bolt(clearance=0.01) {
                         h=barbbBoltLength);
       
       // Lever
-      translate([-barrelExtensionRadius,-(tube_wall*2)-(tube_width/2),handleMinX-stockMinX])
-      ChamferedCube([barrelZ,tube_wall,handleLength-chamferClearance], r=chamferRadius);
+      translate([-barrelExtensionRadius,-(tubeWall*2)-(tube_width/2),handleMinX-stockMinX])
+      ChamferedCube([barrelZ,tubeWall,handleLength-chamferClearance], r=chamferRadius);
       
       // Lever Support
-      translate([-boltSleeveRadius,-(tube_wall*2)-(tube_width/2),handleMinX-stockMinX])
+      translate([-boltSleeveRadius,-(tubeWall*2)-(tube_width/2),handleMinX-stockMinX])
       ChamferedCube([boltSleeveDiameter,
-                     (tube_wall*2)+(tube_width/2)+chamferRadius,
+                     (tubeWall*2)+(tube_width/2)+chamferRadius,
                      handleLength-chamferClearance],
                     r=chamferRadius);
       
@@ -486,7 +478,7 @@ module BARBB_Bolt(clearance=0.01) {
                        slices=$fn*2)
         rotate(camPinAngleExtra)
         translate([0,-hammerWidth*3.5])
-        square([barrel_offset, hammerWidth*4]);
+        square([barrelOffset, hammerWidth*4]);
       
         linear_extrude(height=hammerTravel+(hammerWidth*2))
         translate([barrelZ,0])
@@ -496,7 +488,7 @@ module BARBB_Bolt(clearance=0.01) {
     
       // Hammer travel
       translate([0,-(hammerWidth/2),0])
-      cube([barrel_offset, hammerWidth, hammerWidth+hammerTravel+hammerOvertravel]);
+      cube([barrelOffset, hammerWidth, hammerWidth+hammerTravel+hammerOvertravel]);
     }
   }
 }
@@ -603,7 +595,7 @@ module BARBB_HammerGuide(clearance=0.005) {
           
     // Lower Bolt Tracks
     for(m = [0,1]) mirror([0,m,0])
-    translate([ManifoldGap(),(tubeInnerWidth/2)-0.34+tube_wall-clearance,tubeCenterZ-0.125])
+    translate([ManifoldGap(),(tubeInnerWidth/2)-0.34+tubeWall-clearance,tubeCenterZ-0.125])
     mirror([1,0,0])
     cube([hammerGuideLength+ManifoldGap(2),
           tubeCenterZ,
@@ -628,7 +620,7 @@ module BARBB_Receiver_T_Lug(height=1+chamferRadius, cutter=false) {
   }
 }
 
-module BARBB_Stock(topDiameter=tube_width+(tube_wall*2), bottomDiameter=1,
+module BARBB_Stock(topDiameter=tube_width+(tubeWall*2), bottomDiameter=1,
                   wall=0.25, clearance=0.008) {
                     
   clear2 = clearance*2;
@@ -646,16 +638,16 @@ module BARBB_Stock(topDiameter=tube_width+(tube_wall*2), bottomDiameter=1,
 
         // Body
         translate([-barrelZ,0,0])
-        ChamferedCylinder(r1=barrelExtensionRadius+barrel_wall,
+        ChamferedCylinder(r1=barrelExtensionRadius+barrelWall,
                           r2=chamferRadius,
                            h=stockLength);
         
         
         translate([-barrelZ,0,0])
         rotate(180-camPinAngleExtra)
-        translate([0,-tube_wall-(camPinSquareWidth/2),0])
-        ChamferedCube([boltSleeveRadius+camPinSquareHeight+barrel_wall,
-                       camPinSquareWidth+(tube_wall*2),
+        translate([0,-tubeWall-(camPinSquareWidth/2),0])
+        ChamferedCube([boltSleeveRadius+camPinSquareHeight+barrelWall,
+                       camPinSquareWidth+(tubeWall*2),
                        stockLength],
                       r=chamferRadius);
       }
@@ -705,7 +697,7 @@ module BARBB_Stock(topDiameter=tube_width+(tube_wall*2), bottomDiameter=1,
   }
 }
 
-module BARBB_Buttpad(topDiameter=tube_width+(tube_wall*2), bottomDiameter=1,
+module BARBB_Buttpad(topDiameter=tube_width+(tubeWall*2), bottomDiameter=1,
                      length=2, extend=2+stockWall-ManifoldGap()) {
   difference() {
     translate([stockMinX,0,0])
@@ -724,7 +716,7 @@ module BARBB_Buttpad(topDiameter=tube_width+(tube_wall*2), bottomDiameter=1,
 }
   
 
-module BARBB_Foregrip(topDiameter=tube_width+(tube_wall*2), bottomDiameter=1,
+module BARBB_Foregrip(topDiameter=tube_width+(tubeWall*2), bottomDiameter=1,
                       length=2, extend=2, frontWall=0) {
   translate([0,0,tubeCenterZ])
   rotate([0,90,0])
@@ -752,8 +744,128 @@ module BARBB_Foregrip(topDiameter=tube_width+(tube_wall*2), bottomDiameter=1,
   }
 }
 
-module BARBB_Bipod() {
-  
+module BARBB_Bipod(topDiameter=tube_width+(tubeWall*2), bottomDiameter=1,
+                      length=2, extend=1, frontWall=0.25, bipodLegLength=6) {
+  bipodLegDiameter = 0.5;
+  bipodLegRadius = bipodLegDiameter/2;
+  bipodLegAngle = -180+(60/2);
+
+  render()
+  translate([26+stockMinX-stockWall+length+frontWall,0,0]) {
+    
+    // Bipod legs
+    color("Silver")
+    translate([-length/2,0,0])
+    for (m = [0,1]) mirror([0,m,0])
+    translate([0,(tube_width/2),0])
+    rotate([bipodLegAngle,0,0])
+    %cylinder(r=bipodLegRadius, h=bipodLegLength);
+      
+    difference() {
+      hull() {
+        
+        // Square Tube Body
+        rotate([0,-90,0])
+        translate([0, -topDiameter/2,-ManifoldGap()])
+        ChamferedCube([tube_width+(tubeWall*2), tube_width+(tubeWall*2), length+ManifoldGap()],
+                      chamferRadius=chamferRadius);
+        
+        // Bipod Leg Support
+        translate([-length/2,0,0])
+        for (m = [0,1]) mirror([0,m,0])
+        translate([0,(tube_width/2),0])
+        rotate([bipodLegAngle,0,0])
+        ChamferedCylinder(r1=bipodLegRadius+tubeWall, r2=chamferRadius, h=extend);
+      }
+      
+      // Barrel center axis
+      translate([0,0,barrelZ])
+      rotate([0,-90,0])
+      ChamferedCircularHole(r1=(1.625/2)+0.01, r2=chamferRadius,
+                            h=length,
+                            chamferTop=true, teardropBottom=true, teardrop=true);
+      
+      // Square Tube center axis
+      translate([-frontWall,0,tubeCenterZ])
+      rotate([0,-90,0])
+      ChamferedSquareHole(side=tube_width, length=length-frontWall, center=true,
+                           chamferTop=true, chamferBottom=false, teardropTop=true,
+                           chamferRadius=chamferRadius,
+                           corners=true, cornerRadius=0.0625);
+      
+      // Bipod leg holes
+      translate([-length/2,0,0])
+      for (m = [0,1]) mirror([0,m,0])
+      translate([0,(tube_width/2),0])
+      rotate([bipodLegAngle,0,0])
+      ChamferedCircularHole(r1=bipodLegRadius+0.005, r2=chamferRadius, h=extend, chamferBottom=false);
+      
+      // Fixing Bolt
+      //translate([0,0,tubeCenterZ])
+      rotate([0,90,0])
+      for (m = [0,1]) mirror([0,m,0])
+      translate([-tubeCenterZ,tubeCenterZ,-length/2])
+      rotate([90,-90,0])
+      FlatHeadBolt();
+    }
+  }
+}
+
+module BARBB_RailMount(id=1, clearance=0.003, length=1, height=1, wall=tubeWall) {
+  render()
+  difference() {
+    hull() {
+      
+      // Barrel/Bolt Body
+      translate([0,0,barrelZ])
+      rotate([0,-90,0])
+      ChamferedCylinder(r1=(id/2)+wall,
+                        r2=chamferRadius,
+                        h=length);
+      
+      translate([0, -tubeCenterZ, 0])
+      rotate([0,-90,0])
+      ChamferedCube([tube_width+(tubeWall*2),
+                     tube_width+(tubeWall*2),
+                     length],
+                    r=chamferRadius, center=false);
+    
+      // Flat top for pic rail
+      translate([0, -(tube_width/2), barrelZ+(id/2)])
+      rotate([0,-90,0])
+      ChamferedCube([0.75+0.1,
+                     tube_width,
+                     height],
+                    r=chamferRadius, center=false);
+    }
+
+    translate([-length/2,0,barrelZ+height])
+    NutAndBolt(bolt=Spec_BoltM4(), boltLength=10/25.4,
+                capHeightExtra=1, nutHeightExtra=height+(id/3),
+                clearance=true, teardrop=true, teardropAngle=180);
+    
+    // Barrel center axis
+    translate([0,0,barrelZ])
+    rotate([0,-90,0])
+    ChamferedCircularHole(r1=(id/2)+clearance, r2=chamferRadius,
+                          h=length,
+                          chamferTop=true, teardropBottom=true);
+
+    // Square Tube center axis
+    translate([0,0,tubeCenterZ]) {
+      
+      rotate([0,-90,0])
+      ChamferedSquareHole(side=tube_width+(clearance*2), length=length, center=true,
+                           chamferTop=true, chamferBottom=true, chamferRadius=chamferRadius,
+                           corners=true, cornerRadius=0.0625);
+      
+      // Side Bolts
+      for (m = [0,1]) mirror([0,m,0])
+      translate([-length/2,tubeCenterZ,0])
+      rotate([90,180,0])
+      FlatHeadBolt(sink=0.01);
+    }
+  }
 }
 
 module AR15_Bolt(clearance=0.007, camPin=true, firingPinRetainer=true,
@@ -854,24 +966,40 @@ AR15_Barrel();
 
 BARBB_Bipod();
 
+color("Olive")
+translate([lowerX,0,0])
+translate([ReceiverLugRearMinX()-0.25+12-3.5,0,0])
+BARBB_RailMount();
+
+translate([lowerX,0,0]) {
+  color("Black")
+  translate([ReceiverLugRearMinX()-0.25,0,0]) 
+  translate([-1,-0.75/2,barrelZ+1.5])
+  cube([12, 0.75, 0.375]);
+  
+  color("Olive")
+  translate([ReceiverLugRearMinX()-0.25,0,0]) 
+  BARBB_RailMount(id=1);
+}
+
 // Lower/Front-end
-translate([-ReceiverLugFrontMinX()+barrelGasLength,0,0])
+translate([lowerX,0,0])
 BARBB_Hammer();
 
-translate([-ReceiverLugFrontMinX()+barrelGasLength,0,0])  
+translate([lowerX,0,0])  
 BARBB_HammerGuide();
 
 color("Tan")
-translate([-ReceiverLugFrontMinX()+barrelGasLength-0.5,0,0])  
+translate([lowerX-0.5,0,0])  
 translate([LowerMaxX()+5,0,0])
 BARBB_Foregrip();
 
-translate([-ReceiverLugFrontMinX()+barrelGasLength,0,0])
+translate([lowerX,0,0])
 Lower(showReceiverLugBolts=true,showGuardBolt=true, showHandleBolts=true,
         showTrigger=true, 
         searLength=tubeCenterZ+abs(SearPinOffsetZ()) + SearTravel(), alpha=1);
 
-translate([-ReceiverLugFrontMinX()+barrelGasLength,0,0])
+translate([lowerX,0,0])
 color("Tan")
 //render() DebugHalf()
 BARBB_LowerReceiver();
@@ -931,10 +1059,27 @@ BARBB_LowerReceiver(extraFront=0);
 rotate([0,-90,0])
 BARBB_UpperReceiver(extraRear=0);
 
-!scale(25.4)
+*!scale(25.4)
 rotate([0,-90,0])
 BARBB_Stock();
 
 *!scale(25.4)
 rotate([0,-90,0])
+BARBB_Buttpad();
+
+*!scale(25.4)
+rotate([0,-90,0])
 BARBB_Foregrip();
+
+*!scale(25.4)
+rotate([0,90,0])
+BARBB_RailMount();
+
+*!scale(25.4)
+rotate([0,90,0])
+BARBB_RailMount(id=1);
+
+*!scale(25.4)
+rotate([0,90,0])
+translate([-26,0,0])
+BARBB_Bipod();
