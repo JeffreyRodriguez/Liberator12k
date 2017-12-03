@@ -5,11 +5,10 @@ use <../Components/Teardrop.scad>;
 BoltDiameter         = 1;
 BoltCapDiameter      = 2;
 BoltCapHeight        = 3;
-BoltNutDiameter = 4;
-BoltNutMinorDiameter = 5;
-BoltNutHeight        = 6;
-BoltClearance        = 7;
-BoltFn               = 8;
+BoltNutDiameter      = 4;
+BoltNutHeight        = 5;
+BoltClearance        = 6;
+BoltFn               = 7;
 
 BoltCapTypeNone   = 1;
 BoltCapTypeFlat   = 2;
@@ -23,7 +22,6 @@ function Spec_BoltM3() = [
   [BoltCapDiameter, UnitsMetric(5.4)],
   [BoltCapHeight,   UnitsMetric(2.6)],
   [BoltNutDiameter, UnitsMetric(6.28)],
-  [BoltNutMinorDiameter, UnitsMetric(6.28)],
   [BoltNutHeight,   UnitsMetric(2.5)],
   [BoltClearance,   UnitsMetric(0.7)],
   [BoltFn, 8]
@@ -34,7 +32,6 @@ function Spec_BoltM4() = [
   [BoltCapDiameter, UnitsMetric(7.4+0.3)],
   [BoltCapHeight,   UnitsMetric(3.9)],
   [BoltNutDiameter, UnitsMetric(7.7)],
-  [BoltNutMinorDiameter, UnitsMetric(7.7)],
   [BoltNutHeight,   UnitsMetric(3)],
   [BoltClearance,   UnitsMetric(0.7)],
   [BoltFn, 8]
