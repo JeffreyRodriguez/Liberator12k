@@ -2,17 +2,20 @@ use <../Meta/Units.scad>;
 use <../Meta/Manifold.scad>;
 use <../Components/Teardrop.scad>;
 
-BoltDiameter    = 1;
-BoltCapDiameter = 2;
-BoltCapHeight   = 3;
+BoltDiameter         = 1;
+BoltCapDiameter      = 2;
+BoltCapHeight        = 3;
 BoltNutDiameter = 4;
-BoltNutHeight   = 5;
-BoltClearance   = 6;
-BoltFn          = 7;
+BoltNutMinorDiameter = 5;
+BoltNutHeight        = 6;
+BoltClearance        = 7;
+BoltFn               = 8;
 
-/* M3: radius=0.115/2, capRadius=0.212/2, nutRadius=0.247/2, nutHeight=0.096
-   M8: radius=0.3,     capRadius=0.29,    nutRadius=0.29,  nutHeight=0.3,
-*/
+BoltCapTypeNone   = 1;
+BoltCapTypeFlat   = 2;
+BoltCapTypeSocket = 3;
+BoltCapTypeButton = 4;
+
 function BoltClearance() = BoltClearance;
 
 function Spec_BoltM3() = [
@@ -20,6 +23,7 @@ function Spec_BoltM3() = [
   [BoltCapDiameter, UnitsMetric(5.4)],
   [BoltCapHeight,   UnitsMetric(2.6)],
   [BoltNutDiameter, UnitsMetric(6.28)],
+  [BoltNutMinorDiameter, UnitsMetric(6.28)],
   [BoltNutHeight,   UnitsMetric(2.5)],
   [BoltClearance,   UnitsMetric(0.7)],
   [BoltFn, 8]
@@ -27,6 +31,17 @@ function Spec_BoltM3() = [
 
 function Spec_BoltM4() = [
   [BoltDiameter,    UnitsMetric(4)],
+  [BoltCapDiameter, UnitsMetric(7.4+0.3)],
+  [BoltCapHeight,   UnitsMetric(3.9)],
+  [BoltNutDiameter, UnitsMetric(7.7)],
+  [BoltNutMinorDiameter, UnitsMetric(7.7)],
+  [BoltNutHeight,   UnitsMetric(3)],
+  [BoltClearance,   UnitsMetric(0.7)],
+  [BoltFn, 8]
+];
+
+function Spec_BoltM5() = [
+  [BoltDiameter,    UnitsMetric(5)],
   [BoltCapDiameter, UnitsMetric(7.4+0.3)],
   [BoltCapHeight,   UnitsMetric(3.9)],
   [BoltNutDiameter, UnitsMetric(7.7)],
@@ -130,8 +145,129 @@ module Bolt(bolt=Spec_BoltM3(), length=1,
 
       }
     }
+    
+    children();
   }
 }
+
+module BoltCapFlat() {
+}
+
+module BoltCapSocket() {
+}
+
+module BoltCapButton() {
+}
+
+NutHexDiameter          = 1;
+NutHexClearance         = 2;
+NutHexHeight            = 3;
+NutHexNylonHeight       = 4;
+NutHeatsetMajorDiameter = 5;
+NutHeatsetMinorDiameter = 6;
+NutHeatsetHeight        = 7;
+
+function NutHexDiameter(spec=undef, clearance=false)
+           = lookup(NutHexDiameter, spec)
+          + (clearance == true ? lookup(NutHexClearance, spec) : 0);
+
+function NutHexRadius(spec=undef, clearance=false) = NutHexDiameter(spec, clearance)/2;
+
+function NutHexHeight(spec=undef, clearance=false)
+           = lookup(NutHexHeight, spec)
+          + (clearance == true ? lookup(NutHexClearance, spec) : 0);
+
+
+function NutHeatsetMajorDiameter(spec=undef)
+           = lookup(NutHeatsetMajorDiameter, spec);
+
+function NutHeatsetMajorRadius(spec=undef) = NutHeatsetMajorDiameter(spec)/2;
+
+function NutHeatsetMinorDiameter(spec=undef)
+           = lookup(NutHeatsetMinorDiameter, spec);
+
+function NutHeatsetMinorRadius(spec=undef) = NutHeatsetMinorDiameter(spec)/2;
+
+function NutHeatsetHeight(spec=undef)
+           = lookup(NutHeatsetHeight, spec);
+
+
+function Spec_NutM2() = [
+  [NutHexDiameter,    UnitsMetric(4.32)],
+  [NutHexClearance,  UnitsMetric(0.25)],
+  [NutHexHeight, UnitsMetric(1.6)],
+  [NutHexNylonHeight,   UnitsMetric(4.5)], // ???: Guessed
+  [NutHeatsetMajorDiameter, UnitsMetric(3.12)],
+  [NutHeatsetMinorDiameter,   UnitsMetric(2.7)],
+  [NutHeatsetHeight,   UnitsMetric(4.8)]
+];
+
+function Spec_NutM2pt5() = [
+  [NutHexDiameter,    UnitsMetric(4.45)],
+  [NutHexClearance,  UnitsMetric(0.25)],
+  [NutHexHeight, UnitsMetric(2)],
+  [NutHexNylonHeight,   UnitsMetric(4.5)], // ???: Guessed
+  [NutHeatsetMajorDiameter, UnitsMetric(4.04)],
+  [NutHeatsetMinorDiameter,   UnitsMetric(3.6)],
+  [NutHeatsetHeight,   UnitsMetric(5.6)]
+];
+
+function Spec_NutM3() = [
+  [NutHexDiameter,    UnitsMetric(6.01)],
+  [NutHexClearance,  UnitsMetric(0.25)],
+  [NutHexHeight, UnitsMetric(2.4)],
+  [NutHexNylonHeight,   UnitsMetric(4.5)], // ???: Guessed
+  [NutHeatsetMajorDiameter, UnitsMetric(5.31)],
+  [NutHeatsetMinorDiameter,   UnitsMetric(5.1)],
+  [NutHeatsetHeight,   UnitsMetric(6.4)]
+];
+
+function Spec_NutM4() = [
+  [NutHexDiameter,    UnitsMetric(7.66)],
+  [NutHexClearance,  UnitsMetric(0.25)],
+  [NutHexHeight, UnitsMetric(3.2)],
+  [NutHexNylonHeight,   UnitsMetric(4.5)], // ???: Guessed
+  [NutHeatsetMajorDiameter, UnitsMetric(5.94)],
+  [NutHeatsetMinorDiameter,   UnitsMetric(5.3)],
+  [NutHeatsetHeight,   UnitsMetric(7.9)]
+];
+
+function Spec_NutM5() = [
+  [NutHexDiameter,    UnitsMetric(8.79)],
+  [NutHexClearance,  UnitsMetric(0.25)],
+  [NutHexHeight, UnitsMetric(4.7)],
+  [NutHexNylonHeight,   UnitsMetric(4.5)], // ???: Guessed
+  [NutHeatsetMajorDiameter, UnitsMetric(8)],
+  [NutHeatsetMinorDiameter,   UnitsMetric(7.1)],
+  [NutHeatsetHeight,   UnitsMetric(11.5)]
+];
+
+module NutHex(spec=Spec_NutM5(),
+              nutRadiusExtra=0, nutHeightExtra=0, nutBackset=0,
+              nutSideExtra=0,
+              nutSideAngle=0,
+              clearance=false) {
+    translate([0,0,-(clearance?nutHeightExtra:0)+nutBackset]) {
+      cylinder(r=NutHexRadius(spec, clearance)+(clearance?nutRadiusExtra:0),
+               h=NutHexHeight(spec)+(clearance?nutHeightExtra:0), $fn=6);
+
+      // Insertion side-cut
+      if (clearance && nutSideExtra > 0)
+      rotate(nutSideAngle)
+      translate([-NutHexRadius(spec, clearance),0,0])
+      cube([NutHexDiameter(spec, clearance),
+            NutHexDiameter(spec, clearance)+nutSideExtra,
+            NutHexHeight(spec)+nutHeightExtra]);
+    }
+};
+
+
+module NutHeatset(spec=Spec_NutM5()) {
+      cylinder(r1=NutHeatsetMajorRadius(spec), r2=NutHeatsetMinorRadius(spec),
+               h=NutHeatsetHeight(spec),
+               $fn=12);
+};
+
 
 module NutAndBolt(bolt=Spec_BoltM3(), boltLength=1, boltLengthExtra=0,
                   cap=true, capRadiusExtra=0, capHeightExtra=0,
@@ -169,4 +305,57 @@ module NutAndBolt(bolt=Spec_BoltM3(), boltLength=1, boltLengthExtra=0,
 }
 
 
-#NutAndBolt(bolt=Spec_BoltM3(), clearance=true);
+
+translate([1,0,0])
+Bolt(bolt=Spec_BoltM4(), clearance=false)
+NutHeatset(spec=Spec_NutM4(), clearance=true);
+
+translate([0,1,0])
+Bolt(bolt=Spec_BoltM4(), clearance=false)
+NutHex(spec=Spec_NutM4(), clearance=true);
+
+NutAndBolt(bolt=Spec_BoltM3(), clearance=true);
+
+
+
+// M5x10 FIXME
+module FlatHeadBolt(diameter=0.193, headDiameter=0.353, extraHead=1, length=0.3955,
+                    sink=0.01, teardrop=true) {
+  radius = diameter/2;
+  headRadius = headDiameter/2;
+  
+  render()
+  scale(25.4)
+  translate([0,0,sink])
+  union() {
+    
+    if (teardrop) {
+      linear_extrude(height=length)
+      Teardrop(r=radius, $fn=20);
+    } else {
+      cylinder(r=radius, h=length, $fn=20);
+    }
+    
+    hull() {
+      
+      // Taper
+      cylinder(r1=headDiameter/2, r2=0, h=headDiameter/2);
+      
+      // Taper teardrop hack      
+      linear_extrude(height=ManifoldGap())
+      if (teardrop) {
+        Teardrop(r=headRadius, $fn=20);
+      } else {
+        circle(r=headRadius, $fn=20);
+      }
+    }
+    
+    translate([0,0,-extraHead])
+    linear_extrude(height=extraHead+ManifoldGap())
+    if (teardrop) {
+      Teardrop(r=headRadius, $fn=20);
+    } else {
+      circle(r=headRadius, $fn=20);
+    }
+  }
+}
