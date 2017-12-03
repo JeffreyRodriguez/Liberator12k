@@ -84,8 +84,8 @@ function Spec_RodOneEighthInch() = [
 function Spec_RodThreeSixteenthInch() = [
   [RodDiameter,       3/16],
   [RodRadius,         3/16/2],
-  [RodClearanceSnug,  0.027],
-  [RodClearanceLoose, 0.035],
+  [RodClearanceSnug,  0.022],
+  [RodClearanceLoose, 0.025],
   [RodFn,             16]
 ];
 
