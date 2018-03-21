@@ -22,5 +22,5 @@ scale(25.4) {
   
   rotate([-90,0,0])
   translate([-2.75,-0.25-ManifoldGap(),4.5])
-  LowerTriggerPocket(cutter=false);
+  *LowerTriggerPocket(cutter=false);
 }
