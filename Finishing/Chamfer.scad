@@ -21,7 +21,7 @@ module RoundedBoolean(edgeOffset=1, edgeSign=-1,
 
 }
 
-module VerticalFillet(r=0.125, h=1, inset=false) {
+module Fillet(r=0.125, h=1, inset=false, taperEnds=true) {
   effectiveHeight = h -(inset ? r*2 : 0);
   
   
@@ -37,10 +37,16 @@ module VerticalFillet(r=0.125, h=1, inset=false) {
       square(r+ManifoldGap());
     }
     
+    if (taperEnds)
     for (m = [0,1]) translate([0,0,m ? effectiveHeight : 0]) mirror([0,0,m])
     translate([-r,r,-ManifoldGap()])
     cylinder(r1=r*sqrt(2), r2=0, h=r*sqrt(2)*2, $fn=40);
   }
+}
+
+
+module VerticalFillet(r=0.125, h=1, inset=false, taperEnds=true) {
+  Fillet(r=r, h=h, inset=inset, taperEnds=taperEnds);
 }
 
 module HoleChamfer(r1=0.5, r2=0.125, teardrop=false, edgeSign=1) {
@@ -167,13 +173,16 @@ module CylinderChamfer(r1=1, r2=0.25, teardrop=false) {
                  teardrop=teardrop);
 }
 
-module CylinderChamferEnds(r1=1, r2=0.25, h=1) {
+module CylinderChamferEnds(r1=1, r2=0.25, h=1,
+                           chamferBottom=true, chamferTop=true) {
   render() {
 
     // Keep the bottom teardropped for printing
+    if (chamferBottom)
     CylinderChamfer(r1=r1, r2=r2, teardrop=true);
 
     // We can round the top over
+    if (chamferTop)
     translate([0,0,h])
     mirror([0,0,1])
     CylinderChamfer(r1=r1, r2=r2, teardrop=false);
@@ -181,26 +190,16 @@ module CylinderChamferEnds(r1=1, r2=0.25, h=1) {
 }
 
 
-module ChamferedCylinder(r1=0.5, r2=0.25, h=1) {
+module ChamferedCylinder(r1=0.5, r2=0.25, h=1,
+                         chamferBottom=true, chamferTop=true) {
   render()
   difference() {
     cylinder(r=r1, h=h);
-    CylinderChamferEnds(r1=r1, r2=r2, h=h);
+    CylinderChamferEnds(r1=r1, r2=r2, h=h,
+                        chamferBottom=chamferBottom, chamferTop=chamferTop);
   }
 }
 
-$fn=20;
-render() {
-  difference() {
-    ChamferedCube(xyz=[2,3,2], center=false);
-    
-    translate([0.5, 0.5, 0])
-    ChamferedSquareHole(sides=[1,2], length=2, center=false);
-  }
-
-  translate([2.5, 0.5, 0])
-  !ChamferedSquareHole(sides=[1,2], length=2, center=false);
-}
 
 
 
@@ -233,14 +232,28 @@ module ChamferedToroidalCylinder(r1=1, r2=0.5, r3=0.1, h=1) {
 }
 
 
+$fn=20;
+render() {
+  difference() {
+    ChamferedCube(xyz=[2,3,2], center=false);
+    
+    translate([0.5, 0.5, 0])
+    ChamferedSquareHole(sides=[1,2], length=2, center=false);
+  }
+
+  translate([2.5, 0.5, 0])
+  ChamferedSquareHole(sides=[1,2], length=2, center=false);
+}
+
 translate([-1.5,0,0])
 ChamferedSquare(xy=[1,2]);
 
 translate([-3,0,0])
 ChamferedCube(r=0.125);
 
-translate([-4,0,0])
-VerticalFillet();
+translate([-4,0,0]) {
+  Fillet();
+}
 
 translate([0,-2,0]) {
   RoundedBoolean(teardrop=true, $fn=20);
