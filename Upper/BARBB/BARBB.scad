@@ -19,7 +19,7 @@ $fn=60;
 
 // Configured Values
 barrelLength = 16;
-hammerTravel = 1.5;
+hammerTravel = 1.25;
 hammerOvertravel=0.125;
 tubeWall = 0.25;
 barrelWall = 0.25;
@@ -39,6 +39,7 @@ tubeInnerWidth = 1-(1/8);
 springRadius = 0.75/2;
 springLength = 3;
 gasShaftCollarWidth = 0.5;
+gasShaftCollarOD    = 1.5;
 
 barrelExtensionDiameter = 1;
 barrelExtensionRadius = barrelExtensionDiameter/2;
@@ -74,7 +75,7 @@ boltMiddleRadius = 0.49/2;
 boltMiddleLength = 2.25;
 boltBackRadius = 0.25/2;
 
-firingPinRadius = 0.337/2;
+firingPinRadius = (0.337/2)+0.01;
 firingPinExtension = 0.55;      // From the back of the bolt
 firingPinRetainerOffset = 0.35; // From the back of the bolt
 
@@ -112,49 +113,6 @@ barbbBoltLength = stockLength
                 + barrelExtensionLandingHeight;
 handleLength=abs(hammerMinX-hammerMaxX)+firingPinExtension-hammerOvertravel;
 handleMinX = stockMinX;//+stockWall;
-
-
-
-// m5x10 flat head
-module FlatHeadBolt(diameter=0.193, headDiameter=0.353, extraHead=1, length=0.3955,
-                    sink=0.05, teardrop=true) {
-  radius = diameter/2;
-  headRadius = headDiameter/2;
-  
-  render()
-  translate([0,0,sink])
-  union() {
-    
-    if (teardrop) {
-      linear_extrude(height=length)
-      Teardrop(r=radius, $fn=20);
-    } else {
-      cylinder(r=radius, h=length, $fn=20);
-    }
-    
-    hull() {
-      
-      // Taper
-      cylinder(r1=headDiameter/2, r2=0, h=headDiameter/2);
-      
-      // Taper teardrop hack      
-      linear_extrude(height=ManifoldGap())
-      if (teardrop) {
-        Teardrop(r=headRadius, $fn=20);
-      } else {
-        circle(r=headRadius, $fn=20);
-      }
-    }
-    
-    translate([0,0,-extraHead])
-    linear_extrude(height=extraHead+ManifoldGap())
-    if (teardrop) {
-      Teardrop(r=headRadius, $fn=20);
-    } else {
-      circle(r=headRadius, $fn=20);
-    }
-  }
-}
 
 module PicRailBolts() {
   translate([ReceiverLugRearMinX()+(ReceiverLugRearLength()/2),0,
@@ -950,6 +908,13 @@ module AR15_Barrel(pinRadius=0.125/2, pinHeight=0.09, pinDepth=0.162, clearance=
     
     // Barrel, from the gas block on
     cylinder(r=0.75/2, h=barrelLength);
+  }
+    
+    color("Black") {
+      
+    // Gas block shaft collar
+    translate([0,0,barrelGasLength+ManifoldGap(2)])
+    cylinder(r=gasShaftCollarOD/2, h=gasShaftCollarWidth);
     
     // Suppressor
     translate([0,0,barrelLength-0.5])
