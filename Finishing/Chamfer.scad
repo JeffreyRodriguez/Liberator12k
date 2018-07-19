@@ -121,26 +121,28 @@ module ChamferedSquareHole(sides=[1,1], length=1, center=true,
   }
 }
 
-module ChamferedSquare(xy=[1,1], r=0.25, teardrop=true, teardropTruncated=true, $fn=40) {
+module ChamferedSquare(xy=[1,1], r=0.25,
+                       teardrop=true, teardropTruncated=true) {
   hull()
   for (mX = [r,xy[0]-r]) {
     // Top Circle
     translate([mX, xy[1]-r])
-    circle(r);
+    circle(r=r, $fn=60);
 
     // Bottom
     translate([mX, r])
     if (teardrop){
       rotate(-90)
-      Teardrop(r, truncated=teardropTruncated, $fn=$fn);
+      Teardrop(r=r, truncated=teardropTruncated, $fn=60);
     } else {
-      circle(r);
+      circle(r=r, $fn=60);
     }
   }
 
 }
 
-module ChamferedCube(xyz=[1,2,3], r=0.25, center=false, fn=20) {
+module ChamferedCube(xyz=[1,2,3], r=0.25, center=false,
+                     chamferXYZ=[1,1,1], fn=20) {
   
   translate([center ? -xyz[0]/2 : 0,
               center ? -xyz[1]/2 : 0,
@@ -148,17 +150,20 @@ module ChamferedCube(xyz=[1,2,3], r=0.25, center=false, fn=20) {
   intersection() {
 
     // X
+    if (chamferXYZ[0])
     rotate([90,0,90])
     linear_extrude(height=xyz[0])
     ChamferedSquare(xy=[xyz[1], xyz[2]], r=r, $fn=fn);
 
     // Y
+    if (chamferXYZ[1])
     mirror([0,1,0])
     rotate([90,0,0])
     linear_extrude(height=xyz[1])
     ChamferedSquare(xy=[xyz[0], xyz[2]], r=r, $fn=fn);
     
     // Z
+    if (chamferXYZ[2])
     linear_extrude(height=xyz[2])
     ChamferedSquare(xy=[xyz[0], xyz[1]], r=r, teardrop=false, $fn=fn);
   }
@@ -249,7 +254,7 @@ translate([-1.5,0,0])
 ChamferedSquare(xy=[1,2]);
 
 translate([-3,0,0])
-ChamferedCube(r=0.125);
+ChamferedCube(r=0.125, chamferXYZ=[1,1,1]);
 
 translate([-4,0,0]) {
   Fillet();
