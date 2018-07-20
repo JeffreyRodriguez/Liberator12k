@@ -17,6 +17,7 @@ AR15_GAS_CHANNEL_LENGTH = UnitsImperial(4.334);
 AR15_GAS_CHANNEL_WIDTH = UnitsImperial(0.42+0.1625);
 AR15_GAS_CHANNEL_HEIGHT = UnitsImperial(0.5+0.1);
 
+GAS_PORT_RADIUS =UnitsImperial(.2);
 barrelNutWall= UnitsImperial(0.25);
 
 module BoltPositions() {
@@ -103,9 +104,9 @@ difference() {
   FlatHeadBolt(diameter=0.118, headDiameter=0.3, length=3, extraHead=1, cutter=true);
   
   // Gas ports
-  for (Z = [0,UnitsMetric(20),UnitsMetric(40),UnitsMetric(60)])
-  translate([0,0,UnitsMetric(25)+Z])
+  for (Z = [0:floor(AR15_GAS_CHANNEL_LENGTH-2)])
+  translate([0,0,AR15_BARRELNUT_LENGTH+GAS_PORT_RADIUS+Z])
   rotate([0,-90,180])
-  linear_extrude(height=UnitsMetric(150), center=true)
-  Teardrop(r=UnitsMetric(5));
+  linear_extrude(height=UnitsImperial(4), center=true)
+  Teardrop(r=GAS_PORT_RADIUS);
 }
