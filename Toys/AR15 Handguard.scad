@@ -96,7 +96,7 @@ difference() {
   ChamferedCube([AR15_BARRELNUT_RADIUS+AR15_GAS_CHANNEL_HEIGHT,
                  AR15_GAS_CHANNEL_WIDTH,
                  AR15_GAS_CHANNEL_LENGTH+AR15_BARRELNUT_LENGTH],
-                 r=UnitsMetric(4));
+                 r=UnitsMetric(4), chamferXYZ=[0,0,1]);
   
   
   BoltPositions()
