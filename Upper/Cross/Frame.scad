@@ -36,6 +36,50 @@ function FrameRodOffset()
            + OffsetFrameRod()
            ;
 
+module FrameRod(length=FrameRodLength(),
+                clearance=RodClearanceLoose(),
+                rodFnAngle=90,
+                nutHeight=FrameNutHeight(),
+                nutRadius=0.25,
+                washerHeight=DEFAULT_WASHER_HEIGHT,
+                washerDiameter=0.65, washerHeight=0.07) {
+
+  translate([ReceiverLugRearMinX(),0,0]) {
+    
+    // Rod
+    rotate([0,90,0])
+    translate([0,0,ManifoldGap()])
+    Rod(rod=FrameRod(), length=length -ManifoldGap(2), clearance=clearance);
+                     
+    // Nuts
+    color("DimGrey") {
+      
+      // Front
+      translate([length,0,0])
+      rotate([0,-90,0])
+      cylinder(r=nutRadius, h=nutHeight, $fn=6);
+      
+      // Rear
+      translate([-washerHeight,0,0])
+      rotate([0,-90,0])
+      cylinder(r=nutRadius, h=nutHeight, $fn=6);
+    }
+                     
+    // Washers
+    color("Silver") {
+      
+      // Front
+      translate([length-washerHeight-nutHeight,0,0])
+      rotate([0,90,0])
+      cylinder(r=washerDiameter/2, h=washerHeight, $fn=20);
+      
+      // Rear
+      rotate([0,-90,0])
+      cylinder(r=washerDiameter/2, h=washerHeight, $fn=20);
+    }
+  }
+}
+
 module FrameIterator() {
   for (angle = FrameRodAngles())
   rotate(angle)
