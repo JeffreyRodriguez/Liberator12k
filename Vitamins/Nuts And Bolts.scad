@@ -320,13 +320,18 @@ module NutAndBolt(bolt=Spec_BoltM3(), boltLength=1, boltLengthExtra=0,
 
 
 // M5x10 FIXME
-module FlatHeadBolt(diameter=0.193, headDiameter=0.353, extraHead=1, length=0.3955,
-                    sink=0.01, teardrop=true, cutter=false, clearance=0.01) {
+module FlatHeadBolt(diameter=UnitsImperial(0.193),
+                headDiameter=UnitsImperial(0.353),
+                   extraHead=UnitsImperial(1),
+                      length=UnitsImperial(0.3955),
+                        sink=UnitsImperial(0.01),
+                   clearance=UnitsImperial(0.01),
+                    teardrop=true,
+                      cutter=false) {
   radius = diameter/2;
   headRadius = headDiameter/2;
 
   render()
-  scale(25.4)
   translate([0,0,sink])
   union() {
 
