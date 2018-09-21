@@ -462,9 +462,9 @@ module CrossFitting(tee, infill=true, hollow=false, $fn=40) {
   }
 };
 
-//Tee(TeeThreeQuarterInch);
+//Tee(Spec_AnvilForgedSteel_OneInch());
 
-module TeeRim(tee=Spec_TeeThreeQuarterInch(), height=1, clearance=0) {
+module TeeRim(tee=Spec_AnvilForgedSteel_OneInch(), height=1, clearance=0) {
   cylinder(r=TeeRimRadius(tee) + clearance, h=height, $fn=36);
 }
 

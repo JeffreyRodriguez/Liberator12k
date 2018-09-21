@@ -43,8 +43,7 @@ module PipeCalibration(pipe=undef, clearance=PipeClearanceSnug, height=1/4, wall
 
 
 scale([25.4,25.4,25.4]) {
-  TeeCalibration(tee=Spec_304SS_150_TeeThreeQuarterInch());
-  *TeeCalibration(tee=Spec_TeeThreeQuarterInch());
+  TeeCalibration(tee=Spec_AnvilForgedSteel_OneInch());
   
   *PipeCalibration(pipe=TubingOnePointOneTwoFive, clearance=PipeClearanceLoose,
                   height=1/2, wall=1/4,
