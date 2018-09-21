@@ -37,7 +37,7 @@ function TriggerHeight() = GripCeiling()+TriggerFingerDiameter();
 function TriggerWidth() = 0.49;
 function SearTravel() = 0.25;
 function TriggerTravel() = SearTravel()*1.5;
-function SearLength() = 1.5 + abs(SearPinOffsetZ()) + SearTravel();
+function SearLength() = abs(SearPinOffsetZ()) + SearTravel();
 
 module Sear(length=SearLength()) {
 
@@ -46,7 +46,7 @@ module Sear(length=SearLength()) {
   translate([0,0,SearTravel()*Animate(ANIMATION_STEP_TRIGGER_RESET)])
   translate([0,0,SearPinOffsetZ()-SearBottomOffset()])
   color("LightGreen")
-  Rod(rod=SearRod(), length=length);
+  SquareRod(rod=SearRod(), length=length);
 
   translate([0,0,-SearTravel()*Animate(ANIMATION_STEP_TRIGGER)])
   translate([0,0,SearTravel()*Animate(ANIMATION_STEP_TRIGGER_RESET)])
@@ -56,11 +56,11 @@ module Sear(length=SearLength()) {
   %Rod(rod=SearPinRod(), length=0.8, center=true);
 }
 
-module SearCutter(length=SearLength()+SearTravel(), searLengthExtra=0, wideTrack=false) {
+module SearCutter(length=SearLength()+SearTravel(), searLengthExtra=0, crosspin=true,wideTrack=false) {
   color("Red", 0.25)
   union() {
     translate([0,0,SearPinOffsetZ()-SearBottomOffset()-SearTravel()-SearSpringCompressed()])
-    Rod(rod=SearRod(),
+    SquareRod(rod=SearRod(),
         clearance=RodClearanceLoose(),
         length=length+searLengthExtra);
   
@@ -72,6 +72,7 @@ module SearCutter(length=SearLength()+SearTravel(), searLengthExtra=0, wideTrack
           RodDiameter(SearRod()),
           SearLength()+SearTravel()+searLengthExtra]);
 
+    if (crosspin)
     VerticalSearPinTrack();
   }
 }
@@ -204,7 +205,8 @@ module SearSupportTab(cutter=false) {
     }
 
     if (!cutter)
-    SearCutter(wideTrack=true);
+    translate([0,0,-SearTravel()])
+    SearCutter(length=SearLength()+(SearTravel()*4), wideTrack=true);
 
     ReceiverLugFront(clearance=0.01);
 
@@ -327,5 +329,5 @@ module trigger_plater($t=0) {
 
 echo("Sear Length", SearLength());
 
-*!scale(25.4)
+!scale(25.4)
 trigger_plater();
