@@ -3,13 +3,15 @@ use <../Meta/Resolution.scad>;
 use <../Meta/Manifold.scad>;
 
 module RoundedBoolean(edgeOffset=1, edgeSign=-1,
-                      r=0.25,
+                      r=0.25, angle=0,
                       teardrop=false, teardropAngle=-90) {
+  translate([edgeOffset,0])
+  rotate(angle)
   difference() {
-    translate([edgeOffset-r,-r])
+    translate([-r,-r])
     square([r*2, r*2]);
 
-    translate([edgeOffset+(edgeSign*r),r]) {
+    translate([(edgeSign*r),r]) {
       if (teardrop){
         rotate(teardropAngle)
         Teardrop(r=r);
@@ -122,12 +124,17 @@ module ChamferedSquareHole(sides=[1,1], length=1, center=true,
 }
 
 module ChamferedSquare(xy=[1,1], r=0.25,
-                       teardrop=true, teardropTruncated=true) {
+                       teardrop=true, teardropTop=true, teardropTruncated=true) {
   hull()
   for (mX = [r,xy[0]-r]) {
     // Top Circle
     translate([mX, xy[1]-r])
-    circle(r=r, $fn=60);
+    if (teardrop) {
+      rotate(90)
+      Teardrop(r=r, truncated=teardropTruncated, $fn=60);
+    } else {
+      circle(r=r, $fn=60);
+    }
 
     // Bottom
     translate([mX, r])
@@ -141,8 +148,10 @@ module ChamferedSquare(xy=[1,1], r=0.25,
 
 }
 
-module ChamferedCube(xyz=[1,2,3], r=0.25, center=false,
-                     chamferXYZ=[1,1,1], fn=20) {
+module ChamferedCube(xyz=[1,2,3], r=0.25, center=false, fn=20,
+                     chamferXYZ=[1,1,1],
+                     teardropXYZ=[true, true, true],
+                     teardropTopXYZ=[true, true, true]) {
   
   translate([center ? -xyz[0]/2 : 0,
               center ? -xyz[1]/2 : 0,
@@ -153,19 +162,22 @@ module ChamferedCube(xyz=[1,2,3], r=0.25, center=false,
     if (chamferXYZ[0])
     rotate([90,0,90])
     linear_extrude(height=xyz[0])
-    ChamferedSquare(xy=[xyz[1], xyz[2]], r=r, $fn=fn);
+    ChamferedSquare(xy=[xyz[1], xyz[2]], r=r, $fn=fn,
+                    teardrop=teardropXYZ[0], teardrop=teardropTopXYZ[0]);
 
     // Y
     if (chamferXYZ[1])
     mirror([0,1,0])
     rotate([90,0,0])
     linear_extrude(height=xyz[1])
-    ChamferedSquare(xy=[xyz[0], xyz[2]], r=r, $fn=fn);
+    ChamferedSquare(xy=[xyz[0], xyz[2]], r=r, $fn=fn,
+                    teardrop=teardropXYZ[1], teardrop=teardropTopXYZ[1]);
     
     // Z
     if (chamferXYZ[2])
     linear_extrude(height=xyz[2])
-    ChamferedSquare(xy=[xyz[0], xyz[1]], r=r, teardrop=false, $fn=fn);
+    ChamferedSquare(xy=[xyz[0], xyz[1]], r=r, $fn=fn,
+                    teardrop=teardropXYZ[2], teardrop=teardropTopXYZ[2]);
   }
 }
 
