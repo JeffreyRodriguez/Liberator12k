@@ -280,7 +280,7 @@ module FreedomFab_DriveWheel(id=5, od=15, height=35, clearance=0.625, dWidth=4) 
 
 // Motors
 for (m = [-1,1]) translate([xRodLength/2*m,-(yRodLength/2) - 30,0]) mirror([m,0,0])
-!FreedomFab_DriveWheel();
+FreedomFab_DriveWheel();
 
 // Y-Slide
 for (m = [-1,1]) translate([xRodLength/2*m,0,0]) mirror([m,0,0])
