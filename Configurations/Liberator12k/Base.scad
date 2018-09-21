@@ -86,7 +86,7 @@ module Liberator12k_Base(strikerLength=StrikerRodLength(),
     GuardBolt(clearance=false);
     HandleBolts(clearance=false);
     Lower(alpha=alpha,
-          showTrigger=trigger,
+          showTrigger=trigger, searLength=SearLength()+ReceiverCenter()+RodDiameter(SearRod()),
           showLeft=lowerLeft, showRight=lowerRight);
   }
 
@@ -95,10 +95,16 @@ module Liberator12k_Base(strikerLength=StrikerRodLength(),
 
   FiringPinGuide(debug=true);
 
+
+  color("DarkSlateGray") render() DebugHalf(dimension=3000)
   Receiver(alpha=alpha);
 
-  CrossInserts(alpha=alpha);
+  //CrossInserts(alpha=alpha);
+  
+  color("OliveDrab") render() DebugHalf(dimension=3000)
   CrossUpperFront(alpha=alpha);
+  
+  color("YellowGreen") render() DebugHalf(dimension=3000)
   CrossUpperBack(alpha=alpha);
 }
 
@@ -120,7 +126,11 @@ module Liberator12k_Stock(alpha=1) {
     StrikerSpacer(length=StrikerSpacerLength(), alpha=0.5);
   }
 
+
+  color("SteelBlue") render() DebugHalf(dimension=3000)
   Stock(alpha=alpha);
+  
+  color("DarkSlateGray") render() DebugHalf(dimension=3000)
   Butt(alpha=alpha);
 }
 
