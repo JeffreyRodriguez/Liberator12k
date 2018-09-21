@@ -9,6 +9,7 @@ module PrintableShaftCollar(pipeSpec=Spec_TubingOnePointOneTwoFive(),
                             pipeClearance=PipeClearanceLoose(),
                             length=UnitsMetric(10), height=UnitsMetric(12),
                             wall=UnitsMetric(5),
+                            nutEnable=true,
                             setScrewSpec=Spec_BoltM4(), setScrewLength=UnitsMetric(8),
                             screwOffsetZ=UnitsMetric(6),
                             teardropAngle=90, cutter=false, cutterClearance=0.007) {
@@ -47,6 +48,7 @@ module PrintableShaftCollar(pipeSpec=Spec_TubingOnePointOneTwoFive(),
              radius=PipeOuterRadius(pipeSpec),
              length=setScrewLength,
              capHeightExtra=wall,
+             nutEnable=nutEnable,
              teardrop=true, teardropAngle=teardropAngle,
              cutter=true);
   }
