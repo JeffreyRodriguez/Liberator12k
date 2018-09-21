@@ -19,10 +19,10 @@ module Liberator12k_BreakAction(barrelLength=18, alpha=1) {
   ForendPivotedAssembly();
 }
 
-Liberator12k_Base(lowerLeft=false, lowerRight=false);
-Liberator12k_Stock(alpha=0.1);
-Liberator12k_CoupledFrame(length=PivotedForendFrameLength(), couplerAlpha=0.5);
+Liberator12k_Base(lowerLeft=true, lowerRight=true);
+Liberator12k_Stock(alpha=1);
+*Liberator12k_CoupledFrame(length=PivotedForendFrameLength(), couplerAlpha=0.5);
 
-//Liberator12k_PlainFrame(length=9.85);
+Liberator12k_PlainFrame(length=9.85);
 
 Liberator12k_BreakAction();
