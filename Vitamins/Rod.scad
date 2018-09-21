@@ -50,11 +50,25 @@ module Rod2d(rod=Spec_RodOneQuarterInch(), clearance=undef, extraWall=0, teardro
   }
 }
 
+/**
+ * A 2D rod (square).
+ * @param rod The rod to render.
+ * @param clearance The RodClearance to use.
+ */
+module SquareRod2d(rod=Spec_RodOneQuarterInch(), clearance=undef, extraWall=0) {
+  square(RodDiameter(rod, clearance)+extraWall, center=true);
+}
 
 module Rod(rod=Spec_RodOneQuarterInch(), length=1, clearance=undef, center=false, teardrop=false, teardropRotation=0, teardropTruncated=true, $fn=undef) {
   render(convexity=1)
   linear_extrude(height=length, center=center)
   Rod2d(rod=rod, clearance=clearance, teardrop=teardrop, teardropRotation=teardropRotation, teardropTruncated=teardropTruncated, $fn=$fn);
+}
+
+module SquareRod(rod=Spec_RodOneQuarterInch(), length=1, clearance=undef, center=false) {
+  render(convexity=1)
+  linear_extrude(height=length, center=center)
+  SquareRod2d(rod=rod, clearance=clearance);
 }
 
 function Spec_RodBicNozzle() = [
