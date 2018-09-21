@@ -28,7 +28,7 @@ module SearGuide() {
   render(convexity=4)
   difference() {
     translate([0,0,-ReceiverCenter()])
-    TeeInsert(topFactor=0.7);
+    TeeInsert(tee=ReceiverTee(), topFactor=0.7);
 
     translate([0,0,-ReceiverCenter()])
     SearCutter();

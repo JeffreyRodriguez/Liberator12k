@@ -2,6 +2,8 @@ use <../../Meta/Manifold.scad>;
 use <../../Meta/Resolution.scad>;
 use <../../Meta/Units.scad>;
 
+use <../../Components/Teardrop.scad>;
+
 use <../../Vitamins/Pipe.scad>;
 use <../../Vitamins/Rod.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;
@@ -52,7 +54,7 @@ module FrameRod(length=FrameRodLength(),
     Rod(rod=FrameRod(), length=length -ManifoldGap(2), clearance=clearance);
                      
     // Nuts
-    color("DimGrey") {
+    %color("DimGrey") {
       
       // Front
       translate([length,0,0])
@@ -66,7 +68,7 @@ module FrameRod(length=FrameRodLength(),
     }
                      
     // Washers
-    color("Silver") {
+    %color("Silver") {
       
       // Front
       translate([length-washerHeight-nutHeight,0,0])
@@ -80,11 +82,11 @@ module FrameRod(length=FrameRodLength(),
   }
 }
 
-module FrameIterator() {
-  for (angle = FrameRodAngles())
-  rotate(angle)
-  translate([-FrameRodOffset(ReceiverTee()), 0])
-  rotate(-angle)
+module FrameIterator(mXY = [[0,1],[0,1]]) {
+  for (mX = mXY[0]) mirror([mX, 0])
+  for (mY = mXY[1]) mirror([0, mY])
+  translate([ReceiverCenter() - RodRadius(FrameRod()) - WallFrameRod(),
+             TeeRimRadius(ReceiverTee())+RodRadius(FrameRod())])
   children();
 }
 
@@ -146,11 +148,12 @@ module FrameCouplingNuts(length=DEFAULT_COUPLING_NUT_LENGTH,
 }
 
 module Quadrail2d(rod=Spec_RodFiveSixteenthInch(), rodClearance=RodClearanceLoose(),
-                  bodyRadius=1.478, wallRod=WallFrameRod(),
+                  bodyRadius=ReceiverOR()+WallTee(),
+                  wallRod=WallFrameRod(),
                   flatAngles=[0,180],
                   flatClearance=0.005,
-                  scallopAngles=[90,-90],
-                  scallopOffset=ReceiverOR()+0.375,
+                  scallopAngles=[], //[90,-90],
+                  scallopOffset=ReceiverOR()+WallTee(),
                   scallopRadius=1.125,
                   $fn=Resolution(20, 60)) {
   difference() {
@@ -177,22 +180,30 @@ module Quadrail2d(rod=Spec_RodFiveSixteenthInch(), rodClearance=RodClearanceLoos
     for (scallopAngle = scallopAngles)
     rotate(scallopAngle)
     translate([scallopRadius+scallopOffset,0])
-    circle(r=scallopRadius);
+    for (m = [0,1]) mirror([0,m])
+    rotate(90+(45/2))
+    Teardrop(r=scallopRadius);
   }
 }
 
-scale(25.4)
+//scale(25.4)
 render() {
-
-  %Frame();
-
   FrameCouplingNuts();
 
-  translate([-ManifoldGap(),0,0])
-  mirror([1,0,0])
-  %FrameNuts(washers=true);
+  translate([ReceiverLugRearMinX(),0,0]) {
+    %Frame();
 
-  %rotate([0,90,0])
-  linear_extrude(height=1)
-  Quadrail2d();
+    translate([-ManifoldGap(),0,0])
+    mirror([1,0,0])
+    %FrameNuts(washers=true);
+
+    %rotate([0,90,0])
+    linear_extrude(height=1)
+    Quadrail2d();
+  }
+  
+  Reference();
 }
+
+
+FrameRod();

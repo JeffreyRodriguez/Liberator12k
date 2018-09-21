@@ -23,22 +23,6 @@ module CrossFittingQuadrail2d(rod=Spec_RodFiveSixteenthInch(),
   }
 }
 
-module CrossInserts(width=0.25, height=0.75, slotHeight=1.25,
-                    angles=[90, 270], clearance=0.005,
-                    cutter=false, alpha=1) {
-
-  color("SteelBlue", alpha)
-  translate([-ReceiverCenter(),0,0])
-  Sidebars(width=width, height=height,
-           length=ReceiverLugFrontMaxX()+ReceiverCenter(),
-           angles=angles, clearance=clearance);
-
-  if (cutter)
-  translate([-slotHeight/2,0,0])
-  Sidebars(width=width, height=height, length=slotHeight,
-           angles=angles, cutter=true, clearance=clearance);
-}
-
 module CrossUpperFront($fn=40, alpha=1) {
   color("Orange", alpha)
   render(convexity=4)
@@ -67,8 +51,6 @@ module CrossUpperFront($fn=40, alpha=1) {
     Frame();
 
     Breech();
-
-    CrossInserts(cutter=true);
 
     ChargingHandleCutout();
 
@@ -112,8 +94,6 @@ module CrossUpperBack(alpha=1) {
 
     ReferenceTeeCutter(topLength=0.01);
 
-    CrossInserts(cutter=true);
-
     translate([OffsetFrameBack()-ManifoldGap(),0,0])
     Frame();
   }
@@ -124,7 +104,6 @@ Frame();
 Receiver();
 Breech();
 Stock();
-CrossInserts();
 CrossUpperFront(alpha=0.25);
 CrossUpperBack(alpha=0.25);
 
@@ -136,7 +115,7 @@ rotate([0,90,0])
 CrossUpperFront();
 
 // Plated Back
-*!scale(25.4)
+!scale(25.4)
 translate([0,0,-ReceiverLugRearMinX()])
 rotate([0,-90,0])
 CrossUpperBack();

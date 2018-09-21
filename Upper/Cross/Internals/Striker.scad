@@ -19,7 +19,9 @@ use <../../../Lower/Trigger.scad>;
 
 function StrikerRodLength() = 6;
 //function StrikerTravel() = ReceiverCenter() - BushingDepth(BreechBushing()) -0.4+RodRadius(SearRod());
-function StrikerTravel() = ReceiverIR()+RodRadius(SearRod())-0.125;
+//function StrikerTravel() = ReceiverIR()+RodRadius(SearRod())-0.125;
+function StrikerTravel() = 0.55;
+
 function StrikerCollarMaxX() = -TeePipeEndOffset(ReceiverTee(),StockPipe())-StrikerTravel();
 function StrikerInnerRadius() = RodRadius(StrikerRod(), RodClearanceLoose())*1.02;
 function StrikerSpacerRadius() = PipeInnerRadius(pipe=StockPipe(), clearance=PipeClearanceLoose(), clearanceSign=-1)*0.95;
@@ -33,7 +35,7 @@ function StrikerSpringLength(extension=0) = 3
                                           - StrikerTravel()
                                           + (StrikerTravel()*extension);
 
-function StrikerTopExtension() = ReceiverIR()+0.1;
+function StrikerTopExtension() = 0.7;
 function StrikerTopLength() = StrikerCollarLength()-0.5
                               +abs(StrikerTravel())+StrikerTopExtension();
 
@@ -64,13 +66,13 @@ module StrikerTop2d() {
     rotate(90)
     difference() {
       circle(r=StrikerSpacerRadius(), $fn=40);
-      Rod2d(rod=StrikerRod(), clearance=RodClearanceLoose());
+      SquareRod2d(rod=StrikerRod(), clearance=RodClearanceLoose());
     }
   }
 }
 
 module StrikerTop() {
-  color("Violet", 0.5)
+  color("Violet")
   render(convexity=4)
   difference() {
     translate([StrikerCollarMaxX()-StrikerCollarLength()+0.5,0,0])
@@ -83,7 +85,7 @@ module StrikerTop() {
 }
 
 module StrikerCollar(debug=false) {
-  color("Magenta", 0.5)
+  color("Magenta")
   render(convexity=4)
   difference() {
 
@@ -114,7 +116,7 @@ module StrikerCollar(debug=false) {
 
     // Rod Hole
     rotate([0,-90,0])
-    Rod(rod=StrikerRod(), clearance=RodClearanceLoose(), length=StrikerCollarLength()*2);
+    SquareRod(rod=StrikerRod(), clearance=RodClearanceLoose(), length=StrikerCollarLength()*2);
   }
 }
 
@@ -122,7 +124,7 @@ module StrikerSpacer(length=3, rodClearance=RodClearanceLoose()) {
   render()
   linear_extrude(height=length) {
     PipeInsert2d(pipeSpec=StockPipe(), pipeClearance=PipeClearanceLoose())
-    Rod2d(rod=StrikerRod(), clearance=rodClearance);
+    SquareRod2d(rod=StrikerRod(), clearance=rodClearance);
   };
 }
 
@@ -183,7 +185,7 @@ module Striker(length=StrikerRodLength()) {
     color("Orange")
     translate([-RodRadius(SearRod()),0,0])
     rotate([0,-90,0])
-    Rod(StrikerRod(), length=length);
+    SquareRod(StrikerRod(), length=length);
 
     StrikerCollar();
     StrikerTop();
@@ -204,7 +206,7 @@ module StrikerJig(width=1, height=0.75) {
     // Striker rod hole
     translate([ManifoldGap(),0,0])
     rotate([0,-90,0])
-    Rod(rod=StrikerRod(),
+    SquareRod(rod=StrikerRod(),
         //teardrop=true, teardropTruncated=false,
         clearance=RodClearanceLoose(),
         length=StrikerCollarLength()*2);
@@ -221,7 +223,7 @@ module StrikerJig(width=1, height=0.75) {
 }
 
 //!scale(25.4)rotate([0,90,0]) translate([RodRadius(SearRod()),0,0])
-%StrikerJig(width=0.75);
+*%StrikerJig(width=0.75);
 
 *!scale(25.4)
 rotate([90,0,0])

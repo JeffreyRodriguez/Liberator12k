@@ -101,7 +101,7 @@ module ChargingInsert(single=false) {
     translate([0,0,ReceiverCenter()])
     mirror([0,0,1])
     intersection() {
-      TeeInsert();
+      #TeeInsert(tee=ReceiverTee());
 
       translate([0,0,-ManifoldGap()])
       cylinder(r=TeeInnerRadius(ReceiverTee())+0.1,
@@ -124,7 +124,9 @@ ChargingInsert();
 
 Striker();
 
-color("black", 0.25)
+color("DimGrey", 1)
+render()
+DebugHalf(dimension=3000)
 Reference();
 
 
