@@ -9,6 +9,7 @@ module SetScrew(radius=1,
                 teardrop=true, teardropAngle=90,
                 nutBackset=UnitsMetric(1),
                 capHeightExtra=0,
+                nutEnable=true,
                 cutter=false) {
   translate([radius+UnitsImperial(0.02),0,0])
   rotate([0,90,0])
@@ -18,6 +19,7 @@ module SetScrew(radius=1,
              boltLengthExtra=(cutter?radius:0),
              nutHeightExtra=(cutter?radius:0),
              nutBackset=nutBackset,
+             nutEnable=true,
              teardrop=teardrop, teardropAngle=teardropAngle,
              clearance=cutter);
 }
