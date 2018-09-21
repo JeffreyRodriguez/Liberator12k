@@ -4,6 +4,8 @@ use <../Meta/Manifold.scad>;
 use <../Meta/Resolution.scad>;
 use <../Meta/Units.scad>;
 
+use <../Finishing/Chamfer.scad>;
+
 use <../Vitamins/Nuts And Bolts.scad>;
 use <../Vitamins/Pipe.scad>;
 use <../Vitamins/Rod.scad>;
@@ -59,6 +61,12 @@ module TriggerFinger() {
   TriggerFingerSlot();
 }
 
+module LowerMiddleBoss(clearance=0) {  
+  translate([LowerMaxX()-ManifoldGap(), -0.25-clearance, -LowerGuardHeight()])
+  cube([0.125+ManifoldGap(),
+        0.5+(clearance*2),
+        LowerGuardHeight()]);
+}
 
 module TriggerGuard() {
   height = LowerGuardHeight();
@@ -68,9 +76,9 @@ module TriggerGuard() {
 
       // Main block
       translate([ReceiverLugRearMinX(), -GripWidth()/2, -height])
-      cube([LowerMaxX()+abs(ReceiverLugRearMinX()),
+      ChamferedCube([LowerMaxX()+abs(ReceiverLugRearMinX()),
             GripWidth(),
-            height]);
+            height], r=0.0625);
 
       // Bottom chamfer
       translate([0,0,-height+0.1])
@@ -86,6 +94,9 @@ module TriggerGuard() {
         circle(r=0.1, $fn=Resolution(12,24));
       }
     }
+    
+    // Lower Middle Boss
+    LowerMiddleBoss();
 
     LowerReceiverSupports();
     GripHandle();
