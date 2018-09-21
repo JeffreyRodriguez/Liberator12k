@@ -66,6 +66,16 @@ function Spec_BoltM8() = [
   [BoltFn, 20]
 ];
 
+function Spec_BoltOneHalf() = [
+  [BoltDiameter,    UnitsImperial(0.5)],
+  [BoltCapDiameter, UnitsImperial(0.85)],
+  [BoltCapHeight,   UnitsImperial(0.310)],
+  [BoltNutDiameter, UnitsImperial(0.85)],
+  [BoltNutHeight,   UnitsImperial(0.310)],
+  [BoltClearance,   UnitsImperial(0.04)],
+  [BoltFn, 30]
+];
+
 /**
  * Lookup the diameter of a bolt.
  * @param bolt The bolt to lookup.
@@ -131,10 +141,16 @@ module Bolt2d(bolt=Spec_BoltM3(), clearance=false, teardrop=false, teardropAngle
 
 module Bolt(bolt=Spec_BoltM3(), length=1,
             clearance=false, teardrop=false, teardropAngle=0,
-            cap=true, capRadiusExtra=0, capHeightExtra=0, $fn=undef) {
+            hex=false, cap=true, capRadiusExtra=0, capHeightExtra=0, $fn=undef,
+            capOrientation=false) {
+  
+  capFn = hex ? 6 : BoltFn(bolt, $fn)*2;
+  zOrientation = capOrientation ? -length : 0;
+  
+  translate([0,0,zOrientation])
   union() {
     linear_extrude(height=length)
-    Bolt2d(bolt, clearance, teardrop=teardrop, teardropAngle=teardropAngle, $fn=$fn);
+    Bolt2d(bolt, clearance, teardrop=teardrop, teardropAngle=teardropAngle);
 
     // Cap
     if (cap) {
@@ -143,11 +159,12 @@ module Bolt(bolt=Spec_BoltM3(), length=1,
         linear_extrude(height=BoltCapHeight(bolt)+capHeightExtra)
         Teardrop(r=BoltCapRadius(bolt, clearance)+capRadiusExtra,
                  rotation=teardropAngle,
-                 $fn=BoltFn(bolt, $fn)*2);
+                 $fn=capFn);
       } else {
         translate([0,0,length-ManifoldGap()])
         cylinder(r=BoltCapRadius(bolt, clearance)+capRadiusExtra,
-                h=BoltCapHeight(bolt)+capHeightExtra, $fn=BoltFn(bolt, $fn)*2);
+                h=BoltCapHeight(bolt)+capHeightExtra,
+                $fn=capFn);
 
       }
     }
@@ -163,6 +180,9 @@ module BoltCapSocket() {
 }
 
 module BoltCapButton() {
+}
+
+module BoltCapHex() {
 }
 
 NutHexDiameter          = 1;
@@ -283,7 +303,7 @@ module NutHeatset(spec=Spec_NutM5(), extraLength=0) {
 
 
 module NutAndBolt(bolt=Spec_BoltM3(), boltLength=1, boltLengthExtra=0,
-                  cap=true, capRadiusExtra=0, capHeightExtra=0,
+                  capHex=false, cap=true, capRadiusExtra=0, capHeightExtra=0,
                   nutRadiusExtra=0, nutHeightExtra=0, nutBackset=0,
                   nutSideExtra=0,
                   nutSideAngle=0,
@@ -299,6 +319,7 @@ module NutAndBolt(bolt=Spec_BoltM3(), boltLength=1, boltLengthExtra=0,
     translate([0,0,-boltLengthExtra])
     Bolt(bolt=bolt, length=boltLength+boltLengthExtra,
          cap=cap, capHeightExtra=capHeightExtra, capRadiusExtra=capRadiusExtra,
+         hex=capHex,
          clearance=clearance, teardrop=teardrop, teardropAngle=teardropAngle);
 
     // Nut
