@@ -67,7 +67,8 @@ module ReceiverLugBoltHoles(boltSpec=Spec_BoltM4(),
               nutHeightExtra=nutHeightExtra, nutBackset=0.05);
 }
 
-module ReceiverLugRear(extraTop=ManifoldGap(), cutter=false,
+module ReceiverLugRear(extraTop=ManifoldGap(),
+                       cutter=false,
                        teardrop=true, teardropAngle=90, hole=true) {
 
   color("DarkOrange")
@@ -84,14 +85,15 @@ module ReceiverLugRear(extraTop=ManifoldGap(), cutter=false,
   }
 }
 
-module ReceiverLugFront(cutter=false, clearance=UnitsImperial(0.007), extraTop=ManifoldGap()) {
+module ReceiverLugFront(extraTop=ManifoldGap(),
+                        cutter=false) {
   color("DarkOrange")
   render()
   translate([ReceiverLugFrontMaxX(),0,ReceiverLugFrontZ()])
   mirror([1,0,0])
   T_Lug(length=ReceiverLugFrontLength(), tabWidth=1.25,
           height=abs(ReceiverLugFrontZ())+extraTop,
-          clearance=clearance, clearVeritcal=false,
+          clearVeritcal=false,
           cutter=cutter);
 }
 
