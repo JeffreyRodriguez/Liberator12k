@@ -40,7 +40,7 @@ $fn= 40;
 
 scale(25.4)
 render()
-//DebugHalf(dimension=300) rotate(-90)
+//DebugHalf(dimension=300) rotate(90)
 difference() {
   hull()
   union() {
@@ -100,8 +100,7 @@ difference() {
   
   
   BoltPositions()
-  scale(1/25.4)
-  FlatHeadBolt(diameter=0.118, headDiameter=0.3, length=3, extraHead=1, cutter=true);
+  FlatHeadBolt(diameter=0.118, headDiameter=0.32, length=3, extraHead=1, cutter=true);
   
   // Gas ports
   for (Z = [0:floor(AR15_GAS_CHANNEL_LENGTH-2)])
