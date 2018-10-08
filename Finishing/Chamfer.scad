@@ -1,4 +1,4 @@
-use <../Components/Teardrop.scad>;
+use <../Shapes/Teardrop.scad>;
 use <../Meta/Resolution.scad>;
 use <../Meta/Manifold.scad>;
 

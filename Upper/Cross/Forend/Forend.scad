@@ -2,7 +2,7 @@
 use <../../../Meta/Manifold.scad>;
 use <../../../Meta/Resolution.scad>;
 
-use <../../../Components/Semicircle.scad>;
+use <../../../Shapes/Semicircle.scad>;
 
 use <../../../Vitamins/Pipe.scad>;
 use <../../../Vitamins/Rod.scad>;

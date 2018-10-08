@@ -2,7 +2,7 @@ use <../../Meta/Manifold.scad>;
 use <../../Meta/Resolution.scad>;
 use <../../Meta/Units.scad>;
 
-use <../../Components/Teardrop.scad>;
+use <../../Shapes/Teardrop.scad>;
 
 use <../../Vitamins/Pipe.scad>;
 use <../../Vitamins/Rod.scad>;

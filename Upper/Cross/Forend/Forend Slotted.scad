@@ -1,6 +1,6 @@
 use <../../../Meta/Debug.scad>;
 use <../../../Meta/Manifold.scad>;
-use <../../../Components/Semicircle.scad>;
+use <../../../Shapes/Semicircle.scad>;
 use <../../../Vitamins/Pipe.scad>;
 use <../../../Vitamins/Rod.scad>;
 use <../Frame.scad>;

@@ -1,4 +1,4 @@
-use <../Components/Teardrop.scad>;
+use <../Shapes/Teardrop.scad>;
 
 RodDiameter       = 1;
 RodRadius         = 2;

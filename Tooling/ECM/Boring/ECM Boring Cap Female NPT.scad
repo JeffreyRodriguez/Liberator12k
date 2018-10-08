@@ -6,7 +6,7 @@ use <../../../Meta/Units.scad>;
 use <../../../Vitamins/Pipe.scad>;
 use <../../../Vitamins/Rod.scad>;
 use <../../../Finishing/Chamfer.scad>;
-use <../../../Components/Teardrop.scad>;
+use <../../../Shapes/Teardrop.scad>;
 use <../../../Components/ORing.scad>;
 use <../../../Components/Pipe Cap.scad>;
 use <../../../Components/HoseBarbExtension.scad>;

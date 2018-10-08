@@ -1,7 +1,7 @@
 use <../../Meta/Debug.scad>;
 use <../../Meta/Manifold.scad>;
-use <../../Components/Semicircle.scad>;
-use <../../Components/Teardrop.scad>;
+use <../../Shapes/Semicircle.scad>;
+use <../../Shapes/Teardrop.scad>;
 use <../../Components/T Lug.scad>;
 use <../../Finishing/Chamfer.scad>;
 use <../../Vitamins/Pipe.scad>;

@@ -3,7 +3,7 @@ include <../Meta/Animation.scad>;
 use <../Meta/Manifold.scad>;
 use <../Meta/Debug.scad>;
 
-use <../Components/Teardrop.scad>;
+use <../Shapes/Teardrop.scad>;
 
 use <../Vitamins/Rod.scad>;
 use <../Vitamins/Pipe.scad>;

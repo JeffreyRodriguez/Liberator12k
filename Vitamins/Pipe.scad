@@ -12,6 +12,9 @@ PipeClearanceSnug   = 6; // Added to the diameter, should not slip (default)
 PipeClearanceLoose  = 7; // Added to the diameter, should slide freely
 PipeFn              = 8; // Number of sides
 PipeWeightPerUnit   = 9;
+PipeCapDiameter     = 10;
+PipeCapLength       = 11;
+PipeCapDepth        = 12;
 
 function PipeClearanceSnug()  = PipeClearanceSnug;
 function PipeClearanceLoose() = PipeClearanceLoose;
@@ -55,6 +58,11 @@ function PipeOuterCircumference(pipe, clearance, clearanceSign=1) =
 
 function PipeInnerCircumference(pipe, clearance, clearanceSign=1) =
            3.14*PipeInnerDiameter(pipe, clearance, clearanceSign);
+           
+function PipeCapDiameter(pipe, clearance, clearanceSign=1) = lookup(PipeCapDiameter, pipe);
+function PipeCapRadius(pipe, clearance, clearanceSign=1) = PipeCapDiameter(pipe, clearance, clearanceSign)/2;
+function PipeCapLength(pipe) = lookup(PipeCapLength, pipe);
+function PipeCapDepth(pipe) = lookup(PipeCapDepth, pipe);
 
 
 module Pipe2d(pipe, clearance=PipeClearanceSnug(), clearanceSign=1, hollow=false, extraRadius=0, $fn=undef) {
@@ -67,13 +75,12 @@ module Pipe2d(pipe, clearance=PipeClearanceSnug(), clearanceSign=1, hollow=false
          $fn=PipeFn(pipe, $fn));
   }
 };
+
 module Pipe(pipe, length = 1, clearance=PipeClearanceSnug(), center=false, hollow=false) {
   translate([0,0,center ? -length/2 : 0])
   linear_extrude(height=length)
   Pipe2d(pipe=pipe, clearance=clearance, hollow=hollow);
 };
-
-!Pipe(Spec_PipeOneInch(), length=2, clearance=PipeClearanceLoose);
 
 
 // 1/4" Pipe
@@ -147,7 +154,7 @@ function Spec_PipeOneInch() = [
   [PipeWeightPerUnit,   0] // TODO
 ];
 
-// 1" Pipe Sch80
+// 1" NPT Pipe Schedule 80
 function Spec_PipeOneInchSch80() = [
   [PipeInnerDiameter,   0.958],
   [PipeOuterDiameter,   1.315],
@@ -157,7 +164,10 @@ function Spec_PipeOneInchSch80() = [
   [PipeClearanceSnug,   0.002],
   [PipeClearanceLoose,  0.01],
   [PipeFn,              50],
-  [PipeWeightPerUnit,   0] // TODO
+  [PipeWeightPerUnit,   0], // TODO
+  [PipeCapDiameter,     1.75], // TODO: Verify
+  [PipeCapLength,       1.5],   // TODO: Verify
+  [PipeCapDepth,        1]
 ];
 
 // 0.375" OD DOM Tubing (Just guessing)
@@ -373,7 +383,7 @@ module Tee(tee, $fn=40) {
 
      // Top Body
      rotate([0,-90,0])
-     translate([TeeHeight(tee) - (TeeOuterDiameter(tee)/2),0,0])
+     translate([TeeCenter(tee),0,0])
      cylinder(r=TeeOuterRadius(tee), h=TeeWidth(tee) * 0.99, center=true, $fn=36);
 
      // Bottom Body
@@ -402,6 +412,8 @@ module Tee(tee, $fn=40) {
     }
    }
 };
+*Tee(Spec_AnvilForgedSteel_OneInch());
+
 
 
 module CrossFitting(tee, infill=true, hollow=false, $fn=40) {
@@ -462,8 +474,6 @@ module CrossFitting(tee, infill=true, hollow=false, $fn=40) {
   }
 };
 
-//Tee(Spec_AnvilForgedSteel_OneInch());
-
 module TeeRim(tee=Spec_AnvilForgedSteel_OneInch(), height=1, clearance=0) {
   cylinder(r=TeeRimRadius(tee) + clearance, h=height, $fn=36);
 }
@@ -519,7 +529,32 @@ module Bushing(spec=Spec_BushingThreeQuarterInch()) {
   }
 }
 
+module PipeCap(spec=Spec_PipeOneInchSch80(), hollow=true, clearance=undef, clearanceSign=1) {
+    render()
+    difference() {
+        cylinder(r=PipeCapRadius(pipe=spec,
+                 clearance=clearance,
+                 clearanceSign=clearanceSign),
+                 h=PipeCapLength(spec),
+                 $fn=PipeFn(spec)*2);
+        
+        if (hollow)
+        translate([0,0,PipeCapLength(spec)-PipeCapDepth(spec)])
+        cylinder(r=PipeOuterRadius(pipe=spec,
+                 clearance=clearance,
+                 clearanceSign=clearanceSign),
+                 h=PipeCapLength(spec),
+                 $fn=PipeFn(spec)*2);
+    }
+}
+
+DEFAULT_PIPE = Spec_PipeOneInchSch80();
+
+PipeCap(spec=DEFAULT_PIPE);
+
+translate([0,0,PipeCapLength(DEFAULT_PIPE)-PipeThreadDepth(DEFAULT_PIPE)])
+Pipe(pipe=Spec_PipeOneInchSch80(), length=2, clearance=PipeClearanceLoose);
 
 
 *CrossFitting(Spec_AnvilForgedSteel_TeeThreeQuarterInch3k(), hollow=true);
-CrossFitting(Spec_AnvilForgedSteel_OneInch(), hollow=true);
+*CrossFitting(Spec_AnvilForgedSteel_OneInch(), hollow=true);

@@ -1,6 +1,6 @@
 use <../Meta/Units.scad>;
 use <../Meta/Manifold.scad>;
-use <../Components/Teardrop.scad>;
+use <../Shapes/Teardrop.scad>;
 
 BoltDiameter         = 1;
 BoltCapDiameter      = 2;

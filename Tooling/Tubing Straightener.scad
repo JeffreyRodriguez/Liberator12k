@@ -1,4 +1,4 @@
-use <../Components/Teardrop.scad>
+use <../Shapes/Teardrop.scad>
 use <../Finishing/Chamfer.scad>
 
 module StraightenerPulley(grooveRadius=5/16, od=1.5, $fn=60) {

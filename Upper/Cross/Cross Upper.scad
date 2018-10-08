@@ -99,11 +99,11 @@ module CrossUpperBack(alpha=1) {
   }
 }
 
-translate([OffsetFrameBack()-ManifoldGap(),0,0])
+*translate([OffsetFrameBack()-ManifoldGap(),0,0])
 Frame();
-Receiver();
-Breech();
-Stock();
+translate([0,0,-ReceiverCenter()])
+Lower(alpha=1, showTrigger=true);
+Reference();
 CrossUpperFront(alpha=0.25);
 CrossUpperBack(alpha=0.25);
 
@@ -115,7 +115,7 @@ rotate([0,90,0])
 CrossUpperFront();
 
 // Plated Back
-!scale(25.4)
+*!scale(25.4)
 translate([0,0,-ReceiverLugRearMinX()])
 rotate([0,-90,0])
 CrossUpperBack();

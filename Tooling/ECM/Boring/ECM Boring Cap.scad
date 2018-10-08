@@ -3,7 +3,7 @@ use <../../../Meta/Cylinder Text.scad>;
 use <../../../Meta/Manifold.scad>;
 use <../../../Meta/Resolution.scad>;
 use <../../../Finishing/Chamfer.scad>;
-use <../../../Components/Teardrop.scad>;
+use <../../../Shapes/Teardrop.scad>;
 use <../../../Components/ORing.scad>;
 use <../../../Components/Pipe Cap.scad>;
 use <../../../Components/FemaleExtensionNPT.scad>;

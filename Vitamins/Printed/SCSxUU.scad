@@ -1,5 +1,5 @@
-use <../../Components/Semicircle.scad>;
-use <../../Components/Teardrop.scad>;
+use <../../Shapes/Semicircle.scad>;
+use <../../Shapes/Teardrop.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Finishing/Chamfer.scad>;

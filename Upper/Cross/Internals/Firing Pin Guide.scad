@@ -1,8 +1,8 @@
 include <../../../Meta/Animation.scad>;
 
 use <../../../Components/Firing Pin Retainer.scad>;
-use <../../../Components/Semicircle.scad>;
-use <../../../Components/Teardrop.scad>;
+use <../../../Shapes/Semicircle.scad>;
+use <../../../Shapes/Teardrop.scad>;
 
 use <../../../Meta/Manifold.scad>;
 use <../../../Meta/Resolution.scad>;

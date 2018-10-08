@@ -1,8 +1,8 @@
 include <../Meta/Animation.scad>;
 
-use <Semicircle.scad>;
-use <Manifold.scad>;
-use <Debug.scad>;
+use <../Shapes/Semicircle.scad>;
+use <../Meta/Manifold.scad>;
+use <../Meta/Debug.scad>;
 
 use <../Vitamins/Rod.scad>;
 use <../Vitamins/Pipe.scad>;

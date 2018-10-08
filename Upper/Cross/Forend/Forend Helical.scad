@@ -5,7 +5,7 @@ use <../../../Vitamins/Pipe.scad>;
 use <../../../Vitamins/Double Shaft Collar.scad>;
 use <../../../Vitamins/Rod.scad>;
 use <../../../Ammo/Shell Slug.scad>;
-use <../../../Components/Semicircle.scad>;
+use <../../../Shapes/Semicircle.scad>;
 use <../../../Components/Cylinder.scad>;
 use <../../../Lower/Receiver Lugs.scad>;
 use <../../../Lower/Lower.scad>;

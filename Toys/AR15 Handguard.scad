@@ -1,4 +1,4 @@
-use <../Components/Teardrop.scad>;
+use <../Shapes/Teardrop.scad>;
 use <../Finishing/Chamfer.scad>;
 use <../Meta/Units.scad>;
 use <../Meta/Debug.scad>;

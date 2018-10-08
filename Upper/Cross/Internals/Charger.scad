@@ -11,7 +11,7 @@ use <../../../Meta/Debug.scad>;
 use <../../../Meta/Manifold.scad>;
 use <../../../Meta/Resolution.scad>;
 
-use <../../../Components/Semicircle.scad>;
+use <../../../Shapes/Semicircle.scad>;
 use <../../../Components/Tee Insert.scad>;
 
 use <../../../Vitamins/Rod.scad>;
