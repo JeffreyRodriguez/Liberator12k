@@ -8,7 +8,7 @@ use <../../../Vitamins/Rod.scad>;
 use <../../../Finishing/Chamfer.scad>;
 use <../../../Shapes/Teardrop.scad>;
 use <../../../Components/ORing.scad>;
-use <../../../Components/Pipe Cap.scad>;
+use <../../../Components/Pipe/Cap.scad>;
 use <../../../Components/HoseBarbExtension.scad>;
 use <../../../Components/FemaleExtensionNPT.scad>;
 use <../../../Components/Printable Shaft Collar.scad>;

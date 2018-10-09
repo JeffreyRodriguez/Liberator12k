@@ -1,5 +1,5 @@
-use <../Meta/Manifold.scad>;
-use <../Finishing/Chamfer.scad>;
+use <../../Meta/Manifold.scad>;
+use <../../Finishing/Chamfer.scad>;
 
 module PipeCap(pipeDiameter=1,
                    base=0.25,

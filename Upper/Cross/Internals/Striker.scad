@@ -7,7 +7,7 @@ use <../../../Meta/Manifold.scad>;
 use <../../../Meta/Resolution.scad>;
 use <../../../Meta/Units.scad>;
 
-use <../../../Components/Pipe Insert.scad>;
+use <../../../Components/Pipe/Insert.scad>;
 
 use <../../../Vitamins/Nuts And Bolts.scad>;
 use <../../../Vitamins/Pipe.scad>;

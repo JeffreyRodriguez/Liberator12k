@@ -5,7 +5,7 @@ use <../../../Meta/Resolution.scad>;
 use <../../../Finishing/Chamfer.scad>;
 use <../../../Shapes/Teardrop.scad>;
 use <../../../Components/ORing.scad>;
-use <../../../Components/Pipe Cap.scad>;
+use <../../../Components/Pipe/Cap.scad>;
 use <../../../Components/FemaleExtensionNPT.scad>;
 
 function BoringCapBase(bottomWall,

@@ -1,13 +1,13 @@
-use <../Lower/Receiver Lugs.scad>;
-use <../Lower/Lower.scad>;
-use <../Lower/Trigger.scad>;
-use <../Vitamins/Pipe.scad>;
-use <../Vitamins/Rod.scad>;
-use <../Shapes/Semicircle.scad>;
-use <../Shapes/Teardrop.scad>;
-use <../Finishing/Chamfer.scad>;
-use <../Meta/Manifold.scad>;
-use <../Meta/Resolution.scad>;
+use <../../Lower/Receiver Lugs.scad>;
+use <../../Lower/Lower.scad>;
+use <../../Lower/Trigger.scad>;
+use <../../Vitamins/Pipe.scad>;
+use <../../Vitamins/Rod.scad>;
+use <../../Shapes/Semicircle.scad>;
+use <../../Shapes/Teardrop.scad>;
+use <../../Finishing/Chamfer.scad>;
+use <../../Meta/Manifold.scad>;
+use <../../Meta/Resolution.scad>;
 
 WALL=0.1875;
 PIPE = Spec_OnePointFiveSch40ABS();

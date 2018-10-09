@@ -1,6 +1,6 @@
 use <../Vitamins/Pipe.scad>;
 use <../Vitamins/Rod.scad>;
-use <../Components/Pipe Insert.scad>;
+use <../Components/Pipe/Insert.scad>;
 
 //Spec_PipeThreeQuarterInchSch80
 //Spec_PipeOneInchSch80
