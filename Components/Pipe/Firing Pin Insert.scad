@@ -1,14 +1,14 @@
-include <../Meta/Animation.scad>;
+include <../../Meta/Animation.scad>;
 
-use <../Shapes/Semicircle.scad>;
-use <../Meta/Manifold.scad>;
-use <../Meta/Debug.scad>;
+use <../../Shapes/Semicircle.scad>;
+use <../../Meta/Manifold.scad>;
+use <../../Meta/Debug.scad>;
 
-use <../Vitamins/Rod.scad>;
-use <../Vitamins/Pipe.scad>;
+use <../../Vitamins/Rod.scad>;
+use <../../Vitamins/Pipe.scad>;
 
-use <Pipe Insert.scad>;
-use <Firing Pin Retainer.scad>;
+use <Insert.scad>;
+use <../Firing Pin Retainer.scad>;
 
 //Spec_TubingThreeQuarterByFiveEighthInch
 //Spec_PipeThreeQuarterInchSch80
