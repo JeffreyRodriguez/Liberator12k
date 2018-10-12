@@ -38,7 +38,9 @@ function RodClearanceLoose() = RodClearanceLoose;
  * @param clearance The RodClearance to use.
  * @param $fn Override the RodFn value of the rod.
  */
-module Rod2d(rod=Spec_RodOneQuarterInch(), clearance=undef, extraWall=0, teardrop=false, teardropRotation=0, teardropTruncated=true, $fn=undef) {
+module Rod2d(rod=Spec_RodOneQuarterInch(), clearance=undef, extraWall=0,
+             teardrop=false, teardropRotation=0, teardropTruncated=true,
+             $fn=undef) {
   if (teardrop) {
     Teardrop(r=RodRadius(rod, clearance)+extraWall,
       rotation=teardropRotation,
@@ -59,13 +61,21 @@ module SquareRod2d(rod=Spec_RodOneQuarterInch(), clearance=undef, extraWall=0) {
   square(RodDiameter(rod, clearance)+extraWall, center=true);
 }
 
-module Rod(rod=Spec_RodOneQuarterInch(), length=1, clearance=undef, center=false, teardrop=false, teardropRotation=0, teardropTruncated=true, $fn=undef) {
+module Rod(rod=Spec_RodOneQuarterInch(), length=1,
+           clearance=undef, center=false,
+           teardrop=false, teardropRotation=0, teardropTruncated=true,
+           $fn=undef) {
   render(convexity=1)
   linear_extrude(height=length, center=center)
-  Rod2d(rod=rod, clearance=clearance, teardrop=teardrop, teardropRotation=teardropRotation, teardropTruncated=teardropTruncated, $fn=$fn);
+  Rod2d(rod=rod, clearance=clearance,
+        teardrop=teardrop,
+        teardropRotation=teardropRotation,
+        teardropTruncated=teardropTruncated,
+        $fn=$fn);
 }
 
-module SquareRod(rod=Spec_RodOneQuarterInch(), length=1, clearance=undef, center=false) {
+module SquareRod(rod=Spec_RodOneQuarterInch(), length=1,
+                 clearance=undef, center=false) {
   render(convexity=1)
   linear_extrude(height=length, center=center)
   SquareRod2d(rod=rod, clearance=clearance);
