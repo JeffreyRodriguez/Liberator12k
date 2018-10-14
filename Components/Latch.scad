@@ -16,12 +16,12 @@ LatchBoltLength     = 6;
 DEFAULT_LATCH_BOLT = Spec_BoltM4();
 
 DEFAULT_LATCH = [
-  [LatchWidth,        0.75],
-  [LatchHeight,       0.25],
-  [LatchTravel,       0.75],
-  [LatchSpringLength, 0.875],
-  [LatchHandleWidth,  0.5],
-  [LatchBoltOffset,   0.75],
+  [LatchWidth,        UnitsImperial(0.75)],
+  [LatchHeight,       UnitsImperial(0.25)],
+  [LatchTravel,       UnitsImperial(0.75)],
+  [LatchSpringLength, UnitsImperial(0.875)],
+  [LatchHandleWidth,  UnitsImperial(0.5)],
+  [LatchBoltOffset,   UnitsImperial(1.0)],
   [LatchBoltLength,   UnitsMetric(25)]
 ];
 
@@ -38,6 +38,9 @@ function LatchLength(spec=DEFAULT_LATCH) = LatchBoltOffset(spec)
                                          + (LatchTravel(spec)*2)
                                          + LatchSpringLength(spec);
 
+function LatchHandleLength(spec=DEFAULT_LATCH) = LatchBoltLength(spec)
+                                               - LatchHeight(spec);
+
 module LatchBolt(latchSpec=DEFAULT_LATCH,
                  boltSpec=DEFAULT_LATCH_BOLT,
                  cutter=false) {
@@ -47,7 +50,7 @@ module LatchBolt(latchSpec=DEFAULT_LATCH,
     mirror([0,0,1])
     NutAndBolt(bolt=boltSpec,
                boltLength = LatchBoltLength(latchSpec), capHeightExtra=(cutter?1:0),
-               nutBackset=UnitsMetric(0.5), nutHeightExtra=UnitsMetric(1.5),
+               nutBackset=UnitsMetric(0.5), nutHeightExtra=UnitsMetric(0.5)+ManifoldGap(),
                clearance = cutter);
 }
 
@@ -109,8 +112,6 @@ module LatchHandle(latchSpec=DEFAULT_LATCH,
                    cutter=false, clearance=0.005,
                    $fn=30, alpha=1) {
 
-  height = LatchBoltLength(latchSpec)-LatchHeight(latchSpec);
-  zMin = -height;
   clear  = clearance;
   clear2 = clearance*2;
 
@@ -119,8 +120,8 @@ module LatchHandle(latchSpec=DEFAULT_LATCH,
   if (!cutter)
   difference() {
     union() {
-      translate([LatchBoltOffset(),0,zMin+ManifoldGap()])
-      cylinder(r=LatchHandleWidth(latchSpec)/2, h=height);
+      translate([LatchBoltOffset(),0,-LatchHandleLength(latchSpec)+ManifoldGap()])
+      cylinder(r=LatchHandleWidth(latchSpec)/2, h=LatchHandleLength(latchSpec));
     }
     
     LatchBolt(boltSpec=boltSpec, cutter=true);
@@ -134,7 +135,7 @@ module LatchHandle(latchSpec=DEFAULT_LATCH,
              0,
              ManifoldGap()])
   mirror([0,0,1])
-  linear_extrude(height=height)
+  linear_extrude(height=LatchHandleLength(latchSpec))
   rotate(180)
   Teardrop(r=(LatchHandleWidth(latchSpec)/2)+clearance, truncated=true);
 }
@@ -154,12 +155,14 @@ module LatchAssembly(latchSpec=DEFAULT_LATCH,
 
 // Plated Pivot Latch
 *!scale(25.4)
-translate([0,0,LatchHeight()])
 Latch();
 
 // Plated Latch Handle
 *!scale(25.4)
-translate([-LatchBoltOffset(),0,0])
+translate([-LatchBoltOffset(DEFAULT_LATCH),
+           0,
+           LatchHandleLength(DEFAULT_LATCH)])
 LatchHandle();
 
+translate([-0.25,0,0])
 LatchAssembly(travelFactor=$t);
