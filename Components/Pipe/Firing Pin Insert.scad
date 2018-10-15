@@ -19,14 +19,14 @@ module FiringPinPipeInsert(pipeSpec=Spec_PipeThreeQuarterInchSch80Stainless(), i
   springLength = 0.3;
   nailHeadLength = 0.4;
   length = baseLength+springLength+nailHeadLength;
-  
+
   render()
   difference() {
     linear_extrude(height=length)
-    PipeInsert2d()
+    PipeInsert2d(pipeSpec=pipeSpec)
     translate([rimfireOffset,0])
     circle(r=id/2, $fn=8);
-    
+
     translate([rimfireOffset,0,baseLength]) {
       translate([0,0,springLength+nailHeadLength/2])
       rotate([0,90,0])
