@@ -4,47 +4,12 @@ use <../Meta/Units.scad>;
 use <../Finishing/Chamfer.scad>;
 use <../Shapes/Teardrop.scad>;
 use <../Vitamins/Nuts And Bolts.scad>;
-
-LatchWidth          = 0;
-LatchHeight         = 1;
-LatchTravel         = 2;
-LatchSpringLength   = 3;
-LatchHandleWidth    = 4;
-LatchBoltOffset     = 5;
-LatchBoltLength     = 6;
-
-DEFAULT_LATCH_BOLT = Spec_BoltM4();
-
-DEFAULT_LATCH = [
-  [LatchWidth,        UnitsImperial(0.75)],
-  [LatchHeight,       UnitsImperial(0.25)],
-  [LatchTravel,       UnitsImperial(0.75)],
-  [LatchSpringLength, UnitsImperial(0.875)],
-  [LatchHandleWidth,  UnitsImperial(0.5)],
-  [LatchBoltOffset,   UnitsImperial(1.0)],
-  [LatchBoltLength,   UnitsMetric(25)]
-];
-
-function LatchWidth(spec=DEFAULT_LATCH)  = lookup(LatchWidth, spec);
-function LatchHeight(spec=DEFAULT_LATCH) = lookup(LatchHeight, spec);
-function LatchTravel(spec=DEFAULT_LATCH) = lookup(LatchTravel, spec);
-function LatchSpringLength(spec=DEFAULT_LATCH) = lookup(LatchWidth, spec);
-function LatchHandleWidth(spec=DEFAULT_LATCH)  = lookup(LatchHandleWidth, spec);
-function LatchBoltOffset(spec=DEFAULT_LATCH) = lookup(LatchBoltOffset,spec);
-function LatchBoltLength(spec=DEFAULT_LATCH) = lookup(LatchBoltLength, spec);
-
-function LatchLength(spec=DEFAULT_LATCH) = LatchBoltOffset(spec)
-                                         + (LatchHandleWidth(spec)/2)
-                                         + (LatchTravel(spec)*2)
-                                         + LatchSpringLength(spec);
-
-function LatchHandleLength(spec=DEFAULT_LATCH) = LatchBoltLength(spec)
-                                               - LatchHeight(spec);
+include <Latch_Lookup.scad>;
 
 module LatchBolt(latchSpec=DEFAULT_LATCH,
                  boltSpec=DEFAULT_LATCH_BOLT,
                  cutter=false) {
-    translate([LatchBoltOffset(),
+    translate([LatchBoltOffset(latchSpec),
                0,
                LatchHeight(latchSpec)])
     mirror([0,0,1])
@@ -73,7 +38,10 @@ module Latch(spec=DEFAULT_LATCH,
           LatchHeight(spec)+clear2]);
 
     // Latch Spring Cutout
-    translate([LatchBoltOffset(spec)+(LatchHandleWidth(spec)/2)+LatchTravel(spec),
+    translate([LatchBoltOffset(spec)
+                 + (LatchHandleWidth(spec)/2)
+                 + LatchSpringLength(spec)
+                 + (cutter ? LatchTravel(spec)*1.8 : 0),
                -(LatchHeight(spec)/2)+clear-ManifoldGap(),
                -ManifoldGap()-clear])
     cube([LatchSpringLength(spec)+LatchTravel(spec)+(cutter ? LatchTravel(spec) : 0),
@@ -84,7 +52,7 @@ module Latch(spec=DEFAULT_LATCH,
       LatchBolt(latchSpec=spec, boltSpec=boltSpec, cutter=true);
 
       // Latch Bolt Cutout
-      translate([LatchBoltOffset(),
+      translate([LatchBoltOffset(spec),
                  0,
                  ManifoldGap()])
       cylinder(r=BoltRadius(bolt=boltSpec, clearance=true),
@@ -120,18 +88,18 @@ module LatchHandle(latchSpec=DEFAULT_LATCH,
   if (!cutter)
   difference() {
     union() {
-      translate([LatchBoltOffset(),0,-LatchHandleLength(latchSpec)+ManifoldGap()])
+      translate([LatchBoltOffset(latchSpec),0,-LatchHandleLength(latchSpec)+ManifoldGap()])
       cylinder(r=LatchHandleWidth(latchSpec)/2, h=LatchHandleLength(latchSpec));
     }
     
-    LatchBolt(boltSpec=boltSpec, cutter=true);
+    LatchBolt(latchSpec=latchSpec, boltSpec=boltSpec, cutter=true);
   }
     
   // Slot
   if (cutter)
   hull()
   for (X = [0,LatchTravel(latchSpec)])
-  translate([LatchBoltOffset()+X,
+  translate([LatchBoltOffset(latchSpec)+X,
              0,
              ManifoldGap()])
   mirror([0,0,1])
@@ -146,10 +114,10 @@ module LatchAssembly(latchSpec=DEFAULT_LATCH,
   translate([LatchTravel(latchSpec)*travelFactor,0,0]) {
     LatchBolt(latchSpec=latchSpec, boltSpec=boltSpec);
     Latch(spec=latchSpec);
-    LatchHandle();
+    LatchHandle(latchSpec=latchSpec, boltSpec=boltSpec);
   }
   
-  #Latch(cutter=true);
+  #Latch(spec=latchSpec, cutter=true);
   #LatchHandle(latchSpec=latchSpec, boltSpec=boltSpec, cutter=true);
 }
 
@@ -165,4 +133,4 @@ translate([-LatchBoltOffset(DEFAULT_LATCH),
 LatchHandle();
 
 translate([-0.25,0,0])
-LatchAssembly(travelFactor=$t);
+LatchAssembly(latchSpec=DEFAULT_LATCH, travelFactor=$t);
