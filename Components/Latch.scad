@@ -40,8 +40,9 @@ module Latch(spec=DEFAULT_LATCH,
     // Latch Spring Cutout
     translate([LatchBoltOffset(spec)
                  + (LatchHandleWidth(spec)/2)
-                 + LatchSpringLength(spec)
-                 + (cutter ? LatchTravel(spec)*1.8 : 0),
+                 //+ LatchSpringLength(spec)
+                 + LatchTravel(spec)
+                 + (cutter ? LatchSpringLength(spec) : 0),
                -(LatchHeight(spec)/2)+clear-ManifoldGap(),
                -ManifoldGap()-clear])
     cube([LatchSpringLength(spec)+LatchTravel(spec)+(cutter ? LatchTravel(spec) : 0),
