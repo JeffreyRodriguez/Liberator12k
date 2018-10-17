@@ -58,7 +58,7 @@ function PipeOuterCircumference(pipe, clearance, clearanceSign=1) =
 
 function PipeInnerCircumference(pipe, clearance, clearanceSign=1) =
            3.14*PipeInnerDiameter(pipe, clearance, clearanceSign);
-           
+
 function PipeCapDiameter(pipe, clearance, clearanceSign=1) = lookup(PipeCapDiameter, pipe);
 function PipeCapRadius(pipe, clearance, clearanceSign=1) = PipeCapDiameter(pipe, clearance, clearanceSign)/2;
 function PipeCapLength(pipe) = lookup(PipeCapLength, pipe);
@@ -167,7 +167,7 @@ function Spec_PipeOneInchSch80() = [
   [PipeWeightPerUnit,   0], // TODO
   [PipeCapDiameter,     1.75], // TODO: Verify
   [PipeCapLength,       1.5],   // TODO: Verify
-  [PipeCapDepth,        1]
+  [PipeCapDepth,        1.15]
 ];
 
 // 0.375" OD DOM Tubing (Just guessing)
@@ -537,7 +537,7 @@ module PipeCap(spec=Spec_PipeOneInchSch80(), hollow=true, clearance=undef, clear
                  clearanceSign=clearanceSign),
                  h=PipeCapLength(spec),
                  $fn=PipeFn(spec)*2);
-        
+
         if (hollow)
         translate([0,0,PipeCapLength(spec)-PipeCapDepth(spec)])
         cylinder(r=PipeOuterRadius(pipe=spec,
