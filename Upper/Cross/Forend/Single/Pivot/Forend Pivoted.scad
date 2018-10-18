@@ -336,7 +336,7 @@ module PivotLatchHandle(diameter=LatchHandleWidth(PIVOT_LATCH)-0.015,
   clear  = clearance;
   clear2 = clearance*2;
 
-  color("DimGrey", alpha)
+  color("Gold", alpha)
   render()
   difference() {
     union() {
@@ -662,7 +662,7 @@ module Extractor(barrelPipe=DEFAULT_BARREL, guideSides=[0,1],
 }
 
 
-module ForendPivotedAssembly() {
+module ForendPivotedAssembly(forend=true, debug=false) {
 
 ExtractorPusher(pivotFactor = Animate(ANIMATION_STEP_UNLOAD)
                             - Animate(ANIMATION_STEP_LOAD));
@@ -698,25 +698,28 @@ ExtractorPusher(pivotFactor = Animate(ANIMATION_STEP_UNLOAD)
       Extractor();
     }
 
-    color("Tan") DebugHalf()
+    color("Tan") DebugHalf(enabled=debug)
     BarrelLatchCollar(barrel=DEFAULT_BARREL, alpha=1);
     
-    color("Tan")  DebugHalf()
+    color("Tan")  DebugHalf(enabled=debug)
     BarrelPivotCollar(alpha=1);
   }
-
-  color("DimGrey", alpha=0.8) DebugHalf()
-  ForendPivotedLatch();
-
-  color("Grey") DebugHalf()
-  ForendPivoted(alpha=1);
   
-  color("DarkGray") DebugHalf()
-  ShellRamp();
+  if (forend) {
+
+    color("DimGrey") DebugHalf(enabled=debug)
+    ForendPivotedLatch();
+
+    color("Grey") DebugHalf(enabled=debug)
+    ForendPivoted(alpha=1);
+  
+    color("DarkGray") DebugHalf(enabled=debug)
+    ShellRamp();
+  }
 
 }
 
-ForendPivotedAssembly();
+ForendPivotedAssembly(debug=true);
 
 Reference(barrelPipe=DEFAULT_BARREL);
 

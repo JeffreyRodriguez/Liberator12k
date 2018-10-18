@@ -55,9 +55,9 @@ module ChargingHandle(angle=35) {
     linear_extrude(height=ChargingHandleWidth(), center=true) {
 
       // Charging handle body
-      translate([-chargerPivotX,ReceiverCenter()-chargerPivotZ])
+      translate([0,ReceiverCenter()-chargerPivotZ])
       mirror([1,0])
-      square([ReceiverCenter()+1, 0.75-chargingSpindleRadius]);
+      square([ReceiverCenter()+1, (((ReceiverIR()+abs(chargerPivotX))*2)/2)-(ReceiverCenter()-chargerPivotZ)]);
 
       difference() {
         hull() {
@@ -69,8 +69,7 @@ module ChargingHandle(angle=35) {
 
           // Charger supporting infill
           rotate(70+angle)
-          semidonut(major=(ReceiverIR()+abs(chargerPivotX))*2,
-                    minor=chargingSpindleRadius,
+          semicircle(od=(ReceiverIR()+abs(chargerPivotX))*2,
                     angle=80+angle, $fn=Resolution(20,40));
 
           // StrikerTop interface
@@ -89,10 +88,10 @@ module ChargingHandle(angle=35) {
   }
 }
 
-module ChargingInsert(single=false) {
+module ChargingInsert(single=false, debug=false, alpha=1) {
 
   // Charging Supports
-  color("Moccasin", 0.5)
+  color("Moccasin", alpha) DebugHalf(enabled=debug)
   render(convexity=4)
   translate([0,0,ManifoldGap(2)])
   difference() {
@@ -101,7 +100,7 @@ module ChargingInsert(single=false) {
     translate([0,0,ReceiverCenter()])
     mirror([0,0,1])
     intersection() {
-      #TeeInsert(tee=ReceiverTee());
+      TeeInsert(tee=ReceiverTee());
 
       translate([0,0,-ManifoldGap()])
       cylinder(r=TeeInnerRadius(ReceiverTee())+0.1,

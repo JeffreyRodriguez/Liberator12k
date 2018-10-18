@@ -69,15 +69,17 @@ module Liberator12k_CoupledFrame(length=6,couplerRecess=UnitsImperial(0.5), coup
 
 module Liberator12k_Base(strikerLength=StrikerRodLength(),
                          lower=true, lowerLeft=true, lowerRight=true,
-                         trigger=true, alpha=1) {
+                         upper=true, trigger=true, alpha=1, debug=true) {
 
+  color("SteelBlue") DebugHalf(enabled=debug)
   Breech();
 
   ChargingHandle();
-  ChargingInsert();
+  
+  ChargingInsert(debug=debug);
 
   Striker(length=strikerLength);
-  SearBolts();
+  SearBolts(teardrop=false);
 
   // Lower
   if (lower)
@@ -89,30 +91,32 @@ module Liberator12k_Base(strikerLength=StrikerRodLength(),
           showTrigger=trigger, searLength=SearLength()+ReceiverCenter()+RodDiameter(SearRod()),
           showLeft=lowerLeft, showRight=lowerRight);
   }
-
+  
   translate([0,0,-ManifoldGap()])
-  SearGuide();
+  SearGuide(debug=debug);
 
-  FiringPinGuide(debug=true);
+  FiringPinGuide(debug=debug);
 
 
-  color("DarkSlateGray") render() DebugHalf(dimension=3000)
+  color("DarkSlateGray")DebugHalf(dimension=3000, enabled=debug)
   Receiver(alpha=alpha);
 
   //CrossInserts(alpha=alpha);
   
-  color("OliveDrab") render() DebugHalf(dimension=3000)
-  CrossUpperFront(alpha=alpha);
-  
-  color("YellowGreen") render() DebugHalf(dimension=3000)
-  CrossUpperBack(alpha=alpha);
+  if (upper) {
+    color("OliveDrab") DebugHalf(dimension=3000, enabled=debug)
+    CrossUpperFront(alpha=alpha);
+    
+    color("YellowGreen") DebugHalf(dimension=3000, enabled=debug)
+    CrossUpperBack(alpha=alpha);
+  }
 }
 
-module Liberator12k_Stock(alpha=1) {
+module Liberator12k_Stock(alpha=1, debug=true) {
   translate([ButtTeeCenterX(),0,0]) {
 
     // Striker Foot
-    translate([TeePipeEndOffset(ReceiverTee(),StockPipe()),0,0])
+    translate([TeePipeEndOffset(ButtTee(),StockPipe()),0,0])
     rotate([0,90,180])
     StrikerFoot();
 
@@ -127,10 +131,10 @@ module Liberator12k_Stock(alpha=1) {
   }
 
 
-  color("SteelBlue") render() DebugHalf(dimension=3000)
+  color("SteelBlue") DebugHalf(dimension=3000, enabled=debug)
   Stock(alpha=alpha);
   
-  color("DarkSlateGray") render() DebugHalf(dimension=3000)
+  color("DarkSlateGray") DebugHalf(dimension=3000, enabled=debug)
   Butt(alpha=alpha);
 }
 
