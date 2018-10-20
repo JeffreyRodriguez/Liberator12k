@@ -15,7 +15,7 @@ use <../../Upper/Cross/Forend/Single/Pivot/Forend Pivoted.scad>;
 
 use <Base.scad>;
 
-module Liberator12k_BreakAction(barrelLength=18, alpha=1, debug=false) {
+module Liberator12k_BreakAction(debug=false) {
   
   Liberator12k_Base(lower=true, lowerLeft=!debug, lowerRight=true,
                     upper=true, debug=debug);
