@@ -7,7 +7,7 @@ use <../Vitamins/Pipe.scad>;
 
 module ShellSlug(primer=Spec_Primer209(),
                  chamberDiameter=0.78,
-                 height=2, taperHeight=0.5,
+                 height=1.5, taperHeight=0.5,
                  slug_diameter=0.52,
                  fins=false,
                  chargeDiameter=0.68, chargeHeight=0.7, wadHeight=0.25,
@@ -27,7 +27,9 @@ module ShellSlug(primer=Spec_Primer209(),
     render()
     difference() {
       intersection() {
-        ShellTopper(chamberDiameter=chamberDiameter, height=height, taperHeight=taperHeight);
+        ShellTopper(chamberDiameter=chamberDiameter,
+                    height=height,
+                    taperHeight=taperHeight);
 
         if (fins)
         Fins(major=chamberRadius,
@@ -43,10 +45,10 @@ module ShellSlug(primer=Spec_Primer209(),
     echo("Shell Top Height: ", height);
 }
 
-module ShellSlugBall() {
+module ShellSlugBall(height=1.5) {
   render()
   difference() {
-    ShellSlug(fins=false, taperHeight=0.6) {
+    ShellSlug(fins=false, height=height, taperHeight=0.75) {
       for (i = [1])
       translate([0,0,-0.26 - (i*0.5)]) {
         sphere(r=0.275, $fn=20);
@@ -59,7 +61,7 @@ module ShellSlugBall() {
 
       // Internal void for buffering and material savings
       translate([0,0,-1.5])
-      cylinder(r=0.125, h=0.25);
+      cylinder(r=0.25, h=0.375);
 
     }
 
