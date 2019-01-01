@@ -68,7 +68,7 @@ module LowerMiddleBoss(clearance=0) {
         LowerGuardHeight()]);
 }
 
-module TriggerGuard() {
+module TriggerGuard(bossEnabled=true) {
   height = LowerGuardHeight();
 
   union() {
@@ -96,6 +96,7 @@ module TriggerGuard() {
     }
     
     // Lower Middle Boss
+    if (bossEnabled)
     LowerMiddleBoss();
 
     LowerReceiverSupports();
@@ -257,12 +258,12 @@ module LowerSidePlates(showLeft=true, showRight=true, alpha=1) {
 
 }
 
-module LowerMiddle() {
+module LowerMiddle(bossEnabled=true) {
   color("DimGrey")
   render()
   difference() {
     intersection() {
-      TriggerGuard();
+      TriggerGuard(bossEnabled=bossEnabled);
 
       // Just the middle
       GripSplitter(clearance=0);
@@ -294,12 +295,13 @@ module Lower(showReceiverLugs=false, showReceiverLugBolts=false,
             showGuardBolt=false, showHandleBolts=false,
             showTrigger=false, showTriggerLeft=true, showTriggerRight=true,
             showMiddle=true, showLeft=true, showRight=true,
+            bossEnabled=false,
             searLength=SearLength(),
             alpha=0.5) {
 
   // Trigger Guard Center
   if (showMiddle)
-  LowerMiddle();
+  LowerMiddle(bossEnabled=bossEnabled);
 
   // Trigger
   if (showTrigger) {
