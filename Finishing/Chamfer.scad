@@ -213,7 +213,8 @@ module ChamferedCylinder(r1=0.5, r2=0.25, h=1,
   difference() {
     cylinder(r=r1, h=h);
     CylinderChamferEnds(r1=r1, r2=r2, h=h,
-                        chamferBottom=chamferBottom, chamferTop=chamferTop);
+                        chamferBottom=chamferBottom,
+                        chamferTop=chamferTop);
   }
 }
 
@@ -249,7 +250,7 @@ module ChamferedToroidalCylinder(r1=1, r2=0.5, r3=0.1, h=1) {
 }
 
 
-$fn=20;
+//$fn=20;
 render() {
   difference() {
     ChamferedCube(xyz=[2,3,2], center=false);
