@@ -22,7 +22,7 @@ module Pivot(factor=1,
 }
 
 module PivotHull(pivotX=DEFAULT_PIVOT_X, pivotZ=DEFAULT_PIVOT_Z,
-                 angle=45, resolution=Resolution(1, 2)) {
+                 angle=45, resolution=Resolution(0.25, 1)) {
   steps = angle * resolution;
   pivotStep = 1/(steps);
 
