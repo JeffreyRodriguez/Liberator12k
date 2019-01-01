@@ -13,7 +13,7 @@ WALL=0.1875;
 PIPE = Spec_OnePointFiveSch40ABS();
 PIPE_LENGTH = LowerMaxX()-ReceiverLugRearMinX()+0.75+ManifoldGap(2);
 
-function PipeLugPipeOffsetZ(pipe, wall) = PipeOuterRadius(pipe)+wall;
+function PipeLugPipeOffsetZ(pipe=PIPE, wall=WALL) = PipeOuterRadius(pipe)+wall;
 
 module PipeLugPipe(pipe=PIPE, wall=WALL, length=PIPE_LENGTH, cutter=false, alpha=1) {
   color("DimGrey", alpha) render()
@@ -43,11 +43,13 @@ module PipeLugRear(pipe=PIPE, wall=WALL, alpha=1, cutter=false) {
   }
 }
 
-module PipeLugCenter(pipe=PIPE, wall=WALL, alpha=1) {
+module PipeLugCenter(pipe=PIPE, wall=WALL, cutter=false, clearance=0.002, alpha=1) {
   color("Burlywood", alpha=alpha) render()
   difference() {
     union() {
-      linear_extrude(height=WALL+PipeWall(PIPE)+0.125)
+      translate([0,0,-ManifoldGap()])
+      linear_extrude(height=wall+PipeInnerRadius(pipe)+ManifoldGap(2))
+      offset(r=(cutter?clearance:0))
       intersection() {
         projection(cut=true)
         translate([0,0,0.001])
@@ -58,12 +60,14 @@ module PipeLugCenter(pipe=PIPE, wall=WALL, alpha=1) {
       }
     }
     
-    PipeLugPipe(pipe=pipe, wall=wall, cutter=true);
-    
-    PipeLugFront(cutter=true);
-    PipeLugRear(cutter=true);
-    
-    SearCutter(length=SearLength()+PipeLugPipeOffsetZ(pipe=pipe, wall=wall));
+    if (cutter == false) {
+      PipeLugPipe(pipe=pipe, wall=wall, cutter=true);
+      
+      PipeLugFront(cutter=true);
+      PipeLugRear(cutter=true);
+      
+      SearCutter(length=SearLength()+PipeLugPipeOffsetZ(pipe=pipe, wall=wall));
+    }
   }
 }
 
