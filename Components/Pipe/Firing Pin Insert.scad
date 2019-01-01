@@ -30,7 +30,7 @@ module FiringPinPipeInsert(pipeSpec=Spec_PipeThreeQuarterInchSch80Stainless(), i
     translate([rimfireOffset,0,baseLength]) {
       translate([0,0,springLength+nailHeadLength/2])
       rotate([0,90,0])
-      FiringPinRetainer(gap=0.14);
+      FiringPinRetainer(retainingPinLength=PipeOuterDiameter(pipeSpec), gap=0.14);
     }
   }
 }
