@@ -6,6 +6,7 @@ use <../../Vitamins/Rod.scad>;
 use <../../Shapes/Semicircle.scad>;
 use <../../Shapes/Teardrop.scad>;
 use <../../Finishing/Chamfer.scad>;
+use <../../Meta/Debug.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Resolution.scad>;
 
@@ -13,21 +14,25 @@ WALL=0.1875;
 PIPE = Spec_OnePointFiveSch40ABS();
 PIPE_LENGTH = LowerMaxX()-ReceiverLugRearMinX()+0.75+ManifoldGap(2);
 
-function PipeLugPipeOffsetZ(pipe=PIPE, wall=WALL) = PipeOuterRadius(pipe)+wall;
+function LowerOffsetZ(pipe=PIPE, wall=WALL) = -(PipeOuterRadius(pipe)+wall);
+function ReceiverCenter(receiverPipe=PIPE, wallLower=WALL) = PipeOuterRadius(receiverPipe)+wallLower;
 
-module PipeLugPipe(pipe=PIPE, wall=WALL, length=PIPE_LENGTH, cutter=false, alpha=1) {
-  color("DimGrey", alpha) render()
-    translate([ReceiverLugRearMinX()-0.75,0,PipeLugPipeOffsetZ(pipe=pipe, wall=wall)])
-    rotate([0,90,0])
-    Pipe(pipe=PIPE,
-         length=length,
-         hollow=!cutter, clearance=PipeClearanceLoose());
+
+module PipeLugPipe(pipe=PIPE, wall=WALL, length=PIPE_LENGTH, debug=false, cutter=false, alpha=1) {
+  color("DimGrey", alpha)
+  DebugHalf(enabled=debug)
+  translate([LowerMaxX(),0,0])
+  rotate([0,-90,0])
+  Pipe(pipe=PIPE,
+       length=length,
+       hollow=!cutter, clearance=PipeClearanceLoose());
 }
   
 
 module PipeLugFront(pipe=PIPE, wall=WALL, alpha=1, cutter=false) {
   color("DarkGoldenrod", alpha=alpha) render()
   difference() {
+    translate([0,0,LowerOffsetZ(pipe=pipe, wall=wall)])
     ReceiverLugFront(extraTop=WALL+PipeWall(PIPE), cutter=cutter);
     
     PipeLugPipe(pipe=pipe, wall=wall, cutter=true);
@@ -37,6 +42,7 @@ module PipeLugFront(pipe=PIPE, wall=WALL, alpha=1, cutter=false) {
 module PipeLugRear(pipe=PIPE, wall=WALL, alpha=1, cutter=false) {
   color("DarkGoldenrod", alpha=alpha) render()
   difference() {  
+    translate([0,0,LowerOffsetZ(pipe=pipe, wall=wall)])
     ReceiverLugRear(extraTop=WALL+PipeWall(PIPE), cutter=cutter);
     
     PipeLugPipe(pipe=pipe, wall=wall, cutter=true);
@@ -47,6 +53,7 @@ module PipeLugCenter(pipe=PIPE, wall=WALL, cutter=false, clearance=0.002, alpha=
   color("Burlywood", alpha=alpha) render()
   difference() {
     union() {
+      translate([0,0,LowerOffsetZ(pipe=pipe, wall=wall)])
       translate([0,0,-ManifoldGap()])
       linear_extrude(height=wall+PipeInnerRadius(pipe)+ManifoldGap(2))
       offset(r=(cutter?clearance:0))
@@ -66,7 +73,7 @@ module PipeLugCenter(pipe=PIPE, wall=WALL, cutter=false, clearance=0.002, alpha=
       PipeLugFront(cutter=true);
       PipeLugRear(cutter=true);
       
-      SearCutter(length=SearLength()+PipeLugPipeOffsetZ(pipe=pipe, wall=wall));
+      SearCutter(length=SearLength()+LowerOffsetZ(pipe=pipe, wall=wall));
     }
   }
 }
@@ -87,14 +94,18 @@ module PipeLugPlater(front=true, rear=true, center=true) {
   PipeLugCenter();
 }
 
+module PipeLugAssembly(length=PIPE_LENGTH, debug=false) {
+  PipeLugFront(debug=debug);
+  PipeLugRear(debug=debug);
+  PipeLugCenter(debug=debug);
+  PipeLugPipe(length=length, debug=debug, cutter=false);
 
-PipeLugFront();
-PipeLugRear();
-PipeLugCenter();
-PipeLugPipe(cutter=false);
+  translate([0,0,LowerOffsetZ()])
+  Lower(showTrigger=true,alpha=1,
+        searLength=SearLength()+WALL+PipeWall(PIPE)+0.25);
+}
 
-Lower(showTrigger=true,alpha=1,
-      searLength=SearLength()+WALL+PipeWall(PIPE)+0.25);
+PipeLugAssembly();
 
 *!scale(25.4)
 PipeLugPlater(front=true, rear=true, center=true);
