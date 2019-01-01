@@ -59,7 +59,7 @@ function PipeOuterCircumference(pipe, clearance, clearanceSign=1) =
 function PipeInnerCircumference(pipe, clearance, clearanceSign=1) =
            3.14*PipeInnerDiameter(pipe, clearance, clearanceSign);
 
-function PipeCapDiameter(pipe, clearance, clearanceSign=1) = lookup(PipeCapDiameter, pipe);
+function PipeCapDiameter(pipe, clearance, clearanceSign=1) = lookup(PipeCapDiameter, pipe) + (PipeClearance(pipe, clearance)*clearanceSign);
 function PipeCapRadius(pipe, clearance, clearanceSign=1) = PipeCapDiameter(pipe, clearance, clearanceSign)/2;
 function PipeCapLength(pipe) = lookup(PipeCapLength, pipe);
 function PipeCapDepth(pipe) = lookup(PipeCapDepth, pipe);
