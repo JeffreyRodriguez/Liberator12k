@@ -5,7 +5,7 @@ use <../Meta/Manifold.scad>;
 scale(25.4)
 rotate([90,0,90])
 translate([0,0.25,0])
-LowerMiddle();
+LowerMiddle(bossEnabled=false);
 
 // Left
 scale(25.4)
