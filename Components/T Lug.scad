@@ -6,7 +6,7 @@ module T_Lug2d(
              height=UnitsImperial(1),
           tabHeight=UnitsImperial(0.25),
            tabWidth=UnitsImperial(1),
-          clearance=UnitsImperial(0.01),
+          clearance=UnitsImperial(0.005),
           clearVertical=false,
              cutter=false) {
   clearance = cutter ? clearance : 0;
@@ -28,7 +28,7 @@ module T_Lug(length=0.75,
              height=UnitsImperial(1),
           tabHeight=UnitsImperial(0.25),
            tabWidth=UnitsImperial(1),
-          clearance=UnitsImperial(0.01),
+          clearance=UnitsImperial(0.005),
       clearVertical=false,
              cutter=false) {
 
