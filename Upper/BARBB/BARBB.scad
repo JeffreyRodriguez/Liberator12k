@@ -7,6 +7,8 @@ use <../../Finishing/Chamfer.scad>;
 use <../../Vitamins/Pipe.scad>;
 use <../../Vitamins/Square Tube.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;
+use <../../Vitamins/AR15/Bolt.scad>;
+use <../../Vitamins/AR15/Barrel.scad>;
 use <../../Lower/Receiver Lugs.scad>;
 use <../../Lower/Lower.scad>;
 use <../../Lower/Trigger.scad>;
