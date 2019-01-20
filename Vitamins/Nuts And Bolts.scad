@@ -17,6 +17,16 @@ BoltCapTypeButton = 4;
 
 function BoltClearance() = BoltClearance;
 
+function Spec_BoltM1() = [ // these are all a total guess
+  [BoltDiameter,    UnitsMetric(1)],
+  [BoltCapDiameter, UnitsMetric(4.4)], // WRONG
+  [BoltCapHeight,   UnitsMetric(1.6)],  // WRONG
+  [BoltNutDiameter, UnitsMetric(4.28)], // WRONG
+  [BoltNutHeight,   UnitsMetric(1.5)], // WRONG
+  [BoltClearance,   UnitsMetric(0.4)], // WRONG
+  [BoltFn, 10]
+];
+
 function Spec_BoltM2() = [ // these are all a total guess
   [BoltDiameter,    UnitsMetric(2)],
   [BoltCapDiameter, UnitsMetric(4.4)],
@@ -73,6 +83,16 @@ function Spec_BoltOneHalf() = [
   [BoltNutDiameter, UnitsImperial(0.85)],
   [BoltNutHeight,   UnitsImperial(0.310)],
   [BoltClearance,   UnitsImperial(0.04)],
+  [BoltFn, 30]
+];
+
+function Spec_BoltFiveSixteenths() = [
+  [BoltDiameter,    UnitsImperial(0.3125)],
+  [BoltCapDiameter, UnitsImperial(0.5625)], // Verify?
+  [BoltCapHeight,   UnitsImperial(0.25)],// Verify?
+  [BoltNutDiameter, UnitsImperial(0.5625)],
+  [BoltNutHeight,   UnitsImperial(0.25)],
+  [BoltClearance,   UnitsImperial(0.01)],
   [BoltFn, 30]
 ];
 
