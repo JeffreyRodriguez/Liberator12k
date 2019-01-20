@@ -191,30 +191,34 @@ module CylinderChamfer(r1=1, r2=0.25, teardrop=false) {
 }
 
 module CylinderChamferEnds(r1=1, r2=0.25, h=1,
-                           chamferBottom=true, chamferTop=true) {
+                           chamferBottom=true, chamferTop=true,
+                           teardropBottom=true, teardropTop=false) {
   render() {
 
     // Keep the bottom teardropped for printing
     if (chamferBottom)
-    CylinderChamfer(r1=r1, r2=r2, teardrop=true);
+    CylinderChamfer(r1=r1, r2=r2, teardrop=teardropBottom);
 
     // We can round the top over
     if (chamferTop)
     translate([0,0,h])
     mirror([0,0,1])
-    CylinderChamfer(r1=r1, r2=r2, teardrop=false);
+    CylinderChamfer(r1=r1, r2=r2, teardrop=teardropTop);
   }
 }
 
 
 module ChamferedCylinder(r1=0.5, r2=0.25, h=1,
-                         chamferBottom=true, chamferTop=true) {
+                         chamferBottom=true, chamferTop=true,
+                           teardropBottom=true, teardropTop=false) {
   render()
   difference() {
     cylinder(r=r1, h=h);
     CylinderChamferEnds(r1=r1, r2=r2, h=h,
                         chamferBottom=chamferBottom,
-                        chamferTop=chamferTop);
+                        chamferTop=chamferTop,
+                        teardropBottom=teardropBottom,
+                        teardropTop=teardropTop);
   }
 }
 
@@ -278,6 +282,9 @@ translate([0,-2,0]) {
   
   translate([0,-2,0])
   CircularOuterEdgeChamfer(r1=0.5, r2=0.125, teardrop=false, $fn=20);
+  
+  translate([0,-4, 0])
+  ChamferedCircularHole(r1=1, r2=0.125, h=1, $fn=20);
 
   translate([0,0,0])
   HoleChamfer($fn=20);
