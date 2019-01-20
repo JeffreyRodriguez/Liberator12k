@@ -1,61 +1,83 @@
+use <../../Finishing/Chamfer.scad>;
+
 use <../../Lower/Receiver Lugs.scad>;
 use <../../Lower/Lower.scad>;
 use <../../Lower/Trigger.scad>;
-use <../../Vitamins/Pipe.scad>;
-use <../../Vitamins/Rod.scad>;
-use <../../Shapes/Semicircle.scad>;
-use <../../Shapes/Teardrop.scad>;
-use <../../Finishing/Chamfer.scad>;
+
+
 use <../../Meta/Debug.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Resolution.scad>;
 
-WALL=0.1875;
-PIPE = Spec_OnePointFiveSch40ABS();
-PIPE_LENGTH = LowerMaxX()-ReceiverLugRearMinX()+0.75+ManifoldGap(2);
+use <../../Shapes/Semicircle.scad>;
+use <../../Shapes/Teardrop.scad>;
 
-function LowerOffsetZ(pipe=PIPE, wall=WALL) = -(PipeOuterRadius(pipe)+wall);
-function ReceiverCenter(receiverPipe=PIPE, wallLower=WALL) = PipeOuterRadius(receiverPipe)+wallLower;
+use <../../Vitamins/Pipe.scad>;
+use <../../Vitamins/Rod.scad>;
 
+// Settings: Walls
+function WallLower()      = 0.1875;
 
-module PipeLugPipe(pipe=PIPE, wall=WALL, length=PIPE_LENGTH, debug=false, cutter=false, alpha=1) {
+// Settings: Lengths
+function ReceiverLength() = 6;
+
+// Settings: Vitamins
+function ReceiverPipe()  = Spec_OnePointFiveSch40ABS();
+
+// Calculated: Measurements
+function ReceiverID()     = PipeInnerDiameter(ReceiverPipe());
+function ReceiverIR()     = PipeInnerRadius(ReceiverPipe());
+function ReceiverOD()     = PipeOuterDiameter(ReceiverPipe());
+function ReceiverOR()     = PipeOuterRadius(ReceiverPipe());
+function ReceiverPipeWall() = PipeWall(ReceiverPipe());
+
+// Calculated: Positions
+function ReceiverCenter() = ReceiverOR()+WallLower();
+function LowerOffsetZ() = -ReceiverOR()-WallLower();
+
+module PipeLugPipe(length=ReceiverLength(),
+                   debug=false, cutter=false, alpha=1) {
   color("DimGrey", alpha)
   DebugHalf(enabled=debug)
   translate([LowerMaxX(),0,0])
   rotate([0,-90,0])
-  Pipe(pipe=PIPE,
+  Pipe(pipe=ReceiverPipe(),
        length=length,
-       hollow=!cutter, clearance=PipeClearanceLoose());
+       hollow=!cutter, clearance=cutter?PipeClearanceSnug():undef);
 }
   
 
-module PipeLugFront(pipe=PIPE, wall=WALL, alpha=1, cutter=false) {
-  color("DarkGoldenrod", alpha=alpha) render()
+module PipeLugFront(alpha=1, cutter=false) {
+  color("DarkOrange", alpha=alpha) render()
   difference() {
-    translate([0,0,LowerOffsetZ(pipe=pipe, wall=wall)])
-    ReceiverLugFront(extraTop=WALL+PipeWall(PIPE), cutter=cutter);
+    translate([0,0,LowerOffsetZ()])
+    ReceiverLugFront(extraTop=WallLower()+ReceiverPipeWall()+(cutter?WallLower():0),
+                     cutter=cutter, clearVertical=true);
     
-    PipeLugPipe(pipe=pipe, wall=wall, cutter=true);
+    if (cutter==false)
+    PipeLugPipe(cutter=true);
   }
 }
 
-module PipeLugRear(pipe=PIPE, wall=WALL, alpha=1, cutter=false) {
-  color("DarkGoldenrod", alpha=alpha) render()
+module PipeLugRear(alpha=1, cutter=false) {
+  color("DarkOrange", alpha=alpha) render()
   difference() {  
-    translate([0,0,LowerOffsetZ(pipe=pipe, wall=wall)])
-    ReceiverLugRear(extraTop=WALL+PipeWall(PIPE), cutter=cutter);
+    translate([0,0,LowerOffsetZ()])
+    ReceiverLugRear(extraTop=WallLower()+ReceiverPipeWall()+(cutter?WallLower():0),
+                    cutter=cutter, clearVertical=true);
     
-    PipeLugPipe(pipe=pipe, wall=wall, cutter=true);
+    if (cutter==false)
+    PipeLugPipe(cutter=true);
   }
 }
 
-module PipeLugCenter(pipe=PIPE, wall=WALL, cutter=false, clearance=0.002, alpha=1) {
+module PipeLugCenter(cutter=false, clearance=0.002, alpha=1) {
   color("Burlywood", alpha=alpha) render()
   difference() {
     union() {
-      translate([0,0,LowerOffsetZ(pipe=pipe, wall=wall)])
+      translate([0,0,LowerOffsetZ()])
       translate([0,0,-ManifoldGap()])
-      linear_extrude(height=wall+PipeInnerRadius(pipe)+ManifoldGap(2))
+      linear_extrude(height=WallLower()+ReceiverIR()+ManifoldGap(2))
       offset(r=(cutter?clearance:0))
       intersection() {
         projection(cut=true)
@@ -68,12 +90,12 @@ module PipeLugCenter(pipe=PIPE, wall=WALL, cutter=false, clearance=0.002, alpha=
     }
     
     if (cutter == false) {
-      PipeLugPipe(pipe=pipe, wall=wall, cutter=true);
+      PipeLugPipe(cutter=true);
       
       PipeLugFront(cutter=true);
       PipeLugRear(cutter=true);
       
-      SearCutter(length=SearLength()+LowerOffsetZ(pipe=pipe, wall=wall));
+      SearCutter(length=SearLength()+LowerOffsetZ());
     }
   }
 }
@@ -94,18 +116,29 @@ module PipeLugPlater(front=true, rear=true, center=true) {
   PipeLugCenter();
 }
 
-module PipeLugAssembly(length=PIPE_LENGTH, debug=false) {
-  PipeLugFront(debug=debug);
-  PipeLugRear(debug=debug);
-  PipeLugCenter(debug=debug);
-  PipeLugPipe(length=length, debug=debug, cutter=false);
+module PipeLugAssembly(length=ReceiverLength(), pipeAlpha=1,
+                       front=true, rear=true, center=true,
+                       debug=false) {
 
   translate([0,0,LowerOffsetZ()])
-  Lower(showTrigger=true,alpha=1,
-        searLength=SearLength()+WALL+PipeWall(PIPE)+0.25);
+  Lower(showTrigger=true,alpha=1, animationFactor=0,
+        showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
+        searLength=SearLength()+WallLower()+ReceiverPipeWall()+SearTravel());
+  
+  if (front)
+  PipeLugFront(debug=debug);
+  
+  if (rear)
+  PipeLugRear(debug=debug);
+  
+  if (center)
+  PipeLugCenter(debug=debug);
+  
+  if (length > 0)
+  PipeLugPipe(alpha=pipeAlpha, length=length, debug=debug, cutter=false);
 }
 
-PipeLugAssembly();
+PipeLugAssembly(pipeAlpha=0.5);
 
 *!scale(25.4)
 PipeLugPlater(front=true, rear=true, center=true);
