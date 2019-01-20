@@ -294,8 +294,8 @@ function Spec_OnePointFiveSch40ABS() = [
   [PipeTaperedDiameter, 0.0],
   [PipeThreadLength,    0],
   [PipeThreadDepth,     0],
-  [PipeClearanceSnug,   0.020],
-  [PipeClearanceLoose,  0.022],
+  [PipeClearanceSnug,   0.005],
+  [PipeClearanceLoose,  0.01],
   [PipeFn,              60],
   [PipeWeightPerUnit,   0]
 ];
