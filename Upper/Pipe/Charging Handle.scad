@@ -60,17 +60,17 @@ module PipeChargingHandleHousing(wall=0.125, alpha=1) {
                    ReceiverIR(),
                    ReceiverIR()] , r=1/32);
     
-    translate([BreechRearX(),0,0])
-    rotate([0,-90,0])
+    translate([LowerX(),0,0])
     PipeLugPipe(cutter=true);
     
     PipeChargingHandle(cutter=true);
   }
-  
 }
 
-module PipeChargingHandle(travelFactor=0,
-                          cutter=false) {
+module PipeChargingHandle(travelFactor=0, cutter=false) {
+  clear = cutter ? 0.005 : 0;
+  clear2 = clear*2;
+  
   translate([-ChargingHandleTravel()*travelFactor,0,0])
   color("Orange") render()
   difference() {
@@ -98,7 +98,7 @@ module PipeChargingHandle(travelFactor=0,
 
 $t=AnimationDebug(ANIMATION_STEP_CHARGE, T=$t);
 
-FixedBreechPipeUpperAssembly(frame=true, debug=false);
+*FixedBreechPipeUpperAssembly(frame=true, debug=false);
 
 //!scale(25.4) translate([-BreechRearX(),0,ReceiverOR()+0.5]) rotate([-90,0,0])
 PipeChargingHandle(handle=false, bolt=false, latch=true);
