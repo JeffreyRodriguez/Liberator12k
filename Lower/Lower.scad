@@ -1,3 +1,4 @@
+
 //$t=0.6;
 use <../Meta/Debug.scad>;
 use <../Meta/Manifold.scad>;
@@ -296,7 +297,7 @@ module Lower(showReceiverLugs=false, showReceiverLugBolts=false,
             showTrigger=false, showTriggerLeft=true, showTriggerRight=true,
             showMiddle=true, showLeft=true, showRight=true,
             bossEnabled=false,
-            searLength=SearLength(),
+            searLength=SearLength(), triggerAnimationFactor=0,
             alpha=0.5) {
 
   // Trigger Guard Center
@@ -305,7 +306,10 @@ module Lower(showReceiverLugs=false, showReceiverLugBolts=false,
 
   // Trigger
   if (showTrigger) {
-    TriggerGroup(left=showTriggerLeft, right=showTriggerRight, searLength=searLength);
+    TriggerGroup(left=showTriggerLeft,
+                 right=showTriggerRight,
+                 searLength=searLength,
+                 animationFactor=triggerAnimationFactor);
   }
 
   if (showReceiverLugs) {
@@ -329,6 +333,6 @@ Lower(showReceiverLugs=true, showReceiverLugBolts=true,
       showGuardBolt=true,
       showHandleBolts=true,
       showTrigger=true, showTriggerLeft=true, showTriggerRight=true,
-      showLeft=true,
+      showLeft=false,
       showMiddle=true,
-      showRight=true, alpha=0.5);
+      showRight=true, alpha=1);
