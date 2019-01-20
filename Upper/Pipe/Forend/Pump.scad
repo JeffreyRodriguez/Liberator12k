@@ -10,6 +10,7 @@ use <../../../Shapes/Semicircle.scad>;
 use <../../../Shapes/Teardrop.scad>;
 
 use <../../../Components/Pipe/Frame.scad>;
+use <../../../Components/Pipe/Frame Standoffs.scad>;
 
 use <../../../Vitamins/Nuts And Bolts.scad>;
 use <../../../Vitamins/Pipe.scad>;
@@ -49,10 +50,10 @@ module PumpMagazine2d(hollow=false, clearance=undef) {
            clearance=clearance);
 }
 
-module PumpMagazine(height=12, hollow=false, clearance=undef, alpha=1, debug=false) {
+module PumpMagazine(height=10.875, hollow=false, clearance=undef, alpha=1, debug=false) {
   
   translate([BreechFrontX(),0,0])
-  for (R = [180+45, -45]) rotate([R,0,0])
+  for (R = [180-45, 45]) rotate([R,0,0])
   translate([0,MagazineOffset(),0]) {
     color("Red")
     for (i = [1:3])
@@ -64,6 +65,7 @@ module PumpMagazine(height=12, hollow=false, clearance=undef, alpha=1, debug=fal
     rotate([0,90,0])
     DebugHalf(enabled=debug)
     linear_extrude(height=height)
+    rotate(0)
     PumpMagazine2d(hollow=hollow);
   }
 }
@@ -92,7 +94,7 @@ module BarrelCollar(clearance=0.002, cutter=false, debug=false) {
   
   color("Silver") DebugHalf(enabled=debug)
   difference() {
-    translate([9,0,0])
+    translate([6,0,0])
     rotate([0,90,0])
     cylinder(r=BarrelCollarSteelRadius()+clear,
              h=BarrelCollarSteelWidth(), $fn=40);
@@ -182,11 +184,16 @@ module PumpShotgunAssembly(debug=false) {
   
   ShellLoadingSupport();
 
-  PipeUpperAssembly(frame=true, debug=debug);
+  *PipeUpperAssembly(debug=debug);
 
   FrameAssembly(debug=debug);
     
 
+color("LightSteelBlue")
+translate([11.25,0,0])
+hull()
+Breech();
+  
   color("Red") {
     // In position for load
     translate([BreechFrontX(),0,0])
