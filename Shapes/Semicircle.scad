@@ -1,4 +1,4 @@
-module semicircle(od=3/4, angle=225, center=false, $fn=50) {
+module semicircle(od=20, angle=225, center=false) {
   rotate(center ? angle/2 : 0)
   rotate([0,0,-(angle % 90)])
   difference() {
@@ -29,9 +29,9 @@ module semicircle(od=3/4, angle=225, center=false, $fn=50) {
   }
 }
 
-module semidonut(major=3/4, minor=1/2, angle=225, center=false, $fn=50) {
+module semidonut(major=20, minor=10, angle=225, center=false) {
   difference() {
-    semicircle(od=major, angle=angle, center=center, $fn=$fn);
+    semicircle(od=major, angle=angle, center=center);
 
     circle(r=minor/2);
   }
