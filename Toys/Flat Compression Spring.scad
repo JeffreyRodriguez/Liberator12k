@@ -1,4 +1,4 @@
-use <../Components/Semicircle.scad>;
+use <../Shapes/Semicircle.scad>;
 
 module FlatCompressionSpring(springHeight=0.22, segmentLength=0.75, segmentWidth=0.05,
                          segments=11, angle=14, infill=1) {

@@ -1,5 +1,3 @@
-//$t=0.8;
-//$t=0;
 include <../Meta/Animation.scad>;
 
 use <../Meta/Resolution.scad>;
@@ -7,23 +5,19 @@ use <../Meta/Manifold.scad>;
 use <../Meta/Debug.scad>;
 use <../Meta/Units.scad>;
 
-use <../Vitamins/Nuts And Bolts.scad>;
-use <../Vitamins/Pipe.scad>;
 use <../Vitamins/Rod.scad>;
-use <../Vitamins/Spring.scad>;
 
 use <../Components/Trigger Finger Slot.scad>;
 
 use <Receiver Lugs.scad>;
 
-DEFAULT_SEAR_ROD = Spec_RodOneQuarterInch();
-DEFAULT_SEAR_PIN_ROD = Spec_RodOneEighthInch();
-function SearRod() = DEFAULT_SEAR_ROD;
-function SearPinRod() = DEFAULT_SEAR_PIN_ROD;
+function SearRod() = Spec_RodOneQuarterInch();
+function SearPinRod() = Spec_RodOneEighthInch();
 
-// Spec_BicLighterThumbSpring
-// Spec_BicSoftFeelFinePenSpring
-function TriggerSpring() = Spec_BicLighterThumbSpring();
+// Shorthand: Measurements
+function SearRadius(clearance)   = RodRadius(SearRod(), clearance);
+function SearDiameter(clearance) = RodDiameter(SearRod(), clearance);
+
 function SearSpringCompressed() = 0.4;
 
 function SearPinOffsetZ() = -0.25-RodRadius(SearPinRod());
@@ -37,32 +31,32 @@ function TriggerHeight() = GripCeiling()+TriggerFingerDiameter();
 function TriggerWidth() = 0.49;
 function SearTravel() = 0.25;
 function TriggerTravel() = SearTravel()*1.5;
-function SearLength() = 1.5 + abs(SearPinOffsetZ()) + SearTravel();
+function SearLength() = abs(SearPinOffsetZ()) + SearTravel();
 
-module Sear() {
+function TriggerAnimationFactor() = Animate(ANIMATION_STEP_TRIGGER)-Animate(ANIMATION_STEP_TRIGGER_RESET);
+
+module Sear(animationFactor=TriggerAnimationFactor(), length=SearLength()) {
 
   // Sear Rod
-  translate([0,0,-SearTravel()*Animate(ANIMATION_STEP_TRIGGER)])
-  translate([0,0,SearTravel()*Animate(ANIMATION_STEP_TRIGGER_RESET)])
+  translate([0,0,-SearTravel()*animationFactor])
   translate([0,0,SearPinOffsetZ()-SearBottomOffset()])
   color("LightGreen")
-  Rod(rod=SearRod(), length=SearLength());
+  SquareRod(rod=SearRod(), length=length);
 
-  translate([0,0,-SearTravel()*Animate(ANIMATION_STEP_TRIGGER)])
-  translate([0,0,SearTravel()*Animate(ANIMATION_STEP_TRIGGER_RESET)])
+  translate([0,0,-SearTravel()*animationFactor])
   translate([0,0,SearPinOffsetZ()])
   rotate([90,0,0])
   color("Red")
-  %Rod(rod=SearPinRod(), length=0.8, center=true);
+  %Rod(rod=SearPinRod(), length=0.5, center=true);
 }
 
-module SearCutter(searLengthExtra=0, wideTrack=false) {
+module SearCutter(length=SearLength()+SearTravel(), searLengthExtra=0, crosspin=true,wideTrack=false) {
   color("Red", 0.25)
   union() {
     translate([0,0,SearPinOffsetZ()-SearBottomOffset()-SearTravel()-SearSpringCompressed()])
-    Rod(rod=SearRod(),
+    SquareRod(rod=SearRod(),
         clearance=RodClearanceLoose(),
-        length=SearLength()+SearTravel()+searLengthExtra);
+        length=length+searLengthExtra);
   
     if (wideTrack)
     translate([-RodDiameter(SearRod())*0.4,
@@ -72,6 +66,7 @@ module SearCutter(searLengthExtra=0, wideTrack=false) {
           RodDiameter(SearRod()),
           SearLength()+SearTravel()+searLengthExtra]);
 
+    if (crosspin)
     VerticalSearPinTrack();
   }
 }
@@ -110,7 +105,7 @@ module SearJig(width=0.75, height=1) {
 *!scale(25.4) SearJig();
 
 
-module VerticalSearPinTrack(width=0.9) {
+module VerticalSearPinTrack(width=0.5) {
   rotate([90,0,0])
   linear_extrude(height=width, center=true)
   translate([-RodRadius(SearPinRod(), RodClearanceLoose()),
@@ -121,34 +116,13 @@ module VerticalSearPinTrack(width=0.9) {
 }
 
 module TriggerSearPinTrack() {
-  pinRadius   = RodRadius(SearPinRod(), RodClearanceLoose());
-  pinDiameter = pinRadius*2;
-
-  translate([0,SearPinOffsetZ()+pinRadius])
-  polygon([
-
-    // Rear elbow, top
-    [0, 0],
-
-    // Front elbow, top
-    [TriggerTravel(), -SearTravel()],
-
-    // Front extension top
-    [TriggerTravel()+(pinRadius*1.5), -SearTravel()-pinRadius],
-
-    // Front extension bottom
-    [TriggerTravel()+(pinRadius*1.5), -pinDiameter-SearTravel()-pinRadius],
-
-    [TriggerTravel(), -pinDiameter-SearTravel()],
-
-    [0,-pinDiameter],
-
-    // Rear extension, bottom
-    [-pinRadius,-pinDiameter],
-
-    // Rear extension, top
-    [-pinRadius, 0]
-  ]);
+  translate([0,SearPinOffsetZ()])
+  hull() {
+    Rod2d(SearPinRod(), RodClearanceLoose());
+    
+    translate([TriggerTravel(), -SearTravel()])
+    Rod2d(SearPinRod(), RodClearanceLoose());
+  }
 }
 
 module SearSupportTab(cutter=false) {
@@ -164,47 +138,22 @@ module SearSupportTab(cutter=false) {
         // Sear Body
         translate([ReceiverLugRearMaxX(),0])
         mirror([0,1])
-        square([abs(ReceiverLugRearMaxX())+0.3, TriggerHeight()]);
+        square([abs(ReceiverLugRearMaxX())+0.375, TriggerHeight()]);
 
         // Front Corner
         translate([0,GripCeilingZ()])
-        square([ReceiverLugFrontMinX()+0.1, GripCeiling()-ManifoldGap()]);
+        square([ReceiverLugFrontMinX()+TriggerTravel(), GripCeiling()-ManifoldGap()]);
+
+        // Back Corner
+        translate([ReceiverLugRearMinX(),ReceiverLugRearZ()+ManifoldGap()])
+        mirror([0,1])
+        square([abs(ReceiverLugRearMinX()), 0.375]);
       }
-
-      translate([ReceiverLugRearMinX()-0.25-clearance,
-                 (GripWidth()/2)-RodDiameter(SearRod())+clearance,
-                 -TriggerHeight()+ManifoldGap()+clearance])
-      mirror([0,0,1])
-      rotate([90,0,0])
-      linear_extrude(height=(GripWidth()/2)-RodRadius(SearRod())+clearance) {
-
-        // Grip Middle Interface Lug Horizontal
-        square([ReceiverLugRearLength()+0.45+(clearance*2),
-              0.5+(clearance*2)]);
-
-
-        // Grip Middle Interface Lug Vertical
-        translate([ReceiverLugRearLength()-0.25,0,0])
-        square([0.5+(clearance*2),
-              1+(clearance*2)]);
-
-        // Trigger-interfacing Surface/grip lug
-        square([abs(ReceiverLugRearMinX())+0.25+(clearance*2),
-              0.2+(clearance*2)]);
-      }
-
-
-      // Top-rear trigger retaining lug
-      translate([ReceiverLugRearMaxX()-clearance,
-                 -RodRadius(rod=SearRod()),
-                 ReceiverLugRearZ()-clearance+ManifoldGap()])
-      cube([0.2+(TriggerTravel()*(cutter?1:0))+(clearance*2),
-            (GripWidth()/2)-RodRadius(SearRod())+clearance,
-            abs(ReceiverLugRearZ())+(clearance*2)]);
     }
 
     if (!cutter)
-    SearCutter(wideTrack=true);
+    translate([0,0,-SearTravel()])
+    SearCutter(length=SearLength()+(SearTravel()*4), wideTrack=true);
 
     ReceiverLugFront(clearance=0.01);
 
@@ -216,7 +165,8 @@ module SearSupportTab(cutter=false) {
 module TriggerSideCutter(clearance=0) {
   translate([ReceiverLugRearMinX(),ManifoldGap()])
   mirror([0,1])
-  square([ReceiverLugFrontMaxX()+abs(ReceiverLugRearMinX()),TriggerHeight()+ManifoldGap(2)]);
+  square([ReceiverLugFrontMaxX()+abs(ReceiverLugRearMinX()),
+          TriggerHeight()+ManifoldGap(2)]);
 }
 
 module Trigger2d() {
@@ -225,10 +175,11 @@ module Trigger2d() {
   triggerLength = TriggerTravel()+RodDiameter(SearRod())+triggerFront+triggerBack;
   triggerHeight = TriggerHeight()-0.01;
 
+  render()
   difference() {
 
     // Trigger Body
-    translate([-triggerBack,-0.01])
+    translate([-triggerBack,0])
     mirror([0,1])
     square([triggerLength,triggerHeight-0.01]);
 
@@ -239,6 +190,11 @@ module Trigger2d() {
              -GripCeiling()-TriggerFingerRadius()])
     circle(r=TriggerFingerRadius(), h=1, center=true, $fn=Resolution(16,30));
 
+
+    translate([-triggerBack,ReceiverLugRearZ()-0.375])
+    square([ReceiverLugRearLength(),
+            abs(ReceiverLugRearZ())+0.375]);
+    
     // Clearance for the receiver lugs
     projection(cut=true)
     rotate([-90,0,0]) {
@@ -251,59 +207,51 @@ module Trigger2d() {
   }
 }
 
-module Trigger(left=true, right=true) {
-  sideplateWidth = (TriggerWidth()/2)-RodRadius(SearRod(), RodClearanceLoose());
+module Trigger(animationFactor=TriggerAnimationFactor(), left=true, right=true) {
+  sideplateWidth = (TriggerWidth()/2)
+                 - RodRadius(SearRod(), RodClearanceSnug());
 
-  translate([-(TriggerTravel()*Animate(ANIMATION_STEP_TRIGGER)),0,0])
-  translate([(TriggerTravel()*Animate(ANIMATION_STEP_TRIGGER_RESET)),0,0]) {
+  translate([-(TriggerTravel()*animationFactor),0,0]) {
 
     if (right)
     color("Gold")
-    render(convexity=6)
+    render()
     difference() {
+      translate([0,RodRadius(SearRod(), RodClearanceSnug()),0])
       rotate([90,0,0])
-      linear_extrude(height=TriggerWidth(), center=true)
+      linear_extrude(height=TriggerWidth()-sideplateWidth, center=false)
       Trigger2d();
 
       // Sear Slot (extended)
       translate([ReceiverLugRearMaxX(),-RodRadius(SearRod(), RodClearanceLoose()),ManifoldGap()])
       mirror([0,0,1])
-      cube([abs(ReceiverLugRearMaxX())+TriggerTravel()+0.31,
+      cube([abs(ReceiverLugRearMaxX())+TriggerTravel()+0.385,
             RodDiameter(SearRod(), RodClearanceLoose()), 2+ManifoldGap()]);
 
       // Sear Support Slot Front
       translate([0,-RodRadius(SearRod(), RodClearanceLoose()),GripCeilingZ()-0.01])
       cube([ReceiverLugFrontMaxX(), RodDiameter(SearRod(), RodClearanceLoose()), GripCeiling()+0.01+ManifoldGap()]);
-
-
-      translate([0,TriggerWidth()/2,0])
-      rotate([90,0,0])
-      linear_extrude(height=sideplateWidth+0.01)
-      TriggerSideCutter();
     }
 
     if (left)
     color("Gold", 0.7)
-    render(convexity=4)
+    render()
     difference() {
       translate([0,(TriggerWidth()/2),0])
       rotate([90,0,0])
       linear_extrude(height=sideplateWidth)
       Trigger2d();
-
-      SearSupportTab(cutter=true);
     }
   }
 }
 
-module TriggerGroup() {
-  Sear();
+module TriggerGroup(animationFactor=TriggerAnimationFactor(), searLength=SearLength()) {
+  Sear(animationFactor=animationFactor, length=searLength);
   SearSupportTab();
-  Trigger(left=true, right=true);
+  Trigger(animationFactor=animationFactor, left=true, right=true);
 }
 
-//AnimateSpin()
-TriggerGroup();
+TriggerGroup(animationFactor=0);
 
 *color("black",0.25)
 %Reference();

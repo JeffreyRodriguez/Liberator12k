@@ -3,7 +3,7 @@ include <../Meta/Animation.scad>;
 use <../Meta/Manifold.scad>;
 use <../Meta/Debug.scad>;
 
-use <../Components/Teardrop.scad>;
+use <../Shapes/Teardrop.scad>;
 
 use <../Vitamins/Rod.scad>;
 use <../Vitamins/Pipe.scad>;
@@ -35,11 +35,11 @@ module FiringPinRetainerPins(rodSpec=Spec_RodOneEighthInch(),
 
 }
 
-module FiringPinRetainer(springLength=0.3, teardrop=false, showPins=true) {
+module FiringPinRetainer(springLength=0.3, retainingPinLength=1, teardrop=false, showPins=true) {
 
   // Retaining Pins
   if (showPins)
-  FiringPinRetainerPins(springLength=springLength, teardrop=teardrop);
+  FiringPinRetainerPins(springLength=springLength,retainingPinLength=retainingPinLength, teardrop=teardrop);
 
   translate([springLength+(FiringPinHeadLength()/2),0,0])
   rotate([0,-90,0]) {

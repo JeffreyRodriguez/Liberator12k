@@ -1,8 +1,8 @@
 include <../../../Meta/Animation.scad>;
 
 use <../../../Components/Firing Pin Retainer.scad>;
-use <../../../Components/Semicircle.scad>;
-use <../../../Components/Teardrop.scad>;
+use <../../../Shapes/Semicircle.scad>;
+use <../../../Shapes/Teardrop.scad>;
 
 use <../../../Meta/Manifold.scad>;
 use <../../../Meta/Resolution.scad>;
@@ -44,27 +44,24 @@ module FiringPin() {
 }
 
 module FiringPinGuide(od=ReceiverID()-0.01,
-                    debug=false) {
+                    debug=false, alpha=1) {
   height = ReceiverLength()
          - PipeThreadDepth(StockPipe())
          - BushingDepth(BreechBushing());
   echo("Firing Pin Guide Length", height);
 
   if (debug) {
-    color("SteelBlue")
     translate([FiringPinOffsetX()+FiringPinHeadLength(),0,0])
     FiringPinRetainerPins();
 
 
-    color("SteelBlue")
     translate([0.15*Animate(ANIMATION_STEP_STRIKER),0,0])
     translate([-0.15*Animate(ANIMATION_STEP_CHARGE),0,0])
     FiringPin();
   }
 
 
-  color("PaleTurquoise",0.5)
-  render(convexity=4)
+  color("PaleTurquoise",alpha) DebugHalf(enabled=debug)
   difference() {
 
     // Body
@@ -77,7 +74,7 @@ module FiringPinGuide(od=ReceiverID()-0.01,
       translate([-0.25,0,0])
       translate([BreechRearX(),0,0])
       rotate([0,-90,0])
-      Rod(rod=StrikerRod(), clearance=RodClearanceLoose(), length=height);
+      SquareRod(rod=StrikerRod(), clearance=RodClearanceLoose(), length=height);
 
       translate([FiringPinOffsetX()+FiringPinHeadLength(),0,0])
       FiringPinRetainer(showPins=false);
@@ -93,7 +90,7 @@ module FiringPinGuide(od=ReceiverID()-0.01,
           od]);
 
     // Scoop out a path for the charging handle
-    translate([FiringPinOffsetX()+FiringPinHeadLength()+0.03,
+    translate([ReceiverIR(),
                -(ChargingHandleWidth()/2)-0.03,
                0])
     mirror([1,0,0])
@@ -102,9 +99,7 @@ module FiringPinGuide(od=ReceiverID()-0.01,
           od]);
 
     translate([0,0,-ReceiverCenter()])
-    linear_extrude(height=ReceiverCenter())
-    Teardrop(r=RodRadius(SearRod(), RodClearanceLoose()),
-             rotation=180);
+    SearCutter(searLengthExtra=ReceiverCenter()+SearTravel()+RodDiameter(SearRod()));
 
 
     translate([FiringPinOffsetX()+FiringPinHeadLength(),0,0])
@@ -130,7 +125,7 @@ SearBolts(cutter=false);
 FiringPinGuide(debug=true);
 
 color("black", 0.25)
-Reference();
+*Reference();
 
 *!scale(25.4) rotate([0,90,0])
 FiringPinGuide();

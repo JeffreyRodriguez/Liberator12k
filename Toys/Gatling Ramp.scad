@@ -1,6 +1,6 @@
 use <../Vitamins/Pipe.scad>;
 use <../Vitamins/Rod.scad>;
-use <../Components/Semicircle.scad>;
+use <../Shapes/Semicircle.scad>;
 
 rotation_angle = 360/6;
 pipe = Spec_TubingZeroPointSevenFive();

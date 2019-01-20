@@ -1,9 +1,9 @@
-use <Manifold.scad>;
-use <Pipe Insert.scad>;
-use <Firing Pin Retainer.scad>;
+use <../../Meta/Manifold.scad>;
+use <Insert.scad>;
+use <../Firing Pin Retainer.scad>;
 
-use <../Vitamins/Pipe.scad>;
-use <../Vitamins/Rod.scad>;
+use <../../Vitamins/Pipe.scad>;
+use <../../Vitamins/Rod.scad>;
 
 //Spec_TubingThreeQuarterByFiveEighthInch
 //Spec_PipeThreeQuarterInchSch80

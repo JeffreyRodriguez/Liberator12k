@@ -28,7 +28,7 @@ Bearing608 = [
   [BearingOuterRadius,    0.433],
   [BearingHeight,         0.276],
   [BearingRaceRadius,     0.2375],
-  [BearingFn,             30],
+  [BearingFn,             40],
   [BearingClearanceLoose, 0.02], // TODO: Verify
   [BearingClearanceSnug,  0.01], // TODO: Verify
 ];
@@ -44,10 +44,13 @@ module Bearing2D(spec=Spec_Bearing608(), clearance=BearingClearanceSnug(), solid
   }
 }
 
-module Bearing(spec=Spec_Bearing608(), clearance=BearingClearanceSnug(), extraHeight=0, solid=false) {
+module Bearing(spec=Spec_Bearing608(),
+               clearance=BearingClearanceSnug(),
+               extraHeight=0,
+               solid=false, center=false) {
   color("SteelBlue")
   render()
-  linear_extrude(height=BearingHeight(spec)+extraHeight)
+  linear_extrude(height=BearingHeight(spec)+extraHeight, center=center)
   Bearing2D(spec=spec, clearance=clearance, solid=solid);
 }
 

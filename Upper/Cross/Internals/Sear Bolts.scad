@@ -13,10 +13,10 @@ use <../../../Lower/Trigger.scad>;
 use <../Reference.scad>;
 
 function SearBoltSpec() = Spec_BoltM3();
-function SearBoltOffset() = ReceiverIR()-BoltRadius(SearBoltSpec());
+function SearBoltOffset() = ReceiverIR()-BoltCapRadius(SearBoltSpec());
 
 module SearBolts(boltLength=UnitsMetric(30), nutAngle=90,
-                 teardrop=true, teardropAngle=90, cutter=false) {
+                 teardrop=false, teardropAngle=90, cutter=false) {
 
   nutOffsetZ = -RodRadius(StrikerRod(), RodClearanceLoose())-0.08;
 

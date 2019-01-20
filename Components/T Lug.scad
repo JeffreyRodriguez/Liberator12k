@@ -6,15 +6,16 @@ module T_Lug2d(
              height=UnitsImperial(1),
           tabHeight=UnitsImperial(0.25),
            tabWidth=UnitsImperial(1),
-          clearance=UnitsImperial(0.007),
+          clearance=UnitsImperial(0.005),
+          clearVertical=false,
              cutter=false) {
   clearance = cutter ? clearance : 0;
   render()
   union() {
 
     // Vertical
-    translate([-height, -(width/2)-clearance])
-    square([height+clearance, width+(clearance*2)]);
+    translate([-height, -(width/2)-(clearVertical ? clearance : 0)])
+    square([height+clearance, width+(clearVertical ? clearance*2 : 0)]);
 
     // Horizontal
     translate([-tabHeight-clearance, -(tabWidth/2)-clearance])
@@ -27,7 +28,8 @@ module T_Lug(length=0.75,
              height=UnitsImperial(1),
           tabHeight=UnitsImperial(0.25),
            tabWidth=UnitsImperial(1),
-          clearance=UnitsImperial(0.007),
+          clearance=UnitsImperial(0.005),
+      clearVertical=false,
              cutter=false) {
 
   clearance = cutter ? clearance : 0;
@@ -41,6 +43,7 @@ module T_Lug(length=0.75,
       tabHeight=tabHeight,
        tabWidth=tabWidth,
       clearance=clearance,
+  clearVertical=clearVertical,
          cutter=cutter);
 }
 

@@ -1,7 +1,7 @@
 use <../../../Meta/Debug.scad>;
 use <../../../Meta/Manifold.scad>;
 use <../../../Meta/Resolution.scad>;
-use <../../../Components/Semicircle.scad>;
+use <../../../Shapes/Semicircle.scad>;
 use <../../../Vitamins/Pipe.scad>;
 use <../../../Vitamins/Rod.scad>;
 use <../Reference.scad>;
@@ -94,7 +94,7 @@ module ForendShells(cartridge=Spec_Cartridge_12GAx275(), count=3) {
   
   color("Red")
   for (i = [0:count-1])
-  translate([i*CartridgeOverallLength(cartridge),0,-shellTubeOffsetZ])
+  translate([i*CartridgeOverallLength(cartridge),0,shellTubeOffsetZ])
   rotate([0,90,0])
   ShellBase(wadHeight=CartridgeOverallLength(cartridge)-1);
 }
@@ -125,10 +125,10 @@ module Forend(barrelSpec=BarrelPipe(), cartridge=Spec_Cartridge_12GAx275(), alph
 translate([BreechFrontX(),0,0])
 ForendShells();
 
+Barrel();
 Reference();
 Frame();
 Forend(alpha=0.25, debug=true);
-
 
 
 // Plate

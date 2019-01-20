@@ -20,18 +20,18 @@ use <../../../Lower/Lower.scad>;
 
 use <Sear Bolts.scad>;
 
-module SearGuide() {
+module SearGuide(debug=false, alpha=1) {
 
   %SearBolts(teardrop=false);
 
-  color("LightSeaGreen", 0.5)
+  color("LightSeaGreen", alpha) DebugHalf(enabled=debug)
   render(convexity=4)
   difference() {
     translate([0,0,-ReceiverCenter()])
-    TeeInsert(topFactor=0.7);
+    TeeInsert(tee=ReceiverTee(), topFactor=0.7);
 
     translate([0,0,-ReceiverCenter()])
-    SearCutter();
+    SearCutter(searLengthExtra=ReceiverCenter());
 
     SearBolts(teardrop=false, cutter=true);
   }
@@ -53,10 +53,10 @@ module SearSupportTabWithBoltCutouts() {
 }
 
 translate([0,0,-ReceiverCenter()])
-%Sear();
+Sear(length=SearLength()+ReceiverCenter());
 
 //!scale(25.4)
-SearGuide();
+SearGuide(debug=1);
 
 *!scale(25.4) rotate([90,0,0])
 translate([0,0,-ReceiverCenter()])

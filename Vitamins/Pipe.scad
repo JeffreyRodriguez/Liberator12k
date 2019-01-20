@@ -12,6 +12,9 @@ PipeClearanceSnug   = 6; // Added to the diameter, should not slip (default)
 PipeClearanceLoose  = 7; // Added to the diameter, should slide freely
 PipeFn              = 8; // Number of sides
 PipeWeightPerUnit   = 9;
+PipeCapDiameter     = 10;
+PipeCapLength       = 11;
+PipeCapDepth        = 12;
 
 function PipeClearanceSnug()  = PipeClearanceSnug;
 function PipeClearanceLoose() = PipeClearanceLoose;
@@ -56,6 +59,11 @@ function PipeOuterCircumference(pipe, clearance, clearanceSign=1) =
 function PipeInnerCircumference(pipe, clearance, clearanceSign=1) =
            3.14*PipeInnerDiameter(pipe, clearance, clearanceSign);
 
+function PipeCapDiameter(pipe, clearance, clearanceSign=1) = lookup(PipeCapDiameter, pipe) + (PipeClearance(pipe, clearance)*clearanceSign);
+function PipeCapRadius(pipe, clearance, clearanceSign=1) = PipeCapDiameter(pipe, clearance, clearanceSign)/2;
+function PipeCapLength(pipe) = lookup(PipeCapLength, pipe);
+function PipeCapDepth(pipe) = lookup(PipeCapDepth, pipe);
+
 
 module Pipe2d(pipe, clearance=PipeClearanceSnug(), clearanceSign=1, hollow=false, extraRadius=0, $fn=undef) {
   difference() {
@@ -67,13 +75,12 @@ module Pipe2d(pipe, clearance=PipeClearanceSnug(), clearanceSign=1, hollow=false
          $fn=PipeFn(pipe, $fn));
   }
 };
+
 module Pipe(pipe, length = 1, clearance=PipeClearanceSnug(), center=false, hollow=false) {
   translate([0,0,center ? -length/2 : 0])
   linear_extrude(height=length)
   Pipe2d(pipe=pipe, clearance=clearance, hollow=hollow);
 };
-
-//Pipe(PipeOneInch, clearance=PipeClearanceLoose);
 
 
 // 1/4" Pipe
@@ -147,7 +154,7 @@ function Spec_PipeOneInch() = [
   [PipeWeightPerUnit,   0] // TODO
 ];
 
-// 1" Pipe Sch80
+// 1" NPT Pipe Schedule 80
 function Spec_PipeOneInchSch80() = [
   [PipeInnerDiameter,   0.958],
   [PipeOuterDiameter,   1.315],
@@ -157,7 +164,10 @@ function Spec_PipeOneInchSch80() = [
   [PipeClearanceSnug,   0.002],
   [PipeClearanceLoose,  0.01],
   [PipeFn,              50],
-  [PipeWeightPerUnit,   0] // TODO
+  [PipeWeightPerUnit,   0], // TODO
+  [PipeCapDiameter,     1.75], // TODO: Verify
+  [PipeCapLength,       1.5],   // TODO: Verify
+  [PipeCapDepth,        1.15]
 ];
 
 // 0.375" OD DOM Tubing (Just guessing)
@@ -177,12 +187,25 @@ function Spec_TubingThreeEighthsInch() = [
 function Spec_TubingZeroPointSevenFive() = [
   [PipeInnerDiameter,   0.410],
   [PipeOuterDiameter,   0.750],
-  [PipeTaperedDiameter, 0.750],
-  [PipeThreadLength,    0.0],
-  [PipeThreadDepth,     0.0],
+  [PipeTaperedDiameter, 0.70],
+  [PipeThreadLength,    0.5],
+  [PipeThreadDepth,     0.5],
   [PipeClearanceSnug,   0.005],
   [PipeClearanceLoose,  0.03],
   [PipeFn,              30],
+  [PipeWeightPerUnit,   42]
+];
+
+// 1.00x0.00" DOM Tubing
+function Spec_TubingOnePointZero() = [
+  [PipeInnerDiameter,   0.0],
+  [PipeOuterDiameter,   1.0],
+  [PipeTaperedDiameter, 0],
+  [PipeThreadLength,    0],
+  [PipeThreadDepth,     0],
+  [PipeClearanceSnug,   0.010],
+  [PipeClearanceLoose,  0.03],
+  [PipeFn,              50],
   [PipeWeightPerUnit,   42]
 ];
 
@@ -264,7 +287,18 @@ function Spec_PointFiveSix9mmBarrel() = [
   [PipeWeightPerUnit,   0]
 ];
 
-
+// 1 1/2" Sch40 ABS
+function Spec_OnePointFiveSch40ABS() = [
+  [PipeInnerDiameter,   1.6],
+  [PipeOuterDiameter,   1.905],
+  [PipeTaperedDiameter, 0.0],
+  [PipeThreadLength,    0],
+  [PipeThreadDepth,     0],
+  [PipeClearanceSnug,   0.005],
+  [PipeClearanceLoose,  0.01],
+  [PipeFn,              60],
+  [PipeWeightPerUnit,   0]
+];
 
 // 2.5" Sch40 PVC (ECM Water Jacket)
 function Spec_TwoPointFiveInchSch40PVC() = [
@@ -280,12 +314,6 @@ function Spec_TwoPointFiveInchSch40PVC() = [
 ];
 
 
-
-
-
-echo (PipeOuterCircumference(Spec_PointFiveSix9mmBarrel()));
-
-
 // Fittings: Tee
 TeeOuterDiameter   = 1; // Diameter of the body, not the rim
 TeeWidth           = 2; // Across the top of the tee, side-to-side
@@ -297,20 +325,7 @@ TeeRimWidth        = 7; // Width of the tee rim
 TeeInfillSphere    = 8; // Diameter of the infill sphere, cuts out the casting infill between the tee sections
 TeeInfillOffset    = 9; // Offset for the infill sphere from center
 
-// Anvil USA 3/4" Cast Iron Pipe Tee (DANGEROUS, OUTSIDE SPEC)
-function Spec_TeeThreeQuarterInch() = [
-  [TeeOuterDiameter,   1.41],
-  [TeeWidth,           2.64],
-  [TeeHeight,          2],     // Measured 1.998-2.042
-  [TeeHeightClearance, 0.022], // Derived from (height range/2)
-  [TeeInnerDiameter,   0.88],
-  [TeeRimDiameter,     1.54], // Measured: 1.494-1.523
-  [TeeRimWidth,        0.32],
-  [TeeInfillSphere,    0.10],
-  [TeeInfillOffset,    0.41]
-];
-
-// Anvil USA 3/4" Forged Steel Pipe Tee
+// Anvil USA 3/4" Forged Steel Pipe Tee 2104
 function Spec_AnvilForgedSteel_TeeThreeQuarterInch() = [
   [TeeOuterDiameter,   1.37],
   [TeeWidth,           2.765],
@@ -323,15 +338,28 @@ function Spec_AnvilForgedSteel_TeeThreeQuarterInch() = [
   [TeeInfillOffset,    0.41]
 ];
 
-// Chinese 304SS-150 3/4" Tee (DANGEROUS, OUTSIDE SPEC)
-function Spec_304SS_150_TeeThreeQuarterInch() = [
-  [TeeOuterDiameter,   1.37],
-  [TeeWidth,           2.64],
+// Anvil USA 1" Forged Steel Pipe Tee 2104
+function Spec_AnvilForgedSteel_OneInch() = [
+  [TeeOuterDiameter,   1.625],
+  [TeeWidth,           3.175],
   [TeeHeight,          2],     // Measured 1.998-2.042
   [TeeHeightClearance, 0.022], // Derived from (height range/2)
+  [TeeInnerDiameter,   1.313],
+  [TeeRimDiameter,     1.92],
+  [TeeRimWidth,        0.9],
+  [TeeInfillSphere,    0.10],
+  [TeeInfillOffset,    0.41]
+];
+
+// Anvil USA 3/4" Forged Steel Pipe Tee 2114
+function Spec_AnvilForgedSteel_TeeThreeQuarterInch3k() = [
+  [TeeOuterDiameter,   1.625],
+  [TeeWidth,           3.175],
+  [TeeHeight,          2.05],     // Measured 1.998-2.042
+  [TeeHeightClearance, 0.022], // Derived from (height range/2)
   [TeeInnerDiameter,   0.88],
-  [TeeRimDiameter,     1.4],
-  [TeeRimWidth,        0.31],
+  [TeeRimDiameter,     1.92],
+  [TeeRimWidth,        0.9],
   [TeeInfillSphere,    0.10],
   [TeeInfillOffset,    0.41]
 ];
@@ -355,7 +383,7 @@ module Tee(tee, $fn=40) {
 
      // Top Body
      rotate([0,-90,0])
-     translate([TeeHeight(tee) - (TeeOuterDiameter(tee)/2),0,0])
+     translate([TeeCenter(tee),0,0])
      cylinder(r=TeeOuterRadius(tee), h=TeeWidth(tee) * 0.99, center=true, $fn=36);
 
      // Bottom Body
@@ -384,6 +412,9 @@ module Tee(tee, $fn=40) {
     }
    }
 };
+*Tee(Spec_AnvilForgedSteel_OneInch());
+
+
 
 module CrossFitting(tee, infill=true, hollow=false, $fn=40) {
   render()
@@ -391,8 +422,8 @@ module CrossFitting(tee, infill=true, hollow=false, $fn=40) {
     union() {
 
       // Horizontal Body
+      translate([0,0, TeeCenter(tee)])
       rotate([0,-90,0])
-      translate([TeeHeight(tee) - (TeeOuterDiameter(tee)/2),0,0])
       cylinder(r=TeeOuterRadius(tee), h=TeeWidth(tee), center=true, $fn=36);
 
       // Vertical Body
@@ -422,6 +453,8 @@ module CrossFitting(tee, infill=true, hollow=false, $fn=40) {
         }
       }
 
+
+      hull()
       for (n=[-1,1]) // Top of cross-fitting
       for (i=[-1,1]) { // Sides of tee-fitting
 
@@ -441,9 +474,7 @@ module CrossFitting(tee, infill=true, hollow=false, $fn=40) {
   }
 };
 
-//Tee(TeeThreeQuarterInch);
-
-module TeeRim(tee=Spec_TeeThreeQuarterInch(), height=1, clearance=0) {
+module TeeRim(tee=Spec_AnvilForgedSteel_OneInch(), height=1, clearance=0) {
   cylinder(r=TeeRimRadius(tee) + clearance, h=height, $fn=36);
 }
 
@@ -462,6 +493,14 @@ function Spec_BushingThreeQuarterInch() = [
   [BushingDepth,     0.48],
   [BushingCapWidth,  1.227],
   [BushingCapHeight, 0.425]
+];
+// 1" Bushing
+function Spec_BushingOneInch() = [
+  [BushingHeight,    1.306],
+  [BushingDiameter,  1.313], // Measured 1.05, adding clearance
+  [BushingDepth,     0.59],
+  [BushingCapWidth,  1.528],
+  [BushingCapHeight, 0.514]
 ];
 
 function BushingHeight(bushing)    = lookup(BushingHeight, bushing);
@@ -490,4 +529,32 @@ module Bushing(spec=Spec_BushingThreeQuarterInch()) {
   }
 }
 
-CrossFitting(Spec_AnvilForgedSteel_TeeThreeQuarterInch());
+module PipeCap(spec=Spec_PipeOneInchSch80(), hollow=true, clearance=undef, clearanceSign=1) {
+    render()
+    difference() {
+        cylinder(r=PipeCapRadius(pipe=spec,
+                 clearance=clearance,
+                 clearanceSign=clearanceSign),
+                 h=PipeCapLength(spec),
+                 $fn=PipeFn(spec)*2);
+
+        if (hollow)
+        translate([0,0,PipeCapLength(spec)-PipeCapDepth(spec)])
+        cylinder(r=PipeOuterRadius(pipe=spec,
+                 clearance=clearance,
+                 clearanceSign=clearanceSign),
+                 h=PipeCapLength(spec),
+                 $fn=PipeFn(spec)*2);
+    }
+}
+
+DEFAULT_PIPE = Spec_PipeOneInchSch80();
+
+PipeCap(spec=DEFAULT_PIPE);
+
+translate([0,0,PipeCapLength(DEFAULT_PIPE)-PipeThreadDepth(DEFAULT_PIPE)])
+Pipe(pipe=Spec_PipeOneInchSch80(), length=2, clearance=PipeClearanceLoose);
+
+
+*CrossFitting(Spec_AnvilForgedSteel_TeeThreeQuarterInch3k(), hollow=true);
+*CrossFitting(Spec_AnvilForgedSteel_OneInch(), hollow=true);

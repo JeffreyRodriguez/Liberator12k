@@ -6,9 +6,9 @@ use <../Vitamins/Rod.scad>;
 DEFAULT_TEE = Spec_AnvilForgedSteel_TeeThreeQuarterInch();
 
 module TeeInsert(tee=DEFAULT_TEE, topFactor=0.6, baseHeight=0) {
-  innerRadius = TeeInnerRadius(DEFAULT_TEE);
-  outerRadius = TeeOuterRadius(DEFAULT_TEE);
-  teeCenter   = TeeCenter(DEFAULT_TEE);
+  innerRadius = TeeInnerRadius(tee);
+  outerRadius = TeeOuterRadius(tee);
+  teeCenter   = TeeCenter(tee);
   height      = teeCenter-(innerRadius*topFactor);
 
   render(convexity=4)

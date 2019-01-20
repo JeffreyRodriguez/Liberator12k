@@ -1,8 +1,11 @@
+
 //$t=0.6;
 use <../Meta/Debug.scad>;
 use <../Meta/Manifold.scad>;
 use <../Meta/Resolution.scad>;
 use <../Meta/Units.scad>;
+
+use <../Finishing/Chamfer.scad>;
 
 use <../Vitamins/Nuts And Bolts.scad>;
 use <../Vitamins/Pipe.scad>;
@@ -59,8 +62,14 @@ module TriggerFinger() {
   TriggerFingerSlot();
 }
 
+module LowerMiddleBoss(clearance=0) {  
+  translate([LowerMaxX()-ManifoldGap(), -0.25-clearance, -LowerGuardHeight()])
+  cube([0.125+ManifoldGap(),
+        0.5+(clearance*2),
+        LowerGuardHeight()]);
+}
 
-module TriggerGuard() {
+module TriggerGuard(bossEnabled=true) {
   height = LowerGuardHeight();
 
   union() {
@@ -68,9 +77,9 @@ module TriggerGuard() {
 
       // Main block
       translate([ReceiverLugRearMinX(), -GripWidth()/2, -height])
-      cube([LowerMaxX()+abs(ReceiverLugRearMinX()),
+      ChamferedCube([LowerMaxX()+abs(ReceiverLugRearMinX()),
             GripWidth(),
-            height]);
+            height], r=0.0625);
 
       // Bottom chamfer
       translate([0,0,-height+0.1])
@@ -86,6 +95,10 @@ module TriggerGuard() {
         circle(r=0.1, $fn=Resolution(12,24));
       }
     }
+    
+    // Lower Middle Boss
+    if (bossEnabled)
+    LowerMiddleBoss();
 
     LowerReceiverSupports();
     GripHandle();
@@ -246,12 +259,12 @@ module LowerSidePlates(showLeft=true, showRight=true, alpha=1) {
 
 }
 
-module LowerMiddle() {
+module LowerMiddle(bossEnabled=true) {
   color("DimGrey")
   render()
   difference() {
     intersection() {
-      TriggerGuard();
+      TriggerGuard(bossEnabled=bossEnabled);
 
       // Just the middle
       GripSplitter(clearance=0);
@@ -282,15 +295,21 @@ module LowerMiddle() {
 module Lower(showReceiverLugs=false, showReceiverLugBolts=false,
             showGuardBolt=false, showHandleBolts=false,
             showTrigger=false, showTriggerLeft=true, showTriggerRight=true,
-            showMiddle=true, showLeft=true, showRight=true, alpha=0.5) {
+            showMiddle=true, showLeft=true, showRight=true,
+            bossEnabled=false,
+            searLength=SearLength(), triggerAnimationFactor=0,
+            alpha=0.5) {
 
   // Trigger Guard Center
   if (showMiddle)
-  LowerMiddle();
+  LowerMiddle(bossEnabled=bossEnabled);
 
   // Trigger
   if (showTrigger) {
-    TriggerGroup(left=showTriggerLeft, right=showTriggerRight);
+    TriggerGroup(left=showTriggerLeft,
+                 right=showTriggerRight,
+                 searLength=searLength,
+                 animationFactor=triggerAnimationFactor);
   }
 
   if (showReceiverLugs) {
@@ -314,6 +333,6 @@ Lower(showReceiverLugs=true, showReceiverLugBolts=true,
       showGuardBolt=true,
       showHandleBolts=true,
       showTrigger=true, showTriggerLeft=true, showTriggerRight=true,
-      showLeft=true,
+      showLeft=false,
       showMiddle=true,
-      showRight=true, alpha=0.5);
+      showRight=true, alpha=1);

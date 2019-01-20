@@ -10,9 +10,9 @@ use <../../Vitamins/Rod.scad>;
 //DEFAULT_BARREL = Spec_TubingZeroPointSevenFive(); // Tubing from .44 Magnum ECM - also .357 Magnum shotgun.
 DEFAULT_BARREL = Spec_TubingOnePointOneTwoFive();
 
-DEFAULT_STOCK = Spec_PipeThreeQuarterInchSch80();
-DEFAULT_BREECH = Spec_BushingThreeQuarterInch();
-DEFAULT_FRAME_ROD = Spec_RodFiveSixteenthInch();
+DEFAULT_STOCK = Spec_PipeOneInchSch80();
+DEFAULT_BREECH = Spec_BushingOneInch();
+DEFAULT_FRAME_ROD = Spec_RodOneQuarterInch();
 DEFAULT_ACTUATOR_ROD = Spec_RodFiveSixteenthInch(); // Revolver Setting
 DEFAULT_CYLINDER_ROD = Spec_RodFiveSixteenthInch(); // Revolver Setting
 DEFAULT_CHARGING_ROD = Spec_RodOneQuarterInch();
@@ -23,8 +23,10 @@ DEFAULT_RESET_ROD = Spec_RodOneEighthInch();
 DEFAULT_TRIGGER_ROD = Spec_RodOneEighthInch();
 DEFAULT_FIRING_PIN_ROD = Spec_RodOneEighthInch();
 DEFAULT_GRIP_ROD = Spec_RodFiveSixteenthInch();
-DEFAULT_RECEIVER = Spec_AnvilForgedSteel_TeeThreeQuarterInch();
-DEFAULT_BUTT = Spec_AnvilForgedSteel_TeeThreeQuarterInch();
+//DEFAULT_RECEIVER = Spec_AnvilForgedSteel_TeeThreeQuarterInch();
+//DEFAULT_RECEIVER = Spec_AnvilForgedSteel_TeeThreeQuarterInch3k();
+DEFAULT_RECEIVER = Spec_AnvilForgedSteel_OneInch();
+DEFAULT_BUTT = Spec_AnvilForgedSteel_OneInch();
 DEFAULT_BARREL_LENGTH = 18;
 DEFAULT_STOCK_LENGTH = 12;
 DEFAULT_NOZZLE_DIAMETER=0.8/25.4; // I'm using an 0.8mm Volcano clone.
@@ -36,7 +38,7 @@ function NozzleMultipleCeiling(metric) = metric + (metric % DEFAULT_NOZZLE_DIAME
 
 
 // Settings: Walls
-function WallTee()              = 0.7;//0.1;
+function WallTee()              = 0.1; //0.7;
 function WallTriggerGuardRod()  = 0.35;
 function WallFrontGripRod()     = 0.25;
 function WallFrameRod()         = 0.1875;
@@ -119,7 +121,7 @@ module Stock(stockLength=12, hollow=true, alpha=1) {
   translate([-ReceiverCenter()+PipeThreadDepth(StockPipe()),0,0])
   rotate([0,-90,0])
   Pipe(pipe=StockPipe(),
-       clearance=PipeClearanceLoose(),
+       clearance=undef,
        length=stockLength+0.02,
        hollow=hollow);
 }
@@ -143,7 +145,7 @@ module Reference(breech=Spec_BushingThreeQuarterInch(),
                receiver=ReceiverTee(),
                   stock=Spec_PipeThreeQuarterInch(),
             stockLength=StockLength(), hollowStock=false,
-                   butt=Spec_TeeThreeQuarterInch()) {
+                   butt=Spec_AnvilForgedSteel_TeeThreeQuarterInch()) {
 
   Stock(stockLength=stockLength, hollow=hollowStock);
 

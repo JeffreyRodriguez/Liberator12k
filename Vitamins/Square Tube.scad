@@ -29,7 +29,9 @@ SquareTubeOneInch = [
 ];
 function Spec_SquareTubeOneInch() = SquareTubeOneInch;
 
-module Tubing2D(spec=Spec_SquareTubeOneInch(), clearance=SquareTubeClearanceSnug(), hollow=false) {
+module Tubing2D(spec=Spec_SquareTubeOneInch(),
+                clearance=undef,
+                hollow=false) {
   union() {
     difference() {
       square([SquareTubeOuter(spec, clearance), SquareTubeOuter(spec, clearance)]);

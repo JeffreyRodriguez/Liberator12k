@@ -3,16 +3,16 @@ use <../Meta/Units.scad>;
 
 function MagazineAngle() = 0;
 
-function ARMagazineRearTabLength() = 0.137;
-function ARMagazineBaseWidth() = 0.89;
-function ARMagazineBaseLength() = 2.4;
+function AR15_MagazineRearTabLength() = 0.137;
+function AR15_MagazineBaseWidth() = 0.89;
+function AR15_MagazineBaseLength() = 2.4;
 
-function AR15MagCatchZ() = -0.813;
-function AR15MagCatchX() = -0.058;
+function AR15_MagCatchZ() = -0.813;
+function AR15_MagCatchX() = -0.058;
 
-function AR15MagwellDepth() = UnitsImperial(2.6); //UnitsImperial(2);
+function AR15_MagwellDepth() = UnitsImperial(2.6); //UnitsImperial(2);
 
-module AR15MagwellTemplate(baseWidth=ARMagazineBaseWidth(), baseLength=ARMagazineBaseLength(),
+module AR15_MagwellTemplate(baseWidth=AR15_MagazineBaseWidth(), baseLength=AR15_MagazineBaseLength(),
                        sideTrackOffset=0.825, sideTrackDepth=0.08, centerY=true,
                        widthClearance=0.008, backClearance=0.01,
                        showRearTab=true, showCatch=true) {
@@ -23,29 +23,29 @@ module AR15MagwellTemplate(baseWidth=ARMagazineBaseWidth(), baseLength=ARMagazin
     union() {
 
       // Main body section
-      translate([ARMagazineRearTabLength()-backClearance, -widthClearance])
+      translate([AR15_MagazineRearTabLength()-backClearance, -widthClearance])
       square([baseLength+backClearance, baseWidth+(widthClearance*2)]);
 
       // Rear alignment tab
       if (showRearTab)
       translate([-backClearance,(0.45/2)-widthClearance])
-      square([ARMagazineRearTabLength()+backClearance, 0.45+(widthClearance*2)]);
+      square([AR15_MagazineRearTabLength()+backClearance, 0.45+(widthClearance*2)]);
 
       // Magazine Catch Stop
       if (showCatch)
-      translate([ARMagazineRearTabLength()+0.4-backClearance,baseWidth+widthClearance])
+      translate([AR15_MagazineRearTabLength()+0.4-backClearance,baseWidth+widthClearance])
       square([0.55+backClearance,0.053]);
     }
   }
 }
 
-module AR15MagazineCatch(magHeight=1,
+module AR15_MagazineCatch(magHeight=1,
                      catchOffsetY=0.4,
                      catchLength=0.265, catchHeight=UnitsImperial(0.131),
                      extraY = 0.25, extraRadius=0.02, $fn=8) {
 
-  translate([AR15MagCatchX(),
-             catchOffsetY,AR15MagCatchZ()]) {
+  translate([AR15_MagCatchX(),
+             catchOffsetY,AR15_MagCatchZ()]) {
      rotate([0,MagazineAngle(),0])
 
     // Magazine interface
@@ -71,10 +71,10 @@ module AR15MagazineCatch(magHeight=1,
   }
 }
 
-module AR15MagwellInsert(height=AR15MagwellDepth(),
+module AR15_MagwellInsert(height=AR15_MagwellDepth(),
                      taperHeight=UnitsImperial(0.5)) {
   union() {
-    translate([ARMagazineRearTabLength(),0,-height])
+    translate([AR15_MagazineRearTabLength(),0,-height])
     multmatrix(m=[[1,0,sin(MagazineAngle()),0], // Here's where the magazine is angled
                   [0,1,0,0],
                   [0,0,1,0],
@@ -82,7 +82,7 @@ module AR15MagwellInsert(height=AR15MagwellDepth(),
 
       // Main magazine cutter
       linear_extrude(height=height+ManifoldGap())
-      AR15MagwellTemplate();
+      AR15_MagwellTemplate();
 
       // Magazine tapered opening cutter
       multmatrix(m=[[1,0,0,0],
@@ -93,15 +93,15 @@ module AR15MagwellInsert(height=AR15MagwellDepth(),
       mirror([0,0,1])
       hull()
       linear_extrude(height=taperHeight+ManifoldGap(), scale=1.5)
-      AR15MagwellTemplate(showCatch=false, showRearTab=false);
+      AR15_MagwellTemplate(showCatch=false, showRearTab=false);
     }
 
-    AR15MagazineCatch();
+    AR15_MagazineCatch();
   }
 }
 
-module AR15Magwell(width=UnitsImperial(1.25),
-                  height=AR15MagwellDepth(),
+module AR15_Magwell(width=UnitsImperial(1.25),
+                  height=AR15_MagwellDepth(),
                     wall=UnitsImperial(0.125),
                wallFront=UnitsImperial(0),
                 wallBack=UnitsImperial(0),
@@ -117,15 +117,15 @@ module AR15Magwell(width=UnitsImperial(1.25),
       linear_extrude(height=height)
       hull() {
 
-        translate([ARMagazineRearTabLength()-wallBack, -(width/2)-wall])
-        square([ARMagazineBaseLength()+ARMagazineRearTabLength()+wallBack, width+(wall*2)]);
+        translate([AR15_MagazineRearTabLength()-wallBack, -(width/2)-wall])
+        square([AR15_MagazineBaseLength()+AR15_MagazineRearTabLength()+wallBack, width+(wall*2)]);
 
         translate([0, -(width/2)])
-        square([ARMagazineBaseLength()+ARMagazineRearTabLength()+wallFront, width]);
+        square([AR15_MagazineBaseLength()+AR15_MagazineRearTabLength()+wallFront, width]);
       }
     }
 
-    AR15MagwellInsert(height=height);
+    AR15_MagwellInsert(height=height);
 
     // Remove the front bottom corner
     translate([1.25,-1,-height])
@@ -135,7 +135,7 @@ module AR15Magwell(width=UnitsImperial(1.25),
 }
 
 scale(25.4) rotate([180,0,0])
-AR15Magwell();
+AR15_Magwell();
 
 *%translate([0.375,0,0])
-AR15MagwellInsert();
+AR15_MagwellInsert();

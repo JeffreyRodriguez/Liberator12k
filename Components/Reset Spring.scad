@@ -1,5 +1,5 @@
 include <../Meta/Animation.scad>;
-use <../Components/Semicircle.scad>;
+use <../Shapes/Semicircle.scad>;
 use <../Components/Spindle.scad>;
 use <../Meta/Manifold.scad>;
 use <../Meta/Debug.scad>;

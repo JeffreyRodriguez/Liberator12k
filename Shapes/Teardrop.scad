@@ -1,9 +1,11 @@
-module Teardrop(r=1, rotation=0, truncated=false, $fn=100) {
+use <../Meta/Resolution.scad>;
+
+module Teardrop(r=1, rotation=0, truncated=false) {
   side = r*sqrt(2)/2;
 
   render()
   difference() {
-    union() {
+    hull() {
       circle(r, $fn=$fn);
 
       rotate(rotation)

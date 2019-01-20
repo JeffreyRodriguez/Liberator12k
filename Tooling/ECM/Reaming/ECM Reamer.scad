@@ -4,8 +4,8 @@ use <../../../Meta/Units.scad>;
 use <../../../Vitamins/Pipe.scad>;
 use <../../../Vitamins/Rod.scad>;
 use <../../../Vitamins/Nuts And Bolts.scad>;
-use <../../../Components/Pipe Cap.scad>;
-use <../../../Components/Semicircle.scad>;
+use <../../../Components/Pipe/Cap.scad>;
+use <../../../Shapes/Semicircle.scad>;
 
 PIPE_SPEC = Spec_TubingZeroPointSevenFive();
 

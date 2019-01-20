@@ -6,9 +6,9 @@ use <../../../Vitamins/Pipe.scad>;
 use <../../../Vitamins/Rod.scad>;
 use <../../../Components/Hose Barb.scad>;
 use <../../../Components/HoseBarbExtension.scad>;
-use <../../../Components/Semicircle.scad>;
-use <../../../Components/Teardrop.scad>;
-use <../../../Components/TeardropTorus.scad>;
+use <../../../Shapes/Semicircle.scad>;
+use <../../../Shapes/Teardrop.scad>;
+use <../../../Shapes/TeardropTorus.scad>;
 use <../../../Components/ORing.scad>;
 use <../../../Components/Printable Shaft Collar.scad>;
 
