@@ -100,9 +100,9 @@ function Spec_RodBicFlint() = [
 function Spec_RodOneEighthInch() = [
   [RodDiameter, 1/8],
   [RodRadius, 1/8/2],
-  [RodClearanceSnug, 0.01],
-  [RodClearanceLoose, 0.02],
-  [RodFn, 8]
+  [RodClearanceSnug, 0.002],
+  [RodClearanceLoose, 0.01],
+  [RodFn, 10]
 ];
 
 function Spec_RodThreeSixteenthInch() = [
@@ -120,6 +120,15 @@ function Spec_RodOneQuarterInch() = [
   [RodClearanceLoose, 0.035],
   [RodFn,             12]
 ];
+
+function Spec_RodThreeEighthsInch() = [
+  [RodDiameter,       3/8],
+  [RodRadius,         3/8/2],
+  [RodClearanceSnug,  0.017],
+  [RodClearanceLoose, 0.025],
+  [RodFn,             20]
+];
+
 
 function Spec_RodOneHalfInch() = [
   [RodDiameter,       1/2],
