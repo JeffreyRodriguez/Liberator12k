@@ -124,7 +124,8 @@ module BreechTemplate() {
 }
 
 module FixedBreechPipeUpperAssembly(
-         receiver=Spec_PipeThreeQuarterInch(), receiverLength=ReceiverLength(),
+         receiver=Spec_PipeThreeQuarterInch(),
+         receiverLength=ReceiverLength(),
          pipeAlpha=1,
          frame=true, stock=false, tailcap=false,
          hammerTravelFactor=LinearHammerTravelFactor(),
