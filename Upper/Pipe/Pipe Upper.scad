@@ -10,7 +10,9 @@ use <../../Shapes/Semicircle.scad>;
 use <../../Shapes/Teardrop.scad>;
 
 use <../../Components/Firing Pin.scad>;
+
 use <../../Components/Pipe/Cap.scad>;
+use <../../Components/Pipe/Charging Handle.scad>;
 use <../../Components/Pipe/Lugs.scad>;
 use <../../Components/Pipe/Frame.scad>;
 use <../../Components/Pipe/Tailcap.scad>;
@@ -57,7 +59,7 @@ function FrameMajorRodDiameter(frameBolt=FrameMajorBolt(), clearance=false) = Bo
 module PipeUpperAssembly(receiver=Spec_PipeThreeQuarterInch(),
                          receiverLength=ReceiverLength(),
                          pipeAlpha=1,
-                         frame=true, stock=false, tailcap=false,
+                         chargingHandle=true, frame=true, stock=false, tailcap=false,
                          debug=true) {
                    
   translate([LowerX(),0,0]) {
@@ -75,15 +77,18 @@ module PipeUpperAssembly(receiver=Spec_PipeThreeQuarterInch(),
     
   }
                
-  if (tailcap)
-  translate([-ReceiverLength(),0,0])
-  Tailcap();
+  translate([-receiverLength,0,0]) {
+      if (tailcap)
+      Tailcap();
   
-  if (stock)
-  translate([-12,0,0])
-  Buttstock();
+      if (stock)
+      Buttstock();
+  }
   
-              
+  if (chargingHandle) {
+    ChargingHandle();
+    ChargingHandleHousing();
+  }
 }
 
 PipeUpperAssembly(receiverLength=12, stock=true, tailcap=false,
