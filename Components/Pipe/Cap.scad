@@ -1,7 +1,7 @@
 use <../../Meta/Manifold.scad>;
 use <../../Finishing/Chamfer.scad>;
 
-module PipeCap(pipeDiameter=1,
+module PrintablePipeCap(pipeDiameter=1,
                    base=0.25,
                    wall=0.125,
               extension=0.25) {
