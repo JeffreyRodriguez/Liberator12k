@@ -68,12 +68,8 @@ module PipeUpperAssembly(receiver=Spec_PipeThreeQuarterInch(),
                     center=false,
                     debug=debug);
     
-    if (frame) {
-      FrameBolts();
-      FrameBolts(flip=true);
-
-      FrameAssembly();
-    }
+    if (frame)
+    FrameAssembly();
     
   }
                
