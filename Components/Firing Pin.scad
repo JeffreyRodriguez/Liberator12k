@@ -30,8 +30,10 @@ module FiringPin(cutter=false, debug=false) {
         length=FiringPinBodyLength()+clear2);
     
     color("DarkGoldenrod")
-    translate([0,0,-0.5])
-    cylinder(r=(3/32/2)+clear, h=FiringPinBodyLength(), $fn=Resolution(20,50));
+    translate([0,0,-0.5-(cutter?0.5:0)])
+    cylinder(r=(3/32/2)+clear,
+             h=FiringPinBodyLength()+(cutter?0.5:0),
+             $fn=Resolution(20,50));
   }
 }
 
