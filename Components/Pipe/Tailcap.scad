@@ -20,7 +20,7 @@ module Tailcap(base=0.25, debug=false) {
   translate([-base,0,0])
   rotate([0,90,0])
   difference() {
-    PipeCap(
+    PrintablePipeCap(
         pipeDiameter=ReceiverOD(),
         base=base,
         $fn=Resolution(30,60));
