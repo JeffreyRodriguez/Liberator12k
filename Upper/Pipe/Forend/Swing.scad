@@ -7,10 +7,8 @@ use <../../../Meta/Resolution.scad>;
 
 use <../../../Finishing/Chamfer.scad>;
 
-use <../../../Components/Pipe/Beltclip.scad>;
 use <../../../Components/Pipe/Cap.scad>;
 use <../../../Components/Pipe/Charging Handle.scad>;
-use <../../../Components/Pipe/Laser Support.scad>;
 use <../../../Components/Pipe/Lugs.scad>;
 use <../../../Components/Pipe/Frame.scad>;
 
@@ -23,6 +21,9 @@ use <../../../Shapes/Semicircle.scad>;
 use <../../../Ammo/Shell Slug.scad>;
 
 use <../Pipe Upper.scad>;
+use <../Fixed Breech.scad>;
+
+function BreechRearX() = 0;
 
 // Measured: Vitamins
 function BarrelCollarDiameter() = 1.75;
@@ -42,9 +43,6 @@ function IndexLockRod() = Spec_RodOneQuarterInch();
 // Settings: Lengths
 function BarrelLength() = 18-BarrelX();
 function BarrelX() = 0;
-function LatchExtension() = 0.375;
-function LatchWidth() = 0.5;
-function LatchHeight() = 0.5; //ReceiverIR()/2;
 
 // Settings: Angles
 
@@ -52,7 +50,7 @@ function LatchHeight() = 0.5; //ReceiverIR()/2;
 
 // Calculated: Positions
 function FrameFrontMinX() = BreechFrontX()+4.75;
-function ReceiverLength() = 6;
+function ReceiverLength() = 12;
 
 module BarrelCollar(clearance=0.002, cutter=false, debug=false) {
   clear = cutter ? clearance : 0;
@@ -78,7 +76,7 @@ module Barrel(barrel=BarrelPipe(), barrelLength=BarrelLength(), hollow=true,
        hollow=hollow, length=barrelLength);
 }
 
-module RemovableBarrelTrunnion(debug=false) {
+module SwingBarrelTrunnion(debug=false) {
   
   color("Olive")
   DebugHalf(enabled=debug)
@@ -93,7 +91,7 @@ module RemovableBarrelTrunnion(debug=false) {
   }
 }
 
-module RemovableBarrelPivot(debug=false) {
+module SwingBarrelPivot(debug=false) {
   color("RoyalBlue")
   DebugHalf(enabled=debug)
   difference() {
@@ -123,22 +121,15 @@ module RemovableBarrelPivot(debug=false) {
   }
 }
 
-module RemovableFrameFront(debug=false) {
+module SwingForend(debug=false) {
   color("Khaki")
   DebugHalf(enabled=debug)
   difference() {
-    translate([FrameFrontMinX()+ManifoldGap(),0,0])
     difference() {
-      translate([-BreechRearX()+BreechPlateThickness(),0,0])
-      hull()
-      for (R = [0,180]) rotate([R,0,0])
-      FrameMajorStandoff(length=FrameFrontMinX()+BreechPlateThickness());
       
-      Frame(minorBolts=false,
-             offsetMajor=5, offsetMajorBottom=5,
-             length=10,cutter=true);
+      ForendFront();
       
-      translate([-ManifoldGap(),0, -FrameMajorRodOffset()])
+      translate([FrameFrontMinX()-ManifoldGap(),0, -FrameMajorRodOffset()])
       rotate([0,90,0])
       linear_extrude(height=BreechPlateThickness()+ManifoldGap(2))
       rotate(180)
@@ -148,7 +139,7 @@ module RemovableFrameFront(debug=false) {
                        +PipeOuterRadius(BarrelPipe()))*2,
                 angle=180, $fn=90);
       
-      translate([-FrameFrontMinX()-ManifoldGap(),0, -FrameMajorRodOffset()])
+      translate([-ManifoldGap(),0, -FrameMajorRodOffset()])
       rotate([0,90,0])
       linear_extrude(height=FrameFrontMinX()+ManifoldGap(2))
       rotate(180) {
@@ -164,7 +155,7 @@ module RemovableFrameFront(debug=false) {
                   angle=360, $fn=90);
       }
       
-      translate([-FrameFrontMinX()-ManifoldGap(),0, PipeOuterRadius(ReceiverPipe())/2])
+      translate([-ManifoldGap(),0, PipeOuterRadius(ReceiverPipe())/2])
       rotate([0,90,0])
       linear_extrude(height=FrameFrontMinX()+ManifoldGap(2))
       translate([0,-(BreechPlateWidth()/2)-ManifoldGap(),0])
@@ -183,26 +174,13 @@ module RemovableShotgunAssembly(pipeAlpha=1, debug=false) {
   
   hammerTravelFactor = Animate(ANIMATION_STEP_FIRE)
                      - SubAnimate(ANIMATION_STEP_CHARGE, start=0.275, end=0.69);
-
-  PipeChargingHandle(travelFactor=Animate(ANIMATION_STEP_CHARGE));
   
-  PipeChargingHandleHousing();
-
-  FixedBreechPipeUpperAssembly(pipeAlpha=pipeAlpha, receiverLength=ReceiverLength(),
-                    receiverLength=10, stock=true, tailcap=false,
-                    hammerTravelFactor=hammerTravelFactor,
-                    frame=true, debug=debug);
+  FixedBreechPipeUpperAssembly(pipeAlpha=pipeAlpha,
+                               receiverLength=ReceiverLength(),
+                               stock=true, tailcap=false, frame=true,
+                               hammerTravelFactor=hammerTravelFactor,
+                               debug=debug);
   
-  FrameAssembly(offsetMajor=0,
-                lengthMajorTop=FrameFrontMinX()+1,
-                lengthMajorBottom=FrameFrontMinX()+1,
-                debug=debug);
-  
-  Beltclip();
-  
-  translate([2,0,0])
-  LaserSupport();
-
   Barrel(debug=false);
   BarrelCollar(debug=false);
 
@@ -215,13 +193,13 @@ module RemovableShotgunAssembly(pipeAlpha=1, debug=false) {
 }
 
 //!scale(25.4) rotate([0,-90,0]) translate([-BarrelX()-1.6875,0,0])
-RemovableBarrelTrunnion();
+SwingBarrelTrunnion();
 
 //!scale(25.4) rotate([0,90,0]) translate([-FrameFrontMinX(),0,0])
-RemovableFrameFront();
+SwingForend();
 
 //!scale(25.4) rotate([0,90,0]) translate([-FrameFrontMinX(),0,0])
-RemovableBarrelPivot();
+SwingBarrelPivot();
 
 //AnimateSpin()translate([-2.5,0,0])
 RemovableShotgunAssembly(pipeAlpha=1, debug=true);
