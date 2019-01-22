@@ -25,15 +25,15 @@ use <../../Lower/Lower.scad>;
 
 use <Pipe Upper.scad>;
 
+// Measured: Vitamins
+function BreechPlateThickness() = 3/8;
+function BreechPlateWidth() = 2;
+
 // Settings: Lengths
 function BreechBoltLength() = 5.4;
 
 // Settings: Walls
 function WallBreechBolt() = 0.1875;
-
-// Measured: Vitamins
-function BreechPlateThickness() = 3/8;
-function BreechPlateWidth() = 2;
 
 // Settings: Positions
 function BreechFrontX() = 0;
@@ -88,8 +88,8 @@ module Breech(debug=false,
   }
 }
 
-module BreechBoltIterator() {
-    for (R = [0,180]) rotate([R,0,0])
+module BreechBoltIterator(angles=[0,180]) {
+    for (R = angles) rotate([R,0,0])
     translate([BreechRearX()-ManifoldGap(),0,0])
     translate([0,0,BreechBoltOffset()])
     rotate([0,90,0])
