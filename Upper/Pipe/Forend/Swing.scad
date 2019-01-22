@@ -35,10 +35,6 @@ function BarrelCollarWidth() = 5/8;
 // Settings: Vitamins
 function BarrelPipe() = Spec_TubingOnePointOneTwoFive();
 //function BarrelPipe() = Spec_TubingZeroPointSevenFive();
-function ActuatorRod() = Spec_RodOneQuarterInch();
-function ChargingRod() = Spec_RodOneHalfInch();
-function ChargingExtensionRod() = Spec_RodOneHalfInch();
-function IndexLockRod() = Spec_RodOneQuarterInch();
 
 // Settings: Lengths
 function BarrelLength() = 18-BarrelX();
@@ -83,8 +79,7 @@ module SwingBarrelTrunnion(debug=false) {
   difference() {
     translate([FrameFrontMinX()+ManifoldGap(),0,0])
     rotate([0,-90,0])
-    cylinder(r=PipeInnerRadius(pipe=ReceiverPipe(),
-                               clearance=PipeClearanceLoose()),
+    cylinder(r=ReceiverIR(),
              h=FrameFrontMinX()-BarrelCollarWidth(),
              $fn=PipeFn(ReceiverPipe()));
     Barrel(clearance=PipeClearanceLoose(), hollow=false, cutter=true);
@@ -95,23 +90,21 @@ module SwingBarrelPivot(debug=false) {
   color("RoyalBlue")
   DebugHalf(enabled=debug)
   difference() {
-    union() {
-      translate([0,0, -FrameMajorRodOffset()])
+    hull() {
+      translate([0,0, -BreechBoltOffset()])
       rotate([0,90,0])
-      cylinder(r=FrameMajorRodOffset()
-                -PipeOuterRadius(ReceiverPipe())
-                +FrameMajorWall(),
+      cylinder(r=BreechBoltOffset()
+                -ReceiverOR()
+                +WallBreechBolt(),
                h=FrameFrontMinX()-0.01, $fn=Resolution(30,60));
       
-      translate([FrameFrontMinX(),0,0])
-      translate([-BreechRearX(),0,0])
-      rotate([180,0,0])
-      FrameMajorStandoff(length=FrameFrontMinX()-0.01);
+      translate([-BreechRearX(),-ReceiverOR(),-ReceiverIR()])
+      cube([FrameFrontMinX()-0.01, ReceiverOD(), ReceiverIR()/2]);
     }
     
-    translate([-ManifoldGap(),0, -FrameMajorRodOffset()])
+    translate([-ManifoldGap(),0, -BreechBoltOffset()])
     rotate([0,90,0])
-    cylinder(r=FrameMajorRodOffset()
+    cylinder(r=BreechBoltOffset()
               -PipeOuterRadius(ReceiverPipe())
               +0.01,
              h=FrameFrontMinX()+ManifoldGap(2), $fn=Resolution(30,60));
@@ -127,31 +120,31 @@ module SwingForend(debug=false) {
   difference() {
     difference() {
       
-      ForendFront();
+      FixedBreechForend();
       
-      translate([FrameFrontMinX()-ManifoldGap(),0, -FrameMajorRodOffset()])
+      translate([FrameFrontMinX()-ManifoldGap(),0, -BreechBoltOffset()])
       rotate([0,90,0])
       linear_extrude(height=BreechPlateThickness()+ManifoldGap(2))
       rotate(180)
-      semidonut(minor=(FrameMajorRodOffset()
+      semidonut(minor=(BreechBoltOffset()
                        -PipeOuterRadius(BarrelPipe()))*2,
-                major=(FrameMajorRodOffset()
+                major=(BreechBoltOffset()
                        +PipeOuterRadius(BarrelPipe()))*2,
                 angle=180, $fn=90);
       
-      translate([-ManifoldGap(),0, -FrameMajorRodOffset()])
+      translate([-ManifoldGap(),0, -BreechBoltOffset()])
       rotate([0,90,0])
       linear_extrude(height=FrameFrontMinX()+ManifoldGap(2))
       rotate(180) {
-        semidonut(minor=(FrameMajorRodOffset()
+        semidonut(minor=(BreechBoltOffset()
                          -PipeOuterRadius(ReceiverPipe()))*2,
-                  major=(FrameMajorRodOffset()
+                  major=(BreechBoltOffset()
                          +PipeOuterRadius(ReceiverPipe()))*2,
                   angle=180, $fn=90);
           
-        semidonut(minor=(FrameMajorRodOffset()
+        semidonut(minor=(BreechBoltOffset()
                          -PipeOuterRadius(ReceiverPipe()))*2,
-                  major=(FrameMajorRodOffset()*sqrt(2))*2,
+                  major=(BreechBoltOffset()*sqrt(2))*2,
                   angle=360, $fn=90);
       }
       
