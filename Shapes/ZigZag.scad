@@ -10,7 +10,7 @@ DEFAULT_ZIGZAG_DIAMETER = 4;
 DEFAULT_ZIGZAG_POSITIONS= 2;
 DEFAULT_ZIGZAG_DEPTH = 1/2;
 DEFAULT_ZIGZAG_WIDTH = 1/2;
-DEFAULT_ZIGZAG_ANGLE = 60;
+DEFAULT_ZIGZAG_ANGLE = 50;
 
 function ZigZagSegmentLength(radius, positions)
              = RadiusToCircumference(radius)
@@ -134,12 +134,10 @@ positions = DEFAULT_ZIGZAG_POSITIONS;
 width = DEFAULT_ZIGZAG_WIDTH;
 depth = DEFAULT_ZIGZAG_DEPTH;
 
-//AnimateSpin() {
   // Pin
   translate([radius-depth, 0,width/2])
   rotate([0,90,0])
-  %cylinder(r=width/2, h=depth*3, $fn=10);
+  %cylinder(r=5/16/2, h=depth*3, $fn=10);
 
   ZigZag(radius=radius, depth=depth,
          width=5/16, positions=DEFAULT_ZIGZAG_POSITIONS);
-//}

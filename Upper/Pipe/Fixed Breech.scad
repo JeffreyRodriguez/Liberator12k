@@ -108,7 +108,9 @@ module BreechBolts(length=BreechBoltLength(),
 }
 
 
-module FixedBreechForend(length = BreechBoltLength()-BreechPlateThickness()) {
+module FixedBreechForend(breechBoltLength=BreechBoltLength()) {
+    length = breechBoltLength-BreechPlateThickness();
+
     hull() {
         translate([BreechPlateThickness(),0,0])
         BreechBoltIterator()
@@ -121,9 +123,9 @@ module FixedBreechForend(length = BreechBoltLength()-BreechPlateThickness()) {
     }
 }
 
-module FixedBreechAssembly(debug=false) {
-  FixedBreechFiringPinAssembly();
-  BreechBolts(debug=debug);
+module FixedBreechAssembly(breechBoltLength=BreechBoltLength(), debug=false) {
+  FixedBreechFiringPinAssembly(breechBoltLength=breechBoltLength);
+  BreechBolts(breechBoltLength=breechBoltLength, debug=debug);
   Breech(debug=debug);
 }
 
@@ -138,12 +140,13 @@ module BreechTemplate() {
 module FixedBreechPipeUpperAssembly(
          receiver=Spec_PipeThreeQuarterInch(),
          receiverLength=ReceiverLength(),
+         breechBoltLength=BreechBoltLength(),
          pipeAlpha=1,
          frame=true, stock=false, tailcap=false,
          hammerTravelFactor=LinearHammerTravelFactor(),
          debug=true) {
   
-  FixedBreechAssembly();
+  FixedBreechAssembly(breechBoltLength=breechBoltLength);
   
   translate([FiringPinMinX()-LinearHammerTravel(),0,0])
   LinearHammerAssembly(travelFactor=hammerTravelFactor);
@@ -158,8 +161,6 @@ module FixedBreechPipeUpperAssembly(
 
 FixedBreechPipeUpperAssembly(stock=false, tailcap=true,
                              frame=true, debug=true);
-
-Breech();
 
 FixedBreechForend();
 
