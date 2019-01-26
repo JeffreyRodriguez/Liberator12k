@@ -10,7 +10,6 @@ use <../../../Shapes/Semicircle.scad>;
 use <../../../Shapes/Teardrop.scad>;
 
 use <../../../Components/Pipe/Frame.scad>;
-use <../../../Components/Pipe/Frame Standoffs.scad>;
 
 use <../../../Vitamins/Nuts And Bolts.scad>;
 use <../../../Vitamins/Pipe.scad>;
@@ -24,6 +23,7 @@ use <../../../Lower/Lower.scad>;
 use <../../../Ammo/Shell Slug.scad>;
 
 use <../Pipe Upper.scad>;
+use <../Fixed Breech.scad>;
 
 // Measured: Vitamins
 function BarrelCollarSteelDiameter() = 1.75;
@@ -184,9 +184,8 @@ module PumpShotgunAssembly(debug=false) {
   
   ShellLoadingSupport();
 
-  *PipeUpperAssembly(debug=debug);
+  FixedBreechPipeUpperAssembly(stock=true, recieverLength=12, debug=debug);
 
-  FrameAssembly(debug=debug);
     
 
 color("LightSteelBlue")
