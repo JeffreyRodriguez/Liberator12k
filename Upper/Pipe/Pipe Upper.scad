@@ -10,7 +10,9 @@ use <../../Shapes/Semicircle.scad>;
 use <../../Shapes/Teardrop.scad>;
 
 use <../../Components/Firing Pin.scad>;
+
 use <../../Components/Pipe/Cap.scad>;
+use <../../Components/Pipe/Charging Handle.scad>;
 use <../../Components/Pipe/Lugs.scad>;
 use <../../Components/Pipe/Frame.scad>;
 use <../../Components/Pipe/Tailcap.scad>;
@@ -25,65 +27,35 @@ use <../../Lower/Receiver Lugs.scad>;
 use <../../Lower/Trigger.scad>;
 use <../../Lower/Lower.scad>;
 
-// Settings: Lengths
-function FrameLength() = 10;
-
-DEFAULT_LENGTH_FRAME_MAJOR_TOP = 8;
-DEFAULT_LENGTH_FRAME_MAJOR_BOTTOM = 5;
-DEFAULT_OFFSET_FRAME_MAJOR = 3;
-DEFAULT_OFFSET_FRAME_MINOR = 1.125;
-
-// Settings: Walls
-function WallFrame() = 0.1875;
-
-// Settings: Vitamins
-function FrameMajorBolt() = Spec_BoltOneHalf();
-function FrameMinorBolt() = Spec_BoltM5();
-function FrameMajorRod() = Spec_RodOneHalfInch();//Spec_RodFiveSixteenthInch();
-function FrameMinorRod() = Spec_RodFiveSixteenthInch();
-
-function LowerX() = -LowerMaxX();
-function FrameMajorRodOffset() = ReceiverOR()
-                               + BoltRadius(FrameMajorBolt())
-                               + WallFrame();
-function FrameMajorRodOffsetX() = BreechRearX()
-                                - DEFAULT_OFFSET_FRAME_MAJOR;
-
-// Shorthand: Measurements
-function FrameMajorWall() = WallFrame();
-function FrameMajorRodRadius(frameBolt=FrameMajorBolt(), clearance=false) = BoltRadius(frameBolt, clearance=clearance);
-function FrameMajorRodDiameter(frameBolt=FrameMajorBolt(), clearance=false) = BoltDiameter(frameBolt, clearance=clearance);
-
 module PipeUpperAssembly(receiver=Spec_PipeThreeQuarterInch(),
                          receiverLength=ReceiverLength(),
                          pipeAlpha=1,
-                         frame=true, stock=false, tailcap=false,
+                         chargingHandle=true, frame=true, stock=false, tailcap=false,
                          debug=true) {
                    
-  translate([LowerX(),0,0]) {
+  translate([-LowerMaxX(),0,0]) {
     PipeLugAssembly(length=receiverLength,
                     stock=stock, tailcap=tailcap,
                     center=false,
                     debug=debug);
     
-    if (frame) {
-      FrameBolts();
-      FrameBolts(flip=true);
-
-      FrameAssembly();
-    }
+    if (frame)
+    FrameAssembly();
     
   }
                
-  if (tailcap)
-  translate([-ReceiverLength(),0,0])
-  Tailcap();
+  translate([-receiverLength,0,0]) {
+      if (tailcap)
+      Tailcap();
   
-  if (stock)
-  translate([-12,0,0])
-  Buttstock();
+      if (stock)
+      Buttstock();
+  }
   
-              
+  if (chargingHandle) {
+    ChargingHandle();
+    ChargingHandleHousing();
+  }
 }
 
 PipeUpperAssembly(receiverLength=12, stock=true, tailcap=false,

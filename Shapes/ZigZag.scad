@@ -6,11 +6,11 @@ use <../Meta/Resolution.scad>;
 use <../Shapes/Semicircle.scad>;
 use <../Meta/Manifold.scad>;
 
-DEFAULT_ZIGZAG_DIAMETER = 5;
-DEFAULT_ZIGZAG_POSITIONS= 6;
+DEFAULT_ZIGZAG_DIAMETER = 4;
+DEFAULT_ZIGZAG_POSITIONS= 2;
 DEFAULT_ZIGZAG_DEPTH = 1/2;
 DEFAULT_ZIGZAG_WIDTH = 1/2;
-DEFAULT_ZIGZAG_ANGLE = 60;
+DEFAULT_ZIGZAG_ANGLE = 50;
 
 function ZigZagSegmentLength(radius, positions)
              = RadiusToCircumference(radius)
@@ -39,10 +39,14 @@ module ZigZagSegment(radius=1,
   twistRate= angle/height;
   zigzag_cutter_width = width*sqrt(2);
   slotHeight=(zigzag_cutter_width)*tan(DEFAULT_ZIGZAG_ANGLE);
-  track_angle = TrackAngle(radius,zigzag_cutter_width);
+  track_angle = TrackAngle(radius,width);
   zigzag_track_angle = TrackAngle(radius, zigzag_cutter_width);
   angleDiff = zigzag_track_angle-track_angle;
-  echo("angleDiff: ", angleDiff);
+  
+  *echo("track_angle: ", track_angle);
+  *echo("zigzag_track_angle: ", zigzag_track_angle);
+  *echo("angleDiff: ", angleDiff);
+               
   
   render()
   intersection() {
@@ -58,10 +62,8 @@ module ZigZagSegment(radius=1,
                            + (track_angle*1))
       rotate(angleDiff/2)
       SegmentSemiDonut(radius, depth*2, zigzag_cutter_width, center=true);
-      
+        
       // Vertical slot
-      translate([0, 0, height-slotHeight+(width/2)+slotHeightExtra-ManifoldGap()])
-      rotate(-angle)
       linear_extrude(height=slotHeight+slotHeightExtra+ManifoldGap())
       SegmentSemiDonut(radius, depth*2, width, center=true);
     }
@@ -95,15 +97,13 @@ module ZigZag(
            $fn=Resolution(30,90)) {
 
   slotHeight=width/2;
-
+  angle=360/positions/2;
+  zigzag_height=ZigZagHeight(radius, positions, width);
   top_slot_height = width;
-  bottom_slot_height = 0;//width/2;
+  bottom_slot_height = width;
 
   render()
-  difference() {
-    
-    *cylinder(r=radius, h=zigzag_height+top_slot_height+bottom_slot_height);
-    
+  union() {
     for (i=[0:positions-1]){
       rotate([0,0,angle*2*i])
       render() {
@@ -131,23 +131,13 @@ module ZigZag(
 
 radius = DEFAULT_ZIGZAG_DIAMETER/2;
 positions = DEFAULT_ZIGZAG_POSITIONS;
-angle = 360/positions/2;
 width = DEFAULT_ZIGZAG_WIDTH;
 depth = DEFAULT_ZIGZAG_DEPTH;
-track_angle = TrackAngle(radius, width);
-zigzag_height = ZigZagHeight(radius, positions, width);
 
-//AnimateSpin() {
   // Pin
-
-  translate([0,0,(zigzag_height-(width/2))*($t<0.5?$t*2:0)])
-  translate([0,0,(zigzag_height-(width/2))*($t>=0.5?(1-$t)*2:0)])
   translate([radius-depth, 0,width/2])
   rotate([0,90,0])
-  %cylinder(r=width/2, h=depth*3, $fn=10);
+  %cylinder(r=5/16/2, h=depth*3, $fn=10);
 
-  rotate([0, 0, angle*$t*2])
-  ZigZag(radius=radius, positions=DEFAULT_ZIGZAG_POSITIONS);
-//}
-
-$t=0;
+  ZigZag(radius=radius, depth=depth,
+         width=5/16, positions=DEFAULT_ZIGZAG_POSITIONS);

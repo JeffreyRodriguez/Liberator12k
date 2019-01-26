@@ -72,7 +72,7 @@ module LinearHammerGuide(insertRadius=ReceiverIR(), length=1.5,
     ChamferedCircularHole(r1=0.5, r2=1/4,
                           h=length-BoltCapHeight(LinearHammerBolt())-0.25,
                            chamferTop=false,
-                           $fn=Resolution(8,20));
+                           $fn=Resolution(20,30));
   }
 }
 
@@ -108,7 +108,7 @@ module LinearHammerCompressor(insertRadius=ReceiverIR(),
     rotate([0,90,0])
     ChamferedCircularHole(r1=0.5,
                           r2=1/16, h=length-base, chamferTop=false,
-                          $fn=Resolution(8,20));
+                          $fn=Resolution(20,30));
   }
 }
 

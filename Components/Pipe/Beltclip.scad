@@ -29,15 +29,15 @@ module Beltclip() {
   rotate([-90,0,0])
   difference() {
     
-    translate([BreechRearX()-3,-ReceiverIR()/2,-ReceiverOR()-0.25])
+    translate([-3,-ReceiverIR()/2,-ReceiverOR()-0.25])
     ChamferedCube([2, ReceiverIR(), ReceiverIR()], r=1/16);
     
-    translate([BreechRearX()-2.5,
+    translate([-2.5,
                -ReceiverOR(),
                -ReceiverIR()-0.25])
     ChamferedCube([2, ReceiverOD(), ReceiverIR()+ManifoldGap(2)], teardrop=false, r=1/16);
     
-    translate([BreechRearX()-3,0,0])
+    translate([-3,0,0])
     PipeLugPipe(cutter=true);
   }
   
