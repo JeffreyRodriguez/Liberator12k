@@ -45,7 +45,7 @@ module PipeLugPipe(length=ReceiverLength(),
        length=length,
        hollow=!cutter, clearance=cutter?PipeClearanceSnug():undef);
 }
-  
+
 
 module PipeLugFront(alpha=1, cutter=false) {
   color("DarkOrange", alpha=alpha) render()
@@ -53,7 +53,7 @@ module PipeLugFront(alpha=1, cutter=false) {
     translate([0,0,LowerOffsetZ()])
     ReceiverLugFront(extraTop=WallLower()+ReceiverPipeWall()+(cutter?WallLower():0),
                      cutter=cutter, clearVertical=true);
-    
+
     if (cutter==false)
     PipeLugPipe(cutter=true);
   }
@@ -61,11 +61,11 @@ module PipeLugFront(alpha=1, cutter=false) {
 
 module PipeLugRear(alpha=1, cutter=false) {
   color("DarkOrange", alpha=alpha) render()
-  difference() {  
+  difference() {
     translate([0,0,LowerOffsetZ()])
     ReceiverLugRear(extraTop=WallLower()+ReceiverPipeWall()+(cutter?WallLower():0),
                     cutter=cutter, clearVertical=true);
-    
+
     if (cutter==false)
     PipeLugPipe(cutter=true);
   }
@@ -83,25 +83,25 @@ module PipeLugCenter(cutter=false, clearance=0.002, alpha=1) {
         projection(cut=true)
         translate([0,0,0.001])
         TriggerGuard();
-        
+
         translate([ReceiverLugRearMaxX()-1.375,-1])
         square([LowerMaxX()-ReceiverLugRearMaxX()+1.375,2]);
       }
     }
-    
+
     if (cutter == false) {
       PipeLugPipe(cutter=true);
-      
+
       PipeLugFront(cutter=true);
       PipeLugRear(cutter=true);
-      
+
       SearCutter(length=SearLength()+LowerOffsetZ());
     }
   }
 }
 
 module PipeLugPlater(front=true, rear=true, center=true) {
-  
+
   if (front)
   rotate([0,-90,0])
   translate([-ReceiverLugFrontMinX(),1.5,-ReceiverLugFrontMinX()])
@@ -118,22 +118,22 @@ module PipeLugPlater(front=true, rear=true, center=true) {
 
 module PipeLugAssembly(length=ReceiverLength(), pipeAlpha=1,
                        front=true, rear=true, center=true,
-                       debug=false) {
+                       triggerAnimationFactor=0, debug=false) {
 
   translate([0,0,LowerOffsetZ()])
-  Lower(showTrigger=true,alpha=1, animationFactor=0,
+  Lower(showTrigger=true,alpha=1, triggerAnimationFactor=triggerAnimationFactor,
         showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
         searLength=SearLength()+WallLower()+ReceiverPipeWall()+SearTravel());
-  
+
   if (front)
   PipeLugFront(debug=debug);
-  
+
   if (rear)
   PipeLugRear(debug=debug);
-  
+
   if (center)
   PipeLugCenter(debug=debug);
-  
+
   if (length > 0)
   PipeLugPipe(alpha=pipeAlpha, length=length, debug=debug, cutter=false);
 }
@@ -142,3 +142,5 @@ PipeLugAssembly(pipeAlpha=0.5);
 
 *!scale(25.4)
 PipeLugPlater(front=true, rear=true, center=true);
+
+echo ("Pipe Lug Sear Length: ", SearLength()+WallLower()+ReceiverPipeWall()+SearTravel());
