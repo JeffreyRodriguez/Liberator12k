@@ -5,8 +5,8 @@ use <../../Meta/Units.scad>;
 use <../../Meta/Debug.scad>;
 use <../../Meta/Resolution.scad>;
 
-use <../../Components/Pipe/Lugs.scad>;
 use <../../Components/Firing Pin.scad>;
+use <../../Components/Pipe/Lugs.scad>;
 
 use <../../Finishing/Chamfer.scad>;
 
@@ -16,6 +16,7 @@ use <../../Vitamins/Pipe.scad>;
 use <../../Lower/Receiver Lugs.scad>;
 use <../../Lower/Trigger.scad>;
 use <../../Lower/Lower.scad>;
+
 
 // Settings: Lengths
 function FrameLength() = 1.125;
@@ -102,11 +103,13 @@ module FrameAssembly() {
   UpperPipeFrame();
 }
 
-FrameBolts();
-FrameBolts(flip=true);
+AnimateSpin() {
+  FrameBolts();
+  FrameBolts(flip=true);
 
-FrameAssembly();
-PipeLugAssembly(center=false, debug=false);
+  FrameAssembly();
+  PipeLugAssembly(center=false, debug=false, pipeAlpha=0.5);
+}
 
 
 // Plated lower pipe frame

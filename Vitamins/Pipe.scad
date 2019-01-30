@@ -217,7 +217,7 @@ function Spec_TubingOnePointOneTwoFive() = [
   [PipeThreadLength,    0.9],
   [PipeThreadDepth,     0.5],
   [PipeClearanceSnug,   0.010],
-  [PipeClearanceLoose,  0.03],
+  [PipeClearanceLoose,  0.02],
   [PipeFn,              50],
   [PipeWeightPerUnit,   42]
 ];

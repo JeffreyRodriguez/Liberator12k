@@ -1,23 +1,26 @@
 use <../Vitamins/Rod.scad>;
 use <../Vitamins/Pipe.scad>;
 use <../Meta/Resolution.scad>;
+use <../Meta/Debug.scad>;
 use <../Meta/Manifold.scad>;
 use <../Math/Circles.scad>;
+use <../Finishing/Chamfer.scad>;
 use <../Shapes/ZigZag.scad>;
-
-function ZigZagDepth() = 1/4;
-function ZigZagWidth() = RodDiameter(ActuatorRod(), RodClearanceSnug());
 
 function BarrelPipe() = Spec_TubingOnePointOneTwoFive();
 //function BarrelPipe() = Spec_TubingZeroPointSevenFive();
-function ActuatorRod() = Spec_RodOneEighthInch();
-function CylinderRod() = Spec_RodOneHalfInch();
+function ActuatorRod() = Spec_RodOneQuarterInch();
+function CylinderRod() = Spec_RodThreeEighthsInch();
+function CylinderRod() = Spec_RodFiveSixteenthInch();
 
-function CylinderWall() = 0.3125;
-function CylinderOuterWall() = 2 /32;
-function CylinderChamberOffset() = 
-  (PipeOuterRadius(BarrelPipe())
-  +CylinderWall()) *sqrt(2);
+//Spec_RodThreeEighthsInch
+
+function ZigZagWidth() = RodDiameter(ActuatorRod(), RodClearanceSnug());
+function ZigZagDepth() = 1/4;
+
+
+function CylinderOuterWall() = (1/8)+ZigZagDepth();
+function CylinderChamberOffset() =  PipeOuterDiameter(BarrelPipe());
 
 function CylinderRadius(barrelPipe=BarrelPipe()) =
                   CylinderChamberOffset()
@@ -38,58 +41,84 @@ module OffsetRevolverIterator(centerOffset=1, positions=4) {
 
 module OffsetRevolver(radius=CylinderRadius(), positions=6,
          centerOffset=1, chamberDiameter=1,
-         height=1,
-         trackAngle=0,
-         chamberLength=undef,
-         chambers=true, debug=false) {
+         height=1, chamberLength=2,
+         trackAngle=0, debug=false) {
   // Body
   color("Gold") render()
-  linear_extrude(height=height)
   difference() {
-    circle(r=radius, $fn=Resolution(50,120));
+    union() {
+      
+      // Outer shell
+      ChamferedCylinder(r1=radius, r2=1/16, h=height, $fn=Resolution(50,120));
+      
+      // Extended core
+      cylinder(r=centerOffset, h=chamberLength, $fn=Resolution(30,50));
+    }
 
+    linear_extrude(height=max(height,chamberLength))
     OffsetRevolverIterator(centerOffset=centerOffset, positions=positions)
     children();
   }
 }
 
 module OffsetZigZagRevolver(barrelPipe=BarrelPipe(),
-           wall=CylinderWall(), positions=6,
+           wall=CylinderOuterWall(), positions=6,
            centerOffset=CylinderChamberOffset(),
-           trackAngle=0,
+           trackAngle=0, extraTop=0, extraBottom=0,
+           spindleRadius=RodRadius(CylinderRod(), RodClearanceSnug()),
            chambers=true, chamberLength=undef,
-           printableZigZag=true, debug=false) {
+           supports=true,
+           debug=false, alpha=1) {
 
   radius = OffsetRevolverRadius(
                centerOffset,
                PipeOuterRadius(barrelPipe),
                wall);
-  height = ZigZagHeight(radius, positions, ZigZagWidth()) +(ZigZagWidth()*6);
+  height = ZigZagHeight(radius, positions, ZigZagWidth()) +(ZigZagWidth()*1.5);
+  
+  if (chambers)
+  color("CornflowerBlue")
+  DebugHalf(enabled=debug)
+  OffsetRevolverIterator(centerOffset=centerOffset, positions=positions)
+  Pipe(BarrelPipe(),
+       length=(chamberLength==undef?height:chamberLength),
+       clearance=undef, hollow=true);
 
-  color("Gold")
-  render()
+  color("Gold", alpha)
+  DebugHalf(enabled=debug)
   difference() {
     OffsetRevolver(radius=radius, centerOffset=centerOffset,
                    positions=positions,
-                   height=height, debug=false)
+                   chamberLength=chamberLength,
+                   height=height+extraTop+extraBottom, debug=false)
     translate([0,0,-ManifoldGap()])
-    Pipe2d(barrelPipe, clearance=PipeClearanceSnug());
+    Pipe2d(barrelPipe, clearance=PipeClearanceLoose());
   
     rotate(trackAngle)
-    ZigZag(radius=radius, depth=ZigZagDepth(),
-           width=5/16, positions=positions);
+    ZigZag(radius=radius, depth=ZigZagDepth(), supports=supports,
+           width=ZigZagWidth(), positions=positions,
+           extraTop=extraTop, extraBottom=extraBottom);
+    
+    
+    // Split into two parts, core and shell
+    translate([0,0,-ManifoldGap()])
+    linear_extrude(height=max(height+extraTop+extraBottom, chamberLength)+ManifoldGap(2))
+    difference() {
+      circle(centerOffset
+            +PipeWall(barrelPipe), $fn=Resolution(4,60));
+      
+      circle(PipeOuterRadius(barrelPipe)
+            +PipeWall(barrelPipe), $fn=Resolution(40,60));
+    }
 
     // Spindle
-    Rod(rod=CylinderRod(), length=height, clearance=RodClearanceLoose());
+    cylinder(r=spindleRadius,
+             h=max(height+extraTop+extraBottom, chamberLength)+ManifoldGap(2),
+             $fn=Resolution(20,40));
   }
-  
-  if (chambers)
-  color("MidnightBlue", 0.5)
-  OffsetRevolverIterator(centerOffset=centerOffset, positions=positions)
-  Pipe(BarrelPipe(), length=(chamberLength==undef?height:chamberLength), clearance=undef);
 }
 
 OffsetZigZagRevolver(
            centerOffset=CylinderChamberOffset(),
-           chambers=true, chamberLength=1.5,
+           chambers=true, chamberLength=4, extraTop=1,
            trackAngle=0, debug=false);

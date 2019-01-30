@@ -7,16 +7,16 @@ use <../Shapes/Semicircle.scad>;
 use <../Meta/Manifold.scad>;
 
 DEFAULT_ZIGZAG_DIAMETER = 4;
-DEFAULT_ZIGZAG_POSITIONS= 2;
-DEFAULT_ZIGZAG_DEPTH = 1/2;
+DEFAULT_ZIGZAG_POSITIONS= 6;
+DEFAULT_ZIGZAG_DEPTH = 1/4;
 DEFAULT_ZIGZAG_WIDTH = 1/2;
-DEFAULT_ZIGZAG_ANGLE = 50;
+DEFAULT_ZIGZAG_ANGLE = 45;
 
 function ZigZagSegmentLength(radius, positions)
              = RadiusToCircumference(radius)
              / positions;
 function ZigZagHeight(radius, positions, width)
-             = (ZigZagSegmentLength(radius,positions)*(sin(DEFAULT_ZIGZAG_ANGLE)))
+             = (ZigZagSegmentLength(radius,positions)*sin(DEFAULT_ZIGZAG_ANGLE))
              *tan(DEFAULT_ZIGZAG_ANGLE);
 
 function RadiusToCircumference(radius) = PI * pow(radius, 2);
@@ -27,11 +27,17 @@ function TrackAngle(radius, trackWidth)
 module SegmentSemiDonut(radius, depth, width, center) {
   translate([radius-depth,-width/2])
   square([depth*2, width]);
+  
+  *semidonut(major=(radius+depth)*2,
+            minor=(radius-depth)*2,
+            angle=TrackAngle(radius, width),
+            center=true,
+            $fn=40);
 }
 module ZigZagSegment(radius=1,
            positions=DEFAULT_ZIGZAG_POSITIONS,
            depth=DEFAULT_ZIGZAG_DEPTH, width=DEFAULT_ZIGZAG_WIDTH,
-           slotHeightExtra=0.5, $fn=Resolution(120,90)) {
+           slotHeightExtra=0, $fn=Resolution(120,90)) {
              
   angle=360/positions/2;
   diameter=radius*2;
@@ -61,69 +67,67 @@ module ZigZagSegment(radius=1,
                            //- angleDiff
                            + (track_angle*1))
       rotate(angleDiff/2)
-      SegmentSemiDonut(radius, depth*2, zigzag_cutter_width, center=true);
+      SegmentSemiDonut(radius, depth, zigzag_cutter_width, center=true);
         
       // Vertical slot
       linear_extrude(height=slotHeight+slotHeightExtra+ManifoldGap())
-      SegmentSemiDonut(radius, depth*2, width, center=true);
+      SegmentSemiDonut(radius, depth, width, center=true);
     }
         
     // Trim to shape
     translate([0, 0, -ManifoldGap(2)])
     linear_extrude(height=height+slotHeight+slotHeightExtra+ManifoldGap(4))
     rotate((track_angle/2))
-    difference() {
-      semidonut(
-          angle=angle+track_angle,
-          major=(radius+depth)*2,
-          minor=(radius-depth)*2,
-          center=false);
-      
-      rotate(-angle-track_angle)
-      translate([radius-depth,0])
-      rotate(5)
-      *#mirror([0,1])
-      square([(depth*2*tan(DEFAULT_ZIGZAG_ANGLE))*cos(angle+track_angle),
-              depth*2*sin(angle+track_angle)]);
-    }
+    semidonut(
+        angle=angle+track_angle,
+        major=(radius+depth)*2,
+        minor=(radius-depth)*2,
+        center=false);
   }
 }
 
-module ZigZag(
+module ZigZag(supports=true,
            radius=2,
            depth=DEFAULT_ZIGZAG_DEPTH,
            width=DEFAULT_ZIGZAG_WIDTH,
            positions=DEFAULT_ZIGZAG_POSITIONS,
+           extraTop=0, extraBottom=0,
            $fn=Resolution(30,90)) {
 
-  slotHeight=width/2;
+  //zigzag_cutter_width = width*sqrt(2);
+  //slotHeight=(zigzag_cutter_width)*tan(DEFAULT_ZIGZAG_ANGLE);
   angle=360/positions/2;
   zigzag_height=ZigZagHeight(radius, positions, width);
-  top_slot_height = width;
-  bottom_slot_height = width;
+  top_slot_height = (width/2)+extraTop;
+  bottom_slot_height = (width/2)+extraBottom;
 
   render()
-  union() {
-    for (i=[0:positions-1]){
-      rotate([0,0,angle*2*i])
-      render() {
-        
-        // Support Material
-        *color("Black")
-        translate([radius - depth,width/2,width])
-        cube([depth, 0.031, width * 1.75]);
-        
-        ZigZagSegment(radius=radius, depth=depth, width=width, positions=positions,
-            slotHeightExtra=top_slot_height);
-        
-        rotate([0,0,-angle])
-        translate([0,0,zigzag_height+slotHeight+bottom_slot_height+top_slot_height])
-        mirror([0,0,1])
-        ZigZagSegment(radius=radius,
-            depth=depth, width=width,positions=positions,
-            slotHeightExtra=bottom_slot_height);
+  difference() {
+    union() {
+      for (i=[0:positions-1]){
+        rotate([0,0,angle*2*i])
+        render() {
+          ZigZagSegment(radius=radius, positions=positions,
+                        width=width, depth=depth,
+                        slotHeightExtra=bottom_slot_height);
+          
+          rotate([0,0,-angle])
+          translate([0,0,zigzag_height+(width*sin(DEFAULT_ZIGZAG_ANGLE))
+                         +bottom_slot_height+top_slot_height])
+          mirror([0,0,1])
+          ZigZagSegment(radius=radius,
+              depth=depth, width=width,positions=positions,
+              slotHeightExtra=top_slot_height);
+        }
       }
     }
+        
+    // Support Material
+    if (supports)
+    for (i=[0:positions-1])
+    rotate([0,0,(angle*2*i)-(TrackAngle(radius, width)/2)])
+    translate([radius - (depth*2),-1/16,bottom_slot_height])
+    cube([depth*4, 1/16, width*3]);
   }
 }
 
@@ -139,5 +143,5 @@ depth = DEFAULT_ZIGZAG_DEPTH;
   rotate([0,90,0])
   %cylinder(r=5/16/2, h=depth*3, $fn=10);
 
-  ZigZag(radius=radius, depth=depth,
+  ZigZag(radius=radius, depth=0.125,
          width=5/16, positions=DEFAULT_ZIGZAG_POSITIONS);

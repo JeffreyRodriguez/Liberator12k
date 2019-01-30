@@ -35,8 +35,9 @@ module GuardBolt(boltSpec=Spec_BoltM4(), length=UnitsMetric(30), clearance=true)
               capHeightExtra=cutter, nutBackset=0.05, nutHeightExtra=cutter);
 }
 
-module HandleBolts(boltSpec=Spec_BoltM4(), length=UnitsMetric(30), clearance=true) {
-  cutter = (clearance) ? 1 : 0;
+module HandleBolts(boltSpec=Spec_BoltM4(), length=UnitsMetric(30),
+                   clearance=true) {
+  cutter = clearance ? 1 : 0;
 
   boltsXZ = [
 
@@ -44,7 +45,7 @@ module HandleBolts(boltSpec=Spec_BoltM4(), length=UnitsMetric(30), clearance=tru
      [-2.0,GripCeilingZ()-2.9],
 
      // Handle Bottom-Front
-     [-1.125,GripCeilingZ()-1.375]
+     [-1.375,GripCeilingZ()-1.375]
   ];
 
   color("SteelBlue")
@@ -297,7 +298,7 @@ module Lower(showReceiverLugs=false, showReceiverLugBolts=false,
             showTrigger=false, showTriggerLeft=true, showTriggerRight=true,
             showMiddle=true, showLeft=true, showRight=true,
             bossEnabled=false,
-            searLength=SearLength(), triggerAnimationFactor=0,
+            searLength=1.1525, triggerAnimationFactor=0,
             alpha=0.5) {
 
   // Trigger Guard Center
@@ -333,6 +334,29 @@ Lower(showReceiverLugs=true, showReceiverLugBolts=true,
       showGuardBolt=true,
       showHandleBolts=true,
       showTrigger=true, showTriggerLeft=true, showTriggerRight=true,
+      triggerAnimationFactor=sin(180*$t),
       showLeft=false,
       showMiddle=true,
       showRight=true, alpha=1);
+
+LOWER_PLATER_MIDDLE = false;
+LOWER_PLATER_LEFT = false;
+LOWER_PLATER_RIGHT = false;
+
+scale(25.4) {
+  if (LOWER_PLATER_MIDDLE)
+  !rotate([90,0,0])
+  translate([0,0.25,2.125])
+  LowerMiddle(bossEnabled=false);
+
+  if (LOWER_PLATER_LEFT)
+  !rotate([90,0,0])
+  translate([0,-0.25,2.125])
+  LowerSidePlates(showLeft=true, showRight=false);
+
+  // Right
+  if (LOWER_PLATER_RIGHT)
+  !rotate([-90,0,0])
+  translate([0,0.25,2.125])
+  LowerSidePlates(showLeft=false, showRight=true);
+}

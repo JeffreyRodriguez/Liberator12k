@@ -88,6 +88,16 @@ function Spec_BoltOneHalf() = [
 
 function Spec_BoltFiveSixteenths() = [
   [BoltDiameter,    UnitsImperial(0.3125)],
+  [BoltCapDiameter, UnitsImperial(0.516)], // Verify?
+  [BoltCapHeight,   UnitsImperial(0.25)],// Verify?
+  [BoltNutDiameter, UnitsImperial(0.516)],
+  [BoltNutHeight,   UnitsImperial(0.25)],
+  [BoltClearance,   UnitsImperial(0.01)],
+  [BoltFn, 30]
+];
+
+function Spec_BoltThreeEighths() = [
+  [BoltDiameter,    UnitsImperial(3/8)],
   [BoltCapDiameter, UnitsImperial(0.5625)], // Verify?
   [BoltCapHeight,   UnitsImperial(0.25)],// Verify?
   [BoltNutDiameter, UnitsImperial(0.5625)],

@@ -47,7 +47,7 @@ module Sear(animationFactor=TriggerAnimationFactor(), length=SearLength()) {
   translate([0,0,SearPinOffsetZ()])
   rotate([90,0,0])
   color("Red")
-  %Rod(rod=SearPinRod(), length=0.5, center=true);
+  Rod(rod=SearPinRod(), length=0.5, center=true);
 }
 
 module SearCutter(length=SearLength()+SearTravel(), searLengthExtra=0, crosspin=true,wideTrack=false) {
@@ -207,14 +207,16 @@ module Trigger2d() {
   }
 }
 
-module Trigger(animationFactor=TriggerAnimationFactor(), left=true, right=true) {
+module Trigger(animationFactor=TriggerAnimationFactor(),
+               left=true, leftAlpha=1,
+               right=true, rightAlpha=1) {
   sideplateWidth = (TriggerWidth()/2)
                  - RodRadius(SearRod(), RodClearanceSnug());
 
   translate([-(TriggerTravel()*animationFactor),0,0]) {
 
     if (right)
-    color("Gold")
+    color("Gold", rightAlpha)
     render()
     difference() {
       translate([0,RodRadius(SearRod(), RodClearanceSnug()),0])
@@ -234,7 +236,7 @@ module Trigger(animationFactor=TriggerAnimationFactor(), left=true, right=true) 
     }
 
     if (left)
-    color("Gold", 0.7)
+    color("Gold", leftAlpha)
     render()
     difference() {
       translate([0,(TriggerWidth()/2),0])
@@ -245,35 +247,36 @@ module Trigger(animationFactor=TriggerAnimationFactor(), left=true, right=true) 
   }
 }
 
-module TriggerGroup(animationFactor=TriggerAnimationFactor(), searLength=SearLength()) {
+module TriggerGroup(animationFactor=TriggerAnimationFactor(),
+                    searLength=SearLength()) {
   Sear(animationFactor=animationFactor, length=searLength);
   SearSupportTab();
-  Trigger(animationFactor=animationFactor, left=true, right=true);
+  Trigger(animationFactor=animationFactor,
+          left=true, leftAlpha=0.3,
+          right=true, rightAlpha=1);
 }
 
-TriggerGroup(animationFactor=0);
+TriggerGroup(animationFactor=sin(180*$t), searLength=1.1525);
 
-*color("black",0.25)
-%Reference();
+TRIGGER_PLATER_MIDDLE = false;
+TRIGGER_PLATER_LEFT = false;
+TRIGGER_PLATER_RIGHT = false;
 
-module trigger_plater($t=0) {
-  rotate([90,0,0]) {
-
-    // Plating note: The left-side plate should print right-side-down
-    translate([0,-RodRadius(SearRod(), RodClearanceLoose()),1.8])
-    Trigger(left=true, right=false);
-
-    translate([0,TriggerWidth()/2,0])
-    Trigger(left=false, right=true);
-  }
-
-  translate([-1.75,0,0.12])
+scale(25.4) {
+  
+  if (TRIGGER_PLATER_MIDDLE)
+  !translate([0,0,0.12])
   rotate([90,0,00])
   SearSupportTab(cutter=false);
+  
+  if (TRIGGER_PLATER_LEFT)
+  !rotate([90,0,0])
+  translate([0,-RodRadius(SearRod(), RodClearanceLoose()),0])
+  Trigger(left=true, right=false);
+  
+  if (TRIGGER_PLATER_RIGHT)
+  !rotate([90,0,0])
+  translate([0,TriggerWidth()/2,0])
+  Trigger(left=false, right=true);
+
 }
-
-
-echo("Sear Length", SearLength());
-
-*!scale(25.4)
-trigger_plater();

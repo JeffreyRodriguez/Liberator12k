@@ -4,6 +4,9 @@ use <../../Meta/Manifold.scad>;
 use <../../Meta/Debug.scad>;
 use <../../Meta/Resolution.scad>;
 
+use <../../Components/Firing Pin.scad>;
+use <../../Components/Pipe/Lugs.scad>;
+
 use <../../Finishing/Chamfer.scad>;
 
 use <../../Vitamins/Nuts And Bolts.scad>;
@@ -13,9 +16,6 @@ use <../../Lower/Receiver Lugs.scad>;
 use <../../Lower/Trigger.scad>;
 use <../../Lower/Lower.scad>;
 
-use <../Firing Pin.scad>;
-
-use <Lugs.scad>;
 use <Frame.scad>;
 
 

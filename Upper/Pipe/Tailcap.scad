@@ -5,15 +5,14 @@ use <../../Meta/Units.scad>;
 use <../../Meta/Debug.scad>;
 use <../../Meta/Resolution.scad>;
 
+use <../../Components/Pipe/Cap.scad>;
+use <../../Components/Pipe/Lugs.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/Pipe.scad>;
 
 use <../../Lower/Receiver Lugs.scad>;
 use <../../Lower/Trigger.scad>;
 use <../../Lower/Lower.scad>;
-
-use <Cap.scad>;
-use <Lugs.scad>;
 
 module Tailcap(base=0.25, debug=false) {
   DebugHalf(enabled=debug)

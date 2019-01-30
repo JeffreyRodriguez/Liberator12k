@@ -5,7 +5,6 @@ use <../../Meta/Units.scad>;
 use <../../Meta/Debug.scad>;
 use <../../Meta/Resolution.scad>;
 
-use <../../Components/Pipe/Lugs.scad>;
 use <../../Components/Firing Pin.scad>;
 
 use <../../Finishing/Chamfer.scad>;
@@ -17,6 +16,7 @@ use <../../Lower/Receiver Lugs.scad>;
 use <../../Lower/Trigger.scad>;
 use <../../Lower/Lower.scad>;
 
+use <Lugs.scad>;
 use <Frame.scad>;
 
 

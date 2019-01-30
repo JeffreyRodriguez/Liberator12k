@@ -8,9 +8,7 @@ use <../../../Meta/Resolution.scad>;
 use <../../../Finishing/Chamfer.scad>;
 
 use <../../../Components/Pipe/Cap.scad>;
-use <../../../Components/Pipe/Charging Handle.scad>;
 use <../../../Components/Pipe/Lugs.scad>;
-use <../../../Components/Pipe/Frame.scad>;
 
 use <../../../Vitamins/Nuts And Bolts.scad>;
 use <../../../Vitamins/Pipe.scad>;
@@ -21,6 +19,8 @@ use <../../../Shapes/Semicircle.scad>;
 use <../../../Ammo/Shell Slug.scad>;
 
 use <../Pipe Upper.scad>;
+use <../Frame.scad>;
+use <../Linear Hammer.scad>;
 use <../Fixed Breech.scad>;
 
 function BreechRearX() = 0;

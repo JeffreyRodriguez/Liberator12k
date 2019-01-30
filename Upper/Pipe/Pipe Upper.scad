@@ -10,14 +10,8 @@ use <../../Shapes/Semicircle.scad>;
 use <../../Shapes/Teardrop.scad>;
 
 use <../../Components/Firing Pin.scad>;
-
 use <../../Components/Pipe/Cap.scad>;
-use <../../Components/Pipe/Charging Handle.scad>;
 use <../../Components/Pipe/Lugs.scad>;
-use <../../Components/Pipe/Frame.scad>;
-use <../../Components/Pipe/Tailcap.scad>;
-use <../../Components/Pipe/Buttstock.scad>;
-use <../../Components/Pipe/Linear Hammer.scad>;
 
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/Pipe.scad>;
@@ -27,21 +21,23 @@ use <../../Lower/Receiver Lugs.scad>;
 use <../../Lower/Trigger.scad>;
 use <../../Lower/Lower.scad>;
 
+use <Buttstock.scad>;
+use <Charging Handle.scad>;
+use <Frame.scad>;
+use <Tailcap.scad>;
+use <Linear Hammer.scad>;
+use <Pipe Upper.scad>;
+
+
 module PipeUpperAssembly(receiver=Spec_PipeThreeQuarterInch(),
                          receiverLength=ReceiverLength(),
                          pipeAlpha=1,
                          chargingHandle=true, frame=true, stock=false, tailcap=false,
-                         debug=true) {
-                   
-  translate([-LowerMaxX(),0,0]) {
-    PipeLugAssembly(length=receiverLength,
-                    stock=stock, tailcap=tailcap,
-                    center=false,
-                    debug=debug);
-    
-    if (frame)
-    FrameAssembly();
-    
+                         triggerAnimationFactor=0, debug=true) {
+  
+  if (chargingHandle) {
+    ChargingHandle();
+    ChargingHandleHousing();
   }
                
   translate([-receiverLength,0,0]) {
@@ -51,12 +47,19 @@ module PipeUpperAssembly(receiver=Spec_PipeThreeQuarterInch(),
       if (stock)
       Buttstock();
   }
-  
-  if (chargingHandle) {
-    ChargingHandle();
-    ChargingHandleHousing();
+                   
+  translate([-LowerMaxX(),0,0]) {
+    
+    if (frame)
+    FrameAssembly();
+    
+    PipeLugAssembly(length=receiverLength,
+                    stock=stock, tailcap=tailcap,
+                    center=false, triggerAnimationFactor=triggerAnimationFactor,
+                    debug=debug, pipeAlpha=pipeAlpha);
+    
   }
 }
 
 PipeUpperAssembly(receiverLength=12, stock=true, tailcap=false,
-                  debug=true);
+                  debug=false, pipeAlpha=0.25);
