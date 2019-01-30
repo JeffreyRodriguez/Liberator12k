@@ -34,4 +34,4 @@ module PrintablePipeCap(pipeDiameter=1,
 }
 
 scale(25.4)
-PipeCap($fn=20);
+PrintablePipeCap($fn=20);
