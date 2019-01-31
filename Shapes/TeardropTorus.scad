@@ -1,6 +1,6 @@
 use <Teardrop.scad>;
 
-module TeardropTorus(majorRadius=3/8, minorRadius=1/16, $fn=30) {
+module TeardropTorus(majorRadius=3/8, minorRadius=1/16) {
 
   render()
   rotate_extrude()
@@ -10,4 +10,4 @@ module TeardropTorus(majorRadius=3/8, minorRadius=1/16, $fn=30) {
 }
 
 
-TeardropTorus();
+TeardropTorus(majorRadius=3/8, minorRadius=1/16, $fn=30);
