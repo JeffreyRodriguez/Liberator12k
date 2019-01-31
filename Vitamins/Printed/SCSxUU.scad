@@ -1,39 +1,9 @@
 use <../../Shapes/Semicircle.scad>;
 use <../../Shapes/Teardrop.scad>;
+use <../../Shapes/Bearing Surface.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Finishing/Chamfer.scad>;
-
-module PrintedBearingSurface2d(r=4, depth=1, segment=1.2) {
-  diameter = 2*r;
-  circumference = PI * diameter;
-
-  segments = floor(circumference / segment);
-  segments = r*6;
-
-  union() {
-    circle(r, $fn=r*6);
-
-    for (i = [0:segments-1])
-    rotate(360/segments*i*2)
-    semicircle(od=(r+depth)*2, angle=360/segments/2, center=true);
-  }
-}
-
-module PrintedBearingSurface(r=4, depth=1, segment=1.2, length=30, taperDepth=2, center=true) {
-  render()
-  union() {
-    linear_extrude(height=length, center=center)
-    PrintedBearingSurface2d(r, depth, segment);
-
-    for (m = [0,1])
-    mirror([0,0,m])
-    translate([0,0,-(length/2)+taperDepth+ManifoldGap()])
-    mirror([0,0,1])
-    linear_extrude(height=(r+depth)*2, scale=2)
-    PrintedBearingSurface2d(r, depth, segment);
-  }
-}
 
 SCSxUU_BoltDiameter  = 1;
 SCSxUU_BoltOffset    = 2;
@@ -92,7 +62,7 @@ module SCSxUU(spec=undef, clearance=0.02) {
                        SCSxUU_Length(spec)],
                   r=2, center=true);
 
-    PrintedBearingSurface(r=SCSxUU_InnerRadius(spec)+clearance,
+    BearingSurface(r=SCSxUU_InnerRadius(spec)+clearance,
                           length=SCSxUU_Length(spec), center=true);
 
     SCSxUU_Bolts(spec=spec, clearance=clearance, extraLength=ManifoldGap(2));
