@@ -50,7 +50,7 @@ function PipeThreadDepth(pipe) =
 function PipeWall(pipe) =
            PipeOuterRadius(pipe) - PipeInnerRadius(pipe);
 
-function PipeFn(pipe, fn) =
+function PipeFn(pipe=undef, fn) =
            (fn == undef) ? lookup(PipeFn, pipe) : fn;
 
 function PipeOuterCircumference(pipe, clearance, clearanceSign=1) =
@@ -76,11 +76,35 @@ module Pipe2d(pipe, clearance=PipeClearanceSnug(), clearanceSign=1, hollow=false
   }
 };
 
-module Pipe(pipe, length = 1, clearance=PipeClearanceSnug(), center=false, hollow=false) {
-  translate([0,0,center ? -length/2 : 0])
-  linear_extrude(height=length)
-  Pipe2d(pipe=pipe, clearance=clearance, hollow=hollow);
+module Pipe(pipe, length = 1, clearance=PipeClearanceSnug(),
+            center=false, hollow=false, taperBottom=false, taperTop=false) {
+  translate([0,0,(center ? -length/2 : 0)])
+  difference() {
+    linear_extrude(height=length)
+    Pipe2d(pipe=pipe, clearance=clearance, hollow=hollow);
+
+    if (taperBottom)
+    PipeTaperCutter(pipe);
+
+    if (taperTop)
+    translate([0,0,length])
+    mirror([0,0,1])
+    PipeTaperCutter(pipe, clearance);
+  }
 };
+
+module PipeTaperCutter(pipe, clearance=undef) {
+  translate([0,0,-ManifoldGap()])
+  difference() {
+    linear_extrude(height=PipeThreadLength(pipe))
+    Pipe2d(pipe=pipe, extraRadius=PipeWall(pipe), hollow=false);
+
+    cylinder(r1=PipeTaperedRadius(pipe, clearance),
+             r2=PipeOuterRadius(pipe, clearance),
+              h=PipeThreadLength(pipe),
+             $fn=PipeFn(pipe));
+  }
+}
 
 
 // 1/4" Pipe
@@ -553,7 +577,8 @@ DEFAULT_PIPE = Spec_PipeOneInchSch80();
 PipeCap(spec=DEFAULT_PIPE);
 
 translate([0,0,PipeCapLength(DEFAULT_PIPE)-PipeThreadDepth(DEFAULT_PIPE)])
-Pipe(pipe=Spec_PipeOneInchSch80(), length=2, clearance=PipeClearanceLoose);
+Pipe(pipe=Spec_PipeOneInchSch80(), length=2, clearance=PipeClearanceLoose,
+      taperBottom=true);
 
 
 *CrossFitting(Spec_AnvilForgedSteel_TeeThreeQuarterInch3k(), hollow=true);
