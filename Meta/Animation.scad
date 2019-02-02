@@ -1,3 +1,14 @@
+/* Small Arms Cycle of Operation
+1. Chambering - Placing the cartridge in the chamber.
+2. Locking - Securing the bolt in place behind the cartridge
+3. Firing - Squeezing the trigger so the firing pin will fire the cartridge.
+4. Unlocking - Freeing the bolt from the barrel.
+5. Extraction - Withdrawing the empty case
+6. Ejection - Throw out the empty case
+7. Cocking - Prepare the firing mechanism to fire again.
+8. Feeding - Placing the next round in position for chambering
+*/
+
 // wip
 
 ANIMATION_STEP_UNSAFE        = 0;
@@ -49,7 +60,7 @@ function Animate(step, T=$t)       = step == AnimationStep(T)
 function SubAnimateStart(step, start=0) = max(0, (Animate(step)-start))*(1/(1-start));
 
 /** The min function serves to keep the value at 1 when it exceeds 1 on the second value to min.
- * The second value to min 
+ * The second value to min
  */
 function SubAnimateEnd(step, end=1) = min(1, (1-end+Animate(step)));
 
