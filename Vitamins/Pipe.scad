@@ -99,7 +99,7 @@ module PipeTaperCutter(pipe, clearance=undef) {
     linear_extrude(height=PipeThreadLength(pipe))
     Pipe2d(pipe=pipe, extraRadius=PipeWall(pipe), hollow=false);
 
-    cylinder(r1=PipeTaperedRadius(pipe, clearance),
+    cylinder(r1=PipeOuterRadius(pipe, clearance)-(PipeWall(pipe)/2),
              r2=PipeOuterRadius(pipe, clearance),
               h=PipeThreadLength(pipe),
              $fn=PipeFn(pipe));
@@ -133,8 +133,8 @@ function Spec_PipeThreeQuarterInch() = [
   [PipeTaperedDiameter, 1.018],
   [PipeThreadLength,    0.9],
   [PipeThreadDepth,     0.5],
-  [PipeClearanceSnug,   0.002],
-  [PipeClearanceLoose,  0.01],
+  [PipeClearanceSnug,   0.01],
+  [PipeClearanceLoose,  0.02],
   [PipeFn,              30],
   [PipeWeightPerUnit,   40]
 ];
@@ -168,12 +168,12 @@ function Spec_PipeThreeQuarterInchSch80Stainless() = [
 // 1" Pipe
 function Spec_PipeOneInch() = [
   [PipeInnerDiameter,   1.055],
-  [PipeOuterDiameter,   1.315],
+  [PipeOuterDiameter,   1.325],
   [PipeTaperedDiameter, 1.285],
   [PipeThreadLength,    0.982],
   [PipeThreadDepth,     0.5], // TODO: Verify
-  [PipeClearanceSnug,   0.002],
-  [PipeClearanceLoose,  0.01],
+  [PipeClearanceSnug,   0.015],
+  [PipeClearanceLoose,  0.025],
   [PipeFn,              50],
   [PipeWeightPerUnit,   0] // TODO
 ];
@@ -577,7 +577,7 @@ DEFAULT_PIPE = Spec_PipeOneInchSch80();
 PipeCap(spec=DEFAULT_PIPE);
 
 translate([0,0,PipeCapLength(DEFAULT_PIPE)-PipeThreadDepth(DEFAULT_PIPE)])
-Pipe(pipe=Spec_PipeOneInchSch80(), length=2, clearance=PipeClearanceLoose,
+!Pipe(pipe=Spec_PipeOneInchSch80(), length=2, clearance=PipeClearanceLoose(),
       taperBottom=true);
 
 
