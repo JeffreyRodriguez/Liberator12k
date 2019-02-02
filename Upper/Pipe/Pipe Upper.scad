@@ -22,7 +22,6 @@ use <../../Lower/Trigger.scad>;
 use <../../Lower/Lower.scad>;
 
 use <Buttstock.scad>;
-use <Charging Handle.scad>;
 use <Frame.scad>;
 use <Tailcap.scad>;
 use <Linear Hammer.scad>;
@@ -32,13 +31,8 @@ use <Pipe Upper.scad>;
 module PipeUpperAssembly(receiver=Spec_PipeThreeQuarterInch(),
                          receiverLength=ReceiverLength(),
                          pipeAlpha=1,
-                         chargingHandle=true, frame=true, stock=false, tailcap=false,
+                         frameUpper=true, frameLower=true, stock=false, tailcap=false,
                          triggerAnimationFactor=0, debug=true) {
-  
-  if (chargingHandle) {
-    ChargingHandle();
-    ChargingHandleHousing();
-  }
                
   translate([-receiverLength,0,0]) {
       if (tailcap)
@@ -50,12 +44,11 @@ module PipeUpperAssembly(receiver=Spec_PipeThreeQuarterInch(),
                    
   translate([-LowerMaxX(),0,0]) {
     
-    if (frame)
-    FrameAssembly();
+    FrameAssembly(upper=frameUpper, lower=frameLower);
     
     PipeLugAssembly(length=receiverLength,
                     stock=stock, tailcap=tailcap,
-                    center=false, triggerAnimationFactor=triggerAnimationFactor,
+                    center=!frameLower, triggerAnimationFactor=triggerAnimationFactor,
                     debug=debug, pipeAlpha=pipeAlpha);
     
   }

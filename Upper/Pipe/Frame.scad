@@ -91,22 +91,20 @@ module UpperPipeFrame(length=FrameLength(),
   FrameMount(length=length);
 }
 
-module FrameAssembly() {
+module FrameAssembly(upper=true, lower=true) {
   
-  FrameBolts();
-  FrameBolts(flip=true);
+  if (lower) {
+    FrameBolts();
+    LowerPipeFrame();
+  }
 
-  //!scale(25.4) translate([0,0,-LowerOffsetZ()])
-  LowerPipeFrame();
-
-  //!scale(25.4) rotate([0,90,0]) translate([-LowerMaxX(),0,0])
-  UpperPipeFrame();
+  if (upper) {
+    FrameBolts(flip=true);
+    UpperPipeFrame();
+  }
 }
 
 AnimateSpin() {
-  FrameBolts();
-  FrameBolts(flip=true);
-
   FrameAssembly();
   PipeLugAssembly(center=false, debug=false, pipeAlpha=0.5);
 }
