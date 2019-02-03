@@ -36,7 +36,7 @@ module OffsetZigZagRevolver(chamberRadius=1,
            spindleRadius=RodRadius(CylinderRod(), RodClearanceSnug()),
            chambers=true, chamberLength=undef,
            supports=true,
-           cutter=false, clearance=0.01,
+           cutter=false, clearance=0.015,
            debug=false, alpha=1) {
   clear = cutter ? clearance : 0;
 
@@ -62,7 +62,7 @@ module OffsetZigZagRevolver(chamberRadius=1,
     union() {
       
       // Outer shell
-      ChamferedCylinder(r1=radius, r2=1/16,
+      ChamferedCylinder(r1=radius+clear, r2=1/16,
                         h=height+extraTop+extraBottom + clear,
                         chamferTop=!cutter, chamferBottom=!cutter,
                         $fn=Resolution(50,120));
