@@ -48,7 +48,7 @@ radius = RevolverCylinderRadius(
 
 
 // Settings: Lengths
-function ChamberLength() = 3.5;
+function ChamberLength() = 3.6;
 function BarrelLength() = 18-ChamberLength();
 function UpperLength() =  6;
 function IndexLockOffset() = 0.5;
@@ -134,6 +134,34 @@ module RevolverBreech() {
   }
 }
 
+module RevolverFrameUpper(debug=false) {
+  color("Olive")
+  DebugHalf(enabled=debug)
+  difference() {
+    
+    // Pipe Lug Center
+    translate([BreechRearX(),-(2/2),ReceiverIR()/2])
+    mirror([1,0,0])
+    ChamferedCube([0.75-ManifoldGap(2),
+                   2,
+                   BreechTopZ()-(ReceiverIR()/2)],
+                  r=1/16, chamferXYZ=[1,0,0]);
+    
+    PipeLugPipe(cutter=true);
+    
+    BreechBolts(cutter=true);
+    
+    // Charging rod cutout
+    hull() {
+      for (Z = [0,BreechBoltOffsetZ()]) translate([0,0,Z])
+      rotate([0,-90,0])
+      SquareRod(ChargingRod(),
+          length=2,
+          clearance=RodClearanceLoose());
+    }
+  }
+}
+
 module BarrelCollar(clearance=0.008, cutter=false, debug=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
@@ -189,7 +217,7 @@ module RevolverSpindle(cutter=false) {
   translate([BreechRearX(),0,-RevolverSpindleOffset()])
   rotate([0,90,0])
   Rod(CylinderRod(),
-      length=UpperLength()-1,//-BreechRearX()+ChamberLength()+(BarrelCollarWidth()*2),
+      length=UpperLength(),//-BreechRearX()+ChamberLength()+(BarrelCollarWidth()*2),
       clearance=cutter?RodClearanceSnug():undef);
 }
 
@@ -450,7 +478,10 @@ module RevolverShotgunAssembly(receiverLength=12, stock=true, tailcap=false,
                     stock=stock, tailcap=tailcap,
                     triggerAnimationFactor=triggerAnimationFactor,
                     debug=debug);
-  
+                    
+                    
+  RevolverFrameUpper();
+
   Barrel(debug=debug);
   BarrelSleeve(debug=debug);
   *BarrelCollar(debug=debug);
@@ -540,3 +571,9 @@ intersection() {
   translate([0,0,-ManifoldGap()])
   cylinder(r=BarrelDiameter(), h=ChamberLength()+ManifoldGap(2), $fn=20);
 }
+
+// Revolver Frame Upper
+*!scale(25.4)
+translate([-ReceiverOR(),0,BreechRearX()])
+rotate([0,90,0])
+RevolverFrameUpper();
