@@ -129,8 +129,8 @@ module BreechBolts(length=BreechBoltLength(),
   color("Silver")
   DebugHalf(enabled=debug) {
     BreechBoltIterator()
-    Bolt(bolt=BreechBolt(), length=length+ManifoldGap(2),
-         hex=true, clearance=cutter);
+    NutAndBolt(bolt=BreechBolt(), boltLength=length+ManifoldGap(2),
+         capHex=true, clearance=cutter);
   }
 }
 
@@ -145,6 +145,9 @@ module BreechAssembly(breechBoltLength=BreechBoltLength(), debug=false) {
 
 BreechAssembly(debug=false);
 
+translate([BreechRearX(),0,0])
+PipeUpperAssembly(frameUpper=false);
+
 module BreechTemplate() {
   scale(25.4)
   rotate([0,-90,0])
@@ -152,4 +155,3 @@ module BreechTemplate() {
 }
 
 *!BreechTemplate();
-
