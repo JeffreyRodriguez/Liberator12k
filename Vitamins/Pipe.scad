@@ -35,8 +35,8 @@ function PipeOuterRadius(pipe, clearance, clearanceSign=1) =
 function PipeInnerRadius(pipe, clearance, clearanceSign=1) =
            PipeInnerDiameter(pipe, clearance, clearanceSign)/2;
 
-function PipeTaperedDiameter(pipe) =
-           lookup(PipeTaperedDiameter, pipe);
+function PipeTaperedDiameter(pipe, clearance, clearanceSign) =
+           lookup(PipeTaperedDiameter, pipe) + (PipeClearance(pipe, clearance)*clearanceSign);
 
 function PipeTaperedRadius(pipe, clearance, clearanceSign=1) =
            PipeTaperedDiameter(pipe, clearance, clearanceSign)/2;
@@ -84,7 +84,7 @@ module Pipe(pipe, length = 1, clearance=PipeClearanceSnug(),
     Pipe2d(pipe=pipe, clearance=clearance, hollow=hollow);
 
     if (taperBottom)
-    PipeTaperCutter(pipe);
+    PipeTaperCutter(pipe, clearance);
 
     if (taperTop)
     translate([0,0,length])
@@ -93,13 +93,13 @@ module Pipe(pipe, length = 1, clearance=PipeClearanceSnug(),
   }
 };
 
-module PipeTaperCutter(pipe, clearance=undef) {
+module PipeTaperCutter(pipe, clearance=undef, clearanceSign=1) {
   translate([0,0,-ManifoldGap()])
   difference() {
     linear_extrude(height=PipeThreadLength(pipe))
     Pipe2d(pipe=pipe, extraRadius=PipeWall(pipe), hollow=false);
 
-    cylinder(r1=PipeOuterRadius(pipe, clearance)-(PipeWall(pipe)/2),
+    cylinder(r1=PipeTaperedRadius(pipe, clearance),
              r2=PipeOuterRadius(pipe, clearance),
               h=PipeThreadLength(pipe),
              $fn=PipeFn(pipe));
