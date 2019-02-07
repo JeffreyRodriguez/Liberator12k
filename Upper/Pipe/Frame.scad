@@ -19,8 +19,8 @@ use <../../Lower/Lower.scad>;
 
 
 // Settings: Lengths
-function FrameLength() = 1.125;
-function FrameExtension() = 0.375;
+function FrameLength() = 1.5;
+function FrameExtension() = 0.5;
 
 // Settings: Vitamins
 function FrameBolt() = Spec_BoltM5();
@@ -37,8 +37,11 @@ module FrameBolts(teardrop=false, flip=false,
              Y*ReceiverIR(),
              -ReceiverIR()-ReceiverPipeWall()])
   rotate([0,-90,0])
-  Bolt(bolt=FrameBolt(),
-       length=FrameLength()+FrameExtension()+ManifoldGap(2), teardrop=cutter&&teardrop,
+  FlatHeadBolt(length=FrameLength()+FrameExtension()+ManifoldGap(2),
+               teardrop=cutter&&teardrop, cutter=cutter);
+  *mirror([0,0,1])
+  NutAndBolt(bolt=FrameBolt(), capOrientation=true,
+       boltLength=FrameLength()+FrameExtension()+ManifoldGap(2), teardrop=cutter&&teardrop,
        clearance=cutter);
 }
 
