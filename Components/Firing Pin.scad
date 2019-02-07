@@ -12,100 +12,144 @@ use <../Vitamins/Rod.scad>;
 
 // Settings: Vitamins
 DEFAULT_FIRING_PIN_RETAINER_BOLT = Spec_BoltM5();
+DEFAULT_BOLT_LENGTH = 0.5;
 
-function FiringPinRod() = Spec_RodThreeEighthsInch();
+function FiringPinTemplateRod() = Spec_RodOneSixteenthInch();
+function FiringPinTemplateBolt() = Spec_BoltTemplate();
+function FiringPinRod() = Spec_RodFiveSixteenthInch();
+function FiringPinRetainingRod() = Spec_RodThreeThirtysecondInch();
+function FiringPinTravel() = 1/8;
+function FiringPinExtension() = 3/32;
 function FiringPinBodyLength() = 1;
-function FiringPinRetainerLength() = 0.625+.25;
-function FiringPinSpringLength() = 0.375;
 
-module FiringPin(cutter=false, debug=false) {
+function FiringPinSpringLength() = 0.25;
+
+function FiringPinHousingLength() = 0.75;
+function FiringPinHousingWidth() = 0.75;
+function FiringPinHousingDiameter() = 1.5625;
+
+function FiringPinRetainerOffset() = 0.375;
+
+
+module FiringPin(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT, template=false, cutter=false, debug=false) {
   clear = cutter ? 0.002 : 0;
   clear2 = clear*2;
+  radius = template ? RodRadius(FiringPinTemplateRod()) : (3/32/2)+clear;
   
-  translate([0,0,FiringPinSpringLength()])
-  union() {
-    color("Silver")
-    DebugHalf(enabled=debug)
-    Rod(FiringPinRod(), clearance=cutter?RodClearanceLoose():undef,
-        length=FiringPinBodyLength()+clear2);
+  //FiringPinExtension();
+  
+  //translate([0,0,FiringPinSpringLength()])
+  difference() {
+    union() {
+      if (!template)
+      color("Silver")
+      DebugHalf(enabled=debug)
+      Rod(FiringPinRod(), clearance=cutter?RodClearanceLoose():undef,
+          length=FiringPinBodyLength()+clear2);
+      
+      color("DarkGoldenrod")
+      translate([0,0,-0.5-(cutter?0.5:0)])
+      cylinder(r=radius,
+               h=FiringPinBodyLength()+(cutter?0.5:0),
+               $fn=Resolution(20,50));
+    }
     
-    color("DarkGoldenrod")
-    translate([0,0,-0.5-(cutter?0.5:0)])
-    cylinder(r=(3/32/2)+clear,
-             h=FiringPinBodyLength()+(cutter?0.5:0),
-             $fn=Resolution(20,50));
+    if (!cutter)
+    translate([3/32/2,-RodRadius(FiringPinRod()), FiringPinRetainerOffset()-BoltRadius(bolt)])
+    cube([RodDiameter(FiringPinRod()),
+          RodDiameter(FiringPinRod()),
+          FiringPinTravel()+BoltRadius(bolt)]);
   }
 }
 
-module FiringPinSetScrew(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT, cutter=false) {
+module FiringPinSpring(cutter=false, debug=false) {
+  clear = cutter ? 0.01 : 0;
+  clear2 = clear*2;
+  
+  mirror([0,0,1])
+  color("Silver", 0.25)
+  render()    
+  cylinder(r=(0.25/2)+clear, h=FiringPinSpringLength(), $fn=Resolution(10,20));
+}
+
+module FiringPinRetainingPin(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT, cutter=false) {
   clear = cutter ? 0.002 : 0;
   clear2 = clear*2;
   
-    color("CornflowerBlue")
-  translate([0.0625,0,0.5-0.125+ManifoldGap()])
-  rotate([0,90,0])
-  Bolt(bolt=bolt, cap=false,
-       clearance=cutter,
-       length=0.25+ManifoldGap(2));
+  color("CornflowerBlue")
+  translate([RodRadius(FiringPinRod()),-FiringPinHousingWidth()/2,FiringPinRetainerOffset()+ManifoldGap()])
+  rotate([-90,0,0])
+  rotate(-90)
+  Rod(rod=FiringPinRetainingRod(),
+      clearance=cutter?RodClearanceSnug():undef,
+      teardrop=cutter, teardropTruncated=false,
+      length=FiringPinHousingWidth()+ManifoldGap(2));
 }
 
-module FiringPinRetainer(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT, cutter=false, alpha=0.5, debug=false) {
+
+module FiringPinHousingBolts(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT,
+                              boltLength=DEFAULT_BOLT_LENGTH,
+                              template=false, cutter=false) {
+  color("CornflowerBlue")
+  rotate(90)
+  for (Y = [1,-1])
+  translate([0,Y*(1.125/2),FiringPinHousingLength()+ManifoldGap()])
+  Bolt(bolt=template ? FiringPinTemplateBolt() : bolt, capOrientation=true,
+       clearance=cutter,
+       length=FiringPinHousingLength()+boltLength+ManifoldGap(2));
+}
+
+module FiringPinHousing(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT, cutter=false, alpha=0.5, debug=false) {
   
   color("Grey")
-  DebugHalf(enabled=debug)
+  DebugHalf(enabled=debug)//], rotateArray=[0,0,-90])
   difference() {
+    rotate(-90)
     intersection() {
-      ChamferedCylinder(r1=0.75, r2=1/16, h=FiringPinRetainerLength(), $fn=Resolution(30,50));
+      ChamferedCylinder(r1=(FiringPinHousingDiameter()/2), r2=1/16, h=FiringPinHousingLength(), $fn=Resolution(30,50));
       
-      translate([-0.375, -0.75, 0])
-      ChamferedCube([1, 1.5, FiringPinRetainerLength()], r=1/16);
+      translate([-FiringPinHousingWidth()/2, -(FiringPinHousingDiameter()/2), 0])
+      ChamferedCube([FiringPinHousingWidth(), 1.75, FiringPinHousingLength()], r=1/16);
     }
     
     if (!cutter) {
       FiringPin(cutter=true);
       
-      FiringPinRetainerBolts(bolt=bolt, cutter=true);
+      FiringPinHousingBolts(bolt=bolt, cutter=true);
       
       FiringPinSpring(cutter=true);
+      
+      FiringPinRetainingPin(cutter=true);
+    }
+ 
+  }
+}
+module FiringPinAssembly(boltLength=DEFAULT_BOLT_LENGTH,
+         retainerBolt=DEFAULT_FIRING_PIN_RETAINER_BOLT,
+         template=false, cutter=false, debug=false) {
+
+  rotate(-90) {
+    FiringPin(template=template, cutter=cutter, debug=debug);
+    FiringPinHousingBolts(template=template, bolt=retainerBolt, boltLength=boltLength, cutter=cutter);
+    
+    
+    if (!template) {
+      FiringPinSpring(cutter=cutter, debug=debug);
+      FiringPinRetainingPin(cutter=cutter);
+      FiringPinHousing(cutter=cutter, debug=debug, alpha=0.5);
     }
   }
 }
 
-module FiringPinSpring(cutter=false, debug=true) {
-  clear = cutter ? 0.002 : 0;
-  clear2 = clear*2;
-  
-  translate([0,0,FiringPinSpringLength()])
-  union() {
-    color("Silver")
-    DebugHalf(enabled=debug)
-    Rod(FiringPinRod(), clearance=cutter?RodClearanceLoose():undef,
-        length=FiringPinSpringLength()+clear2);
-    
-    color("DarkGoldenrod")
-    cylinder(r=(0.25/2)+clear, h=FiringPinSpringLength(), $fn=Resolution(20,50));
-  }
-  
-}
+FiringPinAssembly(cutter=false, debug=false);
 
-module FiringPinRetainerBolts(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT,
-                              breechThickness=0.375, cutter=false) {
-  color("CornflowerBlue")
-  for (Y = [1,-1])
-  translate([0,Y*(1.125/2),FiringPinRetainerLength()+ManifoldGap()])
-  Bolt(bolt=bolt, capOrientation=true,
-       clearance=cutter,
-       length=FiringPinRetainerLength()+breechThickness+ManifoldGap(2));
-}
-
-module FiringPinAssembly(
-         retainerBolt=DEFAULT_FIRING_PIN_RETAINER_BOLT,
-         cutter=false, debug=false) {
-
-  FiringPin(cutter=cutter, debug=debug);
-  FiringPinSetScrew();
-  FiringPinRetainerBolts(bolt=retainerBolt, cutter=cutter);
-  FiringPinRetainer(cutter=cutter, debug=debug, alpha=0.5);
-}
-
+translate([0,2,0])
 FiringPinAssembly(cutter=false, debug=true);
+
+translate([0,-2,0])
+FiringPinAssembly(template=true);
+
+// Plated
+!scale(25.4)
+FiringPinHousing(cutter=false, debug=false);
+
