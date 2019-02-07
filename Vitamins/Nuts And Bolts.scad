@@ -407,6 +407,7 @@ module FlatHeadBolt(diameter=UnitsImperial(0.193),
       }
     }
 
+    if (cutter)
     translate([0,0,-extraHead])
     linear_extrude(height=extraHead+ManifoldGap())
     if (teardrop) {
