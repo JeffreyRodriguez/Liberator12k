@@ -97,6 +97,22 @@ function Spec_RodBicFlint() = [
   [RodFn, 5]
 ];
 
+function Spec_RodThreeThirtysecondInch() = [
+  [RodDiameter, 3/32],
+  [RodRadius, 3/32/2],
+  [RodClearanceSnug, 0.002],
+  [RodClearanceLoose, 0.01],
+  [RodFn, 6]
+];
+
+function Spec_RodOneSixteenthInch() = [
+  [RodDiameter, 1/16],
+  [RodRadius, 1/16/2],
+  [RodClearanceSnug, 0.002],
+  [RodClearanceLoose, 0.01],
+  [RodFn, 6]
+];
+
 function Spec_RodOneEighthInch() = [
   [RodDiameter, 1/8],
   [RodRadius, 1/8/2],
