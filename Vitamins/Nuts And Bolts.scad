@@ -17,8 +17,8 @@ BoltCapTypeButton = 4;
 
 function BoltClearance() = BoltClearance;
 
-function Spec_BoltM1() = [ // these are all a total guess
-  [BoltDiameter,    UnitsMetric(1)],
+function Spec_BoltTemplate() = [ // these are all a total guess
+  [BoltDiameter,    UnitsImperial(1/16)],
   [BoltCapDiameter, UnitsMetric(4.4)], // WRONG
   [BoltCapHeight,   UnitsMetric(1.6)],  // WRONG
   [BoltNutDiameter, UnitsMetric(4.28)], // WRONG
