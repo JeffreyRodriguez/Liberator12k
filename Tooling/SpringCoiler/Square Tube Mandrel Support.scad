@@ -1,4 +1,4 @@
-use <../../Components/Gear.scad>;
+use <../../Shapes/Gear.scad>;
 use <../../Shapes/Teardrop.scad>;
 use <../../Math/Triangles.scad>;
 use <../../Meta/Units.scad>;
