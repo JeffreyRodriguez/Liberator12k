@@ -132,8 +132,8 @@ function Spec_RodThreeSixteenthInch() = [
 function Spec_RodOneQuarterInch() = [
   [RodDiameter,       1/4],
   [RodRadius,         1/4/2],
-  [RodClearanceSnug,  0.027],
-  [RodClearanceLoose, 0.035],
+  [RodClearanceSnug,  0.015],
+  [RodClearanceLoose, 0.025],
   [RodFn,             12]
 ];
 
