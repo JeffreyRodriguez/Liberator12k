@@ -9,7 +9,6 @@ use <../../Finishing/Chamfer.scad>;
 use <../../Shapes/Semicircle.scad>;
 use <../../Shapes/Teardrop.scad>;
 
-use <../../Components/Firing Pin.scad>;
 use <../../Components/Pipe/Cap.scad>;
 use <../../Components/Pipe/Lugs.scad>;
 
@@ -24,33 +23,34 @@ use <../../Lower/Lower.scad>;
 use <Buttstock.scad>;
 use <Frame.scad>;
 use <Tailcap.scad>;
-use <Linear Hammer.scad>;
-use <Pipe Upper.scad>;
 
+function TriggerTravelFactor() = Animate(ANIMATION_STEP_TRIGGER)
+                           - Animate(ANIMATION_STEP_TRIGGER_RESET);
 
 module PipeUpperAssembly(receiver=Spec_PipeThreeQuarterInch(),
                          receiverLength=ReceiverLength(),
                          pipeAlpha=1,
                          frameUpper=true, frameLower=true, stock=false, tailcap=false,
-                         triggerAnimationFactor=0, debug=true) {
-               
+                         triggerTravelFactor=TriggerTravelFactor(),
+                         debug=true) {
+
   translate([-receiverLength,0,0]) {
       if (tailcap)
       Tailcap();
-  
+
       if (stock)
       Buttstock();
   }
-                   
+
   translate([-LowerMaxX(),0,0]) {
-    
+
     FrameAssembly(upper=frameUpper, lower=frameLower);
-    
+
     PipeLugAssembly(length=receiverLength,
                     stock=stock, tailcap=tailcap,
-                    center=!frameLower, triggerAnimationFactor=triggerAnimationFactor,
+                    center=!frameLower, triggerAnimationFactor=triggerTravelFactor,
                     debug=debug, pipeAlpha=pipeAlpha);
-    
+
   }
 }
 
