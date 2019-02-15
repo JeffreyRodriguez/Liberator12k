@@ -45,11 +45,11 @@ module LinearHammerBolt(cutter=false) {
              capHex=true, capOrientation=true, clearance=cutter);
 }
 
-module LinearHammerGuide(insertRadius=ReceiverIR(), length=1.5,
+module LinearHammerGuide(insertRadius=ReceiverIR(), length=1,
                          debug=false) {
   color("Orange")
   DebugHalf(enabled=debug)
-    translate([-BoltCapHeight(LinearHammerBolt()),0,0])
+  translate([-BoltCapHeight(LinearHammerBolt()),0,0])
   difference() {
     rotate([0,-90,0])
     ChamferedCylinder(r1=insertRadius, r2=1/16,
@@ -82,10 +82,9 @@ module LinearHammerCompressor(insertRadius=ReceiverIR(),
                               base=0.25, debug=false) {
   length=base+pretravel+LinearHammerTravel()+overtravel;
   
-  color("Orange")
-  DebugHalf(enabled=debug)
   translate([pretravel+LinearHammerTravel()-HammerBoltLength()+0.03125+base+ManifoldGap(),0,0])
-                                
+  
+                                color("Orange") DebugHalf(enabled=debug)
   translate([-BoltCapHeight(LinearHammerBolt()),0,0])
   difference() {
     rotate([0,-90,0])
