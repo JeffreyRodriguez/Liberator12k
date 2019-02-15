@@ -118,12 +118,7 @@ module PipeLugPlater(front=true, rear=true, center=true) {
 
 module PipeLugAssembly(length=ReceiverLength(), pipeAlpha=1,
                        front=true, rear=true, center=true,
-                       triggerAnimationFactor=0, debug=false) {
-
-  translate([0,0,LowerOffsetZ()])
-  Lower(showTrigger=true,alpha=1, triggerAnimationFactor=triggerAnimationFactor,
-        showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
-        searLength=SearLength()+WallLower()+ReceiverPipeWall()+SearTravel());
+                       debug=false) {
 
   if (front)
   PipeLugFront(debug=debug);
@@ -139,6 +134,11 @@ module PipeLugAssembly(length=ReceiverLength(), pipeAlpha=1,
 }
 
 PipeLugAssembly(pipeAlpha=0.5);
+
+translate([0,0,LowerOffsetZ()])
+Lower(showTrigger=true,alpha=1, triggerAnimationFactor=$t,
+      showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
+      searLength=SearLength()+WallLower()+ReceiverPipeWall()+SearTravel());
 
 *!scale(25.4)
 PipeLugPlater(front=true, rear=true, center=true);
