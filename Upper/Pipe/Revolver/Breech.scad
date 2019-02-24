@@ -75,8 +75,8 @@ function BreechTopZ() = BreechBoltOffsetZ()
 function FiringPinMinX() = BreechRearX()-FiringPinBodyLength();
 
 
-//function ChargingRodOffset() = ReceiverOR()+RodDiameter(ChargingRod())+0.0625;
-function ChargingRodOffset() = 1.1875+RodDiameter(ChargingRod());
+function ChargingRodOffset() = ReceiverOR()+RodRadius(ChargingPin())+RodRadius(ChargingRod());
+//function ChargingRodOffset() = 1.1875+RodDiameter(ChargingRod());
 
 
 function ChargingPinX() = BreechRearX()-0.25;
@@ -84,18 +84,18 @@ function ChargingRodMinX() = ChargingPinX()-WallChargingPin();
 
 function DisconnectorPivotOffsetX() = 0.375;
 function DisconnectorPivotX() = BreechRearX()-DisconnectorPivotOffsetX();
-function DisconnectorPivotZ() =ChargingRodOffset()-(RodDiameter(ChargingRod())*2);
+function DisconnectorPivotZ() = ReceiverOR();
 
 
 // Animation Factors
-function DisconnectorFactor() = SubAnimate(ANIMATION_STEP_CHARGE, start=0.36, end=0.75)
-                              - SubAnimate(ANIMATION_STEP_CHARGER_RESET, start=0.9);
+function DisconnectorFactor() = SubAnimate(ANIMATION_STEP_CHARGE, start=0.0, end=0.75)
+                              - SubAnimate(ANIMATION_STEP_CHARGER_RESET, start=0.8);
 
-function ChargingToggleFactor() = SubAnimate(ANIMATION_STEP_CHARGE, start=0.36, end=0.9)
-                                - SubAnimate(ANIMATION_STEP_CHARGER_RESET, start=0.05, end=0.74);
+function ChargingToggleFactor() = SubAnimate(ANIMATION_STEP_CHARGE, start=0.30, end=0.9)
+                                - SubAnimate(ANIMATION_STEP_CHARGER_RESET, start=0.4, end=1);
 
 function HammerFactor() = Animate(ANIMATION_STEP_FIRE)
-                        - SubAnimate(ANIMATION_STEP_CHARGE, start=0.0, end=0.36);
+                        - SubAnimate(ANIMATION_STEP_CHARGE, start=0.18, end=0.36);
 
 // Shorthand: Measurements
 function BreechBoltRadius(clearance=false)
@@ -103,6 +103,13 @@ function BreechBoltRadius(clearance=false)
 
 function BreechBoltDiameter(clearance=false)
     = BoltDiameter(BreechBolt(), clearance);
+
+module ChargingPin(cutter=false) {
+  color("Silver")
+  translate([ChargingPinX(), 0, ChargingRodOffset()])
+  rotate([90,0,0])
+  Rod(ChargingPin(), length=0.76, center=true, clearance=cutter?clearance:undef);
+}
 
 module ChargingRod(clearance=RodClearanceLoose(),
                    length=LowerMaxX()+SearRadius()+DEFAULT_CHARGER_TRAVEL,
@@ -115,27 +122,24 @@ module ChargingRod(clearance=RodClearanceLoose(),
   translate([-travel*animationFactor,0,0]) {
     
     if (!cutter) {
-      ChargingToggle(animationFactor=toggleAnimationFactor);
+       ChargingPusher();
+      *ChargingToggle(animationFactor=toggleAnimationFactor);
       
       color("Silver")
-      translate([ChargingPinX(), 0, ChargingRodOffset()])
       hull() {
-        rotate([90,0,0])
-        Rod(ChargingPin(), length=0.76, center=true, clearance=cutter?clearance:undef);
-
-        if (cutter) {
-          translate([-travel,0,0])
-          rotate([90,0,0])
-          Rod(ChargingPin(), length=0.76, center=true, clearance=cutter?clearance:undef);
-        }
+        ChargingPin(cutter=cutter);
+        
+        if (cutter)
+        translate([-travel,0,0])
+        ChargingPin(cutter=cutter);
       }
     }
       
     // Disconnector trip
-    color("Purple")
+    *color("Purple")
     translate([ChargingRodMinX(),0,ChargingRodOffset()-RodDiameter(ChargingRod())])
     rotate([0,90,0])
-    SquareRod(ChargingRod(), length=0.375,
+    SquareRod(ChargingRod(), length=0.25,
               clearance=cutter?clearance:undef);
 
     color("SteelBlue") DebugHalf(enabled=debug) {
@@ -170,41 +174,81 @@ module ChargingRod(clearance=RodClearanceLoose(),
   }
 }
 
-module ChargingToggle(angle=-96, animationFactor=ChargingToggleFactor(),
+module ChargingPusher(clearance=RodClearanceLoose(),
+                   length=LowerMaxX()+SearRadius()+DEFAULT_CHARGER_TRAVEL,
+                   bolt=true, actuator=true,
+                   cutter=false, debug=false) {
+    
+  color("OrangeRed") DebugHalf(enabled=debug) {
+    difference() {
+      
+      // Charging Pusher
+      translate([ChargingRodMinX()-0.75,-0.5/2,0.375])
+      ChamferedCube([1.125, 0.5, ChargingRodOffset()+0.25-0.375], r=1/16);
+      
+      translate([DEFAULT_CHARGER_TRAVEL,0,0])
+      ChargingRod(cutter=true, clearance=RodClearanceSnug());
+      
+      difference() {
+      
+        // Charging Pusher
+        translate([ChargingRodMinX()-1.125,-1/2,0])
+        cube([1, 1, ChargingRodOffset()+0.25]);
+        translate([DEFAULT_CHARGER_TRAVEL,0,0])
+        
+        translate([ChargingRodMinX()-DEFAULT_CHARGER_TRAVEL,0,0])
+        rotate([0,-90,0])
+        cylinder(r=ReceiverIR()-0.02, h=2, $fn=Resolution(30,40));
+      }
+    }
+  }
+}
+
+
+module ChargingToggle(angle=-100, animationFactor=ChargingToggleFactor(),
                       length=ChargingRodOffset()-RodRadius(ChargingRod()), backsetLength=0.125) {
     for(M = [0,1]) mirror([0,M,0])
     translate([ChargingPinX(), RodDiameter(ChargingRod()), ChargingRodOffset()])
-    rotate([0,-90-45+(angle*animationFactor),0]) {
+    rotate([0,-90-35+(angle*animationFactor),0]) {
       color("Yellow")
       translate([0,0,-backsetLength])
       SquareRod(ChargingRod(),
                 length=length);
   
-      translate([0, 0.13, 0.475])
+      translate([0, 0.13, 0.625])
       rotate([90,0,0])
       Rod(DisconnectorPivotPin(), length=0.76, center=false);
     }
   
 }
 
-module Disconnector(angle=10, animationFactor=1) {
+module Disconnector(angle=13, animationFactor=1) {
   
-  backsetLength = DisconnectorPivotOffsetX()-(1/16);
-  extensionLength = (LowerMaxX()+DisconnectorPivotX()+backsetLength+(0.375)) * cos(angle);
+  backsetLength = 3/8;//DisconnectorPivotOffsetX();
+  extensionLength = (2.8+DisconnectorPivotX()) * cos(angle);
   length = extensionLength+backsetLength;
   
-  
-  translate([DisconnectorPivotX(), 0, DisconnectorPivotZ()])
-  rotate([90,0,0])
-  Rod(DisconnectorPivotPin(), length=1.25, center=true);
-  
-  color("LimeGreen")
-  translate([DisconnectorPivotX(), 0, DisconnectorPivotZ()]) {
-    rotate([0,-90-(angle*animationFactor),0])
-    translate([0,0,-backsetLength])
-    SquareRod(DisconnectorRod(),
-              length=length);
+  rotate([0,0,0]) {
+    translate([DisconnectorPivotX(), 0, DisconnectorPivotZ()])
+    rotate([90,0,0])
+    Rod(DisconnectorPivotPin(), length=1.25, center=true);
     
+    translate([DisconnectorPivotX(), 0, DisconnectorPivotZ()]) {
+      rotate([0,-(angle*(animationFactor)),0])
+      rotate([0,-90,0]) {
+        
+        color("LimeGreen")
+        translate([0,0,-backsetLength])
+        SquareRod(DisconnectorRod(),
+                  length=length);
+        
+        
+    
+        *translate([0, 0, 0.5])
+        rotate([90,0,0])
+        Rod(DisconnectorPivotPin(), length=1.25, center=true);
+      }
+    }
   }
 }
 
@@ -218,7 +262,7 @@ module BreechFiringPinAssembly(template=false,
 module BreechPlate(cutter=false, debug=false,
                    spindleOffset=DEFAULT_SPINDLE_OFFSET) {
   color("LightSteelBlue")
-  DebugHalf(enabled=debug)
+  //DebugHalf(enabled=debug)
   difference() {
     translate([-BreechPlateThickness(), -1-ManifoldGap(2), -BreechPlateWidth()/2])
     ChamferedCube([BreechPlateThickness()+(cutter?(1/8):ManifoldGap(2)),
@@ -233,6 +277,47 @@ module BreechPlate(cutter=false, debug=false,
       BreechFiringPinAssembly(cutter=true);
     }
   }
+}
+
+module BreechBoltIterator() {
+    for (Y = [BreechBoltOffsetY(),-BreechBoltOffsetY()])
+    translate([BreechRearX()-BreechBoltRearExtension()-ManifoldGap(), Y, BreechBoltOffsetZ()])
+    rotate([0,90,0])
+    children();
+}
+
+module BreechBolts(length=abs(BreechRearX())+BreechBoltRearExtension(),
+              debug=false, cutter=false, alpha=1) {
+
+  color("Silver", alpha)
+  DebugHalf(enabled=debug) {
+    BreechBoltIterator()
+    NutAndBolt(bolt=BreechBolt(), boltLength=length+ManifoldGap(2),
+         capHex=true, clearance=cutter);
+  }
+}
+
+module FrameSupport(length=2.5, width=0.125+0.01,
+                    height=3/4, wall=1/8,
+                    clearance=0.01, debug=false, alpha=1) {
+  color("Purple", alpha)
+  //DebugHalf(enabled=debug)
+  for (M = [0,1]) mirror([0,M,0])
+  translate([0,-1-width-wall,BreechTopZ()-wall-height])
+  difference() {
+    ChamferedCube([length, width+(wall*3), height+(wall*2)], r=1/16);
+    
+    translate([wall, wall-clearance,wall-clearance])
+    cube([length, width+(wall*2)+clearance+ManifoldGap(), height+(clearance*2)]);
+    
+    translate([0, width+wall,-ManifoldGap()])
+    cube([length, (wall*2)+ManifoldGap(), height+wall+clearance]);
+  }
+}
+
+module FrameSupportRear(debug=false, alpha=1) {
+  translate([BreechRearX()-BreechBoltRearExtension()+0.3,0,0])
+  FrameSupport(debug=debug, alpha=alpha);
 }
 
 module Breech(debug=false, chargingRodLength=LowerMaxX()+SearRadius(),
@@ -269,47 +354,6 @@ module Breech(debug=false, chargingRodLength=LowerMaxX()+SearRadius(),
   }
 }
 
-module BreechBoltIterator() {
-    for (Y = [BreechBoltOffsetY(),-BreechBoltOffsetY()])
-    translate([BreechRearX()-BreechBoltRearExtension()-ManifoldGap(), Y, BreechBoltOffsetZ()])
-    rotate([0,90,0])
-    children();
-}
-
-module BreechBolts(length=abs(BreechRearX())+BreechBoltRearExtension(),
-              debug=false, cutter=false, alpha=1) {
-
-  color("Silver", alpha)
-  DebugHalf(enabled=debug) {
-    BreechBoltIterator()
-    NutAndBolt(bolt=BreechBolt(), boltLength=length+ManifoldGap(2),
-         capHex=true, clearance=cutter);
-  }
-}
-
-module FrameSupport(length=2.5, width=0.125+0.01,
-                    height=3/4, wall=1/8,
-                    clearance=0.01, debug=false, alpha=1) {
-  color("Purple", alpha)
-  DebugHalf(enabled=debug)
-  for (M = [0,1]) mirror([0,M,0])
-  translate([0,-1-width-wall,BreechTopZ()-wall-height])
-  difference() {
-    ChamferedCube([length, width+(wall*3), height+(wall*2)], r=1/16);
-    
-    translate([wall, wall-clearance,wall-clearance])
-    cube([length, width+(wall*2)+clearance+ManifoldGap(), height+(clearance*2)]);
-    
-    translate([0, width+wall,-ManifoldGap()])
-    cube([length, (wall*2)+ManifoldGap(), height+wall+clearance]);
-  }
-}
-
-module FrameSupportRear(debug=false, alpha=1) {
-  translate([BreechRearX()-BreechBoltRearExtension()+0.3,0,0])
-  FrameSupport(debug=debug, alpha=alpha);
-}
-
 module BreechAssembly(breechBoltLength=abs(BreechRearX())+BreechBoltRearExtension(),
                       breechBoltAlpha=0.3,
                       showBreech=true,
@@ -327,7 +371,7 @@ module BreechAssembly(breechBoltLength=abs(BreechRearX())+BreechBoltRearExtensio
               travel=chargingRodTravel,
               animationFactor=chargingRodAnimationFactor, cutter=false);
 
-  Disconnector(animationFactor=DisconnectorFactor());
+  *Disconnector(animationFactor=DisconnectorFactor());
 
   translate([BreechRearX()-LowerMaxX(),0,0])
   FrameBolts(debug=debug);
@@ -350,14 +394,15 @@ module BreechAssembly(breechBoltLength=abs(BreechRearX())+BreechBoltRearExtensio
 BreechAssembly(debug=true);
 
 translate([BreechRearX(),0,0])
-PipeUpperAssembly(pipeAlpha=0.3,
+*PipeUpperAssembly(pipeAlpha=0.3,
                   receiverLength=12,
                   chargingHandle=false,
                   frameUpper=false,
                   stock=true, tailcap=false,
                   debug=false);
 
-$t=AnimationDebug(ANIMATION_STEP_CHARGE, T=$t);
+//$t=AnimationDebug(ANIMATION_STEP_CHARGE, T=$t);
+//$t=AnimationDebug(ANIMATION_STEP_CHARGER_RESET, T=$t, start=0.25);
 
 *!scale(25.4)
 for (M = [0,1]) mirror([0,M,0])
@@ -365,6 +410,10 @@ rotate([90,0,0])
 translate([0,1.25,-BreechTopZ()-0.1875])
 FrameSupport(debug=true);
 
+*!scale(25.4)
+rotate([0,90,0])
+translate([-BreechRearX(),0,0])
+ChargingPusher();
 
 *!scale(25.4)
 difference() {

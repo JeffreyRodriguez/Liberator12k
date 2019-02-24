@@ -9,8 +9,6 @@ use <../../../Finishing/Chamfer.scad>;
 use <../../../Shapes/Semicircle.scad>;
 use <../../../Shapes/Teardrop.scad>;
 
-use <../../../Components/Pipe/Frame.scad>;
-
 use <../../../Vitamins/Nuts And Bolts.scad>;
 use <../../../Vitamins/Pipe.scad>;
 use <../../../Vitamins/Rod.scad>;
@@ -23,6 +21,7 @@ use <../../../Lower/Lower.scad>;
 use <../../../Ammo/Shell Slug.scad>;
 
 use <../Pipe Upper.scad>;
+use <../Frame.scad>;
 use <../Fixed Breech.scad>;
 
 // Measured: Vitamins

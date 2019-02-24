@@ -27,6 +27,7 @@ function HammerSpringLength() = 3;
 function LinearHammerBolt() = Spec_BoltFiveSixteenths();
 
 DEFAULT_HAMMER_TRAVEL = 1;
+DEFAULT_HAMMER_CLEARANCE = 1/32;
 
 function LinearHammerTravelFactor() = Animate(ANIMATION_STEP_FIRE)
                                     - Animate(ANIMATION_STEP_CHARGE);
@@ -45,7 +46,7 @@ module LinearHammerBolt(cutter=false) {
              capHex=true, capOrientation=true, clearance=cutter);
 }
 
-module LinearHammerGuide(insertRadius=ReceiverIR(), length=1,
+module LinearHammerGuide(insertRadius=ReceiverIR()-DEFAULT_HAMMER_CLEARANCE, length=1,
                          debug=false) {
   color("Orange")
   DebugHalf(enabled=debug)
@@ -76,7 +77,7 @@ module LinearHammerGuide(insertRadius=ReceiverIR(), length=1,
   }
 }
 
-module LinearHammerCompressor(insertRadius=ReceiverIR(),
+module LinearHammerCompressor(insertRadius=ReceiverIR()-DEFAULT_HAMMER_CLEARANCE,
                               pretravel=0.5,
                               overtravel=0.375,
                               base=0.25, debug=false) {
@@ -84,7 +85,7 @@ module LinearHammerCompressor(insertRadius=ReceiverIR(),
   
   translate([pretravel+LinearHammerTravel()-HammerBoltLength()+0.03125+base+ManifoldGap(),0,0])
   
-                                color("Orange") DebugHalf(enabled=debug)
+  color("Orange") DebugHalf(enabled=debug)
   translate([-BoltCapHeight(LinearHammerBolt()),0,0])
   difference() {
     rotate([0,-90,0])
@@ -100,7 +101,7 @@ module LinearHammerCompressor(insertRadius=ReceiverIR(),
     rotate([0,-90,0])
     cylinder(r=0.0625, h=length+ManifoldGap(2), $fn=Resolution(15,25));
   
-    translate([-BoltCapHeight(LinearHammerBolt()),0,0])
+    translate([HammerBoltLength()-BoltCapHeight(LinearHammerBolt()),0,0])
     LinearHammerBolt(cutter=true);
     
     translate([-length,0,0])
@@ -134,7 +135,23 @@ module LinearHammerAssembly(travelFactor=0,
 
 LinearHammerAssembly(travelFactor=$t, debug=true);
 
+module LinearHammerSpacer(outerRadius=ReceiverIR()-DEFAULT_HAMMER_CLEARANCE,
+                            innerRadius=1.065/2,
+                            height=0.5, $fn=Resolution(20,40)) {
+  render()
+  difference() {
+    ChamferedCylinder(r1=outerRadius, r2=1/32, h=height);
+    ChamferedCircularHole(r1=innerRadius, r2=1/32, h=height);
+  }
+}
 
+
+
+
+
+// Collar for 3/4" PVC pipe spacer
+*!scale(25.4)
+LinearHammerSpacer();
 
 // Guide Plater
 *!scale(25.4) rotate([0,90,0]) translate([BoltCapHeight(LinearHammerBolt()),0,0])

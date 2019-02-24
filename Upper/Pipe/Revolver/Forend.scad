@@ -55,13 +55,13 @@ function ChamberLength() = 3.5;
 function BarrelLength() = 18-ChamberLength();
 function UpperLength() =  6;
 function IndexLockOffset() = 0.5;
-function ActuatorPretravel() = 0.5;
+function ActuatorPretravel() = 0.125;
 function ForegripLength() = 4;
 function ForegripChargingGap() = 0.5;
 
 /* How far does the stationary portion of the square rod
  extend into the part that holds it? */
-function ChargingRodStaticLength() = 1;
+function ChargingRodStaticLength() = 1.5;
 
 
 // Shorthand: Measurements
@@ -137,6 +137,23 @@ module RevolverBreech(debug=false) {
   }
 }
 
+module RevolverFrameTest(debug=false) {
+  color("Olive")
+  DebugHalf(enabled=debug)
+  difference() {
+    translate([BreechRearX(),-(2/2),ReceiverIR()/2])
+    mirror([1,0,0])
+    ChamferedCube([0.5,
+                   2,
+                   BreechTopZ()-(ReceiverIR()/2)+1],
+                  r=1/16);
+
+    PipeLugPipe(cutter=true);
+
+    BreechBolts(cutter=true);
+  }
+}
+
 module RevolverFrameUpper(debug=false) {
   color("Olive")
   DebugHalf(enabled=debug)
@@ -153,6 +170,10 @@ module RevolverFrameUpper(debug=false) {
     PipeLugPipe(cutter=true);
 
     BreechBolts(cutter=true);
+    
+    translate([BreechRearX(),-(0.52/2),ReceiverIR()/2])
+    mirror([1,0,0])
+    cube([BreechBoltRearExtension(),0.52,BreechTopZ()+ManifoldGap(2)]);
 
     // Charging rod cutout
     hull() {
@@ -340,9 +361,7 @@ module RevolverForend(debug=false, alpha=1) {
                              - Animate(ANIMATION_STEP_TRIGGER_RESET);
 module RevolverShotgunAssembly(receiverLength=12, stock=true, tailcap=false,
                                pipeAlpha=1, debug=false) {
-
-  hammerTravelFactor = Animate(ANIMATION_STEP_FIRE)
-                     - SubAnimate(ANIMATION_STEP_CHARGE, start=0.275, end=0.69);
+ 
   chargingRodAnimationFactor = Animate(ANIMATION_STEP_CHARGE)
                              - Animate(ANIMATION_STEP_CHARGER_RESET);
 
@@ -370,8 +389,8 @@ module RevolverShotgunAssembly(receiverLength=12, stock=true, tailcap=false,
 
   RevolverFrameUpper(debug=debug);
   
-  FrameSupportFront(debug=debug);
-  FrameSupportRear(debug=debug);
+  *FrameSupportFront(debug=debug);
+  *FrameSupportRear(debug=debug);
 
   Barrel(debug=debug);
   BarrelSleeve(debug=debug);
@@ -409,7 +428,7 @@ PipeUpperAssembly(pipeAlpha=0.3,
 
 
 //$t=AnimationDebug(ANIMATION_STEP_CHARGE, T=180*sin($t));
-$t=AnimationDebug(ANIMATION_STEP_CHARGE, T=0);
+//$t=AnimationDebug(ANIMATION_STEP_CHARGE, T=0);
 //$t=0;
 
 
@@ -482,3 +501,9 @@ intersection() {
 translate([-ReceiverOR(),0,BreechRearX()])
 rotate([0,90,0])
 RevolverFrameUpper();
+
+// Test part for holding in vise
+*!scale(25.4)
+rotate([0,90,0])
+translate([-BreechRearX(),0,0])
+RevolverFrameTest();
