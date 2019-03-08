@@ -5,6 +5,8 @@ use <../Meta/Manifold.scad>;
 use <../Meta/Debug.scad>;
 use <../Meta/Units.scad>;
 
+use <../Finishing/Chamfer.scad>;
+
 use <../Vitamins/Rod.scad>;
 
 use <../Components/Trigger Finger Slot.scad>;
@@ -155,9 +157,9 @@ module SearSupportTab(cutter=false) {
     translate([0,0,-SearTravel()])
     SearCutter(length=SearLength()+(SearTravel()*4), wideTrack=true);
 
-    ReceiverLugFront(clearance=0.01);
+    ReceiverLugFront(cutter=true, clearance=0.01);
 
-    ReceiverLugRear(hole=false, clearance=0.0);
+    ReceiverLugRear(cutter=true, hole=false, clearance=0.0);
 
   }
 }
@@ -188,7 +190,7 @@ module Trigger2d() {
     // Finger curve
     translate([TriggerFingerRadius()+TriggerTravel()+RodDiameter(SearRod())+triggerFront-0.15,
              -GripCeiling()-TriggerFingerRadius()])
-    circle(r=TriggerFingerRadius(), h=1, center=true, $fn=Resolution(16,30));
+    circle(r=TriggerFingerRadius(), $fn=Resolution(16,30));
 
 
     translate([-triggerBack,ReceiverLugRearZ()-0.375])
@@ -198,11 +200,11 @@ module Trigger2d() {
     // Clearance for the receiver lugs
     projection(cut=true)
     rotate([-90,0,0]) {
-      ReceiverLugFront(clearance=0.01);
+      ReceiverLugFront(cutter=true, clearance=0.01);
 
       for (x=[0, TriggerTravel()])
       translate([x,0,0])
-      ReceiverLugRear(hole=false, clearance=0.01);
+      ReceiverLugRear(cutter=true, hole=false, clearance=0.01);
     }
   }
 }
@@ -223,6 +225,13 @@ module Trigger(animationFactor=TriggerAnimationFactor(),
       rotate([90,0,0])
       linear_extrude(height=TriggerWidth()-sideplateWidth, center=false)
       Trigger2d();
+      
+      // Trigger finger chamfer
+      translate([TriggerFingerRadius()+TriggerTravel()+RodDiameter(SearRod())+0.5-0.15,
+                 -TriggerWidth()/2, -GripCeiling()-TriggerFingerRadius()])
+      rotate([-90,0,0])
+      ChamferedCircularHole(r1=TriggerFingerRadius(), r2=1/16,
+                            h=TriggerWidth(), $fn=Resolution(16,30));
 
       // Sear Slot (extended)
       translate([ReceiverLugRearMaxX(),-RodRadius(SearRod(), RodClearanceLoose()),ManifoldGap()])
@@ -232,7 +241,9 @@ module Trigger(animationFactor=TriggerAnimationFactor(),
 
       // Sear Support Slot Front
       translate([0,-RodRadius(SearRod(), RodClearanceLoose()),GripCeilingZ()-0.01])
-      cube([ReceiverLugFrontMaxX(), RodDiameter(SearRod(), RodClearanceLoose()), GripCeiling()+0.01+ManifoldGap()]);
+      cube([ReceiverLugFrontMaxX(),
+            RodDiameter(SearRod(), RodClearanceLoose()),
+            GripCeiling()+0.01+ManifoldGap()]);
     }
 
     if (left)
@@ -243,6 +254,13 @@ module Trigger(animationFactor=TriggerAnimationFactor(),
       rotate([90,0,0])
       linear_extrude(height=sideplateWidth)
       Trigger2d();
+      
+      // Trigger finger chamfer
+      translate([TriggerFingerRadius()+TriggerTravel()+RodDiameter(SearRod())+0.5-0.15,
+                 -TriggerWidth()/2, -GripCeiling()-TriggerFingerRadius()])
+      rotate([-90,0,0])
+      ChamferedCircularHole(r1=TriggerFingerRadius(), r2=1/16,
+                            h=TriggerWidth(), $fn=Resolution(16,30));
     }
   }
 }
