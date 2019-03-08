@@ -1,5 +1,6 @@
 use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
+use <../Finishing/Chamfer.scad>;
 
 module T_Lug2d(
               width=UnitsImperial(0.5),
@@ -35,16 +36,26 @@ module T_Lug(length=0.75,
   clearance = cutter ? clearance : 0;
 
   render()
-  rotate([0,90,0])
-  translate([0,0,-clearance])
-  linear_extrude(height=length+(clearance*2))
-  T_Lug2d(width=width,
-         height=height,
-      tabHeight=tabHeight,
-       tabWidth=tabWidth,
-      clearance=clearance,
-  clearVertical=clearVertical,
-         cutter=cutter);
+  if (cutter) {
+    rotate([0,90,0])
+    translate([0,0,-clearance])
+    linear_extrude(height=length+(clearance*2))
+    T_Lug2d(width=width,
+           height=height,
+        tabHeight=tabHeight,
+         tabWidth=tabWidth,
+        clearance=clearance,
+    clearVertical=clearVertical,
+           cutter=cutter);
+  } else {
+    union() {
+      translate([0,-tabWidth/2,0])
+      ChamferedCube([length, tabWidth, tabHeight], r=1/32);
+          
+      translate([0,-width/2,0])
+      ChamferedCube([length, width, height], r=1/32);
+    }
+  }
 }
 
 T_Lug(cutter=false);
