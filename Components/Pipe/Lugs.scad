@@ -100,23 +100,7 @@ module PipeLugCenter(cutter=false, clearance=0.002, alpha=1) {
   }
 }
 
-module PipeLugPlater(front=true, rear=true, center=true) {
-
-  if (front)
-  rotate([0,-90,0])
-  translate([-ReceiverLugFrontMinX(),1.5,-ReceiverLugFrontMinX()])
-  PipeLugFront();
-
-  if (rear)
-  rotate([0,90,0])
-  translate([-ReceiverLugRearMaxX(),1.5,ReceiverLugRearMaxX()])
-  PipeLugRear();
-
-  if (center)
-  PipeLugCenter();
-}
-
-module PipeLugAssembly(length=ReceiverLength(), pipeAlpha=1,
+module PipeLugAssembly(length=ReceiverLength(), pipeAlpha=1, pipeOffsetX=0,
                        front=true, rear=true, center=true,
                        debug=false) {
 
@@ -130,6 +114,7 @@ module PipeLugAssembly(length=ReceiverLength(), pipeAlpha=1,
   PipeLugCenter(debug=debug);
 
   if (length > 0)
+  translate([pipeOffsetX,0,0])
   PipeLugPipe(alpha=pipeAlpha, length=length, debug=debug, cutter=false);
 }
 
@@ -140,7 +125,26 @@ Lower(showTrigger=true,alpha=1, triggerAnimationFactor=$t,
       showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
       searLength=SearLength()+WallLower()+ReceiverPipeWall()+SearTravel());
 
+
+/*
+ * Plated parts
+ */
+
+// Front Lug
 *!scale(25.4)
-PipeLugPlater(front=true, rear=true, center=true);
+rotate([0,-90,0])
+translate([-ReceiverLugFrontMinX(),0,ReceiverLugFrontMinX()])
+PipeLugFront();
+
+// Rear Lug
+*!scale(25.4)
+rotate([0,90,0])
+translate([-ReceiverLugRearMaxX(),0,-ReceiverLugRearMaxX()])
+PipeLugRear();
+
+// NOTE: Developer Part
+// Center Lug Housing
+*!scale(25.4)
+PipeLugCenter();
 
 echo ("Pipe Lug Sear Length: ", SearLength()+WallLower()+ReceiverPipeWall()+SearTravel());
