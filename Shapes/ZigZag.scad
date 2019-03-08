@@ -9,7 +9,7 @@ use <../Meta/Manifold.scad>;
 DEFAULT_ZIGZAG_DIAMETER = 4;
 DEFAULT_ZIGZAG_POSITIONS= 6;
 DEFAULT_ZIGZAG_DEPTH = 1/4;
-DEFAULT_ZIGZAG_WIDTH = 1/2;
+DEFAULT_ZIGZAG_WIDTH = 1/4;
 DEFAULT_ZIGZAG_ANGLE = 45;
 
 function ZigZagSegmentLength(radius, positions)
@@ -86,8 +86,7 @@ module ZigZag(supports=true,
            extraTop=0, extraBottom=0,
            $fn=Resolution(30,90)) {
 
-  //zigzag_cutter_width = width*sqrt(2);
-  //slotHeight=(zigzag_cutter_width)*tan(zigzagAngle);
+  zigzag_cutter_width = width*cos(zigzagAngle)*2;
   angle=360/positions/2;
   zigzag_height=ZigZagHeight(radius, positions, width, zigzagAngle);
   top_slot_height = (width/2)+extraTop;
@@ -95,6 +94,7 @@ module ZigZag(supports=true,
 
   render()
   difference() {
+    render()
     union() {
       for (i=[0:positions-1]){
         rotate([0,0,angle*2*i])
@@ -118,8 +118,13 @@ module ZigZag(supports=true,
     if (supports)
     for (i=[0:positions-1])
     rotate([0,0,(angle*2*i)-(TrackAngle(radius, width)/2)])
-    translate([radius - (depth*2),-1/16,bottom_slot_height])
-    cube([depth*4, 1/16, width*3]);
+    translate([radius - (depth),-1/16,bottom_slot_height])
+    hull() {
+      cube([ManifoldGap(), 1/16, width]);
+      
+      translate([0,0,(zigzag_cutter_width*2)+(width/2)])
+      cube([depth*2, 1/16, ManifoldGap()]);
+    }
   }
 }
 
@@ -134,4 +139,4 @@ depth = DEFAULT_ZIGZAG_DEPTH;
   %cylinder(r=5/16/2, h=depth*3, $fn=10);
 
   ZigZag(radius=radius, depth=0.125, zigzagAngle=60,
-         width=5/16, positions=DEFAULT_ZIGZAG_POSITIONS);
+         width=DEFAULT_ZIGZAG_WIDTH, positions=DEFAULT_ZIGZAG_POSITIONS);
