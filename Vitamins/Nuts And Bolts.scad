@@ -81,8 +81,8 @@ function Spec_BoltOneHalf() = [
   [BoltCapDiameter, UnitsImperial(0.85)],
   [BoltCapHeight,   UnitsImperial(0.310)],
   [BoltNutDiameter, UnitsImperial(0.85)],
-  [BoltNutHeight,   UnitsImperial(0.310)],
-  [BoltClearance,   UnitsImperial(0.04)],
+  [BoltNutHeight,   UnitsImperial(0.45)],
+  [BoltClearance,   UnitsImperial(0.025)],
   [BoltFn, 30]
 ];
 
