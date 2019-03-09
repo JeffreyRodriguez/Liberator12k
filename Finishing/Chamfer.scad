@@ -92,7 +92,7 @@ module SquareHoleEndChamfer(xy=[1,1], r=0.125, teardrop=true, teardropAngle=-90,
 
 module ChamferedSquareHole(sides=[1,1], length=1, center=true,
                            chamferTop=true, chamferBottom=true, chamferRadius=0.1,
-                           teardropTop=false, teardropBottom=true,
+                           teardropTop=true, teardropBottom=true,
                            corners=true, cornerRadius=0.1) {
   render()
   union() {
