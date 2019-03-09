@@ -133,8 +133,8 @@ function Spec_PipeThreeQuarterInch() = [
   [PipeTaperedDiameter, 1.018],
   [PipeThreadLength,    0.9],
   [PipeThreadDepth,     0.5],
-  [PipeClearanceSnug,   0.01],
-  [PipeClearanceLoose,  0.02],
+  [PipeClearanceSnug,   0.015],
+  [PipeClearanceLoose,  0.025],
   [PipeFn,              30],
   [PipeWeightPerUnit,   40]
 ];
