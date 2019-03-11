@@ -5,10 +5,13 @@ use <../../../Meta/Units.scad>;
 use <../../../Meta/Debug.scad>;
 use <../../../Meta/Resolution.scad>;
 
+use <../../../Math/Triangles.scad>;
+
 use <../../../Components/Cylinder Redux.scad>;
 use <../../../Components/Pipe/Lugs.scad>;
 
 use <../../../Lower/Lower.scad>;
+use <../../../Lower/Trigger.scad>;
 
 use <../../../Finishing/Chamfer.scad>;
 
@@ -26,43 +29,33 @@ use <../../../Ammo/Shell Slug.scad>;
 
 use <../Pipe Upper.scad>;
 use <../Frame.scad>;
+use <../Frame - Upper.scad>;
 use <../Linear Hammer.scad>;
-use <Breech.scad>;
+use <../Recoil Plate.scad>;
+use <../Charging Pump.scad>;
 
-// Measured: Vitamins
-function BarrelCollarDiameter() = 1.75;
-function BarrelCollarRadius() = BarrelCollarDiameter()/2;
-function BarrelCollarWidth() = 5/8;
+use <Revolver Frame.scad>;
+
+
+// Settings: Lengths
+function ChamberLength() = 3;
+function CraneLengthRear() = 0.5;
+function CraneLengthFront() = 0.5;
+function BarrelLength() = 18-ChamberLength();
+function ActuatorPretravel() = 0.125;
+function ForendGasGap() = 1.0;
+function RevolverSpindleOffset() = 31/32;
+function WallCrane() = 0.25;
+function WallBarrel() = 0.375;
+
 
 // Settings: Vitamins
 function BarrelPipe() = Spec_TubingZeroPointSevenFive();
 function BarrelPipe() = Spec_TubingOnePointOneTwoFive();
-function BarrelPipe() = Spec_PipeThreeQuarterInch();
+//function BarrelPipe() = Spec_PipeThreeQuarterInch();
 //function BarrelPipe() = Spec_TubingOnePointZero();
 function BarrelSleevePipe() = Spec_PipeOneInch();
-//function BarrelSleevePipe() = Spec_TubingOnePointZero();
-function SquareRodFixingBolt() = Spec_BoltM3();
-function LockingRod() = Spec_RodOneQuarterInch();
-
-positions = 6;
-radius = RevolverCylinderRadius(
-             centerOffset=RevolverSpindleOffset(),
-             chamberRadius=BarrelSleeveRadius(PipeClearanceSnug()));
-
-
-// Settings: Lengths
-function ChamberLength() = 3.5;
-function BarrelLength() = 18-ChamberLength();
-function UpperLength() =  6;
-function IndexLockOffset() = 0.5;
-function ActuatorPretravel() = 0.125;
-function ForegripLength() = 4;
-function ForegripChargingGap() = 0.5;
-
-/* How far does the stationary portion of the square rod
- extend into the part that holds it? */
-function ChargingRodStaticLength() = 1.5;
-
+function CranePivotRod() = Spec_RodFiveSixteenthInch();
 
 // Shorthand: Measurements
 function BarrelRadius(clearance=undef)
@@ -77,142 +70,62 @@ function BarrelSleeveRadius(clearance=undef)
 function BarrelSleeveDiameter(clearance=undef)
     = PipeOuterDiameter(BarrelSleevePipe(), clearance);
 
+positions = 4;
+radius = RevolverCylinderRadius(
+             centerOffset=RevolverSpindleOffset(),
+             chamberRadius=BarrelSleeveRadius(PipeClearanceSnug()));
+height = RevolverCylinderHeight(radius, positions=positions, zigzagAngle=45)+ActuatorPretravel();
+
 // Calculated: Lengths
-function ForendFrontLength() = UpperLength()-ChamberLength()-BreechRearX();
-function ChargingRodTravel() = ActuatorPretravel()
-                             + ZigZagHeight(radius, positions, ZigZagWidth(), 45)
-                             + (ZigZagWidth()/2);
-                             
+function ForendFrontLength() = FrameUpperBoltExtension()-ChamberLength();
 
 // Calculated: Positions
-function RevolverSpindleOffset() = BarrelSleeveDiameter(PipeClearanceSnug());
-function ChargingRodLength() = abs(ChargingRodMinX())
-                             + BreechRearX()
-                             + UpperLength()
-                             + ChargingRodTravel()
-                             + ChargingRodStaticLength()
-                             + ForegripChargingGap();
-function ActuatorRodX() = (ZigZagWidth()/2)+ChargingRodTravel();
-function ForendFrontX() = BreechRearX()+UpperLength();
-function ForegripFrontX() = ForendFrontX()+ChargingRodTravel()+ForegripChargingGap();
-function ForegripRearX() = ForegripFrontX()-ForegripLength();
+function ForendFrontX() = RecoilPlateRearX()+FrameUpperBoltExtension();
 
-module FrameSupportFront(debug=false, alpha=1) {
-  translate([ForendFrontX(),0,0])
-  mirror([1,0,0])
-  FrameSupport(debug=debug, alpha=alpha);
-}
+function RecoilPlateTopZ() = ReceiverOR()
+                           + FrameUpperBoltDiameter()
+                           + (WallFrameUpperBolt()*2);
+                           
+                           
+function CranePivotAngle() = 90;
+function CranePivotY() = 28/32;//FrameUpperBoltOffsetY();//1.35;//1;
+function CranePivotZ() = 19/32;//FrameUpperBoltOffsetZ();// 1.35;//RevolverSpindleOffset();//+1.355+1;
 
 
-
-module RevolverBreech(debug=false) {
-  color("Orange")
-  DebugHalf(enabled=debug)
-  difference() {
-    Breech(debug=false, spindleOffset=RevolverSpindleOffset()) {
-
-      translate([BreechRearX(),0,-RevolverSpindleOffset()])
-      rotate([0,90,0])
-      ChamferedCylinder(r1=RevolverSpindleOffset(), , r2=1/16,
-               h=abs(BreechRearX())-ManifoldGap(), $fn=50);
-    }
-
-    BreechBolts(cutter=true);
-
-    translate([BreechRearX()-LowerMaxX(),0,0])
-    FrameBolts(cutter=true);
-
-    // Revolver spindle
-    translate([BreechRearX()-ManifoldGap(),0,-RevolverSpindleOffset()])
-    rotate([0,90,0])
-    Rod(CylinderRod(),
-        length=abs(BreechRearX())+ManifoldGap(2),
-        cutter=true);
-
-    rotate([0,90,0])
-    cylinder(r=0.125, h=1, center=true, $fn=12);
-
-    translate([BreechPlateThickness(),0,0])
-    ChargingRod(travel=ChargingRodTravel(), cutter=true, actuator=false, pin=false);
-  }
-}
-
-module RevolverFrameTest(debug=false) {
-  color("Olive")
-  DebugHalf(enabled=debug)
-  difference() {
-    translate([BreechRearX(),-(2/2),ReceiverIR()/2])
-    mirror([1,0,0])
-    ChamferedCube([0.5,
-                   2,
-                   BreechTopZ()-(ReceiverIR()/2)+1],
-                  r=1/16);
-
-    PipeLugPipe(cutter=true);
-
-    BreechBolts(cutter=true);
-  }
-}
-
-module RevolverFrameUpper(debug=false) {
-  color("Olive")
-  DebugHalf(enabled=debug)
-  difference() {
-
-    // Pipe Lug Center
-    translate([BreechRearX(),-(2/2),ReceiverIR()/2])
-    mirror([1,0,0])
-    ChamferedCube([BreechBoltRearExtension()-0.26-ManifoldGap(2),
-                   2,
-                   BreechTopZ()-(ReceiverIR()/2)],
-                  r=1/16);
-
-    PipeLugPipe(cutter=true);
-
-    BreechBolts(cutter=true);
-    
-    translate([BreechRearX(),-(0.52/2),ReceiverIR()/2])
-    mirror([1,0,0])
-    cube([BreechBoltRearExtension(),0.52,BreechTopZ()+ManifoldGap(2)]);
-
-    // Charging rod cutout
-    hull() {
-      for (Z = [0,ChargingRodOffset()]) translate([0,0,Z])
-      rotate([0,-90,0])
-      SquareRod(ChargingRod(),
-          length=5,
-          clearance=RodClearanceLoose());
-    }
-  }
-}
-
-module BarrelCollar(clearance=0.008, cutter=false, debug=false) {
-  clear = cutter ? clearance : 0;
-  clear2 = clear*2;
-
-  color("Silver") DebugHalf(enabled=debug)
-  difference() {
-    for (X = [0, ForendFrontLength()])
-    translate([X+ChamberLength()+BarrelCollarWidth(),0,0])
-    rotate([0,-90,0])
-    cylinder(r=BarrelCollarRadius()+clear,
-             h=BarrelCollarWidth()+(cutter?ChamberLength():0), $fn=40);
-
-    if (!cutter)
-    Barrel(hollow=false, cutter=true);
-  }
-}
-
-module BarrelSleeve(clearance=undef, cutter=false, debug=false) {
-  color("Silver") DebugHalf(enabled=debug)
-  translate([ChamberLength(),0,0])
+// 1.125" OD (A513 DOM) chambers
+module RevolverCylinder_DOM5(positions=5, supports=false, chambers=false,
+                             chamberBolts=true, cutter=false, debug=false) {
+  
+  translate([0,0,-RevolverSpindleOffset()])
   rotate([0,90,0])
-  Pipe(pipe=BarrelSleevePipe(), taperBottom=true,
-       length=ForendFrontLength(),
-       hollow=!cutter, clearance=clearance);
-
+  rotate(-360/positions/2*SubAnimate(ANIMATION_STEP_CHARGER_RESET, start=0.25, end=0.8))
+  rotate(-360/positions/2*SubAnimate(ANIMATION_STEP_CHARGE, start=0.4, end=0.98))
+  rotate(360/positions/2)
+  OffsetZigZagRevolver(positions=positions, depth=3/16,
+      centerOffset=RevolverSpindleOffset(),
+      chamberRadius=1.13/2, chamberInnerRadius=0.813/2,
+      chamberBolts=chamberBolts,teardrop=false, zigzagAngle=49.35,
+      supports=supports,  extraTop=ActuatorPretravel(), //+0.25896
+      chambers=chambers, chamberLength=ChamberLength(),
+      debug=debug, alpha=1.0, cutter=cutter);
 }
 
+// 1.335" OD (A53 ERW Pipe) chambers
+module RevolverCylinder_ERW4(positions=4, supports=false, chambers=false,
+                             chamberBolts=true, cutter=false,
+                             debug=false) {
+  translate([0,0,-RevolverSpindleOffset()])
+  rotate([0,90,0])
+  rotate(-360/positions/2*SubAnimate(ANIMATION_STEP_CHARGER_RESET, start=0.25, end=0.8))
+  rotate(-360/positions/2*SubAnimate(ANIMATION_STEP_CHARGE, start=0.4, end=0.98))
+  OffsetZigZagRevolver(positions=positions,
+      centerOffset=RevolverSpindleOffset(),
+      chamberRadius=BarrelSleeveRadius(PipeClearanceSnug()), chamberInnerRadius=0.813/2,
+      chamberBolts=chamberBolts, wall=0.145, //0.15625,
+      supports=supports, extraTop=ActuatorPretravel(),
+      chambers=chambers, chamberLength=ChamberLength(),
+      debug=debug, alpha=1.0, cutter=cutter);
+}
 module Barrel(barrel=BarrelPipe(), barrelLength=BarrelLength(), hollow=true,
               clearance=undef, alpha=1, debug=false) {
   color("SteelBlue", alpha) DebugHalf(enabled=debug)
@@ -222,213 +135,303 @@ module Barrel(barrel=BarrelPipe(), barrelLength=BarrelLength(), hollow=true,
        hollow=hollow, length=barrelLength);
 }
 
-module RevolverCylinder(supports=false, chambers=false, cutter=false, debug=false) {
-  translate([BreechFrontX(),0,-RevolverSpindleOffset()])
-  rotate([0,90,0])
-  rotate([0,0,-30*SubAnimate(ANIMATION_STEP_CHARGER_RESET, start=0.25, end=0.8)])
-  rotate([0,0,-30*SubAnimate(ANIMATION_STEP_CHARGE, start=0.4, end=0.98)])
-  OffsetZigZagRevolver(positions=positions,
-      centerOffset=RevolverSpindleOffset(),
-      chamberRadius=BarrelSleeveRadius(PipeClearanceSnug()),
-      trackAngle=360/positions/2,
-      supports=supports, extraTop=ActuatorPretravel(),
-      chambers=chambers, chamberLength=ChamberLength(),
-      debug=debug, alpha=1.25, cutter=cutter);
+module ChamberDrillJig() {
+  
+  
+  render()
+  difference() {
+    translate([-1.75/2,-1.75/2,0])
+    ChamferedCube([1.75, 1.75, height], r=1/16);
+      
+    ChamferedCircularHole(r1=BarrelRadius(PipeClearanceSnug()),
+                          r2=1/16, h=height, $fn=40);
+      
+    linear_extrude(height=height)
+    translate([0,-1/32])
+    square([1.75, 1/16], center=false);
+    
+    for (Z = [0.625, height-0.625])
+    translate([0,0,Z])
+    rotate([0,-90,0])
+    linear_extrude(height=height)
+    Teardrop(r=0.0625, $fn=10);
+  }
 }
 
-module RevolverSpindle(cutter=false) {
+module RevolverSpindle(teardrop=false, cutter=false) {
   color("Silver")
-  translate([BreechRearX(),0,-RevolverSpindleOffset()])
+  translate([RecoilPlateRearX(),0,-RevolverSpindleOffset()])
   rotate([0,90,0])
   Rod(CylinderRod(),
-      length=UpperLength(),//-BreechRearX()+ChamberLength()+(BarrelCollarWidth()*2),
-      clearance=cutter?RodClearanceSnug():undef);
+      length=FrameUpperBoltExtension()-RecoilPlateRearX()+CraneLengthFront()+ManifoldGap(),
+      clearance=cutter?RodClearanceSnug():undef,
+      teardrop=cutter&&teardrop);
 }
 
-module RevolverForegrip(debug=false, alpha=1, $fn=Resolution(20,50)) {
-
-  color("Tan", alpha)
+module RevolverRecoilPlateHousing(debug=false) {
+  color("MediumSlateBlue")
   DebugHalf(enabled=debug)
   difference() {
+    RecoilPlateHousing(topHeight=FrameUpperBoltOffsetZ(),
+                       bottomHeight=-LowerOffsetZ(),
+                       debug=false) {
 
-    union() {
-
-      // Body around the charging rod
-      hull() {
-        translate([ForegripFrontX(),-RodRadius(ChargingRod())-0.25,0])
-        rotate([0,90,0])
-        mirror([1,0,0])
-        ChamferedCube([ChargingRodOffset()+RodRadius(ChargingRod())+0.125,
-                       RodDiameter(LockingRod())+0.5,
-                       ChargingRodStaticLength()], r=1/8);
-        
-        // Body around the barrel
-        translate([ForegripFrontX(),0,0])
-        rotate([0,90,0])
-        ChamferedCylinder(r1=ReceiverOR(), r2=1/16,
-                 h=ChargingRodStaticLength());
-      }
-      
-      // Body around the barrel
-      translate([ForegripFrontX(),0,0])
+      // Backing plate for the cylinder
+      translate([RecoilPlateRearX(),0,-RevolverSpindleOffset()])
       rotate([0,90,0])
-      ChamferedCylinder(r1=ReceiverOR(), r2=1/16,
-               h=ForegripLength());
+      ChamferedCylinder(r1=1, r2=1/16,
+               h=abs(RecoilPlateRearX())-ManifoldGap(), $fn=50);
+      
+      // Frame upper support
+      translate([RecoilPlateRearX(),0,0])
+      hull()
+      FrameUpperBoltSupport(length=-RecoilPlateRearX());
     }
 
-    // Gripping cutouts
-    for (X = [ChargingRodStaticLength()+0.1875:0.75:ForegripLength()-0.75])
-    translate([ForegripFrontX()+X,0,0])
-    rotate([0,90,0])
-    for (M = [0,1]) mirror([0,0,M])
-    TeardropTorus(majorRadius=ReceiverOR()-0.125, minorRadius=1/8);
+    FrameUpperBolts(cutter=true);
 
-    // Barrel hole, but with a bearing profile
-    Barrel(hollow=false, cutter=true);
-    translate([ForegripFrontX()+(ForegripLength()/2),0,0])
-    rotate([0,90,0])
-    BearingSurface(r=BarrelRadius(PipeClearanceLoose()), length=ForegripLength(),
-                   depth=0.0625, segment=0.25, taperDepth=0.125, center=true);
+    translate([RecoilPlateRearX()-LowerMaxX(),0,0])
+    FrameBolts(cutter=true, teardrop=false);
 
-    for (R = [0,-90,180]) rotate([R,0,0])
-    translate([ForegripFrontX()-ManifoldGap(), ReceiverOR(),0])
-    rotate([0,90,0])
-    cylinder(r=1/8, h=ForegripLength()+ManifoldGap(2));
-
-    ChargingRod(length=ChargingRodLength(),
-                travel=ChargingRodTravel(),
-                clearance=RodClearanceSnug(), cutter=true);
     RevolverSpindle(cutter=true);
+
+    translate([RecoilPlateThickness(),0,0])
+    ChargingRod(clearance=RodClearanceSnug(), cutter=true, actuator=false, pin=false);
+  }
+}
+
+module CranePivot(angle=CranePivotAngle(), factor=1) {
+  translate([0,CranePivotY(),CranePivotZ()])
+  rotate([angle*factor,0,0])
+  translate([0,-CranePivotY(),-CranePivotZ()])
+  children();
+}
+
+module RevolverCraneRod(cutter=false, teardrop=false) {
+  color("Silver")
+  translate([ChamberLength()-ManifoldGap(),CranePivotY(),CranePivotZ()])
+  rotate([0,90,0])
+  Rod(CylinderRod(),
+      length=ForendFrontLength()+CraneLengthFront()+ManifoldGap(2),
+      clearance=cutter?RodClearanceSnug():undef,
+      teardrop=teardrop&&cutter);
+}
+
+module RevolverCraneProfile(length=CraneLengthRear()) {
+  union() {
+      
+    // Around the crane rod
+    translate([FrameUpperBoltExtension(),CranePivotY(),CranePivotZ()])
+    rotate([0,-90,0])
+    ChamferedCylinder(r1=RodRadius(CranePivotRod())+0.1875, r2=1/16,
+             h=length,
+             $fn=Resolution(20,60));
+    
+    // Around the spindle rod
+    translate([FrameUpperBoltExtension(),0,-RevolverSpindleOffset()])
+    rotate([0,-90,0])
+    ChamferedCylinder(r1=RodRadius(CylinderRod())+0.25, r2=1/16,
+             h=length,
+             $fn=Resolution(20,60));
+    
+    translate([FrameUpperBoltExtension(),BarrelRadius(),0])
+    mirror([1,0,0])
+    ChamferedCube([length,
+                   CranePivotY()+RodRadius(CranePivotRod())+0.1875-BarrelRadius(),
+                   CranePivotZ()],
+                  chamferXYZ=[false, false, true],
+                  r=1/16);
+  
+    // Body around the barrel
+    difference() {
+      intersection() {
+        translate([FrameUpperBoltExtension(),0,0])
+        rotate([0,-90,0])
+        ChamferedCylinder(r1=CranePivotY()+RodRadius(CranePivotRod())+0.1875, r2=1/16,
+                 h=length,
+                 $fn=Resolution(30,60));
+        
+        translate([FrameUpperBoltExtension(),0,0])
+        rotate([0,-90,0])
+        linear_extrude(height=length)
+        rotate(180)
+        semicircle(od=(BarrelRadius()+(WallBarrel()*2))*2,
+                  angle=90, $fn=Resolution(30,60));
+      }
+      
+      translate([FrameUpperBoltExtension(),0,0])
+      rotate([0,-90,0])
+      ChamferedCircularHole(r1=BarrelRadius(), r2=(1/16), h=length, $fn=Resolution(20,60));
+    }
+  }
+}
+
+
+module RevolverCrane(cutter=false, teardrop=false) {
+  length = CraneLengthFront() + ForendFrontLength()-ForendGasGap()+CraneLengthRear();
+  
+  color("Tomato") render()
+  difference() {
+    
+    union() {
+      // Cylinder-side
+      translate([-ForendFrontLength()+ForendGasGap(),0,0])
+      RevolverCraneProfile();
+      
+      // Barrel-side
+      translate([0.5,0,0])
+      RevolverCraneProfile(length=CraneLengthFront());
+      
+      // Joint
+      translate([FrameUpperBoltExtension()+CraneLengthFront(),0,0])
+      rotate([0,-90,0])
+      difference() {
+        intersection() {
+          ChamferedCylinder(r1=CranePivotY()+RodRadius(CranePivotRod())+0.1875, r2=1/16,
+                   h=length,
+                   $fn=Resolution(30,60));
+          
+          linear_extrude(height=length)
+          rotate(155)
+          semicircle(od=(BarrelRadius()+(WallBarrel()*2))*2,
+                    angle=65, $fn=Resolution(30,60));
+        }
+        
+        ChamferedCircularHole(r1=BarrelRadius()+WallBarrel()+0.015,
+                              r2=(1/16),
+                              h=length, $fn=Resolution(20,60));
+      }
+    }
+    
+    
+    RevolverCraneRod(cutter=true);
+
+    RevolverSpindle(cutter=true);
+    
+    Barrel(hollow=false, cutter=true);
   }
 }
 
 module RevolverForend(debug=false, alpha=1) {
-
+  
   // Forward plate
   color("Tan", alpha)
   DebugHalf(enabled=debug)
   difference() {
     union() {
-
-      // Top strap
-      translate([BreechRearX()+UpperLength(),-1,0])
-      rotate([0,-90,0])
-      ChamferedCube([BreechBoltOffsetZ()+BreechBoltRadius()+WallBreechBolt(),
-                     2,
-                     BreechRearX()+UpperLength()], r=1/16);
-
-      hull() {
-        // Body around the barrel collar
-        translate([BreechRearX()+UpperLength(),0,0])
-        rotate([0,-90,0])
-        ChamferedCylinder(r1=ReceiverOR(), r2=1/16,
-                 h=UpperLength()-ChamberLength()+BreechRearX()-ManifoldGap(2),
-                 $fn=Resolution(20,40));
-
+      
+      // Top strap/bolt wall
+      hull()
+      FrameUpperBoltSupport(length=FrameUpperBoltExtension());
+      
+      // Join the barrel collar to the top strap
+      translate([FrameUpperBoltExtension(),0,0])
+      mirror([1,0,0]) {
+        
         // Spindle body
-        translate([BreechRearX()+UpperLength(),0,-RevolverSpindleOffset()])
-        rotate([0,-90,0])
-        ChamferedCylinder(r1=RodRadius(CylinderRod())+0.1875, r2=1/16,
-                 h=ForendFrontLength()-ManifoldGap(2),
+        hull()
+        for (Z = [0,-RevolverSpindleOffset()])
+        translate([0,0,Z])
+        rotate([0,90,0])
+        ChamferedCylinder(r1=RodRadius(CylinderRod())+0.25, r2=1/16,
+                 h=ForendFrontLength()-ForendGasGap(),
                  $fn=Resolution(20,40));
+        
+        // Around the barrel
+        rotate([0,90,0])
+        ChamferedCylinder(r1=BarrelRadius()+WallBarrel(), r2=1/16,
+                 h=ForendFrontLength()-ForendGasGap(),
+                 $fn=Resolution(20,60));
+        
+        hull() {
+          FrameUpperBoltSupport(length=ForendFrontLength()-ForendGasGap());
+      
+          // Around the crane pivot pin
+          translate([0,CranePivotY(),CranePivotZ()])
+          rotate([0,90,0])
+          ChamferedCylinder(r1=RodRadius(CranePivotRod())+(7/32), r2=1/16,
+                   h=ForendFrontLength()-ForendGasGap(),
+                   $fn=Resolution(20,60));
+        }
+        
+        // Join the barrel to the frame
+        translate([0,-(BarrelRadius()+WallBarrel()),0])
+        ChamferedCube([ForendFrontLength()-ForendGasGap(),
+                       (BarrelRadius()+WallBarrel())*2,
+                       FrameUpperBoltOffsetZ()], r=1/16);
       }
     }
     
     // Cutout for a picatinny rail insert
-    translate([BreechFrontX()-ManifoldGap(), -UnitsMetric(15.6/2), BreechTopZ()-0.125])
-    cube([BreechRearX()+UpperLength()+ManifoldGap(2), UnitsMetric(15.6), 0.25]);
+    translate([-ManifoldGap(), -UnitsMetric(15.6/2), RecoilPlateTopZ()-0.125])
+    cube([FrameUpperBoltExtension()+ManifoldGap(2), UnitsMetric(15.6), 0.25]);
 
-    RevolverCylinder(cutter=true);
+    FrameUpperBolts(cutter=true);
 
-    BreechBolts(length=UpperLength()+BreechBoltRearExtension(), cutter=true);
+    Barrel(hollow=false, clearance=PipeClearanceLoose());
 
-    translate([-ManifoldGap(),0,0]) {
-      Barrel(hollow=false, clearance=PipeClearanceSnug());
-
-      BarrelSleeve(clearance=PipeClearanceSnug(), cutter=true);
-      *BarrelCollar(cutter=true);
-    }
-
-    ChargingRod(length=ChargingRodLength(),
-                travel=ChargingRodTravel(),
-                cutter=true);
+    ChargingRod(cutter=true);
 
     RevolverSpindle(cutter=true);
+    
+    // Swingout spindle        
+    translate([FrameUpperBoltExtension(),CranePivotY(),CranePivotZ()])
+    rotate([0,-90,0])
+    linear_extrude(height=ForendFrontLength()-ForendGasGap())
+    rotate(-150)
+    semidonut(major=3.9,
+              minor=3.26,
+              angle=15, $fn=Resolution(30,80));
+    
+    RevolverCraneRod(cutter=true);
+    RevolverCrane(cutter=true);
   }
 }
 
-  triggerAnimationFactor = Animate(ANIMATION_STEP_TRIGGER)
-                             - Animate(ANIMATION_STEP_TRIGGER_RESET);
+
 module RevolverShotgunAssembly(receiverLength=12, stock=true, tailcap=false,
                                pipeAlpha=1, debug=false) {
  
-  chargingRodAnimationFactor = Animate(ANIMATION_STEP_CHARGE)
-                             - Animate(ANIMATION_STEP_CHARGER_RESET);
-
-
-  BreechAssembly(showBreech=false,
-                 chargingRodLength=ChargingRodLength(), chargingRodTravel=ChargingRodTravel(),
-                                 chargingRodAnimationFactor=chargingRodAnimationFactor,
-                 breechBoltLength=UpperLength()+BreechBoltRearExtension(),
-                 debug=debug);
-  RevolverBreech(debug=debug);
+  RevolverRecoilPlateHousing();
+  RecoilPlateFiringPinAssembly(); 
+  RecoilPlate(debug=debug);
                                  
-  *ChargingRod(length=ChargingRodLength(),
-              travel=ChargingRodTravel(),
-              cutter=false, animationFactor=chargingRodAnimationFactor);
-
-  *translate([BreechRearX(),0,0])
-  PipeUpperAssembly(pipeAlpha=pipeAlpha,
-                    receiverLength=receiverLength,
-                    chargingHandle=false,
-                    frameUpper=false,
-                    stock=stock, tailcap=tailcap,
-                    triggerAnimationFactor=triggerAnimationFactor,
-                    debug=debug);
-
-
-  RevolverFrameUpper(debug=debug);
+  *ChargingPumpAssembly();
   
-  *FrameSupportFront(debug=debug);
-  *FrameSupportRear(debug=debug);
-
+  RevolverFrameAssembly(debug=debug);
+  
   Barrel(debug=debug);
-  BarrelSleeve(debug=debug);
-  *BarrelCollar(debug=debug);
 
-  RevolverSpindle();
-  RevolverCylinder(supports=false, chambers=true, debug=false);
-
-  translate([]) {
-
-    translate([-ChargingRodTravel()*chargingRodAnimationFactor,0,0]) {
-      RevolverForegrip(debug=debug, alpha=1);
-    }
+  
+  RevolverCraneRod();
+  
+  CranePivot(factor=Animate(ANIMATION_STEP_UNLOAD)
+                   -Animate(ANIMATION_STEP_LOAD)) {
+    RevolverSpindle();
+    RevolverCrane();
+    
+    RevolverCylinder_DOM5(supports=false, chambers=true, debug=false);
+    *RevolverCylinder_ERW4(supports=false, chambers=true, debug=false);
   }
-
+  
   RevolverForend(debug=debug, alpha=1);
-
-
 }
 
-//AnimateSpin()translate([-2.5,0,0])
-//for (R = [-1,1]) rotate([60*R,0,0]) translate([0,0,-RevolverSpindleOffset()])
-RevolverShotgunAssembly(pipeAlpha=1, debug=true, positions=positions);
+
+RevolverShotgunAssembly(pipeAlpha=1, debug=false, positions=positions);
 
 
-
-translate([BreechRearX(),0,0])
-PipeUpperAssembly(pipeAlpha=0.3,
+translate([RecoilPlateRearX(),0,0])
+PipeUpperAssembly(pipeAlpha=0.2,
                   receiverLength=12,
-                  chargingHandle=false,
-                  frameUpper=false,
+                  frame=false,
                   stock=true, tailcap=false,
-                  triggerAnimationFactor=triggerAnimationFactor,
                   debug=false);
 
 
 //$t=AnimationDebug(ANIMATION_STEP_CHARGE, T=180*sin($t));
-//$t=AnimationDebug(ANIMATION_STEP_CHARGE, T=0);
+//$t=AnimationDebug(ANIMATION_STEP_CHARGE, T=$t);
+//$t=AnimationDebug(ANIMATION_STEP_UNLOAD, T=0);
 //$t=0;
 
 
@@ -437,73 +440,13 @@ PipeUpperAssembly(pipeAlpha=0.3,
  * Platers
  */
 
-// Printed mock breech (quick 'n dirty)
-*!scale(25.4) rotate([0,-90,0])
-RevolverBreech();
 
-// Foregrip
-*!scale(25.4)
-rotate([0,-90,0])
-translate([-ForegripFrontX(),0,0])
-RevolverForegrip();
-
-*!scale(25.4)
-rotate([0,90,0])
-translate([-UpperLength()-BreechRearX(),0,0])
-RevolverForend();
-
-// Revolver Forend Rear
-*!scale(25.4)
-rotate([0,90,0])
-translate([-UpperLength()-BreechRearX(),0,0])
-render() intersection() {
-  RevolverForend();
-
-  translate([0,-1, 0])
-  cube([ChamberLength(), 2, BreechBoltOffsetZ()*2]);
-}
-
-// Revolver Forend Front
-*!scale(25.4)
-rotate([0,90,0])
-translate([-UpperLength()-BreechRearX(),0,0])
-render() difference() {
-  RevolverForend();
-
-  translate([0,-1, 0])
-  cube([ChamberLength(), 2, BreechBoltOffsetZ()*2]);
-}
-
-// Revolver Cylinder shell
-*!scale(25.4) render()
-difference() {
-  translate([-RevolverSpindleOffset(),0,0])
-  rotate([0,-90,0])
-  RevolverCylinder(supports=true, chambers=false, debug=false);
-
-  translate([0,0,-ManifoldGap()])
-  cylinder(r=BarrelDiameter(), h=ChamberLength()+ManifoldGap(2), $fn=20);
-}
-
-// Revolver Cylinder core
-*!scale(25.4) render()
-intersection() {
-  translate([-RevolverSpindleOffset(),0,0])
-  rotate([0,-90,0])
-  RevolverCylinder(supports=true, chambers=false, debug=false);
-
-  translate([0,0,-ManifoldGap()])
-  cylinder(r=BarrelDiameter(), h=ChamberLength()+ManifoldGap(2), $fn=20);
-}
+// Revolver Frame - Lower
+*!scale(25.4) translate([0,0,-LowerOffsetZ()])
+RevolverFrameLower();
 
 // Revolver Frame Upper
 *!scale(25.4)
-translate([-ReceiverOR(),0,BreechRearX()])
-rotate([0,90,0])
+translate([-ReceiverOR(),0,RecoilPlateRearX()])
+rotate([0,-90,0])
 RevolverFrameUpper();
-
-// Test part for holding in vise
-*!scale(25.4)
-rotate([0,90,0])
-translate([-BreechRearX(),0,0])
-RevolverFrameTest();

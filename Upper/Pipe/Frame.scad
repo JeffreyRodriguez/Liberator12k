@@ -19,7 +19,8 @@ use <../../Lower/Lower.scad>;
 
 
 // Settings: Lengths
-function FrameLength() = 1.5;
+function FrameLength() = 0.875;
+function FrameBoltExtension() = 0.5;
 function FrameExtension() = 0.5;
 
 // Settings: Vitamins
@@ -33,16 +34,12 @@ module FrameBolts(teardrop=false, flip=false,
   DebugHalf(enabled=debug)
   for (Y = [-1,1])
   mirror([0,0,flip?180:0])
-  translate([LowerMaxX()+FrameExtension()+ManifoldGap(),
+  translate([LowerMaxX()+FrameBoltExtension()+FrameExtension()+ManifoldGap(),
              Y*ReceiverIR(),
              -ReceiverIR()-ReceiverPipeWall()])
   rotate([0,-90,0])
-  FlatHeadBolt(length=FrameLength()+FrameExtension()+ManifoldGap(2),
+  FlatHeadBolt(length=2, //FrameLength()+FrameExtension()+FrameBoltExtension()+ManifoldGap(2),
                teardrop=cutter&&teardrop, cutter=cutter);
-  *mirror([0,0,1])
-  NutAndBolt(bolt=FrameBolt(), capOrientation=true,
-       boltLength=FrameLength()+FrameExtension()+ManifoldGap(2), teardrop=cutter&&teardrop,
-       clearance=cutter);
 }
 
 module FrameMount(pipe=ReceiverPipe(),
@@ -60,7 +57,7 @@ module FrameMount(pipe=ReceiverPipe(),
     ChamferedCube([length-ManifoldGap(2), 2, ReceiverCenter()-(ReceiverIR()/2)],
                   r=1/16, chamferXYZ=[1,0,0]);
     
-    FrameBolts(offsetMinor=length, cutter=true);
+    FrameBolts(cutter=true);
     
     PipeLugPipe(cutter=true);
   }
@@ -74,10 +71,13 @@ module LowerPipeFrame(pipe=ReceiverPipe(),
   DebugHalf(enabled=debug)
   difference() {
     union() {
-      FrameMount(length=length, cutCenter=false);
+      translate([FrameExtension(),0,0])
+      FrameMount(length=FrameExtension()+length, cutCenter=false);
       
       PipeLugCenter(cutter=false);
     }
+    
+    FrameBolts(cutter=true);
     
     PipeLugFront(wall=wallLower, cutter=true);
       
@@ -86,37 +86,18 @@ module LowerPipeFrame(pipe=ReceiverPipe(),
   }
 }
 
-module UpperPipeFrame(length=FrameLength(),
-                      cut=true, debug=false, alpha=1) {
-  color("Olive")
-  DebugHalf(enabled=debug)
-  rotate([180,0,0])
-  FrameMount(length=length);
-}
-
-module FrameAssembly(upper=true, lower=true) {
-  
-  if (lower) {
-    FrameBolts();
-    LowerPipeFrame();
-  }
-
-  if (upper) {
-    FrameBolts(flip=true);
-    UpperPipeFrame();
-  }
+module FrameAssembly() {
+  *FrameBolts();
+  LowerPipeFrame();
 }
 
 AnimateSpin() {
   FrameAssembly();
-  PipeLugAssembly(center=false, debug=false, pipeAlpha=0.5);
+  PipeLugAssembly(pipeOffsetX=FrameExtension(),
+                  center=false, debug=false, pipeAlpha=0.5);
 }
 
 
 // Plated lower pipe frame
 *!scale(25.4) translate([0,0,-LowerOffsetZ()])
 LowerPipeFrame();
-
-// Plated upper pipe frame
-*!scale(25.4) rotate([0,90,0]) translate([-LowerMaxX(),0,0])
-UpperPipeFrame();
