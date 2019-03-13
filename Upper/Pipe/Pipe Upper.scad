@@ -26,7 +26,8 @@ use <Tailcap.scad>;
 
 module PipeUpperAssembly(receiver=Spec_PipeThreeQuarterInch(),
                          receiverLength=ReceiverLength(),
-                         pipeAlpha=1,
+                         pipeOffsetX=FrameExtension(),
+                         pipeAlpha=1, centerLug=false,
                          frame=true, lower=true, stock=false, tailcap=false,
                          triggerAnimationFactor=TriggerAnimationFactor(),
                          debug=true) {
@@ -48,10 +49,10 @@ module PipeUpperAssembly(receiver=Spec_PipeThreeQuarterInch(),
           searLength=SearLength()+WallLower()+ReceiverPipeWall()+SearTravel());
 
     if (frame)
-    FrameAssembly();
+    FrameAssembly(extension=pipeOffsetX);
 
-    PipeLugAssembly(pipeOffsetX=FrameExtension(), length=receiverLength,
-                    center=false,
+    PipeLugAssembly(pipeOffsetX=pipeOffsetX, length=receiverLength,
+                    center=centerLug,
                     debug=debug, pipeAlpha=pipeAlpha);
 
   }

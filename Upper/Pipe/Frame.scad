@@ -66,13 +66,14 @@ module FrameMount(pipe=ReceiverPipe(),
 module LowerPipeFrame(pipe=ReceiverPipe(),
                       length=FrameLength(),
                       wallLower=WallLower(),
+                      extension=FrameExtension(),
                       cut=true, debug=false, alpha=1) {
   color("Olive")
   DebugHalf(enabled=debug)
   difference() {
     union() {
-      translate([FrameExtension(),0,0])
-      FrameMount(length=FrameExtension()+length, cutCenter=false);
+      translate([extension,0,0])
+      FrameMount(length=length+extension, cutCenter=false);
       
       PipeLugCenter(cutter=false);
     }
@@ -86,9 +87,9 @@ module LowerPipeFrame(pipe=ReceiverPipe(),
   }
 }
 
-module FrameAssembly() {
+module FrameAssembly(extension=FrameExtension()) {
   *FrameBolts();
-  LowerPipeFrame();
+  LowerPipeFrame(extension=extension);
 }
 
 AnimateSpin() {
