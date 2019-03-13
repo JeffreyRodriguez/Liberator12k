@@ -105,7 +105,7 @@ module AR15_Magwell(width=UnitsImperial(1.25),
                     wall=UnitsImperial(0.125),
                wallFront=UnitsImperial(0),
                 wallBack=UnitsImperial(0),
-                tabWidth=0.5, tabHeight = 1) {
+                tabWidth=0.5, tabHeight = 1, cut=true) {
 
   color("Orange")
   render()
@@ -118,13 +118,14 @@ module AR15_Magwell(width=UnitsImperial(1.25),
       hull() {
 
         translate([AR15_MagazineRearTabLength()-wallBack, -(width/2)-wall])
-        square([AR15_MagazineBaseLength()+AR15_MagazineRearTabLength()+wallBack, width+(wall*2)]);
+        square([AR15_MagazineBaseLength()+AR15_MagazineRearTabLength()+wallBack+wallFront, width+(wall*2)]);
 
         translate([0, -(width/2)])
         square([AR15_MagazineBaseLength()+AR15_MagazineRearTabLength()+wallFront, width]);
       }
     }
 
+    if (cut)
     AR15_MagwellInsert(height=height);
 
     // Remove the front bottom corner
@@ -134,8 +135,6 @@ module AR15_Magwell(width=UnitsImperial(1.25),
   }
 }
 
-scale(25.4) rotate([180,0,0])
+//scale(25.4) rotate([180,0,0])
 AR15_Magwell();
-
-*%translate([0.375,0,0])
-AR15_MagwellInsert();
+%AR15_MagwellInsert();
