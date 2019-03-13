@@ -17,29 +17,40 @@ use <../../Lower/Receiver Lugs.scad>;
 use <../../Lower/Trigger.scad>;
 use <../../Lower/Lower.scad>;
 
-module Buttstock(debug=false) {
+module Buttstock(extension=0.125, debug=false) {
 
   chamferRadius = 1/32;
   length = 5;
   base = 0.375;
   baseHeight = ReceiverOR()*sqrt(2);
-  extension = 1;
   wall = 0.1875;
   ribDepth=0.1875;
+  extensionHull = 1;
 
   DebugHalf(enabled=debug)
   translate([-baseHeight,0,0])
   rotate([0,90,0])
   difference() {
-    hull() {
-      translate([-ReceiverOR(), -ReceiverOR()/2,-ManifoldGap()])
-      ChamferedCube([length, ReceiverOR(), base+(chamferRadius*2)],
-                     r=chamferRadius);
+    union() {
+      // Stock and extension hull
+      hull() {
+        translate([-ReceiverOR(), -ReceiverOR()/2,-ManifoldGap()])
+        ChamferedCube([length, ReceiverOR(), base+(chamferRadius*2)],
+                       r=chamferRadius);
 
-      translate([0,0,baseHeight])
+        translate([0,0,baseHeight])
+        ChamferedCylinder(r1=ReceiverOR()+wall,
+                            r2=chamferRadius*2, h=extensionHull,
+                          chamferTop=false,
+                           $fn=Resolution(30,60));
+      }
+      
+      translate([0,0,baseHeight+extensionHull-ManifoldGap()])
       ChamferedCylinder(r1=ReceiverOR()+wall,
-                          r2=chamferRadius*2, h=extension,
-                         $fn=Resolution(30,60));
+                        r2=chamferRadius*2,
+                        chamferBottom=false,
+                        h=extension,
+                        $fn=Resolution(30,60));
     }
 
     // Ribs
@@ -52,7 +63,7 @@ module Buttstock(debug=false) {
     translate([0,0,baseHeight])
     ChamferedCircularHole(r1=ReceiverOR(PipeClearanceSnug()),
                           r2=chamferRadius,
-                          h=extension, chamferBottom=false,
+                          h=extensionHull+extension, chamferBottom=false,
                           $fn=Resolution(30,50));
   }
 }
