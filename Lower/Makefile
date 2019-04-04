@@ -71,15 +71,15 @@ Lower_STL: Lower_M.stl Lower_L.stl Lower_R.stl
 Lower_M.stl:
 	$(OSBIN) $(OSOPTS) -o $@ \
 	  -D LOWER_PLATER_MIDDLE=true \
-	  "Lower Plater.scad"
+	  "Lower.scad"
 Lower_L.stl:
 	$(OSBIN) $(OSOPTS) -o $@ \
 	  -D LOWER_PLATER_LEFT=true \
-	  "Lower Plater.scad"
+	  "Lower.scad"
 Lower_R.stl:
 	$(OSBIN) $(OSOPTS) -o $@ \
 	  -D LOWER_PLATER_RIGHT=true \
-	  "Lower Plater.scad"
+	  "Lower.scad"
 
 Lower_M.stl.png:
 	$(OSBIN) $(OSOPTS) -o $@ \

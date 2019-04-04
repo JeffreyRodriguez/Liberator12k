@@ -381,20 +381,21 @@ LOWER_PLATER_MIDDLE = false;
 LOWER_PLATER_LEFT = false;
 LOWER_PLATER_RIGHT = false;
 
-scale(25.4) {
-  if (LOWER_PLATER_MIDDLE)
-  !rotate([90,0,0])
-  translate([0,0.25,2.125])
-  LowerMiddle(bossEnabled=false);
+if (LOWER_PLATER_MIDDLE)
+!scale(25.4)
+rotate([90,0,0])
+translate([0,0.25,2.125])
+LowerMiddle(bossEnabled=false);
 
-  if (LOWER_PLATER_LEFT)
-  !rotate([90,0,0])
-  translate([0,-0.25,2.125])
-  LowerSidePlates(showLeft=true, showRight=false);
+if (LOWER_PLATER_LEFT)
+!scale(25.4)
+rotate([90,0,0])
+translate([0,-0.25,2.125])
+LowerSidePlates(showLeft=true, showRight=false);
 
-  // Right
-  if (LOWER_PLATER_RIGHT)
-  !rotate([-90,0,0])
-  translate([0,0.25,2.125])
-  LowerSidePlates(showLeft=false, showRight=true);
-}
+// Right
+if (LOWER_PLATER_RIGHT)
+!scale(25.4)
+rotate([-90,0,0])
+translate([0,0.25,2.125])
+LowerSidePlates(showLeft=false, showRight=true);
