@@ -29,7 +29,7 @@ module T_Lug(length=0.75,
              height=UnitsImperial(1),
           tabHeight=UnitsImperial(0.25),
            tabWidth=UnitsImperial(1),
-          clearance=UnitsImperial(0.005),
+          clearance=UnitsImperial(0.002),
       clearVertical=false,
              cutter=false) {
 
@@ -51,7 +51,7 @@ module T_Lug(length=0.75,
     union() {
       translate([0,-tabWidth/2,0])
       ChamferedCube([length, tabWidth, tabHeight], r=1/32);
-          
+
       translate([0,-width/2,0])
       ChamferedCube([length, width, height], r=1/32);
     }

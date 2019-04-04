@@ -9,8 +9,6 @@ use <../Finishing/Chamfer.scad>;
 
 use <../Vitamins/Rod.scad>;
 
-use <../Components/Trigger Finger Slot.scad>;
-
 use <Receiver Lugs.scad>;
 
 function SearRod() = Spec_RodOneQuarterInch();
@@ -25,6 +23,10 @@ function SearSpringCompressed() = 0.4;
 function SearPinOffsetZ() = -0.25-RodRadius(SearPinRod());
 function SearBottomOffset() = 0.25;
 
+
+
+function TriggerFingerDiameter() = 1;
+function TriggerFingerRadius() = TriggerFingerDiameter()/2;
 
 function TriggerFingerOffsetZ() = GripCeilingZ();
 function TriggerFingerWall() = 0.3;
