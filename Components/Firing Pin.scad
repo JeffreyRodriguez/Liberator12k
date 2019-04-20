@@ -24,9 +24,9 @@ function FiringPinBodyLength() = 1;
 
 function FiringPinSpringLength() = 0.25;
 
+function FiringPinBoltOffsetY() = (1.125/2);
 function FiringPinHousingLength() = 0.75;
 function FiringPinHousingWidth() = 0.75;
-function FiringPinHousingDiameter() = 1.5625;
 
 function FiringPinRetainerOffset() = 0.375;
 
@@ -93,7 +93,7 @@ module FiringPinHousingBolts(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT,
   color("CornflowerBlue")
   rotate(90)
   for (Y = [1,-1])
-  translate([0,Y*(1.125/2),FiringPinHousingLength()+ManifoldGap()])
+  translate([0,Y*FiringPinBoltOffsetY(),FiringPinHousingLength()+ManifoldGap()])
   Bolt(bolt=template ? FiringPinTemplateBolt() : bolt, capOrientation=true,
        clearance=cutter,
        length=FiringPinHousingLength()+boltLength+ManifoldGap(2));
@@ -102,14 +102,18 @@ module FiringPinHousingBolts(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT,
 module FiringPinHousing(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT, cutter=false, alpha=0.5, debug=false) {
   
   color("Grey")
-  DebugHalf(enabled=debug)//], rotateArray=[0,0,-90])
+  DebugHalf(enabled=debug)
   difference() {
     rotate(-90)
-    intersection() {
-      ChamferedCylinder(r1=(FiringPinHousingDiameter()/2), r2=1/16, h=FiringPinHousingLength(), $fn=Resolution(30,50));
+    hull() {
+      hull()
+      for (Y = [1,-1])
+      translate([0,Y*FiringPinBoltOffsetY(),0])
+      ChamferedCylinder(r1=BoltRadius(bolt)+(1/8), r2=1/32,
+                          h=FiringPinHousingLength(), $fn=Resolution(30,50));
       
-      translate([-FiringPinHousingWidth()/2, -(FiringPinHousingDiameter()/2), 0])
-      ChamferedCube([FiringPinHousingWidth(), 1.75, FiringPinHousingLength()], r=1/16);
+      translate([-FiringPinHousingWidth()/2, -FiringPinHousingWidth()/2, 0])
+      ChamferedCube([FiringPinHousingWidth(),FiringPinHousingWidth(), FiringPinHousingLength()], r=1/16);
     }
     
     if (!cutter) {
@@ -150,6 +154,6 @@ translate([0,-2,0])
 FiringPinAssembly(template=true);
 
 // Plated
-!scale(25.4)
+*!scale(25.4)
 FiringPinHousing(cutter=false, debug=false);
 
