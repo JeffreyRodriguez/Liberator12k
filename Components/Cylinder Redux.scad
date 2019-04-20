@@ -18,8 +18,8 @@ function ChamberBolt() = Spec_BoltM4();
 
 //Spec_RodThreeEighthsInch
 function ZigZagWidth() = RodDiameter(ActuatorRod(), RodClearanceSnug());
-function ZigZagDepth() = 1/8;
-function CylinderOuterWall() = 3/16;
+function ZigZagDepth() = 0.1875;
+function CylinderOuterWall() = 0.125;
 
 function RevolverCylinderRadius(centerOffset=1, chamberRadius=1,
                                 wall=CylinderOuterWall(), depth=ZigZagDepth())
@@ -39,11 +39,11 @@ module RevolverChamberIterator(centerOffset=1, positions=4) {
   }
 }
 
-module ChamberBolt(positions, chamberRadius, cutter=false) {
+module ChamberBolt(positions, chamberRadius, boltOffset=1.5, cutter=false) {
   angle = 360/positions;
   
   rotate(angle)
-  translate([chamberRadius-0.1875-(cutter?chamberRadius:0),0,1.5])
+  translate([chamberRadius-0.1875-(cutter?chamberRadius:0),0,boltOffset])
   rotate([0,90,0])
   rotate(180)
   color("Gold") render()
@@ -55,7 +55,7 @@ module ChamberBolt(positions, chamberRadius, cutter=false) {
 
 module OffsetZigZagRevolver(chamberRadius=1, chamberInnerRadius=0, centerOffset=undef,
            wall=CylinderOuterWall(), depth=ZigZagDepth(),
-           positions=6, zigzagAngle=45,
+           positions=6, zigzagAngle=45, boltOffset=1.5,
            trackAngle=0, extraTop=0, extraBottom=0,
            spindleRadius=BoltRadius(CylinderBolt(), clearance=true),
            chamberBolts=true, chambers=true, chamberLength=undef,
@@ -83,7 +83,9 @@ module OffsetZigZagRevolver(chamberRadius=1, chamberInnerRadius=0, centerOffset=
   // Chamber Bolts
   if (chamberBolts)
   RevolverChamberIterator(centerOffset=centerOffset, positions=positions)
-  ChamberBolt(positions=positions, chamberRadius=chamberRadius, cutter=false);
+  ChamberBolt(positions=positions,
+              chamberRadius=chamberRadius,
+              boltOffset=boltOffset, cutter=false);
   
   if (chambers && !cutter)
   color("Silver")
@@ -126,7 +128,9 @@ module OffsetZigZagRevolver(chamberRadius=1, chamberInnerRadius=0, centerOffset=
       
       // Chamber bolts
       RevolverChamberIterator(centerOffset=centerOffset, positions=positions)
-      ChamberBolt(positions=positions, chamberRadius=chamberRadius, cutter=true);
+      ChamberBolt(positions=positions,
+                  chamberRadius=chamberRadius,
+                  boltOffset=boltOffset, cutter=true);
     
       // ZigZag track
       rotate(trackAngle)
