@@ -22,6 +22,8 @@ function RecoilPlateWidth() = 1.5;
 
 // Settings: Positions
 function RecoilPlateRearX()  = -0.5;
+function FiringPinOffset() = -0.12; // .22 Rimfire Offset
+//function FiringPinOffset() = 0;
 
 // Settings: Vitamins
 function SquareRodFixingBolt() = Spec_BoltM3();
@@ -30,7 +32,7 @@ function SquareRodFixingBolt() = Spec_BoltM3();
 function FiringPinMinX() = RecoilPlateRearX()-FiringPinBodyLength();
 
 module RecoilPlateFiringPinAssembly(template=false, cutter=false, debug=false) {
-  translate([RecoilPlateRearX(),0,0])
+  translate([RecoilPlateRearX(),0,FiringPinOffset()])
   rotate([0,-90,0])
   FiringPinAssembly(cutter=cutter, debug=debug, template=template);
 }
@@ -121,9 +123,6 @@ PipeUpperAssembly(receiverLength=12,
                   stock=true, tailcap=false,
                   debug=true);
 
-
-// The drill template for the recoil plate, however, is 
-
-// RecoilPlate Plate Template
+// Recoil Plate Drill Template
 *!scale(25.4)
 RecoilPlateTemplate();

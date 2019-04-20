@@ -63,7 +63,7 @@ module FrameMount(pipe=ReceiverPipe(),
   }
 }
 
-module LowerPipeFrame(pipe=ReceiverPipe(),
+module FrameLower(pipe=ReceiverPipe(),
                       length=FrameLength(),
                       wallLower=WallLower(),
                       extension=FrameExtension(),
@@ -84,12 +84,20 @@ module LowerPipeFrame(pipe=ReceiverPipe(),
       
     translate([0,0,LowerOffsetZ()])
     SearCutter(length=SearLength()+abs(LowerOffsetZ()));
+    
+    // Front cutout
+    translate([LowerMaxX(),-0.26, LowerOffsetZ()-ManifoldGap()])
+    ChamferedSquareHole(sides=[FrameExtension()+0.25,0.52],
+                        length=ReceiverCenter(), chamferRadius=1/16,
+                        corners=false, center=false,
+                        teardropTop=true, teardropBottom=true,
+                        $fn=20);
   }
 }
 
 module FrameAssembly(extension=FrameExtension()) {
-  *FrameBolts();
-  LowerPipeFrame(extension=extension);
+  FrameBolts();
+  FrameLower(extension=extension);
 }
 
 AnimateSpin() {
@@ -101,4 +109,4 @@ AnimateSpin() {
 
 // Plated lower pipe frame
 *!scale(25.4) translate([0,0,-LowerOffsetZ()])
-LowerPipeFrame();
+FrameLower();

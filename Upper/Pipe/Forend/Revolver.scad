@@ -34,8 +34,6 @@ use <../Linear Hammer.scad>;
 use <../Recoil Plate.scad>;
 use <../Charging Pump.scad>;
 
-use <Revolver Frame.scad>;
-
 
 // Settings: Lengths
 function ChamberLength() = 3;
@@ -43,7 +41,7 @@ function CraneLengthRear() = 0.5;
 function CraneLengthFront() = 0.5;
 function BarrelLength() = 18-ChamberLength();
 function ActuatorPretravel() = 0.125;
-function ForendGasGap() = 1.0;
+function ForendGasGap() = 0.625;
 function RevolverSpindleOffset() = 31/32;
 function WallCrane() = 0.25;
 function WallBarrel() = 0.375;
@@ -103,8 +101,9 @@ module RevolverCylinder_DOM5(positions=5, supports=false, chambers=false,
   rotate(360/positions/2)
   OffsetZigZagRevolver(positions=positions, depth=3/16,
       centerOffset=RevolverSpindleOffset(),
-      chamberRadius=1.13/2, chamberInnerRadius=0.813/2,
-      chamberBolts=chamberBolts,teardrop=false, zigzagAngle=49.35,
+      chamberRadius=1.135/2, chamberInnerRadius=0.813/2,
+      chamberBolts=chamberBolts, boltOffset=1.875,
+      teardrop=false, zigzagAngle=49.35,
       supports=supports,  extraTop=ActuatorPretravel(), //+0.25896
       chambers=chambers, chamberLength=ChamberLength(),
       debug=debug, alpha=1.0, cutter=cutter);
@@ -136,8 +135,6 @@ module Barrel(barrel=BarrelPipe(), barrelLength=BarrelLength(), hollow=true,
 }
 
 module ChamberDrillJig() {
-  
-  
   render()
   difference() {
     translate([-1.75/2,-1.75/2,0])
@@ -388,6 +385,18 @@ module RevolverForend(debug=false, alpha=1) {
   }
 }
 
+module RevolverFrameAssembly(receiverLength=12, debug=false) {
+  
+  translate([FiringPinMinX()-LinearHammerTravel(),0,0])
+  LinearHammerAssembly();
+                                 
+  translate([RecoilPlateRearX()-LowerMaxX()-FrameExtension(),0,0])
+  FrameLower();
+  
+  FrameUpper(debug=debug);
+
+  FrameUpperBolts(extraLength=FrameUpperBoltExtension(), cutter=false);
+}
 
 module RevolverShotgunAssembly(receiverLength=12, stock=true, tailcap=false,
                                pipeAlpha=1, debug=false) {
@@ -395,14 +404,13 @@ module RevolverShotgunAssembly(receiverLength=12, stock=true, tailcap=false,
   RevolverRecoilPlateHousing();
   RecoilPlateFiringPinAssembly(); 
   RecoilPlate(debug=debug);
-                                 
-  *ChargingPumpAssembly();
+  
+  ChargingPumpAssembly();
   
   RevolverFrameAssembly(debug=debug);
   
   Barrel(debug=debug);
 
-  
   RevolverCraneRod();
   
   CranePivot(factor=Animate(ANIMATION_STEP_UNLOAD)
@@ -431,7 +439,7 @@ PipeUpperAssembly(pipeAlpha=0.2,
 
 //$t=AnimationDebug(ANIMATION_STEP_CHARGE, T=180*sin($t));
 //$t=AnimationDebug(ANIMATION_STEP_CHARGE, T=$t);
-//$t=AnimationDebug(ANIMATION_STEP_UNLOAD, T=0);
+//$t=AnimationDebug(ANIMATION_STEP_UNLOAD, T=1);
 //$t=0;
 
 
@@ -439,14 +447,37 @@ PipeUpperAssembly(pipeAlpha=0.2,
 /*
  * Platers
  */
+ 
+ 
+// Revolver Cylinder shell
+*!scale(25.4) render()
+difference() {
+  translate([-RevolverSpindleOffset(),0,0])
+  rotate([0,-90,0])
+  RevolverCylinder_DOM5(supports=true, chambers=false, chamberBolts=false, debug=false);
+  //RevolverCylinder_ERW4(supports=true, chambers=false, debug=false);
 
+  translate([0,0,-ManifoldGap()])
+  cylinder(r=RevolverSpindleOffset()-0.125, h=ChamberLength()+ManifoldGap(2), $fn=20);
+}
 
-// Revolver Frame - Lower
-*!scale(25.4) translate([0,0,-LowerOffsetZ()])
-RevolverFrameLower();
+// Revolver Cylinder core
+*!scale(25.4) render()
+intersection() {
+  translate([-RevolverSpindleOffset(),0,0])
+  rotate([0,-90,0])
+  RevolverCylinder_DOM5(supports=true, chambers=false, chamberBolts=false, debug=false);
+  //RevolverCylinder_ERW4(supports=true, chambers=false, debug=false);
 
-// Revolver Frame Upper
-*!scale(25.4)
-translate([-ReceiverOR(),0,RecoilPlateRearX()])
-rotate([0,-90,0])
-RevolverFrameUpper();
+  translate([0,0,-ManifoldGap()])
+  cylinder(r=RevolverSpindleOffset()-0.25, h=ChamberLength()+ManifoldGap(2), $fn=20);
+}
+ 
+*!scale(25.4) rotate([0,90,0]) translate([-UpperLength(),0,0])
+RevolverForend();
+
+*!scale(25.4) rotate([0,90,0]) translate([-UpperLength()-0.375,0,0])
+RevolverCrane();
+
+*!scale(25.4) rotate([0,-90,0]) translate([-RecoilPlateRearX(),0,0])
+RevolverRecoilPlateHousing();

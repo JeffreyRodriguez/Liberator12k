@@ -22,12 +22,14 @@ use <../../Lower/Receiver Lugs.scad>;
 use <../../Lower/Trigger.scad>;
 use <../../Lower/Lower.scad>;
 
+use <Charging Pump.scad>;
+use <Recoil Plate.scad>;
 use <Linear Hammer.scad>;
 use <Frame.scad>;
 use <Pipe Upper.scad>;
 
 // Settings: Lengths
-function FrameUpperRearExtension() = 3.75;
+function FrameUpperRearExtension() = 3.5;
 
 // Settings: Walls
 function WallFrameUpperBolt() = 0.25;
@@ -47,6 +49,9 @@ function FrameUpperBoltOffsetZ() = ReceiverOR()
                             + WallFrameUpperBolt();
 function FrameUpperBoltOffsetY() = FrameUpperBoltDiameter()
                              + WallFrameUpperBolt();
+
+function FrameUpperBoltOffsetZ() = 1.39;
+function FrameUpperBoltOffsetY() = 1;
                              
 // Shorthand: Measurements
 function FrameUpperBoltRadius(clearance=false)
@@ -73,6 +78,7 @@ module FrameUpperBolts(length=FrameUpperBoltLength(),
          capHex=true, clearance=cutter);
   }
 }
+
 module FrameUpperBoltSupport(length=1) {  
   for (Y = [FrameUpperBoltOffsetY(),-FrameUpperBoltOffsetY()])
   translate([0, Y, FrameUpperBoltOffsetZ()])
@@ -85,3 +91,63 @@ module FrameUpperBoltSupport(length=1) {
 FrameUpperBoltSupport(length=0.5);
 
 FrameUpperBolts(extraLength=0.5, debug=false);
+
+
+module FrameUpper(debug=false) {
+  length = FrameUpperRearExtension()+RecoilPlateRearX();
+  
+  color("Olive")
+  DebugHalf(enabled=debug)
+  difference() {
+
+    union() {
+      
+      // Bolt wall
+      translate([RecoilPlateRearX(),0,0])
+      mirror([1,0,0])
+      hull()
+      FrameUpperBoltSupport(length=length);
+      
+      // Join bolt wall and pipe
+      translate([RecoilPlateRearX(),-(2/2),ReceiverIR()/2])
+      mirror([1,0,0])
+      ChamferedCube([length,
+                     2,
+                     FrameUpperBoltOffsetZ()-(ReceiverIR()/2)],
+                    r=1/16);
+    }
+
+    PipeLugPipe(cutter=true);
+
+    translate([RecoilPlateRearX(),0,0])
+    FrameUpperBolts(cutter=true);
+    
+    // Charger Cutout
+    translate([RecoilPlateRearX()+ManifoldGap(),-(0.52/2),ReceiverIR()/2])
+    mirror([1,0,0])
+    cube([ChargerTowerLength()+ChargerTravel()+ManifoldGap(),0.52,2]);
+    
+    // Charger Cutout Wide Top
+    translate([RecoilPlateRearX()+ManifoldGap(),-(1.02/2),ChargingRodOffset()])
+    mirror([1,0,0])
+    cube([ChargerTowerLength()+ChargerTravel()+ManifoldGap(),1.02,2]);
+  }
+}
+
+ChargingPumpAssembly();
+
+FrameUpper();
+
+translate([RecoilPlateRearX(),0,0])
+PipeUpperAssembly(pipeAlpha=0.3,
+                  receiverLength=12,
+                  frame=false,
+                  stock=true, tailcap=false,
+                  debug=false);
+
+
+// Frame Upper
+*!scale(25.4)
+translate([-ReceiverOR(),0,FrameUpperRearExtension()])
+rotate([0,-90,0])
+FrameUpper();

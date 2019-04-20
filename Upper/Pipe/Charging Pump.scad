@@ -46,13 +46,14 @@ function ChargerTowerLength() = 0.5;
  extend into the part that holds it? */
 function ChargingRodStaticLength() = 1;
 function ChargingRodOffset() = ReceiverOR()+RodRadius(ChargingRod());
+//function ChargingRodOffset() = 1.0375; // 1.075;
 
 // Settings: Walls
 function WallChargingPin() = 1/8;
 
 
 function ChargingPinX() = RecoilPlateRearX()-0.25;
-function ChargingRodMinX() = ChargingPinX()-WallChargingPin();
+function ChargingRodMinX() = ChargingPinX()-0.25;
 function ChargingRodMaxX() = ChargingRodMinX()+ChargingRodLength();
 
 // Calculated: Lengths
@@ -70,10 +71,13 @@ function ChargerAnimationFactor() = Animate(ANIMATION_STEP_CHARGE)
                              - Animate(ANIMATION_STEP_CHARGER_RESET);
 
 
-module ChargingPin(cutter=false, clearance=RodClearanceSnug()) {
+module ChargingPin(cutter=false, teardrop=false, clearance=RodClearanceSnug()) {
   color("Silver")
-  translate([ChargingPinX(), 0, ChargingRodOffset()-0.125])
-  Rod(ChargingPin(), length=1, center=true, clearance=cutter?clearance:undef);
+  translate([ChargingPinX(), 0, 0.5])
+  Rod(ChargingPin(),
+      length=ChargingRodOffset()+0.25,
+      clearance=cutter?clearance:undef,
+      teardrop=teardrop, teardropTruncated=false, teardropRotation=180);
 }
 
 module ChargingRod(clearance=RodClearanceLoose(),
@@ -114,17 +118,24 @@ module ChargingRod(clearance=RodClearanceLoose(),
 }
 
 module Charger(clearance=RodClearanceLoose(),
-                   bolt=true, actuator=true,
-                   cutter=false, debug=false) {
+               bolt=true,
+               cutter=false, debug=false) {
     
   color("OrangeRed") DebugHalf(enabled=debug) {
     difference() {
       
       // Charging Pusher
       union() {
+        
+        // Tower
         translate([RecoilPlateRearX(),-0.5/2,0.375])
         mirror([1,0,0])
-        ChamferedCube([ChargerTowerLength(), 0.5, ChargingRodOffset()], r=1/16);
+        ChamferedCube([ChargerTowerLength(), 0.5, ChargingRodOffset()-0.25], r=1/32);
+        
+        // Top wings
+        translate([RecoilPlateRearX(),-1/2,ChargingRodOffset()])
+        mirror([1,0,0])
+        ChamferedCube([ChargerTowerLength(), 1, 0.25], r=1/32);
         
         // Charging Pusher Wide Base
         translate([RecoilPlateRearX(),0,0])
@@ -132,7 +143,7 @@ module Charger(clearance=RodClearanceLoose(),
           
           translate([0,-0.5,0.375])
           mirror([1,0,0])
-          ChamferedCube([1.125, 1, ReceiverIR()-0.375], r=1/16);
+          ChamferedCube([1.125, 1, ReceiverIR()-0.375], r=1/32);
           
           // Rounded base
           rotate([0,-90,0])
@@ -140,10 +151,14 @@ module Charger(clearance=RodClearanceLoose(),
         }
       }
       
+      translate([RecoilPlateRearX()-0.625,-0.1875,0])
+      mirror([1,0,0])
+      ChamferedCube([1, 0.375, ReceiverOR()], r=1/16);
+      
       translate([ChargerTravel(),0,0])
       ChargingRod(cutter=true, clearance=RodClearanceSnug());
       
-      ChargingPin(cutter=true);
+      ChargingPin(cutter=true, teardrop=true);
       
     }
   }
@@ -215,7 +230,7 @@ color("SteelBlue")
 rotate([0,90,0])
 Pipe(pipe=Spec_PipeThreeQuarterInch(), hollow=true, length=18);
 
-ChargingPumpAssembly(debug=true);
+ChargingPumpAssembly(debug=false);
 
 RecoilPlateHousing();
 RecoilPlateFiringPinAssembly();
@@ -236,15 +251,26 @@ PipeUpperAssembly(pipeAlpha=0.3,
  * Platers
  */
 
+//
 // Foregrip
+//
 
+// 3/4" Sch40 pipe
 *!scale(25.4)
 rotate([0,-90,0])
 translate([-ForegripFrontX(),0,0])
 ChargingPump();
 
+// 1.125" DOM
+*!scale(25.4)
+rotate([0,-90,0])
+translate([-ForegripFrontX(),0,0])
+ChargingPump(innerRadius=1.15/2);
+
+//
 // Charger
+//
 *!scale(25.4)
 rotate([0,90,0])
-translate([-BreechRearX(),0,0])
+translate([-RecoilPlateRearX(),0,-ChargingRodOffset()])
 Charger();
