@@ -48,7 +48,7 @@ module AR15_Barrel(length=AR15BarrelLength(),
     cylinder(r=AR15BarrelChamberRadius()+clearance, h=AR15BarrelGasLength()+ManifoldGap());
     
     // Barrel, from the gas block on
-    cylinder(r=AR15BarrelGasRadius(), h=AR15BarrelLength());
+    cylinder(r=AR15BarrelGasRadius(), h=length);
   }
 }
 
