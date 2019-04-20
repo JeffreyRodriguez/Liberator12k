@@ -1,6 +1,10 @@
 use <Primer.scad>;
 
-module ShellBase(primer=Spec_Primer209(),
+use <../Finishing/Chamfer.scad>;
+use <../Shapes/Teardrop.scad>;
+use <../Shapes/TeardropTorus.scad>;
+
+module ShellBase(primer=Spec_Primer209(), primerOffset=0,
                  chamberDiameter=0.78,
                  rimDiameter=0.87, rimHeight=0.07,
                  chargeDiameter=0.69, chargeHeight=0.7,
@@ -10,8 +14,9 @@ module ShellBase(primer=Spec_Primer209(),
   chamberRadius = chamberDiameter/2;
   rimRadius     = rimDiameter/2;
   chargeRadius  = chargeDiameter/2;
+  rimExtra = rimRadius-chamberRadius;
 
-  shellBaseHeight = PrimerHeight(primer) + chargeHeight + wadHeight;
+  shellBaseHeight = PrimerHeight(primer) + chargeHeight + wadHeight+(chargeDiameter/2);
   echo("ShellBase Height: ", shellBaseHeight);
 
   render()
@@ -20,6 +25,7 @@ module ShellBase(primer=Spec_Primer209(),
     // Base and rim, minus charge pocket and primer hole
     difference() {
       union() {
+        
         // Body
         color("Yellow")
         translate([0,0,rimHeight/2])
@@ -31,28 +37,30 @@ module ShellBase(primer=Spec_Primer209(),
         cylinder(r=rimRadius, h=rimHeight/2);
 
         // Rim Taper
-        translate([0,0,rimHeight/2])
-        cylinder(r1=rimRadius, r2=chamberRadius, h=rimHeight/2);
+        cylinder(r1=rimRadius, r2=chamberRadius, h=rimExtra);
       }
-
-      // Charge Pocket
-      color("Green")
-      translate([0,0,PrimerHeight(primer)])
+      
+      // Charge pocket
       hull() {
-        cylinder(r1=PrimerMinorRadius(primer),
-                 r2=chargeRadius,
-                  h=chargeHeight,
-                $fn=20);
-      };
+
+        // Charge Pocket Lower Taper
+        translate([0,0,PrimerHeight(primer)])
+        ChamferedCylinder(r1=chargeRadius,
+                          r2=chargeRadius/2,
+                           h=chargeHeight,
+                           teardropBottom=false, chamferTop=false);
+
+        // Charge Pocket Upper Taper
+        translate([0,0,PrimerHeight(primer)+chargeHeight])
+        cylinder(r1=chargeRadius,
+                 r2=chargeRadius/4,
+                  h=chargeRadius);
+      }
       
       // Primer
       color("Red")
+      translate([primerOffset,0,0])
       Primer(primer=primer);
-      
-      cylinder(r1=PrimerRimRadius(primer)+PrimerClearance(primer),
-                r2=PrimerMinorRadius(primer),
-                h=0.06,
-              $fn=PrimerFn(primer));
     }
 
     // Payload
