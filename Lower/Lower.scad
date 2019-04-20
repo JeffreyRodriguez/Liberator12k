@@ -19,20 +19,18 @@ function LowerWallFront() = 0.5;
 function LowerMaxX() = ReceiverLugFrontMaxX()+LowerWallFront();
 function LowerGuardHeight() = TriggerFingerDiameter()+TriggerFingerWall()+GripCeiling();
 
-
-
 module TriggerFingerSlot(radius=TriggerFingerRadius(), length=0.6, $fn=Resolution(12, 60)) {
-  
+
   render()
   union() {
-    
+
     // Chamfered front edge
     translate([0.65+length, 0, TriggerFingerOffsetZ()])
     translate([0,1.25/2,-radius])
     rotate([90,0,0])
     ChamferedCircularHole(r1=radius, r2=1/16,
              h=1.25, $fn=$fn);
-    
+
     // Chamfered rear edge
     difference() {
       translate([0.65, 0, TriggerFingerOffsetZ()])
@@ -40,12 +38,12 @@ module TriggerFingerSlot(radius=TriggerFingerRadius(), length=0.6, $fn=Resolutio
       rotate([90,0,0])
       ChamferedCircularHole(r1=radius, r2=1/16,
                h=GripWidth(), $fn=$fn);
-      
+
       translate([0, 0, TriggerFingerOffsetZ()])
       translate([0,-GripWidth(),0])
       cube([length+(radius*4), GripWidth()*2, abs(TriggerFingerOffsetZ())]);
     }
-  
+
     // Slot hull
     translate([0.65, 0, TriggerFingerOffsetZ()])
     hull()
@@ -93,7 +91,7 @@ module HandleBolts(boltSpec=Spec_BoltM4(), length=UnitsMetric(30),
               capHeightExtra=cutter, nutBackset=0.05, nutHeightExtra=cutter);
 }
 
-module LowerMiddleBoss(clearance=0) {  
+module LowerMiddleBoss(clearance=0) {
   translate([LowerMaxX()-ManifoldGap(), -0.25-clearance, -LowerGuardHeight()])
   cube([0.125+ManifoldGap(),
         0.5+(clearance*2),
@@ -126,7 +124,7 @@ module TriggerGuard(bossEnabled=true) {
         circle(r=0.1, $fn=Resolution(12,24));
       }
     }
-    
+
     // Lower Middle Boss
     if (bossEnabled)
     LowerMiddleBoss();
@@ -368,14 +366,20 @@ module Lower(showReceiverLugs=false, showReceiverLugBolts=false,
   LowerSidePlates(showLeft=showLeft, showRight=showRight, alpha=alpha);
 }
 
+SPIN_REVOLUTIONS=0;
+SHOW_LEFT=true;
+SHOW_RIGHT=true;
+
+AnimateSpin(SPIN_REVOLUTIONS)
 Lower(showReceiverLugs=true, showReceiverLugBolts=true,
       showGuardBolt=true,
       showHandleBolts=true,
       showTrigger=true, showTriggerLeft=true, showTriggerRight=true,
       triggerAnimationFactor=sin(180*$t),
-      showLeft=false,
+      showLeft=SHOW_LEFT,
       showMiddle=true,
-      showRight=true, alpha=1);
+      showRight=SHOW_RIGHT,
+      alpha=1);
 
 LOWER_PLATER_MIDDLE = false;
 LOWER_PLATER_LEFT = false;
@@ -383,12 +387,14 @@ LOWER_PLATER_RIGHT = false;
 
 if (LOWER_PLATER_MIDDLE)
 !scale(25.4)
+rotate(180)
 rotate([90,0,0])
 translate([0,0.25,2.125])
 LowerMiddle(bossEnabled=false);
 
 if (LOWER_PLATER_LEFT)
 !scale(25.4)
+rotate(180)
 rotate([90,0,0])
 translate([0,-0.25,2.125])
 LowerSidePlates(showLeft=true, showRight=false);

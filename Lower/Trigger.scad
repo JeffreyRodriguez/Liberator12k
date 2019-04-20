@@ -61,7 +61,7 @@ module SearCutter(length=SearLength()+SearTravel(), searLengthExtra=0, crosspin=
     SquareRod(rod=SearRod(),
         clearance=RodClearanceLoose(),
         length=length+searLengthExtra);
-  
+
     if (wideTrack)
     translate([-RodDiameter(SearRod())*0.4,
                -RodRadius(SearRod()),
@@ -80,21 +80,21 @@ module SearJig(width=0.75, height=1) {
   difference() {
     translate([-RodRadius(SearRod())-0.125,-width/2,0])
     cube([height,width,SearLength()]);
-    
+
     // Sear Pin Hole
     translate([-1,0,SearBottomOffset()])
     rotate([0,90,0])
     Rod(rod=SearPinRod(), cutter=true,
          teardrop=true, teardropAngle=180,
          length=3);
-    
+
     // Sear Rod Hole
     translate([0,0,-ManifoldGap()])
     Rod(rod=SearRod(),
         //teardrop=true, teardropTruncated=false,
         clearance=RodClearanceLoose(),
         length=SearLength()*2);
-    
+
     // Set screw hole
     translate([0,0,SearLength()-0.5])
     rotate([0,90,0])
@@ -123,7 +123,7 @@ module TriggerSearPinTrack() {
   translate([0,SearPinOffsetZ()])
   hull() {
     Rod2d(SearPinRod(), RodClearanceLoose());
-    
+
     translate([TriggerTravel(), -SearTravel()])
     Rod2d(SearPinRod(), RodClearanceLoose());
   }
@@ -198,7 +198,7 @@ module Trigger2d() {
     translate([-triggerBack,ReceiverLugRearZ()-0.375])
     square([ReceiverLugRearLength(),
             abs(ReceiverLugRearZ())+0.375]);
-    
+
     // Clearance for the receiver lugs
     projection(cut=true)
     rotate([-90,0,0]) {
@@ -227,7 +227,7 @@ module Trigger(animationFactor=TriggerAnimationFactor(),
       rotate([90,0,0])
       linear_extrude(height=TriggerWidth()-sideplateWidth, center=false)
       Trigger2d();
-      
+
       // Trigger finger chamfer
       translate([TriggerFingerRadius()+TriggerTravel()+RodDiameter(SearRod())+0.5-0.15,
                  -TriggerWidth()/2, -GripCeiling()-TriggerFingerRadius()])
@@ -256,7 +256,7 @@ module Trigger(animationFactor=TriggerAnimationFactor(),
       rotate([90,0,0])
       linear_extrude(height=sideplateWidth)
       Trigger2d();
-      
+
       // Trigger finger chamfer
       translate([TriggerFingerRadius()+TriggerTravel()+RodDiameter(SearRod())+0.5-0.15,
                  -TriggerWidth()/2, -GripCeiling()-TriggerFingerRadius()])
@@ -282,21 +282,25 @@ TRIGGER_PLATER_MIDDLE = false;
 TRIGGER_PLATER_LEFT = false;
 TRIGGER_PLATER_RIGHT = false;
 
-scale(25.4) {
-  
-  if (TRIGGER_PLATER_MIDDLE)
-  !translate([0,0,0.12])
-  rotate([90,0,00])
-  SearSupportTab(cutter=false);
-  
-  if (TRIGGER_PLATER_LEFT)
-  !rotate([90,0,0])
-  translate([0,-RodRadius(SearRod(), RodClearanceLoose()),0])
-  Trigger(left=true, right=false);
-  
-  if (TRIGGER_PLATER_RIGHT)
-  !rotate([90,0,0])
-  translate([0,TriggerWidth()/2,0])
-  Trigger(left=false, right=true);
+if (TRIGGER_PLATER_MIDDLE)
+!scale(25.4)
+rotate(180)
+translate([0,-TriggerHeight()/2,0.12])
+rotate([90,0,00])
+SearSupportTab(cutter=false);
 
-}
+if (TRIGGER_PLATER_LEFT)
+!scale(25.4)
+rotate(180)
+translate([0,-TriggerHeight()/2,0])
+rotate([90,0,0])
+translate([0,-RodRadius(SearRod(), RodClearanceLoose()),0])
+Trigger(left=true, right=false);
+
+if (TRIGGER_PLATER_RIGHT)
+!scale(25.4)
+rotate(180)
+translate([0,-TriggerHeight()/2,0])
+rotate([90,0,0])
+translate([0,TriggerWidth()/2,0])
+Trigger(left=false, right=true);

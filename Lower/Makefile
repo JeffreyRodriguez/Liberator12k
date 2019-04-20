@@ -1,5 +1,5 @@
 MDBIN=markdown
-OSBIN=openscad
+OSBIN=nice openscad
 OSOPTS=--colorscheme=$(COLORSCHEME)
 RENDER_ANIMATIONS=true
 RENDER_STL=true
@@ -7,6 +7,8 @@ RENDER_HTML=true
 COLORSCHEME=Starnight
 FRAME_COUNT=100
 FRAMES=$(shell seq 0 $(FRAME_COUNT))
+SLOW_FRAME_COUNT=300
+SLOW_FRAMES=$(shell seq 0 $(FRAME_COUNT))
 
 #Trigger_Orthogonal.mp4:
 #	(sh -c '../bin/animate.sh . Trigger_Orthogonal.mp4')
@@ -34,17 +36,20 @@ Trigger_R.stl:
 Trigger_M.stl.png:
 	$(OSBIN) $(OSOPTS) -o $@ \
 	  -D TRIGGER_PLATER_MIDDLE=true \
-		--viewall --autocenter --projection=p \
+    --camera=0,0,200,0,0,0 --projection=p \
+    --imgsize=1920,1080 \
 	  "Trigger.scad"
 Trigger_L.stl.png:
 	$(OSBIN) $(OSOPTS) -o $@ \
 	  -D TRIGGER_PLATER_LEFT=true \
-		--viewall --autocenter --projection=p \
+    --camera=0,0,200,0,0,0 --projection=p \
+    --imgsize=1920,1080 \
 	  "Trigger.scad"
 Trigger_R.stl.png:
 	$(OSBIN) $(OSOPTS) -o $@ \
-	  -D TRIGGER_PLATER_RIGHT=true --projection=p \
-		--viewall --autocenter \
+	  -D TRIGGER_PLATER_RIGHT=true \
+    --camera=0,0,200,0,0,0 --projection=p \
+    --imgsize=1920,1080 \
 	  "Trigger.scad"
 
 Trigger.png:
@@ -57,7 +62,8 @@ Trigger.mp4:
 	  FILE=`printf '$@_%05d.png' $$i`; \
 	  T=`echo "1/$(FRAME_COUNT)*$$i" | bc -l`; \
 	  $(OSBIN) $(OSOPTS) -o $$FILE -D '$$t'=`printf '%0.4f' $$T` \
-				--camera=5,7,2,0,0,-0.75 --projection=p \
+		    --projection=p \
+				--camera=5,7,2,0,0,-0.75 \
 			  --imgsize=1920,1080 \
 				"Trigger.scad"; \
 	done
@@ -83,24 +89,43 @@ Lower_R.stl:
 
 Lower_M.stl.png:
 	$(OSBIN) $(OSOPTS) -o $@ \
-	  -D LOWER_PLATER_MIDDLE=true --projection=p \
-		--camera=0,0,20,0,0,0 \
+	  -D LOWER_PLATER_MIDDLE=true \
+		--projection=p \
+		--camera=0,0,500,0,0,0 \
+    --imgsize=1920,1080 \
 	  "Lower.scad"
 Lower_L.stl.png:
 	$(OSBIN) $(OSOPTS) -o $@ \
-	  -D LOWER_PLATER_LEFT=true --projection=p \
-		--camera=0,0,20,0,0,0 \
+	  -D LOWER_PLATER_LEFT=true \
+		--projection=p \
+		--camera=0,0,500,0,0,0 \
+    --imgsize=1920,1080 \
 	  "Lower.scad"
 Lower_R.stl.png:
 	$(OSBIN) $(OSOPTS) -o $@ \
-	  -D LOWER_PLATER_RIGHT=true --projection=p \
-		--camera=0,0,20,0,0,0 \
+	  -D LOWER_PLATER_RIGHT=true \
+		--projection=p \
+		--camera=0,0,500,0,0,0 \
+    --imgsize=1920,1080 \
 	  "Lower.scad"
+Lower_Spin.mp4:
+	for i in $(FRAMES); do \
+	  FILE=`printf '$@_%05d.png' $$i`; \
+	  T=`echo "1/$(FRAME_COUNT)*$$i" | bc -l`; \
+	  $(OSBIN) $(OSOPTS) -o $$FILE -D '$$t'=`printf '%0.4f' $$T` \
+	  		  -D SPIN_REVOLUTIONS=1 \
+			  --camera=4,12,3,0,0,-1.5 --projection=p \
+			  --imgsize=1920,1080 \
+				"Lower.scad"; \
+	done
+	cd .. && ./bin/animate.sh Lower/$@_%05d.png Lower/$@
+
 Lower.mp4:
 	for i in $(FRAMES); do \
 	  FILE=`printf '$@_%05d.png' $$i`; \
 	  T=`echo "1/$(FRAME_COUNT)*$$i" | bc -l`; \
 	  $(OSBIN) $(OSOPTS) -o $$FILE -D '$$t'=`printf '%0.4f' $$T` \
+	  		  -D SHOW_RIGHT=false \
 			  --camera=4,12,3,0,0,-1.5 --projection=p \
 			  --imgsize=1920,1080 \
 				"Lower.scad"; \
@@ -117,4 +142,4 @@ clean_MP4:
 clean_HTML:
 	rm -f *.html
 clean_PNG:
-	rm -f f*.png
+  rm -f f*.png
