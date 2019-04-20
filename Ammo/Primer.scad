@@ -12,7 +12,7 @@ PrimerFn            = 7; // Sides, for rendering
 
 
 // Produces no primer
-PrimerDummy = [
+function Spec_PrimerDummy() = [
   [PrimerRimDiameter,   0],
   [PrimerRimHeight,     0],
   [PrimerHeight,        0],
@@ -23,7 +23,7 @@ PrimerDummy = [
 ];
 
 // .209 type (based on Fiocchi 616)
-Primer209 = [
+function Spec_Primer209() = [
   [PrimerRimDiameter,   0.309],
   [PrimerRimHeight,     0.01],
   [PrimerHeight,        0.3],
@@ -33,22 +33,30 @@ Primer209 = [
   [PrimerFn,            12]
 ];
 
-function Spec_Primer209() = Primer209;
-
-// .22 cal "Powder Actuated Tool" aka. Ramset
-Primer22PAT = [
-  [PrimerRimDiameter,   0.309],
-  [PrimerRimHeight,     0.039],
-  [PrimerHeight,        0.28],
+// .22 cal Ramset (necked variety)
+function Spec_Primer22PAT() = [
+  [PrimerRimDiameter,   0.275],
+  [PrimerRimHeight,     0.036],
+  [PrimerHeight,        0.375],
   [PrimerMajorDiameter, 0.226],
-  [PrimerMinorDiameter, 0.226],
-  [PrimerClearance,     0.021],
+  [PrimerMinorDiameter, 0.225],
+  [PrimerClearance,     0.015],
   [PrimerFn,            12]
 ];
-function Spec_Primer22PAT() = Primer22PAT;
+
+// .27 cal Ramset
+function Spec_Primer27PAT() = [
+  [PrimerRimDiameter,   0.327],
+  [PrimerRimHeight,     0.05],
+  [PrimerHeight,        0.402],
+  [PrimerMajorDiameter, 0.2685],
+  [PrimerMinorDiameter, 0.268],
+  [PrimerClearance,     0.015],
+  [PrimerFn,            24]
+];
 
 // 12 gram CO2 cartridge mouth and neck
-Primer12gCO2 = [
+function Spec_Primer12gCO2() = [
   [PrimerRimDiameter,   0.315],
   [PrimerRimHeight,     0.24],
   [PrimerHeight,        0.29],
@@ -71,30 +79,29 @@ function PrimerFn(primer=undef)            = lookup(PrimerFn, primer);
 
 function PrimerOAHeight(primer=undef) = lookup(PrimerHeight, primer) + lookup(PrimerRimHeight, primer);
 
-module Primer(primer=Primer209, extend=0.001) {
+module Primer(primer=Spec_Primer27PAT(), extend=0.001) {
   render()
   union() {
 
     // Rim
     translate([0,0,-extend])
-    cylinder(r=(lookup(PrimerRimDiameter, primer)+lookup(PrimerClearance, primer))/2,
-      h=lookup(PrimerRimHeight, primer) + extend,
-      $fn=lookup(PrimerFn, primer));
+    cylinder(r=(PrimerRimDiameter(primer)+PrimerClearance(primer))/2,
+      h=PrimerRimHeight(primer) + extend,
+      $fn=PrimerFn(primer));
 
     // Rim Taper
-    translate([0,0,lookup(PrimerRimHeight, primer)])
-    cylinder(r1=(lookup(PrimerRimDiameter, primer)+lookup(PrimerClearance, primer))/2,
-      r2=(lookup(PrimerMajorDiameter, primer)+lookup(PrimerClearance, primer))/2,
-      h=lookup(PrimerRimHeight, primer),
-      $fn=lookup(PrimerFn, primer));
+    translate([0,0,PrimerRimHeight(primer)])
+    cylinder(r1=(PrimerRimDiameter(primer)+PrimerClearance(primer))/2,
+      r2=0,
+      h=(PrimerRimDiameter(primer)+PrimerClearance(primer))/2,
+      $fn=PrimerFn(primer));
 
     // Primer
-    translate([0,0,lookup(PrimerRimHeight, primer)])
-    cylinder(r1=(lookup(PrimerMajorDiameter, primer) + lookup(PrimerClearance, primer))/2,
-             r2=(lookup(PrimerMinorDiameter, primer) + lookup(PrimerClearance, primer))/2,
-             h=lookup(PrimerHeight, primer) + 0.1,
-             $fn=lookup(PrimerFn, primer));
+    cylinder(r1=(PrimerMajorDiameter(primer) + PrimerClearance(primer))/2,
+             r2=(PrimerMinorDiameter(primer) + PrimerClearance(primer))/2,
+             h=PrimerHeight(primer),
+             $fn=PrimerFn(primer));
   }
 }
 
-// scale([25.4, 25.4, 25.4]) Primer();
+scale([25.4, 25.4, 25.4]) Primer();
