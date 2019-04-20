@@ -39,7 +39,7 @@ function RodClearanceLoose() = RodClearanceLoose;
  * @param $fn Override the RodFn value of the rod.
  */
 module Rod2d(rod=Spec_RodOneQuarterInch(), clearance=undef, extraWall=0,
-             teardrop=false, teardropRotation=0, teardropTruncated=true,
+             teardrop=false, teardropRotation=0, teardropTruncated=false,
              $fn=undef) {
   if (teardrop) {
     Teardrop(r=RodRadius(rod, clearance)+extraWall,
@@ -63,7 +63,7 @@ module SquareRod2d(rod=Spec_RodOneQuarterInch(), clearance=undef, extraWall=0) {
 
 module Rod(rod=Spec_RodOneQuarterInch(), length=1,
            clearance=undef, center=false,
-           teardrop=false, teardropRotation=0, teardropTruncated=true,
+           teardrop=false, teardropRotation=0, teardropTruncated=false,
            $fn=undef) {
   render(convexity=1)
   linear_extrude(height=length, center=center)
@@ -102,7 +102,7 @@ function Spec_RodThreeThirtysecondInch() = [
   [RodRadius, 3/32/2],
   [RodClearanceSnug, 0.002],
   [RodClearanceLoose, 0.01],
-  [RodFn, 6]
+  [RodFn, 10]
 ];
 
 function Spec_RodOneSixteenthInch() = [
@@ -110,7 +110,7 @@ function Spec_RodOneSixteenthInch() = [
   [RodRadius, 1/16/2],
   [RodClearanceSnug, 0.002],
   [RodClearanceLoose, 0.01],
-  [RodFn, 6]
+  [RodFn, 10]
 ];
 
 function Spec_RodOneEighthInch() = [
