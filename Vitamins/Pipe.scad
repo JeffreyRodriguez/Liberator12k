@@ -107,8 +107,14 @@ module PipeTaperCutter(pipe, clearance=undef, clearanceSign=1) {
 }
 
 
-// 1/4" Pipe
-function Spec_PipeOneQuarterInch() = [
+// 12GaugeChamber - 12ga Chamber tolerances are much pickier than ERW pipe
+function Spec_12GaugeChamber() = [
+  [PipeInnerDiameter,   0.78],
+  [PipeFn,              30]
+];
+
+// 1/8" Pipe
+function Spec_PipeOneEighthInch() = [
   [PipeInnerDiameter,   0.265],
   [PipeOuterDiameter,   0.415],
   [PipeTaperedDiameter, 0.415], // TODO: Verify
@@ -120,10 +126,43 @@ function Spec_PipeOneQuarterInch() = [
   [PipeWeightPerUnit,   0] // TODO
 ];
 
-// 12GaugeChamber - 12ga Chamber tolerances are much pickier than ERW pipe
-function Spec_12GaugeChamber() = [
-  [PipeInnerDiameter,   0.78],
-  [PipeFn,              30]
+// 1/4" Pipe
+function Spec_PipeOneQuarterInch() = [
+  [PipeInnerDiameter,   0.336],
+  [PipeOuterDiameter,   0.534],
+  [PipeTaperedDiameter, 0.440],
+  [PipeThreadLength,    0.445],
+  [PipeThreadDepth,     0.247],
+  [PipeClearanceSnug,   0.015],
+  [PipeClearanceLoose,  0.025],
+  [PipeFn,              30],
+  [PipeWeightPerUnit,   40]
+];
+
+// 3/8" Sch40 Pipe
+function Spec_PipeThreeEighthsInch() = [
+  [PipeInnerDiameter,   0.470],
+  [PipeOuterDiameter,   0.676],
+  [PipeTaperedDiameter, 0.587],
+  [PipeThreadLength,    0.554],
+  [PipeThreadDepth,     0.247], // FIXME: Just wrong
+  [PipeClearanceSnug,   0.015],
+  [PipeClearanceLoose,  0.025],
+  [PipeFn,              30],
+  [PipeWeightPerUnit,   40] // FIXME: Just wrong
+];
+
+// 1/2" Sch40 Pipe
+function Spec_PipeOneHalfInch() = [
+  [PipeInnerDiameter,   0.678],
+  [PipeOuterDiameter,   0.876],
+  [PipeTaperedDiameter, 0.829],
+  [PipeThreadLength,    0.767],
+  [PipeThreadDepth,     0.247], // FIXME: Just wrong
+  [PipeClearanceSnug,   0.015],
+  [PipeClearanceLoose,  0.025],
+  [PipeFn,              30],
+  [PipeWeightPerUnit,   40] // FIXME: Just wrong
 ];
 
 // 3/4" Sch40 Pipe
@@ -134,7 +173,7 @@ function Spec_PipeThreeQuarterInch() = [
   [PipeThreadLength,    0.9],
   [PipeThreadDepth,     0.5],
   [PipeClearanceSnug,   0.015],
-  [PipeClearanceLoose,  0.025],
+  [PipeClearanceLoose,  0.03],
   [PipeFn,              30],
   [PipeWeightPerUnit,   40]
 ];
@@ -173,7 +212,7 @@ function Spec_PipeOneInch() = [
   [PipeThreadLength,    0.982],
   [PipeThreadDepth,     0.5], // TODO: Verify
   [PipeClearanceSnug,   0.015],
-  [PipeClearanceLoose,  0.025],
+  [PipeClearanceLoose,  0.03],
   [PipeFn,              50],
   [PipeWeightPerUnit,   0] // TODO
 ];
@@ -577,7 +616,7 @@ DEFAULT_PIPE = Spec_PipeOneInchSch80();
 PipeCap(spec=DEFAULT_PIPE);
 
 translate([0,0,PipeCapLength(DEFAULT_PIPE)-PipeThreadDepth(DEFAULT_PIPE)])
-!Pipe(pipe=Spec_PipeOneInchSch80(), length=2, clearance=PipeClearanceLoose(),
+!Pipe(pipe=Spec_PipeThreeEighthsInch(), length=2, clearance=PipeClearanceLoose(),
       taperBottom=true);
 
 
