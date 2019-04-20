@@ -45,7 +45,7 @@ module Bearing2D(spec=Spec_Bearing608(), clearance=BearingClearanceSnug(), solid
 }
 
 module Bearing(spec=Spec_Bearing608(),
-               clearance=BearingClearanceSnug(),
+               clearance=undef,
                extraHeight=0,
                solid=false, center=false) {
   color("SteelBlue")
