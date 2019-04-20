@@ -82,7 +82,7 @@ function Spec_BoltOneHalf() = [
   [BoltCapHeight,   UnitsImperial(0.310)],
   [BoltNutDiameter, UnitsImperial(0.85)],
   [BoltNutHeight,   UnitsImperial(0.45)],
-  [BoltClearance,   UnitsImperial(0.025)],
+  [BoltClearance,   UnitsImperial(0.014)],
   [BoltFn, 30]
 ];
 
@@ -173,10 +173,10 @@ module Bolt(bolt=Spec_BoltM3(), length=1,
             clearance=false, teardrop=false, teardropAngle=0,
             hex=false, cap=true, capRadiusExtra=0, capHeightExtra=0, $fn=undef,
             capOrientation=false) {
-  
+
   capFn = hex ? 6 : BoltFn(bolt, $fn)*2;
   zOrientation = capOrientation ? -length : 0;
-  
+
   translate([0,0,zOrientation])
   union() {
     linear_extrude(height=length)
