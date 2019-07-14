@@ -8,7 +8,7 @@ COLORSCHEME=Starnight
 FRAME_COUNT=100
 FRAMES=$(shell seq 0 $(FRAME_COUNT))
 SLOW_FRAME_COUNT=300
-SLOW_FRAMES=$(shell seq 0 $(FRAME_COUNT))
+SLOW_FRAMES=$(shell seq 0 $(SLOW_FRAME_COUNT))
 
 #Trigger_Orthogonal.mp4:
 #	(sh -c '../bin/animate.sh . Trigger_Orthogonal.mp4')
@@ -109,11 +109,11 @@ Lower_R.stl.png:
     --imgsize=1920,1080 \
 	  "Lower.scad"
 Lower_Spin.mp4:
-	for i in $(FRAMES); do \
+	for i in $(SLOW_FRAMES); do \
 	  FILE=`printf '$@_%05d.png' $$i`; \
-	  T=`echo "1/$(FRAME_COUNT)*$$i" | bc -l`; \
+	  T=`echo "1/$(SLOW_FRAME_COUNT)*$$i" | bc -l`; \
 	  $(OSBIN) $(OSOPTS) -o $$FILE -D '$$t'=`printf '%0.4f' $$T` \
-	  		  -D SPIN_REVOLUTIONS=1 \
+	  		-D SPIN_REVOLUTIONS=2 \
 			  --camera=4,12,3,0,0,-1.5 --projection=p \
 			  --imgsize=1920,1080 \
 				"Lower.scad"; \
@@ -125,13 +125,13 @@ Lower.mp4:
 	  FILE=`printf '$@_%05d.png' $$i`; \
 	  T=`echo "1/$(FRAME_COUNT)*$$i" | bc -l`; \
 	  $(OSBIN) $(OSOPTS) -o $$FILE -D '$$t'=`printf '%0.4f' $$T` \
-	  		  -D SHOW_RIGHT=false \
+	  	  -D SHOW_RIGHT=false \
 			  --camera=4,12,3,0,0,-1.5 --projection=p \
 			  --imgsize=1920,1080 \
 				"Lower.scad"; \
 	done
 	cd .. && ./bin/animate.sh Lower/$@_%05d.png Lower/$@
-Lower.html: $(foreach var,.png _M.stl.png _L.stl.png _R.stl.png,$@$var) # Lower.png Trigger.mp4 Trigger_M.stl.png Trigger_L.stl.png  Trigger_R.stl.png
+Lower.html: $(foreach var,.png _M.stl.png _L.stl.png _R.stl.png,$@$var)
 	$(MDBIN) Trigger.md > $@
 
 clean: clean_STL clean_MP4 clean_HTML clean_PNG
@@ -142,4 +142,4 @@ clean_MP4:
 clean_HTML:
 	rm -f *.html
 clean_PNG:
-  rm -f f*.png
+	rm -f f*.png
