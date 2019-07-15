@@ -22,8 +22,8 @@ function RecoilPlateWidth() = 1.5;
 
 // Settings: Positions
 function RecoilPlateRearX()  = -0.5;
-function FiringPinOffset() = -0.12; // .22 Rimfire Offset
-//function FiringPinOffset() = 0;
+//function FiringPinOffset() = -0.12; // .22 Rimfire Offset
+function FiringPinOffset() = 0;
 
 // Settings: Vitamins
 function SquareRodFixingBolt() = Spec_BoltM3();
