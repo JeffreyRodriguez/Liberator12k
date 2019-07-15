@@ -32,6 +32,7 @@ module PipeUpperAssembly(receiver=Spec_PipeThreeQuarterInch(),
                          triggerAnimationFactor=TriggerAnimationFactor(),
                          debug=true) {
 
+  color("Tan")
   translate([-receiverLength,0,0]) {
       if (tailcap)
       Tailcap(debug=debug);
