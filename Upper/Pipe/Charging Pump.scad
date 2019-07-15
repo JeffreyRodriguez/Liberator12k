@@ -57,7 +57,7 @@ function ChargingRodMinX() = ChargingPinX()-0.25;
 function ChargingRodMaxX() = ChargingRodMinX()+ChargingRodLength();
 
 // Calculated: Lengths
-function ChargerTravel() = 2.3125;
+function ChargerTravel() = 2.0625;
 
 // Calculated: Positions
 echo("Charging Rod Length: ", ChargingRodLength());
@@ -82,6 +82,7 @@ module ChargingPin(cutter=false, teardrop=false, clearance=RodClearanceSnug()) {
 
 module ChargingRod(clearance=RodClearanceLoose(),
                    length=ChargingRodLength(),
+                   minX=ChargingRodMinX(),
                    bolt=true,
                    actuator=true, actuatorRadius=(1/4)/2,
                    travel=ChargerTravel(),
@@ -89,7 +90,7 @@ module ChargingRod(clearance=RodClearanceLoose(),
   color("SteelBlue") DebugHalf(enabled=debug) {
 
     // Charging rod
-    translate([ChargingRodMinX()-(cutter?ChargerTravel():0),0,ChargingRodOffset()])
+    translate([minX-(cutter?ChargerTravel():0),0,ChargingRodOffset()])
     rotate([0,90,0])
     SquareRod(ChargingRod(), length=length+(cutter?ChargerTravel():0)+ManifoldGap(),
               clearance=cutter?clearance:undef);
@@ -177,7 +178,7 @@ module ChargingPump(innerRadius=1.1/2, debug=false, alpha=1, $fn=Resolution(20,5
       mirror([1,0,0])
       ChamferedCube([ChargingRodOffset()+RodRadius(ChargingRod())+0.125,
                      RodDiameter(ChargingRod())+0.5,
-                     ChargingRodStaticLength()], r=1/8);
+                     ChargingRodStaticLength()], r=1/16);
       
       // Body around the barrel
       translate([ForegripFrontX(),0,0])
@@ -191,18 +192,22 @@ module ChargingPump(innerRadius=1.1/2, debug=false, alpha=1, $fn=Resolution(20,5
     translate([ForegripFrontX()+X,0,0])
     rotate([0,90,0])
     for (M = [0,1]) mirror([0,0,M])
-    TeardropTorus(majorRadius=ReceiverOR()-0.125, minorRadius=1/8);
+    translate([0,0,-3/32*1.5]) scale([1,1,1.5]) translate([0,0,3/32])
+    TeardropTorus(majorRadius=ReceiverOR()-(3/32), minorRadius=3/32);
 
     // Barrel hole, but with a bearing profile
     translate([ForegripFrontX()+(ForegripLength()/2),0,0])
     rotate([0,90,0])
     BearingSurface(r=innerRadius, length=ForegripLength(),
-                   depth=0.0625, segment=0.25, taperDepth=0.125, center=true);
+                   depth=0.0625, segments=6, taperDepth=0.125,
+                   center=true, $fn=40);
 
-    for (R = [0:45:270]) rotate([45+R,0,0])
+    for (R = [180,60,-60, 120, -120]) rotate([R,0,0])
     translate([ForegripFrontX()-ManifoldGap(), 0, ReceiverOR()])
     rotate([0,90,0])
-    cylinder(r=1/8, h=ForegripLength()+ManifoldGap(2));
+    linear_extrude(height=ForegripLength()+ManifoldGap(2))
+    for (R =[1,-1]) rotate(90*R)
+    Teardrop(r=3/16);
 
     ChargingRod(length=ChargingRodLength(),
                 travel=ChargerTravel(),
@@ -211,13 +216,14 @@ module ChargingPump(innerRadius=1.1/2, debug=false, alpha=1, $fn=Resolution(20,5
 }
 
 module ChargingPumpAssembly(animationFactor=ChargerAnimationFactor(),
+                            length=ChargingRodLength(), minX=ChargingRodMinX(),
                                pipeAlpha=1, debug=false) {
   translate([-ChargerTravel()*animationFactor,0,0]) {
     
     color("Silver")
     ChargingPin();
     
-    ChargingRod(debug=debug);
+    ChargingRod(length=length, minX=minX, debug=debug);
     
     Charger(debug=debug);
 
@@ -266,6 +272,12 @@ ChargingPump();
 rotate([0,-90,0])
 translate([-ForegripFrontX(),0,0])
 ChargingPump(innerRadius=1.15/2);
+
+// 1" 4130
+!scale(25.4)
+rotate([0,-90,0])
+translate([-ForegripFrontX(),0,0])
+ChargingPump(innerRadius=1.01/2);
 
 //
 // Charger
