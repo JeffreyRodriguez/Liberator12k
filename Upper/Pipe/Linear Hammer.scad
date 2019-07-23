@@ -20,14 +20,17 @@ use <Frame.scad>;
 
 
 // Settings: Lengths
-function HammerBoltLength() = 8.25;
-function HammerSpringLength() = 7.25;
+function HammerBoltLength() = 7.5;
+function HammerSpringLength() = 7 + (1/32);
 
 // Settings: Vitamins
 function LinearHammerBolt() = Spec_BoltFiveSixteenths();
 
 DEFAULT_HAMMER_TRAVEL = 1;
 DEFAULT_HAMMER_CLEARANCE = 1/32;
+
+function LinearHammerBaseLength() = 0.5;
+function LinearHammerLength() = 1.5;
 
 function LinearHammerTravelFactor() = Animate(ANIMATION_STEP_FIRE)
                                     - SubAnimate(ANIMATION_STEP_CHARGE, start=0.18, end=0.36);
@@ -48,10 +51,10 @@ module LinearHammerBolt(cutter=false) {
 }
 
 module LinearHammerInsert(insertRadius=ReceiverIR()-DEFAULT_HAMMER_CLEARANCE,
-                          baseHeight=0.25, holeRadius=(5/16/2)+(0.008), 
-                          innerRadius=(1.07/2), length=1,
+                          baseHeight=0.5, holeRadius=(5/16/2)+0.005, 
+                          innerRadius=(1.07/2), length=LinearHammerLength(),
                           minorChamferRadius=1/32, majorChamferRadius=1/8,
-                          debug=false, $fn=Resolution(20,50)) {
+                          debug=false, $fn=Resolution(20,90)) {
   DebugHalf(enabled=debug)
   difference() {
     
@@ -61,10 +64,11 @@ module LinearHammerInsert(insertRadius=ReceiverIR()-DEFAULT_HAMMER_CLEARANCE,
   
     // Hammer Hole
     ChamferedCircularHole(r1=holeRadius, r2=minorChamferRadius,
-                          h=baseHeight);
+                          h=baseHeight, $fn=30);
     
-          
-    translate([0,0,length])
+    
+    // Chamfer the outer rim
+    translate([0,0,length-minorChamferRadius])
     mirror([0,0,1])
     CircularOuterEdgeChamfer(r1=insertRadius, r2=majorChamferRadius*2,
                              teardrop=true);
@@ -72,12 +76,13 @@ module LinearHammerInsert(insertRadius=ReceiverIR()-DEFAULT_HAMMER_CLEARANCE,
     // Cut out the insides
     translate([0,0,baseHeight])
     difference() {
-      translate([0,0,majorChamferRadius])
-      ChamferedCircularHole(r1=innerRadius, r2=majorChamferRadius,
-                            h=length-baseHeight-majorChamferRadius,
+      translate([0,0,minorChamferRadius])
+      ChamferedCircularHole(r1=innerRadius, r2=minorChamferRadius,
+                            h=length-baseHeight-minorChamferRadius,
                             chamferBottom=false);
       
-      CircularOuterEdgeChamfer(r1=innerRadius, r2=majorChamferRadius,
+      // Filleted bottom
+      CircularOuterEdgeChamfer(r1=innerRadius, r2=minorChamferRadius,
                                teardrop=false);
     }
     
@@ -91,8 +96,7 @@ module LinearHammerInsert(insertRadius=ReceiverIR()-DEFAULT_HAMMER_CLEARANCE,
   }
 }
 
-module LinearHammerGuide(insertRadius=ReceiverIR()-DEFAULT_HAMMER_CLEARANCE, length=1,
-                         debug=false) {
+module LinearHammerGuide(debug=false) {
   color("Orange")
   translate([-BoltCapHeight(LinearHammerBolt()),0,0])
   rotate([0,-90,0])
@@ -110,13 +114,13 @@ module LinearHammerCompressor(insertRadius=ReceiverIR()-DEFAULT_HAMMER_CLEARANCE
     LinearHammerInsert(debug=debug);
                                   
     color("Orange")
-    translate([-length-0.5,0,0])
+    translate([-length-(LinearHammerBaseLength()*2),0,0])
     rotate([0,90,0])
     LinearHammerInsert(debug=debug);
     
     color("Beige")
     DebugHalf(enabled=debug)
-    translate([-0.25,0,0])
+    translate([-LinearHammerBaseLength(),0,0])
     rotate([0,-90,0])
     difference() {
       cylinder(r=1.06/2, h=length, $fn=20);
