@@ -39,7 +39,7 @@ function SquareRodFixingBolt() = Spec_BoltM3();
 function UpperLength() =  5.75;
 function ForegripLength() = 5;
 function ForegripChargingGap() = 0.5;
-function ChargingRodLength() = 10.5;
+function ChargingRodLength() = 12;
 function ChargerTowerLength() = 0.5;
 
 /* How far does the stationary portion of the square rod
@@ -66,7 +66,7 @@ function ForegripFrontX() = ChargingRodMinX()
                     + ChargingRodLength()
                     - ChargingRodStaticLength();
 function ForegripRearX() = ForegripFrontX()-ForegripLength();
-                           
+
 function ChargerAnimationFactor() = Animate(ANIMATION_STEP_CHARGE)
                              - Animate(ANIMATION_STEP_CHARGER_RESET);
 
@@ -121,46 +121,46 @@ module ChargingRod(clearance=RodClearanceLoose(),
 module Charger(clearance=RodClearanceLoose(),
                bolt=true,
                cutter=false, debug=false) {
-    
+
   color("OrangeRed") DebugHalf(enabled=debug) {
     difference() {
-      
+
       // Charging Pusher
       union() {
-        
+
         // Tower
         translate([RecoilPlateRearX(),-0.5/2,0.375])
         mirror([1,0,0])
         ChamferedCube([ChargerTowerLength(), 0.5, ChargingRodOffset()-0.25], r=1/32);
-        
+
         // Top wings
         translate([RecoilPlateRearX(),-1/2,ChargingRodOffset()])
         mirror([1,0,0])
         ChamferedCube([ChargerTowerLength(), 1, 0.25], r=1/32);
-        
+
         // Charging Pusher Wide Base
         translate([RecoilPlateRearX(),0,0])
         intersection() {
-          
+
           translate([0,-0.5,0.375])
           mirror([1,0,0])
           ChamferedCube([1.125, 1, ReceiverIR()-0.375], r=1/32);
-          
+
           // Rounded base
           rotate([0,-90,0])
           cylinder(r=ReceiverIR()-0.02, h=1.125, $fn=Resolution(30,60));
         }
       }
-      
+
       translate([RecoilPlateRearX()-0.625,-0.1875,0])
       mirror([1,0,0])
       ChamferedCube([1, 0.375, ReceiverOR()], r=1/16);
-      
+
       translate([ChargerTravel(),0,0])
       ChargingRod(cutter=true, clearance=RodClearanceSnug());
-      
+
       ChargingPin(cutter=true, teardrop=true);
-      
+
     }
   }
 }
@@ -179,7 +179,7 @@ module ChargingPump(innerRadius=1.1/2, debug=false, alpha=1, $fn=Resolution(20,5
       ChamferedCube([ChargingRodOffset()+RodRadius(ChargingRod())+0.125,
                      RodDiameter(ChargingRod())+0.5,
                      ChargingRodStaticLength()], r=1/16);
-      
+
       // Body around the barrel
       translate([ForegripFrontX(),0,0])
       rotate([0,90,0])
@@ -219,12 +219,12 @@ module ChargingPumpAssembly(animationFactor=ChargerAnimationFactor(),
                             length=ChargingRodLength(), minX=ChargingRodMinX(),
                                pipeAlpha=1, debug=false) {
   translate([-ChargerTravel()*animationFactor,0,0]) {
-    
+
     color("Silver")
     ChargingPin();
-    
+
     ChargingRod(length=length, minX=minX, debug=debug);
-    
+
     Charger(debug=debug);
 
     ChargingPump(debug=debug, alpha=1);
@@ -240,7 +240,7 @@ ChargingPumpAssembly(debug=false);
 
 RecoilPlateHousing();
 RecoilPlateFiringPinAssembly();
-                               
+
 RecoilPlate();
 
 translate([RecoilPlateRearX(),0,0])
