@@ -98,10 +98,10 @@ function Spec_BoltOneQuarter() = [
 
 function Spec_BoltFiveSixteenths() = [
   [BoltDiameter,    UnitsImperial(0.3125)],
-  [BoltCapDiameter, UnitsImperial(0.566)], // Verify?
-  [BoltCapHeight,   UnitsImperial(0.25)],// Verify?
-  [BoltNutDiameter, UnitsImperial(0.566)],
-  [BoltNutHeight,   UnitsImperial(0.25)],
+  [BoltCapDiameter, UnitsImperial(0.567)], // Verify?
+  [BoltCapHeight,   UnitsImperial(0.212)],// Verify?
+  [BoltNutDiameter, UnitsImperial(0.557)],
+  [BoltNutHeight,   UnitsImperial(0.263)],
   [BoltClearance,   UnitsImperial(0.01)],
   [BoltFn, 30]
 ];
@@ -121,16 +121,17 @@ function Spec_BoltThreeEighths() = [
  * @param bolt The bolt to lookup.
  * @param clearance Add clearance for holes with 'true'
  */
-function BoltDiameter(bolt=undef, clearance=false)
-           = lookup(BoltDiameter, bolt)
-          + (clearance == true ? lookup(BoltClearance, bolt) : 0);
+function BoltDiameter(bolt=undef, clearance=false, threaded=false)
+           = (lookup(BoltDiameter, bolt)
+              + (clearance == true ? lookup(BoltClearance, bolt) : 0))
+           * (threaded ? 0.9 : 1);
 
 /**
  * Lookup the radius of a bolt.
  * @param bolt The bolt to lookup.
  * @param clearance Add clearance for holes with 'true'
  */
-function BoltRadius(bolt, clearance=false) = BoltDiameter(bolt, clearance)/2;
+function BoltRadius(bolt, clearance=false, threaded=false) = BoltDiameter(bolt, clearance, threaded)/2;
 
 
 
@@ -168,19 +169,19 @@ function BoltFn(bolt, $fn=undef) = ($fn == undef) ? lookup(BoltFn, bolt) : $fn;
  * @param clearance Add clearance for holes with 'true'
  * @param $fn Override the BoltFn value of the bolt.
  */
-module Bolt2d(bolt=Spec_BoltM3(), clearance=false, teardrop=false, teardropAngle=0, $fn=undef) {
+module Bolt2d(bolt=Spec_BoltM3(), clearance=false, threaded=false, teardrop=false, teardropAngle=0, $fn=undef) {
   if (teardrop) {
-    Teardrop(r=BoltRadius(bolt, clearance), rotation=teardropAngle,
+    Teardrop(r=BoltRadius(bolt, clearance, threaded), rotation=teardropAngle,
              $fn=BoltFn(bolt, $fn));
   } else {
-    circle(r=BoltRadius(bolt, clearance),
+    circle(r=BoltRadius(bolt, clearance, threaded),
            $fn=BoltFn(bolt, $fn));
   }
 }
 
 
 module Bolt(bolt=Spec_BoltM3(), length=1,
-            clearance=false, teardrop=false, teardropAngle=0,
+            clearance=false, threaded=false, teardrop=false, teardropAngle=0,
             hex=false, cap=true, capRadiusExtra=0, capHeightExtra=0, $fn=undef,
             capOrientation=false) {
 
@@ -190,7 +191,7 @@ module Bolt(bolt=Spec_BoltM3(), length=1,
   translate([0,0,zOrientation])
   union() {
     linear_extrude(height=length)
-    Bolt2d(bolt, clearance, teardrop=teardrop, teardropAngle=teardropAngle);
+    Bolt2d(bolt, clearance, threaded=threaded, teardrop=teardrop, teardropAngle=teardropAngle);
 
     // Cap
     if (cap) {
