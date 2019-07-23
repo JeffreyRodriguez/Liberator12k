@@ -18,6 +18,9 @@ function CylinderBolt() = Spec_BoltFiveSixteenths();
 //function CylinderBolt() = Spec_BoltOneQuarter();
 function ChamberBolt() = Spec_BoltM3();
 
+function SpindleDiameter() = BoltDiameter(CylinderBolt());
+function SpindleRadius() = BoltRadius(CylinderBolt());
+
 //Spec_RodThreeEighthsInch
 function ZigZagWidth() = RodDiameter(ActuatorRod(), RodClearanceSnug());
 function ZigZagDepth() = 0.1875;
@@ -56,7 +59,8 @@ module ChamberBolt(positions, chamberRadius, boltOffset=1.5, cutter=false) {
        clearance=false, teardrop=cutter);
 }
 
-module OffsetZigZagRevolver(chamberRadius=1, chamberInnerRadius=0, centerOffset=undef,
+module OffsetZigZagRevolver(chamberRadius=1, chamberInnerRadius=0,
+           centerOffset=undef, coreInnerRadius=0,
            wall=CylinderOuterWall(), depth=ZigZagDepth(),
            zigzagAngle=45, boltOffset=1.75,
            trackAngle=0, extraTop=0, extraBottom=0,
@@ -140,6 +144,12 @@ module OffsetZigZagRevolver(chamberRadius=1, chamberInnerRadius=0, centerOffset=
         cylinder(r=spindleRadius,
                  h=max(height, chamberLength+linearClearance)+ManifoldGap(2),
                  $fn=Resolution(20,40));
+  
+          if (coreInnerRadius > 0) {
+              
+              // Hollow out the core
+              cylinder(r=coreInnerRadius, h=height+ManifoldGap(), $fn=20);
+          }
       }
     }
 
