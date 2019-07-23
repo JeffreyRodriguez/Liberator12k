@@ -33,7 +33,7 @@ function FrameUpperRearExtension() = 3.5;
 
 // Settings: Walls
 function WallFrameUpperBolt() = 0.25;
-function FrameUpperBoltLength() = 9.875;
+function FrameUpperBoltLength() = 10;
 
 // Settings: Vitamins
 function FrameUpperBolt() = Spec_BoltThreeEighths();
