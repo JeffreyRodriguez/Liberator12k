@@ -28,7 +28,8 @@ module PipeUpperAssembly(receiver=Spec_PipeThreeQuarterInch(),
                          receiverLength=ReceiverLength(),
                          pipeOffsetX=FrameExtension(),
                          pipeAlpha=1, centerLug=false,
-                         frame=true, lower=true, stock=false, tailcap=false,
+                         lower=true, lowerLeft=true, lowerRight=true,
+                         frame=true, stock=false, tailcap=false,
                          triggerAnimationFactor=TriggerAnimationFactor(),
                          debug=true) {
 
@@ -45,7 +46,7 @@ module PipeUpperAssembly(receiver=Spec_PipeThreeQuarterInch(),
 
     if (lower)
     translate([0,0,LowerOffsetZ()])
-    Lower(showTrigger=true, alpha=1, triggerAnimationFactor=triggerAnimationFactor,
+    Lower(showTrigger=true, showLeft=lowerLeft, showRight=lowerRight, alpha=1, triggerAnimationFactor=triggerAnimationFactor,
           showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
           searLength=SearLength()+WallLower()+ReceiverPipeWall()+SearTravel());
 
