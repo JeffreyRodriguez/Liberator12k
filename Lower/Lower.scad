@@ -15,9 +15,13 @@ use <Receiver Lugs.scad>;
 use <Trigger.scad>;
 
 use <../Components/Grip Handle.scad>;
+
 function LowerWallFront() = 0.5;
-function LowerMaxX() = ReceiverLugFrontMaxX()+LowerWallFront();
-function LowerGuardHeight() = TriggerFingerDiameter()+TriggerFingerWall()+GripCeiling();
+function LowerMaxX() = ReceiverLugFrontMaxX()
+                     + LowerWallFront();
+function LowerGuardHeight() = TriggerFingerDiameter()
+                            + TriggerFingerWall()
+                            + GripCeiling();
 
 module TriggerFingerSlot(radius=TriggerFingerRadius(), length=0.6, $fn=Resolution(12, 60)) {
 

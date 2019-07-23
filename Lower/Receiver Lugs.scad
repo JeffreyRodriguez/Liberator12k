@@ -61,10 +61,10 @@ module ReceiverLugBoltHoles(boltSpec=Spec_BoltM4(),
   rotate([90,0,0])
   rotate(90)
   NutAndBolt(bolt=boltSpec, boltLength=length,
-              teardrop=teardrop, teardropAngle=teardropAngle,
-              clearance=clearance, capOrientation=true,
-              capHeightExtra=capHeightExtra,
-              nutHeightExtra=nutHeightExtra, nutBackset=0.05);
+             teardrop=teardrop, teardropAngle=teardropAngle,
+             clearance=clearance, capOrientation=true,
+             capHeightExtra=capHeightExtra,
+             nutHeightExtra=nutHeightExtra, nutBackset=0.05);
 }
 
 module ReceiverLugRear(extraTop=ManifoldGap(),
@@ -76,8 +76,8 @@ module ReceiverLugRear(extraTop=ManifoldGap(),
   difference() {
     translate([ReceiverLugRearMinX(),0,ReceiverLugRearZ()])
     T_Lug(length=ReceiverLugRearLength(),
-            height=abs(ReceiverLugRearZ())+extraTop,
-            cutter=cutter, clearVertical=clearVertical);
+          height=abs(ReceiverLugRearZ())+extraTop,
+          cutter=cutter, clearVertical=clearVertical);
 
     // Grip Bolt Hole
     if (hole)
@@ -92,12 +92,10 @@ module ReceiverLugFront(extraTop=ManifoldGap(),
   translate([ReceiverLugFrontMaxX(),0,ReceiverLugFrontZ()])
   mirror([1,0,0])
   T_Lug(length=ReceiverLugFrontLength(), tabWidth=1.25,
-          height=abs(ReceiverLugFrontZ())+extraTop,
-          clearance=UnitsImperial(0.01),
-      clearVertical=clearVertical,
-             cutter=cutter);
-          //clearVeritcal=clearVeritcal,
-          //cutter=cutter);
+        height=abs(ReceiverLugFrontZ())+extraTop,
+        clearance=UnitsImperial(0.01),
+        clearVertical=clearVertical,
+        cutter=cutter);
 }
 
 ReceiverLugRear(cutter=true, clearVertical=true);
