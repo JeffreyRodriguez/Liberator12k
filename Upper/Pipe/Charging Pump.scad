@@ -37,7 +37,7 @@ function SquareRodFixingBolt() = Spec_BoltM3();
 
 // Settings: Lengths
 function UpperLength() =  5.75;
-function ForegripLength() = 5;
+function ForegripLength() = 5.25;
 function ForegripChargingGap() = 0.5;
 function ChargingRodLength() = 12;
 function ChargerTowerLength() = 0.5;
@@ -183,18 +183,9 @@ module ChargingPump(innerRadius=1.1/2, debug=false, alpha=1, $fn=Resolution(20,5
       // Body around the barrel
       translate([ForegripFrontX(),0,0])
       rotate([0,90,0])
-      ChamferedCylinder(r1=ReceiverOR(), r2=1/16,
-               h=ForegripLength());
+      ChargingPumpGripBase();
     }
-
-    // Gripping cutouts
-    for (X = [ChargingRodStaticLength()+0.1875:0.75:ForegripLength()-0.75])
-    translate([ForegripFrontX()+X,0,0])
-    rotate([0,90,0])
-    for (M = [0,1]) mirror([0,0,M])
-    translate([0,0,-3/32*1.5]) scale([1,1,1.5]) translate([0,0,3/32])
-    TeardropTorus(majorRadius=ReceiverOR()-(3/32), minorRadius=3/32);
-
+    
     // Barrel hole, but with a bearing profile
     translate([ForegripFrontX()+(ForegripLength()/2),0,0])
     rotate([0,90,0])
@@ -202,16 +193,41 @@ module ChargingPump(innerRadius=1.1/2, debug=false, alpha=1, $fn=Resolution(20,5
                    depth=0.0625, segments=6, taperDepth=0.125,
                    center=true, $fn=40);
 
-    for (R = [180,60,-60, 120, -120]) rotate([R,0,0])
-    translate([ForegripFrontX()-ManifoldGap(), 0, ReceiverOR()])
-    rotate([0,90,0])
-    linear_extrude(height=ForegripLength()+ManifoldGap(2))
-    for (R =[1,-1]) rotate(90*R)
-    Teardrop(r=3/16);
-
     ChargingRod(length=ChargingRodLength(),
                 travel=ChargerTravel(),
                 clearance=RodClearanceSnug(), cutter=true);
+  }
+}
+
+
+
+module ChargingPumpGripBase(outerRadius=ReceiverOR(), length=ForegripLength(),
+                            rings=true, ringRadius=3/32, ringGap=0.75,
+                            debug=false, alpha=1, $fn=Resolution(20,50)) {
+
+  color("Tan", alpha)
+  DebugHalf(enabled=debug)
+  difference() {
+    union() {
+
+      // Body around the barrel
+      ChamferedCylinder(r1=outerRadius, r2=1/16, h=length);
+    }
+
+    // Gripping cutout rings
+    if (rings)
+    for (Z = [ringGap:ringGap:length-ringGap]) translate([0,0,Z])
+    for (M = [0,1]) mirror([0,0,M])
+    translate([0,0,-ringRadius*1.5]) scale([1,1,1.5]) translate([0,0,ringRadius])
+    TeardropTorus(majorRadius=outerRadius-ringRadius,
+                  minorRadius=ringRadius);
+
+    // Gripping cutout linear channels
+    for (R = [0:60:360]) rotate([0,0,R])
+    translate([outerRadius, 0, -ManifoldGap()])
+    linear_extrude(height=length+ManifoldGap(2))
+    for (R =[1,-1]) rotate(90*R)
+    Teardrop(r=ringRadius*2);
   }
 }
 
