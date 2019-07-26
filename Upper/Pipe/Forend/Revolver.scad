@@ -107,13 +107,12 @@ function CraneLatchGuideSide() = 0.25;
 function CraneLatchHandleWall() = 0.375;
 function CraneLatchHandleDiameter() = 2;
 function CraneLatchHandleRadius() = CraneLatchHandleDiameter()/2;
-function CraneLatchGuideWidth() = 0.75;
+function CraneLatchGuideWidth() = 1;
 function CraneLatchGuideHeight() = 0.75
                                  + (RodRadius(CylinderRod())+WallCrane());
 function CraneLatchGuideZ() = -RevolverSpindleOffset()
                               -SpindleCollarRadius()
-                              -WallSpindle()
-                              -CraneLatchGuideSide();
+                              -WallSpindle();
 function CraneLatchHandleZ() = -(RevolverSpindleOffset()*2);
 
 
@@ -335,7 +334,7 @@ module CraneLatch(cutter=false, clearance=0.005, alpha=1) {
       translate([CraneLatchMinX(),
                  -(CraneLatchGuideWidth()/2)-CraneLatchHandleWall(),
                  -RevolverSpindleOffset()
-                   - (SpindleRadius()+WallSpindle())
+                   - (SpindleCollarRadius()+WallSpindle())
                    - clearance])
       ChamferedCube([CraneLatchLength(),
             CraneLatchGuideWidth()+(CraneLatchHandleWall()*2),
@@ -350,7 +349,7 @@ module CraneLatch(cutter=false, clearance=0.005, alpha=1) {
     mirror([0,0,1])
     ChamferedCube([CraneLength()+CR(),
           CraneLatchGuideWidth()+clear2,
-          SpindleRadius()+WallSpindle()+CraneLatchGuideHeight()+clear2],
+          SpindleCollarRadius()+WallSpindle()+CraneLatchGuideHeight()+clear2],
           r=CR());
           
     // Forend clearance (around the barrel)
@@ -369,7 +368,7 @@ module CraneLatch(cutter=false, clearance=0.005, alpha=1) {
     RevolverSpindle(cutter=true);
   }
 }
-module CraneLatchHandle(clearance=0.008, alpha=1, debug=true) {
+module CraneLatchHandle(clearance=0.008, alpha=1, debug=false) {
   clear = clearance;
   clear2 = clearance*2;
   
@@ -389,7 +388,7 @@ module CraneLatchHandle(clearance=0.008, alpha=1, debug=true) {
         translate([CraneMinX()-ManifoldGap(),
                    -CraneLatchGuideWidth(),
                    -RevolverSpindleOffset()
-                   -SpindleRadius()-WallSpindle()-CR()])
+                   -SpindleCollarRadius()-WallSpindle()-CR()])
         cube([CraneLength()+CraneLatchLength()+ManifoldGap(2),
               CraneLatchGuideWidth()*2,
               RevolverSpindleOffset()]);
@@ -399,7 +398,7 @@ module CraneLatchHandle(clearance=0.008, alpha=1, debug=true) {
       translate([CraneMinX(),
                  -(CraneLatchGuideWidth()/2)-CraneLatchHandleWall(),
                  -RevolverSpindleOffset()
-                   - (SpindleRadius()+WallSpindle())
+                   - (SpindleCollarRadius()+WallSpindle())
                    - clearance])
       mirror([0,0,1])
       ChamferedCube([CraneLength()+CraneLatchLength(),
@@ -425,8 +424,6 @@ module CraneLatchHandle(clearance=0.008, alpha=1, debug=true) {
       cube([ForendFrontLength()-BarrelCollarWidth()-clear,
             CraneLatchGuideWidth()+(CR()*2),
             CraneLatchGuideHeight()+(CR()*2)]);
-      
-      
     }
     
     CraneLatchGuide(cutter=true);
@@ -528,7 +525,7 @@ module RevolverCrane(cutter=false, teardrop=false, clearance=1/32, alpha=1) {
       mirror([0,0,1])
       ChamferedCube([CraneLength(),
             CraneLatchGuideWidth()+(CraneLatchHandleWall()*2),
-            SpindleRadius()+WallSpindle()],
+            SpindleCollarRadius()+WallSpindle()],
             r=CR());
     }
     
@@ -829,7 +826,7 @@ intersection() {
   translate([0,0,-ManifoldGap()])
   cylinder(r=RevolverSpindleOffset()-0.25, h=ChamberLength()+ManifoldGap(2), $fn=20);
 }
-  
+
 *!scale(25.4) rotate([0,90,0]) translate([-ForendMinX(),0,0]) {
   intersection() {
     RevolverForend();
@@ -837,9 +834,15 @@ intersection() {
     // Front
     translate([ChamberLength()+ForendGasGap(),-1.5,-2])
     cube([UpperLength(), 3, 4]);
+  }
+}
+
+*!scale(25.4) rotate([0,90,0]) translate([-ForendMinX(),0,0]) {
+  intersection() {
+    RevolverForend();
     
     // Rear
-    *translate([-ManifoldGap(),-1.5,-2])
+    translate([-ManifoldGap(),-1.5,-2])
     cube([ForendMinX(), 3, 4]);
   }
 }
