@@ -55,7 +55,7 @@ module ReceiverLugBoltHoles(boltSpec=Spec_BoltM4(),
   capHeightExtra = clearance ? 1 : 0;
   nutHeightExtra = clearance ? 1 : 0;
 
-  color("SteelBlue")
+  color("Silver")
   for (bolt = ReceiverLugBoltsArray())
   translate([ReceiverLugBoltX(bolt), ReceiverLugBoltY(bolt), ReceiverLugBoltZ(bolt)])
   rotate([90,0,0])

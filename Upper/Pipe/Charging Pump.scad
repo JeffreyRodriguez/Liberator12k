@@ -87,7 +87,7 @@ module ChargingRod(clearance=RodClearanceLoose(),
                    actuator=true, actuatorRadius=(1/4)/2,
                    travel=ChargerTravel(),
                    cutter=false, debug=false) {
-  color("SteelBlue") DebugHalf(enabled=debug) {
+  color("Silver") DebugHalf(enabled=debug) {
 
     // Charging rod
     translate([minX-(cutter?ChargerTravel():0),0,ChargingRodOffset()])
@@ -165,7 +165,9 @@ module Charger(clearance=RodClearanceLoose(),
   }
 }
 
-module ChargingPump(innerRadius=1.1/2, debug=false, alpha=1, $fn=Resolution(20,50)) {
+module ChargingPump(innerRadius=1.1/2,
+                    debug=false, alpha=1,
+                    $fn=Resolution(20,50)) {
 
   color("Tan", alpha)
   DebugHalf(enabled=debug)
@@ -185,7 +187,7 @@ module ChargingPump(innerRadius=1.1/2, debug=false, alpha=1, $fn=Resolution(20,5
       rotate([0,90,0])
       ChargingPumpGripBase();
     }
-    
+
     // Barrel hole, but with a bearing profile
     translate([ForegripFrontX()+(ForegripLength()/2),0,0])
     rotate([0,90,0])
@@ -203,7 +205,7 @@ module ChargingPump(innerRadius=1.1/2, debug=false, alpha=1, $fn=Resolution(20,5
 
 module ChargingPumpGripBase(outerRadius=ReceiverOR(), length=ForegripLength(),
                             rings=true, ringRadius=3/32, ringGap=0.75,
-                            debug=false, alpha=1, $fn=Resolution(20,50)) {
+                            debug=false, alpha=1, $fn=Resolution(20,100)) {
 
   color("Tan", alpha)
   DebugHalf(enabled=debug)

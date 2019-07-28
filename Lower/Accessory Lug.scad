@@ -40,7 +40,7 @@ module LowerLug(holes=true, cutter=false) {
 }
 
 module LowerLugBolts(boltSpec=Spec_BoltM3(), length=UnitsMetric(30), clearance=true) {
-  color("SteelBlue")
+  color("Silver")
   translate([LowerLugBoltX(),0, -0.5])
   translate([0,(GripWidth()/2)+0.125,0.25])
   rotate([90,0,0])

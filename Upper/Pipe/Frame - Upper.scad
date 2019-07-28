@@ -79,13 +79,13 @@ module FrameUpperBolts(length=FrameUpperBoltLength(),
   }
 }
 
-module FrameUpperBoltSupport(length=1) {  
+module FrameUpperBoltSupport(length=1, $fn=Resolution(20,60)) {  
   for (Y = [FrameUpperBoltOffsetY(),-FrameUpperBoltOffsetY()])
   translate([0, Y, FrameUpperBoltOffsetZ()])
   rotate([0,90,0])
   ChamferedCylinder(r1=FrameUpperBoltRadius()+WallFrameUpperBolt(),
                     r2=1/16, h=length,
-                    $fn=30);
+                    teardropTop=true, teardropBottom=true);
 }
 
 FrameUpperBoltSupport(length=0.5);

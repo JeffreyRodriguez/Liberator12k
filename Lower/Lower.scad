@@ -62,7 +62,7 @@ module TriggerFingerSlot(radius=TriggerFingerRadius(), length=0.6, $fn=Resolutio
 module GuardBolt(boltSpec=Spec_BoltM4(), length=UnitsMetric(30), clearance=true) {
   cutter = (clearance) ? 1 : 0;
 
-  color("SteelBlue")
+  color("Silver")
   translate([ReceiverLugBoltX(ReceiverLugBoltsArray()[0]),
              -LowerMaxY()+0.07,
              GripCeilingZ()-TriggerFingerDiameter()+0])
@@ -86,7 +86,7 @@ module HandleBolts(boltSpec=Spec_BoltM4(), length=UnitsMetric(30),
      [-1.375,GripCeilingZ()-1.375]
   ];
 
-  color("SteelBlue")
+  color("Silver")
   for (xz = boltsXZ)
   translate([xz[0],-LowerMaxY()+0.07,xz[1]])
   rotate([90,0,0])
@@ -279,7 +279,7 @@ module GripSplitter(clearance=0) {
 module LowerSidePlates(showLeft=true, showRight=true, alpha=1) {
 
   // Trigger Guard Sides
-  color("DarkSlateBlue", alpha)
+  color("Tan", alpha)
   render()
   difference() {
 

@@ -53,7 +53,7 @@ module ChamberBolt(positions, chamberRadius, boltOffset=1.5, cutter=false) {
   translate([chamberRadius-0.1-(cutter?chamberRadius:0),0,boltOffset])
   rotate([0,90,0])
   rotate(180)
-  color("Gold") render()
+  color("Silver") render()
   Bolt(bolt=ChamberBolt(),
        length=0.8+(cutter?chamberRadius:0), cap=false,
        clearance=false, teardrop=cutter);
@@ -111,7 +111,7 @@ module OffsetZigZagRevolver(chamberRadius=1, chamberInnerRadius=0,
     circle(r=chamberInnerRadius, $fn=Resolution(20,60));
   }
 
-  color("SaddleBrown", alpha)
+  color("Tan", alpha)
   DebugHalf(enabled=debug)
   difference() {
     
