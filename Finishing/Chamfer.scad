@@ -25,20 +25,20 @@ module RoundedBoolean(edgeOffset=1, edgeSign=-1,
 
 module Fillet(r=0.125, h=1, inset=false, taperEnds=true) {
   effectiveHeight = h -(inset ? r*2 : 0);
-  
-  
+
+
   render()
   translate([-ManifoldGap(2),-ManifoldGap(2),(inset ? r : 0)])
   difference() {
     linear_extrude(height=effectiveHeight)
     intersection() {
       RoundedBoolean(edgeOffset=0, r=r, teardrop=false, $fn=40);
-      
+
       translate([ManifoldGap(), -ManifoldGap()])
       rotate(90)
       square(r+ManifoldGap());
     }
-    
+
     if (taperEnds)
     for (m = [0,1]) translate([0,0,m ? effectiveHeight : 0]) mirror([0,0,m])
     translate([-r,r,-ManifoldGap()])
@@ -71,10 +71,10 @@ module SquareHoleEndChamfer(xy=[1,1], r=0.125, teardrop=true, teardropAngle=-90,
   render()
   translate([center ? -xy[0]/2 : 0, center ? -xy[1]/2 : 0, 0])
   difference() {
-    
+
     translate([-r,-r,-r])
     cube([xy[0]+(r*2), xy[1]+(r*2), r*2]);
-    
+
     for (axyl = [[0,-r,-r,xy[0]], [90,-r,r,xy[1]], [0,-r,xy[1]+r,xy[0]], [90,-r,-xy[0]-r,xy[1]]])
     rotate([0,0,axyl[0]])
     translate([axyl[1]-ManifoldGap(),axyl[2],r])
@@ -96,25 +96,25 @@ module ChamferedSquareHole(sides=[1,1], length=1, center=true,
                            corners=true, cornerRadius=0.1) {
   render()
   union() {
-  
+
     // Square Tube
     translate([0,0,chamferBottom ? -chamferRadius/2 : 0])
     linear_extrude(height=length
                          +(chamferTop?chamferRadius/2:0)
                          +(chamferBottom?chamferRadius/2:0)) {
       square(sides, center=center);
-  
+
       if (corners)
       translate([center ? -sides[0]/2 : 0,center ? -sides[1]/2 : 0])
       for (xy = [[0,0], [0, sides[1]], [sides[0],0], [sides[0],sides[1]]])
       translate([xy[0], xy[1]])
       circle(r=cornerRadius, $fn=20);
     }
-      
+
     // Chamfer the bottom
     if (chamferBottom)
     SquareHoleEndChamfer(xy=sides, r=chamferRadius, center=center, teardrop=teardropTop);
-    
+
     // Chamfer the tube front
     if (chamferTop)
     translate([0,0,length])
@@ -152,7 +152,7 @@ module ChamferedCube(xyz=[1,2,3], r=0.25, center=false, fn=20,
                      chamferXYZ=[1,1,1],
                      teardropXYZ=[true, true, true],
                      teardropTopXYZ=[true, true, true]) {
-  
+
   translate([center ? -xyz[0]/2 : 0,
               center ? -xyz[1]/2 : 0,
               center ? -xyz[2]/2 : 0])
@@ -172,7 +172,7 @@ module ChamferedCube(xyz=[1,2,3], r=0.25, center=false, fn=20,
     linear_extrude(height=xyz[1])
     ChamferedSquare(xy=[xyz[0], xyz[2]], r=r, $fn=fn,
                     teardrop=teardropXYZ[1], teardrop=teardropTopXYZ[1]);
-    
+
     // Z
     if (chamferXYZ[2])
     linear_extrude(height=xyz[2])
@@ -229,17 +229,17 @@ module ChamferedCircularHole(r1=1, r2=0.1, h=1,
                              chamferTop=true, chamferBottom=true,
                              teardropBottom=true, teardropTop=false) {
   union() {
-  
+
     // Bottom Chamfer
     if (chamferBottom)
     HoleChamfer(r1=r1, r2=r2, teardrop=teardropBottom);
-    
+
     // TopChamfer
     if (chamferTop)
     translate([0,0,h])
     mirror([0,0,1])
     HoleChamfer(r1=r1, r2=r2, teardrop=teardropTop);
-  
+
     // Center
     translate([0,0,-r2])
     cylinder(r=r1, h=h+(r2*2));
@@ -258,7 +258,7 @@ module ChamferedToroidalCylinder(r1=1, r2=0.5, r3=0.1, h=1) {
 render() {
   difference() {
     ChamferedCube(xyz=[2,3,2], center=false);
-    
+
     translate([0.5, 0.5, 0])
     ChamferedSquareHole(sides=[1,2], length=2, center=false);
   }
@@ -279,10 +279,10 @@ translate([-4,0,0]) {
 
 translate([0,-2,0]) {
   RoundedBoolean(teardrop=true, $fn=20);
-  
+
   translate([0,-2,0])
   CircularOuterEdgeChamfer(r1=0.5, r2=0.125, teardrop=false, $fn=20);
-  
+
   translate([0,-4, 0])
   ChamferedCircularHole(r1=1, r2=0.125, h=1, $fn=20);
 

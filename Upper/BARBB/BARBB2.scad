@@ -368,14 +368,16 @@ DebugHalf(enabled=false)
 BARBB_UpperRear();
 
 translate([AR15BarrelGasLength()+2,0,0]) {
+  translate([-3,0,0]) {
+    ChargingRod(length=18, minX=-8.5);
+    ChargingPump();
+  }
+  
   PipeUpperAssembly(pipeAlpha=0.5, pipeOffsetX=0,
                     receiverLength=15,
                     frame=true,
                     stock=false, tailcap=false,
                     debug=false);
-    
-  translate([-3,0,0])
-  ChargingPump();
 }
 
 *!scale(25.4)

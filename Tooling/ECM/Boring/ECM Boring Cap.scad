@@ -1,5 +1,6 @@
 use <../../../Meta/Animation.scad>;
 use <../../../Meta/Cylinder Text.scad>;
+use <../../../Meta/Debug.scad>;
 use <../../../Meta/Manifold.scad>;
 use <../../../Meta/Resolution.scad>;
 use <../../../Finishing/Chamfer.scad>;
@@ -76,7 +77,7 @@ module ECM_BoringCap(
   // Main water feed part
   render()
   difference() {
-    PipeCap(pipeDiameter=pipeDiameter+clearance,
+    PrintablePipeCap(pipeDiameter=pipeDiameter+clearance,
             base=base,
             oRingSection=pipeORingSection,
             wall=wall+pipeORingSection,
@@ -154,5 +155,5 @@ module ECM_BoringCap(
   }
 }
 
-render()
+//DebugHalf()
 ECM_BoringCap(brandingText=true, speedHoles=true, $fn=20);

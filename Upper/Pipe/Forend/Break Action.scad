@@ -34,7 +34,6 @@ use <../Charging Pump.scad>;
 
 // Settings: Vitamins
 function BarrelPipe() = Spec_PipeThreeQuarterInch();
-function PivotBolt() = Spec_BoltFiveSixteenths();
 function BarrelSleevePipe() = Spec_PipeOneInch();
 function SquareRodFixingBolt() = Spec_BoltM3();
 
@@ -58,10 +57,6 @@ function BarrelSleeveRadius(clearance=undef)
 
 function BarrelSleeveDiameter(clearance=undef)
     = PipeOuterDiameter(BarrelSleevePipe(), clearance);
-function PivotBoltRadius(clearance=false)
-    = BoltRadius(PivotBolt(), cutter=clearance);
-function PivotBoltDiameter(clearance=false)
-    = BoltDiameter(PivotBolt(), cutter=clearance);
 
 // Calculated: Lengths
 function ForendFrontLength() = UpperLength()-1-RecoilPlateRearX();
@@ -69,8 +64,8 @@ function ReceiverTopZ() = ReceiverOR();
 
 // Calculated: Positions
 function ForendFrontX() = RecoilPlateRearX()+UpperLength();
-function PivotX() = BarrelSleeveLength()+PivotBoltRadius();
-function PivotZ() = -(BarrelRadius()+PivotBoltRadius());
+function PivotX() = BarrelSleeveLength();
+function PivotZ() = -BarrelSleeveRadius();
 function PivotAngle() = 35;
 
 module BreakActionRecoilPlateHousing(debug=false) {
@@ -113,42 +108,28 @@ module Barrel(barrel=BarrelPipe(), length=BarrelLength(), clearance=undef, cutte
        hollow=!cutter, length=length);
 }
 
-module BarrelPivotBolt(cutter=false, teardrop=false) {
-  color("Silver")
-  translate([PivotX(), 1.5, PivotZ()])
-  rotate([90,0,0])
-  NutAndBolt(bolt=PivotBolt(), boltLength=3, center=true,
-             clearance=cutter, teardrop=cutter&&teardrop);
-}
 
 module BarrelPivotCollar(length=1.75, debug=false, alpha=1, cutter=false) {
   color("Tomato", alpha) DebugHalf(enabled=debug)
   difference() {
     hull() {
-      translate([PivotX()+PivotBoltRadius()+WallPivot(), 0, 0])
+      translate([PivotX()+WallPivot(), 0, 0])
       rotate([0,-90,0])
       ChamferedCylinder(r1=BarrelSleeveRadius()+WallBarrel(), r2=1/16,
                h=length,
                $fn=60);
       
-      translate([PivotX(), (BarrelSleeveRadius()+WallBarrel()), PivotZ()])
-      rotate([90,0,0])
-      ChamferedCylinder(r1=PivotBoltRadius()+WallPivot(), r2=1/16,
-               h=(BarrelSleeveRadius()+WallBarrel())*2,
-               $fn=Resolution(30,60));
-      
-      translate([PivotX(), -(BarrelSleeveRadius()+WallBarrel()), PivotZ()])
+      translate([PivotX()+WallPivot(), -(BarrelSleeveRadius()+WallBarrel()), PivotZ()])
       mirror([1,0,0])
       mirror([0,0,1])
-      ChamferedCube([length-(PivotBoltRadius()+WallPivot()),
+      ChamferedCube([length,
             (BarrelSleeveRadius()+WallBarrel())*2,
-            (PivotBoltRadius()+WallPivot())], r=1/16,  chamferBottom=false);
+            (WallPivot())], r=1/16,  chamferBottom=false);
     }
     
     if (!cutter) {
       Barrel(clearance=PipeClearanceLoose(), cutter=true);
       BarrelSleeve(clearance=PipeClearanceSnug(), cutter=true);
-      BarrelPivotBolt(cutter=true);
     }
   }
   
@@ -158,7 +139,6 @@ module BarrelAssembly(pivotFactor=0, cutter=false) {
   Pivot(factor=pivotFactor, pivotX=PivotX(), pivotZ=PivotZ(), angle=PivotAngle()) {
     Barrel(cutter=cutter);
     BarrelSleeve(cutter=cutter);
-    BarrelPivotBolt(cutter=cutter);
     BarrelPivotCollar(cutter=cutter);
   }
 }
@@ -197,8 +177,14 @@ module BreakActionForend(debug=false, alpha=1) {
       }
     }
     
-    //PivotHull()
-    //Barrel(length=PivotX(), cutter=true);
+    PivotHull()
+    Barrel(length=PivotX(), cutter=true);
+    
+    PivotHull()
+    BarrelSleeve(cutter=true);
+    
+    *PivotHull()
+    BarrelPivotCollar(cutter=true);
     
     for (pf = [0,1])
     BarrelAssembly(pivotFactor=pf, cutter=true);
@@ -247,13 +233,13 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1,
   chargingRodAnimationFactor = Animate(ANIMATION_STEP_CHARGE)
                              - Animate(ANIMATION_STEP_CHARGER_RESET);
 
-  BreakActionRecoilPlateHousing();
-  RecoilPlateFiringPinAssembly(); 
-  RecoilPlate(debug=debug);
+  *BreakActionRecoilPlateHousing();
+  *RecoilPlateFiringPinAssembly(); 
+  *RecoilPlate(debug=debug);
                                  
-  ChargingPumpAssembly(debug=debug);
+  *ChargingPumpAssembly(debug=debug);
   
-  BreakActionFrameAssembly(debug=debug);
+  *BreakActionFrameAssembly(debug=debug);
   
   BarrelAssembly(pivotFactor=pivotFactor, debug=debug);
 

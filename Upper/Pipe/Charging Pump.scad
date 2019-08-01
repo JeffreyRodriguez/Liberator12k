@@ -42,9 +42,13 @@ function ForegripChargingGap() = 0.5;
 function ChargingRodLength() = 12;
 function ChargerTowerLength() = 0.5;
 
+function PumpGripDiameter() = 2;
+function PumpGripRadius() = PumpGripDiameter()/2;
+
 /* How far does the stationary portion of the square rod
  extend into the part that holds it? */
 function ChargingRodStaticLength() = 1;
+
 function ChargingRodOffset() = ReceiverOR()+RodRadius(ChargingRod());
 //function ChargingRodOffset() = 1.0375; // 1.075;
 
@@ -203,7 +207,7 @@ module ChargingPump(innerRadius=1.1/2,
 
 
 
-module ChargingPumpGripBase(outerRadius=ReceiverOR(), length=ForegripLength(),
+module ChargingPumpGripBase(outerRadius=PumpGripRadius(), length=ForegripLength(),
                             rings=true, ringRadius=3/32, ringGap=0.75,
                             debug=false, alpha=1, $fn=Resolution(20,100)) {
 
@@ -292,7 +296,7 @@ translate([-ForegripFrontX(),0,0])
 ChargingPump(innerRadius=1.15/2);
 
 // 1" 4130
-!scale(25.4)
+*!scale(25.4)
 rotate([0,-90,0])
 translate([-ForegripFrontX(),0,0])
 ChargingPump(innerRadius=1.01/2);

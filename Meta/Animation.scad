@@ -10,7 +10,7 @@
 */
 
 // wip
-
+/*
 ANIMATION_STEP_UNSAFE        = 0;
 ANIMATION_STEP_TRIGGER       = 1;
 ANIMATION_STEP_STRIKER       = 2;
@@ -40,7 +40,30 @@ ANIMATION_STEPS = [
                    ANIMATION_STEP_LOCK,
                    ANIMATION_STEP_SAFE
                    ];
+*/
 
+
+ANIMATION_STEP_TRIGGER       = 0;
+ANIMATION_STEP_FIRE          = 1;
+ANIMATION_STEP_CHARGE        = 2;
+ANIMATION_STEP_TRIGGER_RESET = 3;
+ANIMATION_STEP_CHARGER_RESET = 4;
+ANIMATION_STEP_UNLOCK        = 5;
+ANIMATION_STEP_UNLOAD        = 6;
+ANIMATION_STEP_LOAD          = 7;
+ANIMATION_STEP_LOCK          = 8;
+
+ANIMATION_STEPS = [
+                   ANIMATION_STEP_TRIGGER,
+                   ANIMATION_STEP_FIRE,
+                   ANIMATION_STEP_CHARGE,
+                   ANIMATION_STEP_TRIGGER_RESET,
+                   ANIMATION_STEP_CHARGER_RESET,
+                   ANIMATION_STEP_UNLOCK,
+                   ANIMATION_STEP_UNLOAD,
+                   ANIMATION_STEP_LOAD,
+                   ANIMATION_STEP_LOCK
+                   ];
 function AnimationStepCount() = len(ANIMATION_STEPS);
 function AnimationStepTime() = 1/AnimationStepCount();
 function AnimationStep(t)    = ANIMATION_STEPS[floor(t / AnimationStepTime())];

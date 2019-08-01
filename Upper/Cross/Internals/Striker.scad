@@ -172,12 +172,12 @@ module Striker(length=StrikerRodLength()) {
   translate([StrikerCollarMaxX()-StrikerCollarLength(),0,0])
   rotate([0,-90,0])
   cylinder(r=StrikerSpacerRadius(),
-            h=StrikerSpringLength(Animate(ANIMATION_STEP_STRIKER)),
+            h=StrikerSpringLength(SubAnimate(ANIMATION_STEP_FIRE, start=0.75)),
           $fn=10);
 
   // Striker Collar and Top
-  translate([StrikerTravel()*(Animate(ANIMATION_STEP_STRIKER)),0,0])
-  translate([-StrikerTravel()*(Animate(ANIMATION_STEP_CHARGE)),0,0])
+  translate([StrikerTravel()*(SubAnimate(ANIMATION_STEP_FIRE, start=0.75)),0,0])
+  translate([-StrikerTravel()*(SubAnimate(ANIMATION_STEP_CHARGE, end=0.75)),0,0])
   {
     StrikerBolt(cutter=false);
 

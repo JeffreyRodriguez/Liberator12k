@@ -29,7 +29,7 @@ module NEMA17(cutter=false) {
   }
 }
 
-module PlanetaryNEMA17(cutter=false) {
+module PlanetaryNEMA17(cutter=true) {
   color("DimGrey")
   render()
   scale(1/25.4) {
@@ -47,13 +47,13 @@ module PlanetaryNEMA17(cutter=false) {
     
     // Center boss
     mirror([0,0,1])
-    cylinder(r=(22/2)+1, h=2 + (cutter?25:0), $fn=30);
+    cylinder(r=(22.5/2), h=2, $fn=30);
     
     // Mounting bolts
     for (R = [0:90:360]) rotate(45+R)
     translate([28/2, 0, 0])
     mirror([0,0,1])
-    cylinder(r=4/2, h=8+(cutter?10:0), $fn=6);
+    cylinder(r=3.5/2, h=8+(cutter?12:0), $fn=15);
   }
 }
 NEMA17();

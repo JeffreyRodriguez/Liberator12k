@@ -12,14 +12,12 @@ BARREL_ID = 0.429-0.01;
 TWIST_RATE = 1/20;
 
 module ECM_RiflingChannel(outsideDiameter = BARREL_ID,
-                               rodSpec = Spec_RodThreeSixteenthInch(),
                                 length = 1,
                              twistRate = TWIST_RATE,
                              twistSign = -1,
                            grooveCount = 6,
                            grooveDepth = 0.06,
-                           electrified = true,
-                           supportHelix= true,
+                           wireDiameter= 0.045,
                            intersect   = false,
                                    $fn = 60) {
 
@@ -32,33 +30,24 @@ module ECM_RiflingChannel(outsideDiameter = BARREL_ID,
       linear_extrude(height=length,
                       twist=twistSign*length*twistRate*360,
                      slices=length*10) {
-      intersection() {
-          if (intersect)
-          circle(r=(outsideDiameter/2));
-        
-          // Grooves
-          for (groove = [0:grooveCount-1])
-          rotate(360/(grooveCount)*groove) {
+        intersection() {
+            if (intersect)
+            circle(r=(outsideDiameter/2));
+          
+            // Water Grooves
+            for (groove = [0:grooveCount-1])
+            rotate(360/(grooveCount)*groove)
             translate([outsideRadius,0])
-            circle(r=grooveDepth);
-            
-            if (electrified)
-            translate([0,-0.02])
-            square([outsideRadius,0.04]);
+            circle(r=grooveDepth, $fn=20);
           }
-        }
+        
+        // Wire Grooves
+        for (groove = [0:grooveCount-1])
+        rotate(360/(grooveCount)*groove)
+        translate([outsideRadius-grooveDepth,0])
+        circle(r=wireDiameter/2, $fn=10);
       }
     }
-      
-    // Internal support helix
-    if (supportHelix)
-    linear_extrude(height=length,
-                    twist=length*sqrt(2)*90,
-                   slices=length*sqrt(2)*$fn/4)
-    for (groove = [0:grooveCount-1])
-    rotate(360/(grooveCount)*groove)
-    translate([RodRadius(rodSpec),-0.01])
-    square([outsideRadius-RodRadius(rodSpec)-grooveDepth,0.02]);
     
   }
 }
@@ -67,7 +56,6 @@ module ECM_RiflingChannel(outsideDiameter = BARREL_ID,
 
 
 module ECM_RiflingMandrel(outsideDiameter = BARREL_ID,
-                               rodSpec = Spec_RodThreeSixteenthInch(),
                                 length = 1,
                              twistRate = TWIST_RATE,
                              twistSign = -1,
@@ -106,11 +94,6 @@ module ECM_RiflingMandrel(outsideDiameter = BARREL_ID,
         circle(r=outsideRadius*0.9-ManifoldGap());
       }
     }
-
-    // Electrode
-    if (rodSpec != undef)
-    translate([0,0,-ManifoldGap()])
-    Rod(rod=rodSpec, length=base+length+ManifoldGap(2), clearance=RodClearanceSnug());
     
     // Water channels
     rotate(360*twistRate*-twistSign*(base+chamberLength))
@@ -125,7 +108,7 @@ module ECM_RiflingMandrel(outsideDiameter = BARREL_ID,
     ECM_RiflingChannel(length=base+chamberLength+ManifoldGap(3),
                        grooveDepth=grooveDepth,
                        twistRate=twistRate,
-                       outsideDiameter=outsideDiameter-0.01,
+                       outsideDiameter=outsideDiameter,
                        electrified=false, intersect=true, supportHelix=false);
     
   }
@@ -148,9 +131,9 @@ ECM_RiflingMandrel(length=2.795-0.65+0.0625, twistRate=1/20,
                    outsideDiameter = 0.38);
 
 // 0.45 ACP
-!scale(25.4)
+scale(25.4)
 //ECM_RiflingChannel(length=2, chamberLength=0.25, twistRate=1/16, outsideDiameter=0.442125984);
-ECM_RiflingMandrel(length=4.5,
+ECM_RiflingMandrel(length=3,
                    twistRate=1/16,
                    grooveDepth = 0.07,
                    outsideDiameter=0.442125984,

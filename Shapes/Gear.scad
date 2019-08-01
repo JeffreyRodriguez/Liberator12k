@@ -174,10 +174,19 @@ d12=pitch_radius(mm_per_tooth,n1) + pitch_radius(mm_per_tooth,n2);
 d13=pitch_radius(mm_per_tooth,n1) + pitch_radius(mm_per_tooth,n3);
 d14=pitch_radius(mm_per_tooth,n1) + pitch_radius(mm_per_tooth,n4);
 
-*translate([ 0,    0, 0]) rotate([0,0, $t*360/n1])                 color([1.00,0.75,0.75]) gear(mm_per_tooth,n1,thickness,hole,twist);
-*translate([ 0,  d12, 0]) rotate([0,0,-($t+n2/2-0*n1+1/2)*360/n2]) color([0.75,1.00,0.75]) gear(mm_per_tooth,n2,thickness,root_radius(mm_per_tooth,n2)*2-height,-twist);
+translate([ 0,    0, 0]) rotate([0,0, $t*360/n1])                 color([1.00,0.75,0.75]) gear(mm_per_tooth,n1,thickness,hole,twist);
+translate([ 0,  d12, 0]) rotate([0,0,-($t+n2/2-0*n1+1/2)*360/n2]) color([0.75,1.00,0.75]) gear(mm_per_tooth,n2,thickness,root_radius(mm_per_tooth,n2)*2-height,-twist);
 *translate([ d13,  0, 0]) rotate([0,0,-($t-n3/4+n1/4+1/2)*360/n3]) color([0.75,0.75,1.00]) gear(mm_per_tooth,n3,thickness,hole,-twist);
 *translate([-d14,  0, 0]) rotate([0,0,-($t-n4/4-n1/4+1/2-floor(n4/4)-3)*360/n4]) color([1.00,0.75,0.50]) gear(mm_per_tooth,n4,thickness,hole,-twist,n4-3);
 *translate([(-floor(n5/2)-floor(n1/2)+$t+n1/2-1/2)*mm_per_tooth, -d1+0.0, 0]) rotate([0,0,0]) color([0.75,0.75,0.75]) rack(mm_per_tooth,n5,thickness,height,twist=-twist);
 *translate([ 0,    0, 0]) rotate([0,0,-($t+0.5+n2/2)*360/n6])                 color([1.00,0.50, 1.00]) gear(mm_per_tooth,n6,thickness,outer_radius(mm_per_tooth, n6)*2+height,-twist);
 
+
+
+use <Semicircle.scad>;
+intersection() {
+  gear(mm_per_tooth,72,thickness,outer_radius(mm_per_tooth, 72)*2+10,-twist);
+  
+  linear_extrude(height=height, center=true)
+  semicircle(od=300, angle=45);
+}

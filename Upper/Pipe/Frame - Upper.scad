@@ -44,11 +44,6 @@ function FrameUpperBolt() = Spec_BoltOneHalf();
 function FrameUpperBoltExtension() = FrameUpperBoltLength()
                                    -0.5
                                    -FrameUpperRearExtension();
-function FrameUpperBoltOffsetZ() = ReceiverOR()
-                            + FrameUpperBoltRadius()
-                            + WallFrameUpperBolt();
-function FrameUpperBoltOffsetY() = FrameUpperBoltDiameter()
-                             + WallFrameUpperBolt();
 
 function FrameUpperBoltOffsetZ() = 1.39;
 function FrameUpperBoltOffsetY() = 1;
