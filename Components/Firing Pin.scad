@@ -11,7 +11,7 @@ use <../Vitamins/Nuts And Bolts.scad>;
 use <../Vitamins/Rod.scad>;
 
 // Settings: Vitamins
-DEFAULT_FIRING_PIN_RETAINER_BOLT = Spec_BoltM5();
+DEFAULT_FIRING_PIN_RETAINER_BOLT = Spec_BoltM4();
 DEFAULT_BOLT_LENGTH = 0.5;
 
 function FiringPinTemplateRod() = Spec_RodOneSixteenthInch();
