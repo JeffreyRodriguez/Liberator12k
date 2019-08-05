@@ -148,7 +148,7 @@ module OffsetZigZagRevolver(chamberRadius=1, chamberInnerRadius=0,
           if (coreInnerRadius > 0) {
               
               // Hollow out the core
-              cylinder(r=coreInnerRadius, h=height+ManifoldGap(), $fn=20);
+              cylinder(r=coreInnerRadius, h=height+ManifoldGap(), $fn=40);
           }
       }
     }
