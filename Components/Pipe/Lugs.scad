@@ -39,11 +39,18 @@ module PipeLugPipe(length=ReceiverLength(),
                    debug=false, cutter=false, alpha=1) {
   color("DimGrey", alpha)
   DebugHalf(enabled=debug)
-  translate([LowerMaxX(),0,0])
-  rotate([0,-90,0])
-  Pipe(pipe=ReceiverPipe(),
-       length=length,
-       hollow=!cutter, clearance=cutter?PipeClearanceSnug():undef);
+  difference() {
+    translate([LowerMaxX(),0,0])
+    rotate([0,-90,0])
+    Pipe(pipe=ReceiverPipe(),
+         length=length,
+         hollow=!cutter, clearance=cutter?PipeClearanceSnug():undef);
+    
+    
+    if (!cutter)
+    translate([0,0,LowerOffsetZ()])
+    SearCutter(length=SearLength()+abs(LowerOffsetZ()));
+  }
 }
 
 
@@ -95,7 +102,8 @@ module PipeLugCenter(cutter=false, clearance=0.002, alpha=1) {
       PipeLugFront(cutter=true);
       PipeLugRear(cutter=true);
 
-      SearCutter(length=SearLength()+LowerOffsetZ());
+      translate([0,0,LowerOffsetZ()])
+      SearCutter(length=SearLength()+abs(LowerOffsetZ()));
     }
   }
 }
