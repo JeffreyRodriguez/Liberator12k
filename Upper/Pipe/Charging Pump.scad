@@ -7,6 +7,7 @@ use <../../Meta/Resolution.scad>;
 
 use <../../Components/Cylinder Redux.scad>;
 use <../../Components/Pipe/Lugs.scad>;
+use <../../Components/Pump Grip.scad>;
 
 use <../../Lower/Lower.scad>;
 use <../../Lower/Trigger.scad>;
@@ -32,36 +33,26 @@ use <Recoil Plate.scad>;
 
 // Settings: Vitamins
 function ChargingRod() = Spec_RodOneQuarterInch();
-function ChargingPin() = Spec_RodThreeThirtysecondInch();
-function SquareRodFixingBolt() = Spec_BoltM3();
+function ChargingRodBolt() = Spec_BoltM4();
 
 // Settings: Lengths
-function UpperLength() =  5.75;
-function ForegripLength() = 5.25;
-function ForegripChargingGap() = 0.5;
 function ChargingRodLength() = 12;
 function ChargerTowerLength() = 0.5;
-
-function PumpGripDiameter() = 2;
-function PumpGripRadius() = PumpGripDiameter()/2;
 
 /* How far does the stationary portion of the square rod
  extend into the part that holds it? */
 function ChargingRodStaticLength() = 1;
 
-function ChargingRodOffset() = ReceiverOR()+RodRadius(ChargingRod());
-//function ChargingRodOffset() = 1.0375; // 1.075;
+function ChargingRodOffset() =  0.875+RodRadius(ChargingRod());
 
 // Settings: Walls
-function WallChargingPin() = 1/8;
+function WallCharger() = 1/8;
 
-
-function ChargingPinX() = RecoilPlateRearX()-0.25;
-function ChargingRodMinX() = ChargingPinX()-0.25;
+function ChargingRodMinX() = RecoilPlateRearX()-0.5;
 function ChargingRodMaxX() = ChargingRodMinX()+ChargingRodLength();
 
 // Calculated: Lengths
-function ChargerTravel() = 2.0625;
+function ChargerTravel() = 2.3125;
 
 // Calculated: Positions
 echo("Charging Rod Length: ", ChargingRodLength());
@@ -69,56 +60,72 @@ echo("Charging Rod Length: ", ChargingRodLength());
 function ForegripFrontX() = ChargingRodMinX()
                     + ChargingRodLength()
                     - ChargingRodStaticLength();
-function ForegripRearX() = ForegripFrontX()-ForegripLength();
+function ForegripRearX() = ForegripFrontX()-PumpGripLength();
 
 function ChargerAnimationFactor() = Animate(ANIMATION_STEP_CHARGE)
                              - Animate(ANIMATION_STEP_CHARGER_RESET);
 
+module ZigZagJig() {
+  length=ChargerTravel()+ChargerTowerLength()+abs(RecoilPlateRearX())+(ChargerTowerLength()/2);
+  height=0.75;
+  width=0.75;
+  
+  difference() {
+    translate([0,-(width/2),0])
+    ChamferedCube([length,
+                   width,
+                   height], r=1/16);
 
-module ChargingPin(cutter=false, teardrop=false, clearance=RodClearanceSnug()) {
-  color("Silver")
-  translate([ChargingPinX(), 0, 0.5])
-  Rod(ChargingPin(),
-      length=ChargingRodOffset()+0.25,
-      clearance=cutter?clearance:undef,
-      teardrop=teardrop, teardropTruncated=false, teardropRotation=180);
+    // Charging rod
+    translate([0,0,height-RodRadius(ChargingRod())])
+    rotate([0,90,0])
+    SquareRod(ChargingRod(), length=length+ManifoldGap(),
+              clearance=RodClearanceSnug());
+  
+    // ZigZag Actuator
+    for (X = [0,ChargerTravel()+abs(RecoilPlateRearX())+(ChargerTowerLength()/2)])
+    translate([(ChargerTowerLength()/2)+X,0,-ManifoldGap()])
+    cylinder(r=3/32/2, h=height, $fn=8);
+  }
+  
+}
+
+module ChargingRodBolts(caps=true, cutter=false, teardrop=false) {
+  
+  // Charger
+  color("SteelBlue")
+  translate([ChargingRodMinX()+(WallCharger()*2), 0,
+             ChargingRodOffset()+RodRadius(ChargingRod())+WallCharger()])
+  Bolt(bolt=ChargingRodBolt(), capOrientation=true, cap=caps,
+       length=cutter?1.5:1, clearance=cutter, teardrop=cutter);
+  
+  // Pump grip
+  translate([ChargingRodMaxX()-0.5,0,ChargingRodOffset()+RodRadius(ChargingRod())+WallCharger()])
+  Bolt(bolt=ChargingRodBolt(), capOrientation=true, cap=caps,
+       length=cutter?1.5:1, clearance=cutter, teardrop=cutter);
+
+  // ZigZag Actuator
+  translate([ChargerTravel(),0,ChargingRodOffset()-RodRadius(ChargingRod())])
+  mirror([0,0,1])
+  Bolt(bolt=ChargingRodBolt(), capOrientation=true, cap=caps,
+       length=3/16, clearance=cutter, teardrop=cutter);
+
 }
 
 module ChargingRod(clearance=RodClearanceLoose(),
                    length=ChargingRodLength(),
                    minX=ChargingRodMinX(),
                    bolt=true,
-                   actuator=true, actuatorRadius=(1/4)/2,
                    travel=ChargerTravel(),
                    cutter=false, debug=false) {
-  color("Silver") DebugHalf(enabled=debug) {
+  color("Silver")
+  DebugHalf(enabled=debug) {
 
     // Charging rod
     translate([minX-(cutter?ChargerTravel():0),0,ChargingRodOffset()])
     rotate([0,90,0])
     SquareRod(ChargingRod(), length=length+(cutter?ChargerTravel():0)+ManifoldGap(),
               clearance=cutter?clearance:undef);
-
-    // Charging Rod Fixing Bolt
-    if (bolt)
-    translate([ChargingRodMaxX()-0.5,0,RodRadius(ChargingRod())+0.25])
-    Bolt(bolt=SquareRodFixingBolt(),
-         length=cutter?1.5:1, clearance=cutter, teardrop=cutter);
-
-    // Actuator rod
-    if (actuator)
-    translate([ChargerTravel()+(actuatorRadius),0,ChargingRodOffset()-RodRadius(ChargingRod())])
-    mirror([0,0,1])
-    hull() {
-      Rod(ActuatorRod(), clearance=cutter?RodClearanceSnug():undef,
-          length=0.49);
-
-      if (cutter) {
-        translate([-ChargerTravel()-(actuatorRadius*2),0,0])
-        Rod(ActuatorRod(), clearance=cutter?RodClearanceLoose():undef,
-            length=0.49);
-      }
-    }
   }
 }
 
@@ -163,7 +170,7 @@ module Charger(clearance=RodClearanceLoose(),
       translate([ChargerTravel(),0,0])
       ChargingRod(cutter=true, clearance=RodClearanceSnug());
 
-      ChargingPin(cutter=true, teardrop=true);
+      ChargingRodBolts(cutter=true, teardrop=true);
 
     }
   }
@@ -189,53 +196,27 @@ module ChargingPump(innerRadius=1.1/2,
       // Body around the barrel
       translate([ForegripFrontX(),0,0])
       rotate([0,90,0])
-      ChargingPumpGripBase();
+      PumpGrip();
     }
 
     // Barrel hole, but with a bearing profile
-    translate([ForegripFrontX()+(ForegripLength()/2),0,0])
+    translate([ForegripFrontX()+(PumpGripLength()/2),0,0])
     rotate([0,90,0])
-    BearingSurface(r=innerRadius, length=ForegripLength(),
+    BearingSurface(r=innerRadius, length=PumpGripLength(),
                    depth=0.0625, segments=6, taperDepth=0.125,
-                   center=true, $fn=40);
+                   center=true);
 
     ChargingRod(length=ChargingRodLength(),
                 travel=ChargerTravel(),
                 clearance=RodClearanceSnug(), cutter=true);
+    
+    ChargingRodBolts(cutter=true);
   }
 }
 
 
 
-module ChargingPumpGripBase(outerRadius=PumpGripRadius(), length=ForegripLength(),
-                            rings=true, ringRadius=3/32, ringGap=0.75,
-                            debug=false, alpha=1, $fn=Resolution(20,100)) {
 
-  color("Tan", alpha)
-  DebugHalf(enabled=debug)
-  difference() {
-    union() {
-
-      // Body around the barrel
-      ChamferedCylinder(r1=outerRadius, r2=1/16, h=length);
-    }
-
-    // Gripping cutout rings
-    if (rings)
-    for (Z = [ringGap:ringGap:length-ringGap]) translate([0,0,Z])
-    for (M = [0,1]) mirror([0,0,M])
-    translate([0,0,-ringRadius*1.5]) scale([1,1,1.5]) translate([0,0,ringRadius])
-    TeardropTorus(majorRadius=outerRadius-ringRadius,
-                  minorRadius=ringRadius);
-
-    // Gripping cutout linear channels
-    for (R = [0:60:360]) rotate([0,0,R])
-    translate([outerRadius, 0, -ManifoldGap()])
-    linear_extrude(height=length+ManifoldGap(2))
-    for (R =[1,-1]) rotate(90*R)
-    Teardrop(r=ringRadius*2);
-  }
-}
 
 module ChargingPumpAssembly(animationFactor=ChargerAnimationFactor(),
                             length=ChargingRodLength(), minX=ChargingRodMinX(),
@@ -243,7 +224,7 @@ module ChargingPumpAssembly(animationFactor=ChargerAnimationFactor(),
   translate([-ChargerTravel()*animationFactor,0,0]) {
 
     color("Silver")
-    ChargingPin();
+    ChargingRodBolts();
 
     ChargingRod(length=length, minX=minX, debug=debug);
 
@@ -299,7 +280,13 @@ ChargingPump(innerRadius=1.15/2);
 *!scale(25.4)
 rotate([0,-90,0])
 translate([-ForegripFrontX(),0,0])
-ChargingPump(innerRadius=1.01/2);
+ChargingPump(innerRadius=1.005/2);
+
+
+// drilling jig for zigzag, charger, pump grip
+*!scale(25.4)
+//translate([ChargingRodMinX(),0,ChargingRodOffset()])
+ZigZagJig();
 
 //
 // Charger
