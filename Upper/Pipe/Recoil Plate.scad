@@ -25,9 +25,6 @@ function RecoilPlateRearX()  = -0.5;
 //function FiringPinOffset() = -0.12; // .22 Rimfire Offset
 function FiringPinOffset() = 0;
 
-// Settings: Vitamins
-function SquareRodFixingBolt() = Spec_BoltM3();
-
 // Calculated: Positions
 function FiringPinMinX() = RecoilPlateRearX()-FiringPinBodyLength();
 
@@ -49,7 +46,7 @@ module RecoilPlate(firingPinAngle=0, cutter=false, debug=false) {
                   chamferXYZ=[0,1,0],
                   teardropXYZ=[false, false, false],
                   teardropTopXYZ=[false, false, false]);
-    
+
     if (!cutter)
     rotate([firingPinAngle,0,0])
     RecoilPlateFiringPinAssembly(cutter=true);
@@ -72,7 +69,7 @@ module RecoilPlateHousing(topHeight=ReceiverOR(),
 
       children();
     }
-    
+
     RecoilPlate(cutter=true);
 
     rotate([firingPinAngle,0,0])
@@ -85,14 +82,14 @@ module RecoilPlateAssembly(firingPinAngle=0,
                            topHeight=ReceiverOR(), bottomHeight=ReceiverOR(),
                            showFiringPin=true, showRecoilPlate=true,
                            debug=false) {
-  
+
   if (showFiringPin)
   rotate([firingPinAngle,0,0])
   RecoilPlateFiringPinAssembly(debug=debug);
-  
+
   RecoilPlateHousing(topHeight=topHeight, bottomHeight=bottomHeight,
                      firingPinAngle=firingPinAngle, debug=debug);
-  
+
   if (showRecoilPlate)
   RecoilPlate(firingPinAngle=firingPinAngle, debug=debug)
   children();
@@ -102,10 +99,10 @@ module RecoilPlateTemplate() {
   difference() {
     translate([-1,-1-0.25-ManifoldGap(),-0.25])
     cube([2, 2+0.25, 0.25]);
-    
+
     rotate([0,90,0])
     RecoilPlate(cutter=true);
-    
+
     rotate([0,-90,0])
     RecoilPlateFiringPinAssembly(template=true);
   }
