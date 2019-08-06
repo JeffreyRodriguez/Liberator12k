@@ -708,7 +708,7 @@ module RevolverFrameAssembly(debug=false) {
   
   FrameUpper(debug=debug);
   
-  *RevolverForendFrame(debug=debug);
+  RevolverForendFrame(debug=debug);
 
   FrameUpperBolts(extraLength=FrameUpperBoltExtension(), cutter=false);
 }
