@@ -333,6 +333,19 @@ module LowerMiddle(bossEnabled=true) {
   }
 }
 
+module LowerMatchplate2d() {
+  union() {
+    intersection() {
+      projection(cut=true)
+      translate([0,0,0.001])
+      TriggerGuard();
+
+      translate([ReceiverLugRearMaxX()-1.375,-1])
+      square([LowerMaxX()-ReceiverLugRearMaxX()+1.375,2]);
+    }
+  }
+}
+
 module Lower(showReceiverLugs=false, showReceiverLugBolts=false,
             showGuardBolt=false, showHandleBolts=false,
             showTrigger=false, showTriggerLeft=true, showTriggerRight=true,
