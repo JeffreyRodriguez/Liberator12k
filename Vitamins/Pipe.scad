@@ -363,6 +363,19 @@ function Spec_OnePointFiveSch40ABS() = [
   [PipeWeightPerUnit,   0]
 ];
 
+// 1 3/4" Polycarbonate Tubing
+function Spec_OnePointSevenFivePCTube() = [
+  [PipeInnerDiameter,   1.5],
+  [PipeOuterDiameter,   1.75],
+  [PipeTaperedDiameter, 0.0],
+  [PipeThreadLength,    0],
+  [PipeThreadDepth,     0],
+  [PipeClearanceSnug,   0.005],
+  [PipeClearanceLoose,  0.01],
+  [PipeFn,              60],
+  [PipeWeightPerUnit,   0]
+];
+
 // 2.5" Sch40 PVC (ECM Water Jacket)
 function Spec_TwoPointFiveInchSch40PVC() = [
   [PipeInnerDiameter,   2.5],
