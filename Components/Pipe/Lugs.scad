@@ -23,29 +23,35 @@ function ReceiverLength() = 6;
 
 // Settings: Vitamins
 function ReceiverPipe()  = Spec_OnePointFiveSch40ABS();
+function ReceiverPipe()  = Spec_OnePointSevenFivePCTube();
 
 // Calculated: Measurements
-function ReceiverID()     = PipeInnerDiameter(ReceiverPipe());
-function ReceiverIR()     = PipeInnerRadius(ReceiverPipe());
-function ReceiverOD()     = PipeOuterDiameter(ReceiverPipe());
-function ReceiverOR()     = PipeOuterRadius(ReceiverPipe());
-function ReceiverPipeWall() = PipeWall(ReceiverPipe());
+function ReceiverID()     = 1.5;
+function ReceiverIR()     = ReceiverID()/2;
+function ReceiverOD()     = 1.75;
+function ReceiverOR()     = ReceiverOD()/2;
+function ReceiverPipeWall() = ReceiverOR()-ReceiverIR();
 
 // Calculated: Positions
-function ReceiverCenter() = ReceiverOR()+WallLower();
-function LowerOffsetZ() = -ReceiverOR()-WallLower();
+//function ReceiverCenter() = ReceiverOR()+WallLower();
+function LowerOffsetZ() = -1.25;
 
-module PipeLugPipe(length=ReceiverLength(),
-                   debug=false, cutter=false, alpha=1) {
+module ReceiverTube(length=ReceiverLength(), clearance=0.005,
+                   debug=false, cutter=false, alpha=1, $fn=60) {
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
+
   color("DimGrey", alpha)
   DebugHalf(enabled=debug)
   difference() {
     translate([LowerMaxX(),0,0])
     rotate([0,-90,0])
-    Pipe(pipe=ReceiverPipe(),
-         length=length,
-         hollow=!cutter, clearance=cutter?PipeClearanceSnug():undef);
-    
+    difference() {
+      cylinder(r=ReceiverOR(), h=length);
+      
+      if (!cutter)
+      cylinder(r=ReceiverIR(), h=length);
+    }
     
     if (!cutter)
     translate([0,0,LowerOffsetZ()])
@@ -62,7 +68,7 @@ module PipeLugFront(alpha=1, cutter=false) {
                      cutter=cutter, clearVertical=true);
 
     if (cutter==false)
-    PipeLugPipe(cutter=true);
+    ReceiverTube(cutter=true);
   }
 }
 
@@ -74,7 +80,7 @@ module PipeLugRear(alpha=1, cutter=false) {
                     cutter=cutter, clearVertical=true);
 
     if (cutter==false)
-    PipeLugPipe(cutter=true);
+    ReceiverTube(cutter=true);
   }
 }
 
@@ -97,7 +103,7 @@ module PipeLugCenter(cutter=false, clearance=0.002, alpha=1) {
     }
 
     if (cutter == false) {
-      PipeLugPipe(cutter=true);
+      ReceiverTube(cutter=true);
 
       PipeLugFront(cutter=true);
       PipeLugRear(cutter=true);
@@ -123,7 +129,7 @@ module PipeLugAssembly(length=ReceiverLength(), pipeAlpha=1, pipeOffsetX=0,
 
   if (length > 0)
   translate([pipeOffsetX,0,0])
-  PipeLugPipe(alpha=pipeAlpha, length=length, debug=debug, cutter=false);
+  ReceiverTube(alpha=pipeAlpha, length=length, debug=debug, cutter=false);
 }
 
 PipeLugAssembly(pipeAlpha=0.5);
