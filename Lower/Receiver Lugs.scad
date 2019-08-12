@@ -93,7 +93,6 @@ module ReceiverLugFront(extraTop=ManifoldGap(),
   mirror([1,0,0])
   T_Lug(length=ReceiverLugFrontLength(), tabWidth=1.25,
         height=abs(ReceiverLugFrontZ())+extraTop,
-        clearance=UnitsImperial(0.01),
         clearVertical=clearVertical,
         cutter=cutter);
 }
