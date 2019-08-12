@@ -227,7 +227,7 @@ module ChamferedCylinder(r1=0.5, r2=0.25, h=1,
 
 module ChamferedCircularHole(r1=1, r2=0.1, h=1,
                              chamferTop=true, chamferBottom=true,
-                             teardropBottom=true, teardropTop=false) {
+                             teardropBottom=true, teardropTop=true) {
   union() {
 
     // Bottom Chamfer
