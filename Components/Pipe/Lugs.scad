@@ -36,7 +36,7 @@ function ReceiverPipeWall() = ReceiverOR()-ReceiverIR();
 //function ReceiverCenter() = ReceiverOR()+WallLower();
 function LowerOffsetZ() = -1.25;
 
-module ReceiverTube(length=ReceiverLength(), clearance=0.005,
+module ReceiverTube(length=ReceiverLength(), clearance=0.002,
                    debug=false, cutter=false, alpha=1, $fn=60) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
@@ -64,7 +64,7 @@ module PipeLugFront(alpha=1, cutter=false) {
   color("DarkOrange", alpha=alpha) render()
   difference() {
     translate([0,0,LowerOffsetZ()])
-    ReceiverLugFront(extraTop=WallLower()+ReceiverPipeWall()+(cutter?WallLower():0),
+    ReceiverLugFront(extraTop=-LowerOffsetZ(),
                      cutter=cutter, clearVertical=true);
 
     if (cutter==false)
@@ -76,7 +76,7 @@ module PipeLugRear(alpha=1, cutter=false) {
   color("DarkOrange", alpha=alpha) render()
   difference() {
     translate([0,0,LowerOffsetZ()])
-    ReceiverLugRear(extraTop=WallLower()+ReceiverPipeWall()+(cutter?WallLower():0),
+    ReceiverLugRear(extraTop=-LowerOffsetZ(),
                     cutter=cutter, clearVertical=true);
 
     if (cutter==false)
