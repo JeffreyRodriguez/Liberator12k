@@ -3,6 +3,13 @@ use <../Meta/Resolution.scad>;
 DEFAULT_PIVOT_X = 5;
 DEFAULT_PIVOT_Z = -1;
 
+module Pivot2(xyz=[0,0,0], angle=[0,0,0], factor=1) {
+  translate([xyz[0],xyz[1],xyz[2]])
+  rotate([angle[0]*factor,angle[1]*factor,angle[2]*factor])
+  translate([-xyz[0],-xyz[1],-xyz[2]])
+  children();
+}
+
 module Pivot(factor=1,
              angle=45,
              pivotX=DEFAULT_PIVOT_X,
@@ -13,11 +20,11 @@ module Pivot(factor=1,
   rotate([0,angle*factor,0])
   translate([-pivotX,0,-pivotZ]) {
     children();
-    
-    if (debug)
+
+    //if (debug)
     %translate([pivotX,0,pivotZ])
     rotate([90,0,0])
-    %cylinder(r=0.1, h=1, center=true);
+    %cylinder(r=0.1, h=5, center=true);
   }
 }
 
