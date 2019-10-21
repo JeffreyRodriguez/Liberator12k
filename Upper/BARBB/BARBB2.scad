@@ -18,7 +18,7 @@ use <../../Lower/Trigger.scad>;
 use <../../Magwells/AR15 Magwell.scad>;
 
 use <../Pipe/Pipe Upper.scad>;
-use <../../Components/Pipe/Lugs.scad>;
+use <../Lugs.scad>;
 use <../Pipe/Buttstock.scad>;
 use <../Pipe/Charging Pump.scad>;
 

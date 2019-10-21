@@ -6,8 +6,8 @@ use <../Vitamins/Rod.scad>;
 module RodPulltab(rodSpec=Spec_RodFiveSixteenthInch(),
                   boltSpec=Spec_BoltM3(),
                   holeRadius=0.5, wall=0.15, $fn=30) {
-  height = RodDiameter(rodSpec)+(wall*2)+BoltNutHeight(boltSpec);
-  length = holeRadius+BoltNutDiameter(boltSpec)+(wall*2);
+  height = RodDiameter(rodSpec)+(wall*2)+NutHexHeight(boltSpec);
+  length = holeRadius+NutHexDiameter(boltSpec)+(wall*2);
   
   render()
   translate([-holeRadius,0,-wall-RodRadius(rod=rodSpec, clearance=RodClearanceLoose())])
@@ -35,7 +35,7 @@ module RodPulltab(rodSpec=Spec_RodFiveSixteenthInch(),
     rotate([0,90,0])
     Rod(rod=rodSpec, clearance=RodClearanceLoose(), length=length+ManifoldGap());
     
-    translate([length-BoltNutDiameter(boltSpec),0,height])
+    translate([length-NutHexDiameter(boltSpec),0,height])
     rotate([0,0,90])
     mirror([0,0,1])
     NutAndBolt(boltSpec, boltLength=height+ManifoldGap(2),

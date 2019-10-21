@@ -6,15 +6,16 @@ use <../../Meta/Debug.scad>;
 use <../../Meta/Resolution.scad>;
 
 use <../../Finishing/Chamfer.scad>;
-use <../../Components/Firing Pin.scad>;
-use <../../Components/Pipe/Lugs.scad>;
 
 use <../../Vitamins/Nuts And Bolts.scad>;
+use <../../Vitamins/Nuts and Bolts/BoltSpec.scad>;
+use <../../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
+use <../../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 use <../../Vitamins/Pipe.scad>;
 use <../../Vitamins/Rod.scad>;
 
-use <Frame.scad>;
-use <Pipe Upper.scad>;
+use <Firing Pin.scad>;
+use <Lugs.scad>;
 
 // Measured: Vitamins
 function RecoilPlateThickness() = 1/4;
@@ -25,13 +26,16 @@ function RecoilPlateRearX()  = -0.5;
 //function FiringPinOffset() = -0.12; // .22 Rimfire Offset
 function FiringPinOffset() = 0;
 
+// Settings: Vitamins
+function SquareRodFixingBolt() = Spec_BoltM3();
+
 // Calculated: Positions
-function FiringPinMinX() = RecoilPlateRearX()-FiringPinBodyLength();
+function FiringPinMinX() = RecoilPlateRearX()-FiringPinHousingLength();
 
 module RecoilPlateFiringPinAssembly(template=false, cutter=false, debug=false) {
   translate([RecoilPlateRearX(),0,FiringPinOffset()])
   rotate([0,-90,0])
-  FiringPinAssembly(cutter=cutter, debug=debug, template=template);
+  FiringPinAssembly(cutter=cutter, debug=debug);
 }
 
 module RecoilPlate(firingPinAngle=0, cutter=false, debug=false) {
@@ -95,30 +99,27 @@ module RecoilPlateAssembly(firingPinAngle=0,
   children();
 }
 
-module RecoilPlateTemplate() {
+module RecoilPlateTemplate(clearance=0.005, height=0.25) {
+  render()
   difference() {
-    translate([-1,-1-0.25-ManifoldGap(),-0.25])
-    cube([2, 2+0.25, 0.25]);
+    translate([-1,-1-0.25-ManifoldGap(),0])
+    cube([2, 2+0.25, height]);
 
+    translate([0,0,height])
     rotate([0,90,0])
     RecoilPlate(cutter=true);
 
-    rotate([0,-90,0])
-    RecoilPlateFiringPinAssembly(template=true);
+    for(Y = [1,-1,0]) translate([0,FiringPinBoltOffsetY()*Y,-ManifoldGap()])
+    cylinder(r=FiringPinRadius()+clearance,
+             h=height+ManifoldGap(2),
+            $fn=8);
   }
 }
 
 RecoilPlateAssembly(topHeight=ReceiverOR(),
                     bottomHeight=-LowerOffsetZ(),
-                    width=2,
                     firingPinAngle=0,
                     debug=false);
-
-translate([RecoilPlateRearX(),0,0])
-PipeUpperAssembly(receiverLength=12,
-                  chargingHandle=false,
-                  stock=true, tailcap=false,
-                  debug=true);
 
 // Recoil Plate Drill Template
 *!scale(25.4)

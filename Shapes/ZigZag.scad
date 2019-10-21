@@ -1,14 +1,12 @@
 include<../Meta/Animation.scad>;
 
-use <../Vitamins/Rod.scad>;
-use <../Vitamins/Pipe.scad>;
 use <../Meta/Resolution.scad>;
 use <../Shapes/Semicircle.scad>;
 use <../Meta/Manifold.scad>;
 
-DEFAULT_ZIGZAG_DIAMETER = 4;
+DEFAULT_ZIGZAG_DIAMETER = 3.6252;
 DEFAULT_ZIGZAG_POSITIONS= 6;
-DEFAULT_ZIGZAG_DEPTH = 1/4;
+DEFAULT_ZIGZAG_DEPTH = 3/16;
 DEFAULT_ZIGZAG_WIDTH = 1/4;
 DEFAULT_ZIGZAG_ANGLE = 60;
 
@@ -21,60 +19,82 @@ function ZigZagHeight(radius, positions, width, zigzagAngle)
              = ZigZagSegmentLength(radius,positions)*(sin(zigzagAngle)*2);
 
 function TrackAngle(radius, trackWidth)
-             = 360
-             / (Circumference(radius)/trackWidth);
+             = (trackWidth/Circumference(radius)) * 360;
+             
+function ZigZagCutterWidth(width, zigzagAngle) = width*sqrt(2);
 
-module ZigZagSegment2D(radius, depth, width, center) {
+function ZigZagCutterHeight(width, zigzagAngle) = width*sqrt(2);
+
+module ZigZagSegment2D(radius, depth, width) {
   translate([radius-depth,-width/2])
   square([depth*2, width]);
 }
 
-module ZigZagSegment(radius=1,
+module ZigZagSegment(radius=DEFAULT_ZIGZAG_DIAMETER/2,
            positions=DEFAULT_ZIGZAG_POSITIONS, zigzagAngle=DEFAULT_ZIGZAG_ANGLE,
            depth=DEFAULT_ZIGZAG_DEPTH, width=DEFAULT_ZIGZAG_WIDTH,
-           slotHeightExtra=0, $fn=Resolution(120,90)) {
-             
+           slotHeightExtra=0, $fn=Resolution(30,90)) {
+
   angle=360/positions/2;
   diameter=radius*2;
-  track_angle = TrackAngle(radius, width);
-  height=ZigZagHeight(radius, positions, width, zigzagAngle+track_angle);
-  zigzag_cutter_width = width*sqrt(2);
-  slotHeight=width*sqrt(2);
-  zigzag_track_angle = TrackAngle(radius, zigzag_cutter_width);
-  angleDiff = zigzag_track_angle-track_angle;
+  zigzag_track_angle = TrackAngle(radius, width);
+  height=ZigZagHeight(radius, positions, width, zigzagAngle+zigzag_track_angle);
+  slotHeight=width*sqrt(2)/0.8;
+  zigzag_cutter_width = ZigZagCutterWidth(width, zigzagAngle);
+  zigzag_zigzag_track_angle = TrackAngle(radius, zigzag_cutter_width);
+  angleDiff = zigzag_zigzag_track_angle-zigzag_track_angle;
 
-  render()
-  intersection() {
-    union() {
+  union () {
+    
+    // Vertical slot
+    intersection() {
+      linear_extrude(height=slotHeight+slotHeightExtra+ManifoldGap())
+      ZigZagSegment2D(radius, depth, width);
       
-      // Angled slot
+      translate([0, 0, -ManifoldGap(2)])
+      linear_extrude(height=slotHeight+slotHeightExtra+ManifoldGap(4))
+      semidonut(
+          angle=zigzag_track_angle,
+          major=(radius+depth)*2,
+          minor=(radius-depth)*2,
+          center=true);
+    }
+    
+    // Angled slot
+    intersection() {
+      
       translate([0,0,slotHeightExtra])
       translate([0, 0,-ManifoldGap()])
       linear_extrude(height=height+ManifoldGap(2),
-                     slices=Resolution(50, 30),
-                     twist = angle + track_angle)
+                     slices=Resolution(30, 50),
+                     twist = angle + zigzag_track_angle)
       rotate(angleDiff/2)
-      ZigZagSegment2D(radius, depth, zigzag_cutter_width, center=true);
+      ZigZagSegment2D(radius, depth, zigzag_cutter_width);
         
-      // Vertical slot
-      linear_extrude(height=slotHeight+slotHeightExtra+ManifoldGap())
-      ZigZagSegment2D(radius, depth, width, center=true);
+      // Trim to shape
+      translate([0, 0, -ManifoldGap(2)])
+      linear_extrude(height=height+slotHeight+slotHeightExtra+ManifoldGap(4))
+      semidonut(
+          angle=angle+(zigzag_track_angle/2),
+          major=(radius+depth)*2,
+          minor=(radius-depth)*2,
+          center=false);
     }
-        
-    // Trim to shape
-    translate([0, 0, -ManifoldGap(2)])
-    linear_extrude(height=height+slotHeight+slotHeightExtra+ManifoldGap(4))
-    rotate((track_angle/2)-1)
-    semidonut(
-        angle=angle+track_angle-1,
-        major=(radius+depth)*2,
-        minor=(radius-depth)*2,
-        center=false);
+  }
+}
+
+module ZigZagSupport(radius,depth, width) {
+  translate([radius - (depth*2),-0.07,0])
+  hull() {
+    cube([depth, 0.07, width]);
+    
+    translate([depth*0.9,0,width*2])
+    cube([depth*2.2, 0.07, width]);
   }
 }
 
 module ZigZag(supports=true,
-           radius=2,
+           radius=DEFAULT_ZIGZAG_DIAMETER/2,
            depth=DEFAULT_ZIGZAG_DEPTH,
            width=DEFAULT_ZIGZAG_WIDTH,
            positions=DEFAULT_ZIGZAG_POSITIONS,
@@ -82,19 +102,27 @@ module ZigZag(supports=true,
            extraTop=0, extraBottom=0,
            $fn=Resolution(30,90)) {
 
-  track_angle = TrackAngle(radius, width);
-  zigzag_cutter_width = width*cos(zigzagAngle)*2;
   positionAngle=360/positions;
-  zigzag_height=ZigZagHeight(radius, positions, width, zigzagAngle+track_angle);
   top_slot_height = (width/2)+extraTop;
   bottom_slot_height = (width/2)+extraBottom;
 
-  render()
+  zigzag_track_angle = TrackAngle(radius, width);
+  zigzag_cutter_width = ZigZagCutterWidth(width, zigzagAngle);
+  zigzag_height=ZigZagHeight(radius, positions, width, zigzagAngle+zigzag_track_angle);
+
+  echo("ZigZag angle: ", zigzagAngle);
+  echo("ZigZag positions: ", positions);
+  echo("ZigZag position angle: ", positionAngle);
+  echo("ZigZag radius: ", radius);
+  echo("ZigZag depth: ", depth);
+  echo("ZigZag track angle: ", zigzag_track_angle);
+  echo("ZigZag track width: ", width);
+  echo("ZigZag cutter width: ", zigzag_cutter_width);
+
   difference() {
     union() {
       for (i=[0:positions-1]){
-        rotate([0,0,positionAngle*i])
-        render() {
+        rotate([0,0,positionAngle*i]) {
           
           // Lower segment
           ZigZagSegment(radius=radius, positions=positions,
@@ -114,32 +142,27 @@ module ZigZag(supports=true,
     }
         
     // Support Material
-    if (supports)
-    for (i=[0:positions-1])
-    rotate([0,0,(positionAngle*i)-(TrackAngle(radius, width)/2)])
-    translate([radius - (depth),-1/16,bottom_slot_height])
-    render()
-    hull() {
-      cube([ManifoldGap(), 1/16, width]);
+    if (supports) {
       
-      translate([0,0,(zigzag_cutter_width*2)+(width/2)])
-      cube([depth*2, 1/16, ManifoldGap()]);
+      // Top
+      translate([0,0,bottom_slot_height+zigzag_height-(width*0.5)])
+      mirror([0,0,1])
+      for (i=[0:positions-1])
+      rotate([0,0,(positionAngle/2)+(positionAngle*i)-(TrackAngle(radius, width)/4)])
+      ZigZagSupport(radius, depth, width);
+      
+      // Bottom
+      translate([0,0,bottom_slot_height+width])
+      for (i=[0:positions-1])
+      rotate([0,0,(positionAngle*i)-(TrackAngle(radius, width)/4)])
+      ZigZagSupport(radius, depth, width);
     }
   }
 }
 
-radius = DEFAULT_ZIGZAG_DIAMETER/2;
-positions = DEFAULT_ZIGZAG_POSITIONS;
-width = DEFAULT_ZIGZAG_WIDTH;
-depth = DEFAULT_ZIGZAG_DEPTH;
-
 // Pin
-translate([radius-depth, 0,width/2])
+*translate([DEFAULT_ZIGZAG_DIAMETER/2-DEFAULT_ZIGZAG_DEPTH, 0,DEFAULT_ZIGZAG_WIDTH/2])
 rotate([0,90,0])
-%cylinder(r=DEFAULT_ZIGZAG_WIDTH/2, h=depth*3, $fn=10);
+%cylinder(r=DEFAULT_ZIGZAG_WIDTH/2, h=DEFAULT_ZIGZAG_DEPTH*3, $fn=10);
 
-*ZigZag(radius=radius, depth=0.125, zigzagAngle=DEFAULT_ZIGZAG_ANGLE,
-       width=DEFAULT_ZIGZAG_WIDTH, positions=DEFAULT_ZIGZAG_POSITIONS);
-
-ZigZag(radius=1.8126, depth=0.02, zigzagAngle=50,
-       width=width, positions=6);
+ZigZag();

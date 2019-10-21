@@ -1,10 +1,10 @@
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Units.scad>;
-use <../../Vitamins/Pipe.scad>;
-use <../../Vitamins/Rod.scad>;
-use <../../Vitamins/Nuts And Bolts.scad>;
-use <../../Components/T Lug.scad>;
-use <../../Components/Printable Shaft Collar.scad>;
+use <../../../Meta/Manifold.scad>;
+use <../../../Meta/Units.scad>;
+use <../../../Vitamins/Pipe.scad>;
+use <../../../Vitamins/Rod.scad>;
+use <../../../Vitamins/Nuts And Bolts.scad>;
+use <../../../Components/T Lug.scad>;
+use <../../../Components/Printable Shaft Collar.scad>;
 
 CATHODE_SCREW_SPEC = Spec_BoltM3();
 ANODE_SCREW_SPEC = Spec_BoltM3();

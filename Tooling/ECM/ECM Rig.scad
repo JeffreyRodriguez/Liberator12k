@@ -146,7 +146,7 @@ module ECM_Fluting_WaterFeed(outsideDiameter=2.45,
     // Anode Terminal
     rotate([0,0,45])
     translate([PipeOuterRadius(PIPE_SPEC)+0.1,0,
-               BoltNutRadius(ANODE_SCREW_SPEC)+wall])
+               NutHexRadius(ANODE_SCREW_SPEC)+wall])
     rotate([0,45+90,0])
     rotate(90)
     NutAndBolt(bolt=ANODE_SCREW_SPEC, boltLength=UnitsMetric(10),

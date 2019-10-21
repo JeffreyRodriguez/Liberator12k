@@ -29,6 +29,8 @@ function BarrelCollarRadius() = BarrelCollarDiameter()/2;
 function BarrelCollarWidth() = 5/8;
 
 // Settings: Vitamins
+function ReceiverPipe()  = Spec_OnePointFiveSch40ABS();
+function ReceiverPipe()  = Spec_OnePointSevenFivePCTube();
 function BarrelPipe() = Spec_TubingOnePointOneTwoFive();
 function BarrelPipe() = Spec_TubingZeroPointSevenFive();
 function ActuatorRod() = Spec_RodOneQuarterInch();
@@ -50,14 +52,14 @@ function ReceiverLength() = 7;
 module BarrelCollar(clearance=0.002, cutter=false, debug=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
-  
+
   color("Silver") DebugHalf(enabled=debug)
   difference() {
     translate([BarrelX()+ManifoldGap(),0,0])
     rotate([0,90,0])
     cylinder(r=BarrelCollarRadius()+clear,
              h=BarrelCollarWidth()*3, $fn=40);
-    
+
     Barrel(hollow=false, cutter=true);
   }
 }
@@ -76,7 +78,7 @@ module RemovableForendAssembly(receiver=Spec_PipeThreeQuarterInch(),
 }
 
 module RemovableShotgunAssembly(pipeAlpha=1, debug=false) {
-  
+
   hammerTravelFactor = Animate(ANIMATION_STEP_FIRE)
                      - SubAnimate(ANIMATION_STEP_CHARGE, start=0.275, end=0.69);
 
@@ -85,7 +87,7 @@ module RemovableShotgunAssembly(pipeAlpha=1, debug=false) {
   FixedBreechPipeUpperAssembly(pipeAlpha=pipeAlpha, receiverLength=ReceiverLength(),
                     hammerTravelFactor=hammerTravelFactor,
                     frame=true, debug=debug);
-  
+
   FrameAssembly(offsetMajor=0,
                 lengthMajorTop=FrameFrontMinX()+1,
                 lengthMajorBottom=FrameFrontMinX()+1,
@@ -93,13 +95,13 @@ module RemovableShotgunAssembly(pipeAlpha=1, debug=false) {
 
   Barrel(debug=false);
   BarrelCollar(debug=false);
-  
+
   Tailcap();
 
   color("DimGrey", 0.5)
   DebugHalf(enabled=debug)
   rotate([0,90,0])
-  Pipe(ReceiverPipe(), PipeClearanceLoose(), length=FrameFrontMinX());
+  ReceiverTube(cutter=true, length=FrameFrontMinX());
 
   color("LightSteelBlue")
   render()
@@ -107,7 +109,7 @@ module RemovableShotgunAssembly(pipeAlpha=1, debug=false) {
     translate([BarrelX()+0.5+BreechPlateThickness(),0,0])
     hull()
     Breech();
-    
+
     Barrel(hollow=false, cutter=true);
   }
 }
@@ -120,25 +122,25 @@ module RemovableBarrelPivot(debug=false) {
       translate([0,0, -FrameMajorRodOffset()])
       rotate([0,90,0])
       cylinder(r=FrameMajorRodOffset()
-                -PipeOuterRadius(ReceiverPipe())
+                -ReceiverOR()
                 +FrameMajorWall(),
                h=FrameFrontMinX()-0.01, $fn=Resolution(30,60));
-      
+
       translate([FrameFrontMinX(),0,0])
       translate([-BreechRearX(),0,0])
       rotate([180,0,0])
       FrameMajorStandoff(length=FrameFrontMinX()-0.01);
     }
-    
+
     translate([-ManifoldGap(),0, -FrameMajorRodOffset()])
     rotate([0,90,0])
     cylinder(r=FrameMajorRodOffset()
-              -PipeOuterRadius(ReceiverPipe())
+              -ReceiverOR()
               +0.01,
              h=FrameFrontMinX()+ManifoldGap(2), $fn=Resolution(30,60));
-    
+
     rotate([0,90,0])
-    Pipe(ReceiverPipe(), PipeClearanceLoose(), length=FrameFrontMinX());
+    ReceiverTube(cutter=true, length=FrameFrontMinX());
   }
 }
 
@@ -154,11 +156,11 @@ module RemovableFrameFront(debug=false) {
       hull()
       for (R = [0,180]) rotate([R,0,0])
       FrameMajorStandoff(length=FrameFrontMinX()+BreechPlateThickness());
-      
+
       Frame(minorBolts=false,
              offsetMajor=5, offsetMajorBottom=5,
              length=10,cutter=true);
-      
+
       translate([-ManifoldGap(),0, -FrameMajorRodOffset()])
       rotate([0,90,0])
       linear_extrude(height=BreechPlateThickness()+ManifoldGap(2))
@@ -168,35 +170,35 @@ module RemovableFrameFront(debug=false) {
                 major=(FrameMajorRodOffset()
                        +PipeOuterRadius(BarrelPipe()))*2,
                 angle=180, $fn=90);
-      
+
       translate([-FrameFrontMinX()-ManifoldGap(),0, -FrameMajorRodOffset()])
       rotate([0,90,0])
       linear_extrude(height=FrameFrontMinX()+ManifoldGap(2))
       rotate(180) {
         semidonut(minor=(FrameMajorRodOffset()
-                         -PipeOuterRadius(ReceiverPipe()))*2,
+                         -ReceiverOR())*2,
                   major=(FrameMajorRodOffset()
-                         +PipeOuterRadius(ReceiverPipe()))*2,
+                         +ReceiverOR())*2,
                   angle=180, $fn=90);
-          
+
         semidonut(minor=(FrameMajorRodOffset()
-                         -PipeOuterRadius(ReceiverPipe()))*2,
+                         -ReceiverOR())*2,
                   major=(FrameMajorRodOffset()*sqrt(2))*2,
                   angle=360, $fn=90);
       }
-      
-      translate([-FrameFrontMinX()-ManifoldGap(),0, PipeOuterRadius(ReceiverPipe())/2])
+
+      translate([-FrameFrontMinX()-ManifoldGap(),0, ReceiverOR()/2])
       rotate([0,90,0])
       linear_extrude(height=FrameFrontMinX()+ManifoldGap(2))
       translate([0,-(BreechPlateWidth()/2)-ManifoldGap(),0])
-      square([PipeOuterRadius(ReceiverPipe()),
+      square([ReceiverOR(),
               BreechPlateWidth()]);
     }
-    
+
     Barrel(hollow=false, cutter=true);
-    
+
     rotate([0,90,0])
-    Pipe(ReceiverPipe(), PipeClearanceLoose(), length=FrameFrontMinX());
+    ReceiverTube(cutter=true, length=FrameFrontMinX());
   }
 }
 
@@ -212,29 +214,27 @@ module Tailcap(debug=false) {
   rotate([0,90,0])
   difference() {
     PrintablePipeCap(
-        pipeDiameter=PipeOuterDiameter(ReceiverPipe(), PipeClearanceSnug()),
+        pipeDiameter=ReceiverOD(),
         base=0.25,
         $fn=Resolution(30,60));
-    
+
     ChamferedCircularHole(r1=0.35/2, r2=1/16, $fn=20, h=0.25);
   }
 }
 
 
 
-module AR15BarrelTrunnion(debug=false) {
-  
+module AR15BarrelTrunnion(debug=false, $fn=60) {
+
   color("Olive")
   DebugHalf(enabled=debug)
   difference() {
     translate([BarrelX(),0,0])
     rotate([0,90,0])
-    cylinder(r=PipeInnerRadius(pipe=ReceiverPipe(),
-                               clearance=PipeClearanceLoose()),
+    cylinder(r=ReceiverIR(),
              h=AR15BarrelExtensionLength()
-              +AR15BarrelExtensionLipLength(),
-             $fn=PipeFn(ReceiverPipe()));
-    
+              +AR15BarrelExtensionLipLength());
+
     translate([0,0,0])
     Barrel(clearance=PipeClearanceLoose(), hollow=false, cutter=true);
   }

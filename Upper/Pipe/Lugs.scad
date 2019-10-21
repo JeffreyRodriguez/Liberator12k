@@ -48,11 +48,11 @@ module ReceiverTube(length=ReceiverLength(), clearance=0.002,
     rotate([0,-90,0])
     difference() {
       cylinder(r=ReceiverOR(), h=length);
-      
+
       if (!cutter)
       cylinder(r=ReceiverIR(), h=length);
     }
-    
+
     if (!cutter)
     translate([0,0,LowerOffsetZ()])
     SearCutter(length=SearLength()+abs(LowerOffsetZ()));
@@ -115,29 +115,28 @@ module PipeLugCenter(cutter=false, clearance=0.002, alpha=1) {
 }
 
 module PipeLugAssembly(length=ReceiverLength(), pipeAlpha=1, pipeOffsetX=0,
-                       front=true, rear=true, center=true,
-                       debug=false) {
+                       front=true, rear=true, center=true) {
 
   if (front)
-  PipeLugFront(debug=debug);
+  PipeLugFront();
 
   if (rear)
-  PipeLugRear(debug=debug);
+  PipeLugRear();
 
   if (center)
-  PipeLugCenter(debug=debug);
+  PipeLugCenter();
 
   if (length > 0)
   translate([pipeOffsetX,0,0])
-  ReceiverTube(alpha=pipeAlpha, length=length, debug=debug, cutter=false);
+  ReceiverTube(alpha=pipeAlpha, length=length);
 }
-
-PipeLugAssembly(pipeAlpha=0.5);
 
 translate([0,0,LowerOffsetZ()])
 Lower(showTrigger=true,alpha=1, triggerAnimationFactor=$t,
       showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
       searLength=SearLength()+WallLower()+ReceiverPipeWall()+SearTravel());
+
+PipeLugAssembly(pipeAlpha=0.5);
 
 
 /*

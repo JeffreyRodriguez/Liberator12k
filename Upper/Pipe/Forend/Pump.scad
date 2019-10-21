@@ -22,7 +22,7 @@ use <../../../Ammo/Shell Slug.scad>;
 
 use <../Pipe Upper.scad>;
 use <../Frame.scad>;
-use <../Fixed Breech.scad>;
+use <../Recoil Plate.scad>;
 
 // Measured: Vitamins
 function BarrelCollarSteelDiameter() = 1.75;
@@ -30,6 +30,8 @@ function BarrelCollarSteelRadius() = BarrelCollarSteelDiameter()/2;
 function BarrelCollarSteelWidth() = 5/8;
 
 // Settings: Vitamins
+function ReceiverPipe()  = Spec_OnePointFiveSch40ABS();
+function ReceiverPipe()  = Spec_OnePointSevenFivePCTube();
 function BarrelPipe() = Spec_TubingOnePointOneTwoFive();
 
 // Settings: Lengths
@@ -50,7 +52,7 @@ module PumpMagazine2d(hollow=false, clearance=undef) {
 }
 
 module PumpMagazine(height=10.875, hollow=false, clearance=undef, alpha=1, debug=false) {
-  
+
   translate([BreechFrontX(),0,0])
   for (R = [180-45, 45]) rotate([R,0,0])
   translate([0,MagazineOffset(),0]) {
@@ -59,7 +61,7 @@ module PumpMagazine(height=10.875, hollow=false, clearance=undef, alpha=1, debug
     translate([(i-1)*2.8,0,0])
     rotate([0,90,0])
     ShellSlugBall(height=2.0);
-    
+
     color("Silver", alpha)
     rotate([0,90,0])
     DebugHalf(enabled=debug)
@@ -73,7 +75,7 @@ module PumpMagazine(height=10.875, hollow=false, clearance=undef, alpha=1, debug
 module PumpRails(length=UpperLength(), cutter=false, clearance=0.002, extraRadius=0) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
-  
+
   translate([BreechFrontX()-clear,0,0])
   rotate([0,90,0])
   rotate(180)
@@ -90,14 +92,14 @@ module ShellLoadingSupport() {
 module BarrelCollar(clearance=0.002, cutter=false, debug=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
-  
+
   color("Silver") DebugHalf(enabled=debug)
   difference() {
     translate([6,0,0])
     rotate([0,90,0])
     cylinder(r=BarrelCollarSteelRadius()+clear,
              h=BarrelCollarSteelWidth(), $fn=40);
-    
+
     translate([-BreechFrontX()-ManifoldGap(),0,0])
     Barrel(hollow=false, cutter=true);
   }
@@ -116,7 +118,7 @@ module Barrel(barrel=BarrelPipe(), barrelLength=BarrelLength(), hollow=true,
 module PumpForend(alpha=1, debug=false) {
   ForendWall=0.25;
   ForendLength=0.5;
-  
+
   color("Green", alpha) DebugHalf(enabled=debug)
   difference() {
     union() {
@@ -127,26 +129,26 @@ module PumpForend(alpha=1, debug=false) {
                           r2=0.0625,
                           h=ForendLength,
                           $fn=Resolution(20,50));
-        
-            
+
+
         translate([BreechFrontX()+6.75,0,0])
         rotate([0,90,0])
         linear_extrude(height=ForendLength)
         offset(r=0.1875)
         PumpMagazine2d(clearance=SquareTubeClearanceSnug());
       }
-      
+
       hull() {
-    
+
         translate([BreechFrontX(),0,0])
         rotate([0,90,0])
         intersection() {
-          
+
           ChamferedCylinder(r1=PipeCapRadius(ReceiverPipe())+ForendWall,
                             r2=0.0625,
                             h=UpperLength()+ForendLength,
                             $fn=Resolution(20,50));
-          
+
           translate([-ManifoldGap(),
                      -PipeCapRadius(ReceiverPipe())-ForendWall-ManifoldGap(),
                      -ManifoldGap()])
@@ -154,44 +156,44 @@ module PumpForend(alpha=1, debug=false) {
                 PipeCapDiameter(ReceiverPipe())+(ForendWall*2)+ManifoldGap(2),
                 UpperLength()+ForendLength+ManifoldGap(2)]);
         }
-        
+
         PumpRails(extraRadius=0.1875, length=UpperLength()+ForendLength);
       }
     }
-    
+
     translate([0,-(SquareTubeOuter(MagazineSquareTube(),SquareTubeClearanceLoose())/2)-0.1875,0])
     cube([UpperLength(),
            SquareTubeOuter(MagazineSquareTube(), SquareTubeClearanceLoose())+0.375,
           (PipeCapRadius(ReceiverPipe())*sqrt(2))+0.125]);
-    
+
     PumpRails(cutter=true);
-    
+
     translate([BreechFrontX()+1-ManifoldGap(),0,0])
     rotate([0,90,0])
     cylinder(r=PipeCapRadius(ReceiverPipe(), clearance=PipeClearanceLoose())+0.01,
                       h=UpperLength()-1+ManifoldGap(2),
                       $fn=Resolution(20,50));
-    
+
     translate([-ManifoldGap(),0,0])
     Barrel(hollow=false, cutter=true, clearance=PipeClearanceLoose());
-    
+
     PumpMagazine(hollow=false, clearance=SquareTubeClearanceLoose());
   }
 }
 
 module PumpShotgunAssembly(debug=false) {
-  
+
   ShellLoadingSupport();
 
-  FixedBreechPipeUpperAssembly(stock=true, recieverLength=12, debug=debug);
+  RecoilPlateAssembly(stock=true, recieverLength=12, debug=debug);
 
-    
+
 
 color("LightSteelBlue")
 translate([11.25,0,0])
 hull()
 Breech();
-  
+
   color("Red") {
     // In position for load
     translate([BreechFrontX(),0,0])

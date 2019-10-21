@@ -47,8 +47,8 @@ module PipeSlotDrillingJig(pipeSpec=Spec_TubingOnePointOneTwoFive(),
 
       rotate([0,0,-90])
       translate([PipeOuterRadius(pipeSpec, PipeClearanceLoose()),
-                -BoltNutRadius(setScrewSpec)-wall,0])
-      cube([BoltNutHeight(setScrewSpec)+(wall*2),BoltNutDiameter(setScrewSpec)+(wall*2),BoltNutDiameter(setScrewSpec)+(wall*2)]);
+                -NutHexRadius(setScrewSpec)-wall,0])
+      cube([NutHexHeight(setScrewSpec)+(wall*2),NutHexDiameter(setScrewSpec)+(wall*2),NutHexDiameter(setScrewSpec)+(wall*2)]);
     }
 
 
@@ -65,7 +65,7 @@ module PipeSlotDrillingJig(pipeSpec=Spec_TubingOnePointOneTwoFive(),
     // Set-screw
     rotate([0,0,-90])
     translate([PipeOuterRadius(pipeSpec)+0.02,0,
-               BoltNutRadius(setScrewSpec)+wall])
+               NutHexRadius(setScrewSpec)+wall])
     rotate([0,90,0])
     rotate([0,0,90])
     NutAndBolt(bolt=setScrewSpec, boltLength=UnitsImperial(2),

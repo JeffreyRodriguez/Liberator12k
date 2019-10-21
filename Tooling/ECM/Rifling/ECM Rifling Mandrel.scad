@@ -132,8 +132,7 @@ ECM_RiflingMandrel(length=2.795-0.65+0.0625, twistRate=1/20,
 
 // 0.45 ACP
 scale(25.4)
-//ECM_RiflingChannel(length=2, chamberLength=0.25, twistRate=1/16, outsideDiameter=0.442125984);
-ECM_RiflingMandrel(length=3,
+ECM_RiflingMandrel(length=5.5,
                    twistRate=1/16,
                    grooveDepth = 0.07,
                    outsideDiameter=0.442125984,

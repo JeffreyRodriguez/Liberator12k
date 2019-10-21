@@ -49,7 +49,7 @@ module PipeSlotDrillingJig(pipeSpec=Spec_TubingZeroPointSevenFive(),
                            wall=wall,
                            height=OAL,
                            setScrewSpec=setScrewSpec,
-                           screwOffsetZ=OAL-BoltNutRadius(setScrewSpec)-wall);
+                           screwOffsetZ=OAL-NutHexRadius(setScrewSpec)-wall);
       
       HoseBarbExtension(length=hoseBarbLength+(wall*2)+(barbMajorDiameter/2),
                           wall=barbWall,
