@@ -1,6 +1,10 @@
 use <../Shapes/Teardrop.scad>;
 use <../Meta/Resolution.scad>;
 use <../Meta/Manifold.scad>;
+use <../Meta/Units.scad>;
+
+$fs = UnitsFs()*0.25;
+
 
 module RoundedBoolean(edgeOffset=1, edgeSign=-1,
                       r=0.25, angle=0,
@@ -163,7 +167,7 @@ module ChamferedCube(xyz=[1,2,3], r=0.25, center=false, fn=20,
     rotate([90,0,90])
     linear_extrude(height=xyz[0])
     ChamferedSquare(xy=[xyz[1], xyz[2]], r=r, $fn=fn,
-                    teardrop=teardropXYZ[0], teardrop=teardropTopXYZ[0]);
+                    teardrop=teardropXYZ[0]);
 
     // Y
     if (chamferXYZ[1])
@@ -171,13 +175,13 @@ module ChamferedCube(xyz=[1,2,3], r=0.25, center=false, fn=20,
     rotate([90,0,0])
     linear_extrude(height=xyz[1])
     ChamferedSquare(xy=[xyz[0], xyz[2]], r=r, $fn=fn,
-                    teardrop=teardropXYZ[1], teardrop=teardropTopXYZ[1]);
+                    teardrop=teardropXYZ[1]);
 
     // Z
     if (chamferXYZ[2])
     linear_extrude(height=xyz[2])
     ChamferedSquare(xy=[xyz[0], xyz[1]], r=r, $fn=fn,
-                    teardrop=teardropXYZ[2], teardrop=teardropTopXYZ[2]);
+                    teardrop=teardropXYZ[2]);
   }
 }
 
