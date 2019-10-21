@@ -32,10 +32,10 @@ module SetScrewSupport(radius=1,
 
   // Nut/bolt support
   translate([radius,
-       -BoltNutRadius(boltSpec)-wall,
+       -NutHexRadius(boltSpec)-wall,
        0])
-  cube([BoltNutHeight(boltSpec)+length,
-   BoltNutDiameter(boltSpec)+(wall*2),
+  cube([NutHexHeight(boltSpec)+length,
+   NutHexDiameter(boltSpec)+(wall*2),
    height]);
 }
 
