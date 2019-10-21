@@ -1,4 +1,7 @@
 use <../Meta/Resolution.scad>;
+use <../Meta/Units.scad>;
+
+$fs = UnitsFs()*0.25;
 
 module Teardrop(r=1, rotation=0, truncated=false) {
   side = r*sqrt(2)/2;
@@ -6,7 +9,7 @@ module Teardrop(r=1, rotation=0, truncated=false) {
   render()
   difference() {
     hull() {
-      circle(r, $fn=$fn);
+      circle(r);
 
       rotate(rotation)
       polygon(points=[
