@@ -12,10 +12,9 @@ function PumpGripLength() = 5.25;
 
 module PumpGrip(outerRadius=PumpGripRadius(), length=PumpGripLength(),
                 rings=true, ringRadius=3/32, ringGap=0.75,
-                debug=false, alpha=1, $fn=Resolution(20,100)) {
+                alpha=1, $fn=Resolution(20,100)) {
 
   color("Tan", alpha)
-  DebugHalf(enabled=debug)
   difference() {
     union() {
 
@@ -40,4 +39,5 @@ module PumpGrip(outerRadius=PumpGripRadius(), length=PumpGripLength(),
   }
 }
 
+DebugHalf(enabled=false)
 PumpGrip();
