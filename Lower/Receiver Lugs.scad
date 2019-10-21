@@ -3,6 +3,8 @@ use <../Meta/Units.scad>;
 
 use <../Components/T Lug.scad>;
 use <../Vitamins/Nuts And Bolts.scad>;
+use <../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
+use <../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 
 
 function GripWidth() = 1;
@@ -29,42 +31,39 @@ function ReceiverLugRearZ() = -1;
 function ReceiverLugBoltRadius() = 0.0775;
 
 function ReceiverLugBoltX(bolt) = bolt[0];
-function ReceiverLugBoltY(bolt) = bolt[1];
-function ReceiverLugBoltZ(bolt) = bolt[2];
+function ReceiverLugBoltZ(bolt) = bolt[1];
 
 // XYZ
 function ReceiverLugBoltsArray() = [
 
    // Front-Top
    [ReceiverLugFrontMaxX()+0.25,
-    -LowerMaxY()+0.07,
     -0.375],
 
    // Back-Top
    [ReceiverLugRearMinX()+(ReceiverLugRearLength()/2),
-    -LowerMaxY()+0.07,
     -0.375]
 ];
 
-module ReceiverLugBoltHoles(boltSpec=Spec_BoltM4(),
+module ReceiverLugBolts(boltSpec=Spec_BoltM4(),
                             length=UnitsMetric(30),
-                            clearance=true,
+                            head="socket", nut="hex",
+                            cutter=false,
+                            clearance=0.005,
                             teardrop=false,
                             teardropAngle=90, $fn=8) {
 
-  capHeightExtra = clearance ? 1 : 0;
-  nutHeightExtra = clearance ? 1 : 0;
-
   color("Silver")
   for (bolt = ReceiverLugBoltsArray())
-  translate([ReceiverLugBoltX(bolt), ReceiverLugBoltY(bolt), ReceiverLugBoltZ(bolt)])
+  translate([ReceiverLugBoltX(bolt), -length/2, ReceiverLugBoltZ(bolt)])
   rotate([90,0,0])
   rotate(90)
   NutAndBolt(bolt=boltSpec, boltLength=length,
+             head=head, nut=nut,
              teardrop=teardrop, teardropAngle=teardropAngle,
-             clearance=clearance, capOrientation=true,
-             capHeightExtra=capHeightExtra,
-             nutHeightExtra=nutHeightExtra, nutBackset=0.05);
+             clearance=(cutter?clearance:0), capOrientation=true,
+             capHeightExtra=cutter ? 1 : 0,
+             nutHeightExtra=cutter ? 1 : 0, nutBackset=0.05);
 }
 
 module ReceiverLugRear(extraTop=ManifoldGap(),
@@ -81,7 +80,8 @@ module ReceiverLugRear(extraTop=ManifoldGap(),
 
     // Grip Bolt Hole
     if (hole)
-    ReceiverLugBoltHoles(teardrop=teardrop, teardropAngle=teardropAngle, clearance=true);
+    ReceiverLugBolts(teardrop=teardrop, teardropAngle=teardropAngle,
+                         cutter=true);
   }
 }
 
@@ -101,4 +101,4 @@ ReceiverLugRear(cutter=true, clearVertical=true);
 
 ReceiverLugFront();
 
-ReceiverLugBoltHoles(clearance=false);
+ReceiverLugBolts();
