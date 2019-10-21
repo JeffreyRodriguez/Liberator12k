@@ -69,9 +69,6 @@ module SearCutter(length=SearLength()+SearTravel(), searLengthExtra=0, crosspin=
     cube([RodDiameter(SearRod())*0.8,
           RodDiameter(SearRod()),
           SearLength()+SearTravel()+searLengthExtra]);
-
-    if (crosspin)
-    VerticalSearPinTrack();
   }
 }
 
@@ -107,17 +104,6 @@ module SearJig(width=0.75, height=1) {
 }
 
 *!scale(25.4) SearJig();
-
-
-module VerticalSearPinTrack(width=0.5) {
-  rotate([90,0,0])
-  linear_extrude(height=width, center=true)
-  translate([-RodRadius(SearPinRod(), RodClearanceLoose()),
-             RodRadius(SearPinRod(), RodClearanceLoose())+SearPinOffsetZ()])
-  mirror([0,1])
-  square([RodDiameter(SearPinRod(), RodClearanceLoose()),
-          RodDiameter(SearPinRod(), RodClearanceLoose())+SearTravel()]);
-}
 
 module TriggerSearPinTrack() {
   translate([0,SearPinOffsetZ()])
@@ -159,9 +145,9 @@ module SearSupportTab(cutter=false) {
     translate([0,0,-SearTravel()])
     SearCutter(length=SearLength()+(SearTravel()*4), wideTrack=true);
 
-    ReceiverLugFront(cutter=true, clearance=0.01);
+    ReceiverLugFront(cutter=true);
 
-    ReceiverLugRear(cutter=true, hole=false, clearance=0.0);
+    ReceiverLugRear(cutter=true, hole=false);
 
   }
 }
@@ -202,11 +188,11 @@ module Trigger2d() {
     // Clearance for the receiver lugs
     projection(cut=true)
     rotate([-90,0,0]) {
-      ReceiverLugFront(cutter=true, clearance=0.01);
+      ReceiverLugFront(cutter=true);
 
       for (x=[0, TriggerTravel()])
       translate([x,0,0])
-      ReceiverLugRear(cutter=true, hole=false, clearance=0.01);
+      ReceiverLugRear(cutter=true, hole=false);
     }
   }
 }
