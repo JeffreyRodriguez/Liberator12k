@@ -137,7 +137,7 @@ function CraneLatchMaxX() = CraneLatchMinX()+CraneLatchLength();
 
 module RevolverRecoilPlateHousing(debug=false) {
   color("YellowGreen")
-  DebugHalf(enabled=debug)
+  DebugHalf(enabled=debug) render()
   difference() {
     RecoilPlateHousing(topHeight=FrameUpperBoltOffsetZ(),
                        bottomHeight=-LowerOffsetZ(),
@@ -272,7 +272,7 @@ module CraneLatch(cutter=false, clearance=0.005,
     clear2 = clear*2;
 
   color("BurlyWood", alpha)
-  DebugHalf(enabled=debug)
+  DebugHalf(enabled=debug) render()
   difference() {
       union() {
         hull() {
@@ -388,7 +388,7 @@ module CraneLatchHandle(clearance=0.008, alpha=1, debug=false) {
   clear2 = clearance*2;
 
   color("BurlyWood", alpha)
-  DebugHalf(enabled=debug)
+  DebugHalf(enabled=debug) render()
   difference() {
     union() {
 
@@ -461,7 +461,7 @@ module RevolverCrane(cutter=false, teardrop=false, clearance=0.005,
   pivotCutterRadius = RodRadius(CylinderRod())+WallCrane()+clearance;
 
   color("OliveDrab", alpha)
-  DebugHalf(enabled=debug)
+  DebugHalf(enabled=debug) render()
   difference() {
     union() {
       hull() {
@@ -573,7 +573,7 @@ module CraneShield(cutter=false, clearance=0.006,
   craneRadius = CranePivotY()+CranePivotRadius()+WallCrane();
   cylinderMaxX = 2.3355+ShellRimLength();
 
-  color("OliveDrab", alpha) DebugHalf(enabled=debug)
+  color("OliveDrab", alpha) DebugHalf(enabled=debug) render()
   difference() {
     union() {
 
@@ -616,7 +616,7 @@ module CraneShield(cutter=false, clearance=0.006,
 
 module RevolverForendFrame(debug=false, alpha=1) {
   color("DarkOliveGreen", alpha)
-  DebugHalf(enabled=debug)
+  DebugHalf(enabled=debug) render()
 
   difference() {
     hull()
@@ -637,7 +637,7 @@ module RevolverForend(debug=false, alpha=1, $fn=Resolution(30,100)) {
 
   // Forward plate
   color("DarkOliveGreen", alpha)
-  DebugHalf(enabled=debug)
+  DebugHalf(enabled=debug) render()
   difference() {
     union() {
 
@@ -703,7 +703,7 @@ module RevolverFrameAssembly(debug=false) {
 
 // 1" OD (4130 Tube) chambers
 module RevolverCylinder_4130x6(supports=true, chambers=false,
-                             chamberBolts=false, cutter=false,
+                             chamberBolts=false,
                              debug=false) {
   OffsetZigZagRevolver(
       centerOffset=RevolverSpindleOffset(),
@@ -713,7 +713,7 @@ module RevolverCylinder_4130x6(supports=true, chambers=false,
       extraTop=ActuatorPretravel(),
       supports=supports, chamberBolts=chamberBolts,
       chambers=chambers, chamberLength=ChamberLength(),
-      debug=debug, alpha=1.0, cutter=cutter);
+      debug=debug, alpha=1.0);
 }
 
 module RevolverShotgunAssembly(stock=true,
