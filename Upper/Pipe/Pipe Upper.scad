@@ -164,7 +164,7 @@ module PipeUpperAssembly(receiverLength=ReceiverLength(),
                          pipeAlpha=1, centerLug=false,
                          lower=true, lowerLeft=true, lowerRight=true,
                          lugs=true, stock=false,
-                         frameUpperBolts=true,
+                         frameUpperBolts=true, frameUpperBoltLength=FrameUpperBoltLength(),
                          triggerAnimationFactor=TriggerAnimationFactor(),
                          debug=true) {
 
@@ -191,7 +191,7 @@ module PipeUpperAssembly(receiverLength=ReceiverLength(),
   }
 
   if (frameUpperBolts)
-  FrameUpperBolts(debug=false);
+  FrameUpperBolts(length=frameUpperBoltLength, debug=false);
 
   FrameBolts();
 
