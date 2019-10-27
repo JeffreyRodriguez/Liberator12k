@@ -94,12 +94,12 @@ echo ("Charger wing bottom Z", ChargingRodOffset()+RodRadius(ChargingRod())+Wall
 
 module ChargingRodBolts(cutter=false, teardrop=false) {
   clearance = cutter?0.005:0;
-  
+
   // Charger
   color("SteelBlue")
   translate([ChargingRodMinX()+(WallCharger()*2), 0,
              ChargingRodOffset()+RodRadius(ChargingRod())+WallCharger()+0.071])
-  Bolt(bolt=ChargingRodBolt(), head="socket", capOrientation=true, 
+  Bolt(bolt=ChargingRodBolt(), head="socket", capOrientation=true,
        length=cutter?1.5:1, clearance=clearance, teardrop=cutter, teardropAngle=180);
 
   // Pump grip
@@ -139,7 +139,7 @@ module Charger(clearance=RodClearanceLoose(),
                bolt=true,
                cutter=false, debug=false) {
 
-  color("OrangeRed") DebugHalf(enabled=debug) {
+  color("OrangeRed") DebugHalf(enabled=debug) render() {
     difference() {
 
       // Charging Pusher
@@ -187,7 +187,7 @@ module ChargingPump(innerRadius=1.1/2,
                     $fn=Resolution(20,50)) {
 
   color("Tan", alpha)
-  DebugHalf(enabled=debug)
+  DebugHalf(enabled=debug) render()
   difference() {
     union() {
 
