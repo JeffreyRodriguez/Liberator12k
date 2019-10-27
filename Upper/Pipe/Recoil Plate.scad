@@ -59,7 +59,7 @@ module RecoilPlate(firingPinAngle=0, cutter=false, debug=false) {
 
 module RecoilPlateHousing(topHeight=ReceiverOR(),
                           bottomHeight=ReceiverOR(),
-                          width=2, firingPinAngle=0,
+                          width=2.25, firingPinAngle=0,
                           debug=false, alpha=1) {
   color("Tomato", alpha)
   DebugHalf(enabled=debug)
