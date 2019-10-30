@@ -1,26 +1,26 @@
-include <../../../Meta/Animation.scad>;
+include <../../Meta/Animation.scad>;
 
-use <../../../Meta/Manifold.scad>;
-use <../../../Meta/Units.scad>;
-use <../../../Meta/Debug.scad>;
-use <../../../Meta/Resolution.scad>;
+use <../../Meta/Manifold.scad>;
+use <../../Meta/Units.scad>;
+use <../../Meta/Debug.scad>;
+use <../../Meta/Resolution.scad>;
 
-use <../../../Finishing/Chamfer.scad>;
+use <../../Finishing/Chamfer.scad>;
 
-use <../../../Components/Pipe/Cap.scad>;
-use <../../../Components/Pipe/Frame.scad>;
-use <../../../Components/Pipe/Frame Standoffs.scad>;
+use <../../Components/Pipe/Cap.scad>;
+use <../../Components/Pipe/Frame.scad>;
+use <../../Components/Pipe/Frame Standoffs.scad>;
 
-use <../../../Vitamins/Nuts And Bolts.scad>;
-use <../../../Vitamins/Pipe.scad>;
-use <../../../Vitamins/Rod.scad>;
-use <../../../Vitamins/AR15/Barrel.scad>;
+use <../../Vitamins/Nuts And Bolts.scad>;
+use <../../Vitamins/Pipe.scad>;
+use <../../Vitamins/Rod.scad>;
+use <../../Vitamins/AR15/Barrel.scad>;
 
-use <../../../Shapes/Semicircle.scad>;
+use <../../Shapes/Semicircle.scad>;
 
-use <../../../Ammo/Shell Slug.scad>;
+use <../../Ammo/Shell Slug.scad>;
 
-use <../Pipe Upper.scad>;
+use <../Receiver.scad>;
 
 // Measured: Vitamins
 function BarrelCollarDiameter() = 1.75;

@@ -1,33 +1,33 @@
-include <../../../Meta/Animation.scad>;
+include <../../Meta/Animation.scad>;
 
-use <../../../Meta/Manifold.scad>;
-use <../../../Meta/Units.scad>;
-use <../../../Meta/Debug.scad>;
-use <../../../Meta/Resolution.scad>;
-use <../../../Meta/RenderIf.scad>;
+use <../../Meta/Manifold.scad>;
+use <../../Meta/Units.scad>;
+use <../../Meta/Debug.scad>;
+use <../../Meta/Resolution.scad>;
+use <../../Meta/RenderIf.scad>;
 
-use <../../../Components/Cylinder Redux.scad>;
-use <../../../Components/Pivot.scad>;
+use <../../Components/Cylinder Redux.scad>;
+use <../../Components/Pivot.scad>;
 
-use <../../../Lower/Lower.scad>;
+use <../../Lower/Lower.scad>;
 
-use <../../../Finishing/Chamfer.scad>;
+use <../../Finishing/Chamfer.scad>;
 
-use <../../../Shapes/Bearing Surface.scad>;
-use <../../../Shapes/Teardrop.scad>;
-use <../../../Shapes/TeardropTorus.scad>;
-use <../../../Shapes/Semicircle.scad>;
-use <../../../Shapes/ZigZag.scad>;
+use <../../Shapes/Bearing Surface.scad>;
+use <../../Shapes/Teardrop.scad>;
+use <../../Shapes/TeardropTorus.scad>;
+use <../../Shapes/Semicircle.scad>;
+use <../../Shapes/ZigZag.scad>;
 
-use <../../../Vitamins/Nuts And Bolts.scad>;
-use <../../../Vitamins/Pipe.scad>;
-use <../../../Vitamins/Rod.scad>;
+use <../../Vitamins/Nuts And Bolts.scad>;
+use <../../Vitamins/Pipe.scad>;
+use <../../Vitamins/Rod.scad>;
 
-use <../../../Ammo/Shell Slug.scad>;
+use <../../Ammo/Shell Slug.scad>;
 
 use <../Lugs.scad>;
 use <../Frame.scad>;
-use <../Pipe Upper.scad>;
+use <../Receiver.scad>;
 use <../Linear Hammer.scad>;
 use <../Recoil Plate.scad>;
 use <../Charging Pump.scad>;
@@ -127,9 +127,9 @@ module ExtractorBit(cutter=false, clearance=0.005) {
     cylinder(r=(ExtractorWidth()/2)+clear, h=ExtractorLength(), $fn=6);
 
     for (M = [0,1]) mirror([M,0,0])
-    hull() for (Z = [0,ExtractorWidth()/4])
+    hull() for (Z = [0,ExtractorWidth()/2])
     translate([ExtractorWidth()*0.6,0,Z])
-    scale([1,1,1.5])
+    scale([1,1,1.75])
     rotate([90,0,0])
     cylinder(r=ExtractorWidth()/2, h=ExtractorWidth(),
              center=true);
@@ -472,7 +472,7 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1,
   BreakActionLatchRod();
 
   *ChargingPumpAssembly(debug=debug);
-  
+
   BreakActionRecoilPlateHousing();
 
   BreakActionForend(debug=debug);

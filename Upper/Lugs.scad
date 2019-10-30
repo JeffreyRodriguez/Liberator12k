@@ -1,19 +1,19 @@
-use <../../Finishing/Chamfer.scad>;
+use <../Finishing/Chamfer.scad>;
 
-use <../../Lower/Receiver Lugs.scad>;
-use <../../Lower/Lower.scad>;
-use <../../Lower/Trigger.scad>;
+use <../Lower/Receiver Lugs.scad>;
+use <../Lower/Lower.scad>;
+use <../Lower/Trigger.scad>;
 
 
-use <../../Meta/Debug.scad>;
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Resolution.scad>;
+use <../Meta/Debug.scad>;
+use <../Meta/Manifold.scad>;
+use <../Meta/Resolution.scad>;
 
-use <../../Shapes/Semicircle.scad>;
-use <../../Shapes/Teardrop.scad>;
+use <../Shapes/Semicircle.scad>;
+use <../Shapes/Teardrop.scad>;
 
-use <../../Vitamins/Pipe.scad>;
-use <../../Vitamins/Rod.scad>;
+use <../Vitamins/Pipe.scad>;
+use <../Vitamins/Rod.scad>;
 
 // Settings: Walls
 function WallLower()      = 0.1875;

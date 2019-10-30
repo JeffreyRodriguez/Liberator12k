@@ -1,25 +1,25 @@
-include <../../Meta/Animation.scad>;
+include <../Meta/Animation.scad>;
 
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Debug.scad>;
-use <../../Meta/Resolution.scad>;
+use <../Meta/Manifold.scad>;
+use <../Meta/Debug.scad>;
+use <../Meta/Resolution.scad>;
 
-use <../../Finishing/Chamfer.scad>;
+use <../Finishing/Chamfer.scad>;
 
-use <../../Vitamins/Nuts And Bolts.scad>;
-use <../../Vitamins/Nuts and Bolts/BoltSpec.scad>;
-use <../../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
-use <../../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
-use <../../Vitamins/Rod.scad>;
+use <../Vitamins/Nuts And Bolts.scad>;
+use <../Vitamins/Nuts and Bolts/BoltSpec.scad>;
+use <../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
+use <../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
+use <../Vitamins/Rod.scad>;
 
-use <../../Lower/Receiver Lugs.scad>;
-use <../../Lower/Trigger.scad>;
-use <../../Lower/Lower.scad>;
+use <../Lower/Receiver Lugs.scad>;
+use <../Lower/Trigger.scad>;
+use <../Lower/Lower.scad>;
 
 
 use <Firing Pin.scad>;
 use <Lugs.scad>;
-use <Pipe Upper.scad>;
+use <Receiver.scad>;
 
 
 // Firing pin housing bolt
@@ -53,7 +53,7 @@ function HammerTravel() = LowerMaxX() + FrameExtension()
                               - HammerCollarWidth()
                               + RodRadius(SearRod())
                               - FiringPinHousingLength();
-                              
+
 
 
 module HammerBolt(cutter=false, clearance=0.004) {

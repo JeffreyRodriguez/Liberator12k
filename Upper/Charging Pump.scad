@@ -1,31 +1,31 @@
-include <../../Meta/Animation.scad>;
+include <../Meta/Animation.scad>;
 
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Units.scad>;
-use <../../Meta/Debug.scad>;
-use <../../Meta/Resolution.scad>;
+use <../Meta/Manifold.scad>;
+use <../Meta/Units.scad>;
+use <../Meta/Debug.scad>;
+use <../Meta/Resolution.scad>;
 
-use <../../Components/Cylinder Redux.scad>;
-use <../../Components/Pump Grip.scad>;
+use <../Components/Cylinder Redux.scad>;
+use <../Components/Pump Grip.scad>;
 
-use <../../Lower/Lower.scad>;
-use <../../Lower/Trigger.scad>;
+use <../Lower/Lower.scad>;
+use <../Lower/Trigger.scad>;
 
-use <../../Finishing/Chamfer.scad>;
+use <../Finishing/Chamfer.scad>;
 
-use <../../Shapes/Bearing Surface.scad>;
-use <../../Shapes/Teardrop.scad>;
-use <../../Shapes/TeardropTorus.scad>;
-use <../../Shapes/Semicircle.scad>;
+use <../Shapes/Bearing Surface.scad>;
+use <../Shapes/Teardrop.scad>;
+use <../Shapes/TeardropTorus.scad>;
+use <../Shapes/Semicircle.scad>;
 
-use <../../Vitamins/Nuts And Bolts.scad>;
-use <../../Vitamins/Nuts and Bolts/BoltSpec.scad>;
-use <../../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
-use <../../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
-use <../../Vitamins/Pipe.scad>;
-use <../../Vitamins/Rod.scad>;
+use <../Vitamins/Nuts And Bolts.scad>;
+use <../Vitamins/Nuts and Bolts/BoltSpec.scad>;
+use <../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
+use <../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
+use <../Vitamins/Pipe.scad>;
+use <../Vitamins/Rod.scad>;
 
-use <../../Ammo/Shell Slug.scad>;
+use <../Ammo/Shell Slug.scad>;
 
 use <Lugs.scad>;
 use <Linear Hammer.scad>;
