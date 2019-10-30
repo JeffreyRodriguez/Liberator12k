@@ -1,6 +1,6 @@
 use <../../Shapes/Gear.scad>;
 use <../../Shapes/Teardrop.scad>;
-use <../../Math/Triangles.scad>;
+use <../../Meta/Math/Triangles.scad>;
 use <../../Meta/Units.scad>;
 use <../../Vitamins/Bearing.scad>;
 use <../../Vitamins/Square Tube.scad>;

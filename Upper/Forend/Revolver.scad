@@ -5,7 +5,7 @@ use <../../Meta/Units.scad>;
 use <../../Meta/Debug.scad>;
 use <../../Meta/Resolution.scad>;
 
-use <../../Math/Triangles.scad>;
+use <../../Meta/Math/Triangles.scad>;
 
 use <../../Components/Cylinder Redux.scad>;
 use <../../Components/Pump Grip.scad>;
