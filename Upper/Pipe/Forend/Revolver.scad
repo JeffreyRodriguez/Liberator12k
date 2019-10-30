@@ -31,10 +31,10 @@ use <../../../Vitamins/Rod.scad>;
 use <../../../Ammo/Shell Slug.scad>;
 
 use <../Pipe Upper.scad>;
-use <../Linear Hammer.scad>;
 use <../Recoil Plate.scad>;
 use <../Charging Pump.scad>;
 use <../Lugs.scad>;
+use <../Frame.scad>;
 
 
 // Settings: Lengths
@@ -126,8 +126,8 @@ function CraneMaxX() = ForendMaxX()
                      + CraneLengthFront();
 function CraneMinX() = CraneMaxX()-CraneLength();
 
-function CranePivotY() =  1.09375; //FrameUpperBoltOffsetY()+(3/32);
-function CranePivotZ() =  0.4525; //FrameUpperBoltOffsetZ()-(15/16);
+function CranePivotY() =  1.09375; //FrameBoltY()+(3/32);
+function CranePivotZ() =  0.4525; //FrameBoltZ()-(15/16);
 
 function CranePivotHypotenuse() = pyth_A_B(CranePivotY(), CranePivotZ());
 function CranePivotPinAngle() = CranePivotHypotenuse()*asin(CranePivotZ());
@@ -139,34 +139,25 @@ module RevolverRecoilPlateHousing(debug=false) {
   color("YellowGreen")
   DebugHalf(enabled=debug) render()
   difference() {
-    RecoilPlateHousing(topHeight=FrameUpperBoltOffsetZ(),
-                       bottomHeight=-LowerOffsetZ(),
-                       debug=false) {
+    ReceiverFront(width=2*(FrameBoltY()
+                          +WallFrameUpperBolt()
+                          +FrameUpperBoltRadius())-(1/16)) {
 
         // Backing plate for the cylinder
-        translate([RecoilPlateRearX(),0,-RevolverSpindleOffset()])
+        translate([0,0,-RevolverSpindleOffset()])
         rotate([0,90,0])
         ChamferedCylinder(r1=(BarrelRadius()*3)+(CR()*2), r2=CR(),
-                 h=abs(RecoilPlateRearX())-ManifoldGap(), $fn=Resolution(30,90));
+                 h=abs(RecoilPlateRearX())-ManifoldGap());
 
         // Frame upper support
-        translate([RecoilPlateRearX(),0,0])
-        hull() {
-          translate([0,0,-FrameUpperBoltOffsetZ()*2])
-          FrameUpperBoltSupport(length=abs(RecoilPlateRearX()));
-          FrameUpperBoltSupport(length=abs(RecoilPlateRearX()));
+        *hull() {
+          translate([0,0,-FrameBoltZ()*2])
+          FrameSupport(length=abs(RecoilPlateRearX()));
+          FrameSupport(length=abs(RecoilPlateRearX()));
         }
     }
 
-    FrameUpperBolts(cutter=true);
-
-    translate([RecoilPlateRearX()-LowerMaxX(),0,0])
-    FrameBolts(cutter=true, teardrop=false);
-
     RevolverSpindle(cutter=true);
-
-    translate([RecoilPlateThickness(),0,0])
-    ChargingRod(clearance=RodClearanceSnug(), cutter=true);
   }
 }
 
@@ -614,25 +605,6 @@ module CraneShield(cutter=false, clearance=0.006,
   }
 }
 
-module RevolverForendFrame(debug=false, alpha=1) {
-  color("DarkOliveGreen", alpha)
-  DebugHalf(enabled=debug) render()
-
-  difference() {
-    hull()
-    FrameUpperBoltSupport(length=ForendMinX());
-    echo("ForendMinX(): ", ForendMinX());
-
-    // Cutout for a picatinny rail insert
-    translate([-ManifoldGap(), -UnitsMetric(15.6/2), RecoilPlateTopZ()-0.125])
-    cube([FrameUpperBoltExtension()+ManifoldGap(2), UnitsMetric(15.6), 0.25]);
-
-    FrameUpperBolts(cutter=true);
-
-    ChargingRod(cutter=true);
-  }
-}
-
 module RevolverForend(debug=false, alpha=1, $fn=Resolution(30,100)) {
 
   // Forward plate
@@ -662,7 +634,7 @@ module RevolverForend(debug=false, alpha=1, $fn=Resolution(30,100)) {
     hull() {
 
         // Around the upper bolts
-        FrameUpperBoltSupport(length=ForendFrontLength());
+        FrameSupport(length=ForendFrontLength());
 
         // Around the crane pivot pin
         for (M = [0,1]) mirror([0,M,0])
@@ -677,7 +649,7 @@ module RevolverForend(debug=false, alpha=1, $fn=Resolution(30,100)) {
     translate([-ManifoldGap(), -UnitsMetric(15.6/2), RecoilPlateTopZ()-0.125])
     cube([FrameUpperBoltExtension()+ManifoldGap(2), UnitsMetric(15.6), 0.25]);
 
-    FrameUpperBolts(cutter=true);
+    FrameBolts(cutter=true);
 
     Barrel(hollow=false, clearance=PipeClearanceSnug());
 
@@ -692,13 +664,8 @@ module RevolverForend(debug=false, alpha=1, $fn=Resolution(30,100)) {
 
 module RevolverFrameAssembly(debug=false) {
 
-  translate([FiringPinMinX(),0,0])
-  HammerAssembly(debug=true);
-
-  RevolverForendFrame(debug=debug);
-
-  FrameUpperBolts(cutter=false);
   FrameBolts(cutter=false);
+  ReceiverBolts(cutter=false);
 }
 
 // 1" OD (4130 Tube) chambers
@@ -818,10 +785,6 @@ CraneShield();
 
 *!scale(25.4) rotate([0,-90,0]) translate([-ForendMinX(),0,0])
 RevolverForend();
-
-*!scale(25.4)
-rotate([0,-90,0])
-RevolverForendFrame();
 
 *!scale(25.4) rotate(90) rotate([0,-90,0]) translate([-CraneMinX(),0,0])
 RevolverCrane();

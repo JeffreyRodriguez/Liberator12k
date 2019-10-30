@@ -4,6 +4,7 @@ use <../../../Meta/Manifold.scad>;
 use <../../../Meta/Units.scad>;
 use <../../../Meta/Debug.scad>;
 use <../../../Meta/Resolution.scad>;
+use <../../../Meta/RenderIf.scad>;
 
 use <../../../Components/Cylinder Redux.scad>;
 use <../../../Components/Pivot.scad>;
@@ -25,10 +26,24 @@ use <../../../Vitamins/Rod.scad>;
 use <../../../Ammo/Shell Slug.scad>;
 
 use <../Lugs.scad>;
+use <../Frame.scad>;
 use <../Pipe Upper.scad>;
 use <../Linear Hammer.scad>;
 use <../Recoil Plate.scad>;
 use <../Charging Pump.scad>;
+
+
+/* [What to Render] */
+
+// Assembly is not for printing.
+_RENDER = "Assembly"; // ["Assembly", "BarrelPivotCollar", "BarrelLatchCollar", "RecoilPlateHousing", "Forend"]
+
+/* [Set Screws] */
+BARREL_SET_SCREW = "#8-32"; // ["M4", "#8-32"]
+BARREL_SET_SCREW_CLEARANCE = -0.05;
+
+//CHAMBER_OUTSIDE_DIAMETER = 1;
+//CHAMBER_INSIDE_DIAMETER = 0.813;
 
 
 $fs = UnitsFs()*0.5;
@@ -36,16 +51,19 @@ $fs = UnitsFs()*0.5;
 // Settings: Vitamins
 function BarrelPipe() = Spec_PipeThreeQuarterInch();
 function BarrelSleevePipe() = Spec_PipeOneInch();
-function SquareRodFixingBolt() = Spec_BoltM3();
+function ChamberBolt() = Spec_BoltM3();
+
+function BarrelSetScrew() = BoltSpec(BARREL_SET_SCREW);
+assert(BarrelSetScrew(), "BarrelSetScrew() is undefined. Unknown BARREL_SET_SCERW?");
 
 // Settings: Lengths
 function BarrelLength() = 18;
-function BarrelSleeveLength() = 4;
+function BarrelSleeveLength() = 4.5 ;
 function WallBarrel() = 0.25;
 function WallPivot() = 0.5;
 
 // Shorthand: Measurements
-function PivotWidth() = 1.25;
+function PivotWidth() = 1.125;
 function PivotDiameter() = .25;
 function PivotRadius() = PivotDiameter()/2;
 
@@ -61,78 +79,119 @@ function BarrelSleeveRadius(clearance=undef)
 function BarrelSleeveDiameter(clearance=undef)
     = PipeOuterDiameter(BarrelSleevePipe(), clearance);
 
+
 // Calculated: Lengths
 function ForendFrontLength() = 1.5;
 function ReceiverTopZ() = ReceiverOR();
 
 // Calculated: Positions
-function ForendFrontX() = FrameUpperBoltExtension();
-function PivotX() = 5.5;
-function PivotZ() = FrameUpperBoltOffsetZ()
-                  + (FrameUpperBoltRadius()+PivotRadius());
+function BarrelOffsetZ() = 0; // -0.11 for .22LR rimfire
+function ForendMaxX() = FrameUpperBoltExtension();
+function ForendMinX() = ForendMaxX()-ForendFrontLength();
 function PivotAngle() = -180;
+function PivotX() = 5.5;
+function PivotZ() = FrameBoltZ()
+                  + (FrameUpperBoltRadius()+PivotRadius());
 
-function LatchRodZ() = -1.125;
+function LatchSpringLength() = 1.25;
+function LatchSpringDiameter() = 0.25;
+function LatchSpringRadius() = LatchSpringDiameter()/2;
+function LatchSpringFloor() = 0.5;
+function LatchWall() = 0.125;
+
+function LatchRodY() = 0;
+function LatchRodZ() = -1;
 function LatchRodDiameter() = 0.25;
 function LatchRodRadius() = LatchRodDiameter()/2;
+function LatchRodLength() = 2;
 
-function LatchSpringLength() = 2.5;
-function LatchSpringDiameter() = 0.75;
-function LatchSpringRadius() = LatchSpringDiameter()/2;
-function LatchSpringFloor() = 0.25;
-function LatchSpringWall() = 0.125;
+function LatchCollarLength() = RecoilPlateRearX()
+                             + LatchRodLength()
+                             + LatchSpringLength()
+                             + LatchSpringFloor();
 
-module RenderIf(test=true) {
-  if (test) {
-    render() children();
-  } else {
-    children();
+function ExtractorWidth() = 1/4;
+function ExtractorLength() = 1;
+function ExtractorWall() = 0.1875;
+function ExtractorTravel() = 1;
+function ExtractorAngle() = 45;
+
+module ExtractorBit(cutter=false, clearance=0.005) {
+  clear = cutter?clearance:0;
+  clear2 = clear*2;
+
+  rotate([ExtractorAngle(),0,0])
+  translate([ExtractorWidth()/8,-0.813/2,0])
+  rotate([90,0,25])
+  difference() {
+    cylinder(r=(ExtractorWidth()/2)+clear, h=ExtractorLength(), $fn=6);
+
+    for (M = [0,1]) mirror([M,0,0])
+    hull() for (Z = [0,ExtractorWidth()/4])
+    translate([ExtractorWidth()*0.6,0,Z])
+    scale([1,1,1.5])
+    rotate([90,0,0])
+    cylinder(r=ExtractorWidth()/2, h=ExtractorWidth(),
+             center=true);
   }
 }
 
-module BreakActionLatchRod(cutter=false, clearance=0.005) {
-  clear = cutter ? clearance : 0;
-  clear2 = clear*2;
-  
-  // Rod
-  color("SteelBlue")
-  translate([-0.5, 0, LatchRodZ()])
-  rotate([0,90,0])
-  cylinder(r=LatchRodRadius()+clear,
-           h=BarrelSleeveLength()+0.5+(cutter?0.5:0));
+module Extractor(alpha=0.5) {
+  color("Green", alpha)
+  rotate([ExtractorAngle(),0,0])
+  render()
+  difference() {
+    translate([0,0,-((ExtractorWidth()/2)+ExtractorWall())])
+    mirror([0,1,0])
+    cube([ExtractorWidth()+(ExtractorWall()*2),
+           BarrelRadius()+ExtractorLength(),
+           ExtractorWidth()+(ExtractorWall()*2)]);
+
+    ExtractorBit(cutter=true);
+  }
 }
 
-module BreakActionLatchSpring(cutter=false, clearance=0.005) {
+module BreakActionLatchRod(cutter=false, clearance=0.008) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
-  // Spring
+
+  // Rod
+  color("SteelBlue")
+  translate([RecoilPlateRearX(), LatchRodY()-(LatchRodRadius()+clear), LatchRodZ()-(LatchRodRadius()+clear)])
+  cube([LatchRodLength()+(cutter?LatchSpringLength():0),
+        (LatchRodRadius()+clear)*2,
+        (LatchRodRadius()+clear)*2]);
+}
+
+module BreakActionLatchSpring() {
   color("Silver")
-  translate([BarrelSleeveLength()-LatchSpringFloor(), 0, LatchRodZ()])
-  rotate([0,-90,0])
-  cylinder(r=LatchSpringRadius()+clear, h=cutter?BarrelSleeveLength()-LatchSpringFloor():LatchSpringLength());
+  translate([RecoilPlateRearX()+LatchRodLength(), LatchRodY(), LatchRodZ()])
+  rotate([0,90,0])
+  cylinder(r=LatchSpringRadius(),
+           h=LatchSpringLength());
 }
 
 module BreakActionLatch(debug=false, cutter=false, clearance=0.01) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
-  
-  
+
+
   // Latch block
   color("Tomato")
   difference() {
     union() {
-      translate([-(cutter?0.25:0),-0.125-clear,LatchRodZ()])
+      translate([-(cutter?0.25:0),LatchRodY()-0.125-clear,LatchRodZ()])
       mirror([0,0,1])
       ChamferedCube([0.75+(cutter?0.5+0.25:0), 0.25+clear2, 1.5], r=1/16);
-    
-      translate([0,0,LatchRodZ()])
+
+      translate([0,LatchRodY(),LatchRodZ()])
       rotate([0,90,0])
       ChamferedCylinder(r1=(0.7/2)-0.008, r2=1/16,
                          h=1.25);
     }
-  
+
     LatchScrews(cutter=true, clearance=-0.02);
-    
+
     BreakActionLatchRod(cutter=true);
   }
 }
@@ -140,42 +199,28 @@ module BreakActionLatch(debug=false, cutter=false, clearance=0.01) {
 module LatchScrews(debug=false, cutter=false, clearance=0.008) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
-  
+
   color("Silver")
-  translate([0.375,0,LatchRodZ()])
+  translate([0.375,LatchRodY(),LatchRodZ()])
   rotate([90,0,0])
   cylinder(r=(0.17/2)+clearance, center=true,
-           h=LatchSpringDiameter()+(LatchSpringWall()*2));
+           h=LatchSpringDiameter()+(LatchWall()*2));
 }
 
 module BreakActionRecoilPlateHousing(debug=false) {
   color("MediumSlateBlue")
   DebugHalf(enabled=debug) render()
   difference() {
-    RecoilPlateHousing(topHeight=FrameUpperBoltOffsetZ(),
-                       bottomHeight=-LowerOffsetZ(),
-                       debug=false) {
-      
-      // Frame upper support
-      translate([RecoilPlateRearX(),0,0])
-      hull()
-      FrameUpperBoltSupport(length=-RecoilPlateRearX());
-                         
+    ReceiverFront() {
+
       // Latch Rod Support
-      translate([RecoilPlateRearX(),0,LatchRodZ()])
+      translate([0,LatchRodY(),LatchRodZ()])
       rotate([0,90,0])
       ChamferedCylinder(r1=0.75, r2=1/16,
                         h=abs(RecoilPlateRearX()),
                         $fn=60);
     }
 
-    FrameUpperBolts(cutter=true);
-
-    FrameBolts(cutter=true, teardrop=false);
-
-    translate([RecoilPlateThickness(),0,0])
-    ChargingRod(clearance=RodClearanceSnug(), cutter=true);
-    
     BreakActionLatchRod(cutter=true);
   }
 }
@@ -192,238 +237,222 @@ module Barrel(barrel=BarrelPipe(), length=BarrelLength(),
               clearance=PipeClearanceSnug(),
               cutter=false, alpha=1, debug=false) {
 
-  color("Silver") DebugHalf(enabled=!cutter&&debug) RenderIf(!cutter)
-  rotate([0,90,0])
-  Pipe(pipe=BarrelSleevePipe(),
-       length=BarrelSleeveLength(),
-       hollow=!cutter, clearance=clearance);
-  
+  color("Silver") DebugHalf(enabled=!cutter&&debug)
+  RenderIf(!cutter)
+  translate([0,0,BarrelOffsetZ()])
+  rotate([ExtractorAngle(),0,0])
+  difference() {
+    rotate([0,90,0])
+    Pipe(pipe=BarrelSleevePipe(),
+         length=BarrelSleeveLength(),
+         hollow=!cutter, clearance=clearance);
+
+    if (!cutter)
+    translate([0,-0.813*0.5,0])
+    rotate(40)
+    translate([ExtractorWidth()/4,0.813*0.5*0.1,-ExtractorWidth()/2])
+    mirror([1,1,0])
+    cube([BarrelDiameter(), BarrelRadius(), ExtractorWidth()]);
+  }
+
   color("SteelBlue", alpha) DebugHalf(enabled=!cutter&&debug) RenderIf(!cutter)
-  rotate([0,90,0])
-  Pipe(pipe=barrel, clearance=clearance,
-       hollow=!cutter, length=length);
+  translate([0,0,BarrelOffsetZ()])
+  rotate([ExtractorAngle(),0,0])
+  difference() {
+    rotate([0,90,0])
+    Pipe(pipe=barrel, clearance=clearance,
+         hollow=!cutter, length=length);
+
+    if (!cutter)
+    translate([0,-0.813*0.5,0])
+    rotate(40)
+    translate([ExtractorWidth()/4,0.813*0.5*0.1,-ExtractorWidth()/2])
+    mirror([1,1,0])
+    cube([BarrelDiameter(), BarrelRadius(), ExtractorWidth()]);
+  }
 }
 
 
 module BarrelPivotCollar(length=(PivotRadius()+WallPivot())*2, debug=false, alpha=1, cutter=false) {
   echo(length+0.375);
-  
+
   color("Tomato", alpha) DebugHalf(enabled=!cutter&&debug)
   difference() {
     union() {
-        
-      // Around the barrel
-      translate([PivotX()+PivotRadius()+WallPivot(), 0, 0])
-      intersection() {
-        rotate([0,-90,0])
-        ChamferedCylinder(r1=BarrelSleeveRadius()+WallBarrel(), r2=1/16,
-                 h=length+0.375,
-                 $fn=60);
-        
+
+      hull() {
+
+        // Around the barrel (flatten the top wall)
+        translate([PivotX()+PivotRadius()+WallPivot(), 0, 0])
+        intersection() {
+          translate([0,0,BarrelOffsetZ()])
+          rotate([0,-90,0])
+          ChamferedCylinder(r1=BarrelSleeveRadius()+WallBarrel(), r2=1/16,
+                   h=length+0.375,
+                   $fn=60);
+
+          mirror([1,0,0])
+          translate([0,-(BarrelSleeveRadius()+WallBarrel()),
+                     -(BarrelSleeveRadius()+WallBarrel())+BarrelOffsetZ()])
+          cube([length+0.875,
+                (BarrelSleeveRadius()+WallBarrel())*2,
+                BarrelSleeveRadius()+BarrelRadius()+(WallBarrel()*2)+abs(BarrelOffsetZ())]);
+        }
+
+        // Flat top
+        translate([PivotX()+(PivotRadius()+WallPivot()), -PivotWidth()/2, 0])
         mirror([1,0,0])
-        translate([0,-(BarrelSleeveRadius()+WallBarrel()),
-                   -(BarrelSleeveRadius()+WallBarrel())])
-        cube([length+0.875,
-              (BarrelSleeveRadius()+WallBarrel())*2,
-              BarrelSleeveRadius()+BarrelRadius()+(WallBarrel()*2)]);
+        ChamferedCube([length+0.375,
+                       PivotWidth(),
+                       FrameBoltZ()
+                         -FrameUpperBoltRadius()
+                         -WallFrameUpperBolt()],
+                      r=1/16);
+
+        // Set screw support
+        translate([PivotX()+(PivotRadius()+WallPivot()), -0.625/2, BarrelOffsetZ()])
+        mirror([1,0,0])
+        mirror([0,0,1])
+        ChamferedCube([length+0.375,
+                       0.625,
+                       BarrelRadius()+0.5+abs(BarrelOffsetZ())],
+                      r=1/16);
       }
-      
-      translate([PivotX()+(PivotRadius()+WallPivot()), -1.125/2, 0])
-      mirror([1,0,0])
-      ChamferedCube([length+0.375,
-                     PivotWidth(),
-                     FrameUpperBoltOffsetZ()
-                       -FrameUpperBoltRadius()
-                       -WallFrameUpperBolt()],
-                    r=1/16);
-      
+
       // Pivot support
       hull() {
         translate([PivotX(), -PivotWidth()/2, PivotZ()])
         rotate([-90,0,0])
-        ChamferedCylinder(r1=PivotRadius()+WallPivot(), r2=1/16, h=PivotWidth());
-  
-        translate([PivotX()-(PivotRadius()+WallPivot()), -1.125/2, 0])
+        ChamferedCylinder(r1=PivotRadius()+WallPivot(), r2=1/16,
+                           h=PivotWidth());
+
+        translate([PivotX()-(PivotRadius()+WallPivot()), -PivotWidth()/2, 0])
         ChamferedCube([(PivotRadius()+WallPivot())*2,
                        PivotWidth(),
                        BarrelRadius()+WallBarrel()],
                       r=1/16);
       }
     }
-    
+
     // Set screw hole
     for (X = [0.25,-0.625])
     translate([PivotX()+X,0,0])
     mirror([0,0,1])
-    cylinder(r=1/8/2, h=FrameUpperBoltOffsetZ());
-    
+    cylinder(r=1/8/2, h=FrameBoltZ());
+
     // Pivot hole
     translate([PivotX(), 0, PivotZ()])
     rotate([90,0,0])
     cylinder(r=PivotRadius(), h=3, center=true);
-    
+
     Barrel(cutter=true);
   }
-  
+
 }
 
-module BarrelLatchCollar(length=BarrelSleeveLength(),
-                         debug=false, alpha=0.5, cutter=false) {
+module BarrelLatchCollar(length=LatchCollarLength(),
+                         debug=false, alpha=1, cutter=false) {
   color("Tan", alpha) DebugHalf(enabled=!cutter&&debug) render()
   difference() {
     union() {
-      
+
       // Around the barrel sleeve
       hull() {
-        
+
         intersection() {
           rotate([0,90,0])
           ChamferedCylinder(r1=BarrelSleeveRadius()+WallBarrel(), r2=1/16,
                    h=length,
                    $fn=60);
-          
+
           translate([0,-(BarrelSleeveRadius()+WallBarrel()),
                      -(BarrelSleeveRadius()+WallBarrel())])
           cube([length,
                 (BarrelSleeveRadius()+WallBarrel())*2,
                 BarrelSleeveRadius()+BarrelRadius()+(WallBarrel()*2)]);
         }
-        
+
         translate([0, -(BarrelSleeveRadius()), 0])
         ChamferedCube([length,
                        (BarrelSleeveRadius())*2,
-                       FrameUpperBoltOffsetZ()
+                       FrameBoltZ()
                          -FrameUpperBoltRadius()
                          -WallFrameUpperBolt()],
                       r=1/16);
       }
-      
+
       // Spring support
       color("Silver")
-      translate([0, -(LatchSpringRadius()+LatchSpringWall()), LatchRodZ()-(LatchSpringRadius()+LatchSpringWall())])
+      translate([0, LatchRodY()-(LatchRodRadius()+LatchWall()), LatchRodZ()-(LatchSpringRadius()+LatchWall())])
       ChamferedCube([length,
-                     (LatchSpringRadius()+LatchSpringWall())*2,
+                     (LatchSpringRadius()+LatchWall())*2,
                      abs(LatchRodZ())],
                      r=1/16);
-    
-      // Set screw support
-      translate([BarrelSleeveLength(),0,0])
-      for (R = [40,-40]) rotate([180+R,0,0])
-      translate([0, -0.25, 0])
-      mirror([1,0,0])
-      ChamferedCube([0.5,
-                     0.5,
-                     abs(LatchRodZ())-(LatchSpringRadius()+LatchSpringWall())+0.375],
-                     r=1/16);
     }
-    
+
     // Set screws
-    translate([BarrelSleeveLength()-0.25,0,0])
-    for (R = [40,-40]) rotate([R,0,0])
+    translate([LatchCollarLength()-(LatchSpringFloor()/2),0,0])
     rotate([0,180,0])
     cylinder(r=1/8/2, h=BarrelSleeveDiameter()+WallBarrel());
-    
+
+    // Extractor cutout
+    rotate([ExtractorAngle(),0,0])
+    translate([0,0,-((ExtractorWidth()/2)+ExtractorWall())])
+    mirror([0,1,0])
+    cube([ExtractorWidth()+(ExtractorWall()*2)+ExtractorTravel(),
+           BarrelRadius()+ExtractorLength(),
+           ExtractorWidth()+(ExtractorWall()*2)]);
+
     Barrel(cutter=true);
-    
+
     BreakActionLatchRod(cutter=true);
-    
-    BreakActionLatchSpring(cutter=true);
-    
-    BreakActionLatch(cutter=true);
-    
-    hull() for (X = [0,0.5])
+
+    *BreakActionLatch(cutter=true);
+
+    *hull() for (X = [0,0.5])
     LatchScrews(cutter=true);
   }
-  
-}
 
-module BarrelAssembly(pivotFactor=0, debug=false) {
-  BreakActionPivot(factor=pivotFactor) {
-    
-    %translate([PivotX(), 0, PivotZ()])
-    rotate([90,0,0])
-    cylinder(r=5/16/2, h=3, center=true);
-           
-    Barrel(debug=debug);
-    
-    BarrelPivotCollar(debug=debug);
-    
-    BreakActionLatch(debug=debug);
-    
-    BarrelLatchCollar(debug=debug);
-  }
 }
 
 module BreakActionForend(debug=false, alpha=1) {
-  
+
   // Forward plate
   color("MediumSlateBlue", alpha)
   DebugHalf(enabled=debug) render()
   difference() {
     union() {
-    
+
       // Pivot support
       hull() {
-        
-        translate([ForendFrontX(), 0, 0])
+
+        translate([ForendMaxX(), 0, 0])
         mirror([1,0,0])
-        FrameUpperBoltSupport(length=ForendFrontLength());
-        
+        FrameSupport(length=ForendFrontLength());
+
         translate([PivotX(), 0, PivotZ()])
         rotate([90,0,0])
-        translate([0,0,-FrameUpperBoltOffsetY()-FrameUpperBoltRadius()-WallFrameUpperBolt()])
+        translate([0,0,-FrameBoltY()-FrameUpperBoltRadius()-WallFrameUpperBolt()])
         ChamferedCylinder(r1=0.5, r2=1/16,
-                 h=(FrameUpperBoltOffsetY()+FrameUpperBoltRadius()+WallFrameUpperBolt())*2,
+                 h=(FrameBoltY()+FrameUpperBoltRadius()+WallFrameUpperBolt())*2,
                  $fn=Resolution(20,60));
       }
     }
-    
-    // Pivot Slot Top
-    translate([PivotX(), -1.125/2, FrameUpperBoltOffsetZ()+(FrameUpperBoltRadius()+WallFrameUpperBolt())])
-    mirror([1,0,0])
-    ChamferedCube([ForendFrontLength(),
-                   PivotWidth(),
-                   BarrelSleeveRadius()+WallBarrel()],
-                  r=1/16);
-    
-    // Pivot Slot Front
-    translate([PivotX()-(PivotRadius()+WallPivot()), -1.125/2, 0])
+
+    // Pivot slot
+    translate([PivotX()-(PivotRadius()+WallPivot()),
+                -PivotWidth()/2, 0])
     ChamferedCube([(PivotRadius()+WallPivot())*2,
                    PivotWidth(),
-                   FrameUpperBoltOffsetZ()+FrameUpperBoltDiameter()+(WallFrameUpperBolt()*2)],
+                   FrameBoltZ()+FrameUpperBoltDiameter()+(WallFrameUpperBolt()*2)],
                   r=1/16);
-    
+
     // Pivot rod
     translate([PivotX(), 0, PivotZ()])
     rotate([90,0,0])
     cylinder(r=PivotRadius()+0.01, h=4, center=true);
-    
-    // Cutout for a picatinny rail insert
-    translate([-ManifoldGap(), -UnitsMetric(15.6/2), FrameUpperBoltOffsetZ()+FrameUpperBoltRadius()+WallFrameUpperBolt()-0.125])
-    cube([FrameUpperBoltExtension()+ManifoldGap(2), UnitsMetric(15.6), 0.25]);
 
-    FrameUpperBolts(cutter=true);
-
-    ChargingRod(length=ChargingRodLength(),
-                cutter=true);
-  }
-}
-
-module BreakActionForendSpacer(length=FrameUpperBoltExtension()
-                                     -ForendFrontLength(),
-                               debug=false, alpha=1) {
-  
-  color("Olive", alpha)
-  DebugHalf(enabled=debug) render()
-  difference() {
-    hull()
-    FrameUpperBoltSupport(length=length);
-    
-    // Cutout for a picatinny rail insert
-    translate([-ManifoldGap(), -UnitsMetric(15.6/2), FrameUpperBoltOffsetZ()+FrameUpperBoltRadius()+WallFrameUpperBolt()-0.125])
-    cube([FrameUpperBoltExtension()+ManifoldGap(2), UnitsMetric(15.6), 0.25]);
-
-    FrameUpperBolts(cutter=true);
+    FrameBolts(cutter=true);
 
     ChargingRod(length=ChargingRodLength(),
                 cutter=true);
@@ -435,68 +464,88 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1,
                            stock=true, tailcap=false,
                            debug=false) {
 
-  BreakActionRecoilPlateHousing();
-  RecoilPlateFiringPinAssembly(); 
-  RecoilPlate(debug=debug);
-                             
+
+  *BreakActionRecoilPlateHousing();
+  *RecoilPlateFiringPinAssembly();
+  *RecoilPlate(debug=debug);
+
   BreakActionLatchRod();
-                                 
+
   *ChargingPumpAssembly(debug=debug);
-
-  BreakActionForend(debug=debug, alpha=0.5);
   
-  BarrelAssembly(pivotFactor=pivotFactor, debug=debug);
-                             
-  BreakActionForendSpacer(debug=debug);
+  BreakActionRecoilPlateHousing();
+
+  BreakActionForend(debug=debug);
+
+  // Pivoting barrel assembly
+  BreakActionPivot(factor=pivotFactor) {
+
+    %translate([PivotX(), 0, PivotZ()])
+    rotate([90,0,0])
+    cylinder(r=5/16/2, h=3, center=true);
+
+    Barrel(debug=debug);
+
+    ExtractorBit();
+    Extractor();
+
+    BarrelPivotCollar(debug=debug);
+
+    *BreakActionLatch(debug=debug);
+
+    BreakActionLatchSpring();
+
+    BarrelLatchCollar(debug=debug);
+  }
 }
- 
-chargingRodAnimationFactor = Animate(ANIMATION_STEP_CHARGE)
-                           - Animate(ANIMATION_STEP_CHARGER_RESET);
 
-//AnimateSpin()translate([-2.5,0,0])
-//for (R = [-1,1]) rotate([60*R,0,0]) translate([0,0,- SpindleOffset()])
-BreakActionAssembly(pivotFactor=chargingRodAnimationFactor,
-                    debug=false);
+module BreakActionRecoilPlateHousing_print() {
+  rotate([0,-90,0]) translate([-RecoilPlateRearX(),0,0])
+  BreakActionRecoilPlateHousing();
+}
 
-triggerAnimationFactor = Animate(ANIMATION_STEP_TRIGGER)
-                           - Animate(ANIMATION_STEP_TRIGGER_RESET);
-PipeUpperAssembly(pipeAlpha=1,
-                  receiverLength=12, stock=true,
-                  frameUpperBolts=true,
-                  triggerAnimationFactor=triggerAnimationFactor,
-                  debug=false);
+module BarrelPivotCollar_print() {
+  rotate([0,90,0])
+  translate([-PivotX()-(PivotRadius()+WallPivot()),0,0])
+  BarrelPivotCollar();
+}
 
-//$t=AnimationDebug(ANIMATION_STEP_CHARGE, T=180*sin($t));
-//$t=AnimationDebug(ANIMATION_STEP_CHARGE, T=1);
-//$t=0;
+module BarrelLatchCollar_print() {
+  rotate([0,90,0])
+  translate([-BarrelSleeveLength(),0,0])
+  BarrelLatchCollar();
+}
 
+module BreakActionForend_print() {
+  rotate([0,-90,0])
+  translate([-FrameUpperBoltExtension()+ForendFrontLength(),0,-FrameBoltZ()])
+  BreakActionForend();
+}
 
+scale(25.4) {
+  if (_RENDER == "Assembly") {
+    BreakActionAssembly(debug=false,
+                        pivotFactor=Animate(ANIMATION_STEP_CHARGE)
+                                   -Animate(ANIMATION_STEP_CHARGER_RESET));
+    PipeUpperAssembly(pipeAlpha=0.5, debug=false,
+      triggerAnimationFactor=Animate(ANIMATION_STEP_TRIGGER)
+                            -Animate(ANIMATION_STEP_TRIGGER_RESET));
 
-/*
- * Platers
- */
+  }
 
-// Printed breech (quick 'n dirty)
-*!scale(25.4) rotate([0,-90,0])
-BreakActionRecoilPlateHousing();
+  if (_RENDER == "BarrelPivotCollar")
+  BarrelPivotCollar_print();
 
-// Barrel Pivot Collar
-*!scale(25.4) rotate([0,90,0])
-translate([-PivotX()-(PivotRadius()+WallPivot()),0,0])
-BarrelPivotCollar();
+  if (_RENDER == "BarrelLatchCollar")
+  BarrelLatchCollar_print();
 
-// Barrel Latch Collar
-*!scale(25.4) rotate([0,90,0])
-translate([-BarrelSleeveLength(),0,0])
-BarrelLatchCollar();
+  if (_RENDER == "RecoilPlateHousing")
+  BreakActionRecoilPlateHousing_print();
 
-// Break-action Forend Front
-*!scale(25.4)
-rotate([0,-90,0])
-translate([-FrameUpperBoltExtension()+ForendFrontLength(),0,-FrameUpperBoltOffsetZ()])
-BreakActionForend();
-
+  if (_RENDER == "Forend")
+  BreakActionForend_print();
+}
 
 // Latch
-*!scale(25.4) render() rotate([0,-90,0]) translate([0,0,-LatchRodZ()])
+*!scale(25.4) render() rotate([0,-90,0]) translate([0,-LatchRodY(),-LatchRodZ()])
 BreakActionLatch();

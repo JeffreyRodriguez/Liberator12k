@@ -19,7 +19,6 @@ use <../../Vitamins/Rod.scad>;
 function WallLower()      = 0.1875;
 
 // Settings: Lengths
-function ReceiverLength() = 6;
 
 // Settings: Vitamins
 function ReceiverPipe()  = Spec_OnePointFiveSch40ABS();
@@ -36,7 +35,7 @@ function ReceiverPipeWall() = ReceiverOR()-ReceiverIR();
 //function ReceiverCenter() = ReceiverOR()+WallLower();
 function LowerOffsetZ() = -1.25;
 
-module ReceiverTube(length=ReceiverLength(), clearance=0.002,
+module ReceiverTube(length=6, clearance=0.002,
                    debug=false, cutter=false, alpha=1, $fn=60) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
@@ -114,7 +113,7 @@ module PipeLugCenter(cutter=false, clearance=0.002, alpha=1) {
   }
 }
 
-module PipeLugAssembly(length=ReceiverLength(), pipeAlpha=1, pipeOffsetX=0,
+module PipeLugAssembly(length=6, pipeAlpha=1, pipeOffsetX=0,
                        front=true, rear=true, center=true) {
 
   if (front)

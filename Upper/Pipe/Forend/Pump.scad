@@ -80,7 +80,7 @@ module PumpRails(length=UpperLength(), cutter=false, clearance=0.002, extraRadiu
   rotate([0,90,0])
   rotate(180)
   linear_extrude(height=length+clear2)
-  Teardrop(r=WallFrameSide()+BoltRadius(FrameBolt())+extraRadius+clear,
+  Teardrop(r=WallFrameSide()+BoltRadius(ReceiverBolt())+extraRadius+clear,
            $fn=Resolution(20,30));
 }
 */

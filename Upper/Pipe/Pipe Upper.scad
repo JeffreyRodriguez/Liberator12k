@@ -20,87 +20,43 @@ use <../../Lower/Receiver Lugs.scad>;
 use <../../Lower/Trigger.scad>;
 use <../../Lower/Lower.scad>;
 
-use <Lugs.scad>;
 use <Buttstock.scad>;
 use <Charging Pump.scad>;
+use <Linear Hammer.scad>;
+use <Lugs.scad>;
+use <Frame.scad>;
 use <Recoil Plate.scad>;
 
 // Settings: Lengths
-function FrameUpperRearExtension() = 3.5;
 function FrameBoltExtension() = 0.5;
 function FrameExtension() = 0.5;
-function FrameLength() = 1;
+function ReceiverCouplingLength() = 1;
+function ReceiverLength() = 12;
 
-// Settings: Walls
-function WallFrameUpperBolt() = 0.25;
-function FrameUpperBoltLength() = 10;
 
 // Settings: Vitamins
-function FrameUpperBolt() = Spec_BoltOneHalf();
-function FrameBolt() = Spec_Bolt8_32();
+function ReceiverBolt() = Spec_Bolt8_32();
 
 // Settings: Positions
-function FrameUpperBoltOffsetZ() = 1.39;
-function FrameUpperBoltOffsetY() = 1;
+function ReceiverBoltZ() = LowerOffsetZ()+0.25;
+function ReceiverBoltY() = 0.875;
 
-// Shorthand: Measurements
-function FrameUpperBoltRadius(clearance=0)
-    = BoltRadius(FrameUpperBolt(), clearance);
-
-function FrameUpperBoltDiameter(clearance=0)
-    = BoltDiameter(FrameUpperBolt(), clearance);
-
-// Calculated: Positions
-function FrameUpperBoltExtension() = FrameUpperBoltLength()
-                                   -0.5
-                                   -FrameUpperRearExtension();
-
-module FrameBolts(teardrop=false, flip=false,
+module ReceiverBolts(teardrop=false,
               debug=false, clearance=0.005, cutter=false) {
 
   color("CornflowerBlue")
   DebugHalf(enabled=debug)
   for (Y = [-1,1])
-  mirror([0,0,flip?180:0])
   translate([-FrameExtension()+FrameBoltExtension()+ManifoldGap(),
-             Y*0.875 , /*Y*1.6/2,*/
-             LowerOffsetZ()+0.25/*-(1.905/2)*/])
+             ReceiverBoltY()*Y,
+             ReceiverBoltZ()])
   rotate([0,90,0])
-  NutAndBolt(bolt=FrameBolt(), boltLength=2,
+  NutAndBolt(bolt=ReceiverBolt(), boltLength=2,
              head="flat", nut="heatset", capOrientation=true,
              teardrop=cutter&&teardrop, clearance=cutter?clearance:0);
 }
 
-module FrameUpperBoltIterator() {
-    for (Y = [FrameUpperBoltOffsetY(),-FrameUpperBoltOffsetY()])
-    translate([-FrameUpperRearExtension()-NutHexHeight(FrameUpperBolt())-ManifoldGap(),
-               Y, FrameUpperBoltOffsetZ()])
-    rotate([0,90,0])
-    children();
-}
-
-module FrameUpperBolts(length=FrameUpperBoltLength(),
-              debug=false, cutter=false, clearance=0.005, alpha=1) {
-  clear = cutter ? clearance : 0;
-
-  color("Silver", alpha)
-  DebugHalf(enabled=debug) {
-    FrameUpperBoltIterator()
-    NutAndBolt(bolt=FrameUpperBolt(), boltLength=length,
-         head="hex", nut="hex", clearance=clear);
-  }
-}
-
-module FrameUpperBoltSupport(length=1, $fn=Resolution(20,60)) {
-  for (Y = [FrameUpperBoltOffsetY(),-FrameUpperBoltOffsetY()])
-  translate([0, Y, FrameUpperBoltOffsetZ()])
-  rotate([0,90,0])
-  ChamferedCylinder(r1=FrameUpperBoltRadius()+WallFrameUpperBolt(),
-                    r2=1/16, h=length,
-                    teardropTop=true, teardropBottom=true);
-}
-
-module FrameUpper(debug=false) {
+module ReceiverCoupling(debug=false) {
   length = FrameUpperRearExtension()+RecoilPlateRearX();
 
   color("Olive")
@@ -113,32 +69,30 @@ module FrameUpper(debug=false) {
       translate([RecoilPlateRearX(),0,0])
       mirror([1,0,0])
       hull()
-      FrameUpperBoltSupport(length=length);
+      FrameSupport(length=length);
 
       // Join bolt wall and pipe
       translate([RecoilPlateRearX(),-(2/2),ReceiverIR()/2])
       mirror([1,0,0])
       ChamferedCube([length,
                      2,
-                     FrameUpperBoltOffsetZ()-(ReceiverIR()/2)],
+                     FrameBoltZ()-(ReceiverIR()/2)],
                     r=1/16);
 
       // Lower Frame
       translate([RecoilPlateRearX(),-(2.25/2),LowerOffsetZ()])
       mirror([1,0,0])
-      ChamferedCube([FrameLength()-ManifoldGap(2),
+      ChamferedCube([ReceiverCouplingLength()-ManifoldGap(2),
                      2.25,
-                     abs(LowerOffsetZ())+FrameUpperBoltOffsetY()],
+                     abs(LowerOffsetZ())+FrameBoltY()],
                     r=1/16);
     }
+    
+    FrameBolts(cutter=true);
 
     ReceiverTube(cutter=true);
-
-    translate([RecoilPlateRearX(),0,0])
-    FrameUpperBolts(cutter=true);
-
-
-    FrameBolts(cutter=true);
+    
+    ReceiverBolts(cutter=true);
 
     // Lower lug cutout
     translate([RecoilPlateRearX()-FrameExtension(),-(1.256/2),ReceiverIR()/2])
@@ -159,11 +113,37 @@ module FrameUpper(debug=false) {
   }
 }
 
+module ReceiverFront(debug=false, width=2.25) {
+  color("MediumSlateBlue")
+  DebugHalf(enabled=debug) render()
+  difference() {
+    RecoilPlateHousing() {
+      hull()
+      FrameSupport(length=RecoilSpreaderThickness());
+      
+      translate([0,-width/2, LowerOffsetZ()])
+      ChamferedCube([RecoilSpreaderThickness(),
+                     width,
+                     abs(LowerOffsetZ())+FrameBoltZ()],
+                    r=1/16);
+      
+      children();
+    }
+
+    FrameBolts(cutter=true);
+
+    ReceiverBolts(cutter=true, teardrop=false);
+
+    translate([RecoilPlateThickness(),0,0])
+    ChargingRod(clearance=RodClearanceSnug(), cutter=true);
+  }
+}
+
 module PipeUpperAssembly(receiverLength=ReceiverLength(),
                          pipeOffsetX=FrameExtension(),
                          pipeAlpha=1, centerLug=false,
                          lower=true, lowerLeft=true, lowerRight=true,
-                         lugs=true, stock=false,
+                         lugs=true, stock=true,
                          frameUpperBolts=true, frameUpperBoltLength=FrameUpperBoltLength(),
                          triggerAnimationFactor=TriggerAnimationFactor(),
                          debug=true) {
@@ -175,6 +155,19 @@ module PipeUpperAssembly(receiverLength=ReceiverLength(),
       }
 
   }
+
+  translate([FiringPinMinX(),0,0])
+  HammerAssembly(debug=true);
+  
+  RecoilPlateFiringPinAssembly();
+  
+  RecoilPlate();
+  
+  FrameAssembly();
+
+  ReceiverBolts();
+
+  ReceiverCoupling();
 
   translate([RecoilPlateRearX()-LowerMaxX()-FrameExtension(),0,0]) {
 
@@ -189,23 +182,14 @@ module PipeUpperAssembly(receiverLength=ReceiverLength(),
                     pipeAlpha=pipeAlpha);
 
   }
-
-  if (frameUpperBolts)
-  FrameUpperBolts(length=frameUpperBoltLength, debug=false);
-
-  FrameBolts();
-
-  FrameUpper();
 }
 
+ReceiverFront();
 
-AnimateSpin() {
-
-  PipeUpperAssembly(pipeAlpha=0.3,
-                    receiverLength=12,
-                    stock=true, lower=true,
-                    debug=false);
-}
+PipeUpperAssembly(pipeAlpha=0.3,
+                  receiverLength=12,
+                  stock=true, lower=true,
+                  debug=false);
 
 *!scale(25.4) translate([0,0,-LowerOffsetZ()])
 PipeLugCenter();

@@ -87,7 +87,7 @@ module FiringPinHousing(bolt=FiringPinHousingBolt(), cutter=false,
                         alpha=0.5, debug=false) {
 
   color("Grey")
-  DebugHalf(enabled=debug)
+  DebugHalf(enabled=debug) render()
   difference() {
     rotate(-90)
     union() {
@@ -101,7 +101,7 @@ module FiringPinHousing(bolt=FiringPinHousingBolt(), cutter=false,
       difference() {
         ChamferedCylinder(r1=FiringPinHousingWidth()/2, r2=1/32,
                            h=FiringPinHousingLength());
-            
+
         translate([0,-FiringPinBoltOffsetY()*2,0])
         cube([1,FiringPinBoltOffsetY()*4,1]);
       }
@@ -111,7 +111,7 @@ module FiringPinHousing(bolt=FiringPinHousingBolt(), cutter=false,
       // slot
       translate([-0.125,-1,0])
       cube([0.25,1,FiringPinHousingLength()-0.25]);
-      
+
       FiringPin(cutter=true);
 
       FiringPinHousingBolts(bolt=bolt, cutter=true);
@@ -131,7 +131,9 @@ module FiringPinAssembly(boltLength=0.5,
   rotate(-90) {
     FiringPin(cutter=cutter, debug=debug);
     FiringPinHousingBolts(bolt=retainerBolt, boltLength=boltLength, cutter=cutter);
-    FiringPinHousing(cutter=cutter, debug=debug, alpha=0.5);
+
+    if (!cutter)
+    FiringPinHousing(debug=debug);
   }
 }
 
