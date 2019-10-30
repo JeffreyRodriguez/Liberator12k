@@ -1,7 +1,7 @@
 use <../Meta/Clearance.scad>;
 use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
-use <../Finishing/Chamfer.scad>;
+use <../Shapes/Chamfer.scad>;
 use <../Shapes/Teardrop.scad>;
 use <../Vitamins/Nuts And Bolts.scad>;
 include <Latch_Lookup.scad>;

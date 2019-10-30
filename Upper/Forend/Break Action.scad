@@ -11,7 +11,7 @@ use <../../Components/Pivot.scad>;
 
 use <../../Lower/Lower.scad>;
 
-use <../../Finishing/Chamfer.scad>;
+use <../../Shapes/Chamfer.scad>;
 
 use <../../Shapes/Bearing Surface.scad>;
 use <../../Shapes/Teardrop.scad>;

@@ -1,4 +1,4 @@
-use <../Finishing/Chamfer.scad>;
+use <../Shapes/Chamfer.scad>;
 
 module EPrimer(bodyDiameter=0.31, bodyHeight=0.375,
                rimDiameter=7/16, rimHeight=3/32,

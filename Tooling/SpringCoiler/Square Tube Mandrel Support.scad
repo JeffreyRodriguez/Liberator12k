@@ -6,7 +6,7 @@ use <../../Vitamins/Bearing.scad>;
 use <../../Vitamins/Square Tube.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/Rod.scad>;
-use <../../Finishing/Chamfer.scad>;
+use <../../Shapes/Chamfer.scad>;
 
 DEFAULT_BEARING =Spec_Bearing608();
 DEFAULT_MANDREL=Spec_RodFiveSixteenthInch();

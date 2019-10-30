@@ -1,6 +1,6 @@
 use <../Meta/Manifold.scad>
 use <../Shapes/Teardrop.scad>
-use <../Finishing/Chamfer.scad>
+use <../Shapes/Chamfer.scad>
 
 od=1.5;
 gap=1/8;

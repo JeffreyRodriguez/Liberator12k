@@ -5,7 +5,7 @@ use <../../Meta/Units.scad>;
 use <../../Meta/Debug.scad>;
 use <../../Meta/Resolution.scad>;
 
-use <../../Finishing/Chamfer.scad>;
+use <../../Shapes/Chamfer.scad>;
 
 use <../../Components/Pipe/Cap.scad>;
 use <../../Components/Pipe/Frame.scad>;

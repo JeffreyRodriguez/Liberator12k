@@ -1,30 +1,53 @@
-Welcome to #Liberator12k project!
-=================================
-Everyone's Favorite 3D Printed Shotgun.
+# Welcome to #Liberator12k project!
 
-DANGER: ART AT YOUR OWN RISK
-----------------------------
-Beware, this software can literally kill you and others.
-This isn't one of those bullshit government-mandated warnings. If you blow your
-hand or face off, I'm going to get very choked up - there could be tears.
+Reliable self-defense for everyone - forever.
 
-Safety precautions and procedures *are not fully documented here*.
+### Quick Start
+[Impatient or experienced? Go here.](Quick Start.md)
 
-### Minimum Safety Standard
-Before you shoot a DIY gun from your hands, test it first. You will need:
+### "What?" - Concept
+Future-proof the individual's power to produce arms and ammunition.
+
+#### Simplicity and Availability
+Firearm operating mechanisms should be simple to understand and produce by
+people with minimal tools and access to materials.
+
+Ideally materials should be available from a brick and mortar hardware, grocery, and garden stores in cash. Home Depot, Ace, Tractor Supply, Lowes, Walmart, etc.
+
+These stores do not carry alloy steel tubing suitable for pistol and rifle barrels. At best, Ace Hardware carries Grade 8 bolts which have excellent potential for
+pistol barrels. Lots of quality metal is available on Amazon, Aliexpress, McMaster, Grainger, eBay, and OnlineMetals.
+
+A printer and power drill are the only tools absolutely required. Drill bits and taps notwithstanding. A drill press will *greatly* simplify some processes.
+
+#### Reuse and Upgrades
+A driving force in \#Liberator12k weapon design is reuse of the same receiver.
+
+Similar to the AR15 modular lower/upper concept, the L12k is conceptually split into receiver/forend.
+
+One receiver, multiple forends. It remains to be seen if the fixed recoil plate design can accommodate pump and semiautomatic fire. It's perfect for a break-action and revolver.
+
+#### DIY Tooling
+The project took on a tooling aspect when Electrochemical Machining (ECM) entered the picture.
+
+### "Why?" - Motivation
+
+
+### "When?" - Timeline
+
+### "Who?" - About the artist
+
+### "How?" - Build your own
+
+#### Minimum Safety Standard
+
+DANGER - ART AT YOUR OWN RISK
+
+Safety precautions and procedures *are not fully documented here*. Before you shoot a DIY gun from your hands **test it first**. You will need:
 
 * A secure test rig to hold the gun pointed in a **safe direction**.
 * A bulletproof barrier, such as several feet of dirt or very large tree.
 * A string long enough to pull the trigger from behind cover.
 * At least 5 of the highest pressure cartridges you can find.
-
-Quick Start
-----------
-You will need to download [OpenSCAD](http://www.openscad.org) to open the files
-and render them printable.
-
-This project contains more than one gun design; check out the "Configurations"
-directory for details. Start Here: [\#Liberator12k Shotgun Configuration](Configurations/Liberator12k/README.md)
 
 
 Tech Levels

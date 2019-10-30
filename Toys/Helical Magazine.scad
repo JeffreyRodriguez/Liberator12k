@@ -1,6 +1,6 @@
 use <../Shapes/Teardrop.scad>;
 use <../Shapes/Semicircle.scad>;
-use <../Finishing/Chamfer.scad>;
+use <../Shapes/Chamfer.scad>;
 use <../Meta/Debug.scad>;
 use <../Vitamins/Pipe.scad>;
 use <../SCAD Operations/helix_extrude.scad>;

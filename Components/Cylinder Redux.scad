@@ -5,7 +5,7 @@ use <../Meta/Debug.scad>;
 use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
 use <../Math/Circles.scad>;
-use <../Finishing/Chamfer.scad>;
+use <../Shapes/Chamfer.scad>;
 use <../Shapes/Donut.scad>;
 use <../Shapes/ZigZag.scad>;
 

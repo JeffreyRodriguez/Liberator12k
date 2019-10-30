@@ -3,7 +3,7 @@ use <../../Shapes/Teardrop.scad>;
 use <../../Shapes/Bearing Surface.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Meta/Manifold.scad>;
-use <../../Finishing/Chamfer.scad>;
+use <../../Shapes/Chamfer.scad>;
 
 SCSxUU_BoltDiameter  = 1;
 SCSxUU_BoltOffset    = 2;

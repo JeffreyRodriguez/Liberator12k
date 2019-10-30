@@ -1,4 +1,4 @@
-use <../Finishing/Chamfer.scad>;
+use <../Shapes/Chamfer.scad>;
 
 use <../Lower/Receiver Lugs.scad>;
 use <../Lower/Lower.scad>;

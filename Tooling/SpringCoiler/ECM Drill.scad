@@ -3,7 +3,7 @@ use <../../../Meta/Debug.scad>;
 use <../../../Meta/Cylinder Text.scad>;
 use <../../../Meta/Manifold.scad>;
 use <../../../Meta/Resolution.scad>;
-use <../../../Finishing/Chamfer.scad>;
+use <../../../Shapes/Chamfer.scad>;
 use <../../../Components/ORing.scad>;
 use <../../../Components/Gear.scad>;
 use <ECM Drilling Cap.scad>;

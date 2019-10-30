@@ -3,7 +3,7 @@ use <../../Meta/Manifold.scad>;
 use <../../Shapes/Semicircle.scad>;
 use <../../Shapes/Teardrop.scad>;
 use <../../Components/T Lug.scad>;
-use <../../Finishing/Chamfer.scad>;
+use <../../Shapes/Chamfer.scad>;
 use <../../Vitamins/Pipe.scad>;
 use <../../Vitamins/Square Tube.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;

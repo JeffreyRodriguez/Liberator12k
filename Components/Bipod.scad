@@ -2,7 +2,7 @@ use <../Meta/Debug.scad>;
 use <../Meta/Manifold.scad>;
 use <../Meta/Resolution.scad>;
 use <../Shapes/Teardrop.scad>;
-use <../Finishing/Chamfer.scad>;
+use <../Shapes/Chamfer.scad>;
 use <../Vitamins/Pipe.scad>;
 use <../Vitamins/Square Tube.scad>;
 

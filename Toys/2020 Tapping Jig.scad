@@ -1,4 +1,4 @@
-use <../Finishing/Chamfer.scad>;
+use <../Shapes/Chamfer.scad>;
 
 extrusionWidth=20*(20/19.6)+0.1;
 centerWidth = 6.3;

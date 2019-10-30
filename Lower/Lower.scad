@@ -5,7 +5,7 @@ use <../Meta/Manifold.scad>;
 use <../Meta/Resolution.scad>;
 use <../Meta/Units.scad>;
 
-use <../Finishing/Chamfer.scad>;
+use <../Shapes/Chamfer.scad>;
 
 use <../Vitamins/Nuts And Bolts.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec.scad>;

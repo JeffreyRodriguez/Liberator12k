@@ -5,7 +5,7 @@ use <../Meta/Manifold.scad>;
 use <../Meta/Debug.scad>;
 use <../Meta/Units.scad>;
 
-use <../Finishing/Chamfer.scad>;
+use <../Shapes/Chamfer.scad>;
 
 use <../Vitamins/Rod.scad>;
 

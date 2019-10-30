@@ -13,7 +13,7 @@ use <../../Components/Pump Grip.scad>;
 use <../../Lower/Lower.scad>;
 use <../../Lower/Trigger.scad>;
 
-use <../../Finishing/Chamfer.scad>;
+use <../../Shapes/Chamfer.scad>;
 
 use <../../Shapes/Bearing Surface.scad>;
 use <../../Shapes/Teardrop.scad>;

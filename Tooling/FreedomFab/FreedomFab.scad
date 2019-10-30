@@ -7,7 +7,7 @@ use <../../Components/Set Screw.scad>;
 use <../../Vitamins/Rod.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Meta/Manifold.scad>;
-use <../../Finishing/Chamfer.scad>;
+use <../../Shapes/Chamfer.scad>;
 
 DEFAULT_BEARING_SPEC = Spec_SCS8LUU();
 

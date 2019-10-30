@@ -4,7 +4,7 @@ use <../../../Meta/Units.scad>;
 use <../../../Vitamins/Pipe.scad>;
 use <../../../Vitamins/Rod.scad>;
 use <../../../Shapes/Semicircle.scad>;
-use <../../../Finishing/Chamfer.scad>;
+use <../../../Shapes/Chamfer.scad>;
 
 
 PIPE_SPEC = Spec_TubingZeroPointSevenFive();

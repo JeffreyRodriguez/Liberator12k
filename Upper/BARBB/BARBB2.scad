@@ -5,7 +5,7 @@ use <../../Shapes/Semicircle.scad>;
 use <../../Shapes/Teardrop.scad>;
 use <../../Components/Bipod.scad>;
 use <../../Components/T Lug.scad>;
-use <../../Finishing/Chamfer.scad>;
+use <../../Shapes/Chamfer.scad>;
 use <../../Vitamins/Pipe.scad>;
 use <../../Vitamins/Rod.scad>;
 use <../../Vitamins/Square Tube.scad>;

@@ -1,7 +1,7 @@
 use <../Primer.scad>;
 
 use <../../Meta/Debug.scad>;
-use <../../Finishing/Chamfer.scad>;
+use <../../Shapes/Chamfer.scad>;
 use <../../Shapes/Teardrop.scad>;
 use <../../Shapes/TeardropTorus.scad>;
 use <../../Vitamins/Pipe.scad>;

@@ -1,6 +1,6 @@
 use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
-use <../Finishing/Chamfer.scad>;
+use <../Shapes/Chamfer.scad>;
 
 module T_Lug2d(
               width=UnitsImperial(0.5),

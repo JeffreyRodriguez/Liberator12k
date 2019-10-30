@@ -1,4 +1,4 @@
-use <../Finishing/Chamfer.scad>;
+use <../Shapes/Chamfer.scad>;
 
 capDiameter = 23+1;
 capRadius = capDiameter/2;

@@ -1,7 +1,7 @@
 use <../../Meta/Debug.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Resolution.scad>;
-use <../../Finishing/Chamfer.scad>;
+use <../../Shapes/Chamfer.scad>;
 use <../../Shapes/Teardrop.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;
 

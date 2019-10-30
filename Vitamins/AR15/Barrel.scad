@@ -1,6 +1,6 @@
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
-use <../../Finishing/Chamfer.scad>;
+use <../../Shapes/Chamfer.scad>;
 
 function AR15BarrelLength()               = UnitsImperial(16);
 function AR15BarrelGasLength()            = UnitsImperial(7.8); // Back of the barrel extension to the gas block shelf
