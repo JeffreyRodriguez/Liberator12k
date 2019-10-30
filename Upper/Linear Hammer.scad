@@ -3,6 +3,7 @@ include <../Meta/Animation.scad>;
 use <../Meta/Manifold.scad>;
 use <../Meta/Debug.scad>;
 use <../Meta/Resolution.scad>;
+use <../Meta/RenderIf.scad>;
 
 use <../Finishing/Chamfer.scad>;
 
@@ -17,14 +18,18 @@ use <../Lower/Trigger.scad>;
 use <../Lower/Lower.scad>;
 
 
-use <Firing Pin.scad>;
-use <Lugs.scad>;
-use <Receiver.scad>;
+/* [What to Render] */
+
+// Assembly is not for printing.
+_RENDER = "Assembly"; // ["Assembly", "Head", "Tail"]
 
 
 // Firing pin housing bolt
 HAMMER_BOLT = "5/16\"-18"; // ["5/16\"-18", "M8"]
 
+/* [Receiver Tube] */
+RECEIVER_TUBE_OD = 1.75;
+RECEIVER_TUBE_ID = 1.5;
 
 // Settings: Lengths
 function HammerBoltLength() = 7.5;
@@ -49,35 +54,28 @@ function HammerTailInnerRadius() = (HammerTailInnerDiameter()/2);
 
 function HammerTravelFactor() = Animate(ANIMATION_STEP_FIRE)
                                     - SubAnimate(ANIMATION_STEP_CHARGE, start=0.18, end=0.36);
-function HammerTravel() = LowerMaxX() + FrameExtension()
-                              - HammerCollarWidth()
-                              + RodRadius(SearRod())
-                              - FiringPinHousingLength();
-
-
 
 module HammerBolt(cutter=false, clearance=0.004) {
   translate([HammerCollarWidth()+ManifoldGap(2),0,0])
-  color("CornflowerBlue")
-  render()
+  color("CornflowerBlue") RenderIf(!cutter)
   rotate([0,90,0])
   NutAndBolt(bolt=HammerBolt(),
              boltLength=HammerBoltLength()+ManifoldGap(4), nutBackset=0.03125,
              head="hex", capOrientation=true, clearance=cutter?clearance:0);
 
-  color("Silver")
+  color("Silver") RenderIf(!cutter)
   for (X = [HammerCollarWidth(),-HammerHeadLength(),-HammerBoltLength()+(HammerCollarWidth()*2)]) translate([X,0,0])
   rotate([0,-90,0])
   cylinder(r=HammerCollarRadius(), h=HammerCollarWidth(), $fn=30);
 }
 
-module HammerHead(insertRadius=ReceiverIR()-DEFAULT_HAMMER_CLEARANCE,
+module HammerHead(insertRadius=(RECEIVER_TUBE_ID/2)-DEFAULT_HAMMER_CLEARANCE,
                           holeRadius=(5/16/2)+0.005,
                           length=HammerHeadLength(),
                           chamferRadius=1/16,
-                          debug=false, $fn=Resolution(20,60)) {
-  color("Orange")
-  DebugHalf(enabled=debug)
+                          debug=false, alpha=1, $fn=Resolution(20,60)) {
+  color("Orange", alpha)
+  DebugHalf(enabled=debug) render()
   difference() {
 
     // Body
@@ -102,18 +100,22 @@ module HammerHead(insertRadius=ReceiverIR()-DEFAULT_HAMMER_CLEARANCE,
   }
 }
 
-module HammerTail(insertRadius=ReceiverIR()-DEFAULT_HAMMER_CLEARANCE,
-                          baseHeight=HammerTailBaseLength(),
-                          holeRadius=(5/16/2)+0.008,
-                          innerRadius=HammerTailInnerRadius(),
-                          length=HammerTailLength(),
-                          minorChamferRadius=1/32,
-                          debug=false, $fn=Resolution(20,90)) {
+module HammerHead_print()
+rotate([0,90,0])
+HammerHead();
+
+module HammerTail(insertRadius=(RECEIVER_TUBE_ID/2)-DEFAULT_HAMMER_CLEARANCE,
+                  baseHeight=HammerTailBaseLength(),
+                  holeRadius=(5/16/2)+0.008,
+                  innerRadius=HammerTailInnerRadius(),
+                  length=HammerTailLength(),
+                  minorChamferRadius=1/32,
+                  debug=false, alpha=1, $fn=Resolution(20,90)) {
 
   bigHoleChamferRadius = (insertRadius-innerRadius);
 
-  color("Orange")
-  DebugHalf(enabled=debug)
+  color("Orange", alpha)
+  DebugHalf(enabled=debug) render()
   difference() {
 
     // Body
@@ -142,48 +144,51 @@ module HammerTail(insertRadius=ReceiverIR()-DEFAULT_HAMMER_CLEARANCE,
   }
 }
 
-module HammerCompressor(insertRadius=ReceiverIR()-DEFAULT_HAMMER_CLEARANCE,
-                              length=3, cutter=false, debug=false) {
+module HammerTail_print()
+rotate([0,90,0])
+HammerTail();
 
-  translate([HammerTravel()-HammerSpringLength()+0.03125+HammerTailBaseLength()+ManifoldGap(),0,0]) {
+module HammerCompressor(insertRadius=(RECEIVER_TUBE_ID/2)-DEFAULT_HAMMER_CLEARANCE,
+                        hammerTravel=2,
+                        length=3, debug=false, alpha=1) {
 
-    color("Orange")
+  translate([hammerTravel-HammerSpringLength()+0.03125+HammerTailBaseLength()+ManifoldGap(),0,0]) {
+
+    color("Orange", alpha)
     HammerTail(debug=debug);
 
-    color("Beige")
-    DebugHalf(enabled=debug)
+    color("Beige", alpha)
+    DebugHalf(enabled=debug) render()
     translate([-HammerTailBaseLength(),0,0])
     rotate([0,-90,0])
     difference() {
       cylinder(r=HammerTailInnerRadius(), h=length, $fn=Resolution(20,50));
 
-      if (!cutter)
       cylinder(r=0.75/2, h=length, $fn=Resolution(20,50));
     }
   }
 }
 
-module HammerAssembly(travelFactor=HammerTravelFactor(),
-                    insertRadius = ReceiverIR(),
+module HammerAssembly(travel=2, travelFactor=HammerTravelFactor(),
+                    insertRadius = (RECEIVER_TUBE_ID/2),
                     length=3.25,
-                    debug=false) {
+                    debug=false, alpha=1) {
 
-  translate([-HammerCollarWidth()+HammerTravel()*travelFactor,0,0]) {
+  translate([-HammerCollarWidth()+travel*travelFactor,0,0]) {
     HammerBolt();
 
-    HammerHead(debug=debug);
+    HammerHead(debug=debug, alpha=alpha);
 
   }
 
-  HammerCompressor(length=length, debug=debug);
+  HammerCompressor(length=length, debug=debug, alpha=alpha);
 }
 
-HammerAssembly(travelFactor=$t, debug=true);
+if (_RENDER == "Assembly")
+HammerAssembly();
 
-*!scale(25.4)
-rotate([0,90,0])
-HammerHead();
+if (_RENDER == "Head")
+HammerHead_print();
 
-*!scale(25.4)
-rotate([0,90,0])
-HammerTail();
+if (_RENDER == "Tail")
+HammerTail_print();

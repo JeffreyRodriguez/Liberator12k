@@ -32,7 +32,6 @@ use <../Linear Hammer.scad>;
 use <../Recoil Plate.scad>;
 use <../Charging Pump.scad>;
 
-
 /* [What to Render] */
 
 // Assembly is not for printing.

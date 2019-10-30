@@ -8,6 +8,7 @@ use <../Lower/Trigger.scad>;
 use <../Meta/Debug.scad>;
 use <../Meta/Manifold.scad>;
 use <../Meta/Resolution.scad>;
+use <../Meta/RenderIf.scad>;
 
 use <../Shapes/Semicircle.scad>;
 use <../Shapes/Teardrop.scad>;
@@ -15,41 +16,39 @@ use <../Shapes/Teardrop.scad>;
 use <../Vitamins/Pipe.scad>;
 use <../Vitamins/Rod.scad>;
 
+
+/* [What to Render] */
+
+// Assembly is not for printing.
+_RENDER = "Assembly"; // ["Assembly", "Center", "Front", "Rear"]
+
+/* [Receiver Tube] */
+RECEIVER_TUBE_OD = 1.75;
+RECEIVER_TUBE_ID = 1.5;
+
 // Settings: Walls
 function WallLower()      = 0.1875;
 
-// Settings: Lengths
-
-// Settings: Vitamins
-function ReceiverPipe()  = Spec_OnePointFiveSch40ABS();
-function ReceiverPipe()  = Spec_OnePointSevenFivePCTube();
-
-// Calculated: Measurements
-function ReceiverID()     = 1.5;
-function ReceiverIR()     = ReceiverID()/2;
-function ReceiverOD()     = 1.75;
-function ReceiverOR()     = ReceiverOD()/2;
-function ReceiverPipeWall() = ReceiverOR()-ReceiverIR();
-
 // Calculated: Positions
-//function ReceiverCenter() = ReceiverOR()+WallLower();
 function LowerOffsetZ() = -1.25;
 
-module ReceiverTube(length=6, clearance=0.002,
+module ReceiverTube(od=RECEIVER_TUBE_OD,
+                    id=RECEIVER_TUBE_ID,
+                    length=6, clearance=0.002,
                    debug=false, cutter=false, alpha=1, $fn=60) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
   color("DimGrey", alpha)
-  DebugHalf(enabled=debug)
+  DebugHalf(enabled=debug) RenderIf(!cutter)
   difference() {
     translate([LowerMaxX(),0,0])
     rotate([0,-90,0])
     difference() {
-      cylinder(r=ReceiverOR(), h=length);
+      cylinder(r=od/2, h=length);
 
       if (!cutter)
-      cylinder(r=ReceiverIR(), h=length);
+      cylinder(r=id/2, h=length);
     }
 
     if (!cutter)
@@ -60,7 +59,7 @@ module ReceiverTube(length=6, clearance=0.002,
 
 
 module PipeLugFront(alpha=1, cutter=false) {
-  color("DarkOrange", alpha=alpha) render()
+  color("DarkOrange", alpha=alpha) RenderIf(!cutter)
   difference() {
     translate([0,0,LowerOffsetZ()])
     ReceiverLugFront(extraTop=-LowerOffsetZ(),
@@ -72,7 +71,7 @@ module PipeLugFront(alpha=1, cutter=false) {
 }
 
 module PipeLugRear(alpha=1, cutter=false) {
-  color("DarkOrange", alpha=alpha) render()
+  color("DarkOrange", alpha=alpha) RenderIf(!cutter)
   difference() {
     translate([0,0,LowerOffsetZ()])
     ReceiverLugRear(extraTop=-LowerOffsetZ(),
@@ -84,12 +83,12 @@ module PipeLugRear(alpha=1, cutter=false) {
 }
 
 module PipeLugCenter(cutter=false, clearance=0.002, alpha=1) {
-  color("Burlywood", alpha=alpha) render()
+  color("Burlywood", alpha=alpha) RenderIf(!cutter)
   difference() {
     union() {
       translate([0,0,LowerOffsetZ()])
       translate([0,0,-ManifoldGap()])
-      linear_extrude(height=WallLower()+ReceiverIR()+ManifoldGap(2))
+      linear_extrude(height=abs(LowerOffsetZ()))
       offset(r=(cutter?clearance:0))
       intersection() {
         projection(cut=true)
@@ -130,33 +129,39 @@ module PipeLugAssembly(length=6, pipeAlpha=1, pipeOffsetX=0,
   ReceiverTube(alpha=pipeAlpha, length=length);
 }
 
-translate([0,0,LowerOffsetZ()])
-Lower(showTrigger=true,alpha=1, triggerAnimationFactor=$t,
-      showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
-      searLength=SearLength()+WallLower()+ReceiverPipeWall()+SearTravel());
-
-PipeLugAssembly(pipeAlpha=0.5);
-
-
-/*
- * Plated parts
- */
-
-// Front Lug
-*!scale(25.4)
+module PipeLugFront_print()
 rotate([0,-90,0])
 translate([-ReceiverLugFrontMinX(),0,ReceiverLugFrontMinX()])
 PipeLugFront();
 
-// Rear Lug
-*!scale(25.4)
+
+module PipeLugRear_print()
 rotate([0,90,0])
 translate([-ReceiverLugRearMaxX(),0,-ReceiverLugRearMaxX()])
 PipeLugRear();
 
-// NOTE: Developer Part
-// Center Lug Housing
-*!scale(25.4)
+module PipeLugCenter_print()
+translate([0,0,-LowerOffsetZ()])
 PipeLugCenter();
 
-echo ("Pipe Lug Sear Length: ", SearLength()+WallLower()+ReceiverPipeWall()+SearTravel());
+
+scale(25.4) {
+
+  if (_RENDER == "Assembly") {
+    translate([0,0,LowerOffsetZ()])
+    Lower(showTrigger=true,alpha=1, triggerAnimationFactor=$t,
+          showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
+          searLength=SearLength()+abs(LowerOffsetZ())+SearTravel());
+
+    PipeLugAssembly(pipeAlpha=0.5);
+  }
+
+  if (_RENDER == "Center")
+    PipeLugCenter_print();
+
+  if (_RENDER == "Front")
+    PipeLugFront_print();
+
+  if (_RENDER == "Rear")
+    PipeLugRear_print();
+}

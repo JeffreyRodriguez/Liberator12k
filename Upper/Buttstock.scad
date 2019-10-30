@@ -19,40 +19,50 @@ use <../Lower/Receiver Lugs.scad>;
 use <../Lower/Trigger.scad>;
 use <../Lower/Lower.scad>;
 
-use <Lugs.scad>;
 use <Linear Hammer.scad>;
+
+/* [What to Render] */
+
+// Assembly is not for printing.
+_RENDER = "Assembly"; // ["Assembly", "Buttstock"]
+
+/* [Receiver Tube] */
+RECEIVER_TUBE_OD = 1.75;
+RECEIVER_TUBE_ID = 1.5;
 
 function ButtstockBolt() = Spec_BoltM4();
 function ButtstockHeight() = 2;
 function ButtstockSleeveLength() = 1;
 function ButtstockWall() = 0.1875;
 
-function ButtstockOD() = ReceiverOD()+(ButtstockWall()*2);
-function ButtstockOR() = ButtstockOD()/2;
 
-
-module ButtstockBolt(debug=false, cutter=false, clearance=0.005, teardropAngle=0) {
+module ButtstockBolt(receiverRadius=RECEIVER_TUBE_OD/2,
+                     debug=false, cutter=false,
+                     clearance=0.005, teardropAngle=0) {
   clear = cutter ? clearance : 0;
 
   color("Silver")
   DebugHalf(enabled=debug)
   for (R = [0,90,-90]) rotate([R,0,0])
-  translate([(ButtstockSleeveLength()/2),0,ReceiverOR()+ButtstockWall()])
+  translate([(ButtstockSleeveLength()/2),0,receiverRadius+ButtstockWall()])
   Bolt(bolt=ButtstockBolt(), head="socket", capOrientation=true,
-       length=ButtstockWall()+ReceiverPipeWall(),
+       length=ButtstockWall()+0.125,
        clearance=clear,
        teardrop=cutter, teardropAngle=teardropAngle);
 }
 
-module Buttstock(debug=false, $fn=Resolution(30,60)) {
+module Buttstock(receiverRadius=RECEIVER_TUBE_OD/2, debug=false, $fn=Resolution(30,60)) {
   chamferRadius = 1/16;
   length = 4;
   base = 0.375;
   baseHeight = ButtstockHeight();
   ribDepth=0.1875;
   extensionHull = ButtstockSleeveLength();
+  outsideRadius = receiverRadius+ButtstockWall();
+  
+  
 
-  color("Tan")
+  color("Tan", 0.25)
   DebugHalf(enabled=debug) render()
   difference() {
 
@@ -62,12 +72,12 @@ module Buttstock(debug=false, $fn=Resolution(30,60)) {
     hull() {
 
       // Foot of the stock
-      for (L = [0,1]) translate([(length*L)-(ButtstockOR()/2),0,0])
-      ChamferedCylinder(r1=ButtstockOR()/2, r2=chamferRadius, h=base);
+      for (L = [0,1]) translate([(length*L)-(outsideRadius/2),0,0])
+      ChamferedCylinder(r1=outsideRadius/2, r2=chamferRadius, h=base);
 
       // Around the receiver tube
       translate([0,0,baseHeight])
-      ChamferedCylinder(r1=ButtstockOR(),
+      ChamferedCylinder(r1=outsideRadius,
                           r2=chamferRadius*2, h=extensionHull,
                         chamferTop=true);
     }
@@ -75,19 +85,19 @@ module Buttstock(debug=false, $fn=Resolution(30,60)) {
     // Utility slot
     translate([-baseHeight,0,0])
     rotate([0,90,0]) {
-      translate([ButtstockOR()+ButtstockWall(), -0.51/2, base])
+      translate([outsideRadius+ButtstockWall(), -0.51/2, base])
       ChamferedCube([length, 0.51, baseHeight+extensionHull], r=chamferRadius);
 
 
       // Gripping Ridges
       for (M = [0,1]) mirror([0,M,0])
-      for (X = [0:ButtstockOR()/2:length-(ButtstockOR()/2)])
-      translate([X-(ButtstockOR()/4),(ButtstockOR()/2)+(ButtstockOR()/10),-ManifoldGap()])
-      cylinder(r1=ButtstockOR()/4, r2=0, h=base);
+      for (X = [0:outsideRadius/2:length-(outsideRadius/2)])
+      translate([X-(outsideRadius/4),(outsideRadius/2)+(outsideRadius/10),-ManifoldGap()])
+      cylinder(r1=outsideRadius/4, r2=0, h=base);
 
       // Pipe hole
       translate([0,0,baseHeight])
-      ChamferedCircularHole(r1=ReceiverOR(),
+      ChamferedCircularHole(r1=receiverRadius,
                             r2=chamferRadius,
                             h=extensionHull, chamferBottom=false);
 
@@ -98,18 +108,36 @@ module Buttstock(debug=false, $fn=Resolution(30,60)) {
                             h=1, chamferBottom=false);
     }
 
-    ButtstockBolt(cutter=true, teardropAngle=0);
+    ButtstockBolt(receiverRadius=receiverRadius, cutter=true, teardropAngle=0);
 
   }
 }
 
-
-//translate([LowerMaxX()-ReceiverLength(),0,0])
+module Buttstock_print()
+rotate([0,-90,0]) translate([ButtstockHeight(),0,0])
 Buttstock();
-ButtstockBolt();
 
-//PipeLugAssembly(pipeAlpha=0.5);
+module ButtstockAssembly(receiverRadius=RECEIVER_TUBE_OD/2) {  
+  ButtstockBolt();
 
-// Buttstock Plater
-*!scale(25.4) rotate([0,-90,0]) translate([0, 0,0])
-Buttstock();
+  Buttstock();
+}
+
+
+scale(25.4) {
+  if (_RENDER == "Assembly") {
+    ButtstockAssembly();
+  }
+
+  if (_RENDER == "ReceiverCoupling")
+  ReceiverCoupling_print();
+
+  if (_RENDER == "")
+  BarrelLatchCollar_print();
+
+  if (_RENDER == "RecoilPlateHousing")
+  BreakActionRecoilPlateHousing_print();
+
+  if (_RENDER == "Forend")
+  BreakActionForend_print();
+}

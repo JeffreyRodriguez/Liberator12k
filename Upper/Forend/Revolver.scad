@@ -729,22 +729,12 @@ module RevolverShotgunAssembly(stock=true,
   }
 
   PipeUpperAssembly(pipeAlpha=pipeAlpha,
-                    receiverLength=12, lower=true,
-                    lowerLeft=true,
-                    stock=true,
                     debug=false);
 }
 
 
 RevolverShotgunAssembly(pipeAlpha=0.5, debug=false);
 
-
-//$t=AnimationDebug(ANIMATION_STEP_CHARGE, T=180*sin($t));
-//$t=AnimationDebug(ANIMATION_STEP_FIRE, T=1);
-//$t=AnimationDebug(ANIMATION_STEP_UNLOCK, T=1);
-//$t=AnimationDebug(ANIMATION_STEP_UNLOAD, T=1);
-
-//$t=AnimationDebug(ANIMATION_STEP_CHARGE, T=1);
 
 
 /*

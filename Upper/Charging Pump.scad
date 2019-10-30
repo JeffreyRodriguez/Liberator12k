@@ -133,54 +133,6 @@ module ChargingRod(clearance=RodClearanceLoose(),
   }
 }
 
-echo ("Wing offset", ChargingRodOffset()+0.07);
-
-module Charger(clearance=RodClearanceLoose(),
-               bolt=true,
-               cutter=false, debug=false) {
-
-  color("OrangeRed") DebugHalf(enabled=debug) render() {
-    difference() {
-
-      // Charging Pusher
-      union() {
-
-        // Tower
-        translate([RecoilPlateRearX(),-0.5/2,0.375])
-        mirror([1,0,0])
-        ChamferedCube([ChargerTowerLength(), 0.5, ChargingRodOffset()-0.25], r=1/32);
-
-        // Top wings
-        translate([RecoilPlateRearX(),-1/2,ChargingRodOffset()+0.07])// TODO: FIX magic number 0.07
-        mirror([1,0,0])
-        ChamferedCube([ChargerTowerLength(), 1, 0.25], r=1/32);
-
-        // Charging Pusher Wide Base
-        translate([RecoilPlateRearX(),0,0])
-        intersection() {
-
-          translate([0,-0.5,0.375])
-          mirror([1,0,0])
-          ChamferedCube([1.125, 1, ReceiverIR()-0.375], r=1/32);
-
-          // Rounded base
-          rotate([0,-90,0])
-          cylinder(r=ReceiverIR()-0.02, h=1.125, $fn=Resolution(30,60));
-        }
-      }
-
-      translate([RecoilPlateRearX()-0.625,-0.1875,0])
-      mirror([1,0,0])
-      ChamferedCube([1, 0.375, ReceiverOR()], r=1/16);
-
-      translate([ChargerTravel(),0,0])
-      ChargingRod(cutter=true, clearance=RodClearanceSnug());
-
-      ChargingRodBolts(cutter=true, teardrop=true);
-
-    }
-  }
-}
 
 module ChargingPump(innerRadius=1.1/2,
                     debug=false, alpha=1,
@@ -234,7 +186,7 @@ module ChargingPumpAssembly(animationFactor=ChargerAnimationFactor(),
 
     ChargingRod(length=length, minX=minX, debug=debug);
 
-    Charger(debug=debug);
+    *Charger(debug=debug);
 
     ChargingPump(debug=debug, alpha=1);
   }
