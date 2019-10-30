@@ -1,8 +1,8 @@
-use <../Meta/Manifold.scad>;
-use <../Meta/Units.scad>;
-use <../Meta/Debug.scad>;
-use <../Lower/Lower.scad>;
-use <../Shapes/Chamfer.scad>;
+use <../../Meta/Manifold.scad>;
+use <../../Meta/Units.scad>;
+use <../../Meta/Debug.scad>;
+use <Lower/Lower.scad>;
+use <../../Shapes/Chamfer.scad>;
 
 function MagazineAngle() = 8;
 function MagazineOffsetX(height=0) = (sin(MagazineAngle())*height);
@@ -108,11 +108,11 @@ module Magwell(width=UnitsImperial(1.25), height=MagwellHeight(),
     translate([-MagazineOffsetX(height),0,-height])
     translate([MagwellOffsetX(),0,0]) {
       MagwellInsert(height=height+1);
-      
+
       #MagazineCatch(magHeight=height);
     }
-    
-    
+
+
     translate([-LowerMaxX(),0,0])
     LowerMiddleBoss(clearance=0.02);
   }

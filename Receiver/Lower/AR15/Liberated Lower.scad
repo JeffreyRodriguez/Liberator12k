@@ -1,20 +1,20 @@
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Units.scad>;
-use <../../Meta/Resolution.scad>;
+use <../../../Meta/Manifold.scad>;
+use <../../../Meta/Units.scad>;
+use <../../../Meta/Resolution.scad>;
 
-use <../../Vitamins/Nuts And Bolts.scad>;
-use <../../Vitamins/Rod.scad>;
+use <../../../Vitamins/Nuts And Bolts.scad>;
+use <../../../Vitamins/Rod.scad>;
 
-use <../../Components/AR15/Mating Pins.scad>;
-use <../../Components/AR15/Trigger Pocket.scad>;
-use <../../Components/AR15/Trigger.scad>;
-use <../../Components/AR15/Fire Control.scad>;
+use <../../../Components/AR15/Mating Pins.scad>;
+use <../../../Components/AR15/Trigger Pocket.scad>;
+use <../../../Components/AR15/Trigger.scad>;
+use <../../../Components/AR15/Fire Control.scad>;
 
-use <../../Components/Grip Handle.scad>;
-use <../../Components/T Lug.scad>;
-use <../../Components/Trigger Finger Slot.scad>;
+use <../../../Components/Grip Handle.scad>;
+use <../../../Components/T Lug.scad>;
+use <../../../Components/Trigger Finger Slot.scad>;
 
-use <../../Magwells/AR15 Magwell.scad>;
+use <../../../Receiver/Magwells/AR15 Magwell.scad>;
 
 function BufferLugHeight() = 0.75;
 
@@ -142,7 +142,7 @@ module AR15_LowerCutouts() {
     AR15_BufferLugBolt(cutter=true, teardrop=false);
 
     AR15_LowerBolts(cutter=true);
-    
+
     AR15_TriggerPocket();
   }
 }
@@ -250,7 +250,7 @@ module AR15_LiberatedLowerSides(showLeft=true, showRight=true, alpha=1) {
   intersection() {
     difference() {
       union() {
-        
+
         rotate([90,0,0])
         linear_extrude(height=LowerWidth(), center=true)
         translate([AR15_TowerMinX(),0,0])
@@ -302,7 +302,7 @@ module AR15_LiberatedLowerSides(showLeft=true, showRight=true, alpha=1) {
   }
 }
 
-  
+
 
 *!scale(25.4) rotate([-90,0,0]) translate([0,-0.5,0])
 AR15_LiberatedLowerSides(showLeft=true, showRight=false);
@@ -322,7 +322,7 @@ AR15_MagazineCatch();
   AR15_BufferTower();
 
   AR15_LiberatedLowerSides();
-    
+
   //!scale(25.4) rotate([180,0,0])
   color("Orange")
   render()

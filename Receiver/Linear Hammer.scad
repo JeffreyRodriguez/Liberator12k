@@ -13,9 +13,9 @@ use <../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 use <../Vitamins/Rod.scad>;
 
-use <../Lower/Receiver Lugs.scad>;
-use <../Lower/Trigger.scad>;
-use <../Lower/Lower.scad>;
+use <Lower/Receiver Lugs.scad>;
+use <Lower/Trigger.scad>;
+use <Lower/Lower.scad>;
 
 
 /* [What to Render] */

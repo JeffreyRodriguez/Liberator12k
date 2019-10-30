@@ -1,5 +1,5 @@
-use <../Meta/Manifold.scad>;
-use <../Meta/Units.scad>;
+use <../../Meta/Manifold.scad>;
+use <../../Meta/Units.scad>;
 
 function MagazineAngle() = 0;
 

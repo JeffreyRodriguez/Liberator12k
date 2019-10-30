@@ -1,24 +1,24 @@
 
 //$t=0.6;
-use <../Meta/Debug.scad>;
-use <../Meta/Manifold.scad>;
-use <../Meta/Resolution.scad>;
-use <../Meta/Units.scad>;
+use <../../Meta/Debug.scad>;
+use <../../Meta/Manifold.scad>;
+use <../../Meta/Resolution.scad>;
+use <../../Meta/Units.scad>;
 
-use <../Shapes/Chamfer.scad>;
+use <../../Shapes/Chamfer.scad>;
 
-use <../Vitamins/Nuts And Bolts.scad>;
-use <../Vitamins/Nuts and Bolts/BoltSpec.scad>;
-use <../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
-use <../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
+use <../../Vitamins/Nuts And Bolts.scad>;
+use <../../Vitamins/Nuts and Bolts/BoltSpec.scad>;
+use <../../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
+use <../../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 
-use <../Vitamins/Pipe.scad>;
-use <../Vitamins/Rod.scad>;
+use <../../Vitamins/Pipe.scad>;
+use <../../Vitamins/Rod.scad>;
 
 use <Receiver Lugs.scad>;
 use <Trigger.scad>;
 
-use <../Components/Grip Handle.scad>;
+use <../../Components/Grip Handle.scad>;
 
 function LowerWallFront() = 0.5;
 function LowerMaxX() = ReceiverLugFrontMaxX()
@@ -63,7 +63,7 @@ module TriggerFingerSlot(radius=TriggerFingerRadius(), length=0.6, $fn=Resolutio
 }
 
 module GuardBolt(boltSpec=Spec_BoltM4(), length=UnitsMetric(30), cutter=false, clearance=0.005) {
-  
+
   color("Silver")
   translate([ReceiverLugBoltX(ReceiverLugBoltsArray()[0]),
              -LowerMaxY()+0.07,

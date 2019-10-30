@@ -5,7 +5,7 @@ use <../../../Components/AR15/Fire Control.scad>;
 use <../../../Components/AR15/Mating Pins.scad>;
 use <../../../Components/AR15/Trigger Pocket.scad>;
 use <../../../Components/AR15/Trigger.scad>;
-use <../../../Lower/AR15/Liberated Lower.scad>;
+use <../../../Receiver/Lower/AR15/Liberated Lower.scad>;
 use <../../../Vitamins/Nuts And Bolts.scad>;
 
 use <Trigger Pocket Ram.scad>;

@@ -1,13 +1,13 @@
-include <../Meta/Animation.scad>;
+include <../../Meta/Animation.scad>;
 
-use <../Meta/Resolution.scad>;
-use <../Meta/Manifold.scad>;
-use <../Meta/Debug.scad>;
-use <../Meta/Units.scad>;
+use <../../Meta/Resolution.scad>;
+use <../../Meta/Manifold.scad>;
+use <../../Meta/Debug.scad>;
+use <../../Meta/Units.scad>;
 
-use <../Shapes/Chamfer.scad>;
+use <../../Shapes/Chamfer.scad>;
 
-use <../Vitamins/Rod.scad>;
+use <../../Vitamins/Rod.scad>;
 
 use <Receiver Lugs.scad>;
 

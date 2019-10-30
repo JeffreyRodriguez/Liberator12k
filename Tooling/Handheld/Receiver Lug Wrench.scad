@@ -3,7 +3,7 @@ use <../Meta/Units.scad>;
 
 use <../Vitamins/Nuts And Bolts.scad>;
 
-use <../Lower/Receiver Lugs.scad>;
+use <../Receiver/Lower/Receiver Lugs.scad>;
 WALL = 0.25;
 BOLT = Spec_BoltM4();
 

@@ -1,12 +1,12 @@
 //$t=0.6;
-use <../Meta/Debug.scad>;
-use <../Meta/Manifold.scad>;
-use <../Meta/Resolution.scad>;
-use <../Meta/Units.scad>;
+use <../../Meta/Debug.scad>;
+use <../../Meta/Manifold.scad>;
+use <../../Meta/Resolution.scad>;
+use <../../Meta/Units.scad>;
 
-use <../Vitamins/Nuts And Bolts.scad>;
-use <../Vitamins/Pipe.scad>;
-use <../Vitamins/Rod.scad>;
+use <../../Vitamins/Nuts And Bolts.scad>;
+use <../../Vitamins/Pipe.scad>;
+use <../../Vitamins/Rod.scad>;
 
 use <Receiver Lugs.scad>;
 use <Lower.scad>;

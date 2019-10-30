@@ -1,10 +1,10 @@
-use <../Meta/Manifold.scad>;
-use <../Meta/Units.scad>;
+use <../../Meta/Manifold.scad>;
+use <../../Meta/Units.scad>;
 
-use <../Components/T Lug.scad>;
-use <../Vitamins/Nuts And Bolts.scad>;
-use <../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
-use <../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
+use <../../Components/T Lug.scad>;
+use <../../Vitamins/Nuts And Bolts.scad>;
+use <../../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
+use <../../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 
 
 function GripWidth() = 1;

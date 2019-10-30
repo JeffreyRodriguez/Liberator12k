@@ -16,9 +16,9 @@ use <../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 use <../Vitamins/Pipe.scad>;
 use <../Vitamins/Rod.scad>;
 
-use <../Lower/Receiver Lugs.scad>;
-use <../Lower/Trigger.scad>;
-use <../Lower/Lower.scad>;
+use <Lower/Receiver Lugs.scad>;
+use <Lower/Trigger.scad>;
+use <Lower/Lower.scad>;
 
 use <Buttstock.scad>;
 use <Charging Pump.scad>;

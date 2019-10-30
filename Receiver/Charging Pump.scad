@@ -8,8 +8,8 @@ use <../Meta/Resolution.scad>;
 use <../Components/Cylinder Redux.scad>;
 use <../Components/Pump Grip.scad>;
 
-use <../Lower/Lower.scad>;
-use <../Lower/Trigger.scad>;
+use <Lower/Lower.scad>;
+use <Lower/Trigger.scad>;
 
 use <../Shapes/Chamfer.scad>;
 

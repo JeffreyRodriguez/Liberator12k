@@ -9,7 +9,7 @@ use <../../Meta/RenderIf.scad>;
 use <../../Components/Cylinder Redux.scad>;
 use <../../Components/Pivot.scad>;
 
-use <../../Lower/Lower.scad>;
+use <../Lower/Lower.scad>;
 
 use <../../Shapes/Chamfer.scad>;
 

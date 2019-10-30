@@ -12,10 +12,10 @@ use <../../Vitamins/Square Tube.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/AR15/Barrel.scad>;
 use <../../Vitamins/AR15/Bolt.scad>;
-use <../../Lower/Receiver Lugs.scad>;
-use <../../Lower/Lower.scad>;
-use <../../Lower/Trigger.scad>;
-use <../../Magwells/AR15 Magwell.scad>;
+use <../Lower/Receiver Lugs.scad>;
+use <../Lower/Lower.scad>;
+use <../Lower/Trigger.scad>;
+use <../../Receiver/Magwells/AR15 Magwell.scad>;
 
 use <../Pipe/Receiver.scad>;
 use <../Lugs.scad>;
