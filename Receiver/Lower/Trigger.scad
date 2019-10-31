@@ -262,6 +262,27 @@ module TriggerGroup(animationFactor=TriggerAnimationFactor(),
           right=true, rightAlpha=1);
 }
 
+module TriggerLeft_print()
+rotate(180)
+translate([0,-TriggerHeight()/2,0])
+rotate([90,0,0])
+translate([0,-RodRadius(SearRod(), RodClearanceLoose()),0])
+Trigger(left=true, right=false);
+
+module TriggerRight_print()
+rotate(180)
+translate([0,-TriggerHeight()/2,0])
+rotate([90,0,0])
+translate([0,TriggerWidth()/2,0])
+Trigger(left=false, right=true);
+
+module TriggerMiddle_print()
+rotate(180)
+translate([0,-TriggerHeight()/2,0.12])
+rotate([90,0,00])
+SearSupportTab(cutter=false);
+
+
 TriggerGroup(animationFactor=sin(180*$t), searLength=1.1525);
 
 TRIGGER_PLATER_MIDDLE = false;
@@ -270,23 +291,12 @@ TRIGGER_PLATER_RIGHT = false;
 
 if (TRIGGER_PLATER_MIDDLE)
 !scale(25.4)
-rotate(180)
-translate([0,-TriggerHeight()/2,0.12])
-rotate([90,0,00])
-SearSupportTab(cutter=false);
+TriggerMiddle_print();
 
 if (TRIGGER_PLATER_LEFT)
 !scale(25.4)
-rotate(180)
-translate([0,-TriggerHeight()/2,0])
-rotate([90,0,0])
-translate([0,-RodRadius(SearRod(), RodClearanceLoose()),0])
-Trigger(left=true, right=false);
+TriggerLeft_print();
 
 if (TRIGGER_PLATER_RIGHT)
 !scale(25.4)
-rotate(180)
-translate([0,-TriggerHeight()/2,0])
-rotate([90,0,0])
-translate([0,TriggerWidth()/2,0])
-Trigger(left=false, right=true);
+TriggerRight_print();

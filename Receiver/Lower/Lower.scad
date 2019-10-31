@@ -302,6 +302,17 @@ module LowerSidePlates(showLeft=true, showRight=true, alpha=1) {
 
 }
 
+module LowerLeft_print()
+rotate(180)
+rotate([90,0,0])
+translate([0,-0.25,2.125])
+LowerSidePlates(showLeft=true, showRight=false);
+
+module LowerRight_print()
+rotate([-90,0,0])
+translate([0,0.25,2.125])
+LowerSidePlates(showLeft=false, showRight=true);
+
 module LowerMiddle(bossEnabled=true) {
   color("DimGrey")
   render()
@@ -334,6 +345,12 @@ module LowerMiddle(bossEnabled=true) {
     }
   }
 }
+
+module LowerMiddle_print()
+rotate(180)
+rotate([90,0,0])
+translate([0,0.25,2.125])
+LowerMiddle(bossEnabled=false);
 
 module LowerMatchplate2d() {
   union() {
@@ -404,21 +421,13 @@ LOWER_PLATER_RIGHT = false;
 
 if (LOWER_PLATER_MIDDLE)
 !scale(25.4)
-rotate(180)
-rotate([90,0,0])
-translate([0,0.25,2.125])
-LowerMiddle(bossEnabled=false);
+LowerMiddle_print();
 
 if (LOWER_PLATER_LEFT)
 !scale(25.4)
-rotate(180)
-rotate([90,0,0])
-translate([0,-0.25,2.125])
-LowerSidePlates(showLeft=true, showRight=false);
+LowerLeft_print();
 
 // Right
 if (LOWER_PLATER_RIGHT)
 !scale(25.4)
-rotate([-90,0,0])
-translate([0,0.25,2.125])
-LowerSidePlates(showLeft=false, showRight=true);
+LowerRight_print();
