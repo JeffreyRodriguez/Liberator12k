@@ -101,11 +101,18 @@ module FrameForend(length=FrameForendExtension(), debug=false, alpha=1) {
   }
 }
 
+module FrameForend_print()
+rotate([0,-90,0]) translate([0,0,-FrameBoltZ()])
+FrameForend();
+
 module FrameAssembly(length=FrameUpperBoltLength(),
                      debug=false, alpha=1) {
   FrameBolts(length=length, debug=debug, alpha=alpha);
 
-  FrameForend(length=FrameForendExtension());
+  FrameForend();
 }
 
 FrameAssembly();
+
+
+*!FrameForend_print();
