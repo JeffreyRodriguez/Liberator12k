@@ -32,7 +32,7 @@ use <Firing Pin.scad>;
 /* [What to Render] */
 
 // Assembly is not for printing.
-_RENDER = "Assembly"; // ["Assembly", "ReceiverCoupling", "BarrelLatchCollar", "RecoilPlateHousing", "Forend"]
+_RENDER = "Assembly"; // ["Assembly", "FrameForend", "ReceiverCoupling", "ReceiverLugCenter", "ReceiverLugFront", "ReceiverLugRear", "LowerLeft", "LowerRight", "LowerMiddle", "TriggerLeft", "TriggerRight", "TriggerMiddle", "HammerHead", "HammerTail", "Buttstock"]
 
 /* [Receiver Tube] */
 RECEIVER_TUBE_OD = 1.75;
@@ -135,8 +135,13 @@ module ReceiverCoupling(debug=false) {
   }
 }
 
-module ReceiverFront(debug=false, width=2.25) {
-  color("MediumSlateBlue")
+module ReceiverCoupling_print()
+translate([0,0,-FrameExtension()])
+rotate([0,90,0])
+ReceiverCoupling();
+
+module ReceiverFront(width=2.25, debug=false, alpha=1) {
+  color("MediumSlateBlue", alpha)
   DebugHalf(enabled=debug) render()
   difference() {
     RecoilPlateHousing() {
@@ -250,50 +255,58 @@ module PipeUpperAssembly(receiverLength=ReceiverLength(),
   ButtstockAssembly(receiverRadius=ReceiverOR());
 }
 
-module ReceiverCoupling_print()
-translate([0,0,-FrameExtension()])
-rotate([0,90,0])
-ReceiverCoupling();
-
-// Rear Lug
-*!scale(25.4)
-rotate([0,90,0])
-translate([-ReceiverLugRearMaxX(),0,-ReceiverLugRearMaxX()])
-PipeLugRear();
-
-// NOTE: Developer Part
-// Center Lug Housing
-*!scale(25.4)
-PipeLugCenter();
-
-
 
 
 scale(25.4) {
   if (_RENDER == "Assembly") {
-    ReceiverFront();
 
     PipeUpperAssembly(pipeAlpha=0.3,
                       receiverLength=12,
                       debug=false);
+    ReceiverFront(alpha=0.5);
   }
+  
+  if (_RENDER == "FrameForend")
+    FrameForend_print();
 
   if (_RENDER == "ReceiverCoupling")
-  ReceiverCoupling_print();
+    ReceiverCoupling_print();
 
-  if (_RENDER == "")
-  BarrelLatchCollar_print();
+  if (_RENDER == "ReceiverLugCenter")
+    PipeLugCenter_print();
 
-  if (_RENDER == "RecoilPlateHousing")
-  BreakActionRecoilPlateHousing_print();
+  if (_RENDER == "ReceiverLugFront")
+    PipeLugFront_print();
 
-  if (_RENDER == "Forend")
-  BreakActionForend_print();
+  if (_RENDER == "ReceiverLugRear")
+    PipeLugRear_print();
+
+  if (_RENDER == "LowerLeft")
+    LowerLeft_print();
+
+  if (_RENDER == "LowerRight")
+    LowerRight_print();
+
+  if (_RENDER == "LowerMiddle")
+    LowerMiddle_print();
+
+  if (_RENDER == "TriggerLeft")
+  TriggerLeft_print();
+
+  if (_RENDER == "TriggerRight")
+  TriggerRight_print();
+  
+  if (_RENDER == "TriggerMiddle")
+  TriggerMiddle_print();
+
+  if (_RENDER == "HammerHead")
+    HammerHead_print();
+
+  if (_RENDER == "HammerTail")
+    HammerTail_print();
+
+  if (_RENDER == "Buttstock")
+    Buttstock_print();
 }
-
-
-*!scale(25.4) translate([0,0,-LowerOffsetZ()])
-PipeLugCenter();
-
 
 echo ("Pipe Lug Sear Length: ", SearLength()+WallLower()+ReceiverPipeWall()+SearTravel());
