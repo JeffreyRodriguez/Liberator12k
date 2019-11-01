@@ -28,7 +28,6 @@ _RENDER = "Assembly"; // ["Assembly", "Head", "Tail"]
 HAMMER_BOLT = "5/16\"-18"; // ["5/16\"-18", "M8"]
 
 /* [Receiver Tube] */
-RECEIVER_TUBE_OD = 1.75;
 RECEIVER_TUBE_ID = 1.5;
 
 // Settings: Lengths
@@ -100,9 +99,9 @@ module HammerHead(insertRadius=(RECEIVER_TUBE_ID/2)-DEFAULT_HAMMER_CLEARANCE,
   }
 }
 
-module HammerHead_print()
+module HammerHead_print(insertRadius=(RECEIVER_TUBE_ID/2))
 rotate([0,90,0])
-HammerHead();
+HammerHead(insertRadius=insertRadius);
 
 module HammerTail(insertRadius=(RECEIVER_TUBE_ID/2)-DEFAULT_HAMMER_CLEARANCE,
                   baseHeight=HammerTailBaseLength(),
@@ -144,9 +143,9 @@ module HammerTail(insertRadius=(RECEIVER_TUBE_ID/2)-DEFAULT_HAMMER_CLEARANCE,
   }
 }
 
-module HammerTail_print()
+module HammerTail_print(insertRadius=(RECEIVER_TUBE_ID/2))
 rotate([0,90,0])
-HammerTail();
+HammerTail(insertRadius=insertRadius);
 
 module HammerCompressor(insertRadius=(RECEIVER_TUBE_ID/2)-DEFAULT_HAMMER_CLEARANCE,
                         hammerTravel=2,
@@ -155,7 +154,7 @@ module HammerCompressor(insertRadius=(RECEIVER_TUBE_ID/2)-DEFAULT_HAMMER_CLEARAN
   translate([hammerTravel-HammerSpringLength()+0.03125+HammerTailBaseLength()+ManifoldGap(),0,0]) {
 
     color("Orange", alpha)
-    HammerTail(debug=debug);
+    HammerTail(insertRadius=insertRadius, debug=debug);
 
     color("Beige", alpha)
     DebugHalf(enabled=debug) render()
@@ -177,11 +176,11 @@ module HammerAssembly(travel=2, travelFactor=HammerTravelFactor(),
   translate([-HammerCollarWidth()+travel*travelFactor,0,0]) {
     HammerBolt();
 
-    HammerHead(debug=debug, alpha=alpha);
+    HammerHead(insertRadius=insertRadius, debug=debug, alpha=alpha);
 
   }
 
-  HammerCompressor(length=length, debug=debug, alpha=alpha);
+  HammerCompressor(insertRadius=insertRadius, length=length, debug=debug, alpha=alpha);
 }
 
 if (_RENDER == "Assembly")

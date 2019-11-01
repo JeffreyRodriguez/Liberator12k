@@ -28,7 +28,6 @@ _RENDER = "Assembly"; // ["Assembly", "Buttstock"]
 
 /* [Receiver Tube] */
 RECEIVER_TUBE_OD = 1.75;
-RECEIVER_TUBE_ID = 1.5;
 
 function ButtstockBolt() = Spec_BoltM4();
 function ButtstockHeight() = 2;
@@ -51,7 +50,8 @@ module ButtstockBolt(receiverRadius=RECEIVER_TUBE_OD/2,
        teardrop=cutter, teardropAngle=teardropAngle);
 }
 
-module Buttstock(receiverRadius=RECEIVER_TUBE_OD/2, debug=false, $fn=Resolution(30,60)) {
+module Buttstock(od=RECEIVER_TUBE_OD, debug=false, $fn=Resolution(30,60)) {
+  receiverRadius=od/2;  
   chamferRadius = 1/16;
   length = 4;
   base = 0.375;
@@ -117,7 +117,7 @@ module Buttstock_print()
 rotate([0,-90,0]) translate([ButtstockHeight(),0,0])
 Buttstock();
 
-module ButtstockAssembly(receiverRadius=RECEIVER_TUBE_OD/2) {  
+module ButtstockAssembly(od=RECEIVER_TUBE_OD) {  
   ButtstockBolt();
 
   Buttstock();
