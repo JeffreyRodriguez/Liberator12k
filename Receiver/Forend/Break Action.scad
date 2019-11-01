@@ -98,7 +98,7 @@ function LatchSpringRadius() = LatchSpringDiameter()/2;
 function LatchSpringFloor() = 0.5;
 function LatchWall() = 0.125;
 
-function LatchRodY() = 0;
+function LatchRodY() = 0.5;
 function LatchRodZ() = -1;
 function LatchRodDiameter() = 0.25;
 function LatchRodRadius() = LatchRodDiameter()/2;
@@ -111,9 +111,9 @@ function LatchCollarLength() = RecoilPlateRearX()
 
 function ExtractorWidth() = 1/4;
 function ExtractorLength() = 1;
-function ExtractorWall() = 0.1875;
+function ExtractorWall() = 0.125;
 function ExtractorTravel() = 1;
-function ExtractorAngle() = 45;
+function ExtractorAngle() = 90;
 
 module ExtractorBit(cutter=false, clearance=0.005) {
   clear = cutter?clearance:0;
@@ -156,6 +156,7 @@ module BreakActionLatchRod(cutter=false, clearance=0.008) {
 
   // Rod
   color("SteelBlue")
+  for (M = [0,1]) mirror([0,M,0])
   translate([RecoilPlateRearX(), LatchRodY()-(LatchRodRadius()+clear), LatchRodZ()-(LatchRodRadius()+clear)])
   cube([LatchRodLength()+(cutter?LatchSpringLength():0),
         (LatchRodRadius()+clear)*2,
@@ -164,6 +165,7 @@ module BreakActionLatchRod(cutter=false, clearance=0.008) {
 
 module BreakActionLatchSpring() {
   color("Silver")
+  for (M = [0,1]) mirror([0,M,0])
   translate([RecoilPlateRearX()+LatchRodLength(), LatchRodY(), LatchRodZ()])
   rotate([0,90,0])
   cylinder(r=LatchSpringRadius(),
@@ -176,7 +178,7 @@ module BreakActionLatch(debug=false, cutter=false, clearance=0.01) {
 
 
   // Latch block
-  color("Tomato")
+  color("Tomato") render()
   difference() {
     union() {
       translate([-(cutter?0.25:0),LatchRodY()-0.125-clear,LatchRodZ()])
@@ -206,14 +208,14 @@ module LatchScrews(debug=false, cutter=false, clearance=0.008) {
            h=LatchSpringDiameter()+(LatchWall()*2));
 }
 
-module BreakActionRecoilPlateHousing(debug=false) {
-  color("MediumSlateBlue")
+module BreakActionRecoilPlateHousing(debug=false, alpha=1) {
+  color("MediumSlateBlue", alpha)
   DebugHalf(enabled=debug) render()
   difference() {
     ReceiverFront() {
 
       // Latch Rod Support
-      translate([0,LatchRodY(),LatchRodZ()])
+      *translate([0,LatchRodY(),LatchRodZ()])
       rotate([0,90,0])
       ChamferedCylinder(r1=0.75, r2=1/16,
                         h=abs(RecoilPlateRearX()),
@@ -379,9 +381,16 @@ module BarrelLatchCollar(length=LatchCollarLength(),
                          -WallFrameUpperBolt()],
                       r=1/16);
       }
+      
+      // Set screw support
+      *translate([0,-0.25, -(BarrelSleeveRadius()+0.5)])
+      ChamferedCube([length,
+                     0.5,
+                     BarrelSleeveRadius()+0.5],
+                     r=1/16);
 
-      // Spring support
-      color("Silver")
+      // Latch support
+      for (M = [0,1]) mirror([0,M,0])
       translate([0, LatchRodY()-(LatchRodRadius()+LatchWall()), LatchRodZ()-(LatchSpringRadius()+LatchWall())])
       ChamferedCube([length,
                      (LatchSpringRadius()+LatchWall())*2,
@@ -405,8 +414,6 @@ module BarrelLatchCollar(length=LatchCollarLength(),
     Barrel(cutter=true);
 
     BreakActionLatchRod(cutter=true);
-
-    *BreakActionLatch(cutter=true);
 
     *hull() for (X = [0,0.5])
     LatchScrews(cutter=true);
@@ -463,21 +470,14 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1,
                            stock=true, tailcap=false,
                            debug=false) {
 
-
-  *BreakActionRecoilPlateHousing();
-  *RecoilPlateFiringPinAssembly();
-  *RecoilPlate(debug=debug);
-
-  BreakActionLatchRod();
-
   *ChargingPumpAssembly(debug=debug);
-
-  BreakActionRecoilPlateHousing();
 
   BreakActionForend(debug=debug);
 
   // Pivoting barrel assembly
   BreakActionPivot(factor=pivotFactor) {
+
+  BreakActionLatchRod();
 
     %translate([PivotX(), 0, PivotZ()])
     rotate([90,0,0])
@@ -495,6 +495,12 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1,
     BreakActionLatchSpring();
 
     BarrelLatchCollar(debug=debug);
+  }
+
+  translate([0,0,0]) {
+    RecoilPlateFiringPinAssembly();
+    RecoilPlate(debug=debug);
+    BreakActionRecoilPlateHousing(alpha=0.5);
   }
 }
 
@@ -525,7 +531,8 @@ scale(25.4) {
   if (_RENDER == "Assembly") {
     BreakActionAssembly(debug=false,
                         pivotFactor=Animate(ANIMATION_STEP_CHARGE)
-                                   -Animate(ANIMATION_STEP_CHARGER_RESET));
+                                   -Animate(ANIMATION_STEP_CHARGER_RESET),
+                        pivotFactor=$t);
     PipeUpperAssembly(pipeAlpha=0.5, debug=false,
       triggerAnimationFactor=Animate(ANIMATION_STEP_TRIGGER)
                             -Animate(ANIMATION_STEP_TRIGGER_RESET));
