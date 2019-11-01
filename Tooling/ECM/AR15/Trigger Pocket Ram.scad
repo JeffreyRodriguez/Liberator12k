@@ -1,7 +1,7 @@
 use <../../../Meta/Clearance.scad>;
 use <../../../Meta/Units.scad>;
 use <../../../Meta/Manifold.scad>;
-use <../../../Components/AR15/Trigger Pocket.scad>;
+use <../../../Shapes/Components/AR15/Trigger Pocket.scad>;
 
 layerHeight = UnitsMetric(0.3063);
 

@@ -3,8 +3,8 @@ use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
 use <../../Meta/Resolution.scad>;
 
-use <../../Vitamins/Rod.scad>;
-use <../../Vitamins/Nuts And Bolts.scad>;
+use <../../../Vitamins/Rod.scad>;
+use <../../../Vitamins/Nuts And Bolts.scad>;
 
 function AR15_MatingPinSpec() = Spec_RodOneQuarterInch();
 function AR15_PinZ() = -UnitsImperial(0.252);

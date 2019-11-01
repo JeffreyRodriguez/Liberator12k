@@ -7,9 +7,9 @@ use <../../Meta/Resolution.scad>;
 
 use <../../Shapes/Chamfer.scad>;
 
-use <../../Components/Pipe/Cap.scad>;
-use <../../Components/Pipe/Frame.scad>;
-use <../../Components/Pipe/Frame Standoffs.scad>;
+use <../../Shapes/Components/Pipe/Cap.scad>;
+use <../../Shapes/Components/Pipe/Frame.scad>;
+use <../../Shapes/Components/Pipe/Frame Standoffs.scad>;
 
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/Pipe.scad>;

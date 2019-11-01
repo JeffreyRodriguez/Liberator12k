@@ -1,7 +1,7 @@
-use <../Meta/Debug.scad>;
-use <../Meta/Manifold.scad>;
-use <../Meta/Units.scad>;
-use <../Vitamins/Nuts And Bolts.scad>;
+use <../../Meta/Debug.scad>;
+use <../../Meta/Manifold.scad>;
+use <../../Meta/Units.scad>;
+use <../../Vitamins/Nuts And Bolts.scad>;
 
 module SetScrew(radius=1,
                 length=UnitsMetric(8),

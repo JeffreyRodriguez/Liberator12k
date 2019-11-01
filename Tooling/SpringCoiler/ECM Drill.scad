@@ -4,8 +4,8 @@ use <../../../Meta/Cylinder Text.scad>;
 use <../../../Meta/Manifold.scad>;
 use <../../../Meta/Resolution.scad>;
 use <../../../Shapes/Chamfer.scad>;
-use <../../../Components/ORing.scad>;
-use <../../../Components/Gear.scad>;
+use <../../../Shapes/Components/ORing.scad>;
+use <../../../Shapes/Components/Gear.scad>;
 use <ECM Drilling Cap.scad>;
 
 

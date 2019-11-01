@@ -6,8 +6,8 @@ use <../../Meta/Debug.scad>;
 use <../../Meta/Resolution.scad>;
 use <../../Meta/RenderIf.scad>;
 
-use <../../Components/Cylinder Redux.scad>;
-use <../../Components/Pivot.scad>;
+use <../../Shapes/Components/Cylinder Redux.scad>;
+use <../../Shapes/Components/Pivot.scad>;
 
 use <../Lower/Lower.scad>;
 

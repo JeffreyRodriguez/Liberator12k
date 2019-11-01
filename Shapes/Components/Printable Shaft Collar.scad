@@ -1,8 +1,8 @@
-use <../Meta/Debug.scad>;
-use <../Meta/Manifold.scad>;
-use <../Meta/Units.scad>;
-use <../Vitamins/Nuts And Bolts.scad>;
-use <../Vitamins/Pipe.scad>;
+use <../../Meta/Debug.scad>;
+use <../../Meta/Manifold.scad>;
+use <../../Meta/Units.scad>;
+use <../../Vitamins/Nuts And Bolts.scad>;
+use <../../Vitamins/Pipe.scad>;
 use <Set Screw.scad>;
 
 module PrintableShaftCollar(pipeSpec=Spec_TubingOnePointOneTwoFive(),

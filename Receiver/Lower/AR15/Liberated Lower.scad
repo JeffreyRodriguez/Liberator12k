@@ -5,14 +5,14 @@ use <../../../Meta/Resolution.scad>;
 use <../../../Vitamins/Nuts And Bolts.scad>;
 use <../../../Vitamins/Rod.scad>;
 
-use <../../../Components/AR15/Mating Pins.scad>;
-use <../../../Components/AR15/Trigger Pocket.scad>;
-use <../../../Components/AR15/Trigger.scad>;
-use <../../../Components/AR15/Fire Control.scad>;
+use <../../../Shapes/Components/AR15/Mating Pins.scad>;
+use <../../../Shapes/Components/AR15/Trigger Pocket.scad>;
+use <../../../Shapes/Components/AR15/Trigger.scad>;
+use <../../../Shapes/Components/AR15/Fire Control.scad>;
 
-use <../../../Components/Grip Handle.scad>;
-use <../../../Components/T Lug.scad>;
-use <../../../Components/Trigger Finger Slot.scad>;
+use <../../../Shapes/Components/Grip Handle.scad>;
+use <../../../Shapes/Components/T Lug.scad>;
+use <../../../Shapes/Components/Trigger Finger Slot.scad>;
 
 use <../../../Receiver/Magwells/AR15 Magwell.scad>;
 

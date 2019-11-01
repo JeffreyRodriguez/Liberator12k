@@ -3,8 +3,8 @@ use <../../Meta/Units.scad>;
 use <../../Vitamins/Pipe.scad>;
 use <../../Vitamins/Rod.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;
-use <../../Components/T Lug.scad>;
-use <../../Components/Printable Shaft Collar.scad>;
+use <../../Shapes/Components/T Lug.scad>;
+use <../../Shapes/Components/Printable Shaft Collar.scad>;
 
 JACKET_PIPE = Spec_TwoPointFiveInchSch40PVC();
 

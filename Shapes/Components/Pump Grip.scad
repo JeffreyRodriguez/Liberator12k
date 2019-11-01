@@ -1,9 +1,9 @@
-use <../Meta/Debug.scad>;
-use <../Meta/Manifold.scad>;
-use <../Meta/Resolution.scad>;
-use <../Shapes/Chamfer.scad>;
-use <../Shapes/Teardrop.scad>;
-use <../Shapes/TeardropTorus.scad>;
+use <../../Meta/Debug.scad>;
+use <../../Meta/Manifold.scad>;
+use <../../Meta/Resolution.scad>;
+use <../Chamfer.scad>;
+use <../Teardrop.scad>;
+use <../TeardropTorus.scad>;
 
 function PumpGripDiameter() = 2;
 function PumpGripRadius() = PumpGripDiameter()/2;

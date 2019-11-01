@@ -3,7 +3,7 @@ use <../../Vitamins/Printed/SCSxUU.scad>;
 use <../../Shapes/Dovetail.scad>;
 use <../../Shapes/Semicircle.scad>;
 use <../../Shapes/Teardrop.scad>;
-use <../../Components/Set Screw.scad>;
+use <../../Shapes/Components/Set Screw.scad>;
 use <../../Vitamins/Rod.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Meta/Manifold.scad>;

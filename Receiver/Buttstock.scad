@@ -5,7 +5,7 @@ use <../Meta/Units.scad>;
 use <../Meta/Debug.scad>;
 use <../Meta/Resolution.scad>;
 
-use <../Components/Firing Pin.scad>;
+use <../Shapes/Components/Firing Pin.scad>;
 
 use <../Shapes/Chamfer.scad>;
 

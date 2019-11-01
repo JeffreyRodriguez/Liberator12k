@@ -1,5 +1,5 @@
-use <../Vitamins/Rod.scad>;
-use <../Shapes/Chamfer.scad>;
+use <../../Vitamins/Rod.scad>;
+use <../Chamfer.scad>;
 
 module Spindle(pin=Spec_RodOneEighthInch(), center=false,
                radius=0.2, height=0.3,

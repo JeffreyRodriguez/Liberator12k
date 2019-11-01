@@ -1,6 +1,6 @@
-use <../Meta/Manifold.scad>;
-use <../Shapes/Chamfer.scad>;
-use <../Shapes/Teardrop.scad>;
+use <../../Meta/Manifold.scad>;
+use <../Chamfer.scad>;
+use <../Teardrop.scad>;
 use <Hose Barb.scad>;
 
 

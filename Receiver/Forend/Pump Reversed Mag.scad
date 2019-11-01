@@ -9,9 +9,9 @@ use <../Shapes/Chamfer.scad>;
 use <../Shapes/Semicircle.scad>;
 use <../Shapes/Teardrop.scad>;
 
-use <../Components/Pivot.scad>;
-use <../Components/Pipe/Firing Pin Insert.scad>;
-use <../Components/Firing Pin Retainer.scad>;
+use <../Shapes/Components/Pivot.scad>;
+use <../Shapes/Components/Pipe/Firing Pin Insert.scad>;
+use <../Shapes/Components/Firing Pin Retainer.scad>;
 
 use <../Vitamins/Nuts And Bolts.scad>;
 use <../Vitamins/Pipe.scad>;

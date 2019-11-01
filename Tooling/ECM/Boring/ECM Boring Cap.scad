@@ -5,9 +5,9 @@ use <../../../Meta/Manifold.scad>;
 use <../../../Meta/Resolution.scad>;
 use <../../../Shapes/Chamfer.scad>;
 use <../../../Shapes/Teardrop.scad>;
-use <../../../Components/ORing.scad>;
-use <../../../Components/Pipe/Cap.scad>;
-use <../../../Components/FemaleExtensionNPT.scad>;
+use <../../../Shapes/Components/ORing.scad>;
+use <../../../Shapes/Components/Pipe/Cap.scad>;
+use <../../../Shapes/Components/FemaleExtensionNPT.scad>;
 
 function BoringCapBase(bottomWall,
                        rodORingSection,

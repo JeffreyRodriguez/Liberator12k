@@ -1,5 +1,5 @@
-use <../Meta/Manifold.scad>;
-use <../Meta/Resolution.scad>;
+use <../../Meta/Manifold.scad>;
+use <../../Meta/Resolution.scad>;
 
 module GripHandle(angle=25, gripWidth=1, gripCeiling=0.75, length=1.3, height=5.5, showPalmSwell=true, showFingerSwell=true) {
   handleOffsetZ = 1.3825-gripCeiling;

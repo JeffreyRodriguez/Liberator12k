@@ -1,10 +1,10 @@
 use <../../../Meta/Clearance.scad>;
 use <../../../Meta/Units.scad>;
 use <../../../Meta/Manifold.scad>;
-use <../../../Components/AR15/Fire Control.scad>;
-use <../../../Components/AR15/Mating Pins.scad>;
-use <../../../Components/AR15/Trigger Pocket.scad>;
-use <../../../Components/AR15/Trigger.scad>;
+use <../../../Shapes/Components/AR15/Fire Control.scad>;
+use <../../../Shapes/Components/AR15/Mating Pins.scad>;
+use <../../../Shapes/Components/AR15/Trigger Pocket.scad>;
+use <../../../Shapes/Components/AR15/Trigger.scad>;
 use <../../../Receiver/Lower/AR15/Liberated Lower.scad>;
 use <../../../Vitamins/Nuts And Bolts.scad>;
 

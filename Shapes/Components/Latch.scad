@@ -1,9 +1,9 @@
-use <../Meta/Clearance.scad>;
-use <../Meta/Manifold.scad>;
-use <../Meta/Units.scad>;
-use <../Shapes/Chamfer.scad>;
-use <../Shapes/Teardrop.scad>;
-use <../Vitamins/Nuts And Bolts.scad>;
+use <../../Meta/Clearance.scad>;
+use <../../Meta/Manifold.scad>;
+use <../../Meta/Units.scad>;
+use <../Chamfer.scad>;
+use <../Teardrop.scad>;
+use <../../Vitamins/Nuts And Bolts.scad>;
 include <Latch_Lookup.scad>;
 
 module LatchBolt(latchSpec=DEFAULT_LATCH,

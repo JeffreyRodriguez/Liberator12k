@@ -1,4 +1,4 @@
-use <../Meta/Manifold.scad>;
+use <../../Meta/Manifold.scad>;
 
 
 module HoseBarb(barbOuterMajorDiameter=0.6,

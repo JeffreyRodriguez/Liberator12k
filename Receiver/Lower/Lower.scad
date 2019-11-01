@@ -18,7 +18,7 @@ use <../../Vitamins/Rod.scad>;
 use <Receiver Lugs.scad>;
 use <Trigger.scad>;
 
-use <../../Components/Grip Handle.scad>;
+use <../../Shapes/Components/Grip Handle.scad>;
 
 function LowerWallFront() = 0.5;
 function LowerMaxX() = ReceiverLugFrontMaxX()

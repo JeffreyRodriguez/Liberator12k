@@ -1,13 +1,13 @@
-use <../Vitamins/Rod.scad>;
-use <../Vitamins/Nuts And Bolts.scad>;
-use <../Meta/Resolution.scad>;
-use <../Meta/Debug.scad>;
-use <../Meta/Manifold.scad>;
-use <../Meta/Units.scad>;
-use <../Meta/Math/Circles.scad>;
-use <../Shapes/Chamfer.scad>;
-use <../Shapes/Donut.scad>;
-use <../Shapes/ZigZag.scad>;
+use <../../Vitamins/Rod.scad>;
+use <../../Vitamins/Nuts And Bolts.scad>;
+use <../../Meta/Resolution.scad>;
+use <../../Meta/Debug.scad>;
+use <../../Meta/Manifold.scad>;
+use <../../Meta/Units.scad>;
+use <../../Meta/Math/Circles.scad>;
+use <../Chamfer.scad>;
+use <../Donut.scad>;
+use <../ZigZag.scad>;
 
 // **********************
 // * Customizer Options *

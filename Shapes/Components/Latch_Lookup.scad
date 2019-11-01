@@ -1,5 +1,5 @@
-use <../Meta/Units.scad>;
-use <../Vitamins/Nuts And Bolts.scad>;
+use <../../Meta/Units.scad>;
+use <../../Vitamins/Nuts And Bolts.scad>;
 
 LatchWidth          = 0;
 LatchHeight         = 1;

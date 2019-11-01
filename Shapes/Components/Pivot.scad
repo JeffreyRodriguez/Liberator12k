@@ -1,4 +1,4 @@
-use <../Meta/Resolution.scad>;
+use <../../Meta/Resolution.scad>;
 
 DEFAULT_PIVOT_X = 5;
 DEFAULT_PIVOT_Z = -1;

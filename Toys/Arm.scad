@@ -319,7 +319,7 @@ module printhead() {
 }
 
 
-use <../Components/T Lug.scad>;
+use <../Shapes/Components/T Lug.scad>;
 use <../Shapes/Teardrop.scad>;
 use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;

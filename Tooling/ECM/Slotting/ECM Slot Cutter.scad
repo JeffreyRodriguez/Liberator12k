@@ -4,13 +4,13 @@ use <../../../Meta/Units.scad>;
 use <../../../Vitamins/Nuts And Bolts.scad>;
 use <../../../Vitamins/Pipe.scad>;
 use <../../../Vitamins/Rod.scad>;
-use <../../../Components/Hose Barb.scad>;
-use <../../../Components/HoseBarbExtension.scad>;
+use <../../../Shapes/Components/Hose Barb.scad>;
+use <../../../Shapes/Components/HoseBarbExtension.scad>;
 use <../../../Shapes/Semicircle.scad>;
 use <../../../Shapes/Teardrop.scad>;
 use <../../../Shapes/TeardropTorus.scad>;
-use <../../../Components/ORing.scad>;
-use <../../../Components/Printable Shaft Collar.scad>;
+use <../../../Shapes/Components/ORing.scad>;
+use <../../../Shapes/Components/Printable Shaft Collar.scad>;
 
 function SlotAngle(pipeSpec, width) = (pipeSpec==undef ? 0 : 2*asin(width/PipeOuterDiameter(pipeSpec)));
 

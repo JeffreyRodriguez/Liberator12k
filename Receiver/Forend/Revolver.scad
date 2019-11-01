@@ -7,8 +7,8 @@ use <../../Meta/Resolution.scad>;
 
 use <../../Meta/Math/Triangles.scad>;
 
-use <../../Components/Cylinder Redux.scad>;
-use <../../Components/Pump Grip.scad>;
+use <../../Shapes/Components/Cylinder Redux.scad>;
+use <../../Shapes/Components/Pump Grip.scad>;
 
 use <../Lower/Lower.scad>;
 use <../Lower/Trigger.scad>;

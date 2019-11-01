@@ -1,7 +1,7 @@
-use <../Meta/Manifold.scad>;
-use <../Meta/Resolution.scad>;
-use <../Vitamins/Pipe.scad>;
-use <../Vitamins/Rod.scad>;
+use <../../Meta/Manifold.scad>;
+use <../../Meta/Resolution.scad>;
+use <../../Vitamins/Pipe.scad>;
+use <../../Vitamins/Rod.scad>;
 
 DEFAULT_TEE = Spec_AnvilForgedSteel_TeeThreeQuarterInch();
 

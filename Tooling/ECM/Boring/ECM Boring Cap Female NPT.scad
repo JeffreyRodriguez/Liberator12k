@@ -7,11 +7,11 @@ use <../../../Vitamins/Pipe.scad>;
 use <../../../Vitamins/Rod.scad>;
 use <../../../Shapes/Chamfer.scad>;
 use <../../../Shapes/Teardrop.scad>;
-use <../../../Components/ORing.scad>;
-use <../../../Components/Pipe/Cap.scad>;
-use <../../../Components/HoseBarbExtension.scad>;
-use <../../../Components/FemaleExtensionNPT.scad>;
-use <../../../Components/Printable Shaft Collar.scad>;
+use <../../../Shapes/Components/ORing.scad>;
+use <../../../Shapes/Components/Pipe/Cap.scad>;
+use <../../../Shapes/Components/HoseBarbExtension.scad>;
+use <../../../Shapes/Components/FemaleExtensionNPT.scad>;
+use <../../../Shapes/Components/Printable Shaft Collar.scad>;
 
 use <ECM Boring Cap.scad>;
 

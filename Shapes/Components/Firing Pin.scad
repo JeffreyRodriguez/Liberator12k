@@ -1,14 +1,14 @@
-include <../Meta/Animation.scad>;
+include <../../Meta/Animation.scad>;
 
-use <../Meta/Manifold.scad>;
-use <../Meta/Units.scad>;
-use <../Meta/Debug.scad>;
-use <../Meta/Resolution.scad>;
+use <../../Meta/Manifold.scad>;
+use <../../Meta/Units.scad>;
+use <../../Meta/Debug.scad>;
+use <../../Meta/Resolution.scad>;
 
-use <../Shapes/Chamfer.scad>;
+use <../Chamfer.scad>;
 
-use <../Vitamins/Nuts And Bolts.scad>;
-use <../Vitamins/Rod.scad>;
+use <../../Vitamins/Nuts And Bolts.scad>;
+use <../../Vitamins/Rod.scad>;
 
 // Settings: Vitamins
 DEFAULT_FIRING_PIN_RETAINER_BOLT = Spec_BoltM4();
