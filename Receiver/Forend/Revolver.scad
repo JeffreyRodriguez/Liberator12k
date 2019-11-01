@@ -168,21 +168,21 @@ module Barrel(barrel=BarrelPipe(), barrelLength=BarrelLength(), hollow=true,
   clear = (cutter ? 0.005 : 0);
   clear2 = clear*2;
 
-  color("Silver", alpha) DebugHalf(enabled=debug)
+  color("Silver", alpha) DebugHalf(enabled=debug) RenderIf(!cutter)
   translate([ChamberLength()+ShellRimLength(),0,0])
   rotate([0,90,0])
   Pipe(pipe=barrel, clearance=clearance,
        hollow=hollow, length=barrelLength);
 
   // Rear Shaft Collar
-  color("DimGrey", alpha) DebugHalf(enabled=debug)
+  color("DimGrey", alpha) DebugHalf(enabled=debug) RenderIf(!cutter)
   translate([ForendMinX(),0,0])
   rotate([0,-90,0])
   cylinder(r=BarrelCollarRadius()+PipeClearance(barrel, clearance),
            h=BarrelCollarWidth()+ManifoldGap(), $fn=PipeFn(BarrelPipe())*2);
 
   // Front Shaft Collar
-  color("DimGrey", alpha) DebugHalf(enabled=debug)
+  color("DimGrey", alpha) DebugHalf(enabled=debug) RenderIf(!cutter)
   translate([CraneMaxX()-ManifoldGap(),0,0])
   rotate([0,90,0])
   cylinder(r=BarrelCollarRadius()+PipeClearance(barrel, clearance),
@@ -193,7 +193,7 @@ module RevolverSpindle(teardrop=false, cutter=false, clearance=0.01) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
-  color("Silver")
+  color("Silver") RenderIf(!cutter)
   translate([RecoilPlateRearX(),0,-RevolverSpindleOffset()])
   rotate([0,90,0])
   Rod(CylinderRod(),
@@ -245,7 +245,7 @@ module CranePivotPosition(angle=CranePivotAngle(), factor=1) {
 }
 
 module CranePivotPin(cutter=false, teardrop=false, clearance=0.005) {
-  color("Silver")
+  color("Silver") RenderIf(!cutter)
   translate([CraneMaxX()+ManifoldGap(),CranePivotY(),CranePivotZ()])
   rotate([0,-90,0])
   NutAndBolt(bolt=CraneBolt(), head="hex",
@@ -263,7 +263,7 @@ module CraneLatch(cutter=false, clearance=0.005,
     clear2 = clear*2;
 
   color("BurlyWood", alpha)
-  DebugHalf(enabled=debug) render()
+  DebugHalf(enabled=debug) RenderIf(!cutter)
   difference() {
       union() {
         hull() {
@@ -452,7 +452,7 @@ module RevolverCrane(cutter=false, teardrop=false, clearance=0.005,
   pivotCutterRadius = RodRadius(CylinderRod())+WallCrane()+clearance;
 
   color("OliveDrab", alpha)
-  DebugHalf(enabled=debug) render()
+  DebugHalf(enabled=debug) RenderIf(!cutter)
   difference() {
     union() {
       hull() {
@@ -564,7 +564,7 @@ module CraneShield(cutter=false, clearance=0.006,
   craneRadius = CranePivotY()+CranePivotRadius()+WallCrane();
   cylinderMaxX = 2.3355+ShellRimLength();
 
-  color("OliveDrab", alpha) DebugHalf(enabled=debug) render()
+  color("OliveDrab", alpha) DebugHalf(enabled=debug)  RenderIf(!cutter)
   difference() {
     union() {
 
