@@ -314,7 +314,7 @@ translate([0,0.25,2.125])
 LowerSidePlates(showLeft=false, showRight=true);
 
 module LowerMiddle(bossEnabled=true) {
-  color("DimGrey")
+  color("SaddleBrown")
   render()
   difference() {
     intersection() {
