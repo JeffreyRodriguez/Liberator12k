@@ -273,8 +273,7 @@ scale(25.4) {
   }
 
   if (_RENDER == "Buttstock")
-    Buttstock_print(od=RECEIVER_TUBE_OD,
-                    id=RECEIVER_TUBE_ID);
+    Buttstock_print(od=RECEIVER_TUBE_OD);
   
   if (_RENDER == "FrameForend")
     FrameForend_print();

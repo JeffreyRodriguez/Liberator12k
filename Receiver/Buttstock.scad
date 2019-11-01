@@ -113,9 +113,9 @@ module Buttstock(od=RECEIVER_TUBE_OD, debug=false, $fn=Resolution(30,60)) {
   }
 }
 
-module Buttstock_print()
+module Buttstock_print(od=RECEIVER_TUBE_OD)
 rotate([0,-90,0]) translate([ButtstockHeight(),0,0])
-Buttstock();
+Buttstock(od=od);
 
 module ButtstockAssembly(od=RECEIVER_TUBE_OD) {  
   ButtstockBolt();
