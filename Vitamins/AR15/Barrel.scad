@@ -23,14 +23,13 @@ module AR15_Barrel(length=AR15BarrelLength(),
                    clearance=UnitsImperial(0.007),
                    cutter=false,
                    $fn=60) {
-  color("DimGrey")
-  render() union() {
-    
+  color("DimGrey") union() {
+
     // Barrel Extension
     translate([0,0,-ManifoldGap()])
     cylinder(r=AR15BarrelExtensionRadius()+clearance,
              h=AR15BarrelExtensionLength()+ManifoldGap(2));
-    
+
     // Barrel Locating Pin
     translate([AR15BarrelExtensionRadius()-AR15BarrelExtensionPinHeight(),
               -AR15BarrelExtensionPinRadius(),
@@ -38,15 +37,15 @@ module AR15_Barrel(length=AR15BarrelLength(),
     cube([AR15BarrelExtensionPinHeight()*2,
           AR15BarrelExtensionPinDiameter(),
           AR15BarrelExtensionPinDepth()+ManifoldGap()]);
-    
+
     // Barrel Extension Lip
     translate([0,0,AR15BarrelExtensionLength()])
     cylinder(r=AR15BarrelExtensionLipRadius()+clearance,
              h=AR15BarrelExtensionLipLength()+ManifoldGap());
-    
+
     // Barrel, up to the gas block
     cylinder(r=AR15BarrelChamberRadius()+clearance, h=AR15BarrelGasLength()+ManifoldGap());
-    
+
     // Barrel, from the gas block on
     cylinder(r=AR15BarrelGasRadius(), h=length);
   }

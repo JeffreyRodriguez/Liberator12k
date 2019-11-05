@@ -18,7 +18,6 @@ module AR15_MagwellTemplate(baseWidth=AR15_MagazineBaseWidth(), baseLength=AR15_
                        showRearTab=true, showCatch=true) {
 
   translate([0,centerY ? -(baseWidth/2) : 0,0])
-  render()
   difference() {
     union() {
 
@@ -72,7 +71,9 @@ module AR15_MagazineCatch(magHeight=1,
 }
 
 module AR15_MagwellInsert(height=AR15_MagwellDepth(),
-                     taperHeight=UnitsImperial(0.5)) {
+                          extraTop=0,
+                     taperHeight=UnitsImperial(0.5),
+                          catch=true) {
   union() {
     translate([AR15_MagazineRearTabLength(),0,-height])
     multmatrix(m=[[1,0,sin(MagazineAngle()),0], // Here's where the magazine is angled
@@ -81,7 +82,7 @@ module AR15_MagwellInsert(height=AR15_MagwellDepth(),
                   [0,0,0,1]]) {
 
       // Main magazine cutter
-      linear_extrude(height=height+ManifoldGap())
+      linear_extrude(height=height+extraTop+ManifoldGap())
       AR15_MagwellTemplate();
 
       // Magazine tapered opening cutter
@@ -96,11 +97,12 @@ module AR15_MagwellInsert(height=AR15_MagwellDepth(),
       AR15_MagwellTemplate(showCatch=false, showRearTab=false);
     }
 
+    if (catch)
     AR15_MagazineCatch();
   }
 }
 
-module AR15_Magwell(width=UnitsImperial(1.25),
+module AR15_Magwell(width=UnitsImperial(1.125),
                   height=AR15_MagwellDepth(),
                     wall=UnitsImperial(0.125),
                wallFront=UnitsImperial(0),
@@ -108,7 +110,6 @@ module AR15_Magwell(width=UnitsImperial(1.25),
                 tabWidth=0.5, tabHeight = 1, cut=true) {
 
   color("Orange")
-  render()
   difference() {
     union() {
 
@@ -130,7 +131,7 @@ module AR15_Magwell(width=UnitsImperial(1.25),
 
     // Remove the front bottom corner
     translate([1.25,-1,-height])
-    rotate([0,50,0])
+    rotate([0,60,0])
     cube([height,2,height*2]);
   }
 }

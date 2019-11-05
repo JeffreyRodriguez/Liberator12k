@@ -73,11 +73,15 @@ module ReceiverBolts(teardrop=false,
   translate([-ReceiverFrontLength()+FrameBoltExtension()+ManifoldGap(),
              ReceiverBoltY()*Y,
              ReceiverBoltZ()])
-  rotate([0,90,0])
-  NutAndBolt(bolt=ReceiverBolt(), boltLength=ReceiverCouplingLength(),
-             head="flat", nut="heatset", capOrientation=true,
-             teardrop=cutter&&teardrop,
-             clearance=cutter?clearance:0);
+  rotate([0,90,0]) {
+    if (cutter)
+    cylinder(r1=0.1875, r2=0, h=0.1875*3, $fn=20);
+    
+    NutAndBolt(bolt=ReceiverBolt(), boltLength=ReceiverCouplingLength(),
+               head="flat", nut="heatset", capOrientation=true,
+               teardrop=cutter&&teardrop,
+               clearance=cutter?clearance:0);
+  }
 }
 
 module ReceiverCoupling(od=RECEIVER_TUBE_OD,
@@ -144,29 +148,33 @@ translate([0,0,-ReceiverFrontLength()])
 rotate([0,90,0])
 ReceiverCoupling(od=od, id=id);
 
-module ReceiverFront(width=2.25, debug=false, alpha=1) {
+module ReceiverFront(width=2.25, frameLength=ReceiverFrontLength(),
+                     debug=false, alpha=1) {
   color("MediumSlateBlue", alpha)
-  DebugHalf(enabled=debug) render()
+  DebugHalf(enabled=debug)
   difference() {
-    RecoilPlateHousing() {
-      hull()
-      FrameSupport(length=RecoilSpreaderThickness());
-      
-      translate([0,-width/2, LowerOffsetZ()])
-      ChamferedCube([RecoilSpreaderThickness(),
-                     width,
-                     abs(LowerOffsetZ())+FrameBoltZ()],
-                    r=1/16);
-      
-      children();
+    union() {
+      translate([-ReceiverFrontLength(),0, 0]){
+        hull()
+        FrameSupport(length=frameLength);
+        
+        translate([0,-width/2, LowerOffsetZ()])
+        ChamferedCube([ReceiverFrontLength(),
+                       width,
+                       abs(LowerOffsetZ())+FrameBoltZ()],
+                      r=1/16);
+        
+        children();
+      }
     }
 
+    // Picatinny rail cutout
+    translate([-ReceiverFrontLength(), -UnitsMetric(15.6/2), FrameTopZ()-0.125])
+    cube([frameLength+ManifoldGap(2), UnitsMetric(15.6), 0.25]);
+    
     FrameBolts(cutter=true);
 
     ReceiverBolts(cutter=true, teardrop=false);
-
-    translate([RecoilPlateThickness(),0,0])
-    ChargingRod(clearance=RodClearanceSnug(), cutter=true);
   }
 }
 
@@ -178,7 +186,7 @@ module Charger(od=RECEIVER_TUBE_OD,
                bolt=true,
                cutter=false, debug=false) {
 
-  color("OrangeRed") DebugHalf(enabled=debug) render() {
+  color("Tan") DebugHalf(enabled=debug) render() {
     difference() {
 
       // Charging Pusher
@@ -225,24 +233,16 @@ module PipeUpperAssembly(od=RECEIVER_TUBE_OD,
                          id=RECEIVER_TUBE_ID,
                          receiverLength=ReceiverLength(),
                          pipeOffsetX=ReceiverFrontLength(),
-                         pipeAlpha=1, frameUpperBoltLength=FrameUpperBoltLength(),
+                         pipeAlpha=0.5, buttstockAlpha=0.5, frameUpperBoltLength=FrameUpperBoltLength(),
                          triggerAnimationFactor=TriggerAnimationFactor(),
                          debug=true) {
-
-  translate([FiringPinMinX(),0,0])
-  HammerAssembly(insertRadius=0.75, alpha=0.5);
-  
-  RecoilPlateFiringPinAssembly();
-  
-  RecoilPlate();
-                           
-  Charger();
-  
-  FrameAssembly();
 
   ReceiverBolts();
 
   ReceiverCoupling(od=od, id=id);
+
+  translate([RecoilPlateRearX()-receiverLength,0,0])
+  ButtstockAssembly(od=od, alpha=buttstockAlpha);
 
   translate([RecoilPlateRearX()-LowerMaxX()-ReceiverFrontLength(),0,0]) {
 
@@ -258,18 +258,18 @@ module PipeUpperAssembly(od=RECEIVER_TUBE_OD,
                     pipeAlpha=pipeAlpha);
 
   }
-
-  translate([RecoilPlateRearX()-receiverLength,0,0])
-  ButtstockAssembly(od=od);
 }
 
 scale(25.4) {
   if (_RENDER == "Assembly") {
+    
+    FrameAssembly();
 
     PipeUpperAssembly(pipeAlpha=0.3,
                       receiverLength=12,
                       debug=false);
-    ReceiverFront(alpha=0.5);
+    
+    ReceiverFront(alpha=0.25);
   }
 
   if (_RENDER == "Buttstock")

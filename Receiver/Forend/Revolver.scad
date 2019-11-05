@@ -32,6 +32,7 @@ use <../../Vitamins/Rod.scad>;
 use <../../Ammo/Shell Slug.scad>;
 
 use <../Receiver.scad>;
+use <../Linear Hammer.scad>;
 use <../Recoil Plate.scad>;
 use <../Charging Pump.scad>;
 use <../Lugs.scad>;
@@ -157,6 +158,13 @@ module RevolverRecoilPlateHousing(debug=false) {
           FrameSupport(length=abs(RecoilPlateRearX()));
         }
     }
+  
+    RecoilPlate(cutter=true);
+
+    RecoilPlateFiringPinAssembly(cutter=true);
+
+    translate([RecoilPlateThickness(),0,0])
+    ChargingRod(clearance=RodClearanceSnug(), cutter=true);
 
     RevolverSpindle(cutter=true);
   }
@@ -736,6 +744,17 @@ module RevolverShotgunAssembly(stock=true,
 
 RevolverShotgunAssembly(pipeAlpha=0.5, debug=false);
 
+
+translate([FiringPinMinX(),0,0])
+HammerAssembly(insertRadius=0.75, alpha=0.5);
+
+FrameAssembly();
+
+RecoilPlateFiringPinAssembly();
+
+RecoilPlate();
+                       
+Charger();
 
 
 /*

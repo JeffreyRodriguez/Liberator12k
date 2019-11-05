@@ -6,21 +6,22 @@ use <../../Meta/Debug.scad>;
 use <../../Meta/Resolution.scad>;
 
 use <../../Shapes/Chamfer.scad>;
-
-use <../../Shapes/Components/Pipe/Cap.scad>;
-use <../../Shapes/Components/Pipe/Frame.scad>;
-use <../../Shapes/Components/Pipe/Frame Standoffs.scad>;
+use <../../Shapes/Semicircle.scad>;
+use <../../Shapes/Helix.scad>;
 
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/Pipe.scad>;
 use <../../Vitamins/Rod.scad>;
 use <../../Vitamins/AR15/Barrel.scad>;
+use <../../Vitamins/AR15/Bolt.scad>;
 
-use <../../Shapes/Semicircle.scad>;
-
-use <../../Ammo/Shell Slug.scad>;
+use <../Magwells/AR15 Magwell.scad>;
 
 use <../Receiver.scad>;
+use <../Linear Hammer.scad>;
+use <../Frame.scad>;
+use <../Action Rod.scad>;
+use <../Charging Pump.scad>;
 
 // Measured: Vitamins
 function BarrelCollarDiameter() = 1.75;
@@ -39,15 +40,14 @@ function ChargingExtensionRod() = Spec_RodOneHalfInch();
 function IndexLockRod() = Spec_RodOneQuarterInch();
 
 // Settings: Lengths
-function BarrelLength() = 6-BarrelX();
-function BarrelX() = 0;
+function BarrelLength() = 16;
+function BarrelMinX() = 2.16;
+function WallBarrel() = 0.25;
 
 // Settings: Angles
 
 // Calculated: Positions
 function FrameFrontMinX() = BreechFrontX()+3;
-function ReceiverLength() = 7;
-
 
 module BarrelCollar(clearance=0.002, cutter=false, debug=false) {
   clear = cutter ? clearance : 0;
@@ -55,7 +55,7 @@ module BarrelCollar(clearance=0.002, cutter=false, debug=false) {
 
   color("Silver") DebugHalf(enabled=debug)
   difference() {
-    translate([BarrelX()+ManifoldGap(),0,0])
+    translate([BarrelMinX()+ManifoldGap(),0,0])
     rotate([0,90,0])
     cylinder(r=BarrelCollarRadius()+clear,
              h=BarrelCollarWidth()*3, $fn=40);
@@ -66,188 +66,182 @@ module BarrelCollar(clearance=0.002, cutter=false, debug=false) {
 
 module Barrel(barrelLength=BarrelLength(), hollow=true,
               clearance=undef, alpha=1, debug=false) {
-  translate([BreechFrontX(),0,0])
+  translate([BarrelMinX(),0,0])
   rotate([0,90,0])
+  rotate(180)
   AR15_Barrel();
 }
 
-module RemovableForendAssembly(receiver=Spec_PipeThreeQuarterInch(),
-                 hollowReceiver=true,
-                 butt=Spec_AnvilForgedSteel_TeeThreeQuarterInch(),
-                 debug=true) {
-}
-
-module RemovableShotgunAssembly(pipeAlpha=1, debug=false) {
-
-  hammerTravelFactor = Animate(ANIMATION_STEP_FIRE)
-                     - SubAnimate(ANIMATION_STEP_CHARGE, start=0.275, end=0.69);
-
-  RemovableForendAssembly(debug=debug);
-
-  FixedBreechPipeUpperAssembly(pipeAlpha=pipeAlpha, receiverLength=ReceiverLength(),
-                    hammerTravelFactor=hammerTravelFactor,
-                    frame=true, debug=debug);
-
-  FrameAssembly(offsetMajor=0,
-                lengthMajorTop=FrameFrontMinX()+1,
-                lengthMajorBottom=FrameFrontMinX()+1,
-                debug=debug);
-
-  Barrel(debug=false);
-  BarrelCollar(debug=false);
-
-  Tailcap();
-
-  color("DimGrey", 0.5)
-  DebugHalf(enabled=debug)
-  rotate([0,90,0])
-  ReceiverTube(cutter=true, length=FrameFrontMinX());
-
-  color("LightSteelBlue")
-  render()
-  *difference() {
-    translate([BarrelX()+0.5+BreechPlateThickness(),0,0])
-    hull()
-    Breech();
-
-    Barrel(hollow=false, cutter=true);
-  }
-}
-
-module RemovableBarrelPivot(debug=false) {
-  color("RoyalBlue")
-  DebugHalf(enabled=debug)
-  difference() {
-    union() {
-      translate([0,0, -FrameMajorRodOffset()])
-      rotate([0,90,0])
-      cylinder(r=FrameMajorRodOffset()
-                -ReceiverOR()
-                +FrameMajorWall(),
-               h=FrameFrontMinX()-0.01, $fn=Resolution(30,60));
-
-      translate([FrameFrontMinX(),0,0])
-      translate([-BreechRearX(),0,0])
-      rotate([180,0,0])
-      FrameMajorStandoff(length=FrameFrontMinX()-0.01);
-    }
-
-    translate([-ManifoldGap(),0, -FrameMajorRodOffset()])
-    rotate([0,90,0])
-    cylinder(r=FrameMajorRodOffset()
-              -ReceiverOR()
-              +0.01,
-             h=FrameFrontMinX()+ManifoldGap(2), $fn=Resolution(30,60));
-
-    rotate([0,90,0])
-    ReceiverTube(cutter=true, length=FrameFrontMinX());
-  }
-}
-
-RemovableBarrelPivot();
-
-module RemovableFrameFront(debug=false) {
-  color("Khaki")
-  DebugHalf(enabled=debug)
-  difference() {
-    translate([FrameFrontMinX()+ManifoldGap(),0,0])
-    difference() {
-      translate([-BreechRearX()+BreechPlateThickness(),0,0])
-      hull()
-      for (R = [0,180]) rotate([R,0,0])
-      FrameMajorStandoff(length=FrameFrontMinX()+BreechPlateThickness());
-
-      Frame(minorBolts=false,
-             offsetMajor=5, offsetMajorBottom=5,
-             length=10,cutter=true);
-
-      translate([-ManifoldGap(),0, -FrameMajorRodOffset()])
-      rotate([0,90,0])
-      linear_extrude(height=BreechPlateThickness()+ManifoldGap(2))
-      rotate(180)
-      semidonut(minor=(FrameMajorRodOffset()
-                       -PipeOuterRadius(BarrelPipe()))*2,
-                major=(FrameMajorRodOffset()
-                       +PipeOuterRadius(BarrelPipe()))*2,
-                angle=180, $fn=90);
-
-      translate([-FrameFrontMinX()-ManifoldGap(),0, -FrameMajorRodOffset()])
-      rotate([0,90,0])
-      linear_extrude(height=FrameFrontMinX()+ManifoldGap(2))
-      rotate(180) {
-        semidonut(minor=(FrameMajorRodOffset()
-                         -ReceiverOR())*2,
-                  major=(FrameMajorRodOffset()
-                         +ReceiverOR())*2,
-                  angle=180, $fn=90);
-
-        semidonut(minor=(FrameMajorRodOffset()
-                         -ReceiverOR())*2,
-                  major=(FrameMajorRodOffset()*sqrt(2))*2,
-                  angle=360, $fn=90);
+module AR15Forend(debug=false, alpha=0.5) {
+  length = ReceiverFrontLength()
+         + BarrelMinX()
+         + AR15BarrelExtensionLipLength()
+         + AR15BarrelExtensionLength();
+  
+  color("MediumSlateBlue", alpha)
+  DebugHalf(enabled=debug) render()
+  !difference() {
+    ReceiverFront(frameLength=length ) {
+      
+      hull() {
+        
+        translate([0,0,-0.5])
+        AR15_Magwell(cut=false,
+                     wallFront=0.375);
+          
+        translate([0,-(AR15BarrelExtensionLipRadius()+WallBarrel()),0])
+        ChamferedCube([length,
+                       (AR15BarrelExtensionLipRadius()+WallBarrel())*2,
+                       FrameBoltZ()],
+                       r=1/16);
       }
-
-      translate([-FrameFrontMinX()-ManifoldGap(),0, ReceiverOR()/2])
+      
+      // Around the barrel
       rotate([0,90,0])
-      linear_extrude(height=FrameFrontMinX()+ManifoldGap(2))
-      translate([0,-(BreechPlateWidth()/2)-ManifoldGap(),0])
-      square([ReceiverOR(),
-              BreechPlateWidth()]);
+      ChamferedCylinder(r1=ReceiverOR()+0.125,
+                        r2=1/16,
+                        h=length,
+                       $fn=Resolution(30,60));
     }
-
-    Barrel(hollow=false, cutter=true);
-
+    
+    // Action rod and pin
+    ChargingRod(cutter=true);
+    
+    translate([-ReceiverFrontLength(),
+               -(ChargingRodWidth()/2)-0.01,
+               0])
+    cube([1.25+ReceiverFrontLength(),
+          ChargingRodWidth()+0.02,
+          ChargingRodOffset()]);
+    
+    
+    translate([BarrelMinX()+AR15_BoltLockLengthDiff(),0,0])
+    rotate([0,-90,0])
+    AR15_BoltCamPinTrack();
+    
+    Barrel(cutter=true);
+    
+    translate([-0.5,0,-0.5])
+    AR15_MagwellInsert(catch=false,
+                       extraTop=0);
+    
+    // Ejection slot
+    rotate([-AR15_CamPinAngle(),0,0])
+    mirror([0,1,0])
+    translate([0,0,-0.5/2])
+    ChamferedCube([BarrelMinX()-0.125,
+                   AR15BarrelExtensionLipRadius()+WallBarrel()+1,
+                   0.5], r=1/16);
+                   
+    // Ejection slot forward bevel
+    rotate([-AR15_CamPinAngle(),0,0])
+    translate([BarrelMinX()-0.25,
+                -AR15_BoltHeadRadius(),
+                -0.5/2])
+    mirror([0,1,0])
+    rotate(40)
+    ChamferedCube([BarrelMinX()-0.125,
+                   AR15BarrelExtensionLipRadius()+WallBarrel()+1,
+                   0.5], r=1/16);
+    
+    // Blend the magwell shape into the rounded interior
+    hull() {
+      translate([-0.5+0.125,0,-0.5])
+      linear_extrude(height=0.125)
+      AR15_MagwellTemplate();
+      
+      
+      translate([-ReceiverFrontLength(),0,0])
+      rotate([0,90,0])
+      cylinder(r=AR15_BoltHeadRadius()+0.01,
+               h=BarrelMinX()+ReceiverFrontLength(),
+               $fn=30);
+    }
+    
+    // Bolt carrier hole; taper towards the top
+    translate([-ReceiverFrontLength()-ManifoldGap(),0,0])
     rotate([0,90,0])
-    ReceiverTube(cutter=true, length=FrameFrontMinX());
+    ChamferedCylinder(r1=AR15BarrelExtensionRadius()+0.01,
+                      r2=AR15BarrelExtensionDiameter()-AR15_BoltHeadDiameter(),
+                      h=BarrelMinX()+ReceiverFrontLength()-0.125+ManifoldGap(),
+                      chamferBottom=false, teardropTop=true,
+                      $fn=40);
   }
 }
 
-//AnimateSpin()translate([-2.5,0,0])
-RemovableShotgunAssembly(pipeAlpha=0.5, debug=false);
+translate([-1,0,0])
+HammerAssembly(insertRadius=0.75, alpha=0.5);
 
-//$t=AnimationDebug(ANIMATION_STEP_FIRE, T=$t);
-//$t=0.37;
+FrameBolts(length=10);
+                       
+Charger();
 
-module Tailcap(debug=false) {
-  DebugHalf(enabled=debug)
-  translate([BreechRearX()-0.25-ReceiverLength(),0,0])
-  rotate([0,90,0])
+ActionRodAssembly();
+
+*ChargingPumpAssembly();
+
+
+Barrel();
+
+module BoltCarrier(radius=0.5, clearance=0.01, chamferRadius=1/16) {
+  chamferClearance = 0.01;
+  barrelExtensionLandingHeight = 0.3;
+  firingPinExtension = 0.55;      // From the back of the bolt
+    
+  boltSleeveDiameter = AR15BarrelExtensionDiameter();
+  boltSleeveRadius = boltSleeveDiameter/2;
+
+  length=BarrelMinX()+ReceiverFrontLength()-0.125;
+  
+  render()
   difference() {
-    PrintablePipeCap(
-        pipeDiameter=ReceiverOD(),
-        base=0.25,
-        $fn=Resolution(30,60));
-
-    ChamferedCircularHole(r1=0.35/2, r2=1/16, $fn=20, h=0.25);
+    
+    union() {
+      translate([-ReceiverFrontLength(),0,0])
+      rotate([0,90,0])
+      ChamferedCylinder(r1=boltSleeveRadius,
+                        r2=AR15BarrelExtensionDiameter()-AR15_BoltHeadDiameter(),
+                        h=length,
+                        teardropTop=true, chamferBottom=false,
+                        $fn=50);
+    }
+    
+    // Magazine clearance
+    translate([BarrelMinX(),0,0])
+    rotate([0,-90,0])
+    linear_extrude(height=length)
+    rotate(180)
+    rotate(45)
+    semidonut(major=ActionRodOffset()*2,
+              minor=AR15_BoltHeadDiameter(),
+              angle=90, $fn=50);
+    
+    translate([BarrelMinX()+AR15_BoltLockLengthDiff(),0,0])
+    rotate([0,-90,0])
+    AR15_Bolt(firingPinRetainer=false);
+    
+    *rotate([0,90,0])
+    rotate(180)
+    translate([0,0,0.125])
+    HelixSegment(radius=boltSleeveRadius, angle=-AR15_CamPinAngle());
   }
 }
 
+BoltCarrier();
 
+translate([BarrelMinX()+AR15_BoltLockLengthDiff(),0,0])
+rotate([0,-90,0])
+AR15_Bolt(teardrop=false,
+          firingPinRetainer=false,
+          extraFiringPin=0,
+          clearance=0);
 
-module AR15BarrelTrunnion(debug=false, $fn=60) {
+AR15Forend(debug=false);
 
-  color("Olive")
-  DebugHalf(enabled=debug)
-  difference() {
-    translate([BarrelX(),0,0])
-    rotate([0,90,0])
-    cylinder(r=ReceiverIR(),
-             h=AR15BarrelExtensionLength()
-              +AR15BarrelExtensionLipLength());
-
-    translate([0,0,0])
-    Barrel(clearance=PipeClearanceLoose(), hollow=false, cutter=true);
-  }
-}
-
-//!scale(25.4) rotate([0,-90,0]) translate([-BarrelX(),0,0])
-AR15BarrelTrunnion();
-
-//*!scale(25.4) rotate([0,90,0]) translate([-FrameFrontMinX(),0,0])
-RemovableFrameFront();
-
-//!scale(25.4) rotate([0,90,0]) translate([-FrameFrontMinX(),0,0])
-RemovableBarrelPivot();
-
-//!scale(25.4) rotate([0,-90,0]) translate([ReceiverLength(),0,0])
-//Tailcap();
+*PipeUpperAssembly(pipeAlpha=0.3,
+                  receiverLength=12,
+                  debug=false);
+                  
+*!scale(25.4)
+rotate([0,-90,0])
+AR15Forend();

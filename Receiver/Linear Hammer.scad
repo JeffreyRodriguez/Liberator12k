@@ -73,7 +73,7 @@ module HammerHead(insertRadius=(RECEIVER_TUBE_ID/2)-DEFAULT_HAMMER_CLEARANCE,
                           length=HammerHeadLength(),
                           chamferRadius=1/16,
                           debug=false, alpha=1, $fn=Resolution(20,60)) {
-  color("Orange", alpha)
+  color("Tan", alpha)
   DebugHalf(enabled=debug) render()
   difference() {
 
@@ -113,7 +113,7 @@ module HammerTail(insertRadius=(RECEIVER_TUBE_ID/2)-DEFAULT_HAMMER_CLEARANCE,
 
   bigHoleChamferRadius = (insertRadius-innerRadius);
 
-  color("Orange", alpha)
+  color("Tan", alpha)
   DebugHalf(enabled=debug) render()
   difference() {
 
@@ -153,7 +153,7 @@ module HammerCompressor(insertRadius=(RECEIVER_TUBE_ID/2)-DEFAULT_HAMMER_CLEARAN
 
   translate([hammerTravel-HammerSpringLength()+0.03125+HammerTailBaseLength()+ManifoldGap(),0,0]) {
 
-    color("Orange", alpha)
+    color("Tan", alpha)
     HammerTail(insertRadius=insertRadius, debug=debug);
 
     color("Beige", alpha)

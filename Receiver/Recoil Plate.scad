@@ -57,24 +57,6 @@ module RecoilPlate(firingPinAngle=0, cutter=false, debug=false) {
   }
 }
 
-module RecoilPlateHousing(firingPinAngle=0,
-                          debug=false, alpha=1) {
-  color("Tomato", alpha)
-  DebugHalf(enabled=debug)
-  difference() {
-    union() {
-      translate([RecoilPlateRearX(),0, 0])
-      children();
-    }
-
-    RecoilPlate(cutter=true);
-
-    rotate([firingPinAngle,0,0])
-    RecoilPlateFiringPinAssembly(cutter=true);
-
-  }
-}
-
 module RecoilPlateTemplate(clearance=0.005, height=0.25) {
   render()
   difference() {

@@ -85,7 +85,7 @@ module FrameSupport(length=1, $fn=Resolution(20,60)) {
 }
 
 module FrameForend(length=FrameForendExtension(), debug=false, alpha=1) {
-  color("DarkOliveGreen", alpha)
+  color("Tan", alpha)
   DebugHalf(enabled=debug) render()
   difference() {
     hull()
@@ -106,10 +106,11 @@ rotate([0,-90,0]) translate([0,0,-FrameBoltZ()])
 FrameForend();
 
 module FrameAssembly(length=FrameUpperBoltLength(),
+                     forendLength=FrameForendExtension(),
                      debug=false, alpha=1) {
   FrameBolts(length=length, debug=debug, alpha=alpha);
 
-  FrameForend();
+  FrameForend(length=forendLength);
 }
 
 FrameAssembly();
