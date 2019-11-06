@@ -110,27 +110,40 @@ module AR15_BoltCamPinTrack(length=2,
                  clearance=0.007,
                  extraFiringPin=0, // Ugly, but it'll do
                  $fn=Resolution(20,60)) {
+    camTrackRadius = (AR15_CamPinSquareOffset()
+                      +AR15_CamPinSquareHeight()+0.05);
     
     // Rectangular portion rotation
-    rotate(AR15_CamPinAngle())
-    translate([0,0,AR15_CamPinOffset()+AR15_CamPinRadius()])
-    rotate([0,90,0])
-    translate([-AR15_CamPinRadius()-clearance,
-               -(AR15_CamPinSquareWidth()/2)-clearance,
-               AR15_CamPinSquareOffset()])
-    cube([AR15_CamPinDiameter()+(clearance*2),
-          AR15_CamPinSquareWidth()+(clearance*2),
-          AR15_CamPinSquareHeight()+clearance]);
-    
     translate([0,0,AR15_CamPinOffset()-clearance])
     linear_extrude(height=AR15_CamPinDiameter()+(clearance*2))
     rotate(AR15_CamPinAngle()/2)
     hull() {
       semicircle(od=(AR15_CamPinSquareOffset()
                     +AR15_CamPinSquareHeight()+0.05)*2,
-                 angle=AR15_CamPinAngle()*2.65,
+                 angle=AR15_CamPinAngle()*2.67,
                  center=true, $fn=60);
       circle(r=AR15_CamPinSquareWidth()/2, $fn=30);
+    }
+    
+    translate([0,0,AR15_CamPinOffset()-camTrackRadius-clearance])
+    intersection() {
+      
+      // Rectangular portion rotation
+      translate([0,0,camTrackRadius/2])
+      linear_extrude(height=camTrackRadius)
+      rotate(AR15_CamPinAngle()/2)
+      hull() {
+        semicircle(od=camTrackRadius*2,
+                   angle=AR15_CamPinAngle()*2.67,
+                   center=true, $fn=60);
+        circle(r=AR15_CamPinSquareWidth()/2, $fn=30);
+      }
+      
+      // Taper
+      cylinder(r1=0,
+               r2=camTrackRadius,
+               h=camTrackRadius,
+               $fn=60);
     }
   
     //
