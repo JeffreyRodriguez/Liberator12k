@@ -60,9 +60,11 @@ module ActionRodBolt(angle=0,
   color("SteelBlue")
   translate([ActionRodMinX()+(WallActionRod()*2),
              0,
-             ActionRodOffset()-(ActionRodWidth()/2)])
+             ActionRodOffset()])
+  rotate([angle,0,0])
+  translate([0, 0, -(ActionRodWidth()/2)-ManifoldGap()])
   Bolt(bolt=ActionRodBolt(), head="socket",
-       capOrientation=false, length=ActionRodWidth()+length,
+       capOrientation=false, length=ActionRodWidth()+ManifoldGap()+length,
        clearance=clear,
        teardrop=cutter, teardropAngle=teardropAngle);
 
