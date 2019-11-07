@@ -178,7 +178,25 @@ module ReceiverFront(width=2.25, frameLength=ReceiverFrontLength(),
   }
 }
 
-echo ("Wing offset", ChargingRodOffset()+0.07);
+module ReceiverGuide(od=RECEIVER_TUBE_OD,
+               id=RECEIVER_TUBE_ID,
+               length=0.5,
+               clearance=RodClearanceLoose(),
+               bolt=true,
+               cutter=false, debug=false) {
+
+  color("Tan") DebugHalf(enabled=debug) render()
+  union() {
+
+    // Tower
+    translate([0,-0.5/2,0])
+    ChamferedCube([length, 0.5, 1.25], r=1/16);
+
+    // Top wings
+    translate([0,-1/2,1.005])
+    ChamferedCube([length, 1, 0.25], r=1/16);
+  }
+}
 
 module Charger(od=RECEIVER_TUBE_OD,
                id=RECEIVER_TUBE_ID,
@@ -262,6 +280,10 @@ module PipeUpperAssembly(od=RECEIVER_TUBE_OD,
 
 scale(25.4) {
   if (_RENDER == "Assembly") {
+    
+    translate([RecoilPlateRearX(),0,0])
+    mirror([1,0,0])
+    ReceiverGuide();
     
     FrameAssembly();
 
