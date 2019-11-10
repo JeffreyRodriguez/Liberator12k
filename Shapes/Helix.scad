@@ -24,7 +24,8 @@ module HelixShape2D(radius, depth, cutter_angle, width,
 
 module HelixSegment(radius=2, depth=3/16, width=0.25,
                     angle=360, twist_rate=1,
-                    top=0.125, bottom=0.125) {
+                    top=0.125, bottom=0.125,
+                    teardropTop=true, teardropBottom=true) {
 
   diameter   = radius*2;
   circumf    = PI * diameter;
@@ -36,6 +37,7 @@ module HelixSegment(radius=2, depth=3/16, width=0.25,
   echo("Helix segment: ", segment);
   
   height       = radius/twist_rate;
+  twistedWidth = width/twist_rate;
   cutter_angle = 360*(width*sqrt(2)/circumf)*twist_rate;
       
   intersection() {
@@ -52,31 +54,47 @@ module HelixSegment(radius=2, depth=3/16, width=0.25,
       // Top
       if (top > 0)
       rotate(-angle)
-      translate([0,0,height-ManifoldGap()])
+      translate([radius-depth,-twistedWidth/2,height-ManifoldGap()])
       linear_extrude(height=top+ManifoldGap())
-      translate([radius-depth,-width/2/twist_rate])
-      square([depth*2, width/twist_rate]);
-                 
+      square([depth*2, twistedWidth]);
+      
+      if (teardropTop)
+      rotate(-angle)
+      translate([radius-depth,-twistedWidth/2,height+top-ManifoldGap()])
+      rotate(90)
+      rotate([90,0,0])
+      linear_extrude(height=depth*2)
+      polygon([[0,0], [twistedWidth,0],
+               [(twistedWidth)/2,(twistedWidth/2)*sqrt(2)]]);
+      
       // Bottom
       if (bottom > 0)
-      translate([0,0,-bottom])
+      translate([radius-depth,-twistedWidth/2,-bottom])
       linear_extrude(height=bottom+ManifoldGap())
-      translate([radius-depth,-width/2/twist_rate])
-      square([depth*2, width/twist_rate]);
+      square([depth*2, twistedWidth]);
+      
+      if (teardropBottom)
+      translate([radius-depth,twistedWidth/2,-bottom+ManifoldGap()])
+      rotate(-90)
+      rotate([-90,0,0])
+      linear_extrude(height=depth*2)
+      polygon([[0,0], [twistedWidth,0],
+               [(twistedWidth)/2,(twistedWidth/2)*sqrt(2)]]);
+      
     }
     
-    translate([0,0,-bottom])
-    linear_extrude(height=height+bottom+top)
+    translate([0,0,-bottom-(twistedWidth*sqrt(2)/2)])
+    linear_extrude(height=height+bottom+top+(twistedWidth*sqrt(2)))
     hull() {
       
       // Top profile
       rotate(-angle)
       translate([radius-depth,-width/2/twist_rate])
-      square([depth*2, width/twist_rate]);
+      square([depth*2, twistedWidth]);
 
       // Bottom profile
       translate([radius-depth,-width/2/twist_rate])
-      square([depth*2, width/twist_rate]);
+      square([depth*2, twistedWidth]);
     }
   }
 }
@@ -84,9 +102,11 @@ module HelixSegment(radius=2, depth=3/16, width=0.25,
 radius = 0.25+(2*$t);
 
 difference() {
-  cylinder(r=radius, h=(radius/TWIST_RATE)+0.25, $fn=50);
+  cylinder(r=radius, h=(radius/TWIST_RATE)+0.5, $fn=50);
   
-  translate([0,0,0.125])
+  translate([0,0,0.25])
   HelixSegment(radius=radius, angle=ANGLE,
-                twist_rate=TWIST_RATE);
+               twist_rate=TWIST_RATE,
+               top=0, bottom=0,
+               teardropTop=true, teardropBottom=true);
 }
