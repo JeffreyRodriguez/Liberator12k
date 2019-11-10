@@ -1,2 +1,3 @@
-function RadiusToCircumference(radius) = PI * pow(radius, 2);
-function DiameterToCircumference(diameter) = PI * pow(diameter/2, 2);
+function Circumference(radius) = PI * (2*radius);
+function CircleArea(radius) = PI * pow(radius, 2);
+function ArcLength(angle, radius) = angle * (PI/180) * radius;
