@@ -76,7 +76,7 @@ module ReceiverBolts(teardrop=false,
   rotate([0,90,0]) {
     if (cutter)
     cylinder(r1=0.1875, r2=0, h=0.1875*3, $fn=20);
-    
+
     NutAndBolt(bolt=ReceiverBolt(), boltLength=ReceiverCouplingLength(),
                head="flat", nut="heatset", capOrientation=true,
                teardrop=cutter&&teardrop,
@@ -116,11 +116,11 @@ module ReceiverCoupling(od=RECEIVER_TUBE_OD,
                      abs(LowerOffsetZ())+FrameBoltY()],
                     r=1/16);
     }
-    
+
     FrameBolts(cutter=true);
 
     ReceiverTube(od=od, id=id, cutter=true);
-    
+
     ReceiverBolts(cutter=true);
 
     // Lower lug cutout
@@ -157,13 +157,13 @@ module ReceiverFront(width=2.25, frameLength=ReceiverFrontLength(),
       translate([-ReceiverFrontLength(),0, 0]){
         hull()
         FrameSupport(length=frameLength);
-        
+
         translate([0,-width/2, LowerOffsetZ()])
         ChamferedCube([ReceiverFrontLength(),
                        width,
                        abs(LowerOffsetZ())+FrameBoltZ()],
                       r=1/16);
-        
+
         children();
       }
     }
@@ -171,7 +171,7 @@ module ReceiverFront(width=2.25, frameLength=ReceiverFrontLength(),
     // Picatinny rail cutout
     translate([-ReceiverFrontLength(), -UnitsMetric(15.6/2), FrameTopZ()-0.125])
     cube([frameLength+ManifoldGap(2), UnitsMetric(15.6), 0.25]);
-    
+
     FrameBolts(cutter=true);
 
     ReceiverBolts(cutter=true, teardrop=false);
@@ -181,20 +181,21 @@ module ReceiverFront(width=2.25, frameLength=ReceiverFrontLength(),
 module ReceiverGuide(od=RECEIVER_TUBE_OD,
                id=RECEIVER_TUBE_ID,
                length=0.5,
+               height=0.25,
                clearance=RodClearanceLoose(),
                bolt=true,
                cutter=false, debug=false) {
 
-  color("Tan") DebugHalf(enabled=debug) render()
+  color("OliveDrab") DebugHalf(enabled=debug) render()
   union() {
 
     // Tower
     translate([0,-0.5/2,0])
-    ChamferedCube([length, 0.5, 1.25], r=1/16);
+    ChamferedCube([length, 0.5, 1 + height], r=1/16);
 
     // Top wings
     translate([0,-1/2,1.005])
-    ChamferedCube([length, 1, 0.25], r=1/16);
+    ChamferedCube([length, 1, height], r=1/16);
   }
 }
 
@@ -280,23 +281,23 @@ module PipeUpperAssembly(od=RECEIVER_TUBE_OD,
 
 scale(25.4) {
   if (_RENDER == "Assembly") {
-    
+
     translate([RecoilPlateRearX(),0,0])
     mirror([1,0,0])
     ReceiverGuide();
-    
+
     FrameAssembly();
 
     PipeUpperAssembly(pipeAlpha=0.3,
                       receiverLength=12,
                       debug=false);
-    
+
     ReceiverFront(alpha=0.25);
   }
 
   if (_RENDER == "Buttstock")
     Buttstock_print(od=RECEIVER_TUBE_OD);
-  
+
   if (_RENDER == "FrameForend")
     FrameForend_print();
 
@@ -330,7 +331,7 @@ scale(25.4) {
 
   if (_RENDER == "TriggerRight")
     TriggerRight_print();
-  
+
   if (_RENDER == "TriggerMiddle")
     TriggerMiddle_print();
 
