@@ -37,6 +37,7 @@ function AR15_FiringPinRetainerOffset() = 0.35; // From the back of the bolt
 module AR15_Bolt(camPin=true, firingPinRetainer=true,
                  clearance=0.007,
                  extraFiringPin=0, // Ugly, but it'll do
+                 extraCamPinSquareHeight=0,
                  teardrop=true, $fn=Resolution(20,60)) {
   clear2 = clearance*2;
 
@@ -50,16 +51,16 @@ module AR15_Bolt(camPin=true, firingPinRetainer=true,
     if (camPin)
     translate([0,0,AR15_CamPinOffset()+AR15_CamPinRadius()])
     rotate([0,90,0]) {
-    
+
       // Rectangular potion
       translate([-AR15_CamPinRadius()-clearance,
                  -(AR15_CamPinSquareWidth()/2)-clearance,
                  AR15_CamPinSquareOffset()])
       cube([AR15_CamPinDiameter()+(clearance*2),
             AR15_CamPinSquareWidth()+(clearance*2),
-            AR15_CamPinSquareHeight()+clearance]);
-    
-    
+            AR15_CamPinSquareHeight()+clearance+extraCamPinSquareHeight]);
+
+
       linear_extrude(height=AR15_CamPinSquareOffset()+AR15_CamPinSquareHeight()+ManifoldGap())
       if (teardrop)
         Teardrop(r=AR15_CamPinRadius()+clearance);
@@ -112,7 +113,7 @@ module AR15_BoltCamPinTrack(length=2,
                  $fn=Resolution(20,60)) {
     camTrackRadius = (AR15_CamPinSquareOffset()
                       +AR15_CamPinSquareHeight()+0.05);
-    
+
     // Rectangular portion rotation
     translate([0,0,AR15_CamPinOffset()-clearance])
     linear_extrude(height=AR15_CamPinDiameter()+(clearance*2))
@@ -124,10 +125,10 @@ module AR15_BoltCamPinTrack(length=2,
                  center=true, $fn=60);
       circle(r=AR15_CamPinSquareWidth()/2, $fn=30);
     }
-    
+
     translate([0,0,AR15_CamPinOffset()-camTrackRadius-clearance])
     intersection() {
-      
+
       // Rectangular portion rotation
       translate([0,0,camTrackRadius/2])
       linear_extrude(height=camTrackRadius)
@@ -138,14 +139,14 @@ module AR15_BoltCamPinTrack(length=2,
                    center=true, $fn=60);
         circle(r=AR15_CamPinSquareWidth()/2, $fn=30);
       }
-      
+
       // Taper
       cylinder(r1=0,
                r2=camTrackRadius,
                h=camTrackRadius,
                $fn=60);
     }
-  
+
     //
     // Linear portion
     //
