@@ -73,7 +73,7 @@ module ActionRodBolt(angle=0,
 
 module ActionRod(length=ActionRodLength(),
                  travel=ActionRodTravel(),
-                 clearance=0.005, cutter=false,
+                 clearance=0.008, cutter=false,
                  debug=false) {
   clear = cutter?clearance:0;
   clear2= clear*2;
