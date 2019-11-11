@@ -38,6 +38,7 @@ module AR15_Bolt(camPin=true, firingPinRetainer=true,
                  clearance=0.007,
                  extraFiringPin=0, // Ugly, but it'll do
                  extraCamPinSquareHeight=0,
+                 extraCamPinSquareLength=0,
                  teardrop=true, $fn=Resolution(20,60)) {
   clear2 = clearance*2;
 
@@ -56,7 +57,7 @@ module AR15_Bolt(camPin=true, firingPinRetainer=true,
       translate([-AR15_CamPinRadius()-clearance,
                  -(AR15_CamPinSquareWidth()/2)-clearance,
                  AR15_CamPinSquareOffset()])
-      cube([AR15_CamPinDiameter()+(clearance*2),
+      cube([AR15_CamPinDiameter()+extraCamPinSquareLength+(clearance*2),
             AR15_CamPinSquareWidth()+(clearance*2),
             AR15_CamPinSquareHeight()+clearance+extraCamPinSquareHeight]);
 
