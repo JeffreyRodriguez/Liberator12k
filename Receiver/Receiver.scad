@@ -43,6 +43,7 @@ function FrameBoltExtension() = 0.5;
 function ReceiverFrontLength() = 0.5;
 function ReceiverCouplingLength() = 1;
 function ReceiverLength() = 12;
+function ReceiverSlotWidth() = 0.75;
 
 // Calculated: Measurements
 function ReceiverID()     = RECEIVER_TUBE_ID;
@@ -64,28 +65,28 @@ function CouplingBolt() = Spec_Bolt8_32();
 function ReceiverBoltZ() = LowerOffsetZ()+0.25;
 function ReceiverBoltY() = 0.875;
 
-module CouplingBolts(teardrop=false, boltHead="flat",
+module CouplingBolts(teardrop=false, boltHead="flat", extension=0.5,
               debug=false, clearance=0.005, cutter=false) {
 
   color("CornflowerBlue")
   DebugHalf(enabled=debug)
+  for (NUT = ["heatset", "hex"])
   for (Y = [-1,1])
-  translate([-ReceiverFrontLength()+FrameBoltExtension()+ManifoldGap(),
+  translate([RecoilPlateRearX()-ReceiverCouplingLength()-ManifoldGap(),
              ReceiverBoltY()*Y,
              ReceiverBoltZ()])
-  rotate([0,90,0]) {
-    if (cutter)
-    cylinder(r1=0.1875, r2=0, h=0.1875*3, $fn=20);
-
-    NutAndBolt(bolt=CouplingBolt(), boltLength=ReceiverCouplingLength(),
-               head=boltHead, nut="heatset", capOrientation=true,
-               teardrop=cutter&&teardrop,
-               clearance=cutter?clearance:0);
-  }
+  rotate([0,90,0])
+  NutAndBolt(bolt=CouplingBolt(),
+             boltLength=ReceiverCouplingLength()+extension+ManifoldGap(2),
+             head=boltHead,
+             nut=NUT, nutBackset=(NUT=="heatset"?0.125:0),
+             teardrop=cutter&&teardrop,
+             clearance=cutter?clearance:0);
 }
 
 module ReceiverCoupling(od=RECEIVER_TUBE_OD,
                         id=RECEIVER_TUBE_ID,
+                        clearance=0.01,
                         debug=false, alpha=1) {
   length = FrameUpperRearExtension()+RecoilPlateRearX();
 
@@ -108,11 +109,24 @@ module ReceiverCoupling(od=RECEIVER_TUBE_OD,
                      FrameBoltZ()],
                     r=1/16);
 
-      // Lower Frame
+      // Around the receiver pipe
+      translate([RecoilPlateRearX(),0,0])
+      rotate([0,-90,0])
+      ChamferedCylinder(r1=2.25/2, r2=1/16, h=length, $fn=Resolution(30,60));
+
+      // Coupling bolt support
       translate([RecoilPlateRearX(),-(2.25/2),LowerOffsetZ()])
       mirror([1,0,0])
       ChamferedCube([ReceiverCouplingLength()-ManifoldGap(2),
                      2.25,
+                     abs(LowerOffsetZ())+FrameBoltY()],
+                    r=1/16);
+
+      // Center lug support
+      translate([RecoilPlateRearX(),-(1.5/2),LowerOffsetZ()])
+      mirror([1,0,0])
+      ChamferedCube([length,
+                     1.5,
                      abs(LowerOffsetZ())+FrameBoltY()],
                     r=1/16);
     }
@@ -124,19 +138,12 @@ module ReceiverCoupling(od=RECEIVER_TUBE_OD,
     CouplingBolts(cutter=true);
 
     // Lower lug cutout
-    translate([RecoilPlateRearX()-ReceiverFrontLength(),-(1.256/2),(id/2)/2])
-    mirror([1,0,0])
-    mirror([0,0,1])
-    cube([length+ManifoldGap(),1.256,2]);
-
-
-    // Charger Cutout
-    translate([RecoilPlateRearX()+ManifoldGap(),-(0.52/2),(id/2)/2])
-    mirror([1,0,0])
-    cube([length+ManifoldGap(2),0.52,2]);
-
-    // Charger Cutout Wide Top
-    translate([RecoilPlateRearX()+ManifoldGap(),-(1.02/2),ChargingRodOffset()])
+    translate([-LowerMaxX()+RecoilPlateRearX(),0,0])
+    PipeLugCenter(cutter=true);
+    
+    // Slot Cutout
+    translate([RecoilPlateRearX()+ManifoldGap(),
+               -(ReceiverSlotWidth()/2)-clearance,0])
     mirror([1,0,0])
     cube([length+ManifoldGap(2),1.02,2]);
   }
@@ -179,76 +186,6 @@ module ReceiverFront(width=2.25, frameLength=ReceiverFrontLength(),
   }
 }
 
-module ReceiverGuide(od=RECEIVER_TUBE_OD,
-               id=RECEIVER_TUBE_ID,
-               length=0.5,
-               height=0.25,
-               clearance=RodClearanceLoose(),
-               bolt=true,
-               cutter=false, debug=false) {
-
-  color("OliveDrab") DebugHalf(enabled=debug) render()
-  union() {
-
-    // Tower
-    translate([0,-0.5/2,0])
-    ChamferedCube([length, 0.5, 1 + height], r=1/16);
-
-    // Top wings
-    translate([0,-1/2,1.005])
-    ChamferedCube([length, 1, height], r=1/16);
-  }
-}
-
-module Charger(od=RECEIVER_TUBE_OD,
-               id=RECEIVER_TUBE_ID,
-               clearance=RodClearanceLoose(),
-               bolt=true,
-               cutter=false, debug=false) {
-
-  color("Tan") DebugHalf(enabled=debug) render() {
-    difference() {
-
-      // Charging Pusher
-      union() {
-
-        // Tower
-        translate([RecoilPlateRearX(),-0.5/2,0.375])
-        mirror([1,0,0])
-        ChamferedCube([ChargerTowerLength(), 0.5, ChargingRodOffset()-0.25], r=1/32);
-
-        // Top wings
-        translate([RecoilPlateRearX(),-1/2,ChargingRodOffset()+0.07])// TODO: FIX magic number 0.07
-        mirror([1,0,0])
-        ChamferedCube([ChargerTowerLength(), 1, 0.25], r=1/32);
-
-        // Charging Pusher Wide Base
-        translate([RecoilPlateRearX(),0,0])
-        intersection() {
-
-          translate([0,-0.5,0.375])
-          mirror([1,0,0])
-          ChamferedCube([1.125, 1, (id/2)-0.375], r=1/32);
-
-          // Rounded base
-          rotate([0,-90,0])
-          cylinder(r=(id/2)-0.02, h=1.125, $fn=Resolution(30,60));
-        }
-      }
-
-      translate([RecoilPlateRearX()-0.625,-0.1875,0])
-      mirror([1,0,0])
-      ChamferedCube([1, 0.375, (od/2)], r=1/16);
-
-      translate([ChargerTravel(),0,0])
-      ChargingRod(cutter=true, clearance=RodClearanceSnug());
-
-      ChargingRodBolts(cutter=true, teardrop=true);
-
-    }
-  }
-}
-
 module Receiver(od=RECEIVER_TUBE_OD,
                 id=RECEIVER_TUBE_ID,
                 receiverLength=ReceiverLength(),
@@ -264,7 +201,7 @@ module Receiver(od=RECEIVER_TUBE_OD,
   translate([RecoilPlateRearX()-receiverLength,0,0])
   ButtstockAssembly(od=od, alpha=buttstockAlpha, debug=debug);
 
-  translate([RecoilPlateRearX()-LowerMaxX()-ReceiverFrontLength(),0,0]) {
+  translate([RecoilPlateRearX()-LowerMaxX(),0,0]) {
 
     if (lower)
     translate([0,0,LowerOffsetZ()])
@@ -283,10 +220,6 @@ module Receiver(od=RECEIVER_TUBE_OD,
 
 scale(25.4) {
   if (_RENDER == "Assembly") {
-
-    translate([RecoilPlateRearX(),0,0])
-    mirror([1,0,0])
-    ReceiverGuide();
 
     FrameAssembly();
 
