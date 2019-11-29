@@ -63,10 +63,10 @@ module ReceiverLugBolts(boltSpec=Spec_BoltM4(),
              teardrop=teardrop, teardropAngle=teardropAngle,
              clearance=(cutter?clearance:0), capOrientation=true,
              capHeightExtra=cutter ? 1 : 0,
-             nutHeightExtra=cutter ? 1 : 0, nutBackset=0.05);
+             nutHeightExtra=cutter ? 1 : 0);
 }
 
-module ReceiverLugRear(extraTop=ManifoldGap(),
+module ReceiverLugRear(width=UnitsImperial(0.5), extraTop=ManifoldGap(),
                        cutter=false, clearVertical=false,
                        teardrop=true, teardropAngle=90, hole=true) {
 
@@ -74,7 +74,7 @@ module ReceiverLugRear(extraTop=ManifoldGap(),
   render()
   difference() {
     translate([ReceiverLugRearMinX(),0,ReceiverLugRearZ()])
-    T_Lug(length=ReceiverLugRearLength(),
+    T_Lug(width=width, length=ReceiverLugRearLength(),
           height=abs(ReceiverLugRearZ())+extraTop,
           cutter=cutter, clearVertical=clearVertical);
 
@@ -85,13 +85,13 @@ module ReceiverLugRear(extraTop=ManifoldGap(),
   }
 }
 
-module ReceiverLugFront(extraTop=ManifoldGap(),
+module ReceiverLugFront(width=UnitsImperial(0.5), extraTop=ManifoldGap(),
                         cutter=false, clearVertical=false) {
   color("DarkOrange")
   render()
   translate([ReceiverLugFrontMaxX(),0,ReceiverLugFrontZ()])
   mirror([1,0,0])
-  T_Lug(length=ReceiverLugFrontLength(), tabWidth=1.25,
+  T_Lug(width=width, length=ReceiverLugFrontLength(), tabWidth=1.25,
         height=abs(ReceiverLugFrontZ())+extraTop,
         clearVertical=clearVertical,
         cutter=cutter);
