@@ -173,9 +173,6 @@ module ChargingPump(innerRadius=1.1/2,
 }
 
 
-
-
-
 module ChargingPumpAssembly(animationFactor=ChargerAnimationFactor(),
                             length=ChargingRodLength(), minX=ChargingRodMinX(),
                                pipeAlpha=1, debug=false) {
@@ -186,7 +183,7 @@ module ChargingPumpAssembly(animationFactor=ChargerAnimationFactor(),
 
     ChargingRod(length=length, minX=minX, debug=debug);
 
-    *Charger(debug=debug);
+    Charger(debug=debug);
 
     ChargingPump(debug=debug, alpha=1);
   }
@@ -199,7 +196,6 @@ Pipe(pipe=Spec_PipeThreeQuarterInch(), hollow=true, length=18);
 
 ChargingPumpAssembly(debug=false);
 
-RecoilPlateHousing();
 RecoilPlateFiringPinAssembly();
 
 RecoilPlate();

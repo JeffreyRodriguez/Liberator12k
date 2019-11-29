@@ -41,8 +41,6 @@ function ActionRodTravel() = 3; // Rough default
  extend into the part that holds it? */
 function ActionRodStaticLength() = 0.5;
 
-function ActionRodOffset() =  0.875+RodRadius(ActionRod());
-
 // Settings: Walls
 function WallActionRod() = 1/8;
 
@@ -58,9 +56,6 @@ module ActionRodBolt(angle=0,
   clear = cutter?clearance:0;
 
   color("SteelBlue")
-  translate([ActionRodMinX()+(WallActionRod()*2),
-             0,
-             ActionRodOffset()])
   rotate([angle,0,0])
   translate([0, 0, -(ActionRodWidth()/2)-ManifoldGap()])
   Bolt(bolt=ActionRodBolt(), head="socket",
@@ -79,7 +74,6 @@ module ActionRod(length=ActionRodLength(),
   clear2= clear*2;
 
   color("Silver")
-  translate([ActionRodMinX(),0,ActionRodOffset()])
   translate([0,-(ActionRodWidth()/2)-clear,-(ActionRodWidth()/2)-clear])
   cube([length, ActionRodWidth()+clear2, ActionRodWidth()+clear2]);
 }

@@ -52,7 +52,7 @@ function HammerTailInnerDiameter() = 1.07;
 function HammerTailInnerRadius() = (HammerTailInnerDiameter()/2);
 
 function HammerTravelFactor() = Animate(ANIMATION_STEP_FIRE)
-                                    - SubAnimate(ANIMATION_STEP_CHARGE, start=0.18, end=0.36);
+                              - SubAnimate(ANIMATION_STEP_CHARGE, start=0.18, end=0.36);
 
 module HammerBolt(cutter=false, clearance=0.004) {
   translate([HammerCollarWidth()+ManifoldGap(2),0,0])

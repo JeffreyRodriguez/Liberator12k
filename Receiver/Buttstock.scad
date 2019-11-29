@@ -54,7 +54,7 @@ module ButtstockBolt(receiverRadius=RECEIVER_TUBE_OD/2,
 
 module Buttstock(od=RECEIVER_TUBE_OD,
                  debug=false, alpha=1) {
-  receiverRadius=od/2;  
+  receiverRadius=od/2;
   chamferRadius = 1/16;
   length = 4;
   base = 0.375;
@@ -62,8 +62,8 @@ module Buttstock(od=RECEIVER_TUBE_OD,
   ribDepth=0.1875;
   extensionHull = ButtstockSleeveLength();
   outsideRadius = receiverRadius+ButtstockWall();
-  
-  
+
+
 
   color("Tan", alpha)
   DebugHalf(enabled=debug) render()
@@ -89,7 +89,7 @@ module Buttstock(od=RECEIVER_TUBE_OD,
 
     translate([-baseHeight,0,0])
     rotate([0,90,0]) {
-      
+
       // Utility slot
       translate([outsideRadius+ButtstockWall(), -0.51/2, base])
       ChamferedCube([length, 0.51, baseHeight+extensionHull], r=chamferRadius);
@@ -128,10 +128,10 @@ module Buttstock_print(od=RECEIVER_TUBE_OD)
 rotate([0,-90,0]) translate([ButtstockHeight(),0,0])
 Buttstock(od=od);
 
-module ButtstockAssembly(od=RECEIVER_TUBE_OD, alpha=1) {  
+module ButtstockAssembly(od=RECEIVER_TUBE_OD, debug=false, alpha=1) {
   ButtstockBolt();
 
-  Buttstock(alpha=alpha);
+  Buttstock(debug=debug, alpha=alpha);
 }
 
 

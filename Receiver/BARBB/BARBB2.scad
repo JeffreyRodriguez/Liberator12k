@@ -373,7 +373,7 @@ translate([AR15BarrelGasLength()+2,0,0]) {
     ChargingPump();
   }
   
-  PipeUpperAssembly(pipeAlpha=0.5, pipeOffsetX=0,
+  Receiver(pipeAlpha=0.5, pipeOffsetX=0,
                     receiverLength=15,
                     frame=true,
                     stock=false, tailcap=false,

@@ -158,7 +158,7 @@ module RevolverRecoilPlateHousing(debug=false) {
           FrameSupport(length=abs(RecoilPlateRearX()));
         }
     }
-  
+
     RecoilPlate(cutter=true);
 
     RecoilPlateFiringPinAssembly(cutter=true);
@@ -674,7 +674,7 @@ module RevolverForend(debug=false, alpha=1, $fn=Resolution(30,100)) {
 module RevolverFrameAssembly(debug=false) {
 
   FrameBolts(cutter=false);
-  ReceiverBolts(cutter=false);
+  CouplingBolts(cutter=false);
 }
 
 // 1" OD (4130 Tube) chambers
@@ -737,7 +737,7 @@ module RevolverShotgunAssembly(stock=true,
     }
   }
 
-  PipeUpperAssembly(pipeAlpha=pipeAlpha,
+  Receiver(pipeAlpha=pipeAlpha,
                     debug=false);
 }
 
@@ -753,7 +753,7 @@ FrameAssembly();
 RecoilPlateFiringPinAssembly();
 
 RecoilPlate();
-                       
+
 Charger();
 
 

@@ -16,7 +16,6 @@ use <../Lower/Receiver Lugs.scad>;
 use <../Lower/Lower.scad>;
 use <../Lower/Trigger.scad>;
 use <../../Receiver/Magwells/AR15 Magwell.scad>;
-use <../Tube/Tube Upper.scad>;
 
 $fn=60;
 
@@ -731,7 +730,7 @@ module BARBB_Bipod(topDiameter=tube_width+(tubeWall*2), bottomDiameter=1,
         rotate([0,-90,0])
         translate([0, -topDiameter/2,-ManifoldGap()])
         ChamferedCube([tube_width+(tubeWall*2), tube_width+(tubeWall*2), length+ManifoldGap()],
-                      chamferRadius=chamferRadius);
+                      r=chamferRadius);
         
         // Bipod Leg Support
         translate([-length/2,0,0])

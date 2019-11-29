@@ -4,6 +4,7 @@ use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
 use <../Meta/Debug.scad>;
 use <../Meta/Resolution.scad>;
+use <../Meta/RenderIf.scad>;
 
 use <../Shapes/Chamfer.scad>;
 use <../Shapes/Semicircle.scad>;
@@ -34,7 +35,7 @@ function FrameUpperBoltLength() = 10;
 
 // Settings: Vitamins
 function FrameUpperBolt() = Spec_BoltOneHalf();
-function FrameBolt() = Spec_Bolt8_32();
+function CouplingBolt() = Spec_Bolt8_32();
 
 // Shorthand: Measurements
 function FrameUpperBoltRadius(clearance=0)
@@ -44,7 +45,7 @@ function FrameUpperBoltDiameter(clearance=0)
     = BoltDiameter(FrameUpperBolt(), clearance);
 
 // Settings: Positions
-function FrameBoltZ() = 1.39;
+function FrameBoltZ() = 1.5;
 function FrameBoltY() = 1;
 function FrameTopZ() = FrameBoltZ()
                           + FrameUpperBoltRadius()
@@ -67,7 +68,7 @@ module FrameBolts(length=FrameUpperBoltLength(),
               debug=false, cutter=false, clearance=0.005, alpha=1) {
   clear = cutter ? clearance : 0;
 
-  color("Silver", alpha)
+  color("Silver", alpha) RenderIf(!cutter)
   DebugHalf(enabled=debug) {
     FrameBoltIterator()
     NutAndBolt(bolt=FrameUpperBolt(), boltLength=length,

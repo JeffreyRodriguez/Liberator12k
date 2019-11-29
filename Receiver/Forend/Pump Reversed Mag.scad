@@ -193,7 +193,7 @@ translate([BarrelTravel()*(Animate(ANIMATION_STEP_UNLOAD)-Animate(ANIMATION_STEP
 
 PumpUpper(alpha=0.75, debug=false);
 
-PipeUpperAssembly();
+Receiver();
 
 
 $t=0.75;

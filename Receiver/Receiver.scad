@@ -58,13 +58,13 @@ function HammerTravel() = LowerMaxX() + ReceiverFrontLength()
 echo("HammerTravel", HammerTravel());
 
 // Settings: Vitamins
-function ReceiverBolt() = Spec_Bolt8_32();
+function CouplingBolt() = Spec_Bolt8_32();
 
 // Settings: Positions
 function ReceiverBoltZ() = LowerOffsetZ()+0.25;
 function ReceiverBoltY() = 0.875;
 
-module ReceiverBolts(teardrop=false,
+module CouplingBolts(teardrop=false, boltHead="flat",
               debug=false, clearance=0.005, cutter=false) {
 
   color("CornflowerBlue")
@@ -77,8 +77,8 @@ module ReceiverBolts(teardrop=false,
     if (cutter)
     cylinder(r1=0.1875, r2=0, h=0.1875*3, $fn=20);
 
-    NutAndBolt(bolt=ReceiverBolt(), boltLength=ReceiverCouplingLength(),
-               head="flat", nut="heatset", capOrientation=true,
+    NutAndBolt(bolt=CouplingBolt(), boltLength=ReceiverCouplingLength(),
+               head=boltHead, nut="heatset", capOrientation=true,
                teardrop=cutter&&teardrop,
                clearance=cutter?clearance:0);
   }
@@ -101,11 +101,11 @@ module ReceiverCoupling(od=RECEIVER_TUBE_OD,
       FrameSupport(length=length);
 
       // Join bolt wall and pipe
-      translate([RecoilPlateRearX(),-(2/2),(id/2)/2])
+      translate([RecoilPlateRearX(),-(2.25/2),0])
       mirror([1,0,0])
       ChamferedCube([length,
-                     2,
-                     FrameBoltZ()-((id/2)/2)],
+                     2.25,
+                     FrameBoltZ()],
                     r=1/16);
 
       // Lower Frame
@@ -121,7 +121,7 @@ module ReceiverCoupling(od=RECEIVER_TUBE_OD,
 
     ReceiverTube(od=od, id=id, cutter=true);
 
-    ReceiverBolts(cutter=true);
+    CouplingBolts(cutter=true);
 
     // Lower lug cutout
     translate([RecoilPlateRearX()-ReceiverFrontLength(),-(1.256/2),(id/2)/2])
@@ -149,6 +149,7 @@ rotate([0,90,0])
 ReceiverCoupling(od=od, id=id);
 
 module ReceiverFront(width=2.25, frameLength=ReceiverFrontLength(),
+                     boltHead="flat",
                      debug=false, alpha=1) {
   color("MediumSlateBlue", alpha)
   DebugHalf(enabled=debug)
@@ -169,12 +170,12 @@ module ReceiverFront(width=2.25, frameLength=ReceiverFrontLength(),
     }
 
     // Picatinny rail cutout
-    translate([-ReceiverFrontLength(), -UnitsMetric(15.6/2), FrameTopZ()-0.125])
-    cube([frameLength+ManifoldGap(2), UnitsMetric(15.6), 0.25]);
+    translate([-ReceiverFrontLength()-FrameUpperRearExtension(), -UnitsMetric(15.6/2), FrameTopZ()-0.125])
+    cube([frameLength+ReceiverFrontLength()+FrameUpperRearExtension()+ManifoldGap(2), UnitsMetric(15.6), 0.25]);
 
     FrameBolts(cutter=true);
 
-    ReceiverBolts(cutter=true, teardrop=false);
+    CouplingBolts(boltHead=boltHead, cutter=true, teardrop=false);
   }
 }
 
@@ -248,23 +249,24 @@ module Charger(od=RECEIVER_TUBE_OD,
   }
 }
 
-module PipeUpperAssembly(od=RECEIVER_TUBE_OD,
-                         id=RECEIVER_TUBE_ID,
-                         receiverLength=ReceiverLength(),
-                         pipeOffsetX=ReceiverFrontLength(),
-                         pipeAlpha=0.5, buttstockAlpha=0.5, frameUpperBoltLength=FrameUpperBoltLength(),
-                         triggerAnimationFactor=TriggerAnimationFactor(),
-                         debug=true) {
+module Receiver(od=RECEIVER_TUBE_OD,
+                id=RECEIVER_TUBE_ID,
+                receiverLength=ReceiverLength(),
+                pipeOffsetX=ReceiverFrontLength(),
+                pipeAlpha=0.5, buttstockAlpha=0.5, frameUpperBoltLength=FrameUpperBoltLength(),
+                triggerAnimationFactor=TriggerAnimationFactor(),
+                lower=true, debug=true) {
 
-  ReceiverBolts();
+  CouplingBolts();
 
-  ReceiverCoupling(od=od, id=id);
+  ReceiverCoupling(od=od, id=id, debug=debug);
 
   translate([RecoilPlateRearX()-receiverLength,0,0])
-  ButtstockAssembly(od=od, alpha=buttstockAlpha);
+  ButtstockAssembly(od=od, alpha=buttstockAlpha, debug=debug);
 
   translate([RecoilPlateRearX()-LowerMaxX()-ReceiverFrontLength(),0,0]) {
 
+    if (lower)
     translate([0,0,LowerOffsetZ()])
     Lower(alpha=1,
           showTrigger=true,
@@ -274,7 +276,7 @@ module PipeUpperAssembly(od=RECEIVER_TUBE_OD,
 
     PipeLugAssembly(od=od, id=id, length=receiverLength,
                     pipeOffsetX=pipeOffsetX,
-                    pipeAlpha=pipeAlpha);
+                    pipeAlpha=pipeAlpha, debug=debug);
 
   }
 }
@@ -288,7 +290,7 @@ scale(25.4) {
 
     FrameAssembly();
 
-    PipeUpperAssembly(pipeAlpha=0.3,
+    Receiver(pipeAlpha=0.3,
                       receiverLength=12,
                       debug=false);
 
