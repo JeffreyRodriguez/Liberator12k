@@ -21,8 +21,6 @@ use <Lower/Receiver Lugs.scad>;
 use <Lower/Trigger.scad>;
 use <Lower/Lower.scad>;
 
-use <Charging Pump.scad>;
-
 // Settings: Lengths
 function FrameForendExtension() = 4.5;
 function FrameUpperRearExtension() = 3.5;
@@ -35,7 +33,6 @@ function FrameUpperBoltLength() = 10;
 
 // Settings: Vitamins
 function FrameUpperBolt() = Spec_BoltOneHalf();
-function CouplingBolt() = Spec_Bolt8_32();
 
 // Shorthand: Measurements
 function FrameUpperBoltRadius(clearance=0)
@@ -97,8 +94,6 @@ module FrameForend(length=FrameForendExtension(), debug=false, alpha=1) {
     cube([length+ManifoldGap(2), UnitsMetric(15.6), 0.25]);
 
     FrameBolts(cutter=true);
-
-    ChargingRod(cutter=true);
   }
 }
 
