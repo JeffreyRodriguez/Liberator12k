@@ -45,8 +45,11 @@ function FrameUpperBoltDiameter(clearance=0)
 function FrameBoltZ() = 1.5;
 function FrameBoltY() = 1;
 function FrameTopZ() = FrameBoltZ()
-                          + FrameUpperBoltRadius()
-                          + WallFrameUpperBolt();
+                     + FrameUpperBoltRadius()
+                     + WallFrameUpperBolt();
+function FrameBottomZ() = FrameBoltZ()
+                        - FrameUpperBoltRadius()
+                        - WallFrameUpperBolt();
 
 // Calculated: Positions
 function FrameUpperBoltExtension() = FrameUpperBoltLength()
