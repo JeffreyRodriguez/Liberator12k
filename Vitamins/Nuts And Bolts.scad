@@ -174,6 +174,7 @@ module NutAndBolt(bolt=Spec_BoltTemplate(), boltLength=1, boltLengthExtra=0,
          capHeightExtra=capHeightExtra,
          clearance=clearance, teardrop=teardrop, teardropAngle=teardropAngle)
 
+    translate([0,0,nutBackset])
     if (nut == "hex") {
       NutHex(bolt, nutHeightExtra=nutHeightExtra, clearance=clearance);
     } else if (nut == "heatset") {
