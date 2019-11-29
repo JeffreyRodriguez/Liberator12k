@@ -60,8 +60,8 @@ module ReceiverTube(od=RECEIVER_TUBE_OD,
 
 module PipeLugFront(od=RECEIVER_TUBE_OD,
                     id=RECEIVER_TUBE_ID,
-                    alpha=1, cutter=false) {
-  color("Gray", alpha=alpha) RenderIf(!cutter)
+                    alpha=1, cutter=false, debug=false) {
+  color("Gray", alpha=alpha) DebugHalf(enabled=debug) RenderIf(!cutter)
   difference() {
     translate([0,0,LowerOffsetZ()])
     ReceiverLugFront(extraTop=-LowerOffsetZ(),
@@ -74,8 +74,8 @@ module PipeLugFront(od=RECEIVER_TUBE_OD,
 
 module PipeLugRear(od=RECEIVER_TUBE_OD,
                    id=RECEIVER_TUBE_ID,
-                   alpha=1, cutter=false) {
-  color("Gray", alpha=alpha) RenderIf(!cutter)
+                   alpha=1, cutter=false, debug=false) {
+  color("Gray", alpha=alpha) DebugHalf(enabled=debug) RenderIf(!cutter)
   difference() {
     translate([0,0,LowerOffsetZ()])
     ReceiverLugRear(extraTop=-LowerOffsetZ(),
@@ -88,8 +88,9 @@ module PipeLugRear(od=RECEIVER_TUBE_OD,
 
 module PipeLugCenter(od=RECEIVER_TUBE_OD,
                      id=RECEIVER_TUBE_ID,
-                     cutter=false, clearance=0.002, alpha=1) {
-  color("DarkGray", alpha=alpha) RenderIf(!cutter)
+                     cutter=false, clearance=0.002,
+                    alpha=1, debug=false) {
+  color("DarkGray", alpha=alpha) DebugHalf(enabled=debug) RenderIf(!cutter)
   difference() {
     union() {
       translate([0,0,LowerOffsetZ()])
@@ -102,7 +103,7 @@ module PipeLugCenter(od=RECEIVER_TUBE_OD,
         TriggerGuard();
 
         translate([ReceiverLugRearMaxX()-1.375,-1])
-        square([LowerMaxX()-ReceiverLugRearMaxX()+1.375,2]);
+        square([LowerMaxX()-ReceiverLugRearMaxX()+1.375-0.5,2]);
       }
     }
 
@@ -121,39 +122,39 @@ module PipeLugCenter(od=RECEIVER_TUBE_OD,
 module PipeLugAssembly(od=RECEIVER_TUBE_OD,
                        id=RECEIVER_TUBE_ID,
                        length=6, pipeAlpha=1, pipeOffsetX=0,
-                       front=true, rear=true, center=true) {
+                       front=true, rear=true, center=true, debug=false) {
 
   if (front)
-  PipeLugFront(od=od, id=id);
+  PipeLugFront(od=od, id=id, debug=debug);
 
   if (rear)
-  PipeLugRear(od=od, id=id);
+  PipeLugRear(od=od, id=id, debug=debug);
 
   if (center)
-  PipeLugCenter(od=od, id=id);
+  PipeLugCenter(od=od, id=id, debug=debug);
 
   if (length > 0)
   translate([pipeOffsetX,0,0])
-  ReceiverTube(od=od, id=id, alpha=pipeAlpha, length=length);
+  ReceiverTube(od=od, id=id, alpha=pipeAlpha, length=length, debug=debug);
 }
 
 module PipeLugFront_print(od=RECEIVER_TUBE_OD,
                           id=RECEIVER_TUBE_ID)
 rotate([0,-90,0])
 translate([-ReceiverLugFrontMinX(),0,ReceiverLugFrontMinX()])
-PipeLugFront();
+PipeLugFront(od=od, id=id);
 
 
 module PipeLugRear_print(od=RECEIVER_TUBE_OD,
                        id=RECEIVER_TUBE_ID)
 rotate([0,90,0])
 translate([-ReceiverLugRearMaxX(),0,-ReceiverLugRearMaxX()])
-PipeLugRear();
+PipeLugRear(od=od, id=id);
 
 module PipeLugCenter_print(od=RECEIVER_TUBE_OD,
                        id=RECEIVER_TUBE_ID)
 translate([0,0,-LowerOffsetZ()])
-PipeLugCenter();
+PipeLugCenter(od=od, id=id);
 
 
 scale(25.4) {
