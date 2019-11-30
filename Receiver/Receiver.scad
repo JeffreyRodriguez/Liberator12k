@@ -32,11 +32,19 @@ use <Firing Pin.scad>;
 /* [What to Render] */
 
 // Assembly is not for printing.
-_RENDER = "Assembly"; // ["Assembly", "Buttstock", "FrameForend", "ReceiverCoupling", "ReceiverLugCenter", "ReceiverLugFront", "ReceiverLugRear", "LowerLeft", "LowerRight", "LowerMiddle", "TriggerLeft", "TriggerRight", "TriggerMiddle", "HammerHead", "HammerTail"]
+_RENDER = "Assembly"; // ["Assembly", "Buttstock", "FrameForend", "ReceiverCoupling", "ReceiverLugCenter", "ReceiverLugFront", "ReceiverLugRear", "LowerLeft", "LowerRight", "LowerMiddle", "TriggerLeft", "TriggerRight", "TriggerMiddle","HammerHead", "HammerTail"]
 
 /* [Receiver Tube] */
 RECEIVER_TUBE_OD = 1.7501;
 RECEIVER_TUBE_ID = 1.5001;
+
+/* [Bolts] */
+COUPLING_BOLT = "#8-32"; // ["M4", "#8-32"]
+COUPLING_BOLT_CLEARANCE = 0.015;
+LOWER_BOLT = "#8-32"; // ["M4", "#8-32"]
+LOWER_BOLT_CLEARANCE = 0.015;
+LOWER_BOLT_HEAD = "flat"; // ["socket", "flat"]
+LOWER_BOLT_NUT = "heatset"; // ["hex", "heatset"]
 
 // Settings: Lengths
 function FrameBoltExtension() = 0.5;
@@ -59,7 +67,12 @@ function HammerTravel() = LowerMaxX() + ReceiverFrontLength()
 echo("HammerTravel", HammerTravel());
 
 // Settings: Vitamins
-function CouplingBolt() = Spec_Bolt8_32();
+function CouplingBolt() = BoltSpec(COUPLING_BOLT);
+assert(CouplingBolt(), "CouplingBolt() is undefined. Unknown COUPLING_BOLT?");
+
+function LowerBolt() = BoltSpec(LOWER_BOLT);
+assert(LowerBolt(), "LowerBolt() is undefined. Unknown LOWER_BOLT?");
+
 
 // Settings: Positions
 function ReceiverBoltZ() = LowerOffsetZ()+0.25;
@@ -140,12 +153,12 @@ module ReceiverCoupling(od=RECEIVER_TUBE_OD,
     // Lower lug cutout
     translate([-LowerMaxX()+RecoilPlateRearX(),0,0])
     PipeLugCenter(cutter=true);
-    
+
     // Slot Cutout
     translate([RecoilPlateRearX()+ManifoldGap(),
                -(ReceiverSlotWidth()/2)-clearance,0])
     mirror([1,0,0])
-    cube([length+ManifoldGap(2),1.02,2]);
+    cube([length+ManifoldGap(2),ReceiverSlotWidth()+(clearance*2),2]);
   }
 }
 
@@ -189,10 +202,15 @@ module ReceiverFront(width=2.25, frameLength=ReceiverFrontLength(),
 module Receiver(od=RECEIVER_TUBE_OD,
                 id=RECEIVER_TUBE_ID,
                 receiverLength=ReceiverLength(),
-                pipeOffsetX=ReceiverFrontLength(),
-                pipeAlpha=0.5, buttstockAlpha=0.5, frameUpperBoltLength=FrameUpperBoltLength(),
+                pipeOffsetX=0,
+                pipeAlpha=0.5, buttstockAlpha=0.5,
+                frameUpperBoltLength=FrameUpperBoltLength(),
                 triggerAnimationFactor=TriggerAnimationFactor(),
-                lower=true, debug=true) {
+                lower=true,
+                lowerBolt=LowerBolt(),
+                lowerBoltHead=LOWER_BOLT_HEAD,
+                lowerBoltNut=LOWER_BOLT_NUT,
+                debug=true) {
 
   CouplingBolts();
 
@@ -205,14 +223,14 @@ module Receiver(od=RECEIVER_TUBE_OD,
 
     if (lower)
     translate([0,0,LowerOffsetZ()])
-    Lower(alpha=1,
+    Lower(showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
+          boltSpec=lowerBolt, boltHead=lowerBoltHead, nut=lowerBoltNut,
           showTrigger=true,
           triggerAnimationFactor=triggerAnimationFactor,
-          showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
-          searLength=SearLength()+WallLower()+ReceiverPipeWall(od=od, id=id)+SearTravel());
+          searLength=SearLength()+WallLower()+ReceiverPipeWall(od=od, id=id)+SearTravel(),
+          alpha=1);
 
     PipeLugAssembly(od=od, id=id, length=receiverLength,
-                    pipeOffsetX=pipeOffsetX,
                     pipeAlpha=pipeAlpha, debug=debug);
 
   }
@@ -224,8 +242,11 @@ scale(25.4) {
     FrameAssembly();
 
     Receiver(pipeAlpha=0.3,
-                      receiverLength=12,
-                      debug=false);
+             receiverLength=12,
+             lowerBolt=LowerBolt(),
+             lowerBoltHead=LOWER_BOLT_HEAD,
+             lowerBoltNut=LOWER_BOLT_NUT,
+             debug=false);
 
     ReceiverFront(alpha=0.25);
   }
@@ -253,13 +274,19 @@ scale(25.4) {
                       id=RECEIVER_TUBE_ID);
 
   if (_RENDER == "LowerLeft")
-    LowerLeft_print();
+    LowerLeft_print(
+             boltSpec=LowerBolt(),
+             head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT);
 
   if (_RENDER == "LowerRight")
-    LowerRight_print();
+    LowerRight_print(
+             boltSpec=LowerBolt(),
+             head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT);
 
   if (_RENDER == "LowerMiddle")
-    LowerMiddle_print();
+    LowerMiddle_print(
+             boltSpec=LowerBolt(),
+             head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT);
 
   if (_RENDER == "TriggerLeft")
     TriggerLeft_print();
