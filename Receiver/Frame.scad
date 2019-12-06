@@ -22,8 +22,8 @@ use <Lower/Trigger.scad>;
 use <Lower/Lower.scad>;
 
 // Settings: Lengths
+function FrameReceiverLength() = 3;
 function FrameForendExtension() = 4.5;
-function FrameUpperRearExtension() = 3.5;
 function FrameBoltExtension() = 0.5;
 function FrameExtension() = 0.5;
 
@@ -54,11 +54,11 @@ function FrameBottomZ() = FrameBoltZ()
 // Calculated: Positions
 function FrameUpperBoltExtension() = FrameUpperBoltLength()
                                    -0.5
-                                   -FrameUpperRearExtension();
+                                   -FrameReceiverLength();
 
 module FrameBoltIterator() {
     for (Y = [FrameBoltY(),-FrameBoltY()])
-    translate([-FrameUpperRearExtension()-NutHexHeight(FrameUpperBolt())-ManifoldGap(),
+    translate([-FrameReceiverLength()-NutHexHeight(FrameUpperBolt())-ManifoldGap(),
                Y, FrameBoltZ()])
     rotate([0,90,0])
     children();

@@ -21,18 +21,13 @@ use <Lower/Trigger.scad>;
 use <Lower/Lower.scad>;
 
 use <Buttstock.scad>;
-use <Charging Pump.scad>;
-use <Linear Hammer.scad>;
-use <Lugs.scad>;
 use <Frame.scad>;
-use <Recoil Plate.scad>;
-use <Firing Pin.scad>;
-
+use <Lugs.scad>;
 
 /* [What to Render] */
 
 // Assembly is not for printing.
-_RENDER = "Assembly"; // ["Assembly", "Buttstock", "FrameForend", "ReceiverCoupling", "ReceiverLugCenter", "ReceiverLugFront", "ReceiverLugRear", "LowerLeft", "LowerRight", "LowerMiddle", "TriggerLeft", "TriggerRight", "TriggerMiddle","HammerHead", "HammerTail"]
+_RENDER = "Assembly"; // ["Assembly", "Buttstock", "FrameForend", "ReceiverCoupling", "ReceiverLugCenter", "ReceiverLugFront", "ReceiverLugRear", "LowerLeft", "LowerRight", "LowerMiddle", "TriggerLeft", "TriggerRight", "TriggerMiddle"]
 
 /* [Receiver Tube] */
 RECEIVER_TUBE_OD = 1.7501;
@@ -60,12 +55,6 @@ function ReceiverOD()     = RECEIVER_TUBE_OD;
 function ReceiverOR()     = ReceiverOD()/2;
 function ReceiverPipeWall(od, id) = (od/2)-(id/2);
 
-function HammerTravel() = LowerMaxX() + ReceiverFrontLength()
-                              - HammerCollarWidth()
-                              + RodRadius(SearRod())
-                              - FiringPinHousingLength();
-echo("HammerTravel", HammerTravel());
-
 // Settings: Vitamins
 function CouplingBolt() = BoltSpec(COUPLING_BOLT);
 assert(CouplingBolt(), "CouplingBolt() is undefined. Unknown COUPLING_BOLT?");
@@ -85,7 +74,7 @@ module CouplingBolts(teardrop=false, boltHead="flat", extension=0.5,
   DebugHalf(enabled=debug)
   for (NUT = ["heatset", "hex"])
   for (Y = [-1,1])
-  translate([RecoilPlateRearX()-ReceiverCouplingLength()-ManifoldGap(),
+  translate([-ReceiverCouplingLength()-ManifoldGap(),
              ReceiverBoltY()*Y,
              ReceiverBoltZ()])
   rotate([0,90,0])
@@ -101,7 +90,7 @@ module ReceiverCoupling(od=RECEIVER_TUBE_OD,
                         id=RECEIVER_TUBE_ID,
                         clearance=0.01,
                         debug=false, alpha=1) {
-  length = FrameUpperRearExtension()+RecoilPlateRearX();
+  length = FrameReceiverLength();
 
   color("DimGray", alpha)
   DebugHalf(enabled=debug) render()
@@ -110,12 +99,12 @@ module ReceiverCoupling(od=RECEIVER_TUBE_OD,
     union() {
 
       // Bolt supports
-      translate([RecoilPlateRearX()-length,0,0])
+      translate([-length,0,0])
       hull()
       FrameSupport(length=length);
 
       // Join bolt wall and pipe
-      translate([RecoilPlateRearX(),-(2.25/2),0])
+      translate([0,-(2.25/2),0])
       mirror([1,0,0])
       ChamferedCube([length,
                      2.25,
@@ -123,12 +112,11 @@ module ReceiverCoupling(od=RECEIVER_TUBE_OD,
                     r=1/16);
 
       // Around the receiver pipe
-      translate([RecoilPlateRearX(),0,0])
       rotate([0,-90,0])
       ChamferedCylinder(r1=2.25/2, r2=1/16, h=length, $fn=Resolution(30,60));
 
       // Coupling bolt support
-      translate([RecoilPlateRearX(),-(2.25/2),LowerOffsetZ()])
+      translate([0,-(2.25/2),LowerOffsetZ()])
       mirror([1,0,0])
       ChamferedCube([ReceiverCouplingLength()-ManifoldGap(2),
                      2.25,
@@ -136,7 +124,7 @@ module ReceiverCoupling(od=RECEIVER_TUBE_OD,
                     r=1/16);
 
       // Center lug support
-      translate([RecoilPlateRearX(),-(1.5/2),LowerOffsetZ()])
+      translate([0,-(1.5/2),LowerOffsetZ()])
       mirror([1,0,0])
       ChamferedCube([length,
                      1.5,
@@ -151,11 +139,11 @@ module ReceiverCoupling(od=RECEIVER_TUBE_OD,
     CouplingBolts(cutter=true);
 
     // Lower lug cutout
-    translate([-LowerMaxX()+RecoilPlateRearX(),0,0])
+    translate([-LowerMaxX(),0,0])
     PipeLugCenter(cutter=true);
 
     // Slot Cutout
-    translate([RecoilPlateRearX()+ManifoldGap(),
+    translate([ManifoldGap(),
                -(ReceiverSlotWidth()/2)-clearance,0])
     mirror([1,0,0])
     cube([length+ManifoldGap(2),ReceiverSlotWidth()+(clearance*2),2]);
@@ -190,8 +178,8 @@ module ReceiverFront(width=2.25, frameLength=ReceiverFrontLength(),
     }
 
     // Picatinny rail cutout
-    translate([-ReceiverFrontLength()-FrameUpperRearExtension(), -UnitsMetric(15.6/2), FrameTopZ()-0.125])
-    cube([frameLength+ReceiverFrontLength()+FrameUpperRearExtension()+ManifoldGap(2), UnitsMetric(15.6), 0.25]);
+    translate([-ReceiverFrontLength()-FrameReceiverLength(), -UnitsMetric(15.6/2), FrameTopZ()-0.125])
+    cube([frameLength+ReceiverFrontLength()+FrameReceiverLength()+ManifoldGap(2), UnitsMetric(15.6), 0.25]);
 
     FrameBolts(cutter=true);
 
@@ -216,19 +204,18 @@ module Receiver(od=RECEIVER_TUBE_OD,
 
   ReceiverCoupling(od=od, id=id, debug=debug);
 
-  translate([RecoilPlateRearX()-receiverLength,0,0])
+  translate([-receiverLength,0,0])
   ButtstockAssembly(od=od, alpha=buttstockAlpha, debug=debug);
 
-  translate([RecoilPlateRearX()-LowerMaxX(),0,0]) {
+  translate([-LowerMaxX(),0,0]) {
 
     if (lower)
     translate([0,0,LowerOffsetZ()])
-    Lower(showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
-          boltSpec=lowerBolt, boltHead=lowerBoltHead, nut=lowerBoltNut,
+    Lower(alpha=1, boltSpec=lowerBolt, boltHead=lowerBoltHead, nut=lowerBoltNut,
           showTrigger=true,
           triggerAnimationFactor=triggerAnimationFactor,
-          searLength=SearLength()+WallLower()+ReceiverPipeWall(od=od, id=id)+SearTravel(),
-          alpha=1);
+          showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
+          searLength=SearLength()+WallLower()+ReceiverPipeWall(od=od, id=id)+SearTravel());
 
     PipeLugAssembly(od=od, id=id, length=receiverLength,
                     pipeAlpha=pipeAlpha, debug=debug);
@@ -239,7 +226,7 @@ module Receiver(od=RECEIVER_TUBE_OD,
 scale(25.4) {
   if (_RENDER == "Assembly") {
 
-    FrameAssembly();
+    FrameBolts();
 
     Receiver(pipeAlpha=0.3,
              receiverLength=12,
@@ -248,7 +235,7 @@ scale(25.4) {
              lowerBoltNut=LOWER_BOLT_NUT,
              debug=false);
 
-    ReceiverFront(alpha=0.25);
+    *ReceiverFront(alpha=0.25);
   }
 
   if (_RENDER == "Buttstock")
