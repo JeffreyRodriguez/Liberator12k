@@ -35,7 +35,7 @@ use <Bipod.scad>;
 
 /* [What to Render] */
 
-// Assembly is not for printing.
+// Configure settings below, then choose a part to render. Render that part (F6) then export STL (F7). Assembly is not for printing.
 _RENDER = "Assembly"; // ["Assembly", "BarrelPivotCollar", "BarrelLatchCollar", "RecoilPlateHousing", "Forend", "Foregrip", "Extractor", "Latch", "LatchFront"]
 
 // Cut assembly view in half

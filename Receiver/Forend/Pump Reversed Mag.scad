@@ -1,41 +1,37 @@
-include <../Meta/Animation.scad>;
+include <../../Meta/Animation.scad>;
 
-use <../Meta/Manifold.scad>;
-use <../Meta/Units.scad>;
-use <../Meta/Debug.scad>;
-use <../Meta/Resolution.scad>;
+use <../../Meta/Manifold.scad>;
+use <../../Meta/Units.scad>;
+use <../../Meta/Debug.scad>;
+use <../../Meta/Resolution.scad>;
 
-use <../Shapes/Chamfer.scad>;
-use <../Shapes/Semicircle.scad>;
-use <../Shapes/Teardrop.scad>;
+use <../../Shapes/Chamfer.scad>;
+use <../../Shapes/Semicircle.scad>;
+use <../../Shapes/Teardrop.scad>;
 
-use <../Shapes/Components/Pivot.scad>;
-use <../Shapes/Components/Pipe/Firing Pin Insert.scad>;
-use <../Shapes/Components/Firing Pin Retainer.scad>;
+use <../../Vitamins/Nuts And Bolts.scad>;
+use <../../Vitamins/Pipe.scad>;
+use <../../Vitamins/Rod.scad>;
+use <../../Vitamins/Square Tube.scad>;
 
-use <../Vitamins/Nuts And Bolts.scad>;
-use <../Vitamins/Pipe.scad>;
-use <../Vitamins/Rod.scad>;
-use <../Vitamins/Square Tube.scad>;
+use <../Lower/Receiver Lugs.scad>;
+use <../Lower/Trigger.scad>;
+use <../Lower/Lower.scad>;
 
-use <Lower/Receiver Lugs.scad>;
-use <Lower/Trigger.scad>;
-use <Lower/Lower.scad>;
+use <../../Ammo/Shell Slug.scad>;
 
-use <../Ammo/Shell Slug.scad>;
-
-use <Receiver.scad>;
-use <Frame.scad>;
-use <Receiver.scad>;
+use <../Frame.scad>;
+use <../Receiver.scad>;
 
 function UpperLength() = 6.75;
+function MagazineCenterZ() = 1.5;
 
 module PumpRails(length=UpperLength(), cutter=false, clearance=0.002, extraRadius=0) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
   FrameIterator()
-  translate([BreechFrontX()-clear,0,0])
+  translate([-clear,0,0])
   rotate([0,90,0])
   rotate(180)
   linear_extrude(height=length+clear2)
@@ -53,7 +49,7 @@ module PumpUpper(cutter=false, clearance=0.002, alpha=1, debug=false) {
   color("Yellow", alpha) DebugHalf(enabled=debug)
   difference() {
     union() {
-      translate([BreechFrontX()-clear,0,0])
+      translate([-clear,0,0])
       PipeHousingBase(mainBodyEnabled=false,
                       length=UpperLength()+clear2,
                       magazineLength=BarrelTravel());
@@ -62,13 +58,13 @@ module PumpUpper(cutter=false, clearance=0.002, alpha=1, debug=false) {
     }
 
     hull() {
-      *translate([BreechFrontX()+3-ManifoldGap(),0,0])
+      *translate([+3-ManifoldGap(),0,0])
       rotate([0,90,0])
       linear_extrude(height=ManifoldGap())
       PumpMagazine2d();
 
       for (Z = [0,MagazineCenterZ()-ReceiverCenter()])
-      translate([BreechFrontX()-ManifoldGap(),0,MagazineCenterZ()-Z])
+      translate([-ManifoldGap(),0,MagazineCenterZ()-Z])
       rotate([0,90,0])
       cylinder(r=SquareTubeInner(MagazineSquareTube(),
                                  SquareTubeClearanceLoose())/2,
@@ -103,7 +99,7 @@ module PumpForend(alpha=1, debug=false) {
   difference() {
     union() {
       hull() {
-        translate([BreechFrontX()+ForendLength,0,0])
+        translate([+ForendLength,0,0])
         translate([0,0,ReceiverCenter()])
         rotate([0,90,0])
         ChamferedCylinder(r1=PipeCapRadius(StockPipe())+ForendWall,
@@ -112,7 +108,7 @@ module PumpForend(alpha=1, debug=false) {
                           $fn=Resolution(20,50));
 
 
-        *translate([BreechFrontX()+6.75,0,0])
+        *translate([+6.75,0,0])
         rotate([0,90,0])
         linear_extrude(height=ForendLengthExtra)
         offset(r=0.1875)
@@ -121,7 +117,7 @@ module PumpForend(alpha=1, debug=false) {
 
       hull() {
 
-        translate([BreechFrontX(),0,ReceiverCenter()])
+        translate([0,0,ReceiverCenter()])
         rotate([0,90,0])
         intersection() {
 
@@ -142,7 +138,7 @@ module PumpForend(alpha=1, debug=false) {
       }
     }
 
-    translate([BreechFrontX()-ManifoldGap(),
+    translate([-ManifoldGap(),
                -(SquareTubeOuter(MagazineSquareTube(),SquareTubeClearanceLoose())/2)-0.1875,
                ReceiverCenter()])
     cube([ForendLength+ManifoldGap(2),
@@ -151,7 +147,7 @@ module PumpForend(alpha=1, debug=false) {
 
     PumpRails(cutter=true);
 
-    translate([BreechFrontX()+1-ManifoldGap(),0,ReceiverCenter()])
+    translate([+1-ManifoldGap(),0,ReceiverCenter()])
     rotate([0,90,0])
     cylinder(r=PipeCapRadius(StockPipe(), clearance=PipeClearanceLoose())+0.01,
                       h=1.5+ManifoldGap(2),
@@ -169,18 +165,18 @@ ShellLoadingSupport();
 
 color("Red") {
   for (i = [1:3])
-  translate([BreechFrontX()-3-((i-1)*2.75),0,MagazineCenterZ()])
+  translate([-3-((i-1)*2.75),0,MagazineCenterZ()])
   rotate([0,90,0])
   ShellSlugBall(height=1.95);
 
   // Mid-load
-  translate([BreechFrontX(),0,MagazineCenterZ()])
+  translate([0,0,MagazineCenterZ()])
   rotate([0,90,0])
   ShellSlugBall(height=2.0);
 
 
   // In position for load
-  translate([BreechFrontX(),0,ReceiverCenter()])
+  translate([0,0,ReceiverCenter()])
   rotate([0,90,0])
   ShellSlugBall(height=2.0);
 }

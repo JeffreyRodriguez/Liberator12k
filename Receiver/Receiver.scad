@@ -27,11 +27,14 @@ use <Lugs.scad>;
 /* [What to Render] */
 
 // Configure settings below, then choose a part to render. Render that part (F6) then export STL (F7). Assembly is not for printing.
-_RENDER = "Assembly"; // ["Assembly", "Buttstock", "ButtstockTab", "ReceiverCoupling", "ReceiverLugCenter", "ReceiverLugFront", "ReceiverLugRear", "LowerLeft", "LowerRight", "LowerMiddle", "TriggerLeft", "TriggerRight", "TriggerMiddle"]
+_RENDER = "Assembly"; // ["Assembly", "Buttstock", "ButtstockTab", "ReceiverCoupling", "ReceiverBack", "ReceiverLugCenter", "ReceiverLugFront", "ReceiverLugRear", "LowerLeft", "LowerRight", "LowerMiddle", "TriggerLeft", "TriggerRight", "TriggerMiddle"]
+
+// Cut assembly view in half
+_DEBUG_ASSEMBLY = false;
 
 /* [Receiver Tube] */
-RECEIVER_TUBE_OD = 1.7501;
-RECEIVER_TUBE_ID = 1.5001;
+RECEIVER_TUBE_OD = 1.9101;
+RECEIVER_TUBE_ID = 1.6001;
 
 /* [Bolts] */
 COUPLING_BOLT = "#8-32"; // ["M4", "#8-32"]
@@ -43,9 +46,10 @@ LOWER_BOLT_NUT = "heatset"; // ["hex", "heatset"]
 
 // Settings: Lengths
 function ReceiverFrontLength() = 0.5;
+function ReceiverBackLength() = 0.5;
 function ReceiverCouplingLength() = 1;
 function ReceiverLength() = 12;
-function ReceiverSlotWidth() = 0.75;
+function ReceiverSlotWidth() = 1;
 
 // Calculated: Measurements
 function ReceiverID()     = RECEIVER_TUBE_ID;
@@ -89,7 +93,7 @@ module ReceiverCoupling(od=RECEIVER_TUBE_OD,
                         id=RECEIVER_TUBE_ID,
                         clearance=0.01,
                         debug=false, alpha=1) {
-  length = FrameReceiverLength();
+  length = FrameReceiverLength()-0.5;
 
   color("DimGray", alpha)
   DebugHalf(enabled=debug) render()
@@ -158,11 +162,13 @@ translate([0,0,-ReceiverFrontLength()])
 rotate([0,90,0])
 ReceiverCoupling(od=od, id=id);
 
-module ReceiverFrameCap(od=RECEIVER_TUBE_OD,
-                        id=RECEIVER_TUBE_ID,
-                        clearance=0.01,
-                        debug=false, alpha=1) {
-  length = 1;
+module ReceiverBack(od=RECEIVER_TUBE_OD,
+                    id=RECEIVER_TUBE_ID,
+                    length=ReceiverBackLength(),
+                    clearance=0.01,
+                    debug=false, alpha=1) {
+                      
+    receiverBackMinX = -FrameReceiverLength();
 
   color("DimGray", alpha)
   DebugHalf(enabled=debug) render()
@@ -171,16 +177,16 @@ module ReceiverFrameCap(od=RECEIVER_TUBE_OD,
     union() {
 
       // Bolt supports
-      translate([-FrameReceiverLength()-length,0,0])
+      translate([receiverBackMinX,0,0])
       hull()
       FrameSupport(length=length);
 
       // Join bolt wall and pipe
-      translate([-FrameReceiverLength(),-(2.25/2),0])
-      mirror([1,0,0])
+      translate([receiverBackMinX,-(2.25/2),FrameBoltZ()])
+      mirror([0,0,1])
       ChamferedCube([length,
                      2.25,
-                     FrameBoltZ()],
+                     1],
                     r=1/16);
     }
 
@@ -190,6 +196,12 @@ module ReceiverFrameCap(od=RECEIVER_TUBE_OD,
     ReceiverTube(od=od, id=id, cutter=true);
   }
 }
+
+module ReceiverBack_print(od=RECEIVER_TUBE_OD,
+                              id=RECEIVER_TUBE_ID)
+translate([0,0,-FrameReceiverLength()+ReceiverBackLength()])
+rotate([0,90,0])
+ReceiverBack(od=od, id=id);
 
 module ReceiverFront(width=2.25, frameLength=ReceiverFrontLength(),
                      boltHead="flat",
@@ -232,10 +244,9 @@ module Receiver(od=RECEIVER_TUBE_OD,
                 debug=true) {
 
   CouplingBolts();
-  
 
   *ReceiverFront(alpha=0.25);
-  *ReceiverFrameCap();
+  ReceiverBack(debug=debug);
 
   FrameBolts(length=frameBoltLength);
 
@@ -268,7 +279,7 @@ scale(25.4) {
              lowerBolt=LowerBolt(),
              lowerBoltHead=LOWER_BOLT_HEAD,
              lowerBoltNut=LOWER_BOLT_NUT,
-             debug=false);
+             debug=_DEBUG_ASSEMBLY);
   }
 
   if (_RENDER == "Buttstock")
@@ -279,6 +290,10 @@ scale(25.4) {
 
   if (_RENDER == "ReceiverCoupling")
     ReceiverCoupling_print(od=RECEIVER_TUBE_OD,
+                           id=RECEIVER_TUBE_ID);
+
+  if (_RENDER == "ReceiverBack")
+    ReceiverBack_print(od=RECEIVER_TUBE_OD,
                            id=RECEIVER_TUBE_ID);
 
   if (_RENDER == "ReceiverLugCenter")

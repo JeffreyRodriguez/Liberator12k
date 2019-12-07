@@ -23,8 +23,8 @@ use <../Vitamins/Rod.scad>;
 _RENDER = "Assembly"; // ["Assembly", "Center", "Front", "Rear"]
 
 /* [Receiver Tube] */
-RECEIVER_TUBE_OD = 1.75;
-RECEIVER_TUBE_ID = 1.5;
+RECEIVER_TUBE_OD = 1.9101;
+RECEIVER_TUBE_ID = 1.6001;
 
 // Calculated: Positions
 function LowerOffsetZ() = -1.25;

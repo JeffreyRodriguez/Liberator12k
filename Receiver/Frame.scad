@@ -17,19 +17,16 @@ use <../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 use <../Vitamins/Pipe.scad>;
 use <../Vitamins/Rod.scad>;
 
-use <Lower/Receiver Lugs.scad>;
-use <Lower/Trigger.scad>;
-use <Lower/Lower.scad>;
+FRAME_SPACER_LENGTH = 4.5;
 
 // Settings: Lengths
+function FrameBoltLength() = 10;
 function FrameReceiverLength() = 3;
-function FrameForendExtension() = 4.5;
-function FrameBoltExtension() = 0.5;
-function FrameExtension() = 0.5;
+function FrameExtension() = FrameBoltLength()
+                          - FrameReceiverLength();
 
 // Settings: Walls
 function WallFrameUpperBolt() = 0.25;
-function FrameUpperBoltLength() = 10;
 
 // Settings: Vitamins
 function FrameUpperBolt() = Spec_BoltOneHalf();
@@ -52,7 +49,7 @@ function FrameBottomZ() = FrameBoltZ()
                         - WallFrameUpperBolt();
 
 // Calculated: Positions
-function FrameUpperBoltExtension() = FrameUpperBoltLength()
+function FrameUpperBoltExtension() = FrameBoltLength()
                                    -0.5
                                    -FrameReceiverLength();
 
@@ -64,7 +61,7 @@ module FrameBoltIterator() {
     children();
 }
 
-module FrameBolts(length=FrameUpperBoltLength(),
+module FrameBolts(length=FrameBoltLength(),
               debug=false, cutter=false, clearance=0.005, alpha=1) {
   clear = cutter ? clearance : 0;
 
@@ -76,7 +73,7 @@ module FrameBolts(length=FrameUpperBoltLength(),
   }
 }
 
-module FrameSupport(length=1, $fn=Resolution(20,60)) {
+module FrameSupport(length=FRAME_SPACER_LENGTH, $fn=Resolution(20,60)) {
   for (Y = [FrameBoltY(),-FrameBoltY()])
   translate([0, Y, FrameBoltZ()])
   rotate([0,90,0])
@@ -85,7 +82,7 @@ module FrameSupport(length=1, $fn=Resolution(20,60)) {
                     teardropTop=true, teardropBottom=true);
 }
 
-module FrameForend(length=FrameForendExtension(), debug=false, alpha=1) {
+module FrameSpacer(length=FRAME_SPACER_LENGTH, debug=false, alpha=1) {
   color("Tan", alpha)
   DebugHalf(enabled=debug) render()
   difference() {
@@ -100,16 +97,16 @@ module FrameForend(length=FrameForendExtension(), debug=false, alpha=1) {
   }
 }
 
-module FrameForend_print()
+module FrameSpacer_print()
 rotate([0,-90,0]) translate([0,0,-FrameBoltZ()])
-FrameForend();
+FrameSpacer();
 
-module FrameAssembly(length=FrameUpperBoltLength(),
-                     forendLength=FrameForendExtension(),
+module FrameAssembly(length=FrameBoltLength(),
+                     spacerLength=FRAME_SPACER_LENGTH,
                      debug=false, alpha=1) {
   FrameBolts(length=length, debug=debug, alpha=alpha);
 
-  FrameForend(length=forendLength);
+  FrameSpacer(length=spacerLength);
 }
 
 FrameAssembly();
