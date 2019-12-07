@@ -26,8 +26,8 @@ use <Lugs.scad>;
 
 /* [What to Render] */
 
-// Assembly is not for printing.
-_RENDER = "Assembly"; // ["Assembly", "Buttstock", "FrameForend", "ReceiverCoupling", "ReceiverLugCenter", "ReceiverLugFront", "ReceiverLugRear", "LowerLeft", "LowerRight", "LowerMiddle", "TriggerLeft", "TriggerRight", "TriggerMiddle"]
+// Configure settings below, then choose a part to render. Render that part (F6) then export STL (F7). Assembly is not for printing.
+_RENDER = "Assembly"; // ["Assembly", "Buttstock", "ButtstockTab", "ReceiverCoupling", "ReceiverLugCenter", "ReceiverLugFront", "ReceiverLugRear", "LowerLeft", "LowerRight", "LowerMiddle", "TriggerLeft", "TriggerRight", "TriggerMiddle"]
 
 /* [Receiver Tube] */
 RECEIVER_TUBE_OD = 1.7501;
@@ -42,7 +42,6 @@ LOWER_BOLT_HEAD = "flat"; // ["socket", "flat"]
 LOWER_BOLT_NUT = "heatset"; // ["hex", "heatset"]
 
 // Settings: Lengths
-function FrameBoltExtension() = 0.5;
 function ReceiverFrontLength() = 0.5;
 function ReceiverCouplingLength() = 1;
 function ReceiverLength() = 12;
@@ -102,18 +101,21 @@ module ReceiverCoupling(od=RECEIVER_TUBE_OD,
       translate([-length,0,0])
       hull()
       FrameSupport(length=length);
+      
+      hull() {
 
-      // Join bolt wall and pipe
-      translate([0,-(2.25/2),0])
-      mirror([1,0,0])
-      ChamferedCube([length,
-                     2.25,
-                     FrameBoltZ()],
-                    r=1/16);
+        // Join bolt wall and pipe
+        translate([0,-(2.25/2),0])
+        mirror([1,0,0])
+        ChamferedCube([length,
+                       2.25,
+                       FrameBoltZ()],
+                      r=1/16);
 
-      // Around the receiver pipe
-      rotate([0,-90,0])
-      ChamferedCylinder(r1=2.25/2, r2=1/16, h=length, $fn=Resolution(30,60));
+        // Around the receiver pipe
+        rotate([0,-90,0])
+        ChamferedCylinder(r1=2.25/2, r2=1/16, h=length, $fn=Resolution(30,60));
+      }
 
       // Coupling bolt support
       translate([0,-(2.25/2),LowerOffsetZ()])
@@ -156,6 +158,39 @@ translate([0,0,-ReceiverFrontLength()])
 rotate([0,90,0])
 ReceiverCoupling(od=od, id=id);
 
+module ReceiverFrameCap(od=RECEIVER_TUBE_OD,
+                        id=RECEIVER_TUBE_ID,
+                        clearance=0.01,
+                        debug=false, alpha=1) {
+  length = 1;
+
+  color("DimGray", alpha)
+  DebugHalf(enabled=debug) render()
+  difference() {
+
+    union() {
+
+      // Bolt supports
+      translate([-FrameReceiverLength()-length,0,0])
+      hull()
+      FrameSupport(length=length);
+
+      // Join bolt wall and pipe
+      translate([-FrameReceiverLength(),-(2.25/2),0])
+      mirror([1,0,0])
+      ChamferedCube([length,
+                     2.25,
+                     FrameBoltZ()],
+                    r=1/16);
+    }
+
+    FrameBolts(cutter=true);
+
+    translate([-FrameReceiverLength(),0,0])
+    ReceiverTube(od=od, id=id, cutter=true);
+  }
+}
+
 module ReceiverFront(width=2.25, frameLength=ReceiverFrontLength(),
                      boltHead="flat",
                      debug=false, alpha=1) {
@@ -176,11 +211,7 @@ module ReceiverFront(width=2.25, frameLength=ReceiverFrontLength(),
         children();
       }
     }
-
-    // Picatinny rail cutout
-    translate([-ReceiverFrontLength()-FrameReceiverLength(), -UnitsMetric(15.6/2), FrameTopZ()-0.125])
-    cube([frameLength+ReceiverFrontLength()+FrameReceiverLength()+ManifoldGap(2), UnitsMetric(15.6), 0.25]);
-
+    
     FrameBolts(cutter=true);
 
     CouplingBolts(boltHead=boltHead, cutter=true, teardrop=false);
@@ -191,8 +222,8 @@ module Receiver(od=RECEIVER_TUBE_OD,
                 id=RECEIVER_TUBE_ID,
                 receiverLength=ReceiverLength(),
                 pipeOffsetX=0,
-                pipeAlpha=0.5, buttstockAlpha=0.5,
-                frameUpperBoltLength=FrameUpperBoltLength(),
+                pipeAlpha=1, buttstockAlpha=1,
+                frameBoltLength=FrameBoltLength(),
                 triggerAnimationFactor=TriggerAnimationFactor(),
                 lower=true,
                 lowerBolt=LowerBolt(),
@@ -201,6 +232,12 @@ module Receiver(od=RECEIVER_TUBE_OD,
                 debug=true) {
 
   CouplingBolts();
+  
+
+  *ReceiverFront(alpha=0.25);
+  *ReceiverFrameCap();
+
+  FrameBolts(length=frameBoltLength);
 
   ReceiverCoupling(od=od, id=id, debug=debug);
 
@@ -215,7 +252,7 @@ module Receiver(od=RECEIVER_TUBE_OD,
           showTrigger=true,
           triggerAnimationFactor=triggerAnimationFactor,
           showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
-          searLength=SearLength()+WallLower()+ReceiverPipeWall(od=od, id=id)+SearTravel());
+          searLength=SearLength()+abs(LowerOffsetZ())-(id/2)+SearTravel());
 
     PipeLugAssembly(od=od, id=id, length=receiverLength,
                     pipeAlpha=pipeAlpha, debug=debug);
@@ -226,23 +263,19 @@ module Receiver(od=RECEIVER_TUBE_OD,
 scale(25.4) {
   if (_RENDER == "Assembly") {
 
-    FrameBolts();
-
     Receiver(pipeAlpha=0.3,
              receiverLength=12,
              lowerBolt=LowerBolt(),
              lowerBoltHead=LOWER_BOLT_HEAD,
              lowerBoltNut=LOWER_BOLT_NUT,
              debug=false);
-
-    *ReceiverFront(alpha=0.25);
   }
 
   if (_RENDER == "Buttstock")
     Buttstock_print(od=RECEIVER_TUBE_OD);
 
-  if (_RENDER == "FrameForend")
-    FrameForend_print();
+  if (_RENDER == "ButtstockTab")
+    ButtstockTab_print(od=RECEIVER_TUBE_OD);
 
   if (_RENDER == "ReceiverCoupling")
     ReceiverCoupling_print(od=RECEIVER_TUBE_OD,
@@ -283,12 +316,4 @@ scale(25.4) {
 
   if (_RENDER == "TriggerMiddle")
     TriggerMiddle_print();
-
-  if (_RENDER == "HammerHead")
-    HammerHead_print();
-
-  if (_RENDER == "HammerTail")
-    HammerTail_print();
 }
-
-echo ("Pipe Lug Sear Length: ", SearLength()+WallLower()+ReceiverPipeWall(od=RECEIVER_TUBE_OD, id=RECEIVER_TUBE_ID)+SearTravel());

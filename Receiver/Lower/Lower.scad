@@ -314,13 +314,13 @@ module LowerSidePlates(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOL
 
 }
 
-module LowerLeft_print(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT, )
+module LowerLeft_print(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT)
 rotate(180)
 rotate([90,0,0])
 translate([0,-0.25,2.125])
 LowerSidePlates(boltSpec=LowerBolt(), head=head, nut=nut, showLeft=true, showRight=false);
 
-module LowerRight_print(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT, )
+module LowerRight_print(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT)
 rotate([-90,0,0])
 translate([0,0.25,2.125])
 LowerSidePlates(boltSpec=LowerBolt(), head=head, nut=nut, showLeft=false, showRight=true);
@@ -358,11 +358,11 @@ module LowerMiddle(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NU
   }
 }
 
-module LowerMiddle_print()
+module LowerMiddle_print(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT)
 rotate(180)
 rotate([90,0,0])
 translate([0,0.25,2.125])
-LowerMiddle();
+LowerMiddle(boltSpec=LowerBolt(), head=head, nut=nut);
 
 module LowerMatchplate2d() {
   union() {

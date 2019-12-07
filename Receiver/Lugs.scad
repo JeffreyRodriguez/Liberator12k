@@ -26,9 +26,6 @@ _RENDER = "Assembly"; // ["Assembly", "Center", "Front", "Rear"]
 RECEIVER_TUBE_OD = 1.75;
 RECEIVER_TUBE_ID = 1.5;
 
-// Settings: Walls
-function WallLower()      = 0.1875;
-
 // Calculated: Positions
 function LowerOffsetZ() = -1.25;
 

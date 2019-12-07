@@ -57,11 +57,12 @@ function ChargingRod() = Spec_RodOneHalfInch();
 function ChargingExtensionRod() = Spec_RodOneHalfInch();
 function IndexLockRod() = Spec_RodOneQuarterInch();
 
-function BarrelExtraOffset() = 0.5+0.125;
+function BarrelExtraOffset() = -AR15_MagazineRearTabLength();
 function BarrelLength() = 16;
-function BarrelMinX() = AR15_BoltLockedLength()+0.5+0.06;// 2.16+BarrelExtraOffset();
+function BarrelMinX() = AR15_BoltLockedLength()+BarrelExtraOffset();
 function WallBarrel() = 0.25;
-function MagazineMinX() = BarrelMinX()-AR15_MagazineBaseLength()-0.25;
+function MagazineMinX() = BarrelMinX()
+                        - AR15_MagazineBaseLength();
 
 // Calculated: Positions
 function ActionRodZ() = 0.75+(1/32);
@@ -229,8 +230,8 @@ module ReceiverCutters() {
     
     // Action rod pin travel slot
     hull() for (Z = [0, ActionRodZ()]) translate([0,0,Z])
-    translate([-FrameUpperRearExtension(),0,0])
-    ActionRod(length=2+FrameUpperRearExtension(), cutter=true);
+    translate([-FrameReceiverLength(),0,0])
+    ActionRod(length=2+FrameReceiverLength(), cutter=true);
   }
   
   color("LightGreen")
@@ -284,86 +285,43 @@ module AR15Forend(debug=false, alpha=1) {
   difference() {
     translate([ReceiverFrontLength()+ForendMinX(),0,0])
     ReceiverFront(frameLength=ForendLength(), boltHead="flat") {
-      
-      union() {
         
-        translate([MagazineMinX(),0,-0.25])
-        AR15_Magwell(cut=false, height=AR15_MagwellDepth()+0.5,
-                     wallFront=0.375);
-          
-        translate([0,-(AR15BarrelExtensionLipRadius()+WallBarrel()),0])
-        ChamferedCube([length,
-                       (AR15BarrelExtensionLipRadius()+WallBarrel())*2,
-                       FrameBoltZ()],
-                       r=1/16,
-                       $fn=70);
-      }
-      
-      // Around the barrel
-      rotate([0,90,0])
-      ChamferedCylinder(r1=ReceiverOR()+barrelRearWall,
-                        r2=1/16,
-                        h=length,
-                       $fn=Resolution(30,60));
+      // Join the barrel sleeve to the frame
+      translate([0,-(AR15BarrelExtensionLipRadius()+WallBarrel()),0])
+      ChamferedCube([length,
+                     (AR15BarrelExtensionLipRadius()+WallBarrel())*2,
+                     FrameBoltZ()],
+                     r=1/16,
+                     $fn=70);
+    
+    // Around the barrel
+    rotate([0,90,0])
+    ChamferedCylinder(r1=ReceiverOR()+barrelRearWall,
+                      r2=1/16,
+                      h=length,
+                     $fn=Resolution(30,60));
     }
     
-    *ReceiverCutters();
+    ForendMagwell(cutter=true);
     
-  FrameBolts(cutter=true);
-  
-  color("Silver")
-  union() {
-    // Action rod main hole
-    translate([0,0,ActionRodZ()])
-    ActionRod(cutter=true);
+    ReceiverCutters();
     
-    // Action rod pin travel slot
-    hull() for (Z = [0, ActionRodZ()]) translate([0,0,Z])
-    translate([-FrameUpperRearExtension(),0,0])
-    ActionRod(length=2+FrameUpperRearExtension(), cutter=true);
   }
-  
-  color("LightGreen")
-  union() {
-    
-    // Bolt Carrier Locked
-    rotate([-22.5,0,0])
-    BoltCarrier(cutter=true);
-    
-    // Bolt Carrier (unlocked+travel)
-    union() for (X = [0:-1:-3]) translate([X,0,0])
-    BoltCarrier(cutter=true);
-  }
-  
-  Barrel(cutter=true);
+}
 
-  color("LightBlue")  
-  union() {
+module ForendMagwell(cutter=false, clearance=0.01, debug=false, alpha=1) {
+  clear = cutter?clearance:0;
+  clear2 = clear*2;
+  
+  color("Orange") RenderIf(!cutter)
+  difference() {
+    translate([MagazineMinX(),0,-0.75+0.125])
+    AR15_Magwell(cut=false,
+                 height=AR15_MagwellDepth()+0.125,
+                 wallFront=0.1875,
+                 wall=0.125);
     
-    // Ejection slot
-    rotate([-AR15_CamPinAngle(),0,0])
-    mirror([0,1,0])
-    translate([ReceiverFrontLength(),0,-0.5/2])
-    ChamferedCube([BarrelMinX()-ReceiverFrontLength(),
-                   AR15BarrelExtensionLipRadius()+WallBarrel()+1,
-                   0.5], r=1/16);
-                   
-    // Ejection slot forward bevel
-    rotate([-AR15_CamPinAngle(),0,0])
-    translate([BarrelMinX()-0.25,
-                -AR15_BoltHeadRadius(),
-                -0.5/2])
-    mirror([0,1,0])
-    rotate(40)
-    ChamferedCube([BarrelMinX()-barrelRearWall,
-                   AR15BarrelExtensionLipRadius()+WallBarrel()+1,
-                   0.5], r=1/16);
-  }
-
-  color("Orange")
-  translate([MagazineMinX(),0,-0.5-0.25])
-  AR15_MagwellInsert(catch=false,
-                     extraTop=0.75);
+    ReceiverCutters();
   }
 }
 
@@ -372,11 +330,11 @@ module ReceiverBoltTrack(length=2.5, alpha=1) {
   color("OliveDrab", alpha) render()
   difference() {
     translate([ForendMinX(),0,0])
-    ReceiverFront(boltHead="none") {
-      
-      translate([ForendMinX()+0.25,0,0])
+    ReceiverFront(boltHead="none")
+    union() {
+      translate([ForendMinX()+0.25,-(ReceiverSlotWidth()/2),0])
       mirror([1,0,0])
-      ReceiverGuide(height=(7/8)+0.01, length=length+0.25);
+      ChamferedCube([length+0.25, ReceiverSlotWidth(), (7/8)+0.01], r=1/16);
 
       translate([ForendMinX(),0,0])
       rotate([0,-90,0])
@@ -397,8 +355,6 @@ if (_RENDER == "Assembly") {
 
   translate([-1-2,0,0])
   *HammerAssembly(insertRadius=0.75, alpha=1);
-
-  FrameBolts(length=8);
 
   color("DimGrey") render()
   Barrel();
@@ -430,17 +386,20 @@ if (_RENDER == "Assembly") {
     rotate([-AR15_CamPinAngle()*(1-animate_unlock1),0,0]) {
       Bolt();
       
-      BoltCarrier(alpha=0.5);
+      BoltCarrier(alpha=1);
     }
   }
+  
+  ForendMagwell(debug=false, alpha=0.25);
 
-  ReceiverBoltTrack(debug=false, alpha=0.25);
+  ReceiverBoltTrack(alpha=0.25);
 
-  AR15Forend(debug=false, alpha=0.2);
+  AR15Forend(debug=false, alpha=0.25);
 
-  Receiver(pipeAlpha=0.2, buttstockAlpha=1,
-                    boltExtension=1, lower=false,
-                    receiverLength=12);
+  translate([-ReceiverFrontLength(),0,0])
+  Receiver(pipeAlpha=1, buttstockAlpha=1,
+           receiverLength=12, frameBoltLength=8, 
+           lower=true);
 
 }
 
@@ -456,3 +415,5 @@ scale(25.4) {
   rotate([0,90,0])
   ReceiverBoltTrack();
 }
+
+

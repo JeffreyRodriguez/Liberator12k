@@ -571,7 +571,7 @@ module CraneShield(cutter=false, clearance=0.006,
 
   pivotCutterRadius = RodRadius(CylinderRod())+WallCrane()+0.005;
   craneRadius = CranePivotY()+CranePivotRadius()+WallCrane();
-  cylinderMaxX = 2.3355+ShellRimLength();
+  cylinderMaxX = /*2.3355*/2.56278+ShellRimLength();
 
   color("OliveDrab", alpha) DebugHalf(enabled=debug)  RenderIf(!cutter)
   difference() {
@@ -685,7 +685,7 @@ module RevolverCylinder_4130x6(supports=true, chambers=false,
       centerOffset=RevolverSpindleOffset(),
       chamberRadius=0.5, chamberInnerRadius=0.813/2,
       coreInnerRadius=SpindleCollarRadius()+0.003,
-      zigzagAngle=80, wall=0.1875,
+      zigzagAngle=80, wall=0.1875+0.125,
       extraTop=ActuatorPretravel(),
       supports=supports, chamberBolts=chamberBolts,
       chambers=chambers, chamberLength=ChamberLength(),
@@ -737,16 +737,16 @@ module RevolverShotgunAssembly(stock=true,
     }
   }
 
+  translate([RecoilPlateRearX(),0,0])
   Receiver(pipeAlpha=pipeAlpha,
                     debug=false);
 }
 
 
-RevolverShotgunAssembly(pipeAlpha=0.5, debug=false);
-
-
 translate([FiringPinMinX(),0,0])
 HammerAssembly(insertRadius=0.75, alpha=0.5);
+
+RevolverShotgunAssembly(pipeAlpha=0.5, debug=false);
 
 FrameAssembly();
 
