@@ -48,8 +48,7 @@ module ButtstockBolt(od=RECEIVER_TUBE_OD,
                      clearance=0.005, teardropAngle=0) {
   clear = cutter ? clearance : 0;
 
-  color("Silver")
-  DebugHalf(enabled=debug)
+  color("Silver") RenderIf(!cutter) DebugHalf(enabled=debug)
   for (R = [180]) rotate([R,0,0])
   translate([(ButtstockSleeveLength()/2), 0, ButtstockTabHeight()+ButtstockWall()-(1/2)])
   NutAndBolt(bolt=ButtstockBolt(),
@@ -65,8 +64,7 @@ module ButtstockTab(od=RECEIVER_TUBE_OD,
   clear = cutter?clearance:0;
   clear2 = clear*2;
 
-  color("SaddleBrown", alpha)
-  DebugHalf(enabled=debug) RenderIf(!cutter)
+  color("SaddleBrown", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
     union() {
       hull() {
@@ -132,8 +130,7 @@ module Buttstock(od=RECEIVER_TUBE_OD,
 
 
 
-  color("Tan", alpha)
-  DebugHalf(enabled=debug) render()
+  color("Tan", alpha) render() DebugHalf(enabled=debug)
   difference() {
 
     // Stock and extension hull
