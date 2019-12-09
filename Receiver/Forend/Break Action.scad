@@ -744,7 +744,7 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1,
       
       LatchScrews();
 
-      translate([0,0,ActionRodZ()])
+      translate([-ReceiverFrontLength(),0,ActionRodZ()])
       ActionRod(length=ActionRodLength());
     }
 
