@@ -4,6 +4,7 @@ use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
 use <../Meta/Debug.scad>;
 use <../Meta/Resolution.scad>;
+use <../Meta/RenderIf.scad>;
 
 use <../Shapes/Chamfer.scad>;
 use <../Shapes/Semicircle.scad>;
@@ -73,8 +74,7 @@ function ReceiverBoltY() = 0.875;
 module CouplingBolts(teardrop=false, boltHead="flat", extension=0.5,
               debug=false, clearance=0.005, cutter=false) {
 
-  color("CornflowerBlue")
-  DebugHalf(enabled=debug)
+  color("CornflowerBlue") RenderIf(!cutter) DebugHalf(enabled=debug)
   for (NUT = ["heatset", "hex"])
   for (Y = [-1,1])
   translate([-ReceiverCouplingLength()-ManifoldGap(),
@@ -95,8 +95,7 @@ module ReceiverCoupling(od=RECEIVER_TUBE_OD,
                         debug=false, alpha=1) {
   length = FrameReceiverLength()-0.5;
 
-  color("DimGray", alpha)
-  DebugHalf(enabled=debug) render()
+  color("DimGray", alpha) render() DebugHalf(enabled=debug)
   difference() {
 
     union() {
@@ -105,7 +104,7 @@ module ReceiverCoupling(od=RECEIVER_TUBE_OD,
       translate([-length,0,0])
       hull()
       FrameSupport(length=length);
-      
+
       hull() {
 
         // Join bolt wall and pipe
@@ -167,11 +166,10 @@ module ReceiverBack(od=RECEIVER_TUBE_OD,
                     length=ReceiverBackLength(),
                     clearance=0.01,
                     debug=false, alpha=1) {
-                      
+
     receiverBackMinX = -FrameReceiverLength();
 
-  color("DimGray", alpha)
-  DebugHalf(enabled=debug) render()
+  color("DimGray", alpha) render() DebugHalf(enabled=debug)
   difference() {
 
     union() {
@@ -206,8 +204,7 @@ ReceiverBack(od=od, id=id);
 module ReceiverFront(width=2.25, frameLength=ReceiverFrontLength(),
                      boltHead="flat",
                      debug=false, alpha=1) {
-  color("MediumSlateBlue", alpha)
-  DebugHalf(enabled=debug)
+  color("MediumSlateBlue", alpha) render() DebugHalf(enabled=debug)
   difference() {
     union() {
       translate([-ReceiverFrontLength(),0, 0]){
@@ -223,7 +220,7 @@ module ReceiverFront(width=2.25, frameLength=ReceiverFrontLength(),
         children();
       }
     }
-    
+
     FrameBolts(cutter=true);
 
     CouplingBolts(boltHead=boltHead, cutter=true, teardrop=false);
@@ -237,7 +234,7 @@ module Receiver(od=RECEIVER_TUBE_OD,
                 pipeAlpha=1, buttstockAlpha=1,
                 frameBoltLength=FrameBoltLength(),
                 triggerAnimationFactor=TriggerAnimationFactor(),
-                lower=true,
+                frameBolts=true, lower=true,
                 lowerBolt=LowerBolt(),
                 lowerBoltHead=LOWER_BOLT_HEAD,
                 lowerBoltNut=LOWER_BOLT_NUT,
@@ -248,6 +245,7 @@ module Receiver(od=RECEIVER_TUBE_OD,
   *ReceiverFront(alpha=0.25);
   ReceiverBack(debug=debug);
 
+  if (frameBolts)
   FrameBolts(length=frameBoltLength);
 
   ReceiverCoupling(od=od, id=id, debug=debug);
