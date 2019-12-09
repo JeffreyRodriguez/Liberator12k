@@ -36,8 +36,7 @@ module ReceiverTube(od=RECEIVER_TUBE_OD,
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
-  color("DimGrey", alpha)
-  DebugHalf(enabled=debug) RenderIf(!cutter)
+  color("DimGrey", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
     translate([LowerMaxX(),0,0])
     rotate([0,-90,0])
@@ -58,7 +57,7 @@ module ReceiverTube(od=RECEIVER_TUBE_OD,
 module PipeLugFront(od=RECEIVER_TUBE_OD,
                     id=RECEIVER_TUBE_ID,
                     alpha=1, cutter=false, debug=false) {
-  color("Gray", alpha=alpha) DebugHalf(enabled=debug) RenderIf(!cutter)
+  color("Gray", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
     translate([0,0,LowerOffsetZ()])
     ReceiverLugFront(extraTop=-LowerOffsetZ(),
@@ -72,7 +71,7 @@ module PipeLugFront(od=RECEIVER_TUBE_OD,
 module PipeLugRear(od=RECEIVER_TUBE_OD,
                    id=RECEIVER_TUBE_ID,
                    alpha=1, cutter=false, debug=false) {
-  color("Gray", alpha=alpha) DebugHalf(enabled=debug) RenderIf(!cutter)
+  color("Gray", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
     translate([0,0,LowerOffsetZ()])
     ReceiverLugRear(extraTop=-LowerOffsetZ(),
@@ -87,7 +86,7 @@ module PipeLugCenter(od=RECEIVER_TUBE_OD,
                      id=RECEIVER_TUBE_ID,
                      cutter=false, clearance=0.002,
                     alpha=1, debug=false) {
-  color("DarkGray", alpha=alpha) DebugHalf(enabled=debug) RenderIf(!cutter)
+  color("DarkGray", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
     union() {
       translate([0,0,LowerOffsetZ()])
