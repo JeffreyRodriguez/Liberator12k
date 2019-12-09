@@ -90,7 +90,7 @@ module FrameSpacer(length=FRAME_SPACER_LENGTH, debug=false, alpha=1) {
     FrameSupport(length=length);
 
     // Picatinny rail cutout
-    translate([-ManifoldGap(), -UnitsMetric(15.6/2), FrameTopZ()-0.125])
+    translate([-ManifoldGap(), -UnitsMetric(15.6/2), FrameTopZ()-0.0625])
     cube([length+ManifoldGap(2), UnitsMetric(15.6), 0.25]);
 
     FrameBolts(cutter=true);
