@@ -85,10 +85,10 @@ function BarrelCollarWidth() = (5/8);
 
 
 // Calculated: Lengths
-function ForendFrontLength() = FrameUpperBoltExtension()-ChamberLength()-ForendGasGap();
+function ForendFrontLength() = FrameBoltExtension()-ChamberLength()-ForendGasGap();
 
 // Calculated: Positions
-function ForendMaxX() = FrameUpperBoltExtension();
+function ForendMaxX() = FrameBoltExtension();
 function ForendMinX() = ForendMaxX()-ForendFrontLength();
 
 function BarrelCollarMinX() = ForendMinX()-BarrelCollarWidth();
@@ -138,26 +138,23 @@ function CraneLatchMinX() = CraneMaxX();
 function CraneLatchMaxX() = CraneLatchMinX()+CraneLatchLength();
 
 module RevolverRecoilPlateHousing(debug=false) {
+  length = abs(RecoilPlateRearX());
+  
   color("YellowGreen")
   DebugHalf(enabled=debug) render()
   difference() {
-    ReceiverFront(width=2*(FrameBoltY()
-                          +WallFrameUpperBolt()
-                          +FrameUpperBoltRadius())-(1/16)) {
+    translate([RecoilPlateRearX(),0,0])
+    union() {
+      ReceiverCouplingPattern(length=length, frameLength=length);
 
-        // Backing plate for the cylinder
-        translate([0,0,-RevolverSpindleOffset()])
-        rotate([0,90,0])
-        ChamferedCylinder(r1=(BarrelRadius()*3)+(CR()*2), r2=CR(),
-                 h=abs(RecoilPlateRearX())-ManifoldGap());
-
-        // Frame upper support
-        *hull() {
-          translate([0,0,-FrameBoltZ()*2])
-          FrameSupport(length=abs(RecoilPlateRearX()));
-          FrameSupport(length=abs(RecoilPlateRearX()));
-        }
+      // Backing plate for the cylinder
+      translate([0,0,-RevolverSpindleOffset()])
+      rotate([0,90,0])
+      ChamferedCylinder(r1=(BarrelRadius()*3)+(CR()*2), r2=CR(),
+               h=length-ManifoldGap());
     }
+    
+    FrameBolts(cutter=true);
 
     RecoilPlate(cutter=true);
 
@@ -638,7 +635,7 @@ module RevolverForend(debug=false, alpha=1, $fn=Resolution(30,100)) {
                      inset=true, taperEnds=true);
 
     // Crane Pivot Supports
-    translate([FrameUpperBoltExtension(),0,0])
+    translate([FrameBoltExtension(),0,0])
     mirror([1,0,0])
     hull() {
 
@@ -656,7 +653,7 @@ module RevolverForend(debug=false, alpha=1, $fn=Resolution(30,100)) {
 
     // Cutout for a picatinny rail insert
     translate([-ManifoldGap(), -UnitsMetric(15.6/2), RecoilPlateTopZ()-0.125])
-    cube([FrameUpperBoltExtension()+ManifoldGap(2), UnitsMetric(15.6), 0.25]);
+    cube([FrameBoltExtension()+ManifoldGap(2), UnitsMetric(15.6), 0.25]);
 
     FrameBolts(cutter=true);
 

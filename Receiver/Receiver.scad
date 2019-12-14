@@ -49,6 +49,7 @@ LOWER_BOLT_NUT = "heatset"; // ["hex", "heatset"]
 function ReceiverFrontLength() = 0.5;
 function ReceiverBackLength() = 0.5;
 function ReceiverCouplingLength() = 1;
+function ReceiverCouplingWidth() = 2.25;
 function ReceiverLength() = 12;
 function ReceiverSlotWidth() = 1;
 
@@ -89,6 +90,42 @@ module CouplingBolts(teardrop=false, boltHead="flat", extension=0.5,
              clearance=cutter?clearance:0);
 }
 
+module ReceiverCouplingPattern(width=ReceiverCouplingWidth(),
+                     frameLength=0.75,
+                     length=0.5,
+                     boltHead="flat",
+                     debug=false, alpha=1) {
+  union() {
+    
+    // Frame bolt supports
+    hull()
+    FrameSupport(length=frameLength);
+    
+    hull() {
+      
+      // Around the receiver pipe
+      rotate([0,90,0])
+      ChamferedCylinder(r1=width/2, r2=1/16,
+                        h=frameLength, $fn=Resolution(30,60));
+
+      // Join the bolt wall and pipe
+      translate([0,-width/2, 0])
+      ChamferedCube([frameLength,
+                     width,
+                     FrameBoltZ()],
+                    r=1/16);
+    }
+
+    // Join the bolt wall and pipe
+    translate([0,-width/2, LowerOffsetZ()])
+    ChamferedCube([length,
+                   width,
+                   abs(LowerOffsetZ())+FrameBoltZ()],
+                  r=1/16);
+  }
+}
+
+
 module ReceiverCoupling(od=RECEIVER_TUBE_OD,
                         id=RECEIVER_TUBE_ID,
                         clearance=0.01,
@@ -99,34 +136,9 @@ module ReceiverCoupling(od=RECEIVER_TUBE_OD,
   difference() {
 
     union() {
-
-      // Bolt supports
-      translate([-length,0,0])
-      hull()
-      FrameSupport(length=length);
-
-      hull() {
-
-        // Join bolt wall and pipe
-        translate([0,-(2.25/2),0])
-        mirror([1,0,0])
-        ChamferedCube([length,
-                       2.25,
-                       FrameBoltZ()],
-                      r=1/16);
-
-        // Around the receiver pipe
-        rotate([0,-90,0])
-        ChamferedCylinder(r1=2.25/2, r2=1/16, h=length, $fn=Resolution(30,60));
-      }
-
-      // Coupling bolt support
-      translate([0,-(2.25/2),LowerOffsetZ()])
       mirror([1,0,0])
-      ChamferedCube([ReceiverCouplingLength()-ManifoldGap(2),
-                     2.25,
-                     abs(LowerOffsetZ())+FrameBoltY()],
-                    r=1/16);
+      ReceiverCouplingPattern(frameLength=length,
+                              length=ReceiverCouplingLength());
 
       // Center lug support
       translate([0,-(1.5/2),LowerOffsetZ()])
@@ -157,7 +169,6 @@ module ReceiverCoupling(od=RECEIVER_TUBE_OD,
 
 module ReceiverCoupling_print(od=RECEIVER_TUBE_OD,
                               id=RECEIVER_TUBE_ID)
-translate([0,0,-ReceiverFrontLength()])
 rotate([0,90,0])
 ReceiverCoupling(od=od, id=id);
 
@@ -201,38 +212,13 @@ translate([0,0,-FrameReceiverLength()+ReceiverBackLength()])
 rotate([0,90,0])
 ReceiverBack(od=od, id=id);
 
-module ReceiverFront(width=2.25, frameLength=ReceiverFrontLength(),
-                     boltHead="flat",
-                     debug=false, alpha=1) {
-  color("MediumSlateBlue", alpha) render() DebugHalf(enabled=debug)
-  difference() {
-    union() {
-      translate([-ReceiverFrontLength(),0, 0]){
-        hull()
-        FrameSupport(length=frameLength);
-
-        translate([0,-width/2, LowerOffsetZ()])
-        ChamferedCube([ReceiverFrontLength(),
-                       width,
-                       abs(LowerOffsetZ())+FrameBoltZ()],
-                      r=1/16);
-
-        children();
-      }
-    }
-
-    FrameBolts(cutter=true);
-
-    CouplingBolts(boltHead=boltHead, cutter=true, teardrop=false);
-  }
-}
-
 module Receiver(od=RECEIVER_TUBE_OD,
                 id=RECEIVER_TUBE_ID,
                 receiverLength=ReceiverLength(),
                 pipeOffsetX=0,
                 pipeAlpha=1, buttstockAlpha=1,
                 frameBoltLength=FrameBoltLength(),
+                couplingBoltExtension=0.5,
                 triggerAnimationFactor=TriggerAnimationFactor(),
                 frameBolts=true, lower=true,
                 lowerBolt=LowerBolt(),
@@ -240,9 +226,8 @@ module Receiver(od=RECEIVER_TUBE_OD,
                 lowerBoltNut=LOWER_BOLT_NUT,
                 debug=true) {
 
-  CouplingBolts();
+  CouplingBolts(extension=couplingBoltExtension);
 
-  *ReceiverFront(alpha=0.25);
   ReceiverBack(debug=debug);
 
   if (frameBolts)

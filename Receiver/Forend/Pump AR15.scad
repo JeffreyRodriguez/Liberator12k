@@ -284,7 +284,7 @@ module AR15Forend(debug=false, alpha=1) {
   DebugHalf(enabled=debug) render()
   difference() {
     translate([ReceiverFrontLength()+ForendMinX(),0,0])
-    ReceiverFront(frameLength=ForendLength(), boltHead="flat") {
+    ReceiverCouplingPattern(frameLength=ForendLength(), boltHead="flat") {
         
       // Join the barrel sleeve to the frame
       translate([0,-(AR15BarrelExtensionLipRadius()+WallBarrel()),0])
@@ -330,7 +330,7 @@ module ReceiverBoltTrack(length=2.5, alpha=1) {
   color("OliveDrab", alpha) render()
   difference() {
     translate([ForendMinX(),0,0])
-    ReceiverFront(boltHead="none")
+    ReceiverCouplingPattern(boltHead="none")
     union() {
       translate([ForendMinX()+0.25,-(ReceiverSlotWidth()/2),0])
       mirror([1,0,0])
