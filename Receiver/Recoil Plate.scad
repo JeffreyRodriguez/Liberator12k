@@ -4,6 +4,7 @@ use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
 use <../Meta/Debug.scad>;
 use <../Meta/Resolution.scad>;
+use <../Meta/RenderIf.scad>;
 
 use <../Shapes/Chamfer.scad>;
 
@@ -40,7 +41,7 @@ module RecoilPlateFiringPinAssembly(cutter=false, debug=false) {
 
 module RecoilPlate(firingPinAngle=0, cutter=false, debug=false) {
   color("LightSteelBlue")
-  DebugHalf(enabled=debug)
+  RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
     translate([-RecoilPlateThickness(), -1-ManifoldGap(2), -RecoilPlateWidth()/2])
     ChamferedCube([RecoilPlateThickness()+(cutter?(1/8):0),
