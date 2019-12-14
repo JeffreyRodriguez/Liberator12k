@@ -49,8 +49,7 @@ function FrameBottomZ() = FrameBoltZ()
                         - WallFrameUpperBolt();
 
 // Calculated: Positions
-function FrameUpperBoltExtension() = FrameBoltLength()
-                                   -0.5
+function FrameBoltExtension(length=FrameBoltLength()) = length
                                    -FrameReceiverLength();
 
 module FrameBoltIterator() {
