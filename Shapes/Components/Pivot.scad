@@ -21,10 +21,10 @@ module Pivot(factor=1,
   translate([-pivotX,0,-pivotZ]) {
     children();
 
-    //if (debug)
-    %translate([pivotX,0,pivotZ])
+    %if (debug)
+    translate([pivotX,0,pivotZ])
     rotate([90,0,0])
-    %cylinder(r=0.1, h=5, center=true);
+    cylinder(r=0.1, h=5, center=true);
   }
 }
 
