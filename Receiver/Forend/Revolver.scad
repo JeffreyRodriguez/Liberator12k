@@ -85,17 +85,17 @@ function BarrelCollarWidth() = (5/8);
 
 
 // Calculated: Lengths
-function ForendFrontLength() = FrameBoltExtension()-ChamberLength()-ForendGasGap();
+function ForendFrontLength() = FrameExtension()-ChamberLength()-ForendGasGap();
 
 // Calculated: Positions
-function ForendMaxX() = FrameBoltExtension();
+function ForendMaxX() = FrameExtension();
 function ForendMinX() = ForendMaxX()-ForendFrontLength();
 
 function BarrelCollarMinX() = ForendMinX()-BarrelCollarWidth();
 
 function RecoilPlateTopZ() = ReceiverOR()
-                           + FrameUpperBoltDiameter()
-                           + (WallFrameUpperBolt()*2);
+                           + FrameBoltDiameter()
+                           + (WallFrameBolt()*2);
 
 // Crane
 function CranePivotAngle() = 90;
@@ -635,7 +635,7 @@ module RevolverForend(debug=false, alpha=1, $fn=Resolution(30,100)) {
                      inset=true, taperEnds=true);
 
     // Crane Pivot Supports
-    translate([FrameBoltExtension(),0,0])
+    translate([FrameExtension(),0,0])
     mirror([1,0,0])
     hull() {
 
@@ -653,7 +653,7 @@ module RevolverForend(debug=false, alpha=1, $fn=Resolution(30,100)) {
 
     // Cutout for a picatinny rail insert
     translate([-ManifoldGap(), -UnitsMetric(15.6/2), RecoilPlateTopZ()-0.125])
-    cube([FrameBoltExtension()+ManifoldGap(2), UnitsMetric(15.6), 0.25]);
+    cube([FrameExtension()+ManifoldGap(2), UnitsMetric(15.6), 0.25]);
 
     FrameBolts(cutter=true);
 

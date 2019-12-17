@@ -22,39 +22,37 @@ FRAME_SPACER_LENGTH = 4.5;
 // Settings: Lengths
 function FrameBoltLength() = 10;
 function FrameReceiverLength() = 3;
-function FrameExtension() = FrameBoltLength()
-                          - FrameReceiverLength();
 
 // Settings: Walls
-function WallFrameUpperBolt() = 0.25;
+function WallFrameBolt() = 0.25;
 
 // Settings: Vitamins
-function FrameUpperBolt() = Spec_BoltOneHalf();
+function FrameBolt() = Spec_BoltOneHalf();
 
 // Shorthand: Measurements
-function FrameUpperBoltRadius(clearance=0)
-    = BoltRadius(FrameUpperBolt(), clearance);
+function FrameBoltRadius(clearance=0)
+    = BoltRadius(FrameBolt(), clearance);
 
-function FrameUpperBoltDiameter(clearance=0)
-    = BoltDiameter(FrameUpperBolt(), clearance);
+function FrameBoltDiameter(clearance=0)
+    = BoltDiameter(FrameBolt(), clearance);
 
 // Settings: Positions
 function FrameBoltZ() = 1.5;
 function FrameBoltY() = 1;
 function FrameTopZ() = FrameBoltZ()
-                     + FrameUpperBoltRadius()
-                     + WallFrameUpperBolt();
+                     + FrameBoltRadius()
+                     + WallFrameBolt();
 function FrameBottomZ() = FrameBoltZ()
-                        - FrameUpperBoltRadius()
-                        - WallFrameUpperBolt();
+                        - FrameBoltRadius()
+                        - WallFrameBolt();
 
-// Calculated: Positions
-function FrameBoltExtension(length=FrameBoltLength()) = length
-                                   -FrameReceiverLength();
+function FrameExtension(length=FrameBoltLength()) = length
+                                                  - FrameReceiverLength()
+                                                  - NutHexHeight(FrameBolt());
 
 module FrameBoltIterator() {
     for (Y = [FrameBoltY(),-FrameBoltY()])
-    translate([-FrameReceiverLength()-NutHexHeight(FrameUpperBolt())-ManifoldGap(),
+    translate([-FrameReceiverLength()-NutHexHeight(FrameBolt())-ManifoldGap(),
                Y, FrameBoltZ()])
     rotate([0,90,0])
     children();
@@ -67,7 +65,7 @@ module FrameBolts(length=FrameBoltLength(),
   color("Silver", alpha) RenderIf(!cutter)
   DebugHalf(enabled=debug) {
     FrameBoltIterator()
-    NutAndBolt(bolt=FrameUpperBolt(), boltLength=length,
+    NutAndBolt(bolt=FrameBolt(), boltLength=length,
          head="hex", nut="hex", clearance=clear);
   }
 }
@@ -76,7 +74,7 @@ module FrameSupport(length=FRAME_SPACER_LENGTH, $fn=Resolution(20,60)) {
   for (Y = [FrameBoltY(),-FrameBoltY()])
   translate([0, Y, FrameBoltZ()])
   rotate([0,90,0])
-  ChamferedCylinder(r1=FrameUpperBoltRadius()+WallFrameUpperBolt(),
+  ChamferedCylinder(r1=FrameBoltRadius()+WallFrameBolt(),
                     r2=1/16, h=length,
                     teardropTop=true, teardropBottom=true);
 }

@@ -72,7 +72,7 @@ function WallBarrel() = 0.1875;
 function WallPivot() = (7/16);
 
 // Settings: Positions
-function ActionRodZ() = FrameBoltZ()-WallFrameUpperBolt()-(ActionRodWidth()/2);
+function ActionRodZ() = FrameBoltZ()-WallFrameBolt()-(ActionRodWidth()/2);
 function ActionRodLength() =PivotX()+PivotRadius()+WallPivot()+ChargerTravel()+2;
 
 // Shorthand: Measurements
@@ -106,12 +106,12 @@ function ForegripLength() = 4.625;
 // Calculated: Positions
 function FiringPinMinX() = -1.5-2;
 function BarrelOffsetZ() = 0; // -0.11 for .22LR rimfire
-function ForendMaxX() = FrameUpperBoltExtension()+RecoilPlateRearX();
+function ForendMaxX() = FrameExtension()+RecoilPlateRearX();
 function ForendMinX() = ForendMaxX()-ForendFrontLength();
 function PivotAngle() = -30;
 function PivotX() = 5.5;
 function PivotZ() = FrameBoltZ()
-                  + (FrameUpperBoltRadius()+PivotRadius());
+                  + (FrameBoltRadius()+PivotRadius());
 
 
 function ExtractorAngles() = [90,-90];
@@ -139,7 +139,7 @@ function LatchRodLength() = ReceiverFrontLength()
                           + 0.625;
                           
 function LatchX() = 0.25;
-function LatchZ() = ActionRodZ();//-(BarrelSleeveRadius()+WallBarrel() +LatchSpringRadius());
+function LatchZ() = -(BarrelSleeveRadius()+WallBarrel() +LatchSpringRadius());
 function LatchSupportWidth() = (LatchSpringRadius()+LatchWall())*2;
 function LatchFlatZ() = -(BarrelRadius()+0.5);
 function LatchFlatWidth() = 1.5;
@@ -259,7 +259,10 @@ module LatchScrews(debug=false, cutter=false, clearance=0.008) {
 module BreakActionRecoilPlateHousing(debug=false, alpha=1) {
   color("MediumSlateBlue", alpha) render() DebugHalf(enabled=debug)
   difference() {
-    ReceiverFront() {
+    translate([RecoilPlateRearX(),0,0])
+    union() {
+      ReceiverCouplingPattern(length=ReceiverFrontLength(),
+                              frameLength=ReceiverFrontLength());
       hull() {
 
         // Match the recoil plate
@@ -402,16 +405,16 @@ module BreakActionForend(debug=false, alpha=1) {
 
         translate([PivotX(), 0, PivotZ()])
         rotate([90,0,0])
-        translate([0,0,-FrameBoltY()-FrameUpperBoltRadius()-WallFrameUpperBolt()])
+        translate([0,0,-FrameBoltY()-FrameBoltRadius()-WallFrameBolt()])
         ChamferedCylinder(r1=0.5, r2=1/16,
-                 h=(FrameBoltY()+FrameUpperBoltRadius()+WallFrameUpperBolt())*2,
+                 h=(FrameBoltY()+FrameBoltRadius()+WallFrameBolt())*2,
                  teardropBottom=false,
                  $fn=Resolution(20,60));
 
         // Front face is printed on the bottom layer, flatten it out
-        translate([PivotX(), -(FrameBoltY()+FrameUpperBoltRadius()+WallFrameUpperBolt()), PivotZ()])
+        translate([PivotX(), -(FrameBoltY()+FrameBoltRadius()+WallFrameBolt()), PivotZ()])
         ChamferedCube([0.5,
-                       (FrameBoltY()+FrameUpperBoltRadius()+WallFrameUpperBolt())*2,
+                       (FrameBoltY()+FrameBoltRadius()+WallFrameBolt())*2,
                        0.5], r=1/16);
       }
     }
@@ -421,7 +424,7 @@ module BreakActionForend(debug=false, alpha=1) {
                 -PivotWidth()/2, 0])
     ChamferedCube([(PivotRadius()+WallPivot())*2,
                    PivotWidth(),
-                   FrameBoltZ()+FrameUpperBoltDiameter()+(WallFrameUpperBolt()*2)],
+                   FrameBoltZ()+FrameBoltDiameter()+(WallFrameBolt()*2)],
                   r=1/16);
 
     // Pivot rod
@@ -449,7 +452,7 @@ module BreakActionForend(debug=false, alpha=1) {
 
 module BreakActionForend_print() {
   rotate([0,90,0])
-  translate([-FrameUpperBoltExtension()+ForendFrontLength(),0,-FrameBoltZ()])
+  translate([-FrameExtension()+ForendFrontLength(),0,-FrameBoltZ()])
   BreakActionForend();
 }
 
@@ -574,8 +577,8 @@ module BarrelLatchCollar(debug=false, alpha=1, cutter=false) {
         ChamferedCube([LatchCollarLength(),
                        (BarrelSleeveRadius())*2,
                        FrameBoltZ()
-                         -FrameUpperBoltRadius()
-                         -WallFrameUpperBolt()],
+                         -FrameBoltRadius()
+                         -WallFrameBolt()],
                       r=1/16);
       }
 

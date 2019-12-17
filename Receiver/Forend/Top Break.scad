@@ -81,18 +81,21 @@ function WallBarrel() = 0.1875;
 function FrameBoltLength() = 10;
 
 function WallPivot() = 0.5;
+function PivotAngleBack() = -15;
 function PivotAngle() = 35;
 function PivotX() = 4.5;
-function PivotZ() = -1.3125;// (FrameBoltZ() + (FrameUpperBoltRadius()+PivotRadius()));
+function PivotZ() = -1.3125;// (FrameBoltZ() + (FrameBoltRadius()+PivotRadius()));
 function PivotWidth() = 1.375;
 function PivotRadius() = 0.625;
 function PivotDiameter() = PivotRadius()*2;
+function PivotClearance() = 0.01;
+
 function ActionRodLength() = 10;
 function LatchSpringLength() = 2.5+3;
 function LatchSpringDiameter() = 0.625;
 
 function ReceiverFrontLength() = 1;
-function ForendLength() = FrameBoltExtension(length=FrameBoltLength())
+function ForendLength() = FrameExtension(length=FrameBoltLength())
                         -ReceiverFrontLength()-0.5;
 function ChargerTravel() = 1.125;
 function LatchCollarLength() = 5.5;//ForendLength();
@@ -121,7 +124,7 @@ function ForegripOffsetX() = 6+ChargerTravel();
 function ForegripLength() = 4.625;
 
 // Calculated: Positions
-function ActionRodZ() = FrameBoltZ()-WallFrameUpperBolt()-(ActionRodWidth()/2);
+function ActionRodZ() = FrameBoltZ()-WallFrameBolt()-(ActionRodWidth()/2);
 function BarrelOffsetZ() = 0; // -0.11 for .22LR rimfire
 
 function ExtractorWidth() = (1/4);
@@ -141,6 +144,7 @@ function LatchWall() = 0.1875;
 function BarrelCollarBottomZ() = PivotZ()-(PivotRadius()*0.5);
 
 function WallSupportBolt() =0.25;
+function SupportBoltY() = -2;
 function SupportBoltZ() = -2;
 function SupportBottomZ() = SupportBoltZ()-WallSupportBolt();
 
@@ -422,9 +426,9 @@ module BreakActionForend(clearance=0.01, debug=false, alpha=1) {
       }
     }
     
-    for (PF = [0:0.25:1])
+    for (A = [PivotAngleBack():10:PivotAngle()])
     Pivot(pivotX=PivotX(), pivotZ=PivotZ(),
-          angle=PivotAngle(), factor=PF) {
+          angle=A, factor=1) {
       Barrel(cutter=true);
       BarrelLatchCollar(cutter=true);
      }
@@ -453,18 +457,12 @@ module BreakActionForend(clearance=0.01, debug=false, alpha=1) {
       ChamferedCylinder(r1=PivotRadius()+WallPivot(), r2=1/16,
                          h=PivotWidth()*2, $fn=Resolution(20,80));
     }
-     
-    // Pivot radius
-    *translate([PivotX(), (PivotWidth()/2), PivotZ()])
-    rotate([90,0,0])
-    ChamferedCylinder(r1=abs(PivotZ())+FrameBottomZ(), r2=1/16,
-                       h=PivotWidth(), $fn=Resolution(20,80));
 
-     FrameBolts(cutter=true);
-     SupportBolt(cutter=true);
+    FrameBolts(cutter=true);
+    SupportBolt(cutter=true);
      
-     Extractor(cutter=true);
-     ExtractorGuideRod(cutter=true);
+    Extractor(cutter=true);
+    ExtractorGuideRod(cutter=true);
 
     translate([-ReceiverFrontLength(),0,ActionRodZ()])
     ActionRod(length=ActionRodLength(), cutter=true);
@@ -551,7 +549,8 @@ module BarrelLatchCollar(cutter=false, clearance=0.01,
     hull() for (X = [0,1])
     translate([PivotX()+X, 0, PivotZ()])
     rotate([90,0,0])
-    cylinder(r=PivotRadius()+clear, h=3, center=true);
+    cylinder(r=PivotRadius()+clearance-clear, h=3,
+             center=true, $fn=Resolution(20,50));
     
     if (!cutter) {
       
@@ -663,7 +662,7 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1,
     Bipod();
   }
 
-  BreakActionForend(debug=debug, alpha=0.75);
+  BreakActionForend(debug=debug, alpha=0.25);
 
   translate([-ReceiverFrontLength()+0.5,0,0])
   HammerAssembly(travelFactor=Animate(ANIMATION_STEP_FIRE)
