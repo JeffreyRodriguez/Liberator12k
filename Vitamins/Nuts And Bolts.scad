@@ -19,6 +19,7 @@ BOLTS = [
   ["#10-24", Spec_Bolt10_24()],
   ["5/16\"-18", Spec_BoltFiveSixteenths()],
   ["1/2\"-13", Spec_BoltOneHalf()],
+  ["1/4\"-20", Spec_BoltOneQuarter()],
   ["M4", Spec_BoltM4()],
   ["M5", Spec_BoltM5()],
 
@@ -153,6 +154,18 @@ module NutHeatset(spec, extraLength=0) {
       }
 };
 
+module NutHeatsetLong(spec, extraLength=0) {
+      cylinder(r1=NutHeatsetLongMajorRadius(spec),
+               r2=NutHeatsetLongMinorRadius(spec),
+               h=NutHeatsetLongHeight(spec));
+
+      if (extraLength > 0) {
+        translate([0,0,-extraLength])
+        cylinder(r=NutHeatsetLongMajorRadius(spec),
+                 h=extraLength+ManifoldGap());
+      }
+};
+
 
 module NutAndBolt(bolt=Spec_BoltTemplate(), boltLength=1, boltLengthExtra=0,
                   head="socket", nut=undef,
@@ -179,6 +192,8 @@ module NutAndBolt(bolt=Spec_BoltTemplate(), boltLength=1, boltLengthExtra=0,
       NutHex(bolt, nutHeightExtra=nutHeightExtra, clearance=clearance);
     } else if (nut == "heatset") {
       NutHeatset(bolt, extraLength=nutHeightExtra);
+    } else if (nut == "heatset-long") {
+      NutHeatsetLong(bolt, extraLength=nutHeightExtra);
     }
   }
 }
