@@ -15,7 +15,7 @@ function Spec_Bolt8_32() = [
 
   ["NutHeatsetMajorDiameter", UnitsImperial(0.234)],
   ["NutHeatsetMinorDiameter", UnitsImperial(0.226)],
-  ["NutHeatsetHeight",        UnitsMetric(0.185)],
+  ["NutHeatsetHeight",        UnitsImperial(0.185)],
 
   ["NutHeatsetLongMajorDiameter", UnitsMetric(6.35)],
   ["NutHeatsetLongMinorDiameter", UnitsMetric(5.38)],
