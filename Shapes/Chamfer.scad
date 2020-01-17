@@ -30,8 +30,6 @@ module RoundedBoolean(edgeOffset=1, edgeSign=-1,
 module Fillet(r=0.125, h=1, inset=false, taperEnds=true) {
   effectiveHeight = h -(inset ? r*2 : 0);
 
-
-  render()
   translate([-ManifoldGap(2),-ManifoldGap(2),(inset ? r : 0)])
   difference() {
     linear_extrude(height=effectiveHeight)
@@ -72,7 +70,6 @@ module CircularOuterEdgeChamfer(r1=0.5, r2=0.125, teardrop=false) {
 }
 
 module SquareHoleEndChamfer(xy=[1,1], r=0.125, teardrop=true, teardropAngle=-90, center=false) {
-  render()
   translate([center ? -xy[0]/2 : 0, center ? -xy[1]/2 : 0, 0])
   difference() {
 
@@ -98,7 +95,6 @@ module ChamferedSquareHole(sides=[1,1], length=1, center=true,
                            chamferTop=true, chamferBottom=true, chamferRadius=0.1,
                            teardropTop=true, teardropBottom=true,
                            corners=true, cornerRadius=0.1) {
-  render()
   union() {
 
     // Square Tube
@@ -197,25 +193,21 @@ module CylinderChamfer(r1=1, r2=0.25, teardrop=false) {
 module CylinderChamferEnds(r1=1, r2=0.25, h=1,
                            chamferBottom=true, chamferTop=true,
                            teardropBottom=true, teardropTop=false) {
-  render() {
+  // Keep the bottom teardropped for printing
+  if (chamferBottom)
+  CylinderChamfer(r1=r1, r2=r2, teardrop=teardropBottom);
 
-    // Keep the bottom teardropped for printing
-    if (chamferBottom)
-    CylinderChamfer(r1=r1, r2=r2, teardrop=teardropBottom);
-
-    // We can round the top over
-    if (chamferTop)
-    translate([0,0,h])
-    mirror([0,0,1])
-    CylinderChamfer(r1=r1, r2=r2, teardrop=teardropTop);
-  }
+  // We can round the top over
+  if (chamferTop)
+  translate([0,0,h])
+  mirror([0,0,1])
+  CylinderChamfer(r1=r1, r2=r2, teardrop=teardropTop);
 }
 
 
 module ChamferedCylinder(r1=0.5, r2=0.25, h=1,
                          chamferBottom=true, chamferTop=true,
                            teardropBottom=true, teardropTop=false) {
-  render()
   difference() {
     cylinder(r=r1, h=h);
     CylinderChamferEnds(r1=r1, r2=r2, h=h,
