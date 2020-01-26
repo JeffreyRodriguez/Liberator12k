@@ -8,15 +8,16 @@ DEFAULT_ZIGZAG_DIAMETER = 3.6252;
 DEFAULT_ZIGZAG_POSITIONS= 6;
 DEFAULT_ZIGZAG_DEPTH = 3/16;
 DEFAULT_ZIGZAG_WIDTH = 1/4;
-DEFAULT_ZIGZAG_ANGLE = 60;
+DEFAULT_ZIGZAG_ANGLE = 45;
 
-function Circumference(radius) = PI * pow(radius, 2);
+function Circumference(radius) = PI * (radius*2);
+
 
 function ZigZagSegmentLength(radius, positions)
              = Circumference(radius)
              / (positions*2);
 function ZigZagHeight(radius, positions, width, zigzagAngle)
-             = ZigZagSegmentLength(radius,positions)*(sin(zigzagAngle)*2);
+             = ZigZagSegmentLength(radius,positions)*tan(zigzagAngle);
 
 function TrackAngle(radius, trackWidth)
              = (trackWidth/Circumference(radius)) * 360;
