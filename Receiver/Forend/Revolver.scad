@@ -26,7 +26,6 @@ use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
-use <../../Vitamins/Pipe.scad>;
 use <../../Vitamins/Rod.scad>;
 
 use <../../Ammo/Shell Slug.scad>;
@@ -38,6 +37,8 @@ use <../Charging Pump.scad>;
 use <../Lugs.scad>;
 use <../Frame.scad>;
 
+BARREL_DIAMETER = 1;
+BARREL_CLEARANCE = 0.01;
 
 // Settings: Lengths
 function ShellRimLength() = 0.06;
@@ -45,7 +46,7 @@ function ChamberLength() = 3;
 function BarrelLength() = 18-ChamberLength();
 function ActuatorPretravel() = 0.125;
 function ForendGasGap() = 1.5;
-function RevolverSpindleOffset() = 1.0001;
+function RevolverSpindleOffset() = BARREL_DIAMETER + ManifoldGap();
 function WallBarrel() = 0.375;
 function WallSpindle() = 0.25;
 
@@ -54,14 +55,6 @@ function CR() = 1/16;
 
 
 // Settings: Vitamins
-//Spec_TubingZeroPointSevenFive();
-//Spec_TubingOnePointOneTwoFive();
-//Spec_TubingOnePointZero();
-
-//Spec_PipeThreeQuarterInch();
-//Spec_PipeOneInch();
-function BarrelPipe() = Spec_TubingOnePointZero();
-
 // ZigZag Cylinder
 function CylinderRod() = Spec_RodOneQuarterInch();
 function SpindleCollarWidth() = 0.32;
@@ -73,11 +66,11 @@ function CraneBolt() = Spec_BoltFiveSixteenths();
 function CraneLatchBolt() = Spec_BoltM4();
 
 // Shorthand: Measurements
-function BarrelRadius(clearance=undef)
-    = PipeOuterRadius(BarrelPipe(), clearance);
+function BarrelRadius(clearance=0)
+    = (BARREL_DIAMETER+clearance)/2;
 
-function BarrelDiameter(clearance=undef)
-    = PipeOuterDiameter(BarrelPipe(), clearance);
+function BarrelDiameter(clearance=0)
+    = (BARREL_DIAMETER+clearance);
 
 function BarrelCollarDiameter() = 1 + (5/8);
 function BarrelCollarRadius() = BarrelCollarDiameter()/2;
@@ -168,8 +161,9 @@ module RevolverRecoilPlateHousing(debug=false) {
 }
 
 
-module Barrel(barrel=BarrelPipe(), barrelLength=BarrelLength(), hollow=true,
-              clearance=undef, alpha=1, cutter=false, debug=false) {
+module Barrel(barrelLength=BarrelLength(),
+              clearance=undef, cutter=false,
+              alpha=1, debug=false) {
 
   clear = (cutter ? 0.005 : 0);
   clear2 = clear*2;
@@ -177,22 +171,21 @@ module Barrel(barrel=BarrelPipe(), barrelLength=BarrelLength(), hollow=true,
   color("Silver", alpha) DebugHalf(enabled=debug) RenderIf(!cutter)
   translate([ChamberLength()+ShellRimLength(),0,0])
   rotate([0,90,0])
-  Pipe(pipe=barrel, clearance=clearance,
-       hollow=hollow, length=barrelLength);
+  cylinder(r=BarrelRadius(), h=barrelLength, $fn=Resolution(20,50));
 
   // Rear Shaft Collar
   color("DimGrey", alpha) DebugHalf(enabled=debug) RenderIf(!cutter)
   translate([ForendMinX(),0,0])
   rotate([0,-90,0])
-  cylinder(r=BarrelCollarRadius()+PipeClearance(barrel, clearance),
-           h=BarrelCollarWidth()+ManifoldGap(), $fn=PipeFn(BarrelPipe())*2);
+  cylinder(r=BarrelCollarRadius()+clear,
+           h=BarrelCollarWidth()+ManifoldGap(), $fn=Resolution(30,80));
 
   // Front Shaft Collar
   color("DimGrey", alpha) DebugHalf(enabled=debug) RenderIf(!cutter)
   translate([CraneMaxX()-ManifoldGap(),0,0])
   rotate([0,90,0])
-  cylinder(r=BarrelCollarRadius()+PipeClearance(barrel, clearance),
-           h=BarrelCollarWidth()+clear+ManifoldGap(), $fn=PipeFn(BarrelPipe())*2);
+  cylinder(r=BarrelCollarRadius()+clear,
+           h=BarrelCollarWidth()+clear+ManifoldGap(), $fn=Resolution(30,80));
 }
 
 module RevolverSpindle(teardrop=false, cutter=false, clearance=0.01) {
@@ -231,7 +224,7 @@ module CranePivotPath(clearance=0.005, $fn=Resolution(30,90)) {
     // XDL = MaxX, Diameter, Length
     for (M = [0,1]) mirror([0,M,0])
     for (XDL = [[CraneLatchMaxX(),
-                 BarrelDiameter(PipeClearanceSnug()),
+                 BarrelDiameter(BARREL_CLEARANCE),
                  CraneLatchMaxX()],
                 [ForendMaxX()+clearance,
                  BarrelCollarDiameter()+(clearance*2),
@@ -370,12 +363,12 @@ module CraneLatch(cutter=false, clearance=0.005,
     // Barrel chamfer
     translate([CraneLatchMaxX()+ManifoldGap(),0,0])
     rotate([0,-90,0])
-    ChamferedCircularHole(r1=BarrelRadius(clearance=PipeClearanceLoose()),
+    ChamferedCircularHole(r1=BarrelRadius(clearance=(BARREL_CLEARANCE*2)),
                                                r2=CR(), h=CraneLatchLength()-BarrelCollarWidth());
 
     CranePivotPath();
 
-    Barrel(cutter=true, hollow=false, clearance=PipeClearanceSnug());
+    Barrel(cutter=true, clearance=BARREL_CLEARANCE);
 
     RevolverSpindle(cutter=true);
   }
@@ -541,14 +534,14 @@ module RevolverCrane(cutter=false, teardrop=false, clearance=0.005,
     // Chamfered Barrel Cutout: Front
     translate([CraneMaxX()+ManifoldGap(),0,0])
     rotate([0,-90,0])
-    ChamferedCircularHole(r1=BarrelRadius(clearance=PipeClearanceLoose()),
+    ChamferedCircularHole(r1=BarrelRadius(clearance=(BARREL_CLEARANCE*2)),
                                                r2=CR(), h=CraneMaxX()-ForendMaxX());
 
     // Chamfered Barrel Cutout: Rear
     translate([ManifoldGap(),0,0])
     translate([CraneMinX(),0,0])
     rotate([0,90,0])
-    ChamferedCircularHole(r1=BarrelRadius(clearance=PipeClearanceLoose()),
+    ChamferedCircularHole(r1=BarrelRadius(clearance=(BARREL_CLEARANCE*2)),
                                                    r2=CR(), h=CraneLengthRear());
 
     CranePivotPath();
@@ -558,7 +551,7 @@ module RevolverCrane(cutter=false, teardrop=false, clearance=0.005,
 
     RevolverSpindle(cutter=true);
 
-    *Barrel(hollow=false, cutter=true, clearance=PipeClearanceSnug());
+    *Barrel(cutter=true, clearance=BARREL_CLEARANCE);
   }
 }
 module CraneShield(cutter=false, clearance=0.006,
@@ -591,7 +584,7 @@ module CraneShield(cutter=false, clearance=0.006,
 
     RevolverSpindle(cutter=true);
 
-    Barrel(cutter=true, hollow=false, clearance=PipeClearanceLoose());
+    Barrel(cutter=true, clearance=(BARREL_CLEARANCE*2));
 
     CranePivotPath();
 
@@ -657,7 +650,7 @@ module RevolverForend(debug=false, alpha=1, $fn=Resolution(30,100)) {
 
     FrameBolts(cutter=true);
 
-    Barrel(hollow=false, clearance=PipeClearanceSnug());
+    Barrel(clearance=BARREL_CLEARANCE);
 
     ChargingRod(cutter=true);
 
@@ -680,7 +673,7 @@ module RevolverCylinder_4130x6(supports=true, chambers=false,
                              debug=false) {
   OffsetZigZagRevolver(
       centerOffset=RevolverSpindleOffset(),
-      chamberRadius=0.5, chamberInnerRadius=0.813/2,
+      chamberRadius=BarrelRadius(), chamberInnerRadius=40/25.4/2,
       coreInnerRadius=SpindleCollarRadius()+0.003,
       zigzagAngle=80, wall=0.1875+0.125,
       extraTop=ActuatorPretravel(),
@@ -704,7 +697,7 @@ module RevolverShotgunAssembly(stock=true,
 
     ChargingPumpAssembly(debug=debug);
 
-    Barrel(hollow=true, debug=debug);
+    Barrel(debug=debug);
 
     RevolverForend(debug=debug);
 
