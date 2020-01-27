@@ -66,9 +66,9 @@ function RevolverCylinderRadius(centerOffset=1, chamberRadius=1,
              + wall+depth;
 
 function RevolverCylinderHeight(radius, positions, zigzagAngle=45, width=ZigZagWidth())
-           = ZigZagHeight(radius, positions, ZigZagWidth(), zigzagAngle)
-           + (ZigZagWidth()*1.5)
-           + ZigZagWidth();
+           = ZigZagHeight(radius, positions, width, zigzagAngle)
+           + (width*1.5)
+           + (width*3);
 
 module RevolverChamberIterator(centerOffset=1, positions=4) {
   for (i=[0:positions-1])
@@ -201,7 +201,7 @@ module OffsetZigZagRevolver(chamberRadius=1, chamberInnerRadius=0,
                   cutter=true);
 
       // ZigZag track
-      translate([0,0,0.1875-ManifoldGap()])
+      #translate([0,0,-ManifoldGap()])
       rotate(trackAngle)
       rotate(360/positions)
       ZigZag(radius=radius, depth=ZigZagDepth(), width=ZigZagWidth(),
@@ -221,7 +221,7 @@ OffsetZigZagRevolver(depth=3/16,
       chamberRadius=1/2, chamberInnerRadius=0.813/2,
       chamberBolts=false,
       zigzagAngle=ZIG_ZAG_ANGLE,
-      supports=true,  extraTop=0.125+0.033,
+      supports=true,  //extraTop=0.125+0.033,
       core=false, shell=true,
       chambers=false, chamberLength=3);
 

@@ -1,8 +1,10 @@
 include<../Meta/Animation.scad>;
 
 use <../Meta/Resolution.scad>;
-use <../Shapes/Semicircle.scad>;
 use <../Meta/Manifold.scad>;
+
+use <../Shapes/Semicircle.scad>;
+use <../Shapes/Helix.scad>;
 
 DEFAULT_ZIGZAG_DIAMETER = 3.6252;
 DEFAULT_ZIGZAG_POSITIONS= 6;
