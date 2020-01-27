@@ -8,15 +8,16 @@ DEFAULT_ZIGZAG_DIAMETER = 3.6252;
 DEFAULT_ZIGZAG_POSITIONS= 6;
 DEFAULT_ZIGZAG_DEPTH = 3/16;
 DEFAULT_ZIGZAG_WIDTH = 1/4;
-DEFAULT_ZIGZAG_ANGLE = 60;
+DEFAULT_ZIGZAG_ANGLE = 45;
 
-function Circumference(radius) = PI * pow(radius, 2);
+function Circumference(radius) = PI * (radius*2);
+
 
 function ZigZagSegmentLength(radius, positions)
              = Circumference(radius)
              / (positions*2);
 function ZigZagHeight(radius, positions, width, zigzagAngle)
-             = ZigZagSegmentLength(radius,positions)*(sin(zigzagAngle)*2);
+             = ZigZagSegmentLength(radius,positions)*tan(zigzagAngle);
 
 function TrackAngle(radius, trackWidth)
              = (trackWidth/Circumference(radius)) * 360;
@@ -143,15 +144,6 @@ module ZigZag(supports=true,
         
     // Support Material
     if (supports) {
-      
-      // Top
-      translate([0,0,bottom_slot_height+zigzag_height-(width*0.5)])
-      mirror([0,0,1])
-      for (i=[0:positions-1])
-      rotate([0,0,(positionAngle/2)+(positionAngle*i)-(TrackAngle(radius, width)/4)])
-      ZigZagSupport(radius, depth, width);
-      
-      // Bottom
       translate([0,0,bottom_slot_height+width])
       for (i=[0:positions-1])
       rotate([0,0,(positionAngle*i)-(TrackAngle(radius, width)/4)])
