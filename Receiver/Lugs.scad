@@ -47,9 +47,15 @@ module ReceiverTube(od=RECEIVER_TUBE_OD,
       cylinder(r=id/2, h=length);
     }
 
-    if (!cutter)
-    translate([0,0,LowerOffsetZ()])
-    SearCutter(length=SearLength()+abs(LowerOffsetZ()));
+    if (!cutter) {
+      translate([0,0,LowerOffsetZ()])
+      SearCutter(length=SearLength()+abs(LowerOffsetZ()));
+      
+      // Slot
+      translate([LowerMaxX()+ManifoldGap(), -0.5, 0])
+      mirror([1,0,0])
+      cube([2.5, 1, od]);
+    }
   }
 }
 
