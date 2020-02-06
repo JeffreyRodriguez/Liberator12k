@@ -48,14 +48,10 @@ DEFAULT_HAMMER_TRAVEL = 1;
 DEFAULT_HAMMER_CLEARANCE = 0.005;
 
 
+function HammerOffset() = 0;
 function SearOffset() = 2.875;
-function HammerOffset() = -2.5;
 function HammerTravel() = 1;
 function HammerWidth() = 0.25;
-
-function HammerFlangeDiameter() = 1.5;
-function HammerFlangeRadius() = HammerFlangeDiameter()/2;
-function HammerFlangeLength() = 0.5;
 
 function HammerHeadLength() = 1;
 
@@ -130,26 +126,6 @@ module HammerHead_print()
 rotate([0,90,0])
 HammerHead();
 
-module HammerFlange(debug=false, alpha=1, $fn=Resolution(20,60)) {
-color("Tan", alpha)
-DebugHalf(enabled=debug) render()
-difference() {
-
-  // Body
-  rotate([0,-90,0])
-  translate([-1.25/2, -1.5/2, 0])
-  ChamferedCube([1.25, 1.5, HammerFlangeLength()], r=1/16);
-
-  HammerBolt(cutter=true);
-
-  HammerSpacer(cutter=true);
-}
-}
-
-module HammerFlange_print(insertRadius=(RECEIVER_TUBE_ID/2))
-rotate([0,90,0])
-HammerFlange(insertRadius=insertRadius);
-
 module HammerTailcap(debug=false, alpha=1, $fn=Resolution(20,40)) {
 
   color("Tan", alpha)
@@ -192,8 +168,6 @@ module HammerAssembly(travel=DEFAULT_HAMMER_TRAVEL, travelFactor=sin(180*$t),
     HammerHead();
   }
 
-  HammerFlange(debug=debug, alpha=alpha);
-
   color("Tan", alpha) render()
   mirror([0,0,1])
   HammerTailcap(debug=debug);
@@ -204,7 +178,7 @@ module HammerAssembly(travel=DEFAULT_HAMMER_TRAVEL, travelFactor=sin(180*$t),
   rotate([0,90,0])
   cylinder(r=0.625/2, h=HammerSpringLength()-(travel*travelFactor), $fn=Resolution(20,50));
 
-  HammerSpacer();
+  *HammerSpacer();
 
 }
 
@@ -212,9 +186,6 @@ if (_RENDER == "Assembly")
 HammerAssembly();
 
 scale(25.4) {
-
-  if (_RENDER == "Flange")
-  HammerFlange_print();
 
   if (_RENDER == "Head")
   HammerHead_print();
