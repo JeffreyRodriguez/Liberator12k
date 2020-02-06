@@ -4,6 +4,7 @@ use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
 use <../Meta/Debug.scad>;
 use <../Meta/Resolution.scad>;
+use <../Meta/RenderIf.scad>;
 
 use <../Shapes/Chamfer.scad>;
 use <../Shapes/Semicircle.scad>;
@@ -16,75 +17,81 @@ use <../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 use <../Vitamins/Pipe.scad>;
 use <../Vitamins/Rod.scad>;
 
-use <Lower/Receiver Lugs.scad>;
-use <Lower/Trigger.scad>;
-use <Lower/Lower.scad>;
-
-use <Charging Pump.scad>;
+FRAME_SPACER_LENGTH = 4.5;
 
 // Settings: Lengths
-function FrameForendExtension() = 4.5;
-function FrameUpperRearExtension() = 3.5;
-function FrameBoltExtension() = 0.5;
-function FrameExtension() = 0.5;
+function FrameBoltLength() = 10;
+function FrameReceiverLength() = 2.5;
 
 // Settings: Walls
-function WallFrameUpperBolt() = 0.25;
-function FrameUpperBoltLength() = 10;
+function WallFrameBolt() = 0.25;
 
 // Settings: Vitamins
-function FrameUpperBolt() = Spec_BoltOneHalf();
-function FrameBolt() = Spec_Bolt8_32();
+function FrameBolt() = Spec_BoltOneHalf();
 
 // Shorthand: Measurements
-function FrameUpperBoltRadius(clearance=0)
-    = BoltRadius(FrameUpperBolt(), clearance);
+function FrameBoltRadius(clearance=0)
+    = BoltRadius(FrameBolt(), clearance);
 
-function FrameUpperBoltDiameter(clearance=0)
-    = BoltDiameter(FrameUpperBolt(), clearance);
+function FrameBoltDiameter(clearance=0)
+    = BoltDiameter(FrameBolt(), clearance);
 
 // Settings: Positions
-function FrameBoltZ() = 1.39;
+function FrameBoltZ() = 1.5;
 function FrameBoltY() = 1;
 function FrameTopZ() = FrameBoltZ()
-                          + FrameUpperBoltRadius()
-                          + WallFrameUpperBolt();
+                     + FrameBoltRadius()
+                     + WallFrameBolt();
+function FrameBottomZ() = FrameBoltZ()
+                        - FrameBoltRadius()
+                        - WallFrameBolt();
 
-// Calculated: Positions
-function FrameUpperBoltExtension() = FrameUpperBoltLength()
-                                   -0.5
-                                   -FrameUpperRearExtension();
+function FrameExtension(length=FrameBoltLength()) = length
+                                                  - FrameReceiverLength()
+                                                  - NutHexHeight(FrameBolt());
 
 module FrameBoltIterator() {
     for (Y = [FrameBoltY(),-FrameBoltY()])
-    translate([-FrameUpperRearExtension()-NutHexHeight(FrameUpperBolt())-ManifoldGap(),
+    translate([-FrameReceiverLength()-NutHexHeight(FrameBolt())-ManifoldGap(),
                Y, FrameBoltZ()])
     rotate([0,90,0])
     children();
 }
 
-module FrameBolts(length=FrameUpperBoltLength(),
+module FrameBolts(length=FrameBoltLength(),
               debug=false, cutter=false, clearance=0.005, alpha=1) {
   clear = cutter ? clearance : 0;
 
-  color("Silver", alpha)
+  color("Silver", alpha) RenderIf(!cutter)
   DebugHalf(enabled=debug) {
     FrameBoltIterator()
-    NutAndBolt(bolt=FrameUpperBolt(), boltLength=length,
+    NutAndBolt(bolt=FrameBolt(), boltLength=length,
          head="hex", nut="hex", clearance=clear);
   }
 }
 
-module FrameSupport(length=1, $fn=Resolution(20,60)) {
-  for (Y = [FrameBoltY(),-FrameBoltY()])
-  translate([0, Y, FrameBoltZ()])
-  rotate([0,90,0])
-  ChamferedCylinder(r1=FrameUpperBoltRadius()+WallFrameUpperBolt(),
-                    r2=1/16, h=length,
-                    teardropTop=true, teardropBottom=true);
+module FrameSupport(length=FRAME_SPACER_LENGTH,
+                    width=(FrameBoltY()+FrameBoltRadius()+WallFrameBolt())*2,
+                    height=(FrameBoltRadius()+WallFrameBolt())*2,
+                    $fn=Resolution(20,60)) {
+  
+  
+  intersection() {
+    translate([0, -width/2, FrameBoltZ()-(height/2)])
+    ChamferedCube([length, width, height], r=1/16,
+                   chamferXYZ=[1,1,1],
+                   teardropXYZ=[true, true, true],
+                   teardropTopXYZ=[true, true, true]);
+    
+    translate([0, -width/2, FrameBoltZ()-(height/2)])
+    ChamferedCube([length, width, height], r=3/16,
+                   chamferXYZ=[1,0,0],
+                   teardropXYZ=[false, true, true],
+                   teardropTopXYZ=[false, true, true]);
+  }
 }
 
-module FrameForend(length=FrameForendExtension(), debug=false, alpha=1) {
+module FrameSpacer(length=FRAME_SPACER_LENGTH, debug=false, alpha=1) {
   color("Tan", alpha)
   DebugHalf(enabled=debug) render()
   difference() {
@@ -92,25 +99,23 @@ module FrameForend(length=FrameForendExtension(), debug=false, alpha=1) {
     FrameSupport(length=length);
 
     // Picatinny rail cutout
-    translate([-ManifoldGap(), -UnitsMetric(15.6/2), FrameTopZ()-0.125])
+    translate([-ManifoldGap(), -UnitsMetric(15.6/2), FrameTopZ()-0.0625])
     cube([length+ManifoldGap(2), UnitsMetric(15.6), 0.25]);
 
     FrameBolts(cutter=true);
-
-    ChargingRod(cutter=true);
   }
 }
 
-module FrameForend_print()
+module FrameSpacer_print()
 rotate([0,-90,0]) translate([0,0,-FrameBoltZ()])
-FrameForend();
+FrameSpacer();
 
-module FrameAssembly(length=FrameUpperBoltLength(),
-                     forendLength=FrameForendExtension(),
+module FrameAssembly(length=FrameBoltLength(),
+                     spacerLength=FRAME_SPACER_LENGTH,
                      debug=false, alpha=1) {
   FrameBolts(length=length, debug=debug, alpha=alpha);
 
-  FrameForend(length=forendLength);
+  FrameSpacer(length=spacerLength);
 }
 
 FrameAssembly();

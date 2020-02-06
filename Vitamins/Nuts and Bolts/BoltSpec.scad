@@ -14,7 +14,11 @@ function Spec_BoltTemplate() = [ // these are all a total guess
 
   ["NutHeatsetMajorDiameter", UnitsMetric(3)],
   ["NutHeatsetMinorDiameter", UnitsMetric(2)],
-  ["NutHeatsetHeight",        UnitsMetric(3)]
+  ["NutHeatsetHeight",        UnitsMetric(3)],
+
+  ["NutHeatsetLongMajorDiameter", UnitsMetric(3)],
+  ["NutHeatsetLongMinorDiameter", UnitsMetric(2)],
+  ["NutHeatsetLongHeight",        UnitsMetric(4)]
 ];
 
 /**
@@ -83,3 +87,16 @@ function NutHeatsetMinorRadius(spec=undef) = NutHeatsetMinorDiameter(spec)/2;
 
 function NutHeatsetHeight(spec=undef)
            = slookup("NutHeatsetHeight", spec);
+           
+function NutHeatsetLongMajorDiameter(spec=undef)
+          = slookup("NutHeatsetLongMajorDiameter", spec);
+
+function NutHeatsetMajorRadius(spec=undef) = NutHeatsetMajorDiameter(spec)/2;
+
+function NutHeatsetMinorDiameter(spec=undef)
+          = slookup("NutHeatsetLongMinorDiameter", spec);
+
+function NutHeatsetLongMinorRadius(spec=undef) = NutHeatsetLongMinorDiameter(spec)/2;
+
+function NutHeatsetLongHeight(spec=undef)
+          = slookup("NutHeatsetLongHeight", spec);

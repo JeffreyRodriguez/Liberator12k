@@ -13,9 +13,13 @@ function Spec_Bolt8_32() = [
   ["NutHexDiameter", UnitsImperial(0.34375)],
   ["NutHexHeight",   UnitsImperial(0.125)],
 
-  ["NutHeatsetMajorDiameter", UnitsMetric(6.35)],
-  ["NutHeatsetMinorDiameter", UnitsMetric(5.38)],
-  ["NutHeatsetHeight",        UnitsMetric(7.92)]
+  ["NutHeatsetMajorDiameter", UnitsImperial(0.234)],
+  ["NutHeatsetMinorDiameter", UnitsImperial(0.226)],
+  ["NutHeatsetHeight",        UnitsImperial(0.185)],
+
+  ["NutHeatsetLongMajorDiameter", UnitsMetric(6.35)],
+  ["NutHeatsetLongMinorDiameter", UnitsMetric(5.38)],
+  ["NutHeatsetLongHeight",        UnitsMetric(7.92)]
 ];
 
 function Spec_Bolt10_24() = [
@@ -30,14 +34,17 @@ function Spec_Bolt10_24() = [
   ["NutHexDiameter", UnitsImperial(0.34375)],
   ["NutHexHeight",   UnitsImperial(0.125)],
 
-  ["NutHeatsetMajorDiameter", UnitsMetric(6.35)],
-  ["NutHeatsetMinorDiameter", UnitsMetric(5.38)],
-  ["NutHeatsetHeight",        UnitsMetric(7.92)]
+  ["NutHeatsetMajorDiameter", UnitsMetric(7.52)],
+  ["NutHeatsetMinorDiameter", UnitsMetric(6.90)],
+  ["NutHeatsetHeight",        UnitsMetric(5.72)],
+
+  ["NutHeatsetLongMajorDiameter", UnitsMetric(7.54)],
+  ["NutHeatsetLongMinorDiameter", UnitsMetric(6.38)],
+  ["NutHeatsetLongHeight",        UnitsMetric(9.53)]
 ];
 
 function Spec_BoltOneHalf() = [
-  ["BoltDiameter",    UnitsImperial(0.5
-  )],
+  ["BoltDiameter",    UnitsImperial(0.5)],
   ["BoltSocketCapDiameter", UnitsImperial(0.85)],
   ["BoltSocketCapHeight",   UnitsImperial(0.310)],
 
@@ -47,10 +54,23 @@ function Spec_BoltOneHalf() = [
 
 function Spec_BoltOneQuarter() = [
   ["BoltDiameter",    UnitsImperial(0.25)],
+  
   ["BoltSocketCapDiameter", UnitsImperial(0.566)], // Verify?
   ["BoltSocketCapHeight",   UnitsImperial(0.25)],// Verify?
+  
+  ["BoltFlatHeadDiameter", UnitsImperial(0.505)],
+  ["BoltFlatHeadHeight",   UnitsImperial(0.161)],
+  
   ["NutHexDiameter", UnitsImperial(0.566)],
   ["NutHexHeight",   UnitsImperial(0.25)],
+
+  ["NutHeatsetMajorDiameter", UnitsMetric(9.53)],
+  ["NutHeatsetMinorDiameter", UnitsMetric(9.0)],
+  ["NutHeatsetHeight",        UnitsMetric(7.62)],
+
+  ["NutHeatsetLongMajorDiameter", UnitsMetric(9.52)],
+  ["NutHeatsetLongMinorDiameter", UnitsMetric(8.0)],
+  ["NutHeatsetLongHeight",        UnitsMetric(12.7)]
 ];
 
 function Spec_BoltFiveSixteenths() = [

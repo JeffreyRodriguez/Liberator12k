@@ -27,13 +27,16 @@ module AR15_Trigger(pinWidth=20,
   triggerPocketLength = 45 + triggerPocketModifier;
 
   render()
+  translate([0,0,0])
+  //rotate([90,0,0])
   difference() {
     union() {
 
       // Trigger pack body
+      translate([0,0,-triggerPocketWidth/2])
       cube([triggerPocketLength,triggerPocketHeight,triggerPocketWidth]);
 
-      translate([0,0,triggerPocketWidth/2]) {
+      translate([0,0,0]) {
 
         // Pins and hammer path
         translate([frontPinOffsetX,frontPinOffsetY,0]) {
@@ -71,7 +74,7 @@ module AR15_Trigger(pinWidth=20,
     }
 
     if (triggerHole) {
-      translate([0,0,triggerPocketWidth/2])
+      //translate([0,0,triggerPocketWidth/2])
       translate([rearPinOffsetX - 10,-19,-3.5])
       cube([15,40+triggerPocketHeight,7]);
     }

@@ -1,6 +1,6 @@
-use <../../Meta/Clearance.scad>;
-use <../../Meta/Units.scad>;
-use <../../Meta/Manifold.scad>;
+use <../../../Meta/Clearance.scad>;
+use <../../../Meta/Units.scad>;
+use <../../../Meta/Manifold.scad>;
 
 use <Mating Pins.scad>;
 

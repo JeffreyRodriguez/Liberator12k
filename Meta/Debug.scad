@@ -1,6 +1,5 @@
 module DebugHalf(dimension=100, rotateArray=[0,0,0], mirrorArray=[0,0,0], enabled=true) {
   if (enabled) {
-    render()
     difference() {
       children();
 

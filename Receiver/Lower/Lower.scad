@@ -20,6 +20,27 @@ use <Trigger.scad>;
 
 use <../../Shapes/Components/Grip Handle.scad>;
 
+
+/* [What to Render] */
+
+// Assembly is not for printing.
+_RENDER = "Assembly"; // ["Assembly", "Buttstock", "FrameForend", "ReceiverCoupling", "ReceiverLugCenter", "ReceiverLugFront", "ReceiverLugRear", "LowerLeft", "LowerRight", "LowerMiddle", "TriggerLeft", "TriggerRight", "TriggerMiddle", "HammerHead", "HammerTail"]
+
+// Animation Revolutions
+SPIN_REVOLUTIONS=0;
+
+/* [Screws] */
+LOWER_BOLT = "#8-32"; // ["M4", "#8-32"]
+LOWER_BOLT_CLEARANCE = 0.015;
+LOWER_BOLT_HEAD = "flat"; // ["socket", "flat"]
+LOWER_BOLT_NUT = "heatset"; // ["hex", "heatset"]
+
+function LowerCenterWidth() = TriggerWidth()+0.01;
+
+function LowerBolt() = BoltSpec(LOWER_BOLT);
+assert(LowerBolt(), "LowerBolt() is undefined. Unknown LOWER_BOLT?");
+
+
 function LowerWallFront() = 0.5;
 function LowerMaxX() = ReceiverLugFrontMaxX()
                      + LowerWallFront();
@@ -62,28 +83,30 @@ module TriggerFingerSlot(radius=TriggerFingerRadius(), length=0.6, $fn=Resolutio
   }
 }
 
-module GuardBolt(boltSpec=Spec_BoltM4(), length=UnitsMetric(30), cutter=false, clearance=0.005) {
+module GuardBolt(boltSpec=LowerBolt(), length=UnitsImperial(1.25),
+                 head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT,
+                 cutter=false, clearance=0.005) {
 
   color("Silver")
   translate([ReceiverLugBoltX(ReceiverLugBoltsArray()[0]),
-             -LowerMaxY()+0.07,
+             -LowerMaxY(),
              GripCeilingZ()-TriggerFingerDiameter()+0])
   rotate([90,0,0])
   rotate([0,0,90])
   NutAndBolt(bolt=boltSpec, boltLength=length, clearance=cutter?clearance:0,
-             capOrientation=true, head="socket", nut="hex",
-             capHeightExtra=cutter?1:0, , nutHeightExtra=cutter?1:0,
-             nutBackset=0.05);
+             capOrientation=true, head=head, nut=nut,
+             capHeightExtra=cutter?1:0, nutHeightExtra=cutter?1:0);
 }
 
-module HandleBolts(boltSpec=Spec_BoltM4(), length=UnitsMetric(30),
+module HandleBolts(boltSpec=LowerBolt(), length=UnitsMetric(30),
+                   head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT,
                    cutter=false, clearance=0.005) {
   boltsXZ = [
 
      // Handle Bottom-Rear
      [-2.0,GripCeilingZ()-2.9],
 
-//     // Handle Bottom-Front
+     // Handle Bottom-Front
      [-1.375,GripCeilingZ()-1.375]
   ];
 
@@ -92,19 +115,12 @@ module HandleBolts(boltSpec=Spec_BoltM4(), length=UnitsMetric(30),
   translate([xz[0],-length/2,xz[1]])
   rotate([90,0,0])
   NutAndBolt(bolt=boltSpec, boltLength=length, clearance=cutter?clearance:0,
-              capOrientation=true, head="socket", nut="hex",
-              capHeightExtra=cutter?1:0, nutBackset=0.05,
+              capOrientation=true, head=head, nut=nut,
+              capHeightExtra=cutter?1:0,
               nutHeightExtra=cutter?1:0);
 }
 
-module LowerMiddleBoss(clearance=0) {
-  translate([LowerMaxX()-ManifoldGap(), -0.25-clearance, -LowerGuardHeight()])
-  cube([0.125+ManifoldGap(),
-        0.5+(clearance*2),
-        LowerGuardHeight()]);
-}
-
-module TriggerGuard(bossEnabled=true) {
+module TriggerGuard() {
   height = LowerGuardHeight();
 
   union() {
@@ -130,10 +146,6 @@ module TriggerGuard(bossEnabled=true) {
         circle(r=0.1, $fn=Resolution(12,24));
       }
     }
-
-    // Lower Middle Boss
-    if (bossEnabled)
-    LowerMiddleBoss();
 
     LowerReceiverSupports();
     GripHandle();
@@ -234,18 +246,18 @@ module LowerTriggerPocket() {
   render()
   difference() {
     union() {
-      translate([0,-0.25-ManifoldGap(), ManifoldGap()])
+      translate([0,-(LowerCenterWidth()/2)-ManifoldGap(), ManifoldGap()])
       mirror([0,0,1]) {
 
         // Tigger Body
         translate([ReceiverLugRearMinX(),0,0])
         cube([ReceiverLugFrontMinX()+abs(ReceiverLugRearMinX()),
-              0.5+ManifoldGap(2),
+              LowerCenterWidth()+ManifoldGap(2),
               TriggerHeight()]);
 
         // Trigger Front Extension Cutout
         cube([ReceiverLugFrontMaxX(),
-              0.5+ManifoldGap(2),
+              LowerCenterWidth()+ManifoldGap(2),
               TriggerHeight()-TriggerFingerRadius()]);
       }
 
@@ -257,15 +269,15 @@ module LowerTriggerPocket() {
   }
 }
 
-module LowerCutouts() {
-  ReceiverLugFront(cutter=true);
-  ReceiverLugRear(cutter=true, hole=false);
+module LowerCutouts(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT) {
+  ReceiverLugFront(width=TriggerWidth(), cutter=true);
+  ReceiverLugRear(width=TriggerWidth(), cutter=true, hole=false);
 
-  GuardBolt(cutter=true);
+  GuardBolt(length=1.25, boltSpec=boltSpec, head=head, nut=nut, cutter=true);
 
-  HandleBolts(cutter=true);
+  HandleBolts(length=1.25, boltSpec=boltSpec, head=head, nut=nut, cutter=true);
 
-  ReceiverLugBolts(cutter=true);
+  ReceiverLugBolts(length=1.25, boltSpec=boltSpec, head=head, nut=nut, cutter=true);
 
   TriggerFingerSlot();
 
@@ -274,11 +286,11 @@ module LowerCutouts() {
 
 
 module GripSplitter(clearance=0) {
-  translate([-10, -0.25 -clearance, -10])
-  cube([20, 0.5+(clearance*2), 20]);
+  translate([-10, -(LowerCenterWidth()/2) -clearance, -10])
+  cube([20, LowerCenterWidth()+(clearance*2), 20]);
 }
 
-module LowerSidePlates(showLeft=true, showRight=true, alpha=1) {
+module LowerSidePlates(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT, showLeft=true, showRight=true, alpha=1) {
 
   // Trigger Guard Sides
   color("Tan", alpha)
@@ -289,7 +301,7 @@ module LowerSidePlates(showLeft=true, showRight=true, alpha=1) {
 
     GripSplitter(clearance=0.001);
 
-    LowerCutouts();
+    LowerCutouts(boltSpec=boltSpec, head=head, nut=nut);
 
     if (showLeft == false)
     translate([-10,0,-10])
@@ -302,29 +314,29 @@ module LowerSidePlates(showLeft=true, showRight=true, alpha=1) {
 
 }
 
-module LowerLeft_print()
+module LowerLeft_print(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT)
 rotate(180)
 rotate([90,0,0])
 translate([0,-0.25,2.125])
-LowerSidePlates(showLeft=true, showRight=false);
+LowerSidePlates(boltSpec=LowerBolt(), head=head, nut=nut, showLeft=true, showRight=false);
 
-module LowerRight_print()
+module LowerRight_print(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT)
 rotate([-90,0,0])
 translate([0,0.25,2.125])
-LowerSidePlates(showLeft=false, showRight=true);
+LowerSidePlates(boltSpec=LowerBolt(), head=head, nut=nut, showLeft=false, showRight=true);
 
-module LowerMiddle(bossEnabled=true) {
+module LowerMiddle(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT) {
   color("SaddleBrown")
   render()
   difference() {
     intersection() {
-      TriggerGuard(bossEnabled=bossEnabled);
+      TriggerGuard();
 
       // Just the middle
       GripSplitter(clearance=0);
     }
 
-    LowerCutouts();
+    LowerCutouts(boltSpec=LowerBolt(), head=head, nut=nut);
 
     SearSupportTab(cutter=true);
 
@@ -346,11 +358,11 @@ module LowerMiddle(bossEnabled=true) {
   }
 }
 
-module LowerMiddle_print()
+module LowerMiddle_print(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT)
 rotate(180)
 rotate([90,0,0])
 translate([0,0.25,2.125])
-LowerMiddle(bossEnabled=false);
+LowerMiddle(boltSpec=LowerBolt(), head=head, nut=nut);
 
 module LowerMatchplate2d() {
   union() {
@@ -369,13 +381,14 @@ module Lower(showReceiverLugs=false, showReceiverLugBolts=false,
             showGuardBolt=false, showHandleBolts=false,
             showTrigger=false,
             showMiddle=true, showLeft=true, showRight=true,
-            bossEnabled=false,
             searLength=1.1525, triggerAnimationFactor=0,
+            boltSpec=LowerBolt(), boltHead=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT,
             alpha=0.5) {
+      boltLength = 1.25;
 
   // Trigger Guard Center
   if (showMiddle)
-  LowerMiddle(bossEnabled=bossEnabled);
+  LowerMiddle();
 
   // Trigger
   if (showTrigger) {
@@ -384,50 +397,53 @@ module Lower(showReceiverLugs=false, showReceiverLugBolts=false,
   }
 
   if (showReceiverLugs) {
-    ReceiverLugFront();
-    ReceiverLugRear();
+    ReceiverLugFront(width=TriggerWidth());
+    ReceiverLugRear(width=TriggerWidth());
   }
 
   if (showReceiverLugBolts)
-  ReceiverLugBolts();
+  ReceiverLugBolts(boltSpec=boltSpec, length=boltLength, head=boltHead, nut=nut);
 
   if (showGuardBolt)
-  GuardBolt();
+  GuardBolt(boltSpec=boltSpec, length=boltLength, head=boltHead, nut=nut);
 
   if (showHandleBolts)
-  HandleBolts();
+  HandleBolts(boltSpec=boltSpec, length=boltLength, head=boltHead, nut=nut);
 
-  LowerSidePlates(showLeft=showLeft, showRight=showRight, alpha=alpha);
+  LowerSidePlates(boltSpec=boltSpec, head=boltHead, nut=nut,
+                  showLeft=showLeft, showRight=showRight, alpha=alpha);
 }
 
-SPIN_REVOLUTIONS=0;
-SHOW_LEFT=true;
-SHOW_RIGHT=true;
 
-AnimateSpin(SPIN_REVOLUTIONS)
-Lower(showReceiverLugs=true, showReceiverLugBolts=true,
-      showGuardBolt=true,
-      showHandleBolts=true,
-      showTrigger=true,
-      triggerAnimationFactor=sin(180*$t),
-      showLeft=SHOW_LEFT,
-      showMiddle=true,
-      showRight=SHOW_RIGHT,
-      alpha=1);
 
-LOWER_PLATER_MIDDLE = false;
-LOWER_PLATER_LEFT = false;
-LOWER_PLATER_RIGHT = false;
+scale(25.4) {
+  if (_RENDER == "Assembly") {
 
-if (LOWER_PLATER_MIDDLE)
-!scale(25.4)
-LowerMiddle_print();
+    AnimateSpin(SPIN_REVOLUTIONS)
+    Lower(showReceiverLugs=true, showReceiverLugBolts=true,
+          showGuardBolt=true,
+          showHandleBolts=true,
+          showTrigger=true,
+          triggerAnimationFactor=sin(180*$t),
+          showMiddle=true,
+          alpha=1);
+  }
 
-if (LOWER_PLATER_LEFT)
-!scale(25.4)
-LowerLeft_print();
+  if (_RENDER == "LowerLeft")
+    LowerLeft_print();
 
-// Right
-if (LOWER_PLATER_RIGHT)
-!scale(25.4)
-LowerRight_print();
+  if (_RENDER == "LowerRight")
+    LowerRight_print();
+
+  if (_RENDER == "LowerMiddle")
+    LowerMiddle_print();
+
+  if (_RENDER == "TriggerLeft")
+    TriggerLeft_print();
+
+  if (_RENDER == "TriggerRight")
+    TriggerRight_print();
+
+  if (_RENDER == "TriggerMiddle")
+    TriggerMiddle_print();
+}

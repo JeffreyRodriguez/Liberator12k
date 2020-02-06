@@ -3,7 +3,9 @@ include <../Meta/Animation.scad>;
 use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
 use <../Meta/Debug.scad>;
+use <../Meta/HullIf.scad>;
 use <../Meta/Resolution.scad>;
+use <../Meta/RenderIf.scad>;
 
 use <../Shapes/Chamfer.scad>;
 use <../Shapes/Semicircle.scad>;
@@ -21,28 +23,36 @@ use <Lower/Trigger.scad>;
 use <Lower/Lower.scad>;
 
 use <Buttstock.scad>;
-use <Charging Pump.scad>;
-use <Linear Hammer.scad>;
-use <Lugs.scad>;
 use <Frame.scad>;
-use <Recoil Plate.scad>;
-use <Firing Pin.scad>;
-
+use <Lugs.scad>;
 
 /* [What to Render] */
 
-// Assembly is not for printing.
-_RENDER = "Assembly"; // ["Assembly", "Buttstock", "FrameForend", "ReceiverCoupling", "ReceiverLugCenter", "ReceiverLugFront", "ReceiverLugRear", "LowerLeft", "LowerRight", "LowerMiddle", "TriggerLeft", "TriggerRight", "TriggerMiddle", "HammerHead", "HammerTail"]
+// Configure settings below, then choose a part to render. Render that part (F6) then export STL (F7). Assembly is not for printing.
+_RENDER = "Assembly"; // ["Assembly", "Buttstock", "ButtstockTab", "ReceiverCoupling", "ReceiverBack", "ReceiverLugCenter", "ReceiverLugFront", "ReceiverLugRear", "LowerLeft", "LowerRight", "LowerMiddle", "TriggerLeft", "TriggerRight", "TriggerMiddle"]
+
+// Cut assembly view in half
+_DEBUG_ASSEMBLY = false;
 
 /* [Receiver Tube] */
-RECEIVER_TUBE_OD = 1.7501;
-RECEIVER_TUBE_ID = 1.5001;
+RECEIVER_TUBE_OD = 1.9101;
+RECEIVER_TUBE_ID = 1.6001;
+
+/* [Bolts] */
+COUPLING_BOLT = "1/4\"-20"; // ["1/4\"-20", "M4", "#8-32"]
+COUPLING_BOLT_CLEARANCE = 0.015;
+LOWER_BOLT = "#8-32"; // ["M4", "#8-32"]
+LOWER_BOLT_CLEARANCE = 0.015;
+LOWER_BOLT_HEAD = "flat"; // ["socket", "flat"]
+LOWER_BOLT_NUT = "heatset"; // ["hex", "heatset"]
 
 // Settings: Lengths
-function FrameBoltExtension() = 0.5;
 function ReceiverFrontLength() = 0.5;
+function ReceiverBackLength() = 0.5;
 function ReceiverCouplingLength() = 1;
+function ReceiverCouplingWidth() = 2.25;
 function ReceiverLength() = 12;
+function ReceiverSlotWidth() = 1;
 
 // Calculated: Measurements
 function ReceiverID()     = RECEIVER_TUBE_ID;
@@ -51,68 +61,98 @@ function ReceiverOD()     = RECEIVER_TUBE_OD;
 function ReceiverOR()     = ReceiverOD()/2;
 function ReceiverPipeWall(od, id) = (od/2)-(id/2);
 
-function HammerTravel() = LowerMaxX() + ReceiverFrontLength()
-                              - HammerCollarWidth()
-                              + RodRadius(SearRod())
-                              - FiringPinHousingLength();
-echo("HammerTravel", HammerTravel());
-
 // Settings: Vitamins
-function ReceiverBolt() = Spec_Bolt8_32();
+function CouplingBolt() = BoltSpec(COUPLING_BOLT);
+assert(CouplingBolt(), "CouplingBolt() is undefined. Unknown COUPLING_BOLT?");
+
+function LowerBolt() = BoltSpec(LOWER_BOLT);
+assert(LowerBolt(), "LowerBolt() is undefined. Unknown LOWER_BOLT?");
+
 
 // Settings: Positions
-function ReceiverBoltZ() = LowerOffsetZ()+0.25;
-function ReceiverBoltY() = 0.875;
+function ReceiverBoltZ() = -1;
+function ReceiverBoltY() = 1;
 
-module ReceiverBolts(teardrop=false,
+module CouplingBolts(teardrop=false, boltHead="flat", extension=0.5,
               debug=false, clearance=0.005, cutter=false) {
 
-  color("CornflowerBlue")
-  DebugHalf(enabled=debug)
+  color("Silver") RenderIf(!cutter) DebugHalf(enabled=debug)
   for (Y = [-1,1])
-  translate([-ReceiverFrontLength()+FrameBoltExtension()+ManifoldGap(),
+  translate([-ReceiverCouplingLength()-ManifoldGap(),
              ReceiverBoltY()*Y,
              ReceiverBoltZ()])
-  rotate([0,90,0]) {
-    if (cutter)
-    cylinder(r1=0.1875, r2=0, h=0.1875*3, $fn=20);
+  rotate([0,90,0])
+  NutAndBolt(bolt=CouplingBolt(),
+             boltLength=ReceiverCouplingLength()+extension+ManifoldGap(2),
+             head=boltHead,
+             nut="heatset",
+             teardrop=cutter&&teardrop,
+             clearance=cutter?clearance:0);
+}
 
-    NutAndBolt(bolt=ReceiverBolt(), boltLength=ReceiverCouplingLength(),
-               head="flat", nut="heatset", capOrientation=true,
-               teardrop=cutter&&teardrop,
-               clearance=cutter?clearance:0);
+module ReceiverCouplingPattern(width=ReceiverCouplingWidth(),
+                     frameLength=0.75,
+                     length=0.5, couplingBoltHull=true,
+                     boltHead="flat",
+                     debug=false, alpha=1) {
+  union() {
+    
+    // Frame bolt supports
+    hull()
+    FrameSupport(length=frameLength);
+    
+    // Coupling bolt supports
+    HullIf(couplingBoltHull)
+    for (Y = [-ReceiverBoltY(),ReceiverBoltY()])
+    translate([0,Y,ReceiverBoltZ()])
+    rotate([0,90,0])
+    ChamferedCylinder(r1=0.375, r2=1/32, h=length, $fn=Resolution(20,40));
+
+    // Join the bolt wall and pipe
+    translate([0,-width/2, LowerOffsetZ()])
+    ChamferedCube([length,
+                   width,
+                   abs(LowerOffsetZ())+FrameBoltZ()],
+                   teardropXYZ=[true,true,true],
+                  r=1/16);
   }
 }
 
+
 module ReceiverCoupling(od=RECEIVER_TUBE_OD,
                         id=RECEIVER_TUBE_ID,
+                        clearance=0.01,
                         debug=false, alpha=1) {
-  length = FrameUpperRearExtension()+RecoilPlateRearX();
 
-  color("DimGray", alpha)
-  DebugHalf(enabled=debug) render()
+  color("DimGray", alpha) render() DebugHalf(enabled=debug)
   difference() {
 
     union() {
-
-      // Bolt supports
-      translate([RecoilPlateRearX()-length,0,0])
-      hull()
-      FrameSupport(length=length);
-
-      // Join bolt wall and pipe
-      translate([RecoilPlateRearX(),-(2/2),(id/2)/2])
       mirror([1,0,0])
-      ChamferedCube([length,
-                     2,
-                     FrameBoltZ()-((id/2)/2)],
-                    r=1/16);
+      ReceiverCouplingPattern(frameLength=FrameReceiverLength(),
+                              length=ReceiverCouplingLength(),
+                              couplingBoltHull=false);
+      
+      hull() {
+        
+        // Around the receiver pipe
+        rotate([0,-90,0])
+        ChamferedCylinder(r1=ReceiverCouplingWidth()/2, r2=1/16,
+                          h=FrameReceiverLength(), $fn=Resolution(30,60));
 
-      // Lower Frame
-      translate([RecoilPlateRearX(),-(2.25/2),LowerOffsetZ()])
+        // Join the bolt wall and pipe
+        translate([-FrameReceiverLength(),-ReceiverCouplingWidth()/2, 0])
+        ChamferedCube([FrameReceiverLength(),
+                       ReceiverCouplingWidth(),
+                       FrameBoltZ()],
+                      r=1/16);
+      }
+
+      // Center lug support
+      translate([0,-(1.5/2),LowerOffsetZ()])
       mirror([1,0,0])
-      ChamferedCube([ReceiverCouplingLength()-ManifoldGap(2),
-                     2.25,
+      ChamferedCube([FrameReceiverLength(),
+                     1.5,
                      abs(LowerOffsetZ())+FrameBoltY()],
                     r=1/16);
     }
@@ -121,160 +161,108 @@ module ReceiverCoupling(od=RECEIVER_TUBE_OD,
 
     ReceiverTube(od=od, id=id, cutter=true);
 
-    ReceiverBolts(cutter=true);
+    CouplingBolts(cutter=true);
 
     // Lower lug cutout
-    translate([RecoilPlateRearX()-ReceiverFrontLength(),-(1.256/2),(id/2)/2])
-    mirror([1,0,0])
-    mirror([0,0,1])
-    cube([length+ManifoldGap(),1.256,2]);
+    translate([-LowerMaxX(),0,0])
+    PipeLugCenter(cutter=true);
 
-
-    // Charger Cutout
-    translate([RecoilPlateRearX()+ManifoldGap(),-(0.52/2),(id/2)/2])
+    // Slot Cutout
+    translate([ManifoldGap(),
+               -(ReceiverSlotWidth()/2)-clearance,0])
     mirror([1,0,0])
-    cube([length+ManifoldGap(2),0.52,2]);
-
-    // Charger Cutout Wide Top
-    translate([RecoilPlateRearX()+ManifoldGap(),-(1.02/2),ChargingRodOffset()])
-    mirror([1,0,0])
-    cube([length+ManifoldGap(2),1.02,2]);
+    cube([FrameReceiverLength()+ManifoldGap(2),ReceiverSlotWidth()+(clearance*2),2]);
   }
 }
 
 module ReceiverCoupling_print(od=RECEIVER_TUBE_OD,
                               id=RECEIVER_TUBE_ID)
-translate([0,0,-ReceiverFrontLength()])
 rotate([0,90,0])
 ReceiverCoupling(od=od, id=id);
 
-module ReceiverFront(width=2.25, frameLength=ReceiverFrontLength(),
-                     debug=false, alpha=1) {
-  color("MediumSlateBlue", alpha)
-  DebugHalf(enabled=debug)
+module ReceiverBack(od=RECEIVER_TUBE_OD,
+                    id=RECEIVER_TUBE_ID,
+                    length=ReceiverBackLength(),
+                    clearance=0.01,
+                    debug=false, alpha=1) {
+
+    receiverBackMinX = -FrameReceiverLength();
+
+  color("DimGray", alpha) render() DebugHalf(enabled=debug)
   difference() {
+
     union() {
-      translate([-ReceiverFrontLength(),0, 0]){
-        hull()
-        FrameSupport(length=frameLength);
 
-        translate([0,-width/2, LowerOffsetZ()])
-        ChamferedCube([ReceiverFrontLength(),
-                       width,
-                       abs(LowerOffsetZ())+FrameBoltZ()],
-                      r=1/16);
+      // Bolt supports
+      translate([receiverBackMinX,0,0])
+      hull()
+      FrameSupport(length=length);
 
-        children();
-      }
+      // Join bolt wall and pipe
+      translate([receiverBackMinX,-(2.25/2),FrameBoltZ()])
+      mirror([0,0,1])
+      ChamferedCube([length,
+                     2.25,
+                     1],
+                    r=1/16);
     }
-
-    // Picatinny rail cutout
-    translate([-ReceiverFrontLength(), -UnitsMetric(15.6/2), FrameTopZ()-0.125])
-    cube([frameLength+ManifoldGap(2), UnitsMetric(15.6), 0.25]);
 
     FrameBolts(cutter=true);
 
-    ReceiverBolts(cutter=true, teardrop=false);
+    translate([-FrameReceiverLength(),0,0])
+    ReceiverTube(od=od, id=id, cutter=true);
   }
 }
 
-module ReceiverGuide(od=RECEIVER_TUBE_OD,
-               id=RECEIVER_TUBE_ID,
-               length=0.5,
-               height=0.25,
-               clearance=RodClearanceLoose(),
-               bolt=true,
-               cutter=false, debug=false) {
+module ReceiverBack_print(od=RECEIVER_TUBE_OD,
+                              id=RECEIVER_TUBE_ID)
+translate([0,0,-FrameReceiverLength()+ReceiverBackLength()])
+rotate([0,90,0])
+ReceiverBack(od=od, id=id);
 
-  color("OliveDrab") DebugHalf(enabled=debug) render()
-  union() {
+module Receiver(od=RECEIVER_TUBE_OD,
+                id=RECEIVER_TUBE_ID,
+                receiverLength=ReceiverLength(),
+                receiverBack=true,
+                pipeOffsetX=0,
+                pipeAlpha=1, buttstockAlpha=1, couplingAlpha=1,
+                frameBoltLength=FrameBoltLength(),
+                frameBoltBackset=ReceiverBackLength(),
+                couplingBoltHead="flat", couplingBoltExtension=0.5,
+                triggerAnimationFactor=TriggerAnimationFactor(),
+                frameBolts=true, lower=true,
+                lowerBolt=LowerBolt(),
+                lowerBoltHead=LOWER_BOLT_HEAD,
+                lowerBoltNut=LOWER_BOLT_NUT,
+                debug=true) {
 
-    // Tower
-    translate([0,-0.5/2,0])
-    ChamferedCube([length, 0.5, 1 + height], r=1/16);
+  CouplingBolts(boltHead=couplingBoltHead, extension=couplingBoltExtension);
+  
+  if (receiverBack)
+  translate([-frameBoltBackset,0,0])
+  %ReceiverBack(length=frameBoltBackset, debug=debug);
 
-    // Top wings
-    translate([0,-1/2,1.005])
-    ChamferedCube([length, 1, height], r=1/16);
-  }
-}
+  if (frameBolts)
+  translate([-frameBoltBackset,0,0])
+  FrameBolts(length=frameBoltLength);
 
-module Charger(od=RECEIVER_TUBE_OD,
-               id=RECEIVER_TUBE_ID,
-               clearance=RodClearanceLoose(),
-               bolt=true,
-               cutter=false, debug=false) {
+  ReceiverCoupling(od=od, id=id, debug=debug, alpha=couplingAlpha);
 
-  color("Tan") DebugHalf(enabled=debug) render() {
-    difference() {
+  translate([-receiverLength,0,0])
+  ButtstockAssembly(od=od, alpha=buttstockAlpha, debug=debug);
 
-      // Charging Pusher
-      union() {
+  translate([-LowerMaxX(),0,0]) {
 
-        // Tower
-        translate([RecoilPlateRearX(),-0.5/2,0.375])
-        mirror([1,0,0])
-        ChamferedCube([ChargerTowerLength(), 0.5, ChargingRodOffset()-0.25], r=1/32);
-
-        // Top wings
-        translate([RecoilPlateRearX(),-1/2,ChargingRodOffset()+0.07])// TODO: FIX magic number 0.07
-        mirror([1,0,0])
-        ChamferedCube([ChargerTowerLength(), 1, 0.25], r=1/32);
-
-        // Charging Pusher Wide Base
-        translate([RecoilPlateRearX(),0,0])
-        intersection() {
-
-          translate([0,-0.5,0.375])
-          mirror([1,0,0])
-          ChamferedCube([1.125, 1, (id/2)-0.375], r=1/32);
-
-          // Rounded base
-          rotate([0,-90,0])
-          cylinder(r=(id/2)-0.02, h=1.125, $fn=Resolution(30,60));
-        }
-      }
-
-      translate([RecoilPlateRearX()-0.625,-0.1875,0])
-      mirror([1,0,0])
-      ChamferedCube([1, 0.375, (od/2)], r=1/16);
-
-      translate([ChargerTravel(),0,0])
-      ChargingRod(cutter=true, clearance=RodClearanceSnug());
-
-      ChargingRodBolts(cutter=true, teardrop=true);
-
-    }
-  }
-}
-
-module PipeUpperAssembly(od=RECEIVER_TUBE_OD,
-                         id=RECEIVER_TUBE_ID,
-                         receiverLength=ReceiverLength(),
-                         pipeOffsetX=ReceiverFrontLength(),
-                         pipeAlpha=0.5, buttstockAlpha=0.5, frameUpperBoltLength=FrameUpperBoltLength(),
-                         triggerAnimationFactor=TriggerAnimationFactor(),
-                         debug=true) {
-
-  ReceiverBolts();
-
-  ReceiverCoupling(od=od, id=id);
-
-  translate([RecoilPlateRearX()-receiverLength,0,0])
-  ButtstockAssembly(od=od, alpha=buttstockAlpha);
-
-  translate([RecoilPlateRearX()-LowerMaxX()-ReceiverFrontLength(),0,0]) {
-
+    if (lower)
     translate([0,0,LowerOffsetZ()])
-    Lower(alpha=1,
+    Lower(alpha=1, boltSpec=lowerBolt, boltHead=lowerBoltHead, nut=lowerBoltNut,
           showTrigger=true,
           triggerAnimationFactor=triggerAnimationFactor,
           showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
-          searLength=SearLength()+WallLower()+ReceiverPipeWall(od=od, id=id)+SearTravel());
+          searLength=SearLength()+abs(LowerOffsetZ())-(id/2)+SearTravel());
 
     PipeLugAssembly(od=od, id=id, length=receiverLength,
-                    pipeOffsetX=pipeOffsetX,
-                    pipeAlpha=pipeAlpha);
+                    pipeAlpha=pipeAlpha, debug=debug);
 
   }
 }
@@ -282,27 +270,26 @@ module PipeUpperAssembly(od=RECEIVER_TUBE_OD,
 scale(25.4) {
   if (_RENDER == "Assembly") {
 
-    translate([RecoilPlateRearX(),0,0])
-    mirror([1,0,0])
-    ReceiverGuide();
-
-    FrameAssembly();
-
-    PipeUpperAssembly(pipeAlpha=0.3,
-                      receiverLength=12,
-                      debug=false);
-
-    ReceiverFront(alpha=0.25);
+    Receiver(pipeAlpha=0.3,
+             receiverLength=12,
+             lowerBolt=LowerBolt(),
+             lowerBoltHead=LOWER_BOLT_HEAD,
+             lowerBoltNut=LOWER_BOLT_NUT,
+             debug=_DEBUG_ASSEMBLY);
   }
 
   if (_RENDER == "Buttstock")
     Buttstock_print(od=RECEIVER_TUBE_OD);
 
-  if (_RENDER == "FrameForend")
-    FrameForend_print();
+  if (_RENDER == "ButtstockTab")
+    ButtstockTab_print(od=RECEIVER_TUBE_OD);
 
   if (_RENDER == "ReceiverCoupling")
     ReceiverCoupling_print(od=RECEIVER_TUBE_OD,
+                           id=RECEIVER_TUBE_ID);
+
+  if (_RENDER == "ReceiverBack")
+    ReceiverBack_print(od=RECEIVER_TUBE_OD,
                            id=RECEIVER_TUBE_ID);
 
   if (_RENDER == "ReceiverLugCenter")
@@ -318,13 +305,19 @@ scale(25.4) {
                       id=RECEIVER_TUBE_ID);
 
   if (_RENDER == "LowerLeft")
-    LowerLeft_print();
+    LowerLeft_print(
+             boltSpec=LowerBolt(),
+             head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT);
 
   if (_RENDER == "LowerRight")
-    LowerRight_print();
+    LowerRight_print(
+             boltSpec=LowerBolt(),
+             head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT);
 
   if (_RENDER == "LowerMiddle")
-    LowerMiddle_print();
+    LowerMiddle_print(
+             boltSpec=LowerBolt(),
+             head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT);
 
   if (_RENDER == "TriggerLeft")
     TriggerLeft_print();
@@ -334,12 +327,4 @@ scale(25.4) {
 
   if (_RENDER == "TriggerMiddle")
     TriggerMiddle_print();
-
-  if (_RENDER == "HammerHead")
-    HammerHead_print();
-
-  if (_RENDER == "HammerTail")
-    HammerTail_print();
 }
-
-echo ("Pipe Lug Sear Length: ", SearLength()+WallLower()+ReceiverPipeWall(od=RECEIVER_TUBE_OD, id=RECEIVER_TUBE_ID)+SearTravel());
