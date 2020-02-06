@@ -3,7 +3,7 @@
 Reliable self-defense for everyone - forever.
 
 ### Quick Start
-[Impatient or experienced? Go here.](Quick Start.md)
+[Impatient or experienced? Go here.](Documentation/Quick Start.md)
 
 ### "What?" - Concept
 Future-proof the individual's power to produce arms and ammunition.
@@ -82,12 +82,12 @@ useful *configurable* objects.
 If you browse through the code, you'll see the project has been grouped into
 major functional areas:
 
-  * Tooling - Printable tools for gun making
-  * Vitamins - Store-bought parts, nut and bolts, etc.
-  * Lower - Grip with a simple trigger.
-  * Upper - Different uppers that work with the lower (maybe).
   * Ammo - Printable Ammunition
+  * Documentation - All sorts of docs; including barrel wall calculator.
   * Meta - 3D modeling-specific code
+  * Receiver - Lower+Universal Receiver; interchangeable Forends
+  * Tooling - Printable tools for gun making
+  * Vitamins - Store-bought parts, nut and bolts, collars, etc.
   * Toys - Things I've tried and thrown away (maybe)
 
 There are more directories than mentioned above, but this should give you a taste of what's in here.
