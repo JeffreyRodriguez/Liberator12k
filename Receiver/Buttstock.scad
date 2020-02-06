@@ -31,9 +31,15 @@ _DEBUG_ASSEMBLY = false;
 /* [Receiver Tube] */
 RECEIVER_TUBE_OD = 1.9101;
 
+GP_BOLT = "#8-32"; // ["M4", "#8-32"]
+GP_BOLT_CLEARANCE = 0.015;
+
 $fs = UnitsFs()*0.25;
 
-function ButtstockBolt() = Spec_BoltM4();
+function GPBolt() = BoltSpec(GP_BOLT);
+assert(GPBolt(), "GPBolt() is undefined. Unknown GP_BOLT?");
+
+function ButtstockBolt() = GPBolt();
 function ButtstockHeight() = 2;
 function ButtstockSleeveLength() = 1;
 function ButtstockWall() = 0.1875;
