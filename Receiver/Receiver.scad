@@ -3,6 +3,7 @@ include <../Meta/Animation.scad>;
 use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
 use <../Meta/Debug.scad>;
+use <../Meta/HullIf.scad>;
 use <../Meta/Resolution.scad>;
 use <../Meta/RenderIf.scad>;
 
@@ -38,7 +39,7 @@ RECEIVER_TUBE_OD = 1.9101;
 RECEIVER_TUBE_ID = 1.6001;
 
 /* [Bolts] */
-COUPLING_BOLT = "#8-32"; // ["M4", "#8-32"]
+COUPLING_BOLT = "1/4\"-20"; // ["1/4\"-20", "M4", "#8-32"]
 COUPLING_BOLT_CLEARANCE = 0.015;
 LOWER_BOLT = "#8-32"; // ["M4", "#8-32"]
 LOWER_BOLT_CLEARANCE = 0.015;
@@ -69,14 +70,13 @@ assert(LowerBolt(), "LowerBolt() is undefined. Unknown LOWER_BOLT?");
 
 
 // Settings: Positions
-function ReceiverBoltZ() = LowerOffsetZ()+0.25;
-function ReceiverBoltY() = 0.875;
+function ReceiverBoltZ() = -1;
+function ReceiverBoltY() = 1;
 
 module CouplingBolts(teardrop=false, boltHead="flat", extension=0.5,
               debug=false, clearance=0.005, cutter=false) {
 
-  color("CornflowerBlue") RenderIf(!cutter) DebugHalf(enabled=debug)
-  for (NUT = ["heatset", "hex"])
+  color("Silver") RenderIf(!cutter) DebugHalf(enabled=debug)
   for (Y = [-1,1])
   translate([-ReceiverCouplingLength()-ManifoldGap(),
              ReceiverBoltY()*Y,
@@ -85,14 +85,14 @@ module CouplingBolts(teardrop=false, boltHead="flat", extension=0.5,
   NutAndBolt(bolt=CouplingBolt(),
              boltLength=ReceiverCouplingLength()+extension+ManifoldGap(2),
              head=boltHead,
-             nut=NUT, nutBackset=(NUT=="heatset"?0.125:0),
+             nut="heatset",
              teardrop=cutter&&teardrop,
              clearance=cutter?clearance:0);
 }
 
 module ReceiverCouplingPattern(width=ReceiverCouplingWidth(),
                      frameLength=0.75,
-                     length=0.5,
+                     length=0.5, couplingBoltHull=true,
                      boltHead="flat",
                      debug=false, alpha=1) {
   union() {
@@ -101,26 +101,19 @@ module ReceiverCouplingPattern(width=ReceiverCouplingWidth(),
     hull()
     FrameSupport(length=frameLength);
     
-    hull() {
-      
-      // Around the receiver pipe
-      rotate([0,90,0])
-      ChamferedCylinder(r1=width/2, r2=1/16,
-                        h=frameLength, $fn=Resolution(30,60));
-
-      // Join the bolt wall and pipe
-      translate([0,-width/2, 0])
-      ChamferedCube([frameLength,
-                     width,
-                     FrameBoltZ()],
-                    r=1/16);
-    }
+    // Coupling bolt supports
+    HullIf(couplingBoltHull)
+    for (Y = [-ReceiverBoltY(),ReceiverBoltY()])
+    translate([0,Y,ReceiverBoltZ()])
+    rotate([0,90,0])
+    ChamferedCylinder(r1=0.375, r2=1/32, h=length, $fn=Resolution(20,40));
 
     // Join the bolt wall and pipe
     translate([0,-width/2, LowerOffsetZ()])
     ChamferedCube([length,
                    width,
                    abs(LowerOffsetZ())+FrameBoltZ()],
+                   teardropXYZ=[true,true,true],
                   r=1/16);
   }
 }
@@ -130,20 +123,35 @@ module ReceiverCoupling(od=RECEIVER_TUBE_OD,
                         id=RECEIVER_TUBE_ID,
                         clearance=0.01,
                         debug=false, alpha=1) {
-  length = FrameReceiverLength()-0.5;
 
   color("DimGray", alpha) render() DebugHalf(enabled=debug)
   difference() {
 
     union() {
       mirror([1,0,0])
-      ReceiverCouplingPattern(frameLength=length,
-                              length=ReceiverCouplingLength());
+      ReceiverCouplingPattern(frameLength=FrameReceiverLength(),
+                              length=ReceiverCouplingLength(),
+                              couplingBoltHull=false);
+      
+      hull() {
+        
+        // Around the receiver pipe
+        rotate([0,-90,0])
+        ChamferedCylinder(r1=ReceiverCouplingWidth()/2, r2=1/16,
+                          h=FrameReceiverLength(), $fn=Resolution(30,60));
+
+        // Join the bolt wall and pipe
+        translate([-FrameReceiverLength(),-ReceiverCouplingWidth()/2, 0])
+        ChamferedCube([FrameReceiverLength(),
+                       ReceiverCouplingWidth(),
+                       FrameBoltZ()],
+                      r=1/16);
+      }
 
       // Center lug support
       translate([0,-(1.5/2),LowerOffsetZ()])
       mirror([1,0,0])
-      ChamferedCube([length,
+      ChamferedCube([FrameReceiverLength(),
                      1.5,
                      abs(LowerOffsetZ())+FrameBoltY()],
                     r=1/16);
@@ -163,7 +171,7 @@ module ReceiverCoupling(od=RECEIVER_TUBE_OD,
     translate([ManifoldGap(),
                -(ReceiverSlotWidth()/2)-clearance,0])
     mirror([1,0,0])
-    cube([length+ManifoldGap(2),ReceiverSlotWidth()+(clearance*2),2]);
+    cube([FrameReceiverLength()+ManifoldGap(2),ReceiverSlotWidth()+(clearance*2),2]);
   }
 }
 
@@ -215,10 +223,12 @@ ReceiverBack(od=od, id=id);
 module Receiver(od=RECEIVER_TUBE_OD,
                 id=RECEIVER_TUBE_ID,
                 receiverLength=ReceiverLength(),
+                receiverBack=true,
                 pipeOffsetX=0,
-                pipeAlpha=1, buttstockAlpha=1,
+                pipeAlpha=1, buttstockAlpha=1, couplingAlpha=1,
                 frameBoltLength=FrameBoltLength(),
-                couplingBoltExtension=0.5,
+                frameBoltBackset=ReceiverBackLength(),
+                couplingBoltHead="flat", couplingBoltExtension=0.5,
                 triggerAnimationFactor=TriggerAnimationFactor(),
                 frameBolts=true, lower=true,
                 lowerBolt=LowerBolt(),
@@ -226,14 +236,17 @@ module Receiver(od=RECEIVER_TUBE_OD,
                 lowerBoltNut=LOWER_BOLT_NUT,
                 debug=true) {
 
-  CouplingBolts(extension=couplingBoltExtension);
-
-  ReceiverBack(debug=debug);
+  CouplingBolts(boltHead=couplingBoltHead, extension=couplingBoltExtension);
+  
+  if (receiverBack)
+  translate([-frameBoltBackset,0,0])
+  %ReceiverBack(length=frameBoltBackset, debug=debug);
 
   if (frameBolts)
+  translate([-frameBoltBackset,0,0])
   FrameBolts(length=frameBoltLength);
 
-  ReceiverCoupling(od=od, id=id, debug=debug);
+  ReceiverCoupling(od=od, id=id, debug=debug, alpha=couplingAlpha);
 
   translate([-receiverLength,0,0])
   ButtstockAssembly(od=od, alpha=buttstockAlpha, debug=debug);

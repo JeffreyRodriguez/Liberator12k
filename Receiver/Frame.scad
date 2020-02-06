@@ -21,7 +21,7 @@ FRAME_SPACER_LENGTH = 4.5;
 
 // Settings: Lengths
 function FrameBoltLength() = 10;
-function FrameReceiverLength() = 3;
+function FrameReceiverLength() = 2.5;
 
 // Settings: Walls
 function WallFrameBolt() = 0.25;
@@ -70,13 +70,25 @@ module FrameBolts(length=FrameBoltLength(),
   }
 }
 
-module FrameSupport(length=FRAME_SPACER_LENGTH, $fn=Resolution(20,60)) {
-  for (Y = [FrameBoltY(),-FrameBoltY()])
-  translate([0, Y, FrameBoltZ()])
-  rotate([0,90,0])
-  ChamferedCylinder(r1=FrameBoltRadius()+WallFrameBolt(),
-                    r2=1/16, h=length,
-                    teardropTop=true, teardropBottom=true);
+module FrameSupport(length=FRAME_SPACER_LENGTH,
+                    width=(FrameBoltY()+FrameBoltRadius()+WallFrameBolt())*2,
+                    height=(FrameBoltRadius()+WallFrameBolt())*2,
+                    $fn=Resolution(20,60)) {
+  
+  
+  intersection() {
+    translate([0, -width/2, FrameBoltZ()-(height/2)])
+    ChamferedCube([length, width, height], r=1/16,
+                   chamferXYZ=[1,1,1],
+                   teardropXYZ=[true, true, true],
+                   teardropTopXYZ=[true, true, true]);
+    
+    translate([0, -width/2, FrameBoltZ()-(height/2)])
+    ChamferedCube([length, width, height], r=3/16,
+                   chamferXYZ=[1,0,0],
+                   teardropXYZ=[false, true, true],
+                   teardropTopXYZ=[false, true, true]);
+  }
 }
 
 module FrameSpacer(length=FRAME_SPACER_LENGTH, debug=false, alpha=1) {
