@@ -3,7 +3,7 @@
 Reliable self-defense for everyone - forever.
 
 ### Quick Start
-[Impatient or experienced? Go here.](Documentation/Quick Start.md)
+[Impatient or experienced? Go here.](./Documentation/Quick Start.md)
 
 ### "What?" - Concept
 Future-proof the individual's power to produce arms and ammunition.
