@@ -13,16 +13,20 @@ use <../ZigZag.scad>;
 // **********************
 // * Customizer Options *
 // **********************
+/* [Render] */
+_CYLINDER_ALPHA= 1; // [0:0.1:1]
+_SHOW_CHAMBERS = true;
 
 /* [Chambers] */
 CHAMBER_BOLT = "#8-32"; // ["M3", "M4", "M5", "#8-32", "#10-24"]
-CHAMBER_BOLT_CLEARANCE = -0.05;
+CHAMBER_BOLT_CLEARANCE = 0.005;
 
 CHAMBER_OUTSIDE_DIAMETER = 1.0000;
 CHAMBER_INSIDE_DIAMETER = 0.8130;
+CHAMBER_CLEARANCE = 0.01;
 
 /* [Spindle] */
-SPINDLE_DIAMETER = 0.09375;
+SPINDLE_DIAMETER = 5/16;
 SPINDLE_CLEARANCE = 0.015;
 
 SPINDLE_COLLAR_DIAMETER = 0.375;
@@ -30,9 +34,9 @@ SPINDLE_COLLAR_WIDTH = 0.1875;
 
 /* [ZigZag] */
 ZIG_ZAG_WIDTH = 0.25;
-ZIG_ZAG_DEPTH = 0.1875;
+ZIG_ZAG_DEPTH = 0.16;
 ZIG_ZAG_CLEARANCE = 0.01;
-ZIG_ZAG_ANGLE = 60; // [45:89]
+ZIG_ZAG_ANGLE = 55; // [45:89]
 
 /* [Cylinder] */
 CYLINDER_OUTER_WALL = 0.1875;
@@ -43,7 +47,7 @@ CYLINDER_OUTER_WALL = 0.1875;
 // *************
 
 
-$fs = UnitsFs()*0.5;
+$fs = UnitsFs()*0.25;
 
 function ChamberBolt() = BoltSpec(CHAMBER_BOLT);
 assert(ChamberBolt(), "ChamberBolt() is undefined. Unknown CHAMBER_BOLT?");
@@ -83,42 +87,34 @@ module ChamberBolt(positions, chamberRadius,
   angle = 360/positions;
 
   rotate(angle)
-  translate([chamberRadius-(cutter?chamberRadius:0),0,0])
+  translate([chamberRadius,0,-1])
   rotate([0,90,0])
-  rotate(180)
-  NutAndBolt(bolt=ChamberBolt(), head="none",
-       boltLength=0.8+(cutter?chamberRadius:0),
+  NutAndBolt(bolt=ChamberBolt(), head="none", nut="heatset",
+       boltLength=0.5+(cutter?chamberRadius:0),
+       nutHeightExtra=(cutter?chamberRadius:0),
        clearance=clearance, teardrop=cutter);
 }
 
-module OffsetZigZagRevolver(chamberRadius=1, chamberInnerRadius=0,
-           centerOffset=undef, coreInnerRadius=0,
+module OffsetZigZagRevolver(diameter=4, height=2.75,
+           chamberRadius=1, chamberInnerRadius=0,
+           chamberClearance=CHAMBER_CLEARANCE, centerOffset=undef,
            wall=CylinderOuterWall(), depth=ZigZagDepth(),
            zigzagAngle=45,
            trackAngle=0, extraTop=0, extraBottom=0,
            spindleRadius=SpindleRadius()+SPINDLE_CLEARANCE,
            chamberBolts=true, chambers=true, chamberLength=undef,
-           supports=true, core=true, shell=true,
+           supportsTop=false, supportsBottom=false,
            cutter=false, radialClearance=0.015, linearClearance=0.03,
-           debug=false, alpha=1) {
+           debug=false, alpha=_CYLINDER_ALPHA) {
   radialClear = cutter ? radialClearance : 0;
   linearClear = cutter ? linearClearance : 0;
+
+  radius = diameter/2;
 
   centerOffset = centerOffset==undef ? (chamberRadius*2) : centerOffset;
 
   positions = ChamberCount(chamberRadius*2, centerOffset);
-
-  radius = RevolverCylinderRadius(
-               centerOffset,chamberRadius,
-               wall, depth);
-
-  height = RevolverCylinderHeight(radius, positions,
-                                  zigzagAngle, ZigZagWidth())
-         + extraTop + extraBottom;
-
   trackAngle=360/positions/2;
-
-  coreRadius=centerOffset-0.25;
 
   assert(ZIG_ZAG_ANGLE >= 45);
   assert(ZIG_ZAG_ANGLE <= 90);
@@ -129,6 +125,7 @@ module OffsetZigZagRevolver(chamberRadius=1, chamberInnerRadius=0,
   // Chamber Bolts
   if (chamberBolts)
   color("Silver") render()
+  translate([0,0,height])
   RevolverChamberIterator(centerOffset=centerOffset, positions=positions)
   ChamberBolt(positions=positions,
               chamberRadius=chamberRadius,
@@ -151,63 +148,45 @@ module OffsetZigZagRevolver(chamberRadius=1, chamberInnerRadius=0,
   difference() {
 
     // Body
-    union() {
-
-      // Outer shell
-      if (shell)
-      difference() {
-        ChamferedCylinder(r1=radius+radialClear, r2=1/16,
-                          h=(cutter?chamberLength+linearClear:height),
-                          chamferTop=true, chamferBottom=!cutter, $fn=100);
-
-        // Split into two parts, core and shell
-        translate([0,0,-ManifoldGap()])
-        cylinder(r=centerOffset,
-                 h=height+ManifoldGap(2));
-      }
-
-      // Core
-      if (core)
-      difference() {
-        ChamferedCylinder(r1=coreRadius, r2=1/16,
-                          h=chamberLength);
-
-
-        // Spindle Hole
-        cylinder(r=spindleRadius,
-                 h=max(height, chamberLength+linearClearance)+ManifoldGap(2));
-
-          if (coreInnerRadius > 0) {
-
-              // Hollow out the core
-              cylinder(r=coreInnerRadius, h=height+ManifoldGap());
-          }
-      }
-    }
+    ChamferedCylinder(r1=radius+radialClear, r2=1/16,
+                      h=(cutter?chamberLength+linearClear:height),
+                      chamferTop=true, chamferBottom=!cutter, $fn=Resolution(80,200));
 
     if (!cutter) {
+      
+      children();
+      
+      // Spindle Hole
+      cylinder(r=spindleRadius,
+               h=max(height, chamberLength+linearClearance)+ManifoldGap(2));
 
       // Chambers
       translate([0,0,-ManifoldGap()])
       RevolverChamberIterator(centerOffset=centerOffset, positions=positions)
-      cylinder(r=chamberRadius,
-               h=chamberLength+linearClearance);
+      cylinder(r=chamberRadius+chamberClearance,
+               h=chamberLength+linearClearance, $fn=Resolution(30,60));
+
+      // Chamber ID
+      translate([0,0,-ManifoldGap()])
+      RevolverChamberIterator(centerOffset=centerOffset, positions=positions)
+      cylinder(r=chamberInnerRadius,
+               h=height+ManifoldGap(2));
 
       // Chamber bolts
-      translate([0,0,height-0.5])
+      translate([0,0,height])
       RevolverChamberIterator(centerOffset=centerOffset, positions=positions)
       ChamberBolt(positions=positions,
                   chamberRadius=chamberRadius,
                   cutter=true);
 
       // ZigZag track
-      #translate([0,0,-ManifoldGap()])
+      translate([0,0,-ManifoldGap()])
       rotate(trackAngle)
       rotate(360/positions)
       ZigZag(radius=radius, depth=ZigZagDepth(), width=ZigZagWidth(),
              positions=positions, zigzagAngle=zigzagAngle,
              extraTop=extraTop, extraBottom=extraBottom,
-             supports=supports);
+             supportsTop=supportsTop, supportsBottom=supportsBottom);
     }
 
 
@@ -215,13 +194,12 @@ module OffsetZigZagRevolver(chamberRadius=1, chamberInnerRadius=0,
 }
 
 // L12k 6-shot 4130 12ga
-scale(25.4)
-OffsetZigZagRevolver(depth=3/16,
-      centerOffset=1.0001,
+//scale(25.4)
+OffsetZigZagRevolver(diameter=4, height=2.75,
+      depth=3/16,
+      centerOffset=1.1251,
       chamberRadius=1/2, chamberInnerRadius=0.813/2,
-      chamberBolts=false,
+      chamberBolts=true,
       zigzagAngle=ZIG_ZAG_ANGLE,
-      supports=true,  //extraTop=0.125+0.033,
-      core=false, shell=true,
-      chambers=false, chamberLength=3);
-
+      supportsTop=true, supportsBottom=true,  //extraTop=0.125+0.033,
+      chambers=_SHOW_CHAMBERS, chamberLength=3);
