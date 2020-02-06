@@ -38,6 +38,10 @@ You'll notice some of the design is parameterized, like bolts, barrel diameter, 
 ### Printing basics
 I use ABS almost exclusively, MOST of it can be printed in PLA just fine. A few parts that weld onto the receiver tube must be ABS.
 
+It's designed to work with a 1.5mm nozzle. If you weren't aware, bigger nozzles print *way in the hell faster*. It's worth your time to swap out, just for these prints, you won't want to go back.
+
+3mm thick walls and 30% infill
+
 ### Three Waypoints
 
 You need all the printable parts in each of these files.
