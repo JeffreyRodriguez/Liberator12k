@@ -40,7 +40,7 @@ use <../Frame.scad>;
 /* [What to Render] */
 
 // Configure settings below, then choose a part to render. Render that part (F6) then export STL (F7). Assembly is not for printing.
-_RENDER = "Assembly"; // ["Assembly", "FrameSpacer", "RevolverReceiverFront", "CraneSupport", "BarrelCollar", "Extractor", "Latch", "Foregrip", "RevolverZigZagCylinder"]
+_RENDER = "Assembly"; // ["Assembly", "FrameSpacer", "RevolverReceiverFront", "Crane", "CraneShield", "CraneSupport", "CraneLatch", "Foregrip", "RevolverZigZagCylinder"]
 //$t = 1; // [0:0.01:1]
 
 _CUTAWAY_RECEIVER = true;
@@ -297,7 +297,7 @@ module RevolverReceiverFront(debug=false, alpha=_ALPHA_RECEIVER_FRONT) {
       translate([0,0,-RevolverSpindleOffset()])
       rotate([0,90,0])
       ChamferedCylinder(r1=(BarrelRadius()*3)+(CR()*2), r2=CR(),
-               h=length-ManifoldGap(), $fn=Resolution(8, 200));
+               h=length-ManifoldGap(), $fn=Resolution(80, 200));
     }
     
     FrameBolts(cutter=true);
@@ -681,7 +681,7 @@ module RevolverZigZagCylinder_print() {
 }
 
 // Assemblies
-module CraneSupportAssembly(stock=true,
+module RevolverForendAssembly(stock=true,
                                pipeAlpha=1, debug=false) {
 
   if (_SHOW_RECEIVER_FRONT)
@@ -763,13 +763,9 @@ if (_RENDER == "Assembly") {
            triggerAnimationFactor=Animate(ANIMATION_STEP_TRIGGER)
                           -Animate(ANIMATION_STEP_TRIGGER_RESET));
 
-    CraneSupportAssembly(pipeAlpha=0.5, debug=false);
+    RevolverForendAssembly(pipeAlpha=0.5, debug=false);
 
     RevolverFireControlAssembly();
-
-    *translate([RecoilPlateRearX(),0,0])
-    Receiver(pipeAlpha=pipeAlpha,
-                      debug=false);
 
 }
 
