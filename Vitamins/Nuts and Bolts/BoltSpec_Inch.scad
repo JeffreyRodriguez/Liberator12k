@@ -55,8 +55,8 @@ function Spec_BoltOneHalf() = [
 function Spec_BoltOneQuarter() = [
   ["BoltDiameter",    UnitsImperial(0.25)],
   
-  ["BoltSocketCapDiameter", UnitsImperial(0.566)], // Verify?
-  ["BoltSocketCapHeight",   UnitsImperial(0.25)],// Verify?
+  ["BoltSocketCapDiameter", UnitsImperial(0.375)],
+  ["BoltSocketCapHeight",   UnitsImperial(0.25)],
   
   ["BoltFlatHeadDiameter", UnitsImperial(0.505)],
   ["BoltFlatHeadHeight",   UnitsImperial(0.161)],
