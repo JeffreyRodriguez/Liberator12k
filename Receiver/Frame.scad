@@ -52,9 +52,9 @@ function FrameExtension(length=FrameBoltLength()) = length
 
 module FrameBoltIterator() {
     for (Y = [FrameBoltY(),-FrameBoltY()])
-    translate([-FrameReceiverLength()-NutHexHeight(FrameBolt())-ManifoldGap(),
+    translate([-FrameReceiverLength()-ManifoldGap(),
                Y, FrameBoltZ()])
-    rotate([0,90,0])
+    rotate([0,-90,0])
     children();
 }
 
@@ -66,7 +66,8 @@ module FrameBolts(length=FrameBoltLength(),
   DebugHalf(enabled=debug) {
     FrameBoltIterator()
     NutAndBolt(bolt=FrameBolt(), boltLength=length,
-         head="hex", nut="hex", clearance=clear);
+         head="hex", nut="hex", clearance=clear,
+         capOrientation=true);
   }
 }
 
