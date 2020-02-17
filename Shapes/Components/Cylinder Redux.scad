@@ -63,17 +63,6 @@ function CylinderOuterWall() = CYLINDER_OUTER_WALL;
 function ChamberCount(chamberDiameter=0.5, centerOffset=0.51) =
   floor(PI / (asin(chamberDiameter / (centerOffset*2))*(PI/180)));
 
-function RevolverCylinderRadius(centerOffset=1, chamberRadius=1,
-                                wall=CylinderOuterWall(), depth=ZigZagDepth())
-             = centerOffset
-             + chamberRadius
-             + wall+depth;
-
-function RevolverCylinderHeight(radius, positions, zigzagAngle=45, width=ZigZagWidth())
-           = ZigZagHeight(radius, positions, width, zigzagAngle)
-           + (width*1.5)
-           + (width*3);
-
 module RevolverChamberIterator(centerOffset=1, positions=4) {
   for (i=[0:positions-1])
   rotate([0,0,(360/positions)*i]) {
@@ -98,7 +87,7 @@ module ChamberBolt(positions, chamberRadius,
 module OffsetZigZagRevolver(diameter=4, height=2.75,
            chamberRadius=1, chamberInnerRadius=0,
            chamberClearance=CHAMBER_CLEARANCE, centerOffset=undef,
-           wall=CylinderOuterWall(), depth=ZigZagDepth(),
+           depth=ZigZagDepth(),
            zigzagAngle=45,
            trackAngle=0, extraTop=0, extraBottom=0,
            spindleRadius=SpindleRadius()+SPINDLE_CLEARANCE,

@@ -76,20 +76,11 @@ module FrameSupport(length=FRAME_SPACER_LENGTH,
                     height=(FrameBoltRadius()+WallFrameBolt())*2,
                     $fn=Resolution(20,60)) {
   
-  
-  intersection() {
-    translate([0, -width/2, FrameBoltZ()-(height/2)])
-    ChamferedCube([length, width, height], r=1/16,
-                   chamferXYZ=[1,1,1],
-                   teardropXYZ=[true, true, true],
-                   teardropTopXYZ=[true, true, true]);
-    
-    translate([0, -width/2, FrameBoltZ()-(height/2)])
-    ChamferedCube([length, width, height], r=3/16,
-                   chamferXYZ=[1,0,0],
-                   teardropXYZ=[false, true, true],
-                   teardropTopXYZ=[false, true, true]);
-  }
+  translate([0, -width/2, FrameBoltZ()-(height/2)])
+  ChamferedCube([length, width, height], r=1/16,
+                 chamferXYZ=[1,0,0],
+                 teardropXYZ=[false, false, false],
+                 teardropTopXYZ=[false, false, false]);
 }
 
 module FrameSpacer(length=FRAME_SPACER_LENGTH, debug=false, alpha=1) {
@@ -116,7 +107,7 @@ module FrameAssembly(length=FrameBoltLength(),
                      debug=false, alpha=1) {
   FrameBolts(length=length, debug=debug, alpha=alpha);
 
-  FrameSpacer(length=spacerLength);
+  !FrameSpacer(length=spacerLength);
 }
 
 FrameAssembly();
