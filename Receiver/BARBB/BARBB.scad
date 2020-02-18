@@ -125,7 +125,7 @@ module PicRailBolts() {
   translate([x,0,0])
   NutAndBolt(bolt=Spec_BoltM4(), boltLength=10/25.4,
               capHeightExtra=1, nutHeightExtra=0.5,
-              clearance=true, teardrop=true, teardropAngle=180);
+              clearance=0.005, teardrop=true, teardropAngle=180);
 }
 
 
@@ -804,7 +804,7 @@ module BARBB_RailMount(id=1, clearance=0.003, length=1, height=1, wall=tubeWall)
     translate([-length/2,0,barrelZ+height])
     NutAndBolt(bolt=Spec_BoltM4(), boltLength=10/25.4,
                 capHeightExtra=1, nutHeightExtra=height+(id/3),
-                clearance=true, teardrop=true, teardropAngle=180);
+                clearance=clearance, teardrop=true, teardropAngle=180);
     
     // Barrel center axis
     translate([0,0,barrelZ])
@@ -888,7 +888,7 @@ module AR15_Bolt(clearance=0.007, camPin=true, firingPinRetainer=true,
     NutAndBolt(bolt=Spec_BoltM3(), boltLength=20/25.4,
                 capOrientation=false, capHeightExtra=1,
                 nutHeightExtra=1, nutBackset=3/25.4,
-                clearance=true, teardrop=teardrop, teardropAngle=-90);
+                clearance=clearance, teardrop=teardrop, teardropAngle=-90);
   }
 }
 
