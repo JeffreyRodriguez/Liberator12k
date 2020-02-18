@@ -276,14 +276,13 @@ translate([-4,0,0]) {
 translate([0,-2,0]) {
   RoundedBoolean(teardrop=true, $fn=20);
 
+  HoleChamfer($fn=20);
+
   translate([0,-2,0])
   CircularOuterEdgeChamfer(r1=0.5, r2=0.125, teardrop=false, $fn=20);
 
   translate([0,-4, 0])
   ChamferedCircularHole(r1=1, r2=0.125, h=1, $fn=20);
-
-  translate([0,0,0])
-  HoleChamfer($fn=20);
 
   // Chamfered Cylinder
   translate([-2.5,0,0])
