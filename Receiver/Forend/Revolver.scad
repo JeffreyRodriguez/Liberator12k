@@ -157,6 +157,7 @@ function CranePivotDiameter(clearance=0)
     = BoltDiameter(CraneBolt(), clearance);
 
 
+function CraneLatchRadius() = BarrelRadius()+0.25;
 function CraneLatchTravel() = 0.5;
 function CraneLatchLength() = 0.5;
 function CraneLatchHandleWall() = 0.125;
@@ -259,7 +260,7 @@ module RevolverSpindle(cutter=false, clearance=0.01) {
   translate([RecoilPlateRearX(),0,CylinderZ()])
   rotate([0,90,0])
   SquareRod(CylinderRod(),
-      length=CraneMaxX()-RecoilPlateRearX()
+      length=CraneMaxX()-RecoilPlateRearX()+0.5
             +ManifoldGap(3), 
       clearance=cutter?RodClearanceSnug():undef);
 
@@ -327,9 +328,8 @@ module RevolverReceiverFront(debug=false, alpha=_ALPHA_RECEIVER_FRONT) {
     translate([RecoilPlateRearX(),0,0])
     union() {
       
-      translate([0,0,-0.0625-1])
       FrameSupport(length=length,
-                   height=((FrameBoltRadius()+WallFrameBolt())*2)+0.125+1);
+                   extraBottom=0.125+1);
       
       ReceiverCouplingPattern(length=length, frameLength=length);
 
@@ -405,14 +405,14 @@ module CraneLatch(teardrop=false, clearance=0.005,
     // Clear latch support that goes around the barrel
     translate([ForendMaxX()+CraneLengthFront()-ManifoldGap(),0,0])
     rotate([0,90,0])
-    cylinder(r=BarrelRadius()+WallBarrel()+clearance,
+    cylinder(r=CraneLatchRadius()+clearance,
              h=CraneLatchLength()+ManifoldGap(2));
       
     // Chamfer the latch support hole
     translate([ForendMaxX()+CraneLengthFront()-ManifoldGap(),0,0])
     rotate([0,90,0])
-    HoleChamfer(r1=BarrelRadius()+WallBarrel()+clearance,
-                r2=0.25,
+    HoleChamfer(r1=CraneLatchRadius()+clearance,
+                r2=CR(),
                 teardrop=true);
 
     CranePivotPath(clearance=0.01);
@@ -476,7 +476,7 @@ module Crane(teardrop=false, clearance=0.005,
           // Sloped transition to the shield
           translate([CraneMinX(),0,0])
           rotate([0,90,0])
-          HoleChamfer(r1=bodyRadius, r2=0.25, teardrop=true);
+          *HoleChamfer(r1=bodyRadius, r2=0.25, teardrop=true);
           
           // Around the spindle
           translate([CraneMinX(),0,CylinderZ()])
@@ -489,7 +489,7 @@ module Crane(teardrop=false, clearance=0.005,
           translate([CraneMinX(),0,CylinderZ()])
           rotate([0,90,0])
           HoleChamfer(r1=SpindleCollarRadius()+WallSpindle(),
-                      r2=0.25, teardrop=true);
+                      r2=0.5, teardrop=true);
         }
         
         // Square off the top
@@ -682,15 +682,14 @@ module CraneLatchSupport(debug=false, alpha=_ALPHA_FOREND, $fn=Resolution(30,100
       // Around the barrel
       translate([ForendMaxX()+CraneLengthFront(),0,0])
       rotate([0,90,0])
-      ChamferedCylinder(r1=BarrelRadius()+WallBarrel(), r2=CR(),
+      ChamferedCylinder(r1=CraneLatchRadius(), r2=CR(),
                h=length);
 
     // Crane Pivot Supports
     translate([ForendMaxX()-ManifoldGap(),0,0]) {
       
-      translate([0,0,-0.0625])
       FrameSupport(length=length+CraneLengthFront(),
-                   height=((FrameBoltRadius()+WallFrameBolt())*2)+0.125);
+                   extraBottom=0.125);
 
       
       translate([CraneLengthFront(),0,0])
@@ -735,9 +734,8 @@ module FrameSpacer(length=ForendMinX(), debug=false, alpha=_ALPHA_FOREND) {
   render() DebugHalf(enabled=debug)
   difference() {
     union() {
-      translate([0,0,-0.0625])
       FrameSupport(length=length,
-                   height=((FrameBoltRadius()+WallFrameBolt())*2)+0.125);
+                   extraBottom=0.125);
       
       translate([0,-(3/2),CranePivotZ()])
       ChamferedCube([CylinderMaxX(),
