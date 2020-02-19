@@ -74,13 +74,23 @@ module FrameBolts(length=FrameBoltLength(),
 module FrameSupport(length=FRAME_SPACER_LENGTH,
                     width=(FrameBoltY()+FrameBoltRadius()+WallFrameBolt())*2,
                     height=(FrameBoltRadius()+WallFrameBolt())*2,
+                    extraBottom=0,
                     $fn=Resolution(20,60)) {
   
-  translate([0, -width/2, FrameBoltZ()-(height/2)])
-  ChamferedCube([length, width, height], r=1/16,
-                 chamferXYZ=[1,0,0],
-                 teardropXYZ=[false, false, false],
-                 teardropTopXYZ=[false, false, false]);
+  difference() {
+    translate([0, -width/2, FrameBoltZ()-(height/2)-extraBottom])
+    ChamferedCube([length, width, height+extraBottom], r=1/16,
+                   chamferXYZ=[1,0,0],
+                   teardropXYZ=[false, false, false],
+                   teardropTopXYZ=[false, false, false]);
+    
+    for (M = [0, 1]) mirror([0,M,0])
+    translate([0, -width/2, FrameBoltZ()-(height/2)])
+    rotate([0,90,0])
+    linear_extrude(height=length)
+    rotate(180)
+    RoundedBoolean(r=1/4, edgeOffset=FrameBoltY(), angle=90);
+  }
 }
 
 module FrameSpacer(length=FRAME_SPACER_LENGTH, debug=false, alpha=1) {
@@ -107,7 +117,7 @@ module FrameAssembly(length=FrameBoltLength(),
                      debug=false, alpha=1) {
   FrameBolts(length=length, debug=debug, alpha=alpha);
 
-  !FrameSpacer(length=spacerLength);
+  FrameSpacer(length=spacerLength);
 }
 
 FrameAssembly();
