@@ -151,9 +151,9 @@ function RecoilPlateTopZ() = ReceiverOR()
 function CranePivotAngle() = 90;
 function WallCrane() = 0.25;
 
-function CranePivotRadius(clearance=0)
+function CranePivotBoltRadius(clearance=0)
     = BoltRadius(CraneBolt(), clearance);
-function CranePivotDiameter(clearance=0)
+function CranePivotBoltDiameter(clearance=0)
     = BoltDiameter(CraneBolt(), clearance);
 
 
@@ -175,15 +175,15 @@ function CraneMaxX() = ForendMaxX()
                      + CraneLengthFront();
 function CraneMinX() = CraneMaxX()-CraneLength();
 
-function CranePivotZ() = 0.5; // CranePivotRadius()+WallCrane();
-function CranePivotY() = FrameBoltY()+FrameBoltRadius()-CranePivotRadius();
+function CranePivotZ() = 0.5; // CranePivotBoltRadius()+WallCrane();
+function CranePivotY() = FrameBoltY()+FrameBoltRadius()-CranePivotBoltRadius();
 echo("CranePivotZ: ", CranePivotZ());
 echo("CranePivotY: ", CranePivotY());
 
 function CranePivotHypotenuse() = pyth_A_B(CranePivotY(), CranePivotZ());
 function CranePivotPinAngle() = CranePivotHypotenuse()*asin(CranePivotZ());
 
-function CraneBodyRadius() = CranePivotY()+CranePivotRadius()+WallCrane();
+function CraneBodyRadius() = CranePivotY()+CranePivotBoltRadius()+WallCrane();
 
 function CraneLatchMinX() = CraneMaxX();
 function CraneLatchMaxX() = CraneLatchMinX()+CraneLatchLength();
@@ -370,7 +370,7 @@ module CraneLatch(teardrop=false, clearance=0.005,
         for (Y = [1,-1])
         translate([CraneLatchMinX(),CranePivotY()*Y,CranePivotZ()])
         rotate([0,90,0])
-        ChamferedCylinder(r1=CranePivotRadius()+WallCrane(), r2=CR(),
+        ChamferedCylinder(r1=CranePivotBoltRadius()+WallCrane(), r2=CR(),
                  h=CraneLatchLength(),
                  teardropTop=true);
 
@@ -448,7 +448,7 @@ module Crane(teardrop=false, clearance=0.005,
         for (Y = [1,-1])
         translate([CraneMinX(),CranePivotY()*Y,CranePivotZ()])
         rotate([0,90,0])
-        ChamferedCylinder(r1=CranePivotRadius()+WallCrane(), r2=CR(),
+        ChamferedCylinder(r1=CranePivotBoltRadius()+WallCrane(), r2=CR(),
                  h=CraneLength(), chamferBottom=false,
                  teardropTop=true);
 
@@ -549,7 +549,7 @@ module Crane_print() {
 module CraneShield(clearance=0.006, debug=false, alpha=1) {
 
   pivotCutterRadius = RodRadius(CylinderRod())+WallCrane()+clearance;
-  craneRadius = CranePivotY()+CranePivotRadius()+WallCrane();
+  craneRadius = CranePivotY()+CranePivotBoltRadius()+WallCrane();
   cylinderMaxX = 2.75+ShellRimLength();
   length = CraneMinX()-cylinderMaxX-clearance;
 
@@ -563,7 +563,7 @@ module CraneShield(clearance=0.006, debug=false, alpha=1) {
       for (Y = [1,-1])
       translate([CraneMinX(),CranePivotY()*Y,Z])
       rotate([0,-90,0])
-      ChamferedCylinder(r1=CranePivotRadius()+WallCrane(), r2=CR(),
+      ChamferedCylinder(r1=CranePivotBoltRadius()+WallCrane(), r2=CR(),
                         h=length,
                         chamferBottom=false,
                         chamferTop=false, teardropTop=true,
@@ -618,7 +618,7 @@ module CraneSupport(debug=false, alpha=_ALPHA_FOREND, $fn=Resolution(30,100)) {
       for (M = [0,1]) mirror([0,M,0])
       translate([ForendMaxX(),
                  BarrelRadius()+WallBarrel(),
-                 CranePivotZ()-CranePivotRadius()-WallCrane()])
+                 CranePivotZ()-CranePivotBoltRadius()-WallCrane()])
       rotate([0,-90,0])
       Fillet(r=CR(), h=CraneSupportLength(),
                      inset=true, taperEnds=true);
@@ -634,7 +634,7 @@ module CraneSupport(debug=false, alpha=_ALPHA_FOREND, $fn=Resolution(30,100)) {
         for (M = [0,1]) mirror([0,M,0])
         translate([0,CranePivotY(),CranePivotZ()])
         rotate([0,90,0])
-        ChamferedCylinder(r1=CranePivotRadius()+WallCrane(), r2=CR(),
+        ChamferedCylinder(r1=CranePivotBoltRadius()+WallCrane(), r2=CR(),
                            h=CraneSupportLength());
       }
     }
