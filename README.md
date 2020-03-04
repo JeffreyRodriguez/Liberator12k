@@ -2,6 +2,8 @@
 
 Reliable self-defense for everyone - forever.
 
+[Liberator12k.com](https://Liberator12k.com)
+
 ### Quick Start
 [Impatient or experienced? Go here.](./Documentation/Quick%20Start.md)
 
