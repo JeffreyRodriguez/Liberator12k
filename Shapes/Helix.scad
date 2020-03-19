@@ -5,108 +5,112 @@ use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
 use <../Shapes/Semicircle.scad>;
 
-RADIUS=1; // [0.1:0.1:2]
-TWIST_RATE=1; // [0.1:0.1:2]
+RADIUS=2; // "2"
+DEPTH=0.1875; // "0.1875"
+WIDTH=0.25; // "0.25"
+TWIST_RATE=1; // [0.1:0.1:1]
 ANGLE=22.5; // [0:0.5:360]
 
-module HelixShape2D(radius, depth, cutter_angle, width,
-                    twist_rate=1) {
-  hull() {
-    *semidonut(major=(radius+depth)*2,
-              minor=(radius-depth)*2,
-              angle=cutter_angle, center=true,
-              $fn=50);
+module HelixSegment(radius=RADIUS, depth=DEPTH, width=WIDTH,
+                    angle=ANGLE, twist_rate=1,
+                    topExtra=0.125, bottomExtra=0.125,
+                    teardropTop=true, teardropBottom=true,
+                    verbose=true) {
 
-    translate([radius-depth,-width/2/twist_rate])
-    square([depth*2, width/twist_rate]);
-  }
-}
-
-module HelixSegment(radius=2, depth=3/16, width=0.25,
-                    angle=360, twist_rate=1,
-                    top=0.125, bottom=0.125,
-                    teardropTop=true, teardropBottom=true) {
-
-  diameter   = radius*2;
-  circumf    = PI * diameter;
-  segment    = circumf*(angle/360)/twist_rate;
+  //twist_angle = 90*(2-twist_rate);
+  diameter     = radius*2;
+  circumf      = PI * diameter;
+  segment      = circumf*(angle/360);
+  height       = (segment+width)/twist_rate;//(radius/twist_rate);
+  width_angle  = (width/circumf)*360;
                       
-  echo("Helix twist_rate: ", twist_rate);
-  echo("Helix radius: ", radius);
-  echo("Helix circumference: ", circumf);
-  echo("Helix segment: ", segment);
+  // HACK: The max(width*sqrt(2), ...) will cause the track to be
+  // wider than strictly necessary... sloppier.
+  // This will only affect helices that overhang greater than 45 degrees.
+  // Since this is optimized for printing, that's a sane floor.
   
-  height       = radius/twist_rate;
-  twistedWidth = width/twist_rate;
-  cutter_angle = 360*(width*sqrt(2)/circumf)*twist_rate;
-      
+  // TODO: Adjust the height of the "bottom" square. I used (width/2),
+  // Which works fine for the above hack, but using only the latter portion.
+  //twistedWidth = max(width*sqrt(2), (width*sqrt(2))*twist_rate);
+  twistedWidth = width+(width*0.5);
+  twistedCutterAngle = (twistedWidth/circumf)*360;
+  twistAngleExtra = twistedCutterAngle-width_angle;
+
+                      
+  if (verbose) {
+    echo("Helix height: ", height);
+    echo("Helix width_angle: ", width_angle);
+    echo("Helix twist_rate: ", twist_rate);
+    echo("Helix radius: ", radius);
+    echo("Helix circumference: ", circumf);
+    echo("Helix segment: ", segment);
+  }
+  
+  
+  translate([0,0,width])
   intersection() {
     union() {
+      translate([0,0,-width/2])
       linear_extrude(height=height,
                      slices=Resolution(30, 50),
-                     twist = angle)
-      HelixShape2D(radius=radius,
-                   depth=depth,
-                   cutter_angle=cutter_angle,
-                   width=width,
-                   twist_rate=twist_rate);
+                     twist = angle+twistAngleExtra)
+      translate([radius-(depth*2),-width/2])
+      square([depth*4, twistedWidth]);
 
       // Top
-      if (top > 0)
       rotate(-angle)
-      translate([radius-depth,-twistedWidth/2,height-ManifoldGap()])
-      linear_extrude(height=top+ManifoldGap())
-      square([depth*2, twistedWidth]);
+      translate([0,0,height-width-ManifoldGap()])
+      linear_extrude(height=(width/2)+topExtra+ManifoldGap())
+      translate([radius-(depth*2),-width/2])
+      square([depth*4, width]);
       
       if (teardropTop)
       rotate(-angle)
-      translate([radius-depth,-twistedWidth/2,height+top-ManifoldGap()])
+      translate([radius-(depth*2),
+                 -width/2,
+                 height+topExtra-(width/2)-ManifoldGap()])
       rotate(90)
       rotate([90,0,0])
-      linear_extrude(height=depth*2)
-      polygon([[0,0], [twistedWidth,0],
-               [(twistedWidth)/2,(twistedWidth/2)*sqrt(2)]]);
+      linear_extrude(height=depth*4)
+      polygon([[0,0], [width,0],
+               [(width/2),width*(sqrt(2)/2)]]);
       
       // Bottom
-      if (bottom > 0)
-      translate([radius-depth,-twistedWidth/2,-bottom])
-      linear_extrude(height=bottom+ManifoldGap())
-      square([depth*2, twistedWidth]);
+      translate([radius-(depth*2),-width/2,-(width/2)-bottomExtra])
+      cube([depth*4, width, (width/2)+bottomExtra]);
       
       if (teardropBottom)
-      translate([radius-depth,twistedWidth/2,-bottom+ManifoldGap()])
+      translate([radius-(depth*2),(width/2),-(width/2)-bottomExtra+ManifoldGap()])
       rotate(-90)
       rotate([-90,0,0])
-      linear_extrude(height=depth*2)
-      polygon([[0,0], [twistedWidth,0],
-               [(twistedWidth)/2,(twistedWidth/2)*sqrt(2)]]);
+      linear_extrude(height=depth*4)
+      polygon([[0,0], [width,0],
+               [(width/2),width*sqrt(2)/2]]);
       
     }
     
-    translate([0,0,-bottom-(twistedWidth*sqrt(2)/2)])
-    linear_extrude(height=height+bottom+top+(twistedWidth*sqrt(2)))
-    hull() {
+    // Chop off the leading and trailing tips
+    #translate([0,0,-(width/2)-bottomExtra-(width*sqrt(2)/2)])
+    linear_extrude(height=height+bottomExtra+topExtra+(width*sqrt(2)))
+    union() {
+      semidonut(major=(radius+depth)*2,
+                minor=(radius-depth)*2,
+                angle=angle,
+                $fn=200);
       
-      // Top profile
-      rotate(-angle)
-      translate([radius-depth,-width/2/twist_rate])
-      square([depth*2, twistedWidth]);
-
-      // Bottom profile
-      translate([radius-depth,-width/2/twist_rate])
-      square([depth*2, twistedWidth]);
+      // This is a little hacky, but I'm done fucking with it for now.
+      for (R = [0,-angle]) rotate(R)
+      translate([radius-depth, -(width/2)])
+      square([depth*2,width]);
     }
   }
 }
 
-radius = 0.25+(2*$t);
-
-difference() {
-  cylinder(r=radius, h=(radius/TWIST_RATE)+0.5, $fn=50);
+// Sample Cases
+render()
+//difference() {
+  *cylinder(r=radius, h=(radius/TWIST_RATE)+0.5, $fn=50);
   
-  translate([0,0,0.25])
-  HelixSegment(radius=radius, angle=ANGLE,
-               twist_rate=TWIST_RATE,
-               top=0, bottom=0,
+  HelixSegment(topExtra=0, bottomExtra=0,
                teardropTop=true, teardropBottom=true);
-}
+//}
