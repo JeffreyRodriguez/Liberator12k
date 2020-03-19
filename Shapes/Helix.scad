@@ -12,7 +12,7 @@ TWIST_RATE=1; // [0.1:0.1:1]
 ANGLE=22.5; // [0:0.5:360]
 
 module HelixSegment(radius=RADIUS, depth=DEPTH, width=WIDTH,
-                    angle=ANGLE, twist_rate=1,
+                    angle=ANGLE, twist_rate=TWIST_RATE,
                     topExtra=0.125, bottomExtra=0.125,
                     teardropTop=true, teardropBottom=true,
                     verbose=true) {
@@ -47,7 +47,7 @@ module HelixSegment(radius=RADIUS, depth=DEPTH, width=WIDTH,
   }
   
   
-  translate([0,0,width])
+  translate([0,0,(width/2)+bottomExtra+(teardropBottom?(width*sqrt(2)/2):0)])
   intersection() {
     union() {
       translate([0,0,-width/2])
@@ -90,7 +90,7 @@ module HelixSegment(radius=RADIUS, depth=DEPTH, width=WIDTH,
     }
     
     // Chop off the leading and trailing tips
-    #translate([0,0,-(width/2)-bottomExtra-(width*sqrt(2)/2)])
+    translate([0,0,-(width/2)-bottomExtra-(width*sqrt(2)/2)])
     linear_extrude(height=height+bottomExtra+topExtra+(width*sqrt(2)))
     union() {
       semidonut(major=(radius+depth)*2,
@@ -108,9 +108,9 @@ module HelixSegment(radius=RADIUS, depth=DEPTH, width=WIDTH,
 
 // Sample Cases
 render()
-//difference() {
-  *cylinder(r=radius, h=(radius/TWIST_RATE)+0.5, $fn=50);
+difference() {
+  cylinder(r=RADIUS, h=(RADIUS/TWIST_RATE)+2, $fn=50);
   
-  HelixSegment(topExtra=0, bottomExtra=0,
+  HelixSegment(topExtra=1, bottomExtra=1,
                teardropTop=true, teardropBottom=true);
-//}
+}
