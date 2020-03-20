@@ -15,7 +15,7 @@ module HelixSegment(radius=RADIUS, depth=DEPTH, width=WIDTH,
                     angle=ANGLE, twist_rate=TWIST_RATE,
                     topExtra=0.125, bottomExtra=0.125,
                     teardropTop=true, teardropBottom=true,
-                    verbose=true) {
+                    verbose=false) {
 
   //twist_angle = 90*(2-twist_rate);
   diameter     = radius*2;
@@ -47,7 +47,7 @@ module HelixSegment(radius=RADIUS, depth=DEPTH, width=WIDTH,
   }
   
   
-  translate([0,0,(width/2)+bottomExtra+(teardropBottom?(width*sqrt(2)/2):0)])
+  translate([0,0,width+bottomExtra+(teardropBottom?(width*sqrt(2)/2):0)])
   intersection() {
     union() {
       translate([0,0,-width/2])
@@ -59,16 +59,14 @@ module HelixSegment(radius=RADIUS, depth=DEPTH, width=WIDTH,
 
       // Top
       rotate(-angle)
-      translate([0,0,height-width-ManifoldGap()])
-      linear_extrude(height=(width/2)+topExtra+ManifoldGap())
-      translate([radius-(depth*2),-width/2])
-      square([depth*4, width]);
+      translate([radius-(depth*2),-width/2,height-width-ManifoldGap()])
+      cube([depth*4, width, width+topExtra+ManifoldGap()]);
       
       if (teardropTop)
       rotate(-angle)
       translate([radius-(depth*2),
                  -width/2,
-                 height+topExtra-(width/2)-ManifoldGap()])
+                 height+topExtra-ManifoldGap()])
       rotate(90)
       rotate([90,0,0])
       linear_extrude(height=depth*4)
@@ -76,11 +74,11 @@ module HelixSegment(radius=RADIUS, depth=DEPTH, width=WIDTH,
                [(width/2),width*(sqrt(2)/2)]]);
       
       // Bottom
-      translate([radius-(depth*2),-width/2,-(width/2)-bottomExtra])
-      cube([depth*4, width, (width/2)+bottomExtra]);
+      translate([radius-(depth*2),-width/2,-width-bottomExtra])
+      cube([depth*4, width, width+bottomExtra]);
       
       if (teardropBottom)
-      translate([radius-(depth*2),(width/2),-(width/2)-bottomExtra+ManifoldGap()])
+      translate([radius-(depth*2),(width/2),-width-bottomExtra+ManifoldGap()])
       rotate(-90)
       rotate([-90,0,0])
       linear_extrude(height=depth*4)
@@ -90,8 +88,8 @@ module HelixSegment(radius=RADIUS, depth=DEPTH, width=WIDTH,
     }
     
     // Chop off the leading and trailing tips
-    translate([0,0,-(width/2)-bottomExtra-(width*sqrt(2)/2)])
-    linear_extrude(height=height+bottomExtra+topExtra+(width*sqrt(2)))
+    translate([0,0,-width-bottomExtra-(width*sqrt(2)/2)])
+    linear_extrude(height=height+bottomExtra+topExtra+(width*sqrt(2))+(width))
     union() {
       semidonut(major=(radius+depth)*2,
                 minor=(radius-depth)*2,
@@ -111,6 +109,6 @@ render()
 difference() {
   cylinder(r=RADIUS, h=(RADIUS/TWIST_RATE)+2, $fn=50);
   
-  HelixSegment(topExtra=1, bottomExtra=1,
+  HelixSegment(topExtra=0, bottomExtra=0,
                teardropTop=true, teardropBottom=true);
 }
