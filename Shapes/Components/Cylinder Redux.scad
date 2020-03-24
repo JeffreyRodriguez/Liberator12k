@@ -36,7 +36,6 @@ SPINDLE_COLLAR_WIDTH = 0.1875;
 ZIG_ZAG_WIDTH = 0.25;
 ZIG_ZAG_DEPTH = 0.16;
 ZIG_ZAG_CLEARANCE = 0.01;
-ZIG_ZAG_ANGLE = 55; // [45:89]
 
 /* [Cylinder] */
 CYLINDER_OUTER_WALL = 0.1875;
@@ -88,8 +87,7 @@ module OffsetZigZagRevolver(diameter=4, height=2.75,
            chamberRadius=1, chamberInnerRadius=0,
            chamberClearance=CHAMBER_CLEARANCE, centerOffset=undef,
            depth=ZigZagDepth(),
-           zigzagAngle=45,
-           trackAngle=0, extraTop=0, extraBottom=0,
+           extraTop=0, extraBottom=0,
            spindleRadius=SpindleRadius()+SPINDLE_CLEARANCE,
            chamberBolts=true, chambers=true, chamberLength=undef,
            supportsTop=false, supportsBottom=false,
@@ -105,8 +103,6 @@ module OffsetZigZagRevolver(diameter=4, height=2.75,
   positions = ChamberCount(chamberRadius*2, centerOffset);
   trackAngle=360/positions/2;
 
-  assert(ZIG_ZAG_ANGLE >= 45);
-  assert(ZIG_ZAG_ANGLE <= 90);
   echo("Cylinder positions: ", positions);
   echo("Cylinder height: ", height);
   echo("Cylinder diameter, radius: ", radius*2, radius);
@@ -173,7 +169,7 @@ module OffsetZigZagRevolver(diameter=4, height=2.75,
       rotate(trackAngle)
       rotate(360/positions)
       ZigZag(radius=radius, depth=ZigZagDepth(), width=ZigZagWidth(),
-             positions=positions, zigzagAngle=zigzagAngle,
+             positions=positions,
              extraTop=extraTop, extraBottom=extraBottom,
              supportsTop=supportsTop, supportsBottom=supportsBottom);
     }
@@ -189,6 +185,5 @@ OffsetZigZagRevolver(diameter=4, height=2.75,
       centerOffset=1.1251,
       chamberRadius=1/2, chamberInnerRadius=0.813/2,
       chamberBolts=true,
-      zigzagAngle=ZIG_ZAG_ANGLE,
       supportsTop=true, supportsBottom=true,  //extraTop=0.125+0.033,
       chambers=_SHOW_CHAMBERS, chamberLength=3);

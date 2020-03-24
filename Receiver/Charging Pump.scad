@@ -53,7 +53,7 @@ function ChargingRodMinX() = RecoilPlateRearX()-0.5;
 function ChargingRodMaxX() = ChargingRodMinX()+ChargingRodLength();
 
 // Calculated: Lengths
-function ChargerTravel() = 2.25;
+function ChargerTravel() = 2;
 
 // Calculated: Positions
 echo("Charging Rod Length: ", ChargingRodLength());
@@ -181,7 +181,7 @@ module ChargingPumpAssembly(animationFactor=ChargerAnimationFactor(),
     color("Silver")
     ChargingRodBolts();
 
-    ChargingRod(length=length, minX=minX, debug=debug);
+    *ChargingRod(length=length, minX=minX, debug=debug);
 
     Charger(debug=debug);
 

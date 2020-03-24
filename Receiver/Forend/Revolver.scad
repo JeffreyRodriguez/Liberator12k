@@ -16,7 +16,7 @@ use <../Lower/Lower.scad>;
 use <../Lower/Trigger.scad>;
 
 use <../../Shapes/Chamfer.scad>;
-
+use <../../Shapes/Helix.scad>;
 use <../../Shapes/Bearing Surface.scad>;
 use <../../Shapes/Teardrop.scad>;
 use <../../Shapes/TeardropTorus.scad>;
@@ -41,7 +41,7 @@ use <../Frame.scad>;
 /* [What to Render] */
 
 // Configure settings below, then choose a part to render. Render that part (F6) then export STL (F7). Assembly is not for printing.
-_RENDER = "Assembly"; // ["Assembly", "FrameSpacer", "RevolverReceiverFront", "Crane", "CraneShield", "CraneSupport", "CraneLatch", "Foregrip", "RevolverZigZagCylinder"]
+_RENDER = "Assembly"; // ["Assembly", "FrameSpacer", "RevolverReceiverFront", "Crane", "CraneShield", "CraneSupport", "CraneLatch", "CraneLatchHandle", "Foregrip", "RevolverCylinder"]
 //$t = 1; // [0:0.01:1]
 
 _SHOW_ACTION_ROD = true;
@@ -52,6 +52,7 @@ _SHOW_CYLINDER = true;
 _SHOW_FOREND = true;
 _SHOW_FRAME = true;
 _SHOW_LATCH = true;
+_SHOW_LATCH_HANDLE = true;
 _SHOW_RECEIVER = true;
 _SHOW_RECEIVER_FRONT = true;
 _SHOW_SHIELD = true;
@@ -61,10 +62,12 @@ _ALPHA_CRANE = 1;              // [0:0.1:1]
 _ALPHA_CYLINDER = 1;           // [0:0.1:1]
 _ALPHA_FOREND = 1;             // [0:0.1:1]
 _ALPHA_LATCH = 1;              // [0:0.1:1]
+_ALPHA_LATCH_HANDLE = 1;       // [0:0.1:1]
 _ALPHA_RECEIVER_TUBE = 1;      // [0:0.1:1]
 _ALPHA_RECEIVER_COUPLING = 1;  // [0:0.1:1]
 _ALPHA_RECEIVER_FRONT = 1;     // [0:0.1:1]
 _ALPHA_RECOIL_PLATE_HOUSING=1; // [0:0.1:1]
+_ALPHA_SHIELD = 1;             // [0:0.1:1]
 
 
 /* [Assembly Cutaways] */
@@ -89,12 +92,16 @@ CHAMBER_ID = 0.8101;
 /* [Ambidexterity] */
 CRANE_LEFT_HANDED = false;
 
+/* [Screws] */
+GP_BOLT = "#8-32"; // ["M4", "#8-32"]
+GP_BOLT_CLEARANCE = 0.015;
+
 
 // Settings: Lengths
 function ShellRimLength() = 0.06;
 function ChamberLength() = CHAMBER_LENGTH;
 function BarrelLength() = BARREL_LENGTH;
-function ActuatorPretravel() = 0.125;
+function ActuatorPretravel() = 0;
 function CylinderZ() = -(CYLINDER_OFFSET + ManifoldGap());
 function WallBarrel() = 0.4375;
 function WallSpindle() = 0.25;
@@ -112,7 +119,10 @@ function SpindleCollarRadius() = SpindleCollarDiameter()/2;
 
 function CraneRod() = Spec_RodOneQuarterInch();
 function CraneBolt() = Spec_BoltOneQuarter();
-function CraneLatchBolt() = Spec_BoltM4();
+function CraneActuatorBolt() = BoltSpec(GP_BOLT);
+assert(CraneActuatorBolt(), "CraneActuatorBolt() is undefined. Unknown GP_BOLT?");
+
+
 
 // Shorthand: Measurements
 function BarrelRadius(clearance=0)
@@ -160,17 +170,12 @@ function CranePivotBoltDiameter(clearance=0)
 function CraneLatchRadius() = BarrelRadius()+0.25;
 function CraneLatchTravel() = 0.5;
 function CraneLatchLength() = 0.5;
-function CraneLatchHandleWall() = 0.125;
-function CraneLatchGuideWidth() = 0.25;
-function CraneLatchHandleZ() = -(CylinderZ()*2);
-function CraneLatchHandleMaxZ() = CylinderZ()
-                                  -(SpindleCollarRadius()+WallCrane());
-
 function CraneLengthFront() = 0.5;
 function CraneLengthRear() = 0;
 function CraneLength() = CraneLengthFront()
                        + CraneLengthRear()
                        + CraneSupportLength();
+
 function CraneMaxX() = ForendMaxX()
                      + CraneLengthFront();
 function CraneMinX() = CraneMaxX()-CraneLength();
@@ -184,9 +189,19 @@ function CranePivotHypotenuse() = pyth_A_B(CranePivotY(), CranePivotZ());
 function CranePivotPinAngle() = CranePivotHypotenuse()*asin(CranePivotZ());
 
 function CraneBodyRadius() = CranePivotY()+CranePivotBoltRadius()+WallCrane();
+function CraneNeckRadius() = BarrelRadius()+WallBarrel()+WallCrane()+0.125;
 
 function CraneLatchMinX() = CraneMaxX();
 function CraneLatchMaxX() = CraneLatchMinX()+CraneLatchLength();
+
+function CraneLatchHandleRadius() = CraneBodyRadius()+0.375;
+function CraneLatchHandlePivotAngle() = 20;
+function CraneLatchHandlePivotZ() = 0;//CylinderZ()-0.5;
+function CraneLatchHandleZ() = CylinderZ()-0.75;
+function CraneLatchHandleY() = 1;
+function CraneLatchHandleMaxX() = CraneMaxX()-CraneLengthFront();
+function CraneLatchHandleMinX() = CraneMinX();
+function CraneLatchHandleLength() = CraneLatchHandleMaxX()-CraneLatchHandleMinX();
 
 function CylinderHeight()=CYLINDER_LENGTH;
 function CylinderMaxX() = ShellRimLength()+CylinderHeight();
@@ -234,11 +249,18 @@ module CranePivotPosition(Y=CranePivotY(), Z=CranePivotZ(),
   translate([0,-Y,-Z])
   children();
 }
+module CraneLatchHandlePosition(Z=CraneLatchHandlePivotZ(),
+                          angle=CraneLatchHandlePivotAngle(), factor=1) {
+  translate([0,0,Z])
+  rotate([angle*factor,0,0])
+  translate([0,0,-Z])
+  children();
+}
 
 
 // Vitamins
 module Barrel(barrelLength=BarrelLength(),
-              clearance=0.005, cutter=false,
+              clearance=0.01, cutter=false,
               alpha=1, debug=false) {
 
   clear = (cutter ? clearance : 0);
@@ -266,7 +288,7 @@ module RevolverSpindle(cutter=false, clearance=0.01) {
 
 
   // Rearward shaft collar
-  color("SteelBlue")
+  *color("SteelBlue")
   translate([ManifoldGap(),0,CylinderZ()])
   rotate([0,90,0])
   cylinder(r=SpindleCollarRadius()+clear,
@@ -294,13 +316,15 @@ module CranePivotPin(cutter=false, teardrop=false, clearance=0.01) {
 
 
 
+module CraneLatchActuatorBolt(cutter=false, teardrop=false, clearance=0.01) {
+}
 // Cutters
-module GasPort(cutter=false, clearance=0.008) {
+module GasPort(cutter=false, clearance=0.01) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
   // The gas port
-  translate([GasPortMinX(),
+  *translate([GasPortMinX(),
              -(GasPortWidth()/2)-clear,
              GasPortMinZ()-clear])
   ChamferedCube([GasPortLength(),
@@ -309,7 +333,7 @@ module GasPort(cutter=false, clearance=0.008) {
   
   
   // Clear out the area from barrel to gas port
-  translate([GasPortMinX(),
+  *translate([GasPortMinX(),
              -(GasPortWidth()/2)-clear,
              0])
   ChamferedCube([ForendMinX()-CylinderMaxX(),
@@ -354,8 +378,83 @@ module RevolverReceiverFront(debug=false, alpha=_ALPHA_RECEIVER_FRONT) {
 }
 
 
-module CraneLatch(teardrop=false, clearance=0.005,
-             $fn=Resolution(30,100), alpha=1, debug=false) {
+module CraneLatchHandle(cutter=false, clearance=0.01,
+                        alpha=_ALPHA_LATCH_HANDLE, debug=false) {
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
+  
+  color("Tan", alpha) RenderIf(!cutter)
+  difference() {
+    union() {
+      
+      intersection() {
+        translate([CraneLatchHandleMinX(), 0, 0])
+        rotate([0,90,0])
+        ChamferedCylinder(r1=CraneLatchHandleRadius()+clear, r2=CR(),
+                          h=CraneLatchHandleLength()-(cutter?0:clearance),
+                          chamferBottom=!cutter,
+                          $fn=Resolution(20,80));
+
+        // Square off the top
+        translate([CraneLatchHandleMinX(),0,0])
+        for(M = [0,1]) mirror([0,M,0]) {
+          rotate([-CraneLatchHandlePivotAngle(),0,0])
+          translate([0,-CR(),0])
+          mirror([0,0,1])
+          ChamferedCube([CraneLatchHandleLength(),
+                        CraneLatchHandleRadius()+CR()+clear,
+                        CraneLatchHandleRadius()+clear], r=CR());
+        }
+      }
+    }
+    
+    CraneLatchActuatorBolt(cutter=true, teardrop=true);
+
+    // Finger Cutouts
+    if (!cutter)
+    translate([CraneLatchHandleMinX(),0,0])
+    for(M = [0,1]) mirror([0,M,0]) {
+      rotate([-CraneLatchHandlePivotAngle(),0,0])
+      translate([0,CraneNeckRadius(),0])
+      rotate([0,90,0])
+      ChamferedCircularHole(r1=0.25,
+                            r2=CraneBodyRadius()-CraneNeckRadius()-CR(),
+                            h=CraneLatchHandleLength());
+    }
+  
+    // Cutout the crane neck chamfer
+    translate([CraneMaxX()-CraneLengthFront(),0,0])
+    rotate([0,-90,0])
+    ChamferedCircularHole(r1=CraneNeckRadius()-(cutter?0:clearance),
+                          r2=CraneBodyRadius()-CraneNeckRadius()-CR(),
+                          h=CraneLatchHandleLength(),
+                          chamferTop=!cutter,
+                          teardropBottom=false, teardropTop=false,
+                          $fn=Resolution(20,80));
+    
+    latchCutterDepth=0.1875;
+    latchCutterWidth=0.25;
+          
+    // Lower segment
+    for (M = [0,1]) mirror([0,M,0])
+    translate([CraneLatchHandleMinX()+0.25, 0, 0])
+    rotate([0,90,0])
+    HelixSegment(radius=CraneNeckRadius(),
+                 angle=CraneLatchHandlePivotAngle(),
+                 width=latchCutterWidth, depth=latchCutterDepth,
+                 bottomExtra=-latchCutterWidth/2,
+                 topExtra=-latchCutterWidth/2,
+                 teardropBottom=true,
+                 teardropTop=true);
+  }
+}
+module CraneLatchHandle_print() {
+  rotate([0,-90,0])
+  translate([-CraneLatchHandleMinX(), 0, 0])
+  CraneLatchHandle();
+}
+module CraneLatch(teardrop=false, clearance=0.01,
+             $fn=Resolution(30,100), alpha=_ALPHA_LATCH, debug=false) {
   pivotCutterRadius = RodRadius(CylinderRod())+WallCrane()+clearance;
                        
   bodyRadius = CraneBodyRadius();
@@ -432,103 +531,82 @@ module CraneLatch_print() {
   CraneLatch();
 }
 
-module Crane(teardrop=false, clearance=0.005,
-             $fn=Resolution(30,100), alpha=1, debug=false) {
+module Crane(teardrop=false, clearance=0.01,
+             $fn=Resolution(30,100), alpha=_ALPHA_CRANE, debug=false) {
   pivotCutterRadius = RodRadius(CylinderRod())+WallCrane()+clearance;
-                       
-  bodyRadius = CraneBodyRadius();
 
   color("OliveDrab", alpha)
   render() DebugHalf(enabled=debug)
   difference() {
     union() {
+    
+      // Latch handle lower support
+      hull() for (Z = [CylinderZ(), CylinderZ()-0.5])
+      translate([CraneMinX(), 0, Z])
+      rotate([0,90,0])
+      ChamferedCylinder(r1=0.75, r2=CR(), h=CraneLength(),
+                        chamferBottom=false);
+      
+      // Neck
+      intersection() {
+        union() {
+  
+          // Sloped transition to the body
+          translate([CraneMaxX()-CraneLengthFront(),0,0])
+          rotate([0,-90,0])
+          HoleChamfer(r1=CraneNeckRadius(),
+                      r2=CraneBodyRadius()-CraneNeckRadius()-CR());
+          
+          // Neck around the barrel support
+          translate([CraneMinX(),0,0])
+          rotate([0,90,0])
+          ChamferedCylinder(r1=CraneNeckRadius(), r2=CR(),
+                   h=CraneLength(), chamferBottom=false,
+                   teardropTop=true);
+          
+        }
+
+        // Square off the top
+        translate([CraneMinX(),-(CraneBodyRadius()+0.5),0])
+        mirror([0,0,1])
+        cube([CraneLength(),
+             (CraneBodyRadius()+0.5)*2,
+              CraneBodyRadius()]);
+      }
+      
+      // Forward Body
       hull() {
 
         // Around the crane pivot rods
         for (Y = [1,-1])
-        translate([CraneMinX(),CranePivotY()*Y,CranePivotZ()])
-        rotate([0,90,0])
-        ChamferedCylinder(r1=CranePivotBoltRadius()+WallCrane(), r2=CR(),
-                 h=CraneLength(), chamferBottom=false,
-                 teardropTop=true);
+        translate([CraneMaxX(),CranePivotY()*Y,CranePivotZ()])
+        rotate([0,-90,0])
+        ChamferedCylinder(r1=CranePivotBoltRadius()+WallCrane(),
+                          r2=CR(),
+                          h=CraneLengthFront());
 
         intersection() {
+          
           // Body around the barrel
-          translate([CraneMinX(),0,0])
-          rotate([0,90,0])
-          ChamferedCylinder(r1=bodyRadius, r2=CR(),
-                   h=CraneLength(), chamferBottom=false,
-                   teardropTop=true);
+          translate([CraneMaxX(),0,0])
+          rotate([0,-90,0])
+          ChamferedCylinder(r1=CraneBodyRadius(), r2=CR(),
+                   h=CraneLengthFront(), chamferBottom=true,
+                   teardropTop=false);
 
           // Square off the top
-          translate([CraneMinX(),-(bodyRadius+0.5),-bodyRadius-1])
+          translate([CraneMinX(),-(CraneBodyRadius()+0.5),-CraneBodyRadius()])
           cube([CraneLength(),
-               (bodyRadius+0.5)*2,
-                bodyRadius+CranePivotZ()
-                + RodRadius(CraneRod())+WallCrane()+1]);
+               (CraneBodyRadius()+0.5)*2,
+                CraneBodyRadius()]);
           
         }
-      }
-      
-      intersection() {
-        union() {
-  
-          // Sloped transition to the shield
-          translate([CraneMinX(),0,0])
-          rotate([0,90,0])
-          *HoleChamfer(r1=bodyRadius, r2=0.25, teardrop=true);
-          
-          // Around the spindle
-          translate([CraneMinX(),0,CylinderZ()])
-          rotate([0,90,0])
-          ChamferedCylinder(r1=SpindleCollarRadius()+WallSpindle(), r2=CR(),
-                            h=CraneLength(),
-                            teardropTop=true);
-      
-          // Sloped transition to the shield (Around the spindle)
-          translate([CraneMinX(),0,CylinderZ()])
-          rotate([0,90,0])
-          HoleChamfer(r1=SpindleCollarRadius()+WallSpindle(),
-                      r2=0.5, teardrop=true);
-        }
-        
-        // Square off the top
-        translate([CraneMinX(),-(bodyRadius+0.5),-bodyRadius-1])
-        cube([CraneLength(),
-             (bodyRadius+0.5)*2,
-              bodyRadius+CranePivotZ()
-              + RodRadius(CraneRod())+WallCrane()+1]);
       }
     }
-
-    // Fillet cutouts
-    for (M = [0,1]) mirror([0,M,0])
-    translate([ForendMaxX()+(CR()/2),0,0])
-    translate([0,BarrelRadius()+WallBarrel(),0])
-    rotate([0,-90,0])
-    Fillet(r=CR()*1.25, h=CraneSupportLength()+CR(),
-                   inset=true, taperEnds=true);
-
-    // Crane Support Body
-    translate([ForendMaxX()+0.005,0,0])
-    rotate([0,-90,0])
-    ChamferedCylinder(r1=BarrelRadius()+WallBarrel()+0.005, r2=CR(),
-             h=CraneSupportLength()+0.01);
-
-    // Forend clearance (Crane Supports)
-    translate([ForendMinX()-0.005+ManifoldGap(),
-               -CranePivotY()-(pivotCutterRadius*2),-0.005])
-    ChamferedCube([CraneSupportLength()+0.01,
-                   (CranePivotY()+pivotCutterRadius*2)*2,
-                   CranePivotZ()+pivotCutterRadius
-                     + CR()],
-                  r=CR());
-
-    // Chamfered Barrel Cutout: Front
-    translate([CraneMaxX()+ManifoldGap(),0,0])
-    rotate([0,-90,0])
-    ChamferedCircularHole(r1=BarrelRadius(clearance=(BARREL_CLEARANCE*2)),
-                                               r2=CR(), h=CraneMaxX()-ForendMaxX());
+    
+    CraneSupport(cutter=true);
+    
+    CraneLatchHandle(cutter=true);
 
     CranePivotPath();
 
@@ -536,6 +614,11 @@ module Crane(teardrop=false, clearance=0.005,
     CranePivotPin(cutter=true);
 
     RevolverSpindle(cutter=true);
+    
+    // Revolver spindle (and then some) slot
+    slotWidth = 0.5;
+    translate([CraneMinX()-CR(), -(slotWidth/2), CylinderZ()-0.5])
+    ChamferedCube([CraneLength()-CraneLengthFront()+CR(), slotWidth, 1], r=CR());
 
     Barrel(cutter=true, clearance=(BARREL_CLEARANCE*2));
   }
@@ -546,7 +629,7 @@ module Crane_print() {
   Crane();
 }
 
-module CraneShield(clearance=0.006, debug=false, alpha=1) {
+module CraneShield(clearance=0.01, debug=false, alpha=_ALPHA_SHIELD) {
 
   pivotCutterRadius = RodRadius(CylinderRod())+WallCrane()+clearance;
   craneRadius = CranePivotY()+CranePivotBoltRadius()+WallCrane();
@@ -600,7 +683,12 @@ module CraneShield_print() {
   CraneShield();
 }
 
-module CraneSupport(debug=false, alpha=_ALPHA_FOREND, $fn=Resolution(30,100)) {
+module CraneSupport(cutter=false, clearance=0.01,
+                    debug=false, alpha=_ALPHA_FOREND,
+                    $fn=Resolution(30,100)) {
+
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
 
   // Forward plate
   color("Tan", alpha)
@@ -609,18 +697,18 @@ module CraneSupport(debug=false, alpha=_ALPHA_FOREND, $fn=Resolution(30,100)) {
     union() {
 
       // Around the barrel
-      translate([ForendMaxX(),0,0])
-      rotate([0,-90,0])
-      ChamferedCylinder(r1=BarrelRadius()+WallBarrel(), r2=CR(),
-               h=CraneSupportLength());
+      translate([ForendMinX()-clear,0,0])
+      rotate([0,90,0])
+      ChamferedCylinder(r1=BarrelRadius()+WallBarrel()+clear, r2=CR(),
+               h=CraneSupportLength()+clear);
 
       // Join the barrel to the frame
       for (M = [0,1]) mirror([0,M,0])
-      translate([ForendMaxX(),
+      translate([ForendMaxX()-clear,
                  BarrelRadius()+WallBarrel(),
                  CranePivotZ()-CranePivotBoltRadius()-WallCrane()])
       rotate([0,-90,0])
-      Fillet(r=CR(), h=CraneSupportLength(),
+      Fillet(r=CR()+clear, h=CraneSupportLength()+clear2,
                      inset=true, taperEnds=true);
 
     // Crane Pivot Supports
@@ -638,23 +726,26 @@ module CraneSupport(debug=false, alpha=_ALPHA_FOREND, $fn=Resolution(30,100)) {
                            h=CraneSupportLength());
       }
     }
-
-    // Cutout for a picatinny rail insert
-    translate([-ManifoldGap(), -UnitsMetric(15.6/2), FrameTopZ()-0.0625])
-    cube([FrameExtension()+ManifoldGap(2), UnitsMetric(15.6), 0.25]);
-
-    FrameBolts(cutter=true);
-
-    Barrel(cutter=true, clearance=BARREL_CLEARANCE);
-
-    ChargingRod(cutter=true);
     
-    GasPort(cutter=true);
+    if (!cutter) {
 
-    RevolverSpindle(cutter=true);
-    
-    for (M = [0,1]) mirror([0,M,0])
-    CranePivotPin(cutter=true);
+      // Cutout for a picatinny rail insert
+      translate([-ManifoldGap(), -UnitsMetric(15.6/2), FrameTopZ()-0.0625])
+      cube([FrameExtension()+ManifoldGap(2), UnitsMetric(15.6), 0.25]);
+
+      FrameBolts(cutter=true);
+
+      Barrel(cutter=true, clearance=BARREL_CLEARANCE);
+
+      ChargingRod(cutter=true);
+      
+      GasPort(cutter=true);
+
+      RevolverSpindle(cutter=true);
+      
+      for (M = [0,1]) mirror([0,M,0])
+      CranePivotPin(cutter=true);
+    }
   }
 }
 
@@ -776,7 +867,7 @@ module RevolverReceiverFront_print() {
 }
 
 
-module RevolverZigZagCylinder(supports=true, chambers=false,
+module RevolverCylinder(supports=true, chambers=false,
                              chamberBolts=false,
                              debug=_CUTAWAY_CYLINDER,
                              alpha=_ALPHA_CYLINDER) {                               
@@ -785,7 +876,6 @@ module RevolverZigZagCylinder(supports=true, chambers=false,
       chamberRadius=BarrelRadius(),
       chamberClearance=BARREL_CLEARANCE,
       chamberInnerRadius=CHAMBER_ID/2,
-      zigzagAngle=55,
       extraTop=ActuatorPretravel(),
       supportsBottom=false, supportsTop=supports, chamberBolts=chamberBolts,
       chambers=chambers, chamberLength=ChamberLength(),
@@ -798,10 +888,10 @@ module RevolverZigZagCylinder(supports=true, chambers=false,
 }
 
 
-module RevolverZigZagCylinder_print() {
+module RevolverCylinder_print() {
   translate([0,0,2.75])
   rotate([0,180,0])
-  RevolverZigZagCylinder(supports=true);
+  RevolverCylinder(supports=true);
 }
 
 // Assemblies
@@ -827,7 +917,7 @@ module RevolverForendAssembly(stock=true,
       rotate([0,90,0])
       rotate(-360/6/2*SubAnimate(ANIMATION_STEP_CHARGER_RESET, start=0.25, end=0.8))
       rotate(-360/6/2*SubAnimate(ANIMATION_STEP_CHARGE, start=0.4, end=0.98))
-      RevolverZigZagCylinder(supports=false, chambers=_SHOW_CHAMBERS);
+      RevolverCylinder(supports=false, chambers=_SHOW_CHAMBERS);
 
       MirrorIf(CRANE_LEFT_HANDED, [0,1,0])
       CranePivotPin();
@@ -837,14 +927,22 @@ module RevolverForendAssembly(stock=true,
                     -SubAnimate(ANIMATION_STEP_LOCK, start=0.5)),0,0])
       {
           RevolverSpindle();
+        
+          if (_SHOW_LATCH)
           CraneLatch(debug=debug);
       }
+          
+      if (_SHOW_LATCH_HANDLE)
+      CraneLatchHandlePosition(factor=
+                               SubAnimate(ANIMATION_STEP_UNLOCK, end=0.5)
+                              -SubAnimate(ANIMATION_STEP_LOCK, start=0.5))
+      CraneLatchHandle();
       
       if (_SHOW_CRANE)
-      Crane(alpha=_ALPHA_CRANE, debug=_CUTAWAY_CRANE);
+      Crane(debug=_CUTAWAY_CRANE);
       
       if (_SHOW_SHIELD)
-      CraneShield(alpha=_ALPHA_CRANE, debug=_CUTAWAY_CRANE);
+      CraneShield(debug=_CUTAWAY_CRANE);
     }
 
     if (_SHOW_FOREND) {
@@ -912,6 +1010,9 @@ scale(25.4) {
   if (_RENDER == "CraneLatch")
   CraneLatch_print();
 
+  if (_RENDER == "CraneLatchHandle")
+  CraneLatchHandle_print();
+
   if (_RENDER == "FrameSpacer")
   FrameSpacer_print();
 
@@ -921,6 +1022,6 @@ scale(25.4) {
   if (_RENDER == "RevolverReceiverFront")
   RevolverReceiverFront_print();
   
-  if (_RENDER == "RevolverZigZagCylinder")
-  RevolverZigZagCylinder_print();
+  if (_RENDER == "RevolverCylinder")
+  RevolverCylinder_print();
 }
