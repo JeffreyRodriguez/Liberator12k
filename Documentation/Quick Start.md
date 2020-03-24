@@ -10,6 +10,8 @@ This has been a one-man show :)
 
 Questions via issues are probably best, so I can build a FAQ.
 
+There's also a "liberator12k" team on Keybase... I'm collecting my forces there :)
+
 ### OpenSCAD in a Nutshell
 
 #### WARNING
