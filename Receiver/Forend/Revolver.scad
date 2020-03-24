@@ -435,7 +435,8 @@ module CraneLatchHandle(cutter=false, clearance=0.01,
     latchCutterDepth=0.1875;
     latchCutterWidth=0.25;
           
-    // Lower segment
+    // Cam Slot
+    if (!cutter)
     for (M = [0,1]) mirror([0,M,0])
     translate([CraneLatchHandleMinX()+0.25, 0, 0])
     rotate([0,90,0])
