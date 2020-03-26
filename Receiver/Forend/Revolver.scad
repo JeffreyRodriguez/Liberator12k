@@ -167,7 +167,7 @@ function CranePivotBoltDiameter(clearance=0)
     = BoltDiameter(CraneBolt(), clearance);
 
 
-function CraneLatchRadius() = BarrelRadius()+WallBarrel();
+function CraneLatchRadius() = 1.75/2;
 function CraneLatchTravel() = 0.5;
 function CraneLatchLength() = 0.5;
 function CraneLengthFront() = 0.5;
