@@ -41,7 +41,7 @@ use <../Frame.scad>;
 /* [What to Render] */
 
 // Configure settings below, then choose a part to render. Render that part (F6) then export STL (F7). Assembly is not for printing.
-_RENDER = "Assembly"; // ["Assembly", "FrameSpacer", "RevolverReceiverFront", "Crane", "CraneShield", "CraneSupport", "CraneLatch", "CraneLatchHandle", "Foregrip", "RevolverCylinder"]
+_RENDER = "Assembly"; // ["Assembly", "FrameSpacer", "RevolverReceiverFront", "Crane", "CraneShield", "CraneSupport", "CraneLatch", "CraneLatchHandle", "CraneLatchSupport", "Foregrip", "RevolverCylinder"]
 //$t = 1; // [0:0.01:1]
 
 _SHOW_ACTION_ROD = true;
@@ -167,7 +167,7 @@ function CranePivotBoltDiameter(clearance=0)
     = BoltDiameter(CraneBolt(), clearance);
 
 
-function CraneLatchRadius() = BarrelRadius()+0.25;
+function CraneLatchRadius() = BarrelRadius()+WallBarrel();
 function CraneLatchTravel() = 0.5;
 function CraneLatchLength() = 0.5;
 function CraneLengthFront() = 0.5;
@@ -492,14 +492,15 @@ module CraneLatch(teardrop=false, clearance=0.01,
                 -CylinderZ()+bodyRadius+CranePivotZ()]);
           
         }
-      }
 
-      // Around the spindle
-      translate([CraneLatchMinX(),0,CylinderZ()])
-      rotate([0,90,0])
-      ChamferedCylinder(r1=SpindleCollarRadius()+WallSpindle(), r2=CR(),
-                        h=CraneLatchLength(),
-                 teardropTop=true);
+        // Around the spindle
+        translate([CraneLatchMinX(),
+                    -(SpindleCollarRadius()+WallSpindle()),
+                   CylinderZ()-(SpindleCollarRadius()+WallSpindle())])
+        ChamferedCube([CraneLatchLength(),
+                       (SpindleCollarRadius()+WallSpindle())*2,
+                       (SpindleCollarRadius()+WallSpindle())*2], r=CR());
+      }
     }
 
     // Clear latch support that goes around the barrel
@@ -542,11 +543,20 @@ module Crane(teardrop=false, clearance=0.01,
     union() {
     
       // Latch handle lower support
-      hull() for (Z = [CylinderZ(), CylinderZ()-0.5])
-      translate([CraneMinX(), 0, Z])
-      rotate([0,90,0])
-      ChamferedCylinder(r1=0.75, r2=CR(), h=CraneLength(),
-                        chamferBottom=false);
+      intersection() {
+        translate([CraneMinX(), 0, 0])
+        rotate([0,90,0])
+        ChamferedCylinder(r1=CraneLatchHandleRadius()+WallCrane(), r2=CR(),
+                          h=CraneLength(),
+                          chamferBottom=false);
+        
+        translate([CraneMinX(), 0, 0])
+        rotate([0,90,0])
+        linear_extrude(height=CraneLength())
+        semicircle(od=(CraneLatchHandleRadius()+WallCrane())*2,
+                   angle=22.5+(CraneLatchHandlePivotAngle()*2),
+                   center=true);
+      }
       
       // Neck
       intersection() {
@@ -600,7 +610,22 @@ module Crane(teardrop=false, clearance=0.01,
           cube([CraneLength(),
                (CraneBodyRadius()+0.5)*2,
                 CraneBodyRadius()]);
+        }
+        
+        // Latch handle lower support
+        intersection() {
+          translate([CraneMaxX()-CraneLengthFront(), 0, 0])
+          rotate([0,90,0])
+          ChamferedCylinder(r1=CraneLatchHandleRadius()+WallCrane(), r2=CR(),
+                            h=CraneLengthFront(),
+                            chamferBottom=false);
           
+          translate([CraneMaxX()-CraneLengthFront(), 0, 0])
+          rotate([0,90,0])
+          linear_extrude(height=CraneLengthFront())
+          semicircle(od=(CraneLatchHandleRadius()+WallCrane())*2,
+                     angle=22.5+(CraneLatchHandlePivotAngle()*2),
+                     center=true);
         }
       }
     }
@@ -617,7 +642,7 @@ module Crane(teardrop=false, clearance=0.01,
     RevolverSpindle(cutter=true);
     
     // Revolver spindle (and then some) slot
-    slotWidth = 0.5;
+    slotWidth = RodDiameter(CylinderRod(), RodClearanceLoose());
     translate([CraneMinX()-CR(), -(slotWidth/2), CylinderZ()-0.5])
     ChamferedCube([CraneLength()-CraneLengthFront()+CR(), slotWidth, 1], r=CR());
 
@@ -1014,6 +1039,9 @@ scale(25.4) {
   if (_RENDER == "CraneLatchHandle")
   CraneLatchHandle_print();
 
+  if (_RENDER == "CraneLatchSupport")
+  CraneLatchSupport_print();
+  
   if (_RENDER == "FrameSpacer")
   FrameSpacer_print();
 
