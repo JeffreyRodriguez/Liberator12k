@@ -181,7 +181,7 @@ module ChargingPumpAssembly(animationFactor=ChargerAnimationFactor(),
     color("Silver")
     ChargingRodBolts();
 
-    *ChargingRod(length=length, minX=minX, debug=debug);
+    ChargingRod(length=length, minX=minX, debug=debug);
 
     Charger(debug=debug);
 
