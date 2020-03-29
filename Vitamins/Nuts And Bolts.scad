@@ -68,7 +68,10 @@ module Bolt(bolt=Spec_BoltTemplate(), length=1,
       BoltFlatHead(bolt=bolt, clearance=clearance,
                    capHeightExtra=capHeightExtra);
     } else if (head == "socket") {
-      BoltSocketCap(bolt=bolt, clearance=clearance,
+      BoltSocketCap(bolt=bolt,
+                    clearance=clearance,
+                    teardrop=teardrop,
+                    teardropAngle=teardropAngle,
                     capHeightExtra=capHeightExtra);
     } else if (head == "button") {
       BoltHeadButton(bolt=bolt, clearance=clearance,
@@ -102,7 +105,7 @@ module BoltFlatHead(bolt, clearance=0, capHeightExtra=0, teardrop=false) {
   }
 }
 
-module BoltSocketCap(bolt, capHeightExtra=0, clearance=0, teardrop=false) {
+module BoltSocketCap(bolt, capHeightExtra=0, clearance=0, teardrop=false, teardropAngle=0) {
   if (teardrop) {
     linear_extrude(height=BoltSocketCapHeight(bolt)+capHeightExtra)
     Teardrop(r=BoltSocketCapRadius(bolt, clearance),
