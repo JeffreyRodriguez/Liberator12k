@@ -41,7 +41,7 @@ use <../Frame.scad>;
 /* [What to Render] */
 
 // Configure settings below, then choose a part to render. Render that part (F6) then export STL (F7). Assembly is not for printing.
-_RENDER = "Assembly"; // ["Assembly", "FrameSpacer", "RevolverReceiverFront", "Crane", "CraneShield", "CraneSupport", "CraneLatch", "CraneLatchHandle", "CraneLatchSupport", "Foregrip", "RevolverCylinder"]
+_RENDER = "Assembly"; // ["Assembly", "FrameSpacer", "ReceiverFront", "Crane", "CraneShield", "CraneSupport", "CraneLatch", "CraneLatchHandle", "CraneLatchSupport", "Foregrip", "RevolverCylinder"]
 //$t = 1; // [0:0.01:1]
 
 _SHOW_ACTION_ROD = true;
@@ -95,7 +95,6 @@ CRANE_LEFT_HANDED = false;
 /* [Screws] */
 GP_BOLT = "#8-32"; // ["M4", "#8-32"]
 GP_BOLT_CLEARANCE = 0.015;
-
 
 // Settings: Lengths
 function ShellRimLength() = 0.06;
@@ -316,7 +315,19 @@ module CranePivotPin(cutter=false, teardrop=false, clearance=0.01) {
 
 
 
-module CraneLatchActuatorBolt(cutter=false, teardrop=false, clearance=0.01) {
+module CraneLatchActuatorBolt(cutter=false, teardrop=false, teardropAngle=0, clearance=0.01) {
+  clear = cutter?clearance:0;
+  clear2 = clear*2;
+
+  color("Gold") RenderIf(!cutter)
+  translate([CraneLatchHandleMinX()+0.5,0,CylinderZ()-RodRadius(CylinderRod())])
+  rotate(teardropAngle)
+  mirror([0,0,1])
+  Bolt(bolt=CraneActuatorBolt(), capOrientation=true,
+       length=RodDiameter(CylinderRod())+ManifoldGap(),
+       teardrop=teardrop, clearance=clear,
+       head="socket", capHeightExtra=(cutter?2:0));
+
 }
 // Cutters
 module GasPort(cutter=false, clearance=0.01) {
@@ -353,7 +364,7 @@ module RevolverReceiverFront(debug=false, alpha=_ALPHA_RECEIVER_FRONT) {
     union() {
       
       FrameSupport(length=length,
-                   extraBottom=0.125+1);
+                   extraBottom=0.125+1+abs(CylinderZ()));
       
       ReceiverCouplingPattern(length=length, frameLength=length);
 
@@ -408,6 +419,7 @@ module CraneLatchHandle(cutter=false, clearance=0.01,
       }
     }
     
+    if (!cutter)
     CraneLatchActuatorBolt(cutter=true, teardrop=true);
 
     // Finger Cutouts
@@ -640,6 +652,8 @@ module Crane(teardrop=false, clearance=0.01,
     CranePivotPin(cutter=true);
 
     RevolverSpindle(cutter=true);
+    
+    CraneLatchActuatorBolt(cutter=true, teardrop=true);
     
     // Revolver spindle (and then some) slot
     slotWidth = RodDiameter(CylinderRod(), RodClearanceLoose());
@@ -953,6 +967,7 @@ module RevolverForendAssembly(stock=true,
                     -SubAnimate(ANIMATION_STEP_LOCK, start=0.5)),0,0])
       {
           RevolverSpindle();
+          CraneLatchActuatorBolt();
         
           if (_SHOW_LATCH)
           CraneLatch(debug=debug);
@@ -1048,7 +1063,7 @@ scale(25.4) {
   if (_RENDER == "ReceiverFront")
   ReceiverFront_print();
 
-  if (_RENDER == "RevolverReceiverFront")
+  if (_RENDER == "ReceiverFront")
   RevolverReceiverFront_print();
   
   if (_RENDER == "RevolverCylinder")
