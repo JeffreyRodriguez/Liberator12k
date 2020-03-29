@@ -1061,7 +1061,7 @@ scale(25.4) {
   FrameSpacer_print();
 
   if (_RENDER == "ReceiverFront")
-  ReceiverFront_print();
+  RevolverReceiverFront_print();
 
   if (_RENDER == "ReceiverFront")
   RevolverReceiverFront_print();
