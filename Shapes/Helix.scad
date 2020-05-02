@@ -8,7 +8,7 @@ use <../Shapes/Semicircle.scad>;
 RADIUS=2; // "2"
 DEPTH=0.1875; // "0.1875"
 WIDTH=0.25; // "0.25"
-TWIST_RATE=1; // [0.1:0.1:1]
+TWIST_RATE=1; // [0.1:0.1:2]
 ANGLE=22.5; // [0:0.5:360]
 
 module HelixSegment(radius=RADIUS, depth=DEPTH, width=WIDTH,
