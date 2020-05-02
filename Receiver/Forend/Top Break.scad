@@ -544,7 +544,7 @@ module BarrelCollar(cutter=false, clearance=0.01,
                            
   supportWidth = 1;
 
-  !color("Tan", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("Tan", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
   PivotClearanceCut()
   difference() {
     union() {
