@@ -25,13 +25,6 @@ CHAMBER_OUTSIDE_DIAMETER = 1.0000;
 CHAMBER_INSIDE_DIAMETER = 0.8130;
 CHAMBER_CLEARANCE = 0.01;
 
-/* [Spindle] */
-SPINDLE_DIAMETER = 5/16;
-SPINDLE_CLEARANCE = 0.015;
-
-SPINDLE_COLLAR_DIAMETER = 0.375;
-SPINDLE_COLLAR_WIDTH = 0.1875;
-
 /* [ZigZag] */
 ZIG_ZAG_WIDTH = 0.25;
 ZIG_ZAG_DEPTH = 0.16;
@@ -50,9 +43,6 @@ $fs = UnitsFs()*0.25;
 
 function ChamberBolt() = BoltSpec(CHAMBER_BOLT);
 assert(ChamberBolt(), "ChamberBolt() is undefined. Unknown CHAMBER_BOLT?");
-
-function SpindleDiameter() = SPINDLE_DIAMETER;
-function SpindleRadius() = SpindleDiameter()/2;
 
 function ZigZagWidth() = ZIG_ZAG_WIDTH;
 function ZigZagDepth() = ZIG_ZAG_DEPTH;
@@ -88,7 +78,7 @@ module OffsetZigZagRevolver(diameter=4, height=2.75,
            chamberClearance=CHAMBER_CLEARANCE, centerOffset=undef,
            depth=ZigZagDepth(),
            extraTop=0, extraBottom=0,
-           spindleRadius=SpindleRadius()+SPINDLE_CLEARANCE,
+           spindleRadius=0,
            chamberBolts=true, chambers=true, chamberLength=undef,
            supportsTop=false, supportsBottom=false,
            cutter=false, radialClearance=0.015, linearClearance=0.03,
@@ -142,6 +132,7 @@ module OffsetZigZagRevolver(diameter=4, height=2.75,
       children();
       
       // Spindle Hole
+      if (spindleRadius > 0)
       cylinder(r=spindleRadius,
                h=max(height, chamberLength+linearClearance)+ManifoldGap(2));
 
