@@ -66,6 +66,8 @@ module Bolt(bolt=Spec_BoltTemplate(), length=1,
     translate([0,0,length])
     if (head == "flat") {
       BoltFlatHead(bolt=bolt, clearance=clearance,
+                   teardrop=teardrop,
+                   teardropAngle=teardropAngle,
                    capHeightExtra=capHeightExtra);
     } else if (head == "socket") {
       BoltSocketCap(bolt=bolt,
@@ -85,7 +87,7 @@ module Bolt(bolt=Spec_BoltTemplate(), length=1,
   }
 }
 
-module BoltFlatHead(bolt, clearance=0, capHeightExtra=0, teardrop=false) {
+module BoltFlatHead(bolt, clearance=0, capHeightExtra=0, teardrop=false, teardropAngle=0) {
   hull() {
 
     // Taper
@@ -97,6 +99,7 @@ module BoltFlatHead(bolt, clearance=0, capHeightExtra=0, teardrop=false) {
     // Taper teardrop hack
     linear_extrude(height=(clearance?capHeightExtra:ManifoldGap()))
     if (teardrop) {
+      rotate(teardropAngle)
       Teardrop(r=BoltFlatHeadRadius(bolt, clearance));
 
     } else {
