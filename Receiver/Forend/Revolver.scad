@@ -1051,6 +1051,15 @@ module RevolverForendAssembly(stock=true,
     
     BarrelSetScrews();
 
+    if (_SHOW_FOREND_SPACER)
+    FrameSpacer(debug=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
+    
+    if (_SHOW_CRANE_SUPPORT)
+    CraneSupport(debug=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
+    
+    if (_SHOW_CRANE_LATCH_SUPPORT)
+    CraneLatchSupport(debug=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
+
     CranePivotPosition(factor=Animate(ANIMATION_STEP_UNLOAD)
                      -Animate(ANIMATION_STEP_LOAD)) {
 
@@ -1096,15 +1105,6 @@ module RevolverForendAssembly(stock=true,
       if (_SHOW_SHIELD)
       CraneShield(debug=_CUTAWAY_CRANE);
     }
-
-    if (_SHOW_FOREND_SPACER)
-    FrameSpacer(debug=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
-    
-    if (_SHOW_CRANE_SUPPORT)
-    CraneSupport(debug=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
-    
-    if (_SHOW_CRANE_LATCH_SUPPORT)
-    CraneLatchSupport(debug=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
   }
 }
 
