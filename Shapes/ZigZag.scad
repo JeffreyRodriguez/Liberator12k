@@ -12,7 +12,7 @@ DEFAULT_ZIGZAG_DEPTH = 3/16;
 DEFAULT_ZIGZAG_WIDTH = 1/4;
 
 module ZigZagSupport(radius,depth, width) {
-  translate([radius - (depth*2),-(width/2)+(0.07/2),0])
+  translate([radius - (depth*2),-(width/2)-(0.07/2),0])
   hull() {
     cube([depth, 0.07, width]);
     
@@ -34,7 +34,9 @@ module ZigZag(supportsTop=true, supportsBottom=true,
   bottom_slot_height = (width/2)+extraBottom;
              
   twistRate = 0.8;
-  height = (radius*2*3.14/positions/2/twistRate)+(width*3)+(width/2*sqrt(2));
+  height = (radius*2*3.14/positions/2/twistRate)
+         + (width*3)
+         + (width/2*sqrt(2));
   
 
   difference() {
@@ -45,7 +47,7 @@ module ZigZag(supportsTop=true, supportsBottom=true,
           // Lower segment
           HelixSegment(radius=radius, angle=positionAngle/2,
                 width=width, depth=depth,
-                bottomExtra=0,
+                bottomExtra=extraBottom,
                 topExtra=bottom_slot_height,
                 teardropBottom=false,
                 teardropTop=false,
@@ -53,7 +55,7 @@ module ZigZag(supportsTop=true, supportsBottom=true,
           
           // Mirrored upper segment
           rotate([0,0,-(positionAngle/2)])
-          translate([0,0,height+width])
+          translate([0,0,height+width+extraBottom])
           mirror([0,0,1])
           HelixSegment(radius=radius, angle=positionAngle/2,
               depth=depth, width=width,
@@ -68,7 +70,7 @@ module ZigZag(supportsTop=true, supportsBottom=true,
     // Support Material
     // Top
     if (supportsTop)
-    translate([0,0,height-(width*2)])
+    translate([0,0,height-(width*2)+extraBottom])
     mirror([0,0,1])
     for (i=[0:positions-1])
     rotate([0,0,(positionAngle/2)+(positionAngle*i)])
