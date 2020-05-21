@@ -149,6 +149,7 @@ module OffsetZigZagRevolver(diameter=4, height=2.75,
                h=height+ManifoldGap(2));
 
       // Chamber bolts
+      if (chamberBolts)
       translate([0,0,height])
       RevolverChamberIterator(centerOffset=centerOffset, positions=positions)
       ChamberBolt(positions=positions,
