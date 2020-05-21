@@ -70,8 +70,8 @@ assert(LowerBolt(), "LowerBolt() is undefined. Unknown LOWER_BOLT?");
 
 
 // Settings: Positions
-function ReceiverBoltZ() = -1;
-function ReceiverBoltY() = 1;
+function ReceiverBoltZ() = -7/8;
+function ReceiverBoltY() = 1.125;
 
 module CouplingBolts(teardrop=false, boltHead="flat", extension=0.5,
               debug=false, clearance=0.005, cutter=false) {
@@ -131,7 +131,7 @@ module ReceiverCoupling(od=RECEIVER_TUBE_OD,
       mirror([1,0,0])
       ReceiverCouplingPattern(frameLength=FrameReceiverLength(),
                               length=ReceiverCouplingLength(),
-                              couplingBoltHull=false);
+                              couplingBoltHull=true);
       
       hull() {
         
@@ -188,7 +188,7 @@ module ReceiverBack(od=RECEIVER_TUBE_OD,
 
     receiverBackMinX = -FrameReceiverLength();
 
-  color("DimGray", alpha) render() DebugHalf(enabled=debug)
+  color("Chocolate", alpha) render() DebugHalf(enabled=debug)
   difference() {
 
     union() {
@@ -224,6 +224,7 @@ module Receiver(od=RECEIVER_TUBE_OD,
                 id=RECEIVER_TUBE_ID,
                 receiverLength=ReceiverLength(),
                 receiverBack=true,
+                buttstock=true,
                 pipeOffsetX=0,
                 pipeAlpha=1, buttstockAlpha=1, couplingAlpha=1,
                 frameBoltLength=FrameBoltLength(),
@@ -248,6 +249,7 @@ module Receiver(od=RECEIVER_TUBE_OD,
 
   ReceiverCoupling(od=od, id=id, debug=debug, alpha=couplingAlpha);
 
+  if (buttstock)
   translate([-receiverLength,0,0])
   ButtstockAssembly(od=od, alpha=buttstockAlpha, debug=debug);
 
