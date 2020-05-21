@@ -583,7 +583,7 @@ module BarrelCollar(cutter=false, clearance=0.01,
     if (!cutter) {
       
       // Chamfer the back bottom-edge for improved clearance
-      #translate([clearance, 0, BarrelCollarBottomZ()])
+      translate([clearance, 0, BarrelCollarBottomZ()])
       rotate([90,0,0])
       linear_extrude(height=supportWidth+ManifoldGap(2), center=true)
       mirror([1,0])
