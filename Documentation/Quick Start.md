@@ -1,27 +1,25 @@
+# Read it all or cry :P
+
+Welcome to the project. There's a lot of reasons you might be here. ECM, Revolver, BARBB, E-Primers, Printed Ammo - lots going on. This document is currently mostly about making a revolver or break-action L12k.
+
+### Chat!
+There's a "liberator12k" team on [Keybase](https://keybase.io)... You'd do well to join and check in on the current state of things. For instance, you're probably on the `master` branch of this document... I'm working in `RevolverP3`. What's a *branch*? [Watch a GitHub crashcourse](https://www.youtube.com/watch?v=0fKg7e37bQE), and come chat on keybase.
+
 ### Pre-Alpha
 I already told you it isn't done... But I know you want to poke around anyway.
-Here's a few landmarks... enough to get you lost - and you're on your own!
+Here's a few landmarks... enough to get you lost, and you're on your own!
 
-If you don't know anything about OpenSCAD or Git, you're gonna have a bad time.
-
-If you do know what you're doing:
-Please contribute issues and pull requests with Unlicensed code.
-This has been a one-man show :)
-
-Questions via issues are probably best, so I can build a FAQ.
-
-There's also a "liberator12k" team on Keybase... I'm collecting my forces there :)
+If you don't know anything about Git, GitHub, or OpenSCAD you're gonna have a bad time, you're a little too early, but read-on anyway. _Please_ contribute issues and pull requests with Unlicensed code. This has been a one-man show :) Questions via issues are probably best, so I can build a FAQ.
 
 ### OpenSCAD in a Nutshell
 
 #### WARNING
 Rendering the revolver takes a *hell* of a long time the first time. Read the rest of this guide, then open the revolver forend file. Render that assembly first. Go out to dinner or a happy hour, especially if your machine is slow.
 
-Anytime you change parameters, it'll take it's sweet ass time to render.
+Anytime you change parameters, it'll take it's sweet-ass time to render. Ideally, just, keep OpenSCAD open. It's the worst problem of this whole project.
 
 #### Download
-
-You will need to download [OpenSCAD](http://www.openscad.org) to open the files and render them as printable STLs.
+You will need to download [OpenSCAD](http://www.openscad.org) to render the source as printable STLs.
 
 
 #### Customizer
@@ -48,12 +46,22 @@ It's designed to work with a 1.5mm nozzle. If you weren't aware, bigger nozzles 
 
 You need all the printable parts in each of these files.
 
-Let me recommend:
-* Lots of 1/4" mild steel square rod
-* a few 8-32 spiral taps
-* 1/2"-13 bolts, 10" long and nuts to match.
-
 #### Universal Receiver
+
+##### BOM
+This is incomplete and a work-in-progress. Most of this is available at Home Depot, Lowes, or Ace. Otherwise Amazon or McMaster.
+
+If you're outside the US look for:
+* 4mm taps/nuts/bolts instead of #8-32
+* 6mm taps/nuts/bolts instead of 1/4-20
+* 12mm taps/nuts/bolts instead of 1/2-13
+* 7mm square rod instead of 1/4"
+* 8mm round rod instead of 5/16"
+
+###### US-Based Shopping List
+* 1/4" mild steel square rod, the 36" long sticks. You'll cut these down to under 12"
+* 8-32 spiral point or flute taps (Amazon) YG-1 is a good brand. Point is preferred.
+* 1/2"-13 bolts, 10" long and nuts to match.
 
 ##### Receiver Tube
 [Receiver.scad](../Receiver/Receiver.scad) can render all the receiver parts
