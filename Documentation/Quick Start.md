@@ -60,8 +60,12 @@ If you're outside the US look for:
 
 ###### US-Based Shopping List
 * 1/4" mild steel square rod, the 36" long sticks. You'll cut these down to under 12"
-* 8-32 spiral point or flute taps (Amazon) YG-1 is a good brand. Point is preferred.
-* 1/2"-13 bolts, 10" long and nuts to match.
+* 8-32 spiral point or flute taps (Amazon) YG-1 is a good brand.  Spiral Point is preferred.
+* 1/2"-13 hex bolts, 10" long and hex nuts to match. At least a pair of each.
+* 1-1/2" COEX ABS DWV Pipe (10ft or 2ft length)
+* 3/4" Schedule 40 steel pipe (Galvanized is ideal)
+* 1" Schedule 40 steel pipe nipple, 8-12" long.
+* Epoxy - JB Weld or similar.
 
 ##### Receiver Tube
 [Receiver.scad](../Receiver/Receiver.scad) can render all the receiver parts
