@@ -48,7 +48,53 @@ You need all the printable parts in each of these files.
 
 #### Universal Receiver
 
-##### BOM
+**[Receiver.scad](../Receiver/Receiver.scad)**
+The following parts must all be ABS/ASA/PC.
+* ReceiverCoupling
+* ReceiverLugCenter
+* ReceiverLugFront
+* ReceiverLugRear
+* ButtstockTab
+
+Any material:
+* Buttstock
+* ReceiverBack - under development
+
+The default receiver tube is 1-1/2" COEX ABS DWV pipe from Home Depot.
+Cut a section 12-15" long for the receiver. Use 3/4" PVC for the hammer spacer.
+
+Speaking of the hammer... that's in the middle of some changes, so good luck :P
+
+**[Lower.scad](../Receiver/Lower/Lower.scad)**
+* LowerRight
+* LowerMiddle
+* LowerLeft
+* TriggerRight
+* TriggerMiddle
+* TriggerLeft
+
+#### Forend
+As mentioned, the L12k is a platform... and supports interchangeable forends all on the same receiver.
+
+Pretty much all of these are works in progress or something I've tried... None of them are guaranteed to work, and some of them might even hurt you if you naively print one out... especially the pump AR.
+
+**[Revolver.scad](../Receiver/Forend/Revolver.scad)**
+Parts list is in flux, but generally:
+* RevolverCylinder
+* ReceiverFront
+* FrameSpacer
+* Foregrip (broken)
+
+**[Top Break.scad](../Receiver/Forend/Top%20Break.scad)**
+* ReceiverFront
+* ReceiverForend
+* BarrelCollar
+* Extractor
+* Latch
+* Foregrip
+
+
+##### Bill of Materials
 This is incomplete and a work-in-progress. Most of this is available at Home Depot, Lowes, or Ace. Otherwise Amazon or McMaster.
 
 If you're outside the US look for:
@@ -60,33 +106,13 @@ If you're outside the US look for:
 
 ###### US-Based Shopping List
 * 1/4" mild steel square rod, the 36" long sticks. You'll cut these down to under 12"
-* 8-32 spiral point or flute taps (Amazon) YG-1 is a good brand.  Spiral Point is preferred.
+* #8-32 spiral point or flute taps (Amazon) YG-1 is a good brand.  Spiral Point is preferred.
 * 1/2"-13 hex bolts, 10" long and hex nuts to match. At least a pair of each.
 * 1-1/2" COEX ABS DWV Pipe (10ft or 2ft length)
 * 3/4" Schedule 40 steel pipe (Galvanized is ideal)
+* 3/4" Schedule 40 PVC pipe (
 * 1" Schedule 40 steel pipe nipple, 8-12" long.
 * Epoxy - JB Weld or similar.
-
-##### Receiver Tube
-[Receiver.scad](../Receiver/Receiver.scad) can render all the receiver parts
-
-The coupling and buttstock tab must be printed in ABS, Polycarbonate, or some
-other weld-compatible material.
-
-The default receiver tube is 1-1/2" COEX ABS DWV pipe from Home Depot.
-Cut a section 12-15" long for the receiver. Use 3/4" PVC for the hammer spacer.
-
-Speaking of the hammer... that's in the middle of some changes, so good luck :P
-
-##### Lower
-[Lower.scad](../Receiver/Lower/Lower.scad)
-
-#### Forend
-As mentioned, the L12k is a platform... and supports interchangeable forends all on the same receiver.
-
-Pretty much all of these are works in progress or something I've tried... None of them are guaranteed to work, and some of them might even hurt you if you naively print one out... especially the pump AR.
-
-[Revolver.scad](../Receiver/Forend/Revolver.scad)
-
-[Top Break.scad](../Receiver/Forend/Top%20Break.scad)
-
+* #8-32x1/4" Socket Head Bolts
+* #8-32x1/2" Flat Head Bolts
+* 1/4-20x2" Flat Head Bolts (2pcs)
