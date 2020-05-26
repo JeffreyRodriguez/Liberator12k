@@ -42,13 +42,12 @@ It's designed to work with a 1.5mm nozzle. If you weren't aware, bigger nozzles 
 
 3mm thick walls and 30% infill
 
-### Three Waypoints
+### Files to Print
 
 You need all the printable parts in each of these files.
 
-#### Universal Receiver
-
 **[Receiver.scad](../Receiver/Receiver.scad)**
+
 The following parts must all be ABS/ASA/PC.
 * ReceiverCoupling
 * ReceiverLugCenter
@@ -73,13 +72,15 @@ Speaking of the hammer... that's in the middle of some changes, so good luck :P
 * TriggerMiddle
 * TriggerLeft
 
-#### Forend
+#### Forends
 As mentioned, the L12k is a platform... and supports interchangeable forends all on the same receiver.
 
 Pretty much all of these are works in progress or something I've tried... None of them are guaranteed to work, and some of them might even hurt you if you naively print one out... especially the pump AR.
 
 **[Revolver.scad](../Receiver/Forend/Revolver.scad)**
+
 Parts list is in flux, but generally:
+
 * RevolverCylinder
 * ReceiverFront
 * FrameSpacer
@@ -94,17 +95,17 @@ Parts list is in flux, but generally:
 * Foregrip
 
 
-##### Bill of Materials
+### Bill of Materials
 This is incomplete and a work-in-progress. Most of this is available at Home Depot, Lowes, or Ace. Otherwise Amazon or McMaster.
 
 If you're outside the US look for:
-* 4mm taps/nuts/bolts instead of #8-32
-* 6mm taps/nuts/bolts instead of 1/4-20
-* 12mm taps/nuts/bolts instead of 1/2-13
+* M4 instead of #8-32
+* M6 instead of 1/4-20
+* M12 instead of 1/2-13
 * 7mm square rod instead of 1/4"
 * 8mm round rod instead of 5/16"
 
-###### US-Based Shopping List
+#### US-Based Shopping List
 * 1/4" mild steel square rod, the 36" long sticks. You'll cut these down to under 12"
 * #8-32 spiral point or flute taps (Amazon) YG-1 is a good brand.  Spiral Point is preferred.
 * 1/2"-13 hex bolts, 10" long and hex nuts to match. At least a pair of each.
