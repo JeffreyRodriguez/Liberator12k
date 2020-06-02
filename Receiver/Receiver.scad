@@ -39,12 +39,13 @@ RECEIVER_TUBE_OD = 1.9101;
 RECEIVER_TUBE_ID = 1.6001;
 
 /* [Bolts] */
-COUPLING_BOLT = "1/4\"-20"; // ["1/4\"-20", "M4", "#8-32"]
+COUPLING_BOLT = "1/4\"-20";    // ["1/4\"-20", "M4", "#8-32"]
+COUPLING_BOLT_NUT = "heatset"; // ["hex", "heatset"]
+LOWER_BOLT = "#8-32";          // ["M4", "#8-32"]
+LOWER_BOLT_HEAD = "flat";      // ["socket", "flat"]
+LOWER_BOLT_NUT = "heatset";    // ["hex", "heatset"]
 COUPLING_BOLT_CLEARANCE = 0.015;
-LOWER_BOLT = "#8-32"; // ["M4", "#8-32"]
 LOWER_BOLT_CLEARANCE = 0.015;
-LOWER_BOLT_HEAD = "flat"; // ["socket", "flat"]
-LOWER_BOLT_NUT = "heatset"; // ["hex", "heatset"]
 
 // Settings: Lengths
 function ReceiverFrontLength() = 0.5;
@@ -73,8 +74,11 @@ assert(LowerBolt(), "LowerBolt() is undefined. Unknown LOWER_BOLT?");
 function ReceiverBoltZ() = -7/8;
 function ReceiverBoltY() = 1.125;
 
-module CouplingBolts(teardrop=false, boltHead="flat", extension=0.5,
-              debug=false, clearance=0.005, cutter=false) {
+module CouplingBolts(boltHead="flat", nutType=COUPLING_BOLT_NUT,
+                     extension=0.5,
+                     clearance=0.005, cutter=false,
+                     teardrop=false,
+                     debug=false) {
 
   color("Silver") RenderIf(!cutter) DebugHalf(enabled=debug)
   for (Y = [-1,1])
@@ -85,7 +89,7 @@ module CouplingBolts(teardrop=false, boltHead="flat", extension=0.5,
   NutAndBolt(bolt=CouplingBolt(),
              boltLength=ReceiverCouplingLength()+extension+ManifoldGap(2),
              head=boltHead,
-             nut="heatset",
+             nut=nutType,
              teardrop=cutter&&teardrop,
              clearance=cutter?clearance:0);
 }
