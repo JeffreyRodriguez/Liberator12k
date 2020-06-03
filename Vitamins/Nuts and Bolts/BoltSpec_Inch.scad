@@ -45,6 +45,9 @@ function Spec_Bolt10_24() = [
 
 function Spec_BoltOneHalf() = [
   ["BoltDiameter",    UnitsImperial(0.5)],
+  ["BoltHexDiameter", UnitsImperial(0.85)], // WRONG
+  ["BoltHexHeight",   UnitsImperial(0.325)],  // WRONG
+  
   ["BoltSocketCapDiameter", UnitsImperial(0.85)],
   ["BoltSocketCapHeight",   UnitsImperial(0.310)],
 
@@ -60,6 +63,9 @@ function Spec_BoltOneQuarter() = [
   
   ["BoltFlatHeadDiameter", UnitsImperial(0.505)],
   ["BoltFlatHeadHeight",   UnitsImperial(0.161)],
+  
+  ["BoltHexDiameter", UnitsImperial(0.566)],
+  ["BoltHexHeight",   UnitsImperial(0.25)],
   
   ["NutHexDiameter", UnitsImperial(0.566)],
   ["NutHexHeight",   UnitsImperial(0.25)],

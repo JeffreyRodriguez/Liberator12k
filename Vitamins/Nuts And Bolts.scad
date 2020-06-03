@@ -124,8 +124,8 @@ module BoltHeadButton() {
 }
 
 module BoltHeadHex(bolt, clearance=0, capHeightExtra=0) {
-  cylinder(r=BoltSocketCapRadius(bolt, clearance),
-          h=BoltSocketCapHeight(bolt)+capHeightExtra,
+  cylinder(r=BoltHexRadius(bolt, clearance),
+          h=BoltHexHeight(bolt)+capHeightExtra,
           $fn=6);
 }
 

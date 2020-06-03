@@ -5,6 +5,9 @@ function Spec_BoltTemplate() = [ // these are all a total guess
   ["BoltSpec",        "Template"],
   ["BoltDiameter",    UnitsMetric(1)],
   
+  ["BoltHexDiameter", UnitsMetric(2)], // WRONG
+  ["BoltHexHeight",   UnitsMetric(2)],  // WRONG
+  
   ["BoltSocketCapDiameter", UnitsMetric(2)], // WRONG
   ["BoltSocketCapHeight",   UnitsMetric(2)],  // WRONG
 
@@ -38,6 +41,15 @@ function BoltDiameter(bolt=undef, clearance=0, threaded=false)
  */
 function BoltRadius(bolt, clearance=0, threaded=false)
          = BoltDiameter(bolt, clearance, threaded)/2;
+
+function BoltHexDiameter(bolt=undef, clearance=0)
+          = slookup("BoltHexDiameter", bolt)
+          + clearance;
+
+function BoltHexRadius(bolt=undef, clearance=0)
+         = BoltHexDiameter(bolt, clearance)/2;
+
+function BoltHexHeight(bolt=undef) = slookup("BoltHexHeight", bolt);
 
 function BoltSocketCapDiameter(bolt=undef, clearance=0)
           = slookup("BoltSocketCapDiameter", bolt)
