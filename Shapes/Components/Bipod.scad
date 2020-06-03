@@ -6,7 +6,7 @@ use <../Chamfer.scad>;
 use <../../Vitamins/Pipe.scad>;
 use <../../Vitamins/Square Tube.scad>;
 
-module Bipod(bottomDiameter=1,
+module Bipod(bottomDiameter=1, legDiameter=5/16,
              length=2, extend=1, frontWall=0.25, bipodLegLength=6,
              tubeWall = 0.25,  chamferRadius = 0.1,
              $fn=Resolution(20, 60)) {
@@ -16,8 +16,8 @@ module Bipod(bottomDiameter=1,
   tubeCenterZ = tubeWall+(tube_width/2);
   topDiameter = tube_width+(tubeWall*2);
 
-  bipodLegDiameter = 0.5;
-  bipodLegRadius = bipodLegDiameter/2;
+  legDiameter = legDiameter;
+  bipodLegRadius = legDiameter/2;
   bipodLegAngle = -180+(60/2);
 
   render()
