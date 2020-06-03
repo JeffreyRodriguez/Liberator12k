@@ -30,7 +30,14 @@ One receiver, multiple forends. It remains to be seen if the fixed recoil plate 
 The project took on a tooling aspect when Electrochemical Machining (ECM) entered the picture.
 
 ### "Why?" - Motivation
+Self-defense is an individual imperative and weapons are the means of self-defense.
 
+These guns are real. You can make them yourself.
+
+* Please do not hurt people who've done you no harm.
+* Please do not damage or take the stuff from other people.
+* Please do be responsible when shooting.
+* Please do use for self-defense, sport, and fun.
 
 ### "When?" - Timeline
 
