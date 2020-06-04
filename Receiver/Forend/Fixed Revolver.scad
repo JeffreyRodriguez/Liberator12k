@@ -516,10 +516,15 @@ module RevolverAssembly() {
 if (_RENDER == "Assembly")
 RevolverAssembly();
 
-!projection(cut=true)
-scale(25.4)
-translate([0,0,-1/16])
-RevolverCylinder_print();
+*!intersection() {
+  projection(cut=true)
+  scale(25.4)
+  translate([0,0,-1/16])
+  RevolverCylinder_print();
+  
+  scale(25.4)
+  circle(r=1.125-0.125, $fn=100);
+}
 
 scale(25.4) {
   
