@@ -91,17 +91,27 @@ module BoltFlatHead(bolt, clearance=0, capHeightExtra=0, teardrop=false, teardro
   hull() {
 
     // Taper
-    mirror([0,0,1])
-    cylinder(r1=BoltFlatHeadRadius(bolt, clearance),
-             r2=BoltRadius(bolt, clearance),
-              h=BoltFlatHeadHeight(bolt));
+    if (teardrop) {
+      translate([0,0,BoltFlatHeadHeight(bolt)])
+      linear_extrude(height=ManifoldGap())
+      rotate(teardropAngle)
+      Teardrop(r=BoltFlatHeadRadius(bolt, clearance));
+      
+      linear_extrude(height=ManifoldGap())
+      rotate(teardropAngle)
+      Teardrop(r=BoltRadius(bolt, clearance));
+    } else {
+      mirror([0,0,1])
+      cylinder(r1=BoltFlatHeadRadius(bolt, clearance),
+               r2=BoltRadius(bolt, clearance),
+                h=BoltFlatHeadHeight(bolt));
+    }
 
     // Taper teardrop hack
     linear_extrude(height=(clearance?capHeightExtra:ManifoldGap()))
     if (teardrop) {
       rotate(teardropAngle)
       Teardrop(r=BoltFlatHeadRadius(bolt, clearance));
-
     } else {
       circle(r=BoltFlatHeadRadius(bolt, clearance));
     }
