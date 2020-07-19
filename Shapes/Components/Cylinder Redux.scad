@@ -82,7 +82,8 @@ module OffsetZigZagRevolver(diameter=4, height=2.75,
            chamberBolts=true, chambers=true, chamberLength=undef,
            supportsTop=false, supportsBottom=false,
            cutter=false, radialClearance=0.015, linearClearance=0.03,
-           debug=false, alpha=_CYLINDER_ALPHA) {
+           debug=false, alpha=_CYLINDER_ALPHA,
+           render_cylinder=false) {
   radialClear = cutter ? radialClearance : 0;
   linearClear = cutter ? linearClearance : 0;
 
@@ -118,7 +119,7 @@ module OffsetZigZagRevolver(diameter=4, height=2.75,
     circle(r=chamberInnerRadius);
   }
 
-  color("Tan", alpha) render()
+  color("Tan", alpha) RenderIf(render_cylinder)
   DebugHalf(enabled=debug)
   difference() {
 
