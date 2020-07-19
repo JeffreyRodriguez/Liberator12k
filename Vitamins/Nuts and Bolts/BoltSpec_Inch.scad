@@ -81,6 +81,9 @@ function Spec_BoltOneQuarter() = [
 
 function Spec_BoltFiveSixteenths() = [
   ["BoltDiameter",    UnitsImperial(0.3125)],
+  
+  ["BoltHexDiameter", UnitsImperial(0.565)],
+  ["BoltHexHeight",   UnitsImperial(0.203)],
 
   // TODO: Verify
   //["BoltSocketCapDiameter", UnitsImperial(0.567)],

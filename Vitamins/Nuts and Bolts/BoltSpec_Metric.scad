@@ -29,12 +29,16 @@ function Spec_BoltM3() = [
   ["BoltDiameter",    UnitsMetric(3)],
   ["BoltSocketCapDiameter", UnitsMetric(5.4)],
   ["BoltSocketCapHeight",   UnitsMetric(2.6)],
+  ["BoltFlatHeadDiameter", UnitsMetric(5.6)],
+  ["BoltFlatHeadHeight",   UnitsMetric(1.65)],
+  
   ["NutHexDiameter", UnitsMetric(6.28)],
   ["NutHexHeight",   UnitsMetric(2.5)],
 
   ["NutHexDiameter",    UnitsMetric(6.01)],
   ["NutHexHeight", UnitsMetric(2.4)],
   ["NutHexNylonHeight",   UnitsMetric(4.5)], // ???: Guessed
+  
   ["NutHeatsetMajorDiameter", UnitsMetric(5.31+0.3)],
   ["NutHeatsetMinorDiameter",   UnitsMetric(5.1+0.3)],
   ["NutHeatsetHeight",   UnitsMetric(6.4+0.6)]
@@ -71,9 +75,10 @@ function Spec_BoltM5() = [
   ["NutHexDiameter",    UnitsMetric(8.79)],
   ["NutHexHeight", UnitsMetric(4.7)],
   ["NutHexNylonHeight",   UnitsMetric(4.5)], // ???: Guessed
+  
   ["NutHeatsetMajorDiameter", UnitsMetric(8)],
   ["NutHeatsetMinorDiameter",   UnitsMetric(7.1)],
-  ["NutHeatsetHeight",   UnitsMetric(11.5)]
+  ["NutHeatsetHeight",   UnitsMetric(6.73)]
 ];
 
 function Spec_BoltM8() = [
