@@ -20,6 +20,7 @@ BOLTS = [
   ["5/16\"-18", Spec_BoltFiveSixteenths()],
   ["1/2\"-13", Spec_BoltOneHalf()],
   ["1/4\"-20", Spec_BoltOneQuarter()],
+  ["M3", Spec_BoltM3()],
   ["M4", Spec_BoltM4()],
   ["M5", Spec_BoltM5()],
 
@@ -92,14 +93,14 @@ module BoltFlatHead(bolt, clearance=0, capHeightExtra=0, teardrop=false, teardro
 
     // Taper
     if (teardrop) {
-      translate([0,0,BoltFlatHeadHeight(bolt)])
-      linear_extrude(height=ManifoldGap())
-      rotate(teardropAngle)
-      Teardrop(r=BoltFlatHeadRadius(bolt, clearance));
-      
+      translate([0,0,-BoltFlatHeadHeight(bolt)-clearance])
       linear_extrude(height=ManifoldGap())
       rotate(teardropAngle)
       Teardrop(r=BoltRadius(bolt, clearance));
+      
+      linear_extrude(height=ManifoldGap())
+      rotate(teardropAngle)
+      Teardrop(r=BoltFlatHeadRadius(bolt, clearance));
     } else {
       mirror([0,0,1])
       cylinder(r1=BoltFlatHeadRadius(bolt, clearance),
