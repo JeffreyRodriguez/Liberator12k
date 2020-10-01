@@ -35,8 +35,8 @@ _RENDER = "Assembly"; // ["Assembly", "Buttstock", "ButtstockTab", "ReceiverCoup
 _DEBUG_ASSEMBLY = false;
 
 /* [Receiver Tube] */
-RECEIVER_TUBE_OD = 1.9101;
-RECEIVER_TUBE_ID = 1.6001;
+RECEIVER_TUBE_OD = 1.75;
+RECEIVER_TUBE_ID = 1.5001;
 
 /* [Bolts] */
 COUPLING_BOLT = "1/4\"-20";    // ["1/4\"-20", "M4", "#8-32"]
@@ -265,7 +265,7 @@ module Receiver(od=RECEIVER_TUBE_OD,
           showTrigger=true,
           triggerAnimationFactor=triggerAnimationFactor,
           showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
-          searLength=SearLength()+abs(LowerOffsetZ())-(id/2)+SearTravel());
+          searLength=SearLength()+abs(LowerOffsetZ())+SearTravel()-(0.25/2));
 
     PipeLugAssembly(od=od, id=id, length=receiverLength,
                     pipeAlpha=pipeAlpha, debug=debug);
