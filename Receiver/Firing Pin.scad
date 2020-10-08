@@ -12,6 +12,8 @@ use <../Vitamins/Nuts And Bolts.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 use <../Vitamins/Rod.scad>;
 
+use <Frame.scad>;
+
 
 // Firing pin housing bolt
 HOUSING_BOLT = "#8-32"; // ["M3", "M4", "M5", "#8-32", "#10-24"]
@@ -41,7 +43,7 @@ function FiringPinCollarDiameter() = FIRING_PIN_COLLAR_DIAMETER;
 function FiringPinCollarRadius() = FiringPinCollarDiameter()/2;
 function FiringPinCollarWidth() = 0.1875;
 
-function FiringPinExtension() = 0.5;
+function FiringPinExtension() = 0.0;
 function FiringPinTravel() = 0.03;
 function FiringPinHousingLength() = 1;
 function FiringPinHousingBack() = 0.25;
@@ -60,25 +62,26 @@ module FiringPin(radius=FiringPinRadius(),
 
   color("Silver")
   DebugHalf(enabled=debug)
-  translate([0,0,FiringPinHousingLength()-FiringPinHousingBack()])
-  mirror([0,0,1])
+  translate([-0.25-FiringPinHousingLength()+FiringPinHousingBack(),0,0])
+  rotate([0,90,0])
   cylinder(r=FiringPinCollarRadius()+clear,
            h=(cutter?FiringPinHousingLength():FiringPinCollarWidth()));
 
   color("DarkGoldenrod")
-  translate([0,0,-FiringPinExtension()])
+  translate([FiringPinExtension(),0,0])
+  rotate([0,-90,0])
   cylinder(r=radius+clear,
            h=FiringPinLength());
 }
 
 module FiringPinHousingBolts(bolt=FiringPinHousingBolt(),
-                              boltLength=0.5,
+                              boltLength=0.25,
                               template=false, cutter=false, clearance=HOUSING_BOLT_CLEARANCE) {
   color("CornflowerBlue")
+  translate([0,0,-FiringPinBoltOffsetY()])
+  rotate([0,-90,0])
   rotate(90)
-  for (Y = [1,-1])
-  translate([0,Y*FiringPinBoltOffsetY(),FiringPinHousingLength()+ManifoldGap()])
-  Bolt(bolt=bolt, capOrientation=true, head="flat",
+  Bolt(bolt=bolt, capOrientation=false, head="flat",
        clearance=cutter?clearance:0,
        length=FiringPinHousingLength()+boltLength+ManifoldGap(2));
 }
@@ -86,32 +89,35 @@ module FiringPinHousingBolts(bolt=FiringPinHousingBolt(),
 module FiringPinHousing(bolt=FiringPinHousingBolt(), cutter=false,
                         alpha=0.5, debug=false) {
 
-  color("Grey")
+  color("Olive")
   DebugHalf(enabled=debug) render()
   difference() {
-    rotate(-90)
     union() {
-      hull()
-      for (Y = [1,-1])
-      translate([0,Y*FiringPinBoltOffsetY(),0])
-      ChamferedCylinder(r1=0.25, r2=1/32,
-                         h=FiringPinHousingLength(),
-                       teardropTop=true, teardropBottom=true);
+      rotate(-90)
+      //hull() {
+        
+        // Bolt support
+        translate([-FiringPinBoltOffsetY(),0,0])
+        ChamferedCylinder(r1=0.25, r2=1/32,
+                           h=FiringPinHousingLength(),
+                         teardropTop=true, teardropBottom=true);
 
-      difference() {
-        ChamferedCylinder(r1=FiringPinHousingWidth()/2, r2=1/32,
-                           h=FiringPinHousingLength());
-
-        translate([0,-FiringPinBoltOffsetY()*2,0])
-        cube([1,FiringPinBoltOffsetY()*4,1]);
-      }
+        // Firing pin support
+        translate([-FiringPinHousingWidth()/2, -(FiringPinHousingWidth()/2)-1,0])
+        ChamferedCube([FiringPinHousingWidth(), FiringPinHousingWidth()+1, FiringPinHousingLength()-0.25], r=1/32);
+      //}
+    
+      // Disconnector extension spring pin support
+      translate([-(0.75/2), (FiringPinHousingWidth()/2),0.25])
+      mirror([0,1,0])
+      ChamferedCube([0.75, FrameTopZ()+(FiringPinHousingWidth()/2), FiringPinHousingLength()-0.25], r=1/32);
+    
+      // Disconnector extension spring pin support - upper
+      translate([-0.5,-FrameTopZ(),0.25])
+      ChamferedCube([1, 0.75, FiringPinHousingLength()-0.25], r=1/32);
     }
 
     if (!cutter) {
-      // slot
-      translate([-0.125,-1,0])
-      cube([0.25,1,FiringPinHousingLength()-0.25]);
-
       FiringPin(cutter=true);
 
       FiringPinHousingBolts(bolt=bolt, cutter=true);
