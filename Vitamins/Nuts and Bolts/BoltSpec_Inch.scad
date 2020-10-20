@@ -1,6 +1,28 @@
 use <../../Meta/Units.scad>;
 use <BoltSpec.scad>;
 
+function Spec_Bolt6_32() = [
+  ["BoltDiameter",    UnitsImperial(0.135)],
+
+  /* ["BoltSocketCapDiameter", UnitsImperial(0.270)],
+  ["BoltSocketCapHeight",   UnitsImperial(0.164)], */
+
+  ["BoltFlatHeadDiameter", UnitsImperial(0.270)],
+  ["BoltFlatHeadHeight",   UnitsImperial(0.115)],
+
+  /* ["NutHexDiameter", UnitsImperial(0.34375)],
+  ["NutHexHeight",   UnitsImperial(0.125)], */
+
+  /* ["NutHeatsetMajorDiameter", UnitsImperial(0.234)],
+  ["NutHeatsetMinorDiameter", UnitsImperial(0.226)],
+  ["NutHeatsetHeight",        UnitsImperial(0.185)], */
+
+  /* ["NutHeatsetLongMajorDiameter", UnitsMetric(6.35)],
+  ["NutHeatsetLongMinorDiameter", UnitsMetric(5.38)],
+  ["NutHeatsetLongHeight",        UnitsMetric(7.92)] */
+];
+
+
 function Spec_Bolt8_32() = [
   ["BoltDiameter",    UnitsImperial(0.1640)],
 
