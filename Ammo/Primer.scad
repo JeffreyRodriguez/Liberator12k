@@ -29,8 +29,8 @@ function Spec_Primer209() = [
   [PrimerHeight,        0.3],
   [PrimerMajorDiameter, 0.248],
   [PrimerMinorDiameter, 0.242],
-  [PrimerClearance,     0.021],
-  [PrimerFn,            12]
+  [PrimerClearance,     0.005],
+  [PrimerFn,            20]
 ];
 
 // .22 cal Ramset (necked variety)
