@@ -61,8 +61,8 @@ function Spec_BoltOneQuarter() = [
   ["BoltSocketCapDiameter", UnitsImperial(0.375)],
   ["BoltSocketCapHeight",   UnitsImperial(0.25)],
   
-  ["BoltFlatHeadDiameter", UnitsImperial(0.505)],
-  ["BoltFlatHeadHeight",   UnitsImperial(0.161)],
+  ["BoltFlatHeadDiameter", UnitsImperial(0.49)],
+  ["BoltFlatHeadHeight",   UnitsImperial(0.191)],
   
   ["BoltHexDiameter", UnitsImperial(0.566)],
   ["BoltHexHeight",   UnitsImperial(0.25)],
