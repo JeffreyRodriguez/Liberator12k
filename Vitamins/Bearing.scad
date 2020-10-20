@@ -1,3 +1,4 @@
+use <../Meta/Units.scad>;
 //
 // Square Tube dimensions
 //
@@ -33,6 +34,18 @@ Bearing608 = [
   [BearingClearanceSnug,  0.01], // TODO: Verify
 ];
 function Spec_Bearing608() = Bearing608;
+
+// 623 Bearing
+Bearing623 = [
+  [BearingInnerRadius,    UnitsMetric(3/2)],
+  [BearingOuterRadius,    UnitsMetric(10/2)],
+  [BearingHeight,         UnitsMetric(4)],
+  [BearingRaceRadius,     UnitsMetric(5.2/2)],
+  [BearingFn,             30],
+  [BearingClearanceLoose, UnitsMetric(.3)], // TODO: Verify
+  [BearingClearanceSnug,  UnitsMetric(.15)], // TODO: Verify
+];
+function Spec_Bearing623() = Bearing623;
 
 module Bearing2D(spec=Spec_Bearing608(), clearance=BearingClearanceSnug(), solid=false) {
   //echo(BearingInnerRadius(spec, clearance));
