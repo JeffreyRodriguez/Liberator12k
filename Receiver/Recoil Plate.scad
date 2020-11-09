@@ -26,9 +26,6 @@ function RecoilSpreaderThickness() = 0.5;
 function RecoilPlateRearX()  = -RecoilSpreaderThickness();
 function FiringPinZ() = 0; //-0.12; // .22 Rimfire Offset
 
-// Settings: Vitamins
-function SquareRodFixingBolt() = Spec_BoltM3();
-
 // Calculated: Positions
 function FiringPinMinX() = RecoilPlateRearX()-FiringPinHousingLength();
 
