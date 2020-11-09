@@ -154,7 +154,8 @@ module ReceiverCouplingPattern(width=ReceiverCouplingWidth(),
 module ReceiverCoupling(od=RECEIVER_TUBE_OD,
                         id=RECEIVER_TUBE_ID,
                         clearance=0.01,
-                        debug=false, alpha=1) {
+                        debug=false, alpha=1,
+                        monolith=false) {
 
   color("DimGray", alpha) render() DebugHalf(enabled=debug)
   difference() {
@@ -189,6 +190,12 @@ module ReceiverCoupling(od=RECEIVER_TUBE_OD,
                     r=1/16);
     }
 
+    // Upper slot Cutout
+    translate([ManifoldGap(),
+               -(ReceiverSlotWidth()/2)-clearance,0])
+    mirror([1,0,0])
+    cube([FrameReceiverLength()+ManifoldGap(2),ReceiverSlotWidth()+(clearance*2),2]);
+
     FrameBolts(cutter=true);
 
     ReceiverTube(od=od, id=id, cutter=true);
@@ -197,13 +204,7 @@ module ReceiverCoupling(od=RECEIVER_TUBE_OD,
 
     // Lower lug cutout
     translate([-LowerMaxX(),0,0])
-    PipeLugCenter(cutter=true);
-
-    // Slot Cutout
-    translate([ManifoldGap(),
-               -(ReceiverSlotWidth()/2)-clearance,0])
-    mirror([1,0,0])
-    cube([FrameReceiverLength()+ManifoldGap(2),ReceiverSlotWidth()+(clearance*2),2]);
+    PipeLugCenter(cutter=true, clearance=(monolith?0:0.002));
   }
 }
 
@@ -253,6 +254,7 @@ ReceiverBack(od=od, id=id);
 
 module Receiver(od=RECEIVER_TUBE_OD,
                 id=RECEIVER_TUBE_ID,
+                monolith=false,
                 receiverLength=ReceiverLength(),
                 receiverBack=true,
                 buttstock=true,
@@ -267,7 +269,8 @@ module Receiver(od=RECEIVER_TUBE_OD,
                 lowerBoltHead=LOWER_BOLT_HEAD,
                 lowerBoltNut=LOWER_BOLT_NUT,
                 debug=false) {
-  ReceiverCoupling(od=od, id=id, debug=debug, alpha=couplingAlpha);
+  ReceiverCoupling(od=od, id=id, monolith=monolith,
+                   debug=debug, alpha=couplingAlpha);
 
   translate([-LowerMaxX(),0,0])
   PipeLugAssembly(od=od, id=id, length=receiverLength,
@@ -346,7 +349,7 @@ scale(25.4) {
   
   if (_RENDER == "ReceiverMonolith")
     rotate([0,90,0])
-    Receiver(receiverLength=5);
+    Receiver(monolith=true, receiverLength=5);
 
   if (_RENDER == "ReceiverCoupling")
     ReceiverCoupling_print(od=RECEIVER_TUBE_OD,
