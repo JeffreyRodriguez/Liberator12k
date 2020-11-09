@@ -273,7 +273,7 @@ module Receiver(od=RECEIVER_TUBE_OD,
                    debug=debug, alpha=couplingAlpha);
 
   translate([-LowerMaxX(),0,0])
-  PipeLugAssembly(od=od, id=id, length=receiverLength,
+  PipeLugAssembly(od=od, id=id, length=receiverLength, monolith=monolith,
                   pipeAlpha=pipeAlpha, debug=debug);
   
   ReceiverTube(debug=debug, alpha=pipeAlpha, length=receiverLength);

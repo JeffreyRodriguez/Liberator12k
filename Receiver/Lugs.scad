@@ -90,6 +90,7 @@ module PipeLugRear(od=RECEIVER_TUBE_OD,
 
 module PipeLugCenter(od=RECEIVER_TUBE_OD,
                      id=RECEIVER_TUBE_ID,
+                     monolith=false,
                      cutter=false, clearance=0.002,
                     alpha=1, debug=false) {
   color("DarkGray", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
@@ -112,8 +113,10 @@ module PipeLugCenter(od=RECEIVER_TUBE_OD,
     if (cutter == false) {
       ReceiverTube(od=od, id=id, cutter=true);
 
-      PipeLugFront(od=od, id=id, cutter=true);
-      PipeLugRear(od=od, id=id, cutter=true);
+      if (!monolith) {
+        PipeLugFront(od=od, id=id, cutter=true);
+        PipeLugRear(od=od, id=id, cutter=true);
+      }
 
       translate([0,0,LowerOffsetZ()])
       SearCutter(length=SearLength()+abs(LowerOffsetZ()));
@@ -123,6 +126,7 @@ module PipeLugCenter(od=RECEIVER_TUBE_OD,
 
 module PipeLugAssembly(od=RECEIVER_TUBE_OD,
                        id=RECEIVER_TUBE_ID,
+                       monolith=false,
                        length=6, pipeAlpha=1, pipeOffsetX=0,
                        front=true, rear=true, center=true, debug=false) {
 
@@ -133,7 +137,7 @@ module PipeLugAssembly(od=RECEIVER_TUBE_OD,
   PipeLugRear(od=od, id=id, debug=debug);
 
   if (center)
-  PipeLugCenter(od=od, id=id, debug=debug);
+  PipeLugCenter(od=od, id=id, debug=debug, monolith=monolith);
 
   if (length > 0)
   translate([pipeOffsetX,0,0])
