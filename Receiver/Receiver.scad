@@ -29,13 +29,13 @@ use <Lugs.scad>;
 /* [What to Render] */
 
 // Configure settings below, then choose a part to render. Render that part (F6) then export STL (F7). Assembly is not for printing.
-_RENDER = "Assembly"; // ["Assembly", "Buttstock", "ButtstockTab", "ReceiverCoupling", "ReceiverBack", "ReceiverLugCenter", "ReceiverLugFront", "ReceiverLugRear", "LowerLeft", "LowerRight", "LowerMiddle", "TriggerLeft", "TriggerRight", "TriggerMiddle"]
+_RENDER = "Assembly"; // ["Assembly", "ReceiverMonolith", "Buttstock", "ButtstockTab", "ReceiverCoupling", "ReceiverBack", "ReceiverLugCenter", "ReceiverLugFront", "ReceiverLugRear", "LowerLeft", "LowerRight", "LowerMiddle", "TriggerLeft", "TriggerRight", "TriggerMiddle"]
 
 // Cut assembly view in half
 _DEBUG_ASSEMBLY = false;
 
 /* [Receiver Tube] */
-RECEIVER_TUBE_OD = 1.75;
+RECEIVER_TUBE_OD =  1.7501;
 RECEIVER_TUBE_ID = 1.5001;
 
 /* [Bolts] */
@@ -74,6 +74,34 @@ assert(LowerBolt(), "LowerBolt() is undefined. Unknown LOWER_BOLT?");
 function ReceiverBoltZ() = -7/8;
 function ReceiverBoltY() = 1.125;
 
+module ReceiverTube(od=RECEIVER_TUBE_OD,
+                    id=RECEIVER_TUBE_ID,
+                    length=ReceiverLength(), clearance=0.002,
+                   debug=false, cutter=false, alpha=1, $fn=60) {
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
+
+  color("DimGrey", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
+  difference() {
+    rotate([0,-90,0])
+    difference() {
+      cylinder(r=od/2, h=length);
+
+      if (!cutter)
+      cylinder(r=id/2, h=length);
+    }
+
+    if (!cutter) {
+      translate([-LowerMaxX(),0,LowerOffsetZ()])
+      SearCutter(length=SearLength()+abs(LowerOffsetZ()));
+      
+      // Slot
+      translate([ManifoldGap(), -0.5, 0])
+      mirror([1,0,0])
+      cube([2.5, 1, od]);
+    }
+  }
+}
 module CouplingBolts(boltHead="flat", nutType=COUPLING_BOLT_NUT,
                      extension=0.5,
                      clearance=0.005, cutter=false,
@@ -213,7 +241,6 @@ module ReceiverBack(od=RECEIVER_TUBE_OD,
 
     FrameBolts(cutter=true);
 
-    translate([-FrameReceiverLength(),0,0])
     ReceiverTube(od=od, id=id, cutter=true);
   }
 }
@@ -225,6 +252,31 @@ rotate([0,90,0])
 ReceiverBack(od=od, id=id);
 
 module Receiver(od=RECEIVER_TUBE_OD,
+                id=RECEIVER_TUBE_ID,
+                receiverLength=ReceiverLength(),
+                receiverBack=true,
+                buttstock=true,
+                pipeOffsetX=0,
+                pipeAlpha=1, buttstockAlpha=1, couplingAlpha=1,
+                frameBoltLength=FrameBoltLength(),
+                frameBoltBackset=ReceiverBackLength(),
+                couplingBoltHead="flat", couplingBoltExtension=0.5,
+                triggerAnimationFactor=TriggerAnimationFactor(),
+                frameBolts=true, lower=true,
+                lowerBolt=LowerBolt(),
+                lowerBoltHead=LOWER_BOLT_HEAD,
+                lowerBoltNut=LOWER_BOLT_NUT,
+                debug=false) {
+  ReceiverCoupling(od=od, id=id, debug=debug, alpha=couplingAlpha);
+
+  translate([-LowerMaxX(),0,0])
+  PipeLugAssembly(od=od, id=id, length=receiverLength,
+                  pipeAlpha=pipeAlpha, debug=debug);
+  
+  ReceiverTube(debug=debug, alpha=pipeAlpha, length=receiverLength);
+  
+}
+module ReceiverAssembly(od=RECEIVER_TUBE_OD,
                 id=RECEIVER_TUBE_ID,
                 receiverLength=ReceiverLength(),
                 receiverBack=true,
@@ -257,38 +309,44 @@ module Receiver(od=RECEIVER_TUBE_OD,
   translate([-receiverLength,0,0])
   ButtstockAssembly(od=od, alpha=buttstockAlpha, debug=debug);
 
-  translate([-LowerMaxX(),0,0]) {
-
-    if (lower)
-    translate([0,0,LowerOffsetZ()])
-    Lower(alpha=1, boltSpec=lowerBolt, boltHead=lowerBoltHead, nut=lowerBoltNut,
-          showTrigger=true,
-          triggerAnimationFactor=triggerAnimationFactor,
-          showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
-          searLength=SearLength()+abs(LowerOffsetZ())+SearTravel()-(0.25/2));
-
-    PipeLugAssembly(od=od, id=id, length=receiverLength,
-                    pipeAlpha=pipeAlpha, debug=debug);
-
-  }
+  if (lower)
+  translate([-LowerMaxX(),0,LowerOffsetZ()])
+  Lower(alpha=1, boltSpec=lowerBolt, boltHead=lowerBoltHead, nut=lowerBoltNut,
+        showTrigger=true,
+        triggerAnimationFactor=triggerAnimationFactor,
+        showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
+        searLength=SearLength()+abs(LowerOffsetZ())+SearTravel()-(0.25/2));
+  
+  Receiver(debug=debug);
 }
+
+
+// Sear
+*!scale(25.4)
+translate([0,0,0.125])
+rotate([90,0,0])
+Sear(length=SearLength()+abs(LowerOffsetZ())-0.0625);
 
 scale(25.4) {
   if (_RENDER == "Assembly") {
 
-    Receiver(pipeAlpha=0.3,
+    ReceiverAssembly(pipeAlpha=0.3,
              receiverLength=12,
              lowerBolt=LowerBolt(),
              lowerBoltHead=LOWER_BOLT_HEAD,
              lowerBoltNut=LOWER_BOLT_NUT,
              debug=_DEBUG_ASSEMBLY);
   }
-
+  
   if (_RENDER == "Buttstock")
     Buttstock_print(od=RECEIVER_TUBE_OD);
 
   if (_RENDER == "ButtstockTab")
     ButtstockTab_print(od=RECEIVER_TUBE_OD);
+  
+  if (_RENDER == "ReceiverMonolith")
+    rotate([0,90,0])
+    Receiver(receiverLength=5);
 
   if (_RENDER == "ReceiverCoupling")
     ReceiverCoupling_print(od=RECEIVER_TUBE_OD,
