@@ -450,11 +450,22 @@ module SpindleLatch(cutter=false, clearance=0.01) {
       ChamferedCube([0.375+(cutter?0.25:0)+clear,
                      0.3125+clear2,
                      SpindleCollarRadius()+WallSpindle()+0.5], r=1/16);
-    } 
+      
+      translate([ForendMinX()+SpindleCollarWidth(), 0, CylinderZ()-SpindleCollarDiameter()-WallSpindle()])
+      rotate([0,90,0])
+      ChamferedCylinder(r1=SpindleCollarRadius()+clear,
+                        r2=1/32,
+                        h=0.375+clear);
+    }
     
     if (!cutter)
     RevolverSpindle(cutter=true);
   }
+}
+module SpindleLatch_print() {
+  rotate([0,-90,0])
+  translate([-(ForendMinX()+SpindleCollarWidth()), 0, -CylinderZ()])
+  SpindleLatch();
 }
 module RevolverCylinder(supports=true, chambers=false, chamberBolts=false, debug=_CUTAWAY_CYLINDER, alpha=_ALPHA_CYLINDER, render_cylinder=true) {
   OffsetZigZagRevolver(
@@ -567,14 +578,16 @@ module RevolverAssembly() {
 if (_RENDER == "Assembly")
 RevolverAssembly();
 
+/**********
+ * Prints *
+ **********/
 scale(25.4) {
+  
   if (_RENDER == "BarrelSupport")
   BarrelSupport_print();
 
   if (_RENDER == "SpindleLatch")
-  rotate([0,-90,0])
-  translate([-(ForendMinX()+SpindleCollarWidth()), 0, -CylinderZ()])
-  SpindleLatch();
+  SpindleLatch_print();
   
   if (_RENDER == "FrameSpacer")
   FrameSpacer_print();
