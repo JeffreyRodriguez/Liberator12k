@@ -6,6 +6,23 @@ use <../Meta/Units.scad>;
 $fs = UnitsFs()*0.25;
 
 
+module TangentBoolean(edgeOffset=1, edgeSign=-1,
+                      r=0.25, angle=0) {
+  translate([edgeOffset,0])
+  rotate(angle)
+  difference() {
+    translate([-r,-r])
+    square([r*2, r*2]);
+
+    translate([(edgeSign*r),r])
+    intersection()
+    for (R = [0,90]) rotate(-R)
+    Teardrop(r=r);
+  }
+
+}
+
+
 module RoundedBoolean(edgeOffset=1, edgeSign=-1,
                       r=0.25, angle=0,
                       teardrop=false, teardropAngle=-90) {
