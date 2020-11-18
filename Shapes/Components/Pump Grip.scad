@@ -1,6 +1,7 @@
 use <../../Meta/Debug.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Resolution.scad>;
+use <../../Meta/RenderIf.scad>;
 use <../Chamfer.scad>;
 use <../Teardrop.scad>;
 use <../TeardropTorus.scad>;
@@ -12,9 +13,10 @@ function PumpGripLength() = 5.25;
 
 module PumpGrip(outerRadius=PumpGripRadius(), length=PumpGripLength(),
                 rings=true, ringRadius=3/32, ringGap=0.75,
-                alpha=1, $fn=Resolution(20,100)) {
+                doRender=false, alpha=1, $fn=Resolution(20,100)) {
 
   color("Tan", alpha)
+  RenderIf(doRender)
   difference() {
     union() {
 
