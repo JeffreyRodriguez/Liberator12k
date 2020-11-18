@@ -53,7 +53,10 @@ function Spec_Bolt8_32() = [
   ["BoltFlatHeadDiameter", UnitsImperial(0.359)],
   ["BoltFlatHeadHeight",   UnitsImperial(0.112)],
 
-  ["NutHexDiameter", UnitsImperial(0.34375)],
+  ["BoltHexDiameter", UnitsImperial(0.3095)],
+  ["BoltHexHeight",   UnitsImperial(0.125)],
+
+  ["NutHexDiameter", UnitsImperial(0.3095)],
   ["NutHexHeight",   UnitsImperial(0.125)],
 
   ["NutHeatsetMajorDiameter", UnitsImperial(0.234)],
