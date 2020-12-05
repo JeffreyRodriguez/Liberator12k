@@ -51,7 +51,7 @@ module Fillet(r=0.125, h=1, inset=false, taperEnds=true) {
   difference() {
     linear_extrude(height=effectiveHeight)
     intersection() {
-      RoundedBoolean(edgeOffset=0, r=r, teardrop=false, $fn=40);
+      RoundedBoolean(edgeOffset=0, r=r, teardrop=false);
 
       translate([ManifoldGap(), -ManifoldGap()])
       rotate(90)
@@ -61,7 +61,7 @@ module Fillet(r=0.125, h=1, inset=false, taperEnds=true) {
     if (taperEnds)
     for (m = [0,1]) translate([0,0,m ? effectiveHeight : 0]) mirror([0,0,m])
     translate([-r,r,-ManifoldGap()])
-    cylinder(r1=r*sqrt(2), r2=0, h=r*sqrt(2)*2, $fn=40);
+    cylinder(r1=r*sqrt(2), r2=0, h=r*sqrt(2)*2);
   }
 }
 
@@ -125,7 +125,7 @@ module ChamferedSquareHole(sides=[1,1], length=1, center=true,
       translate([center ? -sides[0]/2 : 0,center ? -sides[1]/2 : 0])
       for (xy = [[0,0], [0, sides[1]], [sides[0],0], [sides[0],sides[1]]])
       translate([xy[0], xy[1]])
-      circle(r=cornerRadius, $fn=20);
+      circle(r=cornerRadius);
     }
 
     // Chamfer the bottom
@@ -148,24 +148,24 @@ module ChamferedSquare(xy=[1,1], r=0.25,
     translate([mX, xy[1]-r])
     if (teardrop) {
       rotate(90)
-      Teardrop(r=r, truncated=teardropTruncated, $fn=60);
+      Teardrop(r=r, truncated=teardropTruncated);
     } else {
-      circle(r=r, $fn=60);
+      circle(r=r);
     }
 
     // Bottom
     translate([mX, r])
     if (teardrop){
       rotate(-90)
-      Teardrop(r=r, truncated=teardropTruncated, $fn=60);
+      Teardrop(r=r, truncated=teardropTruncated);
     } else {
-      circle(r=r, $fn=60);
+      circle(r=r);
     }
   }
 
 }
 
-module ChamferedCube(xyz=[1,2,3], r=0.25, center=false, fn=20,
+module ChamferedCube(xyz=[1,2,3], r=0.25, center=false,
                      chamferXYZ=[1,1,1],
                      teardropXYZ=[true, true, true],
                      teardropTopXYZ=[true, true, true]) {
@@ -179,7 +179,7 @@ module ChamferedCube(xyz=[1,2,3], r=0.25, center=false, fn=20,
     if (chamferXYZ[0])
     rotate([90,0,90])
     linear_extrude(height=xyz[0])
-    ChamferedSquare(xy=[xyz[1], xyz[2]], r=r, $fn=fn,
+    ChamferedSquare(xy=[xyz[1], xyz[2]], r=r,
                     teardrop=teardropXYZ[0]);
 
     // Y
@@ -187,13 +187,13 @@ module ChamferedCube(xyz=[1,2,3], r=0.25, center=false, fn=20,
     mirror([0,1,0])
     rotate([90,0,0])
     linear_extrude(height=xyz[1])
-    ChamferedSquare(xy=[xyz[0], xyz[2]], r=r, $fn=fn,
+    ChamferedSquare(xy=[xyz[0], xyz[2]], r=r,
                     teardrop=teardropXYZ[1]);
 
     // Z
     if (chamferXYZ[2])
     linear_extrude(height=xyz[2])
-    ChamferedSquare(xy=[xyz[0], xyz[1]], r=r, $fn=fn,
+    ChamferedSquare(xy=[xyz[0], xyz[1]], r=r,
                     teardrop=teardropXYZ[2]);
   }
 }
@@ -267,7 +267,6 @@ module ChamferedToroidalCylinder(r1=1, r2=0.5, r3=0.1, h=1) {
 }
 
 
-//$fn=20;
 render() {
   difference() {
     ChamferedCube(xyz=[2,3,2], center=false);
@@ -291,17 +290,17 @@ translate([-4,0,0]) {
 }
 
 translate([0,-2,0]) {
-  RoundedBoolean(teardrop=true, $fn=20);
+  RoundedBoolean(teardrop=true);
 
-  HoleChamfer($fn=20);
+  HoleChamfer();
 
   translate([0,-2,0])
-  CircularOuterEdgeChamfer(r1=0.5, r2=0.125, teardrop=false, $fn=20);
+  CircularOuterEdgeChamfer(r1=0.5, r2=0.125, teardrop=false);
 
   translate([0,-4, 0])
-  ChamferedCircularHole(r1=1, r2=0.125, h=1, $fn=20);
+  ChamferedCircularHole(r1=1, r2=0.125, h=1);
 
   // Chamfered Cylinder
   translate([-2.5,0,0])
-  ChamferedToroidalCylinder(r1=1, r2=0.5, r3=0.1, h=1, $fn=50);
+  ChamferedToroidalCylinder(r1=1, r2=0.5, r3=0.1, h=1);
 }
