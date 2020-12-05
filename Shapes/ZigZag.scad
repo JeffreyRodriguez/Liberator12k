@@ -27,13 +27,13 @@ module ZigZag(supportsTop=true, supportsBottom=true,
            width=DEFAULT_ZIGZAG_WIDTH,
            positions=DEFAULT_ZIGZAG_POSITIONS,
            extraTop=0, extraBottom=0,
+           twistRate=0.8,
            $fn=Resolution(30,90)) {
 
   positionAngle=360/positions;
   top_slot_height = (width/2)+extraTop;
   bottom_slot_height = (width/2)+extraBottom;
-             
-  twistRate = 0.8;
+  
   height = (radius*2*3.14/positions/2/twistRate)
          + (width*3)
          + (width/2*sqrt(2));
@@ -55,7 +55,7 @@ module ZigZag(supportsTop=true, supportsBottom=true,
           
           // Mirrored upper segment
           rotate([0,0,-(positionAngle/2)])
-          translate([0,0,height+width+extraBottom])
+          translate([0,0,height+width+extraBottom+extraTop])
           mirror([0,0,1])
           HelixSegment(radius=radius, angle=positionAngle/2,
               depth=depth, width=width,
@@ -92,4 +92,4 @@ rotate([0,90,0])
 %cylinder(r=DEFAULT_ZIGZAG_WIDTH/2, h=DEFAULT_ZIGZAG_DEPTH*3, $fn=10);
 
 //render()
-ZigZag();
+ZigZag(extraTop=1);
