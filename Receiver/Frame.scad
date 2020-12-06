@@ -17,17 +17,31 @@ use <../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 use <../Vitamins/Pipe.scad>;
 use <../Vitamins/Rod.scad>;
 
+use <Receiver.scad>;
+
 FRAME_SPACER_LENGTH = 4.5;
+
+COUPLING_BOLT = "1/4\"-20";    // ["1/4\"-20", "M4", "#8-32"]
+COUPLING_BOLT_NUT = "heatset"; // ["hex", "heatset"]
+COUPLING_BOLT_CLEARANCE = 0.015;
 
 // Settings: Lengths
 function FrameBoltLength() = 10;
 function FrameReceiverLength() = 2.5;
+function FrameBackLength() = 0.5;
+function ReceiverCouplingLength() = 1;
+function LogoTextSize() = 11/32;
+function LogoTextDepth() = 1/16;
 
 // Settings: Walls
-function WallFrameBolt() = 0.25;
+function WallFrameBolt() = 0.1875;
 
 // Settings: Vitamins
 function FrameBolt() = Spec_BoltOneHalf();
+
+function CouplingBolt() = BoltSpec(COUPLING_BOLT);
+assert(CouplingBolt(), "CouplingBolt() is undefined. Unknown COUPLING_BOLT?");
+
 
 // Shorthand: Measurements
 function FrameBoltRadius(clearance=0)
@@ -37,8 +51,14 @@ function FrameBoltDiameter(clearance=0)
     = BoltDiameter(FrameBolt(), clearance);
 
 // Settings: Positions
+function CouplingBoltZ() = -7/8;
+function CouplingBoltY() = 1.125;
+
 function FrameBoltZ() = 1.5;
 function FrameBoltY() = 1;
+function FrameWidth() = (FrameBoltY()
+                       + FrameBoltRadius()
+                       + WallFrameBolt()) * 2;
 function FrameTopZ() = FrameBoltZ()
                      + FrameBoltRadius()
                      + WallFrameBolt();
@@ -52,7 +72,7 @@ function FrameExtension(length=FrameBoltLength()) = length
 
 module FrameBoltIterator() {
     for (Y = [FrameBoltY(),-FrameBoltY()])
-    translate([-FrameReceiverLength()-ManifoldGap(),
+    translate([-FrameReceiverLength()-FrameBackLength()-ManifoldGap(),
                Y, FrameBoltZ()])
     rotate([0,-90,0])
     children();
@@ -71,26 +91,38 @@ module FrameBolts(length=FrameBoltLength(),
   }
 }
 
-module FrameSupport(length=FRAME_SPACER_LENGTH,
-                    width=(FrameBoltY()+FrameBoltRadius()+WallFrameBolt())*2,
-                    height=(FrameBoltRadius()+WallFrameBolt())*2,
-                    extraBottom=0,
-                    $fn=Resolution(20,60)) {
+module CouplingBolts(boltHead="flat", nutType=COUPLING_BOLT_NUT, extension=0.5, clearance=0.005, cutter=false, teardrop=false, debug=false) {
+                         for (Y = [-1,1])
+  translate([-ReceiverCouplingLength()-ManifoldGap(),
+             CouplingBoltY()*Y,
+             CouplingBoltZ()])
+  rotate([0,90,0])
+  NutAndBolt(bolt=CouplingBolt(),
+             boltLength=ReceiverCouplingLength()+extension+ManifoldGap(2),
+             head=boltHead,
+             nut=nutType,
+             teardrop=cutter&&teardrop,
+             clearance=cutter?clearance:0);
+}
+
+module FrameSupport(length=FRAME_SPACER_LENGTH, width=(FrameBoltY()+FrameBoltRadius()+WallFrameBolt())*2, height=(FrameBoltRadius()+WallFrameBolt())*2, extraBottom=0, $fn=Resolution(20,60)) {
   
-  difference() {
-    translate([0, -width/2, FrameBoltZ()-(height/2)-extraBottom])
-    ChamferedCube([length, width, height+extraBottom], r=1/16,
-                   chamferXYZ=[1,0,0],
-                   teardropXYZ=[false, false, false],
-                   teardropTopXYZ=[false, false, false]);
-    
-    for (M = [0, 1]) mirror([0,M,0])
-    translate([0, -width/2, FrameBoltZ()-(height/2)])
-    rotate([0,90,0])
-    linear_extrude(height=length)
-    rotate(180)
-    RoundedBoolean(r=1/4, edgeOffset=FrameBoltY(), angle=90);
-  }
+  translate([0, -width/2, FrameBoltZ()-(height/2)-extraBottom])
+  ChamferedCube([length, width, height+extraBottom], r=1/4,
+                 chamferXYZ=[1,0,0],
+                 teardropXYZ=[false, false, false],
+                 teardropTopXYZ=[false, false, false]);
+}
+
+module CouplingSupport(length=1) {
+  
+  // Coupling bolt supports
+  for (Y = [-CouplingBoltY(),CouplingBoltY()])
+  translate([0,Y,CouplingBoltZ()])
+  rotate([0,90,0])
+  ChamferedCylinder(r1=0.3125, r2=1/16, h=length,
+                    chamferBottom=false,
+                    teardropTop=true, $fn=Resolution(20,40));
 }
 
 module FrameSpacer(length=FRAME_SPACER_LENGTH, debug=false, alpha=1) {
@@ -108,19 +140,96 @@ module FrameSpacer(length=FRAME_SPACER_LENGTH, debug=false, alpha=1) {
   }
 }
 
-module FrameSpacer_print()
-rotate([0,-90,0]) translate([0,0,-FrameBoltZ()])
-FrameSpacer();
-
-module FrameAssembly(length=FrameBoltLength(),
-                     spacerLength=FRAME_SPACER_LENGTH,
-                     debug=false, alpha=1) {
-  FrameBolts(length=length, debug=debug, alpha=alpha);
-
-  FrameSpacer(length=spacerLength);
+module FrameSpacer_print() {
+  rotate([0,-90,0]) translate([0,0,-FrameBoltZ()])
+  FrameSpacer();
 }
 
-FrameAssembly();
+module FrameBack(length=FrameBackLength(), clearance=0.01, debug=false, alpha=1) {
+  color("Chocolate", alpha) render() DebugHalf(enabled=debug)
+  translate([-(FrameReceiverLength()+length),0,0])
+  FrameSpacer(length=length);
+}
 
+module FrameBack_print() {
+  translate([0,0,-(FrameReceiverLength()+FrameBackLength())])
+  rotate([0,90,0])
+  FrameBack();
+}
+
+module Receiver_LargeFrame(length=ReceiverCouplingLength(), doRender=true, debug=false) {
+  color("Tan")
+  RenderIf(doRender)
+  difference() {
+    Receiver(doRender=false) {
+      
+      // Frame bolt supports
+      hull()
+      mirror([1,0,0])
+      FrameSupport(length=FrameReceiverLength());
+      
+      // Smooth the frame-receiver joint
+      translate([-FrameReceiverLength(),-(TensionRodTopY()+WallTensionRod()), 0])
+      cube([FrameReceiverLength(),(TensionRodTopY()+WallTensionRod())*2, FrameBoltZ()]);
+      
+      // Coupling bolt supports
+      mirror([1,0,0])
+      CouplingSupport();
+
+      // Smooth the coupling bolts at the bottom of the reciever
+      translate([-length,-CouplingBoltY(), CouplingBoltZ()-0.1875])
+      mirror([0,0,1])
+      rotate([0,90,0])
+      cube([0.5-(1/32), (CouplingBoltY()*2), length]);
+      
+      // Right-side text
+      translate([-FrameReceiverLength()+0.0625,-FrameWidth()/2,FrameBoltZ()-(LogoTextSize()/2)])
+      rotate([90,0,0])
+      linear_extrude(height=LogoTextDepth(), center=true)
+      text("Liberator12k", size=LogoTextSize(), font="Impact");
+
+      // Left-side text
+      translate([-0.0625,FrameWidth()/2,FrameBoltZ()-(LogoTextSize()/2)])
+      rotate([90,0,0])
+      linear_extrude(height=LogoTextDepth(), center=true)
+      mirror([1,0])
+      text("Liberator12k", size=LogoTextSize(), font="Impact");
+    }
+    
+    CouplingBolts(cutter=true);
+    FrameBolts(cutter=true);
+  }
+}
+
+module Receiver_LargeFrame_print() {
+  rotate([0,90,0])
+  Receiver_LargeFrame();
+}
+
+
+module Receiver_LargeFrameAssembly(length=FrameBoltLength(),
+                     spacerLength=FRAME_SPACER_LENGTH,
+                     debug=false, alpha=1) {
+
+  Receiver_LargeFrame(debug=debug);
+  
+  //if (frame)
+  CouplingBolts();
+  
+  //if (frame && frameBack)
+  FrameBack(length=FrameBackLength(), debug=debug);
+
+  //if (frame && frameBolts)
+  FrameBolts(length=length);
+                       
+  FrameBolts(length=length, debug=debug, alpha=alpha);
+
+  *FrameSpacer(length=spacerLength);
+}
+
+Receiver_LargeFrameAssembly();
+
+*!scale(25.4)
+Receiver_LargeFrame_print();
 
 *!FrameForend_print();

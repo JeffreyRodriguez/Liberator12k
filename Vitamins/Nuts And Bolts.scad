@@ -15,6 +15,7 @@ HEAD = ""; // ["", "flat", "hex", "socket"]
 NUT = ""; // ["", "hex", "heatset"]
 
 BOLTS = [
+  ["Template", Spec_BoltTemplate()],
   ["#4-40", Spec_Bolt4_40()],
   ["#6-32", Spec_Bolt6_32()],
   ["#8-32", Spec_Bolt8_32()],

@@ -17,10 +17,11 @@ use <../Lower/Lower.scad>;
 use <../Lower/Trigger.scad>;
 use <../../Receiver/Magwells/AR15 Magwell.scad>;
 
-use <../Pipe/Receiver.scad>;
+use <../Components/AR15 Trunnion.scad>;
+use <../Receiver.scad>;
 use <../Lugs.scad>;
-use <../Pipe/Buttstock.scad>;
-use <../Pipe/Charging Pump.scad>;
+use <../Buttstock.scad>;
+use <../Charging Pump.scad>;
 
 
 $fn=Resolution(20, 60);
@@ -31,7 +32,7 @@ barrelLength=24;
 BARREL_PIPE = Spec_TubingZeroPointSevenFive();
 RECEIVER_PIPE = Spec_OnePointFiveSch40ABS();
 BOLT_ROD = Spec_RodOneHalfInch();
-BOLT = Spec_BoltOneHalf();
+BOLT = BoltSpec("1-2\"-13");;
 BOLT_GUIDE_ROD = Spec_RodOneQuarterInch();
 BOLT_SEAR_ROD = Spec_RodOneQuarterInch();
 EJECTOR_PIVOT_ROD = Spec_RodOneEighthInch();
@@ -89,27 +90,7 @@ barbbBoltLength = stockLength
 handleLength=abs(hammerMinX-hammerMaxX)+AR15_FiringPinExtension();
 handleMinX = stockMinX;//+stockWall;
 
-module BARBB_Magwell(cutter=false) {
-  if (!cutter) {
-    render()
-    difference() {
-      union() {
-        translate([-2.675,0,-0.4375])
-        AR15_Magwell(wallFront=0.125, wallBack=0.25, cut=false);
-        
-        translate([-6,0,0])
-        Buttstock(extension=1);
-      }
-      
-      translate([-2.675,0,-0.4375])
-      AR15_MagwellInsert();
-    }
-  } else {
-    translate([-2.675,0,-0.4375])
-    AR15_MagwellInsert();
-  }
-}
-
+function AR15_CamPinAngleExtra() = 0;
 
 module BARBB_CamPinCutout(clearance=0.01, chamferBack=false) {
   clear2 = clearance*2;
@@ -155,15 +136,15 @@ module BARBB_HammerCutOut(extraX=0) {
     
     // Hammer linear track
     cube([abs(hammerMaxX-hammerMinX)+extraX,
-                    hammerWidth,
-                    -tubeCenterZ+(hammerWidth/2)+AR15_firingPinRadius()], r=chamferRadius);
+          hammerWidth,
+          abs(-tubeCenterZ+(hammerWidth/2)+AR15_firingPinRadius())]);
     
     
     // Hammer rotary track
     rotate([0,90,0])
     linear_extrude(height=hammerWidth)
     rotate(-90)
-    semicircle(od=((-tubeCenterZ+(hammerWidth/2)+AR15_firingPinRadius())*2), angle=90);
+    semicircle(od=abs((-tubeCenterZ+(hammerWidth/2)+AR15_firingPinRadius())*2), angle=90);
     
     // Hammer rotary track, rounded inside corner)
     translate([hammerWidth,0,0])
@@ -178,12 +159,20 @@ module BARBB_UpperReceiver() {
   
   render()
   difference() {
-    translate([upperMinX,0,0])
     union() {
 
+        translate([AR15_TrunnionLength(),0,0])
+        ReceiverSegment(length=upperLength+2.675);
+        
+        translate([-2.675,0,-0.4375])
+        AR15_Magwell(wallFront=0.125, wallBack=0.25, cut=false);
+        
+        translate([StockLength(),0,0])
+        Buttstock();
+      
       // Barrel section
       rotate([0,90,0])
-      ChamferedCylinder(r1=AR15BarrelExtensionRadius()+barrelWall, r2=chamferRadius,
+      *ChamferedCylinder(r1=AR15BarrelExtensionRadius()+barrelWall, r2=chamferRadius,
                         h=upperLength-ManifoldGap());
     }
     
@@ -214,6 +203,9 @@ module BARBB_UpperReceiver() {
     rotate([0,90,0])
     rotate(180)
     AR15_Barrel(clearance=0.005);
+    
+    translate([-2.675,0,-0.4375])
+    AR15_MagwellInsert();
   }
 }
 
@@ -254,7 +246,6 @@ module BARBB_Bolt(clearance=0.01) {
     mirror([0,0,1])
     cube([hammerWidth, 10, tubeCenterZ]);
     
-    
     // Firing Pin Rear Hole Chamfer
     translate([stockMinX,0,0])
     rotate([0,90,0])
@@ -262,7 +253,7 @@ module BARBB_Bolt(clearance=0.01) {
     
     translate([boltLockedMaxX,0,0])
     rotate([0,-90,0])
-    AR15_Bolt();
+    AR15_Bolt(firingPinRetainer=false);
     
     // Hammer Track
     translate([hammerMinX,0,0])
@@ -300,18 +291,13 @@ module BARBB_UpperRear(topDiameter=tube_width+(tubeWall*2), bottomDiameter=1,
 
   render()
   difference() {
-    union() {
-        
+    
+      // Body
       translate([stockMinX,0,0])
       rotate([0,90,0])
-      hull() {
-
-        // Body
-        ChamferedCylinder(r1=AR15BarrelExtensionRadius()+barrelWall,
-                          r2=chamferRadius,
-                           h=stockLength);
-      }
-    }
+      ChamferedCylinder(r1=AR15BarrelExtensionRadius()+barrelWall,
+                        r2=chamferRadius,
+                         h=stockLength);
       
     translate([boltLockedMaxX,0,0])
     rotate([0,-90,0]) {
@@ -330,7 +316,6 @@ module BARBB_UpperRear(topDiameter=tube_width+(tubeWall*2), bottomDiameter=1,
   }
 }
 
-BARBB_Magwell(cutter=false);
 
 rotate([0,90,0]) {
   rotate(180)
@@ -367,18 +352,14 @@ color("Tan", 0.25)
 DebugHalf(enabled=false)
 BARBB_UpperRear();
 
-translate([AR15BarrelGasLength()+2,0,0]) {
+*translate([AR15BarrelGasLength()+2,0,0]) {
   translate([-3,0,0]) {
     ChargingRod(length=18, minX=-8.5);
     ChargingPump();
   }
   
-  Receiver(pipeAlpha=0.5, pipeOffsetX=0,
-                    receiverLength=15,
-                    frame=true,
-                    stock=false, tailcap=false,
-                    debug=false);
 }
+*ReceiverAssembly(debug=false);
 
 *!scale(25.4)
 rotate([0,90,0])

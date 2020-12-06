@@ -16,170 +16,146 @@ use <../Shapes/Teardrop.scad>;
 use <../Vitamins/Pipe.scad>;
 use <../Vitamins/Rod.scad>;
 
+use <Receiver.scad>;
 
 /* [What to Render] */
 
 // Assembly is not for printing.
-_RENDER = "Assembly"; // ["Assembly", "Center", "Front", "Rear"]
+_RENDER = "Assembly"; // ["Assembly", "LowerLugs", "LowerLug_Front", "LowerLug_Rear"]
 
-/* [Receiver Tube] */
-RECEIVER_TUBE_OD = 1.7501;
-RECEIVER_TUBE_ID = 1.501;
+// Settings: Positions
+function LowerOffsetZ() = -1.0625;
+function LowerLugHeight() = 0.0;
 
-// Calculated: Positions
-function LowerOffsetZ() = -1.25;
-
-module ReceiverTube(od=RECEIVER_TUBE_OD,
-                    id=RECEIVER_TUBE_ID,
-                    length=6, clearance=0.002,
-                   debug=false, cutter=false, alpha=1, $fn=60) {
-  clear = cutter ? clearance : 0;
-  clear2 = clear*2;
-
-  color("DimGrey", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
+module ReceiverBottomSlotInterface(length=0.75, height=abs(LowerOffsetZ()+LowerLugHeight())) {
   difference() {
-    translate([LowerMaxX(),0,0])
-    rotate([0,-90,0])
-    difference() {
-      cylinder(r=od/2, h=length);
-
-      if (!cutter)
-      cylinder(r=id/2, h=length);
-    }
-
-    if (!cutter) {
-      translate([0,0,LowerOffsetZ()])
-      SearCutter(length=SearLength()+abs(LowerOffsetZ()));
+    union() {
+      translate([-length,-1/2,-height+0.1875+0.005])
+      ChamferedCube([length, 1, height], r=1/32);
       
-      // Slot
-      translate([LowerMaxX()+ManifoldGap(), -0.5, 0])
-      mirror([1,0,0])
-      cube([2.5, 1, od]);
+      translate([-length,-0.75/2,-height+0.005])
+      ChamferedCube([length, 0.75, height], r=1/32);
     }
   }
 }
 
-
-module PipeLugFront(od=RECEIVER_TUBE_OD,
-                    id=RECEIVER_TUBE_ID,
-                    alpha=1, cutter=false, debug=false) {
-  color("Gray", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
-  difference() {
-    translate([0,0,LowerOffsetZ()])
-    ReceiverLugFront(extraTop=-LowerOffsetZ(),
-                     cutter=cutter, clearVertical=true);
-
-    if (cutter==false)
-    ReceiverTube(od=od, id=id, cutter=true);
-  }
-}
-
-module PipeLugRear(od=RECEIVER_TUBE_OD,
-                   id=RECEIVER_TUBE_ID,
-                   alpha=1, cutter=false, debug=false) {
-  color("Gray", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
-  difference() {
-    translate([0,0,LowerOffsetZ()])
-    ReceiverLugRear(extraTop=-LowerOffsetZ(),
-                    cutter=cutter, clearVertical=true);
-
-    if (cutter==false)
-    ReceiverTube(od=od, id=id, cutter=true);
-  }
-}
-
-module PipeLugCenter(od=RECEIVER_TUBE_OD,
-                     id=RECEIVER_TUBE_ID,
-                     monolith=false,
-                     cutter=false, clearance=0.002,
-                    alpha=1, debug=false) {
-  color("DarkGray", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
+module LowerLugs(id=1.5, alpha=1, debug=false) {
+  color("Tan")
+  render() DebugHalf(enabled=debug)
+  translate([-LowerMaxX(),0,0])
   difference() {
     union() {
       translate([0,0,LowerOffsetZ()])
-      translate([0,0,-ManifoldGap()])
-      linear_extrude(height=abs(LowerOffsetZ()))
-      offset(r=(cutter?clearance:0))
-      intersection() {
-        projection(cut=true)
-        translate([0,0,0.001])
-        TriggerGuard();
-
-        translate([ReceiverLugRearMaxX()-1.375,-1])
-        square([LowerMaxX()-ReceiverLugRearMaxX()+1.375-0.5,2]);
-      }
-    }
-
-    if (cutter == false) {
-      ReceiverTube(od=od, id=id, cutter=true);
-
-      if (!monolith) {
-        PipeLugFront(od=od, id=id, cutter=true);
-        PipeLugRear(od=od, id=id, cutter=true);
-      }
-
+      ReceiverLugFront(extraTop=-LowerOffsetZ()+LowerLugHeight());
+      
       translate([0,0,LowerOffsetZ()])
-      SearCutter(length=SearLength()+abs(LowerOffsetZ()));
+      ReceiverLugRear(extraTop=-LowerOffsetZ()+LowerLugHeight());
+      
+      translate([ReceiverLugFrontMaxX(),0,0])
+      ReceiverBottomSlotInterface(length=3.5+0.5);
     }
+    
+    // Receiver ID
+    difference() {
+      translate([LowerMaxX(),0,0])
+      rotate([0,-90,0])
+      cylinder(r=(id/2), h=4.5, $fn=80);
+      
+      // Sear Support
+      hull() {
+        translate([0.125,-0.25/2,-(id/2)-0.25])
+        ChamferedCube([0.25, 0.25, id/2], r=1/32);
+        
+        translate([LowerMaxX()-1.25,-0.25/2,-(id/2)-0.25])
+        ChamferedCube([0.25, 0.25, 0.25], r=1/32);
+      }
+    }
+    
+    translate([-0.01,0,0])
+    SearCutter();
   }
 }
 
-module PipeLugAssembly(od=RECEIVER_TUBE_OD,
-                       id=RECEIVER_TUBE_ID,
-                       monolith=false,
-                       length=6, pipeAlpha=1, pipeOffsetX=0,
-                       front=true, rear=true, center=true, debug=false) {
-
-  if (front)
-  PipeLugFront(od=od, id=id, debug=debug);
-
-  if (rear)
-  PipeLugRear(od=od, id=id, debug=debug);
-
-  if (center)
-  PipeLugCenter(od=od, id=id, debug=debug, monolith=monolith);
-
-  if (length > 0)
-  translate([pipeOffsetX,0,0])
-  ReceiverTube(od=od, id=id, alpha=pipeAlpha, length=length, debug=debug);
+module LowerLugs_print() {
+  rotate([0,90,0])
+  translate([0.5,0,-LowerOffsetZ()])
+  LowerLugs();
 }
 
-module PipeLugFront_print(od=RECEIVER_TUBE_OD,
-                          id=RECEIVER_TUBE_ID)
-rotate([0,-90,0])
-translate([-ReceiverLugFrontMinX(),0,ReceiverLugFrontMinX()])
-PipeLugFront(od=od, id=id);
-
-
-module PipeLugRear_print(od=RECEIVER_TUBE_OD,
-                       id=RECEIVER_TUBE_ID)
-rotate([0,90,0])
-translate([-ReceiverLugRearMaxX(),0,-ReceiverLugRearMaxX()])
-PipeLugRear(od=od, id=id);
-
-module PipeLugCenter_print(od=RECEIVER_TUBE_OD,
-                       id=RECEIVER_TUBE_ID)
-translate([0,0,-LowerOffsetZ()])
-PipeLugCenter(od=od, id=id);
-
-
-scale(25.4) {
-
-  if (_RENDER == "Assembly") {
-    translate([0,0,LowerOffsetZ()])
-    Lower(showTrigger=true,alpha=1, triggerAnimationFactor=$t,
-          showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
-          searLength=SearLength()+abs(LowerOffsetZ())+SearTravel());
-
-    PipeLugAssembly(pipeAlpha=0.5);
+module LowerLug_Front(id=1.5, alpha=1, debug=false) {
+  color("Tan")
+  render() DebugHalf(enabled=debug)
+  translate([-LowerMaxX(),0,0])
+  difference() {
+    union() {
+      translate([0,0,LowerOffsetZ()])
+      ReceiverLugFront(extraTop=-LowerOffsetZ()+LowerLugHeight());
+      
+      translate([ReceiverLugFrontMaxX(),0,0])
+      ReceiverBottomSlotInterface(length=1.75);
+    }
+    
+    // Receiver ID
+    difference() {
+      translate([LowerMaxX(),0,0])
+      rotate([0,-90,0])
+      cylinder(r=(id/2), h=4.5, $fn=80);
+      
+      hull() {
+        translate([0.125,-0.25/2,-(id/2)-0.25])
+        ChamferedCube([0.25, 0.25, id/2], r=1/32);
+        
+        translate([LowerMaxX()-1.25,-0.25/2,-(id/2)-0.25])
+        ChamferedCube([0.25, 0.25, 0.25], r=1/32);
+      }
+    }
+    
+    SearCutter();
   }
+}
 
-  if (_RENDER == "Center")
-    PipeLugCenter_print();
+module LowerLug_Rear(id=1.5, alpha=1, debug=false) {
+  color("Tan")
+  render() DebugHalf(enabled=debug)
+  translate([-LowerMaxX(),0,0])
+  difference() {
+    union() {
+      
+      translate([0,0,LowerOffsetZ()])
+      ReceiverLugRear(extraTop=-LowerOffsetZ()+LowerLugHeight());
+      
+      translate([ReceiverLugRearMaxX(),0,0])
+      ReceiverBottomSlotInterface(length=0.75+0.75);
+    }
+    
+    // Receiver ID
+    translate([LowerMaxX(),0,0])
+    rotate([0,-90,0])
+    cylinder(r=id/2, h=4.5, $fn=80);
+  }
+}
 
-  if (_RENDER == "Front")
-    PipeLugFront_print();
+if (_RENDER == "Assembly") {
+  ReceiverAssembly();
+  LowerLugs();
 
-  if (_RENDER == "Rear")
-    PipeLugRear_print();
+  translate([-LowerMaxX(),0,LowerOffsetZ()])
+  Lower(showTrigger=true,
+        showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
+        searLength=SearLength()+abs(LowerOffsetZ())+SearTravel()-(0.25/2));
+  
+}
+
+scale(25.4)
+if (_RENDER == "LowerLugs") {
+  LowerLugs_print();
+} else if (_RENDER == "LowerLug_Front") {
+  rotate([0,90,0])
+  translate([0.5,0,-LowerOffsetZ()])
+  LowerLug_Front();
+  
+} else if (_RENDER == "LowerLug_Rear") {
+  rotate([0,90,0])
+  translate([LowerMaxX()-ReceiverLugRearMaxX(),0,-LowerOffsetZ()])
+  LowerLug_Rear();
 }

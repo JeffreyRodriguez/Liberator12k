@@ -101,7 +101,7 @@ module AR15_Bolt(camPin=true, firingPinRetainer=true,
                AR15_firingPinRadius()+(7/25.4),
                AR15_BoltLength()+AR15_FiringPinRetainerOffset()])
     rotate([90,0,0])
-    NutAndBolt(bolt=Spec_BoltM3(), boltLength=20/25.4,
+    NutAndBolt(bolt=BoltSpec("M3"), boltLength=20/25.4,
                 capOrientation=false, capHeightExtra=1,
                 nutHeightExtra=1, nutBackset=3/25.4,
                 clearance=true, teardrop=teardrop, teardropAngle=-90);
