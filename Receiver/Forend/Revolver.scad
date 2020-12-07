@@ -355,14 +355,14 @@ module BarrelSupport(debug=false, alpha=_ALPHA_FOREND, $fn=Resolution(30,100)) {
       translate([ForendMinX()+0.375,-FrameWidth()/2,FrameBoltZ()-(0.25/2)-0.125])
       rotate([90,0,0])
       linear_extrude(height=1/32, center=true)
-      text("12ga Revolver", size=0.25, font="Impact");
+      text("ZZR 12 gauge", size=0.25, font="Impact");
 
       // Left-side text
       translate([ForendMaxX()-0.375,FrameWidth()/2,FrameBoltZ()-(0.25/2)-0.125])
       rotate([90,0,0])
       linear_extrude(height=1/32, center=true)
       mirror([1,0])
-      text("12ga Revolver", size=0.25, font="Impact");
+      text("ZZR 12 gauge", size=0.25, font="Impact");
 
 
       // Around the barrel
