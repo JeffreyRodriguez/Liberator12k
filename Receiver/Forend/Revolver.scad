@@ -110,7 +110,8 @@ RECOIL_PLATE_BOLT_CLEARANCE = 0.015;
 $fs = UnitsFs()*0.25;
 
 // Settings: Lengths
-function ShellRimLength() = 0.06+0.05;
+function ShellRimLength() = 0.06;
+function CylinderGap() = 0.005;
 function ChamberLength() = CHAMBER_LENGTH;
 function BarrelLength() = BARREL_LENGTH;
 function CylinderZ() = -(CYLINDER_OFFSET + ManifoldGap());
@@ -165,7 +166,7 @@ function ForendLength() = FrameExtension(length=FrameBoltLength())
 function SpindleLatchLength() = 1;
 
 // Calculated: Positions
-function BarrelMinX() = ChamberLength()+ShellRimLength();
+function BarrelMinX() = CylinderGap()+ChamberLength()+ShellRimLength();
 function ForendMinX() = BarrelMinX()+RecoilPlateThickness();
 function ForendMaxX() = ForendLength();
 function ForegripMinX() = ForendMaxX()+ForegripGap()+ActionRodTravel();
