@@ -21,12 +21,13 @@ use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/Pipe.scad>;
 use <../../Vitamins/Rod.scad>;
 
-use <../../Ammo/Shell Slug.scad>;
+use <../Lower/Lower.scad>;
+use <../Components/Compact Linear Hammer.scad>;
 
 use <../Lugs.scad>;
+use <../Buttstock.scad>;
 use <../Frame.scad>;
 use <../Receiver.scad>;
-use <../Compact Linear Hammer.scad>;
 use <../Recoil Plate.scad>;
 use <../Action Rod.scad>;
 
@@ -66,6 +67,7 @@ function GPBolt() = BoltSpec(GP_BOLT);
 assert(GPBolt(), "GPBolt() is undefined. Unknown GP_BOLT?");
 
 // Settings: Lengths
+function ReceiverFrontLength() = 0.5;
 function BarrelLength() = 18;
 function BarrelSleeveLength() = 4;
 function WallBarrel() = 0.1875;
@@ -106,7 +108,7 @@ function ForegripLength() = 4.625;
 // Calculated: Positions
 function FiringPinMinX() = -1.5-2;
 function BarrelOffsetZ() = 0; // -0.11 for .22LR rimfire
-function ForendMaxX() = FrameExtension()+RecoilPlateRearX();
+function ForendMaxX() = FrameExtension()-ReceiverFrontLength();
 function ForendMinX() = ForendMaxX()-ForendFrontLength();
 function PivotAngle() = -30;
 function PivotX() = 5.5;
@@ -215,7 +217,7 @@ module LatchRod(cutter=false, clearance=0.008) {
   // Rod
   color("Silver") RenderIf(!cutter)
   for (M = [0,1]) mirror([0,M,0])
-  translate([RecoilPlateRearX(), -(LatchRodRadius()+clear), LatchZ()-(LatchRodRadius()+clear)])
+  translate([-ReceiverFrontLength(), -(LatchRodRadius()+clear), LatchZ()-(LatchRodRadius()+clear)])
   cube([LatchRodLength()+(cutter?LatchSpringLength():0),
         (LatchRodRadius()+clear)*2,
         (LatchRodRadius()+clear)*2]);
@@ -256,20 +258,21 @@ module LatchScrews(debug=false, cutter=false, clearance=0.008) {
 }
 
 
-module BreakActionRecoilPlateHousing(debug=false, alpha=1) {
+module BreakActionReceiverFront(debug=false, alpha=1) {
   color("MediumSlateBlue", alpha) render() DebugHalf(enabled=debug)
   difference() {
-    translate([RecoilPlateRearX(),0,0])
+    translate([-ReceiverFrontLength(),0,0])
     union() {
-      ReceiverCouplingPattern(length=ReceiverFrontLength(),
-                              frameLength=ReceiverFrontLength());
+      FrameSupport(length=ReceiverFrontLength());
+      CouplingSupport(length=ReceiverFrontLength());
+      
       hull() {
 
         // Match the recoil plate
         translate([0,-2.25/2,LowerOffsetZ()])
         ChamferedCube([ReceiverFrontLength(),
                        2.25,
-                       abs(LatchZ())], r=1/16);
+                       abs(LatchZ())+FrameBoltZ()], r=1/16);
 
         // Latch Rod Support
         translate([0,-0.5/2,LatchZ()-1])
@@ -279,9 +282,10 @@ module BreakActionRecoilPlateHousing(debug=false, alpha=1) {
       }
     }
 
-    RecoilPlate(cutter=true);
-
-    RecoilPlateFiringPinAssembly(cutter=true);
+    translate([-ReceiverFrontLength(),0,0]) {
+      RecoilPlate(cutter=true);
+      RecoilPlateBolts(cutter=true);
+    }
 
     for (Z = [0,ActionRodWidth()])
     translate([-ReceiverFrontLength(),0,ActionRodZ()+Z])
@@ -291,9 +295,9 @@ module BreakActionRecoilPlateHousing(debug=false, alpha=1) {
   }
 }
 
-module BreakActionRecoilPlateHousing_print() {
-  rotate([0,-90,0]) translate([-RecoilPlateRearX(),0,0])
-  BreakActionRecoilPlateHousing();
+module BreakActionReceiverFront_print() {
+  rotate([0,-90,0]) translate([ReceiverFrontLength(),0,0])
+  BreakActionReceiverFront();
 }
 
 module Barrel(barrel=BarrelPipe(), length=BarrelLength(),
@@ -733,11 +737,12 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1,
                            stock=true, tailcap=false,
                            debug=false) {
 
-  translate([0,0,0]) {
-    RecoilPlateFiringPinAssembly(debug=debug);
+  translate([-ReceiverFrontLength(),0,0]) {
+    RecoilPlateBolts();
     RecoilPlate(debug=debug);
-    BreakActionRecoilPlateHousing(debug=debug);
   }
+  
+  BreakActionReceiverFront(debug=debug);
 
   // Pivoting barrel assembly
   BreakActionPivot(factor=pivotFactor) {
@@ -797,17 +802,21 @@ if (_RENDER == "Assembly") {
                                  -Animate(ANIMATION_STEP_LOAD));
 
 
-  translate([RecoilPlateRearX(),0,0]) {
+  translate([-ReceiverFrontLength(),0,0]) {
 
     //translate([FiringPinMinX(),0,0])
-    HammerAssembly(travelFactor=Animate(ANIMATION_STEP_FIRE)
+    *HammerAssembly(travelFactor=Animate(ANIMATION_STEP_FIRE)
                               - Animate(ANIMATION_STEP_CHARGE),
                    travel=-1);
 
-    Receiver(pipeAlpha=1, buttstockAlpha=1, debug=_DEBUG_ASSEMBLY,
-             frameBolts=false,
-             triggerAnimationFactor=Animate(ANIMATION_STEP_TRIGGER)
-                            -Animate(ANIMATION_STEP_TRIGGER_RESET));
+    Receiver_LargeFrameAssembly();
+    ReceiverBackSegment();
+    StockAssembly();
+    
+    LowerLugs();
+    
+    translate([-LowerMaxX(),0,LowerOffsetZ()])
+    Lower();
   }
 }
 
@@ -820,7 +829,7 @@ scale(25.4) {
   BarrelLatchCollar_print();
 
   if (_RENDER == "RecoilPlateHousing")
-  BreakActionRecoilPlateHousing_print();
+  BreakActionReceiverFront_print();
 
   if (_RENDER == "Forend")
   BreakActionForend_print();
