@@ -48,10 +48,12 @@ module ShellBase(primer=Spec_Primer209(), primerOffset=0,
         ChamferedCylinder(r1=chargeRadius,
                           r2=chargeRadius/2,
                            h=chargeHeight,
-                           teardropBottom=false, chamferTop=false);
+                           teardropBottom=false,
+                           teardropTop=true,
+                           chamferTop=true);
 
         // Charge Pocket Upper Taper
-        translate([0,0,PrimerHeight(primer)+chargeHeight])
+        *translate([0,0,PrimerHeight(primer)+chargeHeight])
         cylinder(r1=chargeRadius,
                  r2=chargeRadius/4,
                   h=chargeRadius);

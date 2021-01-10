@@ -1,8 +1,10 @@
-ar15_grip_POSITION_FRONT   = 0; // Default
-ar15_grip_POSITION_REAR    = 1;
-  slot_width = .35;
-  slot_height = .973;
-  slot_length = 1.28;
+use <../Receiver/Receiver.scad>;
+use <../Receiver/Lower/Trigger.scad>;
+use <../Receiver/Lower/Lower.scad>;
+
+  slot_width = .34;
+  slot_height = .930;
+  slot_length = 1.280;
   slot_angle  = 30.1;
   slot_angle_offset = -0.4;
   slot_overlap = 1/4;
@@ -23,10 +25,10 @@ module ar15_grip_bolt(od=grip_bolt_diameter, length=4,
     translate([grip_bolt_offset_x,0,-length/4])
     rotate([0,30,0])
     union() {
-      cylinder(r=od/2, h=length, $fn=8);
+      cylinder(r=od/2, h=length, $fn=30);
 
       // Nut
-      if (nut_offset)
+      if (nut_offset && nut_height > 0)
       translate([0,0,nut_offset]) {
       rotate([0,0,nut_angle])
         cylinder(r=nut_od/2, h=nut_height, $fn=6);
@@ -39,17 +41,46 @@ module ar15_grip_bolt(od=grip_bolt_diameter, length=4,
     }
 }
 
-module ar15_grip(mount_height=1, mount_length=1, position=0, top_extension = 0, extension=0,
+module ar15_grip(mount_height=1, mount_length=1, top_extension = 0, extension=0,
                  nut_od=0.5, nut_height=0.25, nut_offset=2, nut_angle=0,
                  debug=false) {
 
-  // Positioning options
-  x_offset = position == ar15_grip_POSITION_REAR ? slot_length : 0;
-
-  translate([x_offset, 0,0])
+  render()
   difference() {
-
     union() {
+        
+      // Grip Boss
+      translate([-ReceiverLength()+1.5,0,ReceiverBottomZ()])
+      hull() {
+        translate([-slot_length,-slot_width/2,-0.3460])
+        cube([slot_length, slot_width, 0.3460]);
+        
+        translate([-0.1705,-slot_width/2,-slot_height])
+        cube([0.1705, slot_width, slot_height]);
+      }
+      
+      // Receiver Slot Wide Section
+      translate([-ReceiverLength(),
+                 -(ReceiverSlotWidth()/2),
+                 ReceiverBottomZ()+0.1875])
+      cube([ReceiverLength()-0.5,
+            ReceiverSlotWidth(),
+            0.3125]);
+
+      // Receiver Slot Narrow Section
+      translate([-ReceiverLength(),
+                 -(ReceiverSlotWidth()/2)+0.125,
+                 ReceiverBottomZ()])
+      cube([ReceiverLength()-0.5,
+            ReceiverSlotWidth()-0.25,
+            0.25]);
+    }
+    
+    translate([-LowerMaxX(),0,0])
+    #SearCutter();
+
+    *union() {
+
 
       // Mount body
       translate([-slot_length,-slot_width/2,-slot_height])
@@ -87,24 +118,26 @@ module ar15_grip(mount_height=1, mount_length=1, position=0, top_extension = 0, 
       scale([1/25.4, 1/25.4, 1/25.4])
       import("Vitamins/Grip.stl");
     }
-
-    // Angle cutter
-    translate([-slot_length,0,slot_angle_offset])
-    rotate([0,slot_angle,0])
-    translate([0,-slot_width/2 - 0.1,-1])
-    cube([1.2, slot_width + 0.2, 1]);
+    
+    // FCG Slot
+    translate([-1.25,-(0.27/2),0])
+    mirror([1,0,0])
+    mirror([0,0,1])
+    cube([1.5, 0.27, 2]);
 
     // Mounting Hole Cutter
+    translate([-ReceiverLength()+1.5,0,ReceiverBottomZ()])
     ar15_grip_bolt(nut_offset=nut_offset, nut_height=0, nut_angle=nut_angle);
-
   }
 
 }
 
 
-// Test Print
-scale([25.4,25.4,25.4]) {
-  //translate([0,0,1/4])
-  rotate([0,90,0])
-  ar15_grip(mount_height = 1/4, mount_length = 1/8);
-}
+ReceiverAssembly();
+
+translate([-LowerMaxX(),0,LowerOffsetZ()])
+Lower(showTrigger=true, showLeft=false);
+
+//!scale(25.4) rotate([0,180,0]) translate([ReceiverLength()-1.5,0,-ReceiverBottomZ()])
+ar15_grip(mount_height = 0, mount_length = 0);
+
