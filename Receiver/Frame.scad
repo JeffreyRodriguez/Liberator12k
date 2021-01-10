@@ -1,4 +1,4 @@
-include <../Meta/Animation.scad>;
+ include <../Meta/Animation.scad>;
 
 use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
@@ -31,7 +31,7 @@ function FrameReceiverLength() = 2.5;
 function FrameBackLength() = 0.5;
 function ReceiverCouplingLength() = 1;
 function LogoTextSize() = 11/32;
-function LogoTextDepth() = 1/16;
+function LogoTextDepth() = 1/32;
 
 // Settings: Walls
 function WallFrameBolt() = 0.1875;
@@ -54,8 +54,8 @@ function FrameBoltDiameter(clearance=0)
 function CouplingBoltZ() = -7/8;
 function CouplingBoltY() = 1.125;
 
-function FrameBoltZ() = 1.5;
-function FrameBoltY() = 1;
+function FrameBoltZ() = 7/8;
+function FrameBoltY() = 1.25;
 function FrameWidth() = (FrameBoltY()
                        + FrameBoltRadius()
                        + WallFrameBolt()) * 2;
@@ -86,7 +86,7 @@ module FrameBolts(length=FrameBoltLength(),
   DebugHalf(enabled=debug) {
     FrameBoltIterator()
     NutAndBolt(bolt=FrameBolt(), boltLength=length,
-         head="hex", nut="hex", clearance=clear,
+         head=(cutter?"none":"hex"), nut=(cutter?"none":"hex"), clearance=clear,
          capOrientation=true);
   }
 }
@@ -106,12 +106,12 @@ module CouplingBolts(boltHead="flat", nutType=COUPLING_BOLT_NUT, extension=0.5, 
 }
 
 module FrameSupport(length=FRAME_SPACER_LENGTH, width=(FrameBoltY()+FrameBoltRadius()+WallFrameBolt())*2, height=(FrameBoltRadius()+WallFrameBolt())*2, extraBottom=0, $fn=Resolution(20,60)) {
-  
   translate([0, -width/2, FrameBoltZ()-(height/2)-extraBottom])
-  ChamferedCube([length, width, height+extraBottom], r=1/4,
-                 chamferXYZ=[1,0,0],
-                 teardropXYZ=[false, false, false],
-                 teardropTopXYZ=[false, false, false]);
+  rotate([90,0,90])
+  linear_extrude(height=length)
+  ChamferedSquare(xy=[width,height+extraBottom], r=1/4,
+                  teardropBottom=false,
+                  teardropTop=false);
 }
 
 module CouplingSupport(length=1) {
@@ -147,17 +147,40 @@ module FrameSpacer_print() {
 
 module FrameBack(length=FrameBackLength(), clearance=0.01, debug=false, alpha=1) {
   color("Chocolate", alpha) render() DebugHalf(enabled=debug)
-  translate([-(FrameReceiverLength()+length),0,0])
-  FrameSpacer(length=length);
+  difference() {
+    translate([-(FrameReceiverLength()+length),0,0])
+    FrameSpacer(length=length);
+    
+    hull()
+    Receiver(doRender=false);
+  }
 }
 
 module FrameBack_print() {
-  translate([0,0,-(FrameReceiverLength()+FrameBackLength())])
-  rotate([0,90,0])
+  rotate([0,-90,0])
+  translate([(FrameReceiverLength()+FrameBackLength()),0,-FrameBoltZ()])
   FrameBack();
 }
 
 module Receiver_LargeFrame(length=ReceiverCouplingLength(), doRender=true, debug=false) {
+  
+  
+  color("DimGrey") RenderIf(doRender) {
+      
+    // Right-side text
+    translate([-FrameReceiverLength()+0.0625,-FrameWidth()/2,FrameBoltZ()-(LogoTextSize()/2)])
+    rotate([90,0,0])
+    linear_extrude(height=LogoTextDepth(), center=true)
+    text("Liberator12k", size=LogoTextSize(), font="Impact");
+
+    // Left-side text
+    translate([-0.0625,FrameWidth()/2,FrameBoltZ()-(LogoTextSize()/2)])
+    rotate([90,0,0])
+    linear_extrude(height=LogoTextDepth(), center=true)
+    mirror([1,0])
+    text("Liberator12k", size=LogoTextSize(), font="Impact");
+  }
+  
   color("Tan")
   RenderIf(doRender)
   difference() {
@@ -168,10 +191,6 @@ module Receiver_LargeFrame(length=ReceiverCouplingLength(), doRender=true, debug
       mirror([1,0,0])
       FrameSupport(length=FrameReceiverLength());
       
-      // Smooth the frame-receiver joint
-      translate([-FrameReceiverLength(),-(TensionRodTopY()+WallTensionRod()), 0])
-      cube([FrameReceiverLength(),(TensionRodTopY()+WallTensionRod())*2, FrameBoltZ()]);
-      
       // Coupling bolt supports
       mirror([1,0,0])
       CouplingSupport();
@@ -181,19 +200,6 @@ module Receiver_LargeFrame(length=ReceiverCouplingLength(), doRender=true, debug
       mirror([0,0,1])
       rotate([0,90,0])
       cube([0.5-(1/32), (CouplingBoltY()*2), length]);
-      
-      // Right-side text
-      translate([-FrameReceiverLength()+0.0625,-FrameWidth()/2,FrameBoltZ()-(LogoTextSize()/2)])
-      rotate([90,0,0])
-      linear_extrude(height=LogoTextDepth(), center=true)
-      text("Liberator12k", size=LogoTextSize(), font="Impact");
-
-      // Left-side text
-      translate([-0.0625,FrameWidth()/2,FrameBoltZ()-(LogoTextSize()/2)])
-      rotate([90,0,0])
-      linear_extrude(height=LogoTextDepth(), center=true)
-      mirror([1,0])
-      text("Liberator12k", size=LogoTextSize(), font="Impact");
     }
     
     CouplingBolts(cutter=true);
@@ -227,9 +233,9 @@ module Receiver_LargeFrameAssembly(length=FrameBoltLength(),
   *FrameSpacer(length=spacerLength);
 }
 
-Receiver_LargeFrameAssembly();
-
-*!scale(25.4)
-Receiver_LargeFrame_print();
-
-*!FrameForend_print();
+if ($preview) {
+  Receiver_LargeFrameAssembly();
+} else {
+  scale(25.4)
+  Receiver_LargeFrame_print();
+}

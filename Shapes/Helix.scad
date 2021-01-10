@@ -4,6 +4,7 @@ use <../Meta/Resolution.scad>;
 use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
 use <../Shapes/Semicircle.scad>;
+use <../Shapes/Teardrop.scad>;
 
 RADIUS=2; // "2"
 DEPTH=0.1875; // "0.1875"
@@ -14,7 +15,8 @@ ANGLE=22.5; // [0:0.5:360]
 module HelixSegment(radius=RADIUS, depth=DEPTH, width=WIDTH,
                     angle=ANGLE, twist_rate=TWIST_RATE,
                     topExtra=0.125, bottomExtra=0.125,
-                    teardropTop=true, teardropBottom=true,
+                    teardropTop=false, teardropTopTruncated=true,
+                    teardropBottom=false, teardropBottomTruncated=true,
                     verbose=false) {
 
   //twist_angle = 90*(2-twist_rate);
@@ -47,7 +49,7 @@ module HelixSegment(radius=RADIUS, depth=DEPTH, width=WIDTH,
   }
   
   
-  translate([0,0,width+bottomExtra+(teardropBottom?(width*sqrt(2)/2):0)])
+  translate([0,0,width+bottomExtra])
   intersection() {
     union() {
       translate([0,0,-width/2])
@@ -60,30 +62,28 @@ module HelixSegment(radius=RADIUS, depth=DEPTH, width=WIDTH,
       // Top
       rotate(-angle)
       translate([radius-(depth*2),-width/2,height-width-ManifoldGap()])
-      cube([depth*4, width, width+topExtra+ManifoldGap()]);
+      cube([depth*4, width, width+topExtra+ManifoldGap(2)]);
       
-      if (teardropTop)
       rotate(-angle)
       translate([radius-(depth*2),
-                 -width/2,
+                 0,
                  height+topExtra-ManifoldGap()])
       rotate(90)
       rotate([90,0,0])
       linear_extrude(height=depth*4)
-      polygon([[0,0], [width,0],
-               [(width/2),width*(sqrt(2)/2)]]);
+      rotate(90)
+      Teardrop(r=width/2, enabled=teardropTop, truncated=teardropTopTruncated);
       
       // Bottom
-      translate([radius-(depth*2),-width/2,-width-bottomExtra])
-      cube([depth*4, width, width+bottomExtra]);
+      translate([radius-(depth*2),-width/2,-width-bottomExtra-ManifoldGap()])
+      cube([depth*4, width, width+bottomExtra+ManifoldGap(2)]);
       
-      if (teardropBottom)
-      translate([radius-(depth*2),(width/2),-width-bottomExtra+ManifoldGap()])
+      translate([radius-(depth*2),0,-width-bottomExtra+ManifoldGap()])
       rotate(-90)
       rotate([-90,0,0])
       linear_extrude(height=depth*4)
-      polygon([[0,0], [width,0],
-               [(width/2),width*sqrt(2)/2]]);
+      rotate(90)
+      Teardrop(r=width/2,enabled=teardropBottom, truncated=teardropBottomTruncated);
       
     }
     
@@ -110,5 +110,5 @@ difference() {
   cylinder(r=RADIUS, h=(RADIUS/TWIST_RATE)+2, $fn=50);
   
   HelixSegment(topExtra=0, bottomExtra=0,
-               teardropTop=true, teardropBottom=true);
+               teardropTop=false, teardropBottom=false);
 }

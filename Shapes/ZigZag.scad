@@ -55,12 +55,12 @@ module ZigZag(supportsTop=true, supportsBottom=true,
           
           // Mirrored upper segment
           rotate([0,0,-(positionAngle/2)])
-          translate([0,0,height+width+extraBottom+extraTop])
+          translate([0,0,height+extraBottom+extraTop])
           mirror([0,0,1])
           HelixSegment(radius=radius, angle=positionAngle/2,
               depth=depth, width=width,
               bottomExtra=top_slot_height, topExtra=0,
-              teardropBottom=true,
+              teardropBottom=false,
               teardropTop=false,
               twist_rate=twistRate);
         }

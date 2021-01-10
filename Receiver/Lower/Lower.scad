@@ -199,14 +199,14 @@ module LowerReceiverSupports() {
     mirror([1,0,0])
     mirror([0,0,1])
     ChamferedCube([LowerMaxX()-ReceiverLugFrontMinX()+0.0625, 1.25, GripCeiling()+0.25],
-                  chamferXYZ=[0,1,1], r=1/16);
+                  r=1/16);
 
     // Rear cube
     translate([LowerMaxX()-0.375,-1.25/2,0])
     mirror([1,0,0])
     mirror([0,0,1])
     ChamferedCube([LowerMaxX()-ReceiverLugFrontMinX(), 1.25, GripCeiling()],
-                  chamferXYZ=[1,0,1], r=1/4);
+                  r=1/4);
   }
 
   // Front receiver lug support
