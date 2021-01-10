@@ -26,21 +26,25 @@ use <../../Ammo/Shell Slug.scad>;
 use <../../Ammo/Cartridges/Cartridge.scad>;
 use <../../Ammo/Cartridges/Cartridge_12GA.scad>;
 
+use <../Lower/Lower.scad>;
+
+use <../Buttstock.scad>;
 use <../Lugs.scad>;
 use <../Frame.scad>;
 use <../Receiver.scad>;
 use <../Recoil Plate.scad>;
-use <../Compact Linear Hammer.scad>;
 use <../Action Rod.scad>;
-
-use <Bipod.scad>;
-
 
 /* [What to Render] */
 
 // Configure settings below, then choose a part to render. Render that part (F6) then export STL (F7). Assembly is not for printing.
 _RENDER = "Assembly"; // ["Assembly", "ReceiverFront", "ReceiverForend", "BarrelCollar", "Extractor", "Latch", "Foregrip"]
 
+
+_SHOW_RECEIVER = true;
+_SHOW_STOCK = true;
+_SHOW_LOWER = true;
+_SHOW_LOWER_LUGS = true;
 _CUTAWAY_RECEIVER = true;
 _ALPHA_RECEIVER_TUBE = 1; // [0:0.1:1]
 _ALPHA_RECEIVER_COUPLING = 1;  // [0:0.1:1]
@@ -113,10 +117,10 @@ function LatchSpringDiameter() = 0.65;
 function FrameBoltLength() = 10;
 
 function ReceiverFrontLength() = 0.5;
-function ReceiverBackLength() = 0.75+0.5;
+function FrameBackLength() = 0.75+0.5;
 function ForendLength() = FrameExtension(length=FrameBoltLength())
                         -ReceiverFrontLength()
-                        -ReceiverBackLength();
+                        -FrameBackLength();
                         
 function LatchTravel() = 0.5;
 function ChargerTravel() = 1.75;
@@ -377,9 +381,16 @@ module Barrel(barrel=BarrelPipe(), length=BarrelLength(),
 module ReceiverFront(debug=false, alpha=1) {
   color("MediumSlateBlue", alpha) render() DebugHalf(enabled=debug)
   difference() {
-    mirror([1,0,0])
-    ReceiverCouplingPattern(length=ReceiverFrontLength(),
-                            frameLength=ReceiverFrontLength());
+    mirror([1,0,0]) {
+      FrameSupport(length=ReceiverFrontLength());
+      CouplingSupport(length=ReceiverFrontLength());
+
+      // Match the recoil plate
+      translate([0,-2.25/2,LowerOffsetZ()])
+      ChamferedCube([ReceiverFrontLength(),
+                     2.25,
+                     abs(LatchZ())+FrameBoltZ()], r=1/16);
+    }
 
     // Bolt Slot
     hull() for (Y = [-1,1])
@@ -491,8 +502,16 @@ module Latch_print() {
 module ReceiverForend(clearance=0.01, debug=false, alpha=1) {
   color("MediumSlateBlue", alpha) render() DebugHalf(enabled=debug)
   difference() {
-    ReceiverCouplingPattern(length=ForendLength(),
-                            frameLength=ForendLength());
+    union() {
+      FrameSupport(length=ForendLength());
+      CouplingSupport(length=ForendLength());
+
+      // Match the recoil plate
+      translate([0,-2.25/2,LowerOffsetZ()])
+      ChamferedCube([ForendLength(),
+                     2.25,
+                     abs(LatchZ())+FrameBoltZ()], r=1/16);
+    }
     
     Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=PivotAngle(), factor=1)
     Barrel(cutter=true);
@@ -544,7 +563,7 @@ module BarrelCollar(cutter=false, clearance=0.01,
                            
   supportWidth = 1;
 
-  !color("Tan", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("Tan", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
   PivotClearanceCut()
   difference() {
     union() {
@@ -583,7 +602,7 @@ module BarrelCollar(cutter=false, clearance=0.01,
     if (!cutter) {
       
       // Chamfer the back bottom-edge for improved clearance
-      #translate([clearance, 0, BarrelCollarBottomZ()])
+      translate([clearance, 0, BarrelCollarBottomZ()])
       rotate([90,0,0])
       linear_extrude(height=supportWidth+ManifoldGap(2), center=true)
       mirror([1,0])
@@ -721,30 +740,35 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1, receiverFrontAlpha=1,
   if (_SHOW_FOREND)
   ReceiverForend(debug=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
 
-  translate([-ReceiverFrontLength()-1-1,0,0])
+  *translate([-ReceiverFrontLength()-1-1,0,0])
   HammerAssembly(travelFactor=Animate(ANIMATION_STEP_FIRE)
                             - Animate(ANIMATION_STEP_CHARGE),
                  travel=ChargerTravel());
 }
 
 if (_RENDER == "Assembly") {
-    
-  translate([-ReceiverFrontLength(),0,0])
-  Receiver(debug=_CUTAWAY_RECEIVER,
-           pipeAlpha=_ALPHA_RECEIVER_TUBE,
-           buttstockAlpha=_ALPHA_RECEIVER_TUBE,
-
-           couplingAlpha=_ALPHA_RECEIVER_COUPLING,
-           couplingBoltHead="hex",
-           couplingBoltExtension=FrameExtension(length=FrameBoltLength()
-                                -ReceiverBackLength()),
-           
-           frameBolts=_SHOW_FRAME,
-           frameBoltLength=FrameBoltLength(),
-           frameBoltBackset=ReceiverBackLength(),
   
-           triggerAnimationFactor=Animate(ANIMATION_STEP_TRIGGER)
-                          -Animate(ANIMATION_STEP_TRIGGER_RESET));
+  translate([-ReceiverFrontLength(),0,0]) {
+    
+    if (_SHOW_LOWER_LUGS)
+    LowerLugs();
+
+    if (_SHOW_LOWER)
+    translate([-LowerMaxX(),0,LowerOffsetZ()+0.0625])
+    Lower(showTrigger=true,
+          showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true);
+    
+    if (_SHOW_RECEIVER) {
+      ReceiverRods();
+      
+      Receiver_LargeFrameAssembly(debug=_CUTAWAY_RECEIVER);
+      ReceiverBackSegment();
+    }
+
+    if (_SHOW_STOCK) {
+      StockAssembly();
+    }
+  }
   
   BreakActionAssembly(pivotFactor=Animate(ANIMATION_STEP_UNLOAD)
                                  -Animate(ANIMATION_STEP_LOAD),

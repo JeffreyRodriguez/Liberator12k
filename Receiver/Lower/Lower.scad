@@ -24,7 +24,7 @@ use <../../Shapes/Components/Grip Handle.scad>;
 /* [What to Render] */
 
 // Assembly is not for printing.
-_RENDER = "Assembly"; // ["Assembly", "Buttstock", "FrameForend", "ReceiverCoupling", "ReceiverLugCenter", "ReceiverLugFront", "ReceiverLugRear", "LowerLeft", "LowerRight", "LowerMiddle", "TriggerLeft", "TriggerRight", "TriggerMiddle", "HammerHead", "HammerTail"]
+_RENDER = "Assembly"; // ["Assembly", "LowerLeft", "LowerRight", "LowerMiddle", "TriggerLeft", "TriggerRight", "TriggerMiddle"]
 
 // Animation Revolutions
 SPIN_REVOLUTIONS=0;
@@ -199,14 +199,14 @@ module LowerReceiverSupports() {
     mirror([1,0,0])
     mirror([0,0,1])
     ChamferedCube([LowerMaxX()-ReceiverLugFrontMinX()+0.0625, 1.25, GripCeiling()+0.25],
-                  chamferXYZ=[0,1,1], r=1/16);
+                  r=1/16);
 
     // Rear cube
     translate([LowerMaxX()-0.375,-1.25/2,0])
     mirror([1,0,0])
     mirror([0,0,1])
     ChamferedCube([LowerMaxX()-ReceiverLugFrontMinX(), 1.25, GripCeiling()],
-                  chamferXYZ=[1,0,1], r=1/4);
+                  r=1/4);
   }
 
   // Front receiver lug support
@@ -383,7 +383,7 @@ module Lower(showReceiverLugs=false, showReceiverLugBolts=false,
             showMiddle=true, showLeft=true, showRight=true,
             searLength=1.1525, triggerAnimationFactor=0,
             boltSpec=LowerBolt(), boltHead=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT,
-            alpha=0.5) {
+            alpha=1) {
       boltLength = 1.25;
 
   // Trigger Guard Center

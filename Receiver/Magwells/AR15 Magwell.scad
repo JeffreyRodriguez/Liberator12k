@@ -1,5 +1,6 @@
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
+use <../../Shapes/Chamfer.scad>;
 
 function MagazineAngle() = 0;
 
@@ -10,7 +11,7 @@ function AR15_MagazineBaseLength() = 2.4;
 function AR15_MagCatchZ() = -0.813;
 function AR15_MagCatchX() = -0.058;
 
-function AR15_MagwellDepth() = UnitsImperial(2.6); //UnitsImperial(2);
+function AR15_MagwellDepth() = UnitsImperial(2.5); //UnitsImperial(2);
 
 module AR15_MagwellTemplate(baseWidth=AR15_MagazineBaseWidth(), baseLength=AR15_MagazineBaseLength(),
                        sideTrackOffset=0.825, sideTrackDepth=0.08, centerY=true,
@@ -40,6 +41,7 @@ module AR15_MagwellTemplate(baseWidth=AR15_MagazineBaseWidth(), baseLength=AR15_
 
 module AR15_MagazineCatch(magHeight=1,
                      catchOffsetY=0.4,
+                     springOffsetY=-0.125,
                      catchLength=0.265, catchHeight=UnitsImperial(0.131),
                      extraY = 0.25, extraRadius=0.02, $fn=8) {
 
@@ -58,6 +60,13 @@ module AR15_MagazineCatch(magHeight=1,
     translate([0,catchOffsetY,0])
     rotate([90,0,0])
     cylinder(r=(0.186/2)+extraRadius,
+             h=UnitsImperial(1.26),
+           $fn=20);
+
+    // Spring
+    translate([0,springOffsetY,0])
+    rotate([90,0,0])
+    cylinder(r=(0.3125/2)+extraRadius,
              h=UnitsImperial(1.26),
            $fn=20);
 
@@ -119,10 +128,13 @@ module AR15_Magwell(width=UnitsImperial(1.125),
       hull() {
 
         translate([AR15_MagazineRearTabLength()-wallBack, -(width/2)-wall])
-        square([AR15_MagazineBaseLength()+AR15_MagazineRearTabLength()+wallBack+wallFront, width+(wall*2)]);
+        mirror([1,0])
+        rotate(90)
+        ChamferedSquare([width+(wall*2),AR15_MagazineBaseLength()+AR15_MagazineRearTabLength()+wallBack+wallFront]);
 
-        translate([0, -(width/2)])
-        square([AR15_MagazineBaseLength()+AR15_MagazineRearTabLength()+wallFront, width]);
+        translate([0, -(width/2)])mirror([1,0])
+        rotate(90)
+        ChamferedSquare([width,AR15_MagazineBaseLength()+AR15_MagazineRearTabLength()+wallFront]);
       }
     }
 

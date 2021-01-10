@@ -3,14 +3,15 @@ use <../Meta/Units.scad>;
 
 $fs = UnitsFs()*0.25;
 
-module Teardrop(r=1, rotation=0, truncated=false) {
+module Teardrop(r=1, rotation=0, enabled=true, truncated=false) {
   side = r*sqrt(2)/2;
 
   render()
   difference() {
     hull() {
       circle(r);
-
+      
+      if (enabled)
       rotate(rotation)
       polygon(points=[
                [side,-side],
@@ -19,7 +20,7 @@ module Teardrop(r=1, rotation=0, truncated=false) {
       ]);
     }
 
-    if (truncated)
+    if (enabled && truncated)
     rotate(rotation)
     translate([r,-r])
     square([r, r*2]);

@@ -25,15 +25,10 @@ use <../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 use <../Vitamins/Pipe.scad>;
 use <../Vitamins/Rod.scad>;
 
-use <../Ammo/Shell Slug.scad>;
-
-use <Lugs.scad>;
-use <Linear Hammer.scad>;
-use <Recoil Plate.scad>;
 
 // Settings: Vitamins
 function ChargingRod() = Spec_RodOneQuarterInch();
-function ChargingRodBolt() = Spec_BoltM4();
+function ChargingRodBolt() = BoltSpec("M4");
 
 // Settings: Lengths
 function ChargingRodLength() = 12;
@@ -43,17 +38,17 @@ function ChargerTowerLength() = 0.5;
  extend into the part that holds it? */
 function ChargingRodStaticLength() = 1;
 
-function ChargingRodOffset() =  0.875+RodRadius(ChargingRod());
+function ChargingRodOffset() =  0.75+RodRadius(ChargingRod());
 
 // Settings: Walls
 function WallCharger() = 1/8;
 
 function ChargingRodWidth() = RodDiameter(ChargingRod());
-function ChargingRodMinX() = RecoilPlateRearX()-0.5;
+function ChargingRodMinX() = 0;
 function ChargingRodMaxX() = ChargingRodMinX()+ChargingRodLength();
 
 // Calculated: Lengths
-function ChargerTravel() = 2.25;
+function ChargerTravel() = 2;
 
 // Calculated: Positions
 echo("Charging Rod Length: ", ChargingRodLength());
@@ -67,7 +62,7 @@ function ChargerAnimationFactor() = Animate(ANIMATION_STEP_CHARGE)
                              - Animate(ANIMATION_STEP_CHARGER_RESET);
 
 module ZigZagJig() {
-  length=ChargerTravel()+ChargerTowerLength()+abs(RecoilPlateRearX())+(ChargerTowerLength()/2);
+  length=ChargerTravel()+ChargerTowerLength()+(ChargerTowerLength()/2);
   height=0.75;
   width=0.75;
 
@@ -84,7 +79,7 @@ module ZigZagJig() {
               clearance=RodClearanceSnug());
 
     // ZigZag Actuator
-    for (X = [0,ChargerTravel()+abs(RecoilPlateRearX())+(ChargerTowerLength()/2)])
+    for (X = [0,ChargerTravel()+(ChargerTowerLength()/2)])
     translate([(ChargerTowerLength()/2)+X,0,-ManifoldGap()])
     cylinder(r=3/32/2, h=height, $fn=8);
   }
@@ -178,12 +173,12 @@ module ChargingPumpAssembly(animationFactor=ChargerAnimationFactor(),
                                pipeAlpha=1, debug=false) {
   translate([-ChargerTravel()*animationFactor,0,0]) {
 
-    color("Silver")
+    *color("Silver")
     ChargingRodBolts();
 
     ChargingRod(length=length, minX=minX, debug=debug);
 
-    Charger(debug=debug);
+    *Charger(debug=debug);
 
     ChargingPump(debug=debug, alpha=1);
   }
@@ -195,11 +190,6 @@ rotate([0,90,0])
 Pipe(pipe=Spec_PipeThreeQuarterInch(), hollow=true, length=18);
 
 ChargingPumpAssembly(debug=false);
-
-RecoilPlateFiringPinAssembly();
-
-RecoilPlate();
-
 
 /*
  * Platers
@@ -238,5 +228,5 @@ ZigZagJig();
 //
 *!scale(25.4)
 rotate([0,90,0])
-translate([-RecoilPlateRearX(),0,-ChargingRodOffset()])
+translate([0,0,-ChargingRodOffset()])
 Charger();

@@ -81,6 +81,14 @@ module SquareRod(rod=Spec_RodOneQuarterInch(), length=1,
   SquareRod2d(rod=rod, clearance=clearance);
 }
 
+function Spec_RodTemplate() = [
+  [RodDiameter, 1/16],
+  [RodRadius, 1/16/2],
+  [RodClearanceSnug, 0],
+  [RodClearanceLoose, 0],
+  [RodFn, 6]
+];
+
 function Spec_RodBicNozzle() = [
   [RodDiameter, 0.093],
   [RodRadius, 0.093/2],

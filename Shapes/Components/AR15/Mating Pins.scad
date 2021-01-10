@@ -1,7 +1,7 @@
-use <../../Meta/Clearance.scad>;
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Units.scad>;
-use <../../Meta/Resolution.scad>;
+use <../../../Meta/Clearance.scad>;
+use <../../../Meta/Manifold.scad>;
+use <../../../Meta/Units.scad>;
+use <../../../Meta/Resolution.scad>;
 
 use <../../../Vitamins/Rod.scad>;
 use <../../../Vitamins/Nuts And Bolts.scad>;

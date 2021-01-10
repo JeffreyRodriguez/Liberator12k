@@ -35,6 +35,7 @@ function ReceiverPipe()  = Spec_OnePointSevenFivePCTube();
 function BarrelPipe() = Spec_TubingOnePointOneTwoFive();
 
 // Settings: Lengths
+function ReceiverFrontLength() = 0.5;
 function BarrelLength() = 18;
 
 function MagazineOffset() = (BarrelCollarSteelRadius()+0.5);
@@ -101,7 +102,7 @@ module BarrelCollar(clearance=0.002, cutter=false, debug=false) {
              h=BarrelCollarSteelWidth(), $fn=40);
 
     translate([-ManifoldGap(),0,0])
-    Barrel(hollow=false, cutter=true);
+    Barrel(hollow=false);
   }
 }
 
@@ -188,7 +189,7 @@ module PumpShotgunAssembly(debug=false) {
   translate([-ReceiverFrontLength(),0,0])
   Receiver(debug=debug);
 
-  color("LightSteelBlue")
+  *color("LightSteelBlue")
   ReceiverFront();
 
   // In position for load

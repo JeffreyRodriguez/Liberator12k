@@ -20,16 +20,21 @@ use <../../Vitamins/AR15/Bolt.scad>;
 
 use <../Magwells/AR15 Magwell.scad>;
 
+use <../Buttstock.scad>;
 use <../Receiver.scad>;
-use <../Linear Hammer.scad>;
+use <../Lower/Lower.scad>;
+use <../Lugs.scad>;
 use <../Frame.scad>;
 use <../Action Rod.scad>;
 use <../Charging Pump.scad>;
+use <../Components/AR15 Trunnion.scad>;
 
 /* [What to Render] */
 
 // Assembly is not for printing.
 _RENDER = "Assembly"; // ["Assembly", "Forend", "Bolt Carrier", "Bolt Carrier Track"]
+
+SHOW_BOLT_CARRIER = true;
 
 // Cut assembly view in half
 _DEBUG_ASSEMBLY = false;
@@ -37,9 +42,7 @@ _DEBUG_ASSEMBLY = false;
 // Show receiver cutters
 _DEBUG_CUTTERS = false;
 
-/* [Receiver Tube] */
-RECEIVER_TUBE_OD = 1.7501;
-RECEIVER_TUBE_ID = 1.5001;
+function ReceiverFrontLength() = 0.5;
 
 // Measured: Vitamins
 function BarrelCollarDiameter() = 1.75;
@@ -50,19 +53,18 @@ function BarrelCollarWidth() = 5/8;
 // Settings: Vitamins
 function ReceiverPipe()  = Spec_OnePointFiveSch40ABS();
 function ReceiverPipe()  = Spec_OnePointSevenFivePCTube();
-function BarrelPipe() = Spec_TubingOnePointOneTwoFive();
-function BarrelPipe() = Spec_TubingZeroPointSevenFive();
 function ActuatorRod() = Spec_RodOneQuarterInch();
 function ChargingRod() = Spec_RodOneHalfInch();
 function ChargingExtensionRod() = Spec_RodOneHalfInch();
 function IndexLockRod() = Spec_RodOneQuarterInch();
 
-function BarrelExtraOffset() = -AR15_MagazineRearTabLength();
+function BarrelExtraOffset() = AR15_MagazineRearTabLength()+0.125+0.1+0.375;
 function BarrelLength() = 16;
 function BarrelMinX() = AR15_BoltLockedLength()+BarrelExtraOffset();
 function WallBarrel() = 0.25;
-function MagazineMinX() = BarrelMinX()
-                        - AR15_MagazineBaseLength();
+function MagazineMinX() = BarrelMinX()-0.125
+                        - AR15_MagazineBaseLength()
+                        - AR15_MagazineRearTabLength();
 
 // Calculated: Positions
 function ActionRodZ() = 0.75+(1/32);
@@ -204,7 +206,7 @@ module BoltCarrier(cutter=false, clearance=0.01, chamferRadius=1/16, alpha=1) {
       translate([camPinLockedX,0,0]) 
       rotate([0,-90,0])
       rotate(-AR15_CamPinAngle())
-      HelixSegment(radius=boltCarrierTrackRadius,
+      *HelixSegment(radius=boltCarrierTrackRadius,
                     width=ActionRodWidth()+0.02, depth=0.1875,
                     top=0, bottom=helixBottom,
                     angle=-AR15_CamPinAngle());
@@ -273,53 +275,32 @@ module ReceiverCutters() {
 
   color("Orange")
   translate([MagazineMinX(),0,-0.5-0.25])
-  AR15_MagwellInsert(catch=false,
+  AR15_MagwellInsert(catch=true,
                      extraTop=0.75);
+  
+  mirror([1,0,0])
+  ReceiverRods(cutter=true, nutType="none", length=12);
 }
 
 module AR15Forend(debug=false, alpha=1) {
-  length = ForendLength();
+  length = ForendLength()
+             - AR15BarrelExtensionLipLength()
+             - AR15BarrelExtensionLength();
   
   color("MediumSlateBlue", alpha)
   DebugHalf(enabled=debug) render()
   difference() {
-    translate([ReceiverFrontLength()+ForendMinX(),0,0])
-    ReceiverCouplingPattern(frameLength=ForendLength(), boltHead="flat") {
-        
-      // Join the barrel sleeve to the frame
-      translate([0,-(AR15BarrelExtensionLipRadius()+WallBarrel()),0])
-      ChamferedCube([length,
-                     (AR15BarrelExtensionLipRadius()+WallBarrel())*2,
-                     FrameBoltZ()],
-                     r=1/16,
-                     $fn=70);
-    
-    // Around the barrel
-    rotate([0,90,0])
-    ChamferedCylinder(r1=ReceiverOR()+barrelRearWall,
-                      r2=1/16,
-                      h=length,
-                     $fn=Resolution(30,60));
+    union() {
+      translate([ForendMinX(),0,0])
+      mirror([1,0,0])
+      ReceiverSegment(length=length);
+      
+      translate([MagazineMinX(),0,-0.5])
+      AR15_Magwell(cut=false,
+                   height=AR15_MagwellDepth()+0.125,
+                   wallFront=0, wallBack=0.375+AR15_MagazineRearTabLength(),
+                   wall=0.125);
     }
-    
-    ForendMagwell(cutter=true);
-    
-    ReceiverCutters();
-    
-  }
-}
-
-module ForendMagwell(cutter=false, clearance=0.01, debug=false, alpha=1) {
-  clear = cutter?clearance:0;
-  clear2 = clear*2;
-  
-  color("Orange") RenderIf(!cutter)
-  difference() {
-    translate([MagazineMinX(),0,-0.75+0.125])
-    AR15_Magwell(cut=false,
-                 height=AR15_MagwellDepth()+0.125,
-                 wallFront=0.1875,
-                 wall=0.125);
     
     ReceiverCutters();
   }
@@ -330,8 +311,11 @@ module ReceiverBoltTrack(length=2.5, alpha=1) {
   color("OliveDrab", alpha) render()
   difference() {
     translate([ForendMinX(),0,0])
-    ReceiverCouplingPattern(boltHead="none")
-    union() {
+    difference() {
+      *translate([ForendMinX(),0,0])
+      mirror([1,0,0])
+      ReceiverSegment(length=length);
+    
       translate([ForendMinX()+0.25,-(ReceiverSlotWidth()/2),0])
       mirror([1,0,0])
       ChamferedCube([length+0.25, ReceiverSlotWidth(), (7/8)+0.01], r=1/16);
@@ -348,9 +332,12 @@ module ReceiverBoltTrack(length=2.5, alpha=1) {
   }
 }
 
+
+
+
 if (_RENDER == "Assembly") {
   
-  if (_DEBUG_CUTTERS)  
+  if (_DEBUG_CUTTERS)
   ReceiverCutters();
 
   translate([-1-2,0,0])
@@ -366,6 +353,7 @@ if (_RENDER == "Assembly") {
                  - SubAnimate(ANIMATION_STEP_LOCK, end=0.75);
 
   // Motion-coupled: Bolt carrier and action rod
+  if (SHOW_BOLT_CARRIER)
   translate([(-BarrelMinX()-0.5)*animate_unlock2,0,0]) {
     
     translate([-0.875*animate_unlock1,0,ActionRodZ()]) {
@@ -389,23 +377,23 @@ if (_RENDER == "Assembly") {
       BoltCarrier(alpha=1);
     }
   }
-  
-  ForendMagwell(debug=false, alpha=0.25);
 
   ReceiverBoltTrack(alpha=0.25);
 
-  AR15Forend(debug=false, alpha=0.25);
+  AR15Forend(debug=false);
 
-  translate([-ReceiverFrontLength(),0,0])
-  Receiver(pipeAlpha=1, buttstockAlpha=1,
-           receiverLength=12, frameBoltLength=8, 
-           lower=true);
+  ReceiverAssembly();
+  StockAssembly();
+  
+  translate([-LowerMaxX(),0,LowerOffsetZ()])
+  Lower();
+  LowerLugs();
 
 }
 
 scale(25.4) {
   if (_RENDER == "Bolt Carrier")
-    BoltCarrier_print(od=RECEIVER_TUBE_OD);
+    BoltCarrier_print();
 
   if (_RENDER == "Forend")
     rotate([0,-90,0])

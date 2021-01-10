@@ -3,6 +3,7 @@ include <../../Meta/Animation.scad>;
 use <../../Meta/Resolution.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Debug.scad>;
+use <../../Meta/RenderIf.scad>;
 use <../../Meta/Units.scad>;
 
 use <../../Shapes/Chamfer.scad>;
@@ -12,7 +13,7 @@ use <../../Vitamins/Rod.scad>;
 use <Receiver Lugs.scad>;
 
 function SearRod() = Spec_RodOneQuarterInch();
-function SearPinRod() = Spec_RodOneEighthInch();
+function SearPinRod() = Spec_RodThreeThirtysecondInch();
 
 // Shorthand: Measurements
 function SearRadius(clearance)   = RodRadius(SearRod(), clearance);
@@ -37,24 +38,29 @@ function SearTravel() = 0.25;
 function TriggerTravel() = SearTravel()*1.5;
 function SearLength() = abs(SearPinOffsetZ()) + SearTravel();
 
-function TriggerAnimationFactor() = Animate(ANIMATION_STEP_TRIGGER)-Animate(ANIMATION_STEP_TRIGGER_RESET);
+function TriggerAnimationFactor() = SubAnimate(ANIMATION_STEP_TRIGGER)-SubAnimate(ANIMATION_STEP_CHARGER_RESET, end=0.1);
 
-module Sear(animationFactor=TriggerAnimationFactor(), length=SearLength()) {
-
-  // Sear Rod
-  translate([0,0,-SearTravel()*animationFactor])
-  translate([0,0,SearPinOffsetZ()-SearBottomOffset()])
-  color("LightGreen")
-  SquareRod(rod=SearRod(), length=length);
-
-  translate([0,0,-SearTravel()*animationFactor])
+module Sear(animationFactor=TriggerAnimationFactor(), length=SearLength(), cutter=false, clearance=0.01) {
+  RenderIf(!cutter)
+  difference() {
+    translate([0,0,-SearTravel()*animationFactor])
+    translate([0,0,SearPinOffsetZ()-SearBottomOffset()])
+    color("LightGreen")
+    SquareRod(rod=SearRod(), length=length);
+    
+    if (!cutter)
+    SearPin(cutter=true);
+  }
+}
+module SearPin(cutter=false, clearance=0.005) {
   translate([0,0,SearPinOffsetZ()])
   rotate([90,0,0])
-  color("Red")
-  Rod(rod=SearPinRod(), length=0.5, center=true);
+  color("Red") RenderIf(!cutter)
+  Rod(rod=SearPinRod(), clearance=cutter?RodClearanceLoose():undef, length=0.5, center=true);
 }
 
 module SearCutter(length=SearLength()+SearTravel(), searLengthExtra=0, crosspin=true,wideTrack=false) {
+  
   color("Red", 0.25)
   union() {
     translate([0,0,SearPinOffsetZ()-SearBottomOffset()-SearTravel()-SearSpringCompressed()])
@@ -196,6 +202,42 @@ module Trigger2d() {
     }
   }
 }
+
+module TriggerBody() {
+  sideplateWidth = (TriggerWidth()/2)
+                 - RodRadius(SearRod(), RodClearanceSnug());
+  
+  color("Gold")
+  render()
+  difference() {
+    translate([0,(TriggerWidth()/2),0])
+    rotate([90,0,0])
+    linear_extrude(height=TriggerWidth())
+    Trigger2d();
+
+    // Trigger finger chamfer
+    translate([TriggerFingerRadius()+TriggerTravel()+RodDiameter(SearRod())+0.5-0.15,
+               -TriggerWidth()/2, -GripCeiling()-TriggerFingerRadius()])
+    rotate([-90,0,0])
+    ChamferedCircularHole(r1=TriggerFingerRadius(), r2=1/16,
+                          h=TriggerWidth(), $fn=Resolution(16,30));
+
+    // Sear Slot (extended)
+    translate([ReceiverLugRearMaxX(),-RodRadius(SearRod(), RodClearanceLoose()),ManifoldGap()])
+    mirror([0,0,1])
+    cube([abs(ReceiverLugRearMaxX())+TriggerTravel()+0.385,
+          RodDiameter(SearRod(), RodClearanceLoose()), 2+ManifoldGap()]);
+
+    // Sear Support Slot Front
+    translate([0,-RodRadius(SearRod(), RodClearanceLoose()),GripCeilingZ()-0.01])
+    cube([ReceiverLugFrontMaxX(),
+          RodDiameter(SearRod(), RodClearanceLoose()),
+          GripCeiling()+0.01+ManifoldGap()]);
+  }
+}
+
+!scale(25.4)
+TriggerBody();
 
 module Trigger(animationFactor=TriggerAnimationFactor(),
                left=true, leftAlpha=1,

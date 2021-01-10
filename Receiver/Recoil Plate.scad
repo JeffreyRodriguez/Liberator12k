@@ -15,74 +15,71 @@ use <../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 use <../Vitamins/Pipe.scad>;
 use <../Vitamins/Rod.scad>;
 
-use <Firing Pin.scad>;
+RECOIL_PLATE_BOLT = "#8-32"; // ["#8-32", "M4"])
+RECOIL_PLATE_BOLT_CLEARANCE = 0.005;
 
 // Measured: Vitamins
-function RecoilPlateThickness() = 1/4;
-function RecoilPlateWidth() = 1.5;
-function RecoilSpreaderThickness() = 0.5;
+function RecoilPlateLength() = 1/4;
+function RecoilPlateWidth() = 2;
+function RecoilPlateHeight() = 1.5;
 
-// Settings: Positions
-function RecoilPlateRearX()  = -RecoilSpreaderThickness();
-function FiringPinZ() = 0; //-0.12; // .22 Rimfire Offset
+function RecoilPlateBolt() = BoltSpec(RECOIL_PLATE_BOLT);
+function RecoilPlateBoltOffsetY() = 0.5;
 
-// Settings: Vitamins
-function SquareRodFixingBolt() = Spec_BoltM3();
-
-// Calculated: Positions
-function FiringPinMinX() = RecoilPlateRearX()-FiringPinHousingLength();
-
-module RecoilPlateFiringPinAssembly(cutter=false, debug=false) {
-  translate([RecoilPlateRearX(),0,FiringPinZ()])
+module RecoilPlateBolts(bolt=RecoilPlateBolt(),
+                        boltLength=0.5, head="flat",
+                        cutter=false, clearance=RECOIL_PLATE_BOLT_CLEARANCE) {
+  color("CornflowerBlue")
+  for (M = [0,1]) mirror([0,M,0])
+  translate([0,RecoilPlateBoltOffsetY(),0])
   rotate([0,-90,0])
-  rotate(180)
-  FiringPinAssembly(cutter=cutter, debug=debug);
+  Bolt(bolt=bolt, capOrientation=true, head=head,
+       clearance=cutter?clearance:0,
+       length=boltLength+ManifoldGap(2));
 }
 
-module RecoilPlate(firingPinAngle=0, cutter=false, debug=false) {
+module RecoilPlate(cutter=false, debug=false) {
   color("LightSteelBlue")
   RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
-    translate([-RecoilPlateThickness(), -1-ManifoldGap(2), -RecoilPlateWidth()/2])
-    ChamferedCube([RecoilPlateThickness()+(cutter?(1/8):0),
-                   2+ManifoldGap(4),
-                   RecoilPlateWidth()],
+    translate([0.25, -1-ManifoldGap(2), -RecoilPlateHeight()/2])
+    ChamferedCube([RecoilPlateLength()+(cutter?(1/8):0),
+                   RecoilPlateWidth()+ManifoldGap(4),
+                   RecoilPlateHeight()],
                   r=1/32,
                   chamferXYZ=[0,1,0],
                   teardropXYZ=[false, false, false],
                   teardropTopXYZ=[false, false, false]);
 
     if (!cutter)
-    rotate([firingPinAngle,0,0])
-    RecoilPlateFiringPinAssembly(cutter=true);
+    RecoilPlateBolts(cutter=true);
   }
 }
 
-module RecoilPlateTemplate(clearance=0.005, height=0.25) {
+module RecoilPlateTemplate(firingPinRadius=1/32, clearance=0.005, extend=0.125) {
   render()
   difference() {
-    translate([-1,-1-0.25-ManifoldGap(),0])
-    cube([2, 2+0.25, height]);
+    translate([0,-(RecoilPlateWidth()/2)-extend,-(RecoilPlateHeight()/2)-extend])
+    cube([RecoilPlateLength()+extend, RecoilPlateWidth()+extend, RecoilPlateHeight()+(+extend*2)]);
 
-    translate([0,0,height])
-    rotate([0,90,0])
     RecoilPlate(cutter=true);
-
-    for(Y = [1,-1,0]) translate([0,FiringPinBoltOffsetY()*Y,-ManifoldGap()])
-    cylinder(r=FiringPinRadius()+clearance,
-             h=height+ManifoldGap(2),
+    
+    
+    RecoilPlateBolts(bolt=BoltSpec("Template"), head="none");
+    
+    rotate([0,90,0])
+    cylinder(r=firingPinRadius+clearance,
+             h=RecoilPlateLength()+extend+ManifoldGap(2),
             $fn=8);
   }
 }
 
 
-translate([-0.25-0.1,0,0])
-rotate([0,90,0])
+//translate([-0.25-0.1,0,0]) rotate([0,90,0])
 RecoilPlateTemplate();
 
-RecoilPlateFiringPinAssembly();
-
 RecoilPlate();
+RecoilPlateBolts();
 
 // Recoil Plate Drill Template
 *!scale(25.4)

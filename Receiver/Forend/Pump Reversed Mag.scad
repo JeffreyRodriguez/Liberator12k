@@ -63,7 +63,7 @@ module PumpUpper(cutter=false, clearance=0.002, alpha=1, debug=false) {
       linear_extrude(height=ManifoldGap())
       PumpMagazine2d();
 
-      for (Z = [0,MagazineCenterZ()-ReceiverCenter()])
+      for (Z = [0,MagazineCenterZ()])
       translate([-ManifoldGap(),0,MagazineCenterZ()-Z])
       rotate([0,90,0])
       cylinder(r=SquareTubeInner(MagazineSquareTube(),
@@ -100,7 +100,6 @@ module PumpForend(alpha=1, debug=false) {
     union() {
       hull() {
         translate([+ForendLength,0,0])
-        translate([0,0,ReceiverCenter()])
         rotate([0,90,0])
         ChamferedCylinder(r1=PipeCapRadius(StockPipe())+ForendWall,
                           r2=0.0625,
@@ -117,7 +116,6 @@ module PumpForend(alpha=1, debug=false) {
 
       hull() {
 
-        translate([0,0,ReceiverCenter()])
         rotate([0,90,0])
         intersection() {
 
@@ -139,15 +137,14 @@ module PumpForend(alpha=1, debug=false) {
     }
 
     translate([-ManifoldGap(),
-               -(SquareTubeOuter(MagazineSquareTube(),SquareTubeClearanceLoose())/2)-0.1875,
-               ReceiverCenter()])
+               -(SquareTubeOuter(MagazineSquareTube(),SquareTubeClearanceLoose())/2)-0.1875,0])
     cube([ForendLength+ManifoldGap(2),
            SquareTubeOuter(MagazineSquareTube(), SquareTubeClearanceLoose())+0.375,
           (PipeCapRadius(StockPipe())*sqrt(2))+0.125]);
 
     PumpRails(cutter=true);
 
-    translate([+1-ManifoldGap(),0,ReceiverCenter()])
+    translate([+1-ManifoldGap(),0,0])
     rotate([0,90,0])
     cylinder(r=PipeCapRadius(StockPipe(), clearance=PipeClearanceLoose())+0.01,
                       h=1.5+ManifoldGap(2),
@@ -176,7 +173,6 @@ color("Red") {
 
 
   // In position for load
-  translate([0,0,ReceiverCenter()])
   rotate([0,90,0])
   ShellSlugBall(height=2.0);
 }

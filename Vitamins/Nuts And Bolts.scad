@@ -15,11 +15,15 @@ HEAD = ""; // ["", "flat", "hex", "socket"]
 NUT = ""; // ["", "hex", "heatset"]
 
 BOLTS = [
+  ["Template", Spec_BoltTemplate()],
+  ["#4-40", Spec_Bolt4_40()],
+  ["#6-32", Spec_Bolt6_32()],
   ["#8-32", Spec_Bolt8_32()],
   ["#10-24", Spec_Bolt10_24()],
   ["5/16\"-18", Spec_BoltFiveSixteenths()],
   ["1/2\"-13", Spec_BoltOneHalf()],
   ["1/4\"-20", Spec_BoltOneQuarter()],
+  ["M3", Spec_BoltM3()],
   ["M4", Spec_BoltM4()],
   ["M5", Spec_BoltM5()],
 
@@ -66,9 +70,14 @@ module Bolt(bolt=Spec_BoltTemplate(), length=1,
     translate([0,0,length])
     if (head == "flat") {
       BoltFlatHead(bolt=bolt, clearance=clearance,
+                   teardrop=teardrop,
+                   teardropAngle=teardropAngle,
                    capHeightExtra=capHeightExtra);
     } else if (head == "socket") {
-      BoltSocketCap(bolt=bolt, clearance=clearance,
+      BoltSocketCap(bolt=bolt,
+                    clearance=clearance,
+                    teardrop=teardrop,
+                    teardropAngle=teardropAngle,
                     capHeightExtra=capHeightExtra);
     } else if (head == "button") {
       BoltHeadButton(bolt=bolt, clearance=clearance,
@@ -82,27 +91,38 @@ module Bolt(bolt=Spec_BoltTemplate(), length=1,
   }
 }
 
-module BoltFlatHead(bolt, clearance=0, capHeightExtra=0, teardrop=false) {
+module BoltFlatHead(bolt, clearance=0, capHeightExtra=0, teardrop=false, teardropAngle=0) {
   hull() {
 
     // Taper
-    mirror([0,0,1])
-    cylinder(r1=BoltFlatHeadRadius(bolt, clearance),
-             r2=BoltRadius(bolt, clearance),
-              h=BoltFlatHeadHeight(bolt));
+    if (teardrop) {
+      translate([0,0,-BoltFlatHeadHeight(bolt)-clearance])
+      linear_extrude(height=ManifoldGap())
+      rotate(teardropAngle)
+      Teardrop(r=BoltRadius(bolt, clearance));
+      
+      linear_extrude(height=ManifoldGap())
+      rotate(teardropAngle)
+      Teardrop(r=BoltFlatHeadRadius(bolt, clearance));
+    } else {
+      mirror([0,0,1])
+      cylinder(r1=BoltFlatHeadRadius(bolt, clearance),
+               r2=BoltRadius(bolt, clearance),
+                h=BoltFlatHeadHeight(bolt));
+    }
 
     // Taper teardrop hack
     linear_extrude(height=(clearance?capHeightExtra:ManifoldGap()))
     if (teardrop) {
+      rotate(teardropAngle)
       Teardrop(r=BoltFlatHeadRadius(bolt, clearance));
-
     } else {
       circle(r=BoltFlatHeadRadius(bolt, clearance));
     }
   }
 }
 
-module BoltSocketCap(bolt, capHeightExtra=0, clearance=0, teardrop=false) {
+module BoltSocketCap(bolt, capHeightExtra=0, clearance=0, teardrop=false, teardropAngle=0) {
   if (teardrop) {
     linear_extrude(height=BoltSocketCapHeight(bolt)+capHeightExtra)
     Teardrop(r=BoltSocketCapRadius(bolt, clearance),
@@ -118,8 +138,8 @@ module BoltHeadButton() {
 }
 
 module BoltHeadHex(bolt, clearance=0, capHeightExtra=0) {
-  cylinder(r=BoltSocketCapRadius(bolt, clearance),
-          h=BoltSocketCapHeight(bolt)+capHeightExtra,
+  cylinder(r=BoltHexRadius(bolt, clearance),
+          h=BoltHexHeight(bolt)+capHeightExtra,
           $fn=6);
 }
 
