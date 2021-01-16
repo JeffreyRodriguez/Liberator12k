@@ -79,7 +79,7 @@ module FrameBoltIterator() {
 }
 
 module FrameBolts(length=FrameBoltLength(),
-              debug=false, cutter=false, clearance=0.005, alpha=1) {
+              debug=false, cutter=false, clearance=0.008, alpha=1) {
   clear = cutter ? clearance : 0;
 
   color("Silver", alpha) RenderIf(!cutter)
@@ -125,7 +125,7 @@ module CouplingSupport(length=1) {
                     teardropTop=true, $fn=Resolution(20,40));
 }
 
-module FrameSpacer(length=FRAME_SPACER_LENGTH, debug=false, alpha=1) {
+module FrameSpacer(length=FRAME_SPACER_LENGTH, picRail=true, debug=false, alpha=1) {
   color("Tan", alpha)
   DebugHalf(enabled=debug) render()
   difference() {
@@ -133,6 +133,7 @@ module FrameSpacer(length=FRAME_SPACER_LENGTH, debug=false, alpha=1) {
     FrameSupport(length=length);
 
     // Picatinny rail cutout
+    if (picRail)
     translate([-ManifoldGap(), -UnitsMetric(15.6/2), FrameTopZ()-0.0625])
     cube([length+ManifoldGap(2), UnitsMetric(15.6), 0.25]);
 
@@ -149,7 +150,7 @@ module FrameBack(length=FrameBackLength(), clearance=0.01, debug=false, alpha=1)
   color("Chocolate", alpha) render() DebugHalf(enabled=debug)
   difference() {
     translate([-(FrameReceiverLength()+length),0,0])
-    FrameSpacer(length=length);
+    FrameSpacer(length=length,picRail=false);
     
     hull()
     Receiver(doRender=false);

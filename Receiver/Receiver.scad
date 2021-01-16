@@ -60,7 +60,7 @@ assert(ReceiverRod(), "ReceiverRod() is undefined. Unknown RECEIVER_TENSION_BOLT
 function ReceiverLength() = 4.5;
 function ReceiverBackLength() = 0.5;
 function ReceiverStockLength() = 12-ReceiverLength()-ReceiverBackLength()-0.25-1;
-function ReceiverSlotWidth() = 0.75;
+function ReceiverTopSlotWidth() = 0.75;
 function ReceiverBottomSlotWidth() = 1;
 function ReceiverSideSlotHeight() = 0.5;
 function RecieverSideSlotDepth() = 0.125;
@@ -111,13 +111,13 @@ module ReceiverRodIterator() {
   rotate([0,-90,0])
   children();
 }
-module ReceiverRods(headType="none", nutType=RECEIVER_TENSION_NUT_TYPE, length=12, cutter=false, clearance=RECEIVER_TENSION_BOLT_CLEARANCE, teardrop=false, debug=false) {
+module ReceiverRods(headType="hex", nutType=RECEIVER_TENSION_NUT_TYPE, length=12, cutter=false, clearance=RECEIVER_TENSION_BOLT_CLEARANCE, teardrop=false, debug=false) {
 
   color("Silver") RenderIf(!cutter) DebugHalf(enabled=debug)
   ReceiverRodIterator()
   NutAndBolt(bolt=ReceiverRod(),
              boltLength=length+ManifoldGap(2),
-             head=headType,
+             head=headType, capHeightExtra=(cutter?0.375:0),
              nut=nutType,
              teardrop=cutter&&teardrop,
              clearance=cutter?clearance:0);
@@ -138,9 +138,9 @@ module ReceiverBottomSlot(clearance=0.005) {
 
 module ReceiverTopSlot(clearance=0.005) {
     translate([ManifoldGap(),
-               -(ReceiverSlotWidth()/2)-clearance,0])
+               -(ReceiverTopSlotWidth()/2)-clearance,0])
     mirror([1,0,0])
-    cube([ReceiverLength()+ManifoldGap(2),ReceiverSlotWidth()+(clearance*2),2]);
+    cube([ReceiverLength()+ManifoldGap(2),ReceiverTopSlotWidth()+(clearance*2),2]);
     
 }
 
