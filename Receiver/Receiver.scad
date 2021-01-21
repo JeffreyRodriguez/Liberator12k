@@ -21,7 +21,7 @@ use <../Vitamins/Rod.scad>;
 /* [What to Render] */
 
 // Configure settings below, then choose a part to render. Render that part (F6) then export STL (F7). Assembly is not for printing.
-_RENDER = "Receiver Assembly"; // ["Receiver Assembly", "Receiver", "ReceiverBackSegment", "ReceiverStockSegment"]
+_RENDER = "Receiver Assembly"; // ["Receiver Assembly", "Receiver", "ReceiverBackSegment"]
 
 _SHOW_RECEIVER            = true;
 _SHOW_RECEIVER_RODS       = true;
@@ -59,7 +59,7 @@ assert(ReceiverRod(), "ReceiverRod() is undefined. Unknown RECEIVER_TENSION_BOLT
 // Settings: Lengths
 function ReceiverLength() = 4.5;
 function ReceiverBackLength() = 0.5;
-function ReceiverStockLength() = 12-ReceiverLength()-ReceiverBackLength()-0.25-1;
+function ReceiverStockLength() = 12-ReceiverLength()-ReceiverBackLength()-0.1875;
 function ReceiverTopSlotWidth() = 0.75;
 function ReceiverBottomSlotWidth() = 1;
 function ReceiverSideSlotHeight() = 0.5;
@@ -89,19 +89,6 @@ function ReceiverTopZ() = TensionRodTopZ()-WallTensionRod();
 // ************
 // * Vitamins *
 // ************
-module ReceiverSideplateBolts(length=0.5, innerLength=0.125, headType=RECEIVER_SIDEPLATE_BOLT_HEAD, nutType=RECEIVER_TENSION_NUT_TYPE, cutter=false, clearance=RECEIVER_SIDEPLATE_BOLT_CLEARANCE, teardrop=true, teardropAngle=180) {
-  color("Silver") RenderIf(!cutter)
-  for (M = [0,1]) mirror([0,M,0])
-  for (X = [-0.375, -ReceiverLength()+0.375])
-  translate([X,ReceiverIR()-innerLength,0])
-  rotate([-90,0,0])
-  NutAndBolt(bolt=ReceiverSideplateBolt(),
-             boltLength=length+ManifoldGap(2),
-             head=headType,
-             nut=nutType, nutHeightExtra=(cutter?ReceiverIR():0), nutBackset=innerLength,
-             teardrop=cutter&&teardrop, teardropAngle=teardropAngle,
-             clearance=cutter?clearance:0);
-}
 module ReceiverRodIterator() {
   for (YZ = [[TensionRodTopOffsetSide(),TensionRodTopZ()],
              [-TensionRodTopOffsetSide(),TensionRodTopZ()],
@@ -111,7 +98,7 @@ module ReceiverRodIterator() {
   rotate([0,-90,0])
   children();
 }
-module ReceiverRods(headType="hex", nutType=RECEIVER_TENSION_NUT_TYPE, length=12, cutter=false, clearance=RECEIVER_TENSION_BOLT_CLEARANCE, teardrop=false, debug=false) {
+module ReceiverRods(headType="none", nutType=RECEIVER_TENSION_NUT_TYPE, length=12, cutter=false, clearance=RECEIVER_TENSION_BOLT_CLEARANCE, teardrop=false, debug=false) {
 
   color("Silver") RenderIf(!cutter) DebugHalf(enabled=debug)
   ReceiverRodIterator()
@@ -136,12 +123,18 @@ module ReceiverBottomSlot(clearance=0.005) {
   cube([ReceiverLength()-0.5,ReceiverBottomSlotWidth()-0.25+(clearance*2),abs(TensionRodBottomZ())+25]);
 }
 
-module ReceiverTopSlot(clearance=0.005) {
-    translate([ManifoldGap(),
-               -(ReceiverTopSlotWidth()/2)-clearance,0])
+module ReceiverTopSlot(length=ReceiverLength(), width=ReceiverTopSlotWidth(), height=2, clearance=0.005) {
+  chamferRadius = 1/32;
+  
+  intersection() {
+    translate([ManifoldGap()+chamferRadius, -(width/2)-clearance,0])
     mirror([1,0,0])
-    cube([ReceiverLength()+ManifoldGap(2),ReceiverTopSlotWidth()+(clearance*2),2]);
-    
+    ChamferedCube([ManifoldGap()+length+(chamferRadius*2),width+(clearance*2),height], r=chamferRadius);
+  
+    translate([ManifoldGap(), -(width/2)-clearance,0])
+    mirror([1,0,0])
+    cube([ManifoldGap()+length,width+(clearance*2),height]);
+  }
 }
 
 module ReceiverSegment(length=1, chamferFront=true, chamferBack=true) {
@@ -180,25 +173,7 @@ module ReceiverSegment(length=1, chamferFront=true, chamferBack=true) {
   ChamferedCube([length, ReceiverOD(),1],
                  chamferXYZ=[1,0,chamferFront||chamferBack?1:0], r=1/16);
 }
-module ReceiverStockSegment(length=ReceiverStockLength(), alpha=1) {
-  color("DimGray", alpha) render()
-  difference() {
-    translate([-ReceiverLength()-ReceiverBackLength(),0,0])
-    ReceiverSegment(length=length, chamferBack=true, chamferFront=false);
-    
-    translate([-ReceiverLength()-ReceiverBackLength(),0,0])
-    rotate([0,-90,0])
-    cylinder(r=ReceiverIR(), h=length, $fn=60);
-    
-    ReceiverRods(nutType="none", headType="none", cutter=true);
-  }
-}
-module ReceiverStockSegment_print() {
-  rotate([0,90,0])
-  translate([ReceiverLength()+ReceiverBackLength(),0,0])
-  ReceiverStockSegment();
-}
-module Receiver(receiverLength=ReceiverLength(), doRender=true, alpha=1, debug=false) {
+module Receiver(receiverLength=ReceiverLength(), topSlotHeight=ManifoldGap(), doRender=true, alpha=1, debug=false) {
 
   color("DimGray", alpha) RenderIf(doRender)
   DebugHalf(enabled=debug)
@@ -214,7 +189,7 @@ module Receiver(receiverLength=ReceiverLength(), doRender=true, alpha=1, debug=f
     rotate([0,-90,0])
     cylinder(r=ReceiverIR(), h=6, $fn=Resolution(40,80));
     
-    ReceiverTopSlot();
+    ReceiverTopSlot(height=topSlotHeight);
     ReceiverBottomSlot();
 
     // Side slots
@@ -227,7 +202,6 @@ module Receiver(receiverLength=ReceiverLength(), doRender=true, alpha=1, debug=f
                   teardropTopXYZ=[false, false, false]);
     
     ReceiverRods(cutter=true);
-    *ReceiverSideplateBolts(cutter=true);
   }
 }
 
@@ -243,11 +217,6 @@ module ReceiverBackSegment(length=ReceiverBackLength()) {
     rotate([0,-90,0])
     ChamferedCircularHole(r1=0.65/2, r2=1/16, chamferTop=false,
                           h=length-0.1875, $fn=40);
-    
-    translate([-ReceiverLength()-length,0,0])
-    rotate([0,90,0])
-    ChamferedCircularHole(r1=(0.3125/2)+0.005, r2=1/32,
-                          h=0.1875-(1/16), $fn=20);
   }
 }
 
@@ -257,23 +226,20 @@ module ReceiverBackSegment_print() {
   ReceiverBackSegment();
 }
 
-module ReceiverAssembly(showBack=_SHOW_RECEIVER_BACK, debug=false) {
+module ReceiverAssembly(debug=false) {
   if (_SHOW_RECEIVER_RODS)
   ReceiverRods();
 
   if (_SHOW_RECEIVER)
   Receiver(alpha=_RECEIVER_ALPHA, debug=debug)
   children();
-  
-  if (showBack)
-  ReceiverBackSegment();
 }
 
 
 if (_RENDER == "Receiver Assembly") {
   ReceiverAssembly(debug=_DEBUG_ASSEMBLY);
   
-  ReceiverStockSegment(alpha=_RECEIVER_ALPHA);
+  ReceiverBackSegment();
 }
   
 scale(25.4) {

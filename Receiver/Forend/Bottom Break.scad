@@ -24,12 +24,13 @@ use <../../Vitamins/Rod.scad>;
 use <../Lower/Lower.scad>;
 use <../Components/Compact Linear Hammer.scad>;
 
+use <../FCG/Simple.scad>;
+
 use <../Lugs.scad>;
 use <../Buttstock.scad>;
 use <../Frame.scad>;
 use <../Receiver.scad>;
 use <../Recoil Plate.scad>;
-use <../Action Rod.scad>;
 
 use <Bipod.scad>;
 
@@ -72,6 +73,7 @@ function BarrelLength() = 18;
 function BarrelSleeveLength() = 4;
 function WallBarrel() = 0.1875;
 function WallPivot() = (7/16);
+function WallActionRod() = 1/8;
 
 // Settings: Positions
 function ActionRodZ() = FrameBoltZ()-WallFrameBolt()-(ActionRodWidth()/2);

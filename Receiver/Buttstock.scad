@@ -5,9 +5,12 @@ use <../Meta/Resolution.scad>;
 use <../Meta/RenderIf.scad>;
 
 use <../Shapes/Chamfer.scad>;
+use <../Shapes/Teardrop.scad>;
 
 use <../Vitamins/Nuts And Bolts.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec.scad>;
+
+use <Frame.scad>;
 
 use <Receiver.scad>;
 
@@ -17,13 +20,16 @@ use <Receiver.scad>;
 _RENDER = "StockAssembly"; // ["StockAssembly", "Stock", "Buttpad"]
 _SHOW_BUTTPAD_BOLT = true;
 _SHOW_STOCK = true;
-_SHOW_BUTTPAD_PLATE = true;
 _SHOW_BUTTPAD = true;
 
 /* [Assembly Transparency] */
-_ALPHA_STOCK = 1;
-_ALPHA_BUTTPAD_PLATE = 1;
-_ALPHA_BUTTPAD = 1;
+_ALPHA_STOCK = 1; // [0:0.1:1]
+_ALPHA_BUTTPAD = 1; // [0:0.1:1]
+
+
+/* [Assembly Cutaway] */
+_CUTAWAY_STOCK = false;
+_CUTAWAY_BUTTPAD = false;
 
 _DEBUG_ASSEMBLY = false;
 
@@ -39,15 +45,16 @@ assert(ButtpadBolt(), "ButtpadBolt() is undefined. Unknown BUTTPAD_BOLT?");
 
 function StockLength() = 6;
 function ButtpadSleeveLength() = 1;
-function ButtpadLength() = 2;
+function ButtpadLength() = 2.5;
 function ButtpadWall() = 0.1875;
-function ButtpadX() = -(ReceiverLength()+ReceiverBackLength()+StockLength()+1.5);
+function ButtpadX() = -(ReceiverLength()+StockLength()+1.5);
 
 module ButtpadBolt(debug=false, cutter=false, teardrop=true, clearance=0.01, teardropAngle=0) {
   clear = cutter ? clearance : 0;
 
   color("Silver") RenderIf(!cutter) DebugHalf(enabled=debug)
-  translate([ButtpadX()-1.5, 0, -0.25])
+  for (Z = [0, -2])
+  translate([ButtpadX()-ButtpadLength(), 0, Z])
   rotate([0,-90,0])
   NutAndBolt(bolt=ButtpadBolt(),
              boltLength=3,
@@ -56,16 +63,40 @@ module ButtpadBolt(debug=false, cutter=false, teardrop=true, clearance=0.01, tea
              clearance=clear);
 }
 
-module Stock(length=StockLength(), doRender=true, debug=false, alpha=1) {
+module Stock(length=StockLength(), doRender=true, debug=_CUTAWAY_STOCK, alpha=1) {
+topCoverHeight = 1;
   color("Chocolate", alpha=alpha)
-  RenderIf(doRender)
+  RenderIf(doRender) DebugHalf(enabled=debug)
   difference() {
-    translate([-(ReceiverLength()+ReceiverBackLength()),0,0])
+    translate([-ReceiverLength(),0,0])
     union() {
-    
+      
+      // Merge large frame top cover into the body
+      hull() {
+        
+        
+        // Top cover
+        translate([0, -TensionRodTopOffsetSide(), ReceiverTopZ()])
+        rotate([0,-90,0])
+        linear_extrude(height=0.0625)
+        ChamferedSquare(xy=[topCoverHeight,(TensionRodTopOffsetSide()*2)], r=1/16,
+                        teardropBottom=false,
+                        teardropTop=false);
+        
+        // Merge to body
+        translate([0,-TensionRodTopOffsetSide(),0])
+        rotate([0,-90,0])
+        linear_extrude(height=1.5)
+        ChamferedSquare(xy=[ReceiverTopZ(),(TensionRodTopOffsetSide()*2)], r=1/16,
+                        teardropBottom=false,
+                        teardropTop=false);
+      }
+      
+      // Main body
       ReceiverSegment(length=length,
                     chamferFront=false, chamferBack=false);
       
+      // Buttpad attachment
       translate([-length,0,0])
       hull() {
         ReceiverSegment(length=1-0.25,
@@ -77,29 +108,38 @@ module Stock(length=StockLength(), doRender=true, debug=false, alpha=1) {
         ReceiverSegment(length=ManifoldGap(),
                         chamferFront=false, chamferBack=false);
         
-        translate([-1,-0.5,-(ReceiverOR()+1.5)])
-        cube([ManifoldGap(),1,ReceiverOR()+1.5]);
-        
+        translate([-1,0,-2])
+        rotate([0,90,0])
+        cylinder(r=0.5, h=0.5, $fn=50);
       }
     }
     
+    // Spring seat
+    translate([-ReceiverLength(),0,0])
+    rotate([0,-90,0])
+    ChamferedCircularHole(r1=0.65/2, r2=1/16, chamferTop=false,
+                          h=0.1875, $fn=40);
+    
     // Slot
     translate([-(ReceiverLength()+ReceiverBackLength()),0,0])
-    translate([-length,-0.75/2, -2])
-    cube([length, 0.75, 2]);
+    translate([-length,-0.75/2, -3])
+    cube([length-1, 0.75, 3]);
+    
+    // Slot Taper
+    translate([-(ReceiverLength()+ReceiverBackLength()),0,0])
+    translate([-1,0, -3])
+    linear_extrude(height=3)
+    Teardrop(r=0.375);
     
     // Center Hole
+    translate([-(ReceiverLength()+ReceiverBackLength())-0.75,0,0])
+    rotate([0,-90,0])
+    cylinder(r=0.75, h=length-0.75, $fn=80);
+    
+    // Center Hole Taper
     translate([-(ReceiverLength()+ReceiverBackLength()),0,0])
     rotate([0,-90,0])
-    cylinder(r=0.75, h=length, $fn=80);
-      
-    // Alignment tab
-    translate([-StockLength(),0,0])
-    translate([-length-0.25,-(0.5+0.02)/2,-ReceiverOR()-0.25-0.01])
-    ChamferedCube([0.5+0.02,0.5+0.02,ReceiverOD()+0.02], r=1/16,
-                  teardropXYZ=[false,true,true],
-                  teardropTopXYZ=[false,true,true],
-                  teardropFlip=[false,true,true]);
+    cylinder(r1=0, r2=0.75, h=0.75, $fn=80);
     
     ReceiverRods(nutType="none", headType="none", cutter=true);
     
@@ -107,7 +147,12 @@ module Stock(length=StockLength(), doRender=true, debug=false, alpha=1) {
   }
 }
 
-module Buttpad(doRender=true, debug=false, alpha=1) {
+module Stock_print() {
+  rotate([0,-90,0])
+  translate([ReceiverLength()+StockLength()+ButtpadSleeveLength(),0,0])
+  Stock();
+}
+module Buttpad(doRender=true, debug=_CUTAWAY_BUTTPAD, alpha=1) {
   receiverRadius=ReceiverOR();
   outsideRadius = receiverRadius+ButtpadWall();
   chamferRadius = 1/16;
@@ -121,33 +166,26 @@ module Buttpad(doRender=true, debug=false, alpha=1) {
   color("Tan", alpha) RenderIf(doRender) DebugHalf(enabled=debug)
   difference() {
 
+    // Stock and extension hull
     translate([ButtpadX(),0,0])
-    union() {
-      
-      // Stock and extension hull
-      hull() {
+    hull() {
 
-        // Foot of the stock
-        translate([-baseHeight,0,-0.5])
-        rotate([0,90,0])
-        for (L = [0,1]) translate([(length*L)-(outsideRadius/2),0,0])
-        ChamferedCylinder(r1=baseRadius, r2=chamferRadius,
-                           h=base,
-                           $fn=Resolution(20,50));
-        scale([1,1.1,1.1])
-        mirror([1,0,0])
-        ReceiverSegment(length=0.5,
-                        chamferFront=false, chamferBack=false);
-        
-        translate([0,-0.5,-(ReceiverOR()+1.5)])
-        cube([0.5,1,ReceiverOR()+1.5]);
-        
-      }
+      // Foot of the stock
+      translate([-baseHeight,0,-0.5])
+      rotate([0,90,0])
+      for (L = [0,1]) translate([(length*L)-(outsideRadius/2),0,0])
+      ChamferedCylinder(r1=baseRadius, r2=chamferRadius,
+                         h=base,
+                         $fn=Resolution(20,50));
+      scale([1,1.1,1.1])
+      mirror([1,0,0])
+      ReceiverSegment(length=0.5,
+                      chamferFront=false, chamferBack=false);
       
-      // Alignment tab
-      translate([0.25,-0.5/2,-ReceiverOR()-0.25])
-      ChamferedCube([0.5,0.5,ReceiverOD()], r=1/16,
-                  teardropFlip=[false,true,true]);
+      translate([0,0,-2])
+      rotate([0,90,0])
+      cylinder(r=0.5, h=0.5, $fn=50);
+      
     }
 
     // Gripping Ridges
@@ -165,7 +203,7 @@ module Buttpad(doRender=true, debug=false, alpha=1) {
     
     translate([ButtpadX()+0.5,0,0])
     ReceiverRodIterator()
-    cylinder(r=NutHexRadius(ReceiverRod(), 0.02), h=0.375, $fn=20);
+    cylinder(r=NutHexRadius(ReceiverRod(), 0.02), h=0.5, $fn=20);
   }
 }
 

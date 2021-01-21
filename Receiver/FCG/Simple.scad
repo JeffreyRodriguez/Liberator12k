@@ -20,7 +20,6 @@ use <../../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 use <../../Vitamins/Rod.scad>;
 
-use <../Action Rod.scad>;
 use <../Receiver.scad>;
 use <../Lugs.scad>;
 use <../Frame.scad>;
@@ -90,6 +89,7 @@ function RecoilPlateBolt() = BoltSpec(RECOIL_PLATE_BOLT);
 assert(RecoilPlateBolt(), "RecoilPlateBolt() is undefined. Unknown RECOIL_PLATE_BOLT?");
 
 // Settings: Lengths
+function ActionRodWidth() = 0.25;
 function ChargingRodOffset() =  0.75+RodRadius(ChargingRod());
 function ChamferRadius() = 1/16;
 function CR() = 1/16;
@@ -116,7 +116,7 @@ function FiringPinLength() = FiringPinHousingLength()+0.5
 function FiringPinMinX() = -FiringPinHousingLength();
 function RecoilPlateRearX()  = 0.25;
 
-function ActionRodZ() = 0.75+RodRadius(ActionRod());
+function ActionRodZ() = 0.75+(ActionRodWidth()/2);
 
 hammerFiredX  = FiringPinMinX();
 hammerCockedX = -LowerMaxX()-0.125;
@@ -131,6 +131,7 @@ disconnectorPivotZ = 0.5;
 disconnectorPivotAngle=-6;
 disconnectorThickness = 0.5;
 disconnectorHeight = 0.25;
+disconnectorTripBackset = 0.0625;
 disconnectDistance = 0.125;
 disconnectorExtension = 0;
 disconnectorPivotX = -disconnectorOffset;
@@ -146,7 +147,7 @@ $fs = UnitsFs()*0.25;
 //************
 //* Vitamins *
 //************
-module SimpleActionRod(length=10, debug=false, cutter=false, clearance=0.01) {
+module ActionRod(length=10, debug=false, cutter=false, clearance=0.01) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
@@ -154,7 +155,8 @@ module SimpleActionRod(length=10, debug=false, cutter=false, clearance=0.01) {
   color("Silver")
   translate([-0.5-(cutter?1:0),0,ActionRodZ()])
   DebugHalf(enabled=debug)
-  ActionRod(length=length+ManifoldGap(), clearance=clear, cutter=true);
+  translate([0,-(ActionRodWidth()/2)-clear,-(ActionRodWidth()/2)-clear])
+  cube([length, ActionRodWidth()+clear2, ActionRodWidth()+clear2]);
 }
 module ActionRodBolt(debug=false, cutter=false, teardrop=false, clearance=0.01) {
   clear = cutter ? clearance : 0;
@@ -168,14 +170,14 @@ module ActionRodBolt(debug=false, cutter=false, teardrop=false, clearance=0.01) 
              head="flat", capOrientation=true,
              clearance=clear, teardrop=cutter);
 }
-module DisconnectorPivotPin(debug=false, cutter=false, teardrop=false, clearance=0.01) {
+module DisconnectorPivotPin(debug=false, cutter=false, teardrop=false, clearance=0.005) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
   color("Silver")
   translate([disconnectorPivotX, 0, disconnectorPivotZ])
   rotate([90,0,0])
-  linear_extrude(height=ReceiverID()+clear2, center=true)
+  linear_extrude(height=cutter?ReceiverID():ReceiverTopSlotWidth(), center=true)
   Teardrop(r=(3/32/2)+clear, enabled=teardrop, $fn=20);
 }
 module DisconnectorSpring(debug=false, cutter=false, clearance=DISCONNECTOR_SPRING_CLEARANCE) {
@@ -220,7 +222,7 @@ module FiringPin(radius=FiringPinRadius(), cutter=false, clearance=FIRING_PIN_CL
       
       // Body
       cylinder(r=FiringPinBodyRadius()+clear,
-               h=FiringPinBodyLength()+(cutter?0.375:0));
+               h=FiringPinBodyLength()+(cutter?0.5+FiringPinTravel()+clear:0));
     }
     
     translate([FiringPinBodyRadius()-(1/16)+clear,-FiringPinBodyRadius()-clear,0])
@@ -260,25 +262,38 @@ module HammerCharger(debug=false, cutter=false, clearance=0.015) {
   clear2 = clear*2;
   
   width = ReceiverTopSlotWidth();
-  chamferRadius = 1/16;
+  chamferRadius = 1/32;
   
   color("Green")
   RenderIf(!cutter)
   DebugHalf(enabled=debug)
   difference() {
+    union() {
+      
+      // Top
+      translate([-0.5-(cutter?1:0),
+                 -(width/2)-clear,
+                 ActionRodZ()+0.375+clear])
+      mirror([0,0,1])
+      ChamferedCube([0.5+(cutter?2:0),
+                     width+clear2,
+                     0.25+clear2],
+                    r=chamferRadius);
     
-    // Long segment along the action rod
-    translate([-0.5-(cutter?1:0),
-               -(width/2)-clear,
-               ActionRodZ()+0.375+clear])
-    mirror([0,0,1])
-    ChamferedCube([0.5+(cutter?2:0),
-                   width+clear2,
-                   0.5+clear2],
-                  r=chamferRadius);
+      // Side Trip
+      translate([-0.5-(cutter?1:0),
+                 (ActionRodWidth()/2)-clear,
+                 ActionRodZ()+0.375+clear])
+      mirror([0,0,1])
+      ChamferedCube([0.5-disconnectorTripBackset+(cutter?2:0),
+                     0.25+clear2,
+                     0.5+clear2],
+                    r=chamferRadius);
+    }
+      
     
     if (!cutter) {
-      SimpleActionRod(cutter=true, clearance=0.005);
+      ActionRod(cutter=true, clearance=0.005);
       ActionRodBolt(cutter=true);
     }
       
@@ -381,37 +396,30 @@ module Disconnector(pivotFactor=0, cutter=false, clearance=0.01, alpha=1, debug=
         
         // Trip
         hull() {
-          translate([disconnectorPivotX+disconnectorOffset-clearance,
+          translate([clear,
                      disconnectorOffsetY+0.25-clear,
                      disconnectorPivotZ-0.125-clear])
           mirror([1,0,0])
-          ChamferedCube([(1/16)+(cutter?0.125:0),
+          ChamferedCube([(disconnectorTripBackset),
                 0.25+clear2,
                 ActionRodZ()-disconnectorPivotZ+clear2], r=1/64);
           
-          translate([disconnectorPivotX+disconnectorOffset-0.375-clear,
+          translate([-clear,
                      disconnectorOffsetY+0.25-clear,
                      disconnectorPivotZ-0.125-clear])
-          ChamferedCube([0.375+(cutter?0.125:0),
+          mirror([1,0,0])
+          ChamferedCube([disconnectorTripBackset+0.25+(cutter?0.125:0),
                 0.25+clear2,
                 0.25+clear2], r=1/64);
         }
         
         // Trip Extension
-        hull() {
-          translate([disconnectorPivotX+disconnectorOffset-0.0625-clearance,
-                     disconnectorOffsetY-clear,
-                     disconnectorPivotZ-0.125-clear])
-          ChamferedCube([0.0625+(cutter?0.125:0),
-                (5/16)+clear2,
-                0.25+clear2], r=1/64);
-          
-          translate([disconnectorPivotX,
-                     disconnectorOffsetY-clear,
-                     disconnectorPivotZ])
-          rotate([-90,0,0])
-          ChamferedCylinder(r1=0.125+clear, r2=1/64, h=(5/16)+clear2);
-        }
+        translate([-1,
+                   disconnectorOffsetY-clear,
+                   disconnectorPivotZ-0.125-clear])
+        ChamferedCube([1,
+              (5/16)+clear2,
+              0.25+clear2], r=1/64);
         
         // Prong
         translate([0,
@@ -424,7 +432,7 @@ module Disconnector(pivotFactor=0, cutter=false, clearance=0.01, alpha=1, debug=
       }
       
       if (!cutter) {
-        DisconnectorPivotPin(cutter=true);
+        DisconnectorPivotPin(cutter=true, clearance=0.002);
         DisconnectorSpring(cutter=true);
       
         // Trim the back edge to clear pivot
@@ -494,7 +502,7 @@ module FireControlHousing_print() {
 module SimpleFireControlAssembly(debug=false) {
   disconnectStart = 0.8;
   disconnectLetdown = 0.2;
-  connectStart = 0.91;
+  connectStart = 0.99;
   hammerChargeStart = 0.25;
   
   disconnectorTripAF = SubAnimate(ANIMATION_STEP_CHARGE, start=0.0, end=0.2)
@@ -502,7 +510,7 @@ module SimpleFireControlAssembly(debug=false) {
                                   start=connectStart);
   
   disconnectorAF = SubAnimate(ANIMATION_STEP_CHARGE, start=0.99)
-                 - SubAnimate(ANIMATION_STEP_CHARGER_RESET, start=connectStart, end=0.98);
+                 - SubAnimate(ANIMATION_STEP_CHARGER_RESET, start=connectStart, end=1);
   
   chargeAF = Animate(ANIMATION_STEP_CHARGE)
            - Animate(ANIMATION_STEP_CHARGER_RESET);
@@ -510,7 +518,7 @@ module SimpleFireControlAssembly(debug=false) {
   if (_SHOW_ACTION_ROD)
   translate([-chargerTravel*chargeAF,0,0]) {
     HammerCharger(debug=_CUTAWAY_HAMMER_CHARGER);
-    SimpleActionRod();
+    ActionRod();
     ActionRodBolt();
     children();
   }
@@ -538,11 +546,11 @@ module SimpleFireControlAssembly(debug=false) {
     FiringPinSpring();
   }
   
-  if (_SHOW_FIRE_CONTROL_HOUSING)
-  FireControlHousing();
-  
   if (_SHOW_RECOIL_PLATE_BOLTS)
   RecoilPlateBolts();
+  
+  if (_SHOW_FIRE_CONTROL_HOUSING)
+  FireControlHousing();
   
   translate([-LowerMaxX(),0,LowerOffsetZ()])
   Sear(length=SearLength()+abs(LowerOffsetZ())+SearTravel()-0.25);

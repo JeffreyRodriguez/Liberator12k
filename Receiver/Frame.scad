@@ -165,6 +165,7 @@ module FrameBack_print() {
 
 module Receiver_LargeFrame(length=ReceiverCouplingLength(), doRender=true, debug=false) {
   
+  topCoverHeight = 1;
   
   color("DimGrey") RenderIf(doRender) {
       
@@ -183,14 +184,31 @@ module Receiver_LargeFrame(length=ReceiverCouplingLength(), doRender=true, debug
   }
   
   color("Tan")
-  RenderIf(doRender)
+  RenderIf(doRender) DebugHalf(enabled=debug)
   difference() {
-    Receiver(doRender=false) {
+    Receiver(topSlotHeight=ManifoldGap(), doRender=false) {
       
-      // Frame bolt supports
-      hull()
-      mirror([1,0,0])
-      FrameSupport(length=FrameReceiverLength());
+      hull() {
+        
+        // Frame bolt supports
+        mirror([1,0,0])
+        FrameSupport(length=FrameReceiverLength()+FrameBackLength());
+        
+        // Top cover
+        translate([0,-TensionRodTopOffsetSide(),ReceiverTopZ()])
+        mirror([1,0,0])
+        cube([FrameReceiverLength(),
+              (TensionRodTopOffsetSide()*2),
+              topCoverHeight]);
+      }
+      
+      // Top cover
+      translate([0, -TensionRodTopOffsetSide(), ReceiverTopZ()])
+      rotate([0,-90,0])
+      linear_extrude(height=ReceiverLength())
+      ChamferedSquare(xy=[topCoverHeight,(TensionRodTopOffsetSide()*2)], r=1/16,
+                      teardropBottom=false,
+                      teardropTop=false);
       
       // Coupling bolt supports
       mirror([1,0,0])
@@ -201,7 +219,36 @@ module Receiver_LargeFrame(length=ReceiverCouplingLength(), doRender=true, debug
       mirror([0,0,1])
       rotate([0,90,0])
       cube([0.5-(1/32), (CouplingBoltY()*2), length]);
+      
+      // Fillet barrel to the frame
+      *for (M = [0,1]) mirror([0,M,0])
+      translate([0,
+                 ReceiverOR()-ManifoldGap(2),
+                 FrameBottomZ()+ManifoldGap()])
+      mirror([1,0,0])
+      rotate([0,90,0])
+      rotate(-90)
+      Fillet(r=WallFrameBolt(),
+             h=FrameReceiverLength(),
+             taperEnds=true);
+      
+      // Fill in under the frame bolts
+      *translate([0, -ReceiverOR(), 0])
+      mirror([1,0,0])
+      cube([FrameReceiverLength(),
+                     ReceiverOD(),
+                     FrameBoltZ()]);
     }
+    
+    hull() {
+      ReceiverTopSlot(length=FrameReceiverLength()-0.25, height=1.25+0.01);
+      ReceiverTopSlot(length=ReceiverLength(), width=0.5+0.02, height=1);
+    }
+      
+    // Pic rail insert
+    translate([0, -UnitsMetric(15.6/2), ReceiverTopZ()+topCoverHeight-0.0625])
+    mirror([1,0,0])
+    cube([ReceiverLength(), UnitsMetric(15.6), 0.25]);
     
     CouplingBolts(cutter=true);
     FrameBolts(cutter=true);
@@ -224,7 +271,7 @@ module Receiver_LargeFrameAssembly(length=FrameBoltLength(),
   CouplingBolts();
   
   //if (frame && frameBack)
-  FrameBack(length=FrameBackLength(), debug=debug);
+  //FrameBack(length=FrameBackLength(), debug=debug);
 
   //if (frame && frameBolts)
   FrameBolts(length=length);

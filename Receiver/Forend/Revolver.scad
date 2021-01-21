@@ -31,7 +31,6 @@ use <../../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 use <../../Vitamins/Rod.scad>;
 
-use <../Action Rod.scad>;
 use <../Receiver.scad>;
 use <../Lugs.scad>;
 use <../Frame.scad>;
@@ -59,7 +58,6 @@ _SHOW_CYLINDER = true;
 _SHOW_PUMP = true;
 _SHOW_SPINDLE = true;
 _SHOW_FRAME_SPACER = true;
-_SHOW_SHIELD = true;
 
 /* [Assembly Transparency] */
 _ALPHA_BARREL_SUPPORT = 1;     // [0:0.1:1]
@@ -129,8 +127,6 @@ function ChamferRadius() = 1/16;
 function CR() = 1/16;
 
 // Measured: Vitamins
-function BlastPlateThickness() = 1/4;
-function BlastPlateWidth() = 1.5;
 function RecoilPlateThickness() = 1/4;
 function RecoilPlateWidth() = 1.5;
 function RecoilSpreaderThickness() = 0.5;
@@ -184,9 +180,9 @@ function SpindleTogglePinOffset() = 0.5;
 function SpindleTogglePinX() = ForendMaxX()-SpindleTogglePinOffset();
 function SpindleTogglePinZ() = CylinderZ()-0.3215/2;
 
-function SpindlePinMinX() = ForendMinX()+BlastPlateThickness()+0.375;
+function SpindlePinMinX() = ForendMinX()+0.375;
 function SpindlePinTravel() = RecoilPlateThickness();
-function SpindlePinMaxX() = ForendMinX()+BlastPlateThickness()+0.375+SpindlePinTravel();
+function SpindlePinMaxX() = ForendMinX()+0.375+SpindlePinTravel();
 function SpindleLinkagePinOffset() = 0.5;
 function SpindleLinkagePinX() = SpindleTogglePinX()-Revolver_ForendSpindleTogglePinRadius()-SpindleLinkagePinOffset();
   
@@ -243,7 +239,7 @@ module Revolver_CylinderSpindle(template=false, cutter=false, clearance=0.01) {
   translate([-ReceiverFrontLength()-ManifoldGap(),0,CylinderZ()])
   rotate([0,90,0])
   Rod((template ? Spec_RodTemplate() : CylinderRod()),
-      length=ForendMaxX()-ForendMinX()-1.5+(cutter?BlastPlateThickness()+0.5:0)+ManifoldGap(3), 
+      length=ForendMaxX()-ForendMinX()-1.5+(cutter?0.5:0)+ManifoldGap(3), 
       clearance=cutter?RodClearanceSnug():undef);
 }
 
@@ -253,10 +249,10 @@ module Revolver_ForendSpindle(template=false, cutter=false, clearance=0.01) {
   clear2 = clear*2;
 
   color("Silver") RenderIf(!cutter)
-  translate([ForendMinX()-BlastPlateThickness()-ManifoldGap(),0,CylinderZ()])
+  translate([ForendMinX()-ManifoldGap(),0,CylinderZ()])
   rotate([0,90,0])
   Rod((template ? Spec_RodTemplate() : CylinderRod()),
-      length=ForendMaxX()-ForendMinX()-1.5+(cutter?BlastPlateThickness()+0.5:0)+ManifoldGap(3), 
+      length=ForendMaxX()-ForendMinX()-1.5+(cutter?0.5:0)+ManifoldGap(3), 
       clearance=cutter?RodClearanceSnug():undef);
 }
 
@@ -303,76 +299,23 @@ module Revolver_PumpLockRod(cutter=false, clearance=0.005) {
   translate([ForendMaxX()-1,-(width/2)-clear,-BarrelRadius()-width-clear])
   cube([length, width+clear2, width+clear2]);
 }
-module Revolver_BlastPlate(clearance=0.01, cutter=false, debug=false) {
-  clear = cutter ? clearance : 0;
-  clear2 = clear*2;
 
-  color("LightSteelBlue")
-  RenderIf(!cutter) DebugHalf(enabled=debug)
-  difference() {
-    translate([BarrelMinX(), // Don't *really* need to clear here
-               -(BlastPlateWidth()/2)-clear,
-               ActionRodZ()-0.125])
-    mirror([0,0,1])
-    cube([BlastPlateThickness(),
-          BlastPlateWidth()+clear2,
-          2.25]);
-
-    if (!cutter)
-    Revolver_Barrel(cutter=true);
-    SimpleActionRod(cutter=true);
-    Revolver_ForendSpindle(cutter=true);
-  }
-}
-
-module Revolver_Shield(cutter=false) {
-  translate([ForendMinX()+0.25,0,CylinderZ()-0.01])
-  rotate([0,-90,0])
-  linear_extrude(height=0.5)
-  rotate(90)
-  semidonut(minor=CylinderDiameter()-0.25, major=CylinderDiameter(), angle=180, $fn=100);
-}
-module Revolver_RecoilPlateBolts(bolt=RecoilPlateBolt(), boltLength=FiringPinHousingLength()+0.5, template=false, cutter=false, clearance=RECOIL_PLATE_BOLT_CLEARANCE) {
-  bolt     = template ? BoltSpec("Template") : bolt;
-  boltHead = template ? "none"               : "flat";
-  
-  color("Silver")
-  RenderIf(!cutter) {
-  
-    // Top
-    translate([0.5+ManifoldGap(),0,0.5])
-    rotate([0,-90,0])
-    Bolt(bolt=bolt, length=0.5+ManifoldGap(2),
-          head=boltHead,
-          clearance=cutter?clearance:0);
-
-    // Bottom
-    color("Silver")
-    translate([0.5+ManifoldGap(),0,CylinderZ()-0.5])
-    rotate([0,-90,0])
-    Bolt(bolt=bolt,
-         length=0.5+ManifoldGap(2),
-         head=boltHead,
-         clearance=cutter?clearance:0);
-  }
-}
 module Revolver_RecoilPlate(template=false, cutter=false, debug=_CUTAWAY_RECOIL_PLATE) {
   color("LightSteelBlue")
   RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
     translate([ReceiverFrontLength()-RecoilPlateThickness()+(cutter?ManifoldGap():0),
-               -RecoilPlateWidth()/2,
-               FrameTopZ()])
-    mirror([0,0,1])
+               -1,
+               -RecoilPlateWidth()/2])
     cube([RecoilPlateThickness()+(cutter?ManifoldGap():0),
-          RecoilPlateWidth(),
-          3]);
+          2,
+          RecoilPlateWidth()]);
 
     if (!cutter) {
       FiringPin(cutter=true, radius=(template?1/32/2:FiringPinRadius()));
       Revolver_CylinderSpindle(cutter=true, template=template);
-      Revolver_RecoilPlateBolts(cutter=true, template=template);
-      SimpleActionRod(cutter=true);
+      RecoilPlateBolts(cutter=true, template=template);
+      ActionRod(cutter=true);
     }
   }
 }
@@ -386,15 +329,18 @@ module Revolver_ReceiverFront(debug=_CUTAWAY_RECEIVER_FRONT, alpha=_ALPHA_RECEIV
   color("Chocolate", alpha)
   render() DebugHalf(enabled=debug)
   difference() {
-    union() {
+    hull() {
       FrameSupport(length=length,
-                   extraBottom=FrameBoltZ()+abs(CylinderZ()));
+                   extraBottom=0.5);
       
       // Cover the back of the cylinder to prevent blowback
       translate([0,0,CylinderZ()])
       rotate([0,90,0])
-      ChamferedCylinder(r1=(BarrelRadius()*3)+(CR()*2)+0.125, r2=CR(),
+      ChamferedCylinder(r1=(BarrelRadius()*3)+(CR()*2), r2=CR(),
                         h=length-ManifoldGap(), $fn=Resolution(80, 200));
+      
+      translate([0,-TensionRodTopOffsetSide(),FrameTopZ()])
+      cube([1/32,(TensionRodTopOffsetSide()*2), 0.25]);
     }
     
     FrameBolts(cutter=true);
@@ -405,11 +351,13 @@ module Revolver_ReceiverFront(debug=_CUTAWAY_RECEIVER_FRONT, alpha=_ALPHA_RECEIV
     
     FiringPin(cutter=true);
     
-    Revolver_RecoilPlateBolts(cutter=true);
+    RecoilPlateBolts(cutter=true);
+    ReceiverRods(cutter=true);
     
-    SimpleActionRod(cutter=true);
+    ActionRod(cutter=true);
 
     Revolver_ForendSpindle(cutter=true);
+    Revolver_CylinderSpindle(cutter=true);
   }
 }
 
@@ -458,14 +406,14 @@ module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND, $
       // Around the barrel
       difference() {
         hull() {
-          translate([ForendMinX()+BlastPlateThickness(),0,0])
+          translate([ForendMinX(),0,0])
           rotate([0,90,0])
           ChamferedCylinder(r1=BarrelRadius()+WallBarrel(), r2=CR(),
-                   h=Revolver_BarrelSupportLength()-BlastPlateThickness(),
+                   h=Revolver_BarrelSupportLength(),
                               teardropTop=true);
           
-          translate([ForendMinX()+BlastPlateThickness(), -(BarrelRadius()+WallBarrel()), 0])
-          ChamferedCube([Revolver_BarrelSupportLength()-BlastPlateThickness(),
+          translate([ForendMinX(), -(BarrelRadius()+WallBarrel()), 0])
+          ChamferedCube([Revolver_BarrelSupportLength(),
                          (BarrelRadius()+WallBarrel())*2,
                          FrameBoltZ()], r=CR());
         }
@@ -473,12 +421,12 @@ module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND, $
 
       // Around the spindle
       hull() {
-        translate([ForendMinX()+BlastPlateThickness(), -(0.6875/2), CylinderZ()+SpindleRadius()])
-        ChamferedCube([Revolver_BarrelSupportLength()-BlastPlateThickness()-(Revolver_ForendSpindleLinkagePinRadius()*2)-1,
+        translate([ForendMinX(), -(0.6875/2), CylinderZ()+SpindleRadius()])
+        ChamferedCube([Revolver_BarrelSupportLength()-(Revolver_ForendSpindleLinkagePinRadius()*2)-1,
                        0.6875,
                        1], r=CR(), teardropFlip=[false,true,true]);
-        translate([ForendMinX()+BlastPlateThickness(), -(0.6875/2), CylinderZ()-(SpindleRadius()+WallSpindle())])
-        ChamferedCube([Revolver_BarrelSupportLength()-BlastPlateThickness()-1-(Revolver_ForendSpindleLinkagePinRadius()*2)-(SpindleRadius()+WallSpindle()+abs(SpindleTogglePinZ()-CylinderZ())),
+        translate([ForendMinX(), -(0.6875/2), CylinderZ()-(SpindleRadius()+WallSpindle())])
+        ChamferedCube([Revolver_BarrelSupportLength()-1-(Revolver_ForendSpindleLinkagePinRadius()*2)-(SpindleRadius()+WallSpindle()+abs(SpindleTogglePinZ()-CylinderZ())),
                        0.6875,
                        1], r=CR(), teardropFlip=[false,true,true]);
       }
@@ -491,23 +439,18 @@ module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND, $
       
       // Fillet barrel to the frame
       for (M = [0,1]) mirror([0,M,0])
-      translate([ForendMinX()+BlastPlateThickness()+CR(),
+      translate([ForendMinX()+CR(),
                  BarrelRadius()+WallBarrel()-ManifoldGap(2),
                  FrameBottomZ()-extraBottom+ManifoldGap()])
       rotate([0,90,0])
       rotate(-90)
-      Fillet(r=WallFrameBolt(), h=Revolver_BarrelSupportLength()-BlastPlateThickness()-(CR()*2),
+      Fillet(r=WallFrameBolt(), h=Revolver_BarrelSupportLength()-(CR()*2),
                      taperEnds=true);
     }
     
     // Cutout for a picatinny rail insert
     translate([-ManifoldGap(), -UnitsMetric(15.6/2), FrameTopZ()-0.0625])
     cube([FrameExtension()+ManifoldGap(2), UnitsMetric(15.6), 0.25]);
-    
-    // Blast plate fillet weld clearance
-    translate([ForendMinX()+BlastPlateThickness(), 0, 0])
-    rotate([0,90,0])
-    HoleChamfer(r1=BarrelRadius(), r2=0.25, teardrop=true);
     
     // Handle pivot clearance
     rotate([90,0,0])
@@ -535,12 +478,11 @@ module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND, $
     
     FrameBolts(cutter=true);
 
-    SimpleActionRod(cutter=true);
+    ActionRod(cutter=true);
     
     //Revolver_PumpLockRod(cutter=true);
 
     Revolver_Barrel(cutter=true);
-    Revolver_BlastPlate(cutter=true);
     
     Revolver_ForendSpindle(cutter=true);
     
@@ -582,17 +524,10 @@ module Revolver_FrameSpacer(length=ForendMinX(), debug=false, alpha=_ALPHA_FOREN
     // Picatinny rail cutout
     translate([-ManifoldGap(), -UnitsMetric(15.6/2), FrameTopZ()-0.0625])
     cube([length+ManifoldGap(2), UnitsMetric(15.6), 0.25]);
-    
-    // Gas Vent
-    translate([BarrelMinX()-0.375,-(1.5/2),FrameBottomZ()-extraBottom])
-    ChamferedSquareHole(sides=[1, 1.5], center=false,
-                        length=FrameTopZ()-FrameBottomZ()+extraBottom,
-                        corners=false,
-                        chamferRadius=0.5);
 
     FrameBolts(cutter=true);
     
-    SimpleActionRod(cutter=true);
+    ActionRod(cutter=true);
     
     // Cylinder Cutout
     translate([0,0,CylinderZ()])
@@ -776,7 +711,7 @@ module Foregrip(length=2) {
       ChamferedCube([1, 0.75, 1.125], r=1/16);
     }
     
-    SimpleActionRod(cutter=true);
+    ActionRod(cutter=true);
     Revolver_Barrel(cutter=true);
     
     // Foregrip bolt
@@ -784,6 +719,7 @@ module Foregrip(length=2) {
     cylinder(r=1/8/2, h=2);
   }
 }
+
 module Foregrip_print() {
   rotate([0,-90,0])
   translate([-ForegripMinX(),0,0])
@@ -797,10 +733,9 @@ module Foregrip_print() {
 module RevolverForendAssembly(pipeAlpha=1, debug=false) {
   if (_SHOW_BARREL) {
     Revolver_Barrel(debug=debug);
-    Revolver_BlastPlate();
   }
   
-  Revolver_PumpLockRod();
+  *Revolver_PumpLockRod();
 
   if (_SHOW_FRAME_SPACER)
   Revolver_FrameSpacer(debug=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
@@ -837,9 +772,6 @@ module RevolverForendAssembly(pipeAlpha=1, debug=false) {
   rotate(-360/6/2*animateCylinderRotation)
   rotate(-360/6/2*animateCylinderRotation)
   Revolver_Cylinder(supports=false);
-  
-  if (_SHOW_SHIELD)
-  Revolver_Shield();
 }
 
 module RevolverAssembly(stock=true) {
@@ -859,7 +791,6 @@ module RevolverAssembly(stock=true) {
       ReceiverRods();
       
       Receiver_LargeFrameAssembly(debug=_CUTAWAY_RECEIVER);
-      ReceiverBackSegment();
     }
 
     if (_SHOW_STOCK) {
@@ -868,7 +799,7 @@ module RevolverAssembly(stock=true) {
 
     if (_SHOW_RECOIL_PLATE) {
       Revolver_RecoilPlate();
-      Revolver_RecoilPlateBolts();
+      RecoilPlateBolts();
     }
 
     if (_SHOW_FCG)
