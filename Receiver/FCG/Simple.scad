@@ -27,7 +27,7 @@ use <../Frame.scad>;
 /* [What to Render] */
 
 // Configure settings below, then choose a part to render. Render that part (F6) then export STL (F7). Assembly is not for printing.
-_RENDER = "Assembly"; // ["Assembly", "FireControlHousing", "Disconnector", "HammerCharger", "Hammer"]
+_RENDER = "Assembly"; // ["Assembly", "FireControlHousing", "Disconnector", "HammerCharger", "Hammer", "RecoilPlateJig"]
 //$t = 1; // [0:0.01:1]
 
 _SHOW_FIRE_CONTROL_HOUSING = true;
@@ -35,10 +35,10 @@ _SHOW_DISCONNECTOR = true;
 _SHOW_HAMMER = true;
 _SHOW_ACTION_ROD = true;
 _SHOW_FIRING_PIN = true;
+_SHOW_RECOIL_PLATE = true;
+_SHOW_RECOIL_PLATE_BOLTS = true;
 
 _SHOW_RECEIVER      = true;
-_SHOW_RECEIVER_BACK = true;
-_SHOW_RECOIL_PLATE_BOLTS = true;
 
 /* [Assembly Transparency] */
 _ALPHA_FIRING_PIN_HOUSING = 1; // [0:0.1:1]
@@ -77,6 +77,15 @@ FIRING_PIN_BODY_DIAMETER = 0.3125;
 
 // Shaft collar width
 FIRING_PIN_BODY_LENGTH = 1;
+
+// Measured: Vitamins
+function RecoilPlateLength() = 1/4;
+function RecoilPlateWidth() = 2;
+function RecoilPlateHeight() = 1.5;
+
+function RecoilPlateBolt() = BoltSpec(RECOIL_PLATE_BOLT);
+function RecoilPlateBoltOffsetY() = 0.375;
+
 
 // Settings: Vitamins
 function HammerBolt() = BoltSpec(HAMMER_BOLT);
@@ -240,7 +249,8 @@ module FiringPinSpring(debug=_CUTAWAY_FIRING_PIN_SPRING) {
 }
 
 
-module RecoilPlateBolts(bolt=RecoilPlateBolt(), boltLength=FiringPinHousingLength()+0.5, template=false, cutter=false, clearance=RECOIL_PLATE_BOLT_CLEARANCE) {
+
+module RecoilPlateBolts(bolt=RecoilPlateBolt(), boltLength=0.5, template=false, cutter=false, clearance=RECOIL_PLATE_BOLT_CLEARANCE) {
   bolt     = template ? BoltSpec("Template") : bolt;
   boltHead = template ? "none"               : "flat";
   
@@ -252,6 +262,22 @@ module RecoilPlateBolts(bolt=RecoilPlateBolt(), boltLength=FiringPinHousingLengt
   Bolt(bolt=bolt, length=1.5+ManifoldGap(2),
         head=boltHead, capHeightExtra=(cutter?1:0),
         clearance=cutter?clearance:0);
+}
+module RecoilPlate(cutter=false, debug=false) {
+  color("LightSteelBlue")
+  RenderIf(!cutter) DebugHalf(enabled=debug)
+  difference() {
+    translate([0.25, -1-ManifoldGap(2), -RecoilPlateHeight()/2])
+    ChamferedCube([RecoilPlateLength()+(cutter?(1/8):0),
+                   RecoilPlateWidth()+ManifoldGap(4),
+                   RecoilPlateHeight()],
+                  r=1/32,
+                  teardropXYZ=[false, false, false],
+                  teardropTopXYZ=[false, false, false]);
+
+    if (!cutter)
+    RecoilPlateBolts(cutter=true);
+  }
 }
 
 //*****************
@@ -496,6 +522,27 @@ module FireControlHousing_print() {
 }
 
 
+
+//****************
+//* Printed Jigs *
+//****************
+module RecoilPlateJig(firingPinRadius=1/32, clearance=0.005, extend=0.125) {
+  render()
+  difference() {
+    translate([0,-(RecoilPlateWidth()/2)-extend,-(RecoilPlateHeight()/2)-extend])
+    cube([RecoilPlateLength()+extend, RecoilPlateWidth()+extend, RecoilPlateHeight()+(+extend*2)]);
+
+    RecoilPlate(cutter=true);
+    
+    
+    RecoilPlateBolts(bolt=BoltSpec("Template"), head="none");
+    
+    rotate([0,90,0])
+    cylinder(r=firingPinRadius+clearance,
+             h=RecoilPlateLength()+extend+ManifoldGap(2),
+            $fn=8);
+  }
+}
 //**************
 //* Assemblies *
 //**************
@@ -549,6 +596,9 @@ module SimpleFireControlAssembly(debug=false) {
   if (_SHOW_RECOIL_PLATE_BOLTS)
   RecoilPlateBolts();
   
+  if (_SHOW_RECOIL_PLATE)
+  RecoilPlate();
+  
   if (_SHOW_FIRE_CONTROL_HOUSING)
   FireControlHousing();
   
@@ -565,7 +615,7 @@ if (_RENDER == "Assembly") {
   SimpleFireControlAssembly();
   
   if (_SHOW_RECEIVER)
-  ReceiverAssembly(debug=_CUTAWAY_RECEIVER, showBack=_SHOW_RECEIVER_BACK);
+  ReceiverAssembly(debug=_CUTAWAY_RECEIVER);
 }
 
 scale(25.4) {
@@ -588,4 +638,7 @@ scale(25.4) {
   rotate([90,0,0])
   translate([-disconnectorPivotX,-disconnectorOffsetY,-disconnectorPivotZ])
   Disconnector();
+  
+  if (_RENDER == "RecoilPlateJig")
+  RecoilPlateJig();
 }

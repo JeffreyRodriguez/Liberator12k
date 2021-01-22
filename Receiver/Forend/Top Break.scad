@@ -32,8 +32,7 @@ use <../Buttstock.scad>;
 use <../Lugs.scad>;
 use <../Frame.scad>;
 use <../Receiver.scad>;
-use <../Recoil Plate.scad>;
-use <../Action Rod.scad>;
+use <../FCG/Simple.scad>;
 
 /* [What to Render] */
 
@@ -45,7 +44,7 @@ _SHOW_RECEIVER = true;
 _SHOW_STOCK = true;
 _SHOW_LOWER = true;
 _SHOW_LOWER_LUGS = true;
-_CUTAWAY_RECEIVER = true;
+_CUTAWAY_RECEIVER = false;
 _ALPHA_RECEIVER_TUBE = 1; // [0:0.1:1]
 _ALPHA_RECEIVER_COUPLING = 1;  // [0:0.1:1]
 
@@ -105,7 +104,7 @@ function PivotAngleBack() = -15;
 function PivotAngle() = 35;
 function PivotX() = 4.75;
 function PivotZ() = -1.125;// (FrameBoltZ() + (FrameBoltRadius()+PivotRadius()));
-function PivotWidth() = 1.625;
+function PivotWidth() = 1.75;
 function PivotRadius() = 1/2;
 function PivotDiameter() = PivotRadius()*2;
 function PivotClearance() = 0.01;
@@ -149,7 +148,7 @@ function ForegripOffsetX() = 6+ChargerTravel();
 function ForegripLength() = 4.625;
 
 // Calculated: Positions
-function ActionRodZ() = FrameBoltZ()-WallFrameBolt()-(ActionRodWidth()/2);
+//function ActionRodZ() = FrameBoltZ()-WallFrameBolt()-(ActionRodWidth()/2);
 function BarrelOffsetZ() = 0; // -0.11 for .22LR rimfire
 
 function ExtractorWall() = 0.1875;
@@ -289,7 +288,7 @@ module LatchRetainer(cutter=false, clearance=0.005) {
   color("Silver")
   translate([ChargerTravel()+0.375+(ActionRodWidth()/2),
              -(LatchWidth()/2)-LatchWall()-clear,
-             ActionRodZ()-(ActionRodWidth()*1.5)-clear])
+             -(ActionRodWidth()*1.5)-clear])
   cube([ActionRodWidth()+clear,
         LatchWidth()+(LatchWall()*2)+clear2,
         ActionRodWidth()+clear2]);
@@ -300,7 +299,7 @@ module LatchSpring(length=LatchSpringLength(), compress=0,
   clear = cutter?clearance:0;
 
   color("Silver", alpha) RenderIf(!cutter)
-  translate([LatchLength()+LatchSpringLength(), 0, ActionRodZ()])
+  translate([LatchLength()+LatchSpringLength(), 0, 0])
   rotate([0,-90,0])
   cylinder(r=LatchSpringRadius()+clear,
            h=length-compress);
@@ -312,7 +311,7 @@ module LatchScrews(debug=false, cutter=false, clearance=0.008) {
 
   // Secure the latch block to the latch rod
   color("Gold") RenderIf(!cutter)
-  translate([ChargerTravel()+0.375,0,ActionRodZ()+(ActionRodWidth()/2)])
+  translate([ChargerTravel()+0.375,0,(ActionRodWidth()/2)])
   mirror([0,0,1])
   Bolt(bolt=GPBolt(),
        length=ActionRodWidth()+ManifoldGap(), clearance=clear,
@@ -387,9 +386,9 @@ module ReceiverFront(debug=false, alpha=1) {
 
       // Match the recoil plate
       translate([0,-2.25/2,LowerOffsetZ()])
-      ChamferedCube([ReceiverFrontLength(),
+      cube([ReceiverFrontLength(),
                      2.25,
-                     abs(LatchZ())+FrameBoltZ()], r=1/16);
+                     abs(LatchZ())+FrameBoltZ()]);
     }
 
     // Bolt Slot
@@ -403,12 +402,15 @@ module ReceiverFront(debug=false, alpha=1) {
     
     FrameBolts(cutter=true);
 
-    RecoilPlate(cutter=true);
-    
-    RecoilPlateFiringPinAssembly(cutter=true);
-
-    translate([-ReceiverFrontLength()-ManifoldGap(),0,ActionRodZ()])
-    ActionRod(length=ActionRodLength(), cutter=true);
+    translate([-ReceiverFrontLength(),0,0]) {
+      RecoilPlate(cutter=true);
+      
+      RecoilPlateBolts(cutter=true);
+      
+      FiringPin(cutter=true);
+      
+      ActionRod(cutter=true);
+    }
   }
 }
 
@@ -488,7 +490,6 @@ module Latch(debug=false, cutter=false, clearance=0.02, alpha=1) {
       LatchScrews(cutter=true);
       LatchRetainer(cutter=true);
       
-      translate([0,0,ActionRodZ()])
       ActionRod(cutter=true);
     }
   }
@@ -545,7 +546,7 @@ module ReceiverForend(clearance=0.01, debug=false, alpha=1) {
      
     Extractor(cutter=true);
 
-    translate([-ReceiverFrontLength(),0,ActionRodZ()])
+    translate([-ReceiverFrontLength(),0,0])
     ActionRod(length=ActionRodLength(), cutter=true);
   }
 }
@@ -561,7 +562,7 @@ module BarrelCollar(cutter=false, clearance=0.01,
   clear = cutter?clearance:0;
   clear2 = clear*2;
                            
-  supportWidth = 1;
+  supportWidth = 1.5;
 
   color("Tan", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
   PivotClearanceCut()
@@ -634,7 +635,6 @@ module BarrelCollar(cutter=false, clearance=0.01,
       translate([X,0,0])
       LatchRetainer(cutter=true);
       
-      translate([-0.5,0,ActionRodZ()])
       ActionRod(cutter=true, length=ActionRodLength());
       
       PumpLockRod(cutter=true);
@@ -680,10 +680,9 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1, receiverFrontAlpha=1,
                            stock=true, tailcap=false,
                            debug=false) {
 
-  translate([0/*-CartridgeRimThickness(Spec_Cartridge_12GA())*/,0,0]) {
-    RecoilPlateFiringPinAssembly(debug=debug);
-                               
-    RecoilPlate(debug=debug);
+
+  translate([-ReceiverFrontLength(),0,0]) {
+    SimpleFireControlAssembly();
   }
   
   // Pivoting barrel assembly
@@ -696,7 +695,7 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1, receiverFrontAlpha=1,
       
       LatchScrews();
 
-      translate([-0.5,0,ActionRodZ()])
+      translate([-0.5,0,0])
       ActionRod(length=ActionRodLength());
     }
 
@@ -762,7 +761,6 @@ if (_RENDER == "Assembly") {
       ReceiverRods();
       
       Receiver_LargeFrameAssembly(debug=_CUTAWAY_RECEIVER);
-      ReceiverBackSegment();
     }
 
     if (_SHOW_STOCK) {

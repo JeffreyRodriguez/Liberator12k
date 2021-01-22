@@ -114,14 +114,14 @@ module FrameSupport(length=FRAME_SPACER_LENGTH, width=(FrameBoltY()+FrameBoltRad
                   teardropTop=false);
 }
 
-module CouplingSupport(length=1) {
+module CouplingSupport(length=1, chamferFront=false) {
   
   // Coupling bolt supports
   for (Y = [-CouplingBoltY(),CouplingBoltY()])
   translate([0,Y,CouplingBoltZ()])
   rotate([0,90,0])
   ChamferedCylinder(r1=0.3125, r2=1/16, h=length,
-                    chamferBottom=false,
+                    chamferBottom=false, chamferTop=chamferFront,
                     teardropTop=true, $fn=Resolution(20,40));
 }
 
