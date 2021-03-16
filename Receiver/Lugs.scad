@@ -23,6 +23,8 @@ use <Receiver.scad>;
 // Assembly is not for printing.
 _RENDER = "Assembly"; // ["Assembly", "LowerLugs", "LowerLug_Front", "LowerLug_Rear"]
 
+_CUTAWAY_RECEIVER = false;
+
 // Settings: Positions
 function LowerOffsetZ() = -1.0625;
 function LowerLugHeight() = 0.0;
@@ -136,7 +138,7 @@ module LowerLug_Rear(id=1.5, alpha=1, debug=false) {
 }
 
 if (_RENDER == "Assembly") {
-  ReceiverAssembly();
+  ReceiverAssembly(debug=_CUTAWAY_RECEIVER);
   LowerLugs();
 
   translate([-LowerMaxX(),0,LowerOffsetZ()])
