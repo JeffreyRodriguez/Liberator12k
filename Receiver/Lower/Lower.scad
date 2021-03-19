@@ -153,31 +153,29 @@ module TriggerGuard() {
     // Text
     if (Resolution(false, true)) {
       translate([-0.2,
-                 (GripWidth()/2)-0.05,
+                 (GripWidth()/2),
                  -0.55])
       rotate([90,0,180])
-      linear_extrude(height=0.07) {
+      linear_extrude(height=0.05, center=true) {
         difference() {
-          circle(r=0.43, $fn=30);
-          circle(r=0.35, $fn=30);
+          circle(r=0.43, $fn=50);
+        
+        text("A", font="Arial Black", size=0.5,
+             halign = "center", valign="center"); // Anarchism A
         }
-
-        translate([-0.29,-0.29])
-        text("A", font="Arial Black", size=0.6); // Anarchism A
       }
 
       translate([-0.2,
-                 -(GripWidth()/2)+0.05,
+                 -(GripWidth()/2),
                  -0.55])
       rotate([90,0,0])
-      linear_extrude(height=0.07) {
+      linear_extrude(height=0.05, center=true) {
         difference() {
-          circle(r=0.43, $fn=30);
-          circle(r=0.35, $fn=30);
-        }
+          circle(r=0.43, $fn=50);
 
-        translate([-0.35,-0.35])
-        text("V", font="Arial Black", size=0.6); // Voluntaryism V
+          text("V", font="Arial Black", size=0.5,
+              halign = "center", valign="center"); // Voluntaryism V
+        }
       }
     }
   }
