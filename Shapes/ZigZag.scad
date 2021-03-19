@@ -6,10 +6,12 @@ use <../Meta/Manifold.scad>;
 use <../Shapes/Semicircle.scad>;
 use <../Shapes/Helix.scad>;
 
-DEFAULT_ZIGZAG_DIAMETER = 3.6252;
-DEFAULT_ZIGZAG_POSITIONS= 6;
-DEFAULT_ZIGZAG_DEPTH = 3/16;
-DEFAULT_ZIGZAG_WIDTH = 1/4;
+DEFAULT_ZIGZAG_DIAMETER  = 3.6252;
+DEFAULT_ZIGZAG_POSITIONS = 6;
+DEFAULT_ZIGZAG_DEPTH     = 0.1875;
+DEFAULT_ZIGZAG_WIDTH     = 0.2500;
+EXTRA_BOTTOM = 0.0000;
+EXTRA_TOP = 0.0000;
 
 module ZigZagSupport(radius,depth, width) {
   translate([radius - (depth*2),-(width/2)-(0.07/2),0])
@@ -28,7 +30,11 @@ module ZigZag(supportsTop=true, supportsBottom=true,
            positions=DEFAULT_ZIGZAG_POSITIONS,
            extraTop=0, extraBottom=0,
            twistRate=0.8,
-           $fn=Resolution(30,90)) {
+           $fn=Resolution(30,120)) {
+             
+  zigZagCircumference = (radius+depth)*2*PI;
+  slotAngle = (width/zigZagCircumference)*360;
+  overTwist = slotAngle/2;
 
   positionAngle=360/positions;
   top_slot_height = (width/2)+extraTop;
@@ -53,16 +59,32 @@ module ZigZag(supportsTop=true, supportsBottom=true,
                 teardropTop=false,
                 twist_rate=twistRate);
           
-          // Mirrored upper segment
-          rotate([0,0,-(positionAngle/2)])
-          translate([0,0,height+extraBottom+extraTop])
-          mirror([0,0,1])
-          HelixSegment(radius=radius, angle=positionAngle/2,
-              depth=depth, width=width,
-              bottomExtra=top_slot_height, topExtra=0,
-              teardropBottom=false,
-              teardropTop=false,
-              twist_rate=twistRate);
+          // Upper Segment
+          intersection() {
+            rotate([0,0,-(positionAngle/2)])
+            translate([0,0,height+extraBottom+extraTop])
+            mirror([0,0,1])
+            HelixSegment(radius=radius, angle=(positionAngle/2)+overTwist,
+                depth=depth, width=width,
+                bottomExtra=top_slot_height, topExtra=0,
+                teardropBottom=false,
+                teardropTop=false,
+                twist_rate=twistRate);
+            
+            linear_extrude(height=height+extraBottom+extraTop)
+            hull() {
+              rotate(-(positionAngle/2)+overTwist)
+              semicircle(od=(radius+depth+depth)*2,
+                         angle=(positionAngle/2)+(overTwist*2));
+              
+              circle(r=width/2, $fn=20);
+            }
+          }
+          
+          // Extend the straight section to compensate for overtwist
+          //rotate([0,0,-(positionAngle/2)])
+          translate([radius-depth,-width/2,extraBottom+width])
+          cube([depth*2, width, width]);
         }
       }
     }
@@ -81,7 +103,7 @@ module ZigZag(supportsTop=true, supportsBottom=true,
     if (supportsBottom)
     translate([0,0,bottom_slot_height+width])
     for (i=[0:positions-1])
-    rotate([0,0,(positionAngle*i)])
+    rotate([0,0,(positionAngle*i)+overTwist])
     ZigZagSupport(radius, depth, width);
   }
 }
@@ -92,4 +114,5 @@ rotate([0,90,0])
 %cylinder(r=DEFAULT_ZIGZAG_WIDTH/2, h=DEFAULT_ZIGZAG_DEPTH*3, $fn=10);
 
 //render()
-ZigZag(extraTop=1);
+ZigZag(extraBottom=EXTRA_BOTTOM, extraTop=EXTRA_TOP,
+       supportsTop=false, supportsBottom=false);
