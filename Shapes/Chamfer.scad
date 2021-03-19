@@ -47,13 +47,12 @@ module RoundedBoolean(edgeOffset=1, edgeSign=-1,
 module Fillet(r=0.125, h=1, inset=false, taperEnds=true) {
   effectiveHeight = h -(inset ? r*2 : 0);
 
-  translate([-ManifoldGap(2),-ManifoldGap(2),(inset ? r : 0)])
+  translate([0,0,(inset ? r : 0)])
   difference() {
     linear_extrude(height=effectiveHeight)
     intersection() {
       RoundedBoolean(edgeOffset=0, r=r, teardrop=false);
 
-      translate([ManifoldGap(), -ManifoldGap()])
       rotate(90)
       square(r+ManifoldGap());
     }

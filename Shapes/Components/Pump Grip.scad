@@ -29,7 +29,7 @@ module PumpGrip(outerRadius=PumpGripRadius(), length=PumpGripLength(),
     for (Z = [ringGap:ringGap:length-ringGap]) translate([0,0,Z])
     for (M = [0,1]) mirror([0,0,M])
     translate([0,0,-ringRadius*1.5]) scale([1,1,1.5]) translate([0,0,ringRadius])
-    TeardropTorus(majorRadius=outerRadius-ringRadius,
+    TeardropTorus(majorRadius=outerRadius,
                   minorRadius=ringRadius);
 
     // Gripping cutout linear channels
