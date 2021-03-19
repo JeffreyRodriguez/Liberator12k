@@ -41,7 +41,7 @@ module ReceiverBottomSlotInterface(length=0.75, height=abs(LowerOffsetZ()+LowerL
   }
 }
 
-module LowerLugs(id=1.5, alpha=1, debug=false) {
+module LowerLugs(id=1.25-0.02, alpha=1, debug=false) {
   color("Tan")
   render() DebugHalf(enabled=debug)
   translate([-LowerMaxX(),0,0])
@@ -65,12 +65,17 @@ module LowerLugs(id=1.5, alpha=1, debug=false) {
       
       // Sear Support
       hull() {
-        translate([0.125,-0.25/2,-(id/2)-0.25])
-        ChamferedCube([0.25, 0.25, id/2], r=1/32);
+        translate([0.125,-0.3125/2,-(id/2)-0.25])
+        ChamferedCube([0.25, 0.3125, id/2], r=1/32);
         
-        translate([LowerMaxX()-1.25,-0.25/2,-(id/2)-0.25])
-        ChamferedCube([0.25, 0.25, 0.25], r=1/32);
+        translate([LowerMaxX()-1.25,-0.3125/2,-(id/2)-0.25])
+        ChamferedCube([0.25, 0.3125, 0.25], r=1/32);
       }
+      
+      // Hammer Guide
+      translate([LowerMaxX()-1.25-1,-0.3125/2,-(id/2)-0.25])
+      mirror([1,0,0])
+      ChamferedCube([2.25, 0.3125, (id/2)], r=1/32);
     }
     
     translate([-0.01,0,0])
@@ -84,7 +89,7 @@ module LowerLugs_print() {
   LowerLugs();
 }
 
-module LowerLug_Front(id=1.5, alpha=1, debug=false) {
+module LowerLug_Front(id=1.25-0.02, alpha=1, debug=false) {
   color("Tan")
   render() DebugHalf(enabled=debug)
   translate([-LowerMaxX(),0,0])
@@ -104,19 +109,20 @@ module LowerLug_Front(id=1.5, alpha=1, debug=false) {
       cylinder(r=(id/2), h=4.5, $fn=80);
       
       hull() {
-        translate([0.125,-0.25/2,-(id/2)-0.25])
-        ChamferedCube([0.25, 0.25, id/2], r=1/32);
+        translate([0.125,-0.3125/2,-(id/2)-0.25])
+        ChamferedCube([0.25, 0.3125, id/2], r=1/32);
         
-        translate([LowerMaxX()-1.25,-0.25/2,-(id/2)-0.25])
-        ChamferedCube([0.25, 0.25, 0.25], r=1/32);
+        translate([LowerMaxX()-1.25,-0.3125/2,-(id/2)-0.25])
+        ChamferedCube([0.25, 0.3125, 0.25], r=1/32);
       }
     }
     
+    translate([-0.01,0,0])
     SearCutter();
   }
 }
 
-module LowerLug_Rear(id=1.5, alpha=1, debug=false) {
+module LowerLug_Rear(id=1.25-0.02, alpha=1, debug=false) {
   color("Tan")
   render() DebugHalf(enabled=debug)
   translate([-LowerMaxX(),0,0])
@@ -130,10 +136,18 @@ module LowerLug_Rear(id=1.5, alpha=1, debug=false) {
       ReceiverBottomSlotInterface(length=0.75+0.75);
     }
     
-    // Receiver ID
-    translate([LowerMaxX(),0,0])
-    rotate([0,-90,0])
-    cylinder(r=id/2, h=4.5, $fn=80);
+    difference() {
+      
+      // Receiver ID
+      translate([LowerMaxX(),0,0])
+      rotate([0,-90,0])
+      cylinder(r=id/2, h=4.5, $fn=80);
+      
+      // Hammer Guide
+      translate([ReceiverLugRearMaxX(),-0.3125/2,-(id/2)-0.25])
+      mirror([1,0,0])
+      ChamferedCube([0.75, 0.3125, id/2], r=1/32);
+    }
   }
 }
 
