@@ -31,7 +31,7 @@ BOLTS = [
 
 function BoltSpec(bolt) = slookup(bolt, BOLTS);
 
-$fs = UnitsFs()*0.5;
+$fs = UnitsFs()*0.25;
 
 
 /**
