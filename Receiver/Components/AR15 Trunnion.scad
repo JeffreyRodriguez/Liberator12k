@@ -14,7 +14,7 @@ use <../../Vitamins/AR15/Barrel.scad>;
 
 use <../Receiver.scad>;
 use <../Lower/Lower.scad>;
-use <../Lugs.scad>;
+use <../Lower/Lugs.scad>;
 use <../Action Rod.scad>;
 
 /* [What to Render] */
@@ -41,7 +41,7 @@ module AR15_Trunnion(doRender=true) {
     rotate(180)
     AR15_Barrel(cutter=true);
     
-    ReceiverRods(cutter=true, nutType="none");
+    TensionBolts(cutter=true, nutType="none");
   }
 }
 
@@ -59,7 +59,7 @@ module AR15_TrunnionCap(doRender=true) {
     rotate(180)
     AR15_Barrel(cutter=true);
     
-    ReceiverRods(cutter=true, nutType="none");
+    TensionBolts(cutter=true, nutType="none");
   }
 }
 
@@ -75,7 +75,7 @@ module AR15_TrunnionAssembly() {
   
   translate([-LowerMaxX(), 0, LowerOffsetZ()])
   Lower();
-  LowerLugs();
+  LowerMount();
 }
 
 scale(25.4) {

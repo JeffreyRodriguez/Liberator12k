@@ -10,7 +10,7 @@ use <../../Shapes/Chamfer.scad>;
 
 use <../../Vitamins/Rod.scad>;
 
-use <Receiver Lugs.scad>;
+use <Lugs.scad>;
 
 function SearRod() = Spec_RodOneQuarterInch();
 function SearPinRod() = Spec_RodThreeThirtysecondInch();

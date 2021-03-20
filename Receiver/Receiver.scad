@@ -23,6 +23,7 @@ use <../Vitamins/Rod.scad>;
 // Configure settings below, then choose a part to render. Render that part (F6) then export STL (F7). Assembly is not for printing.
 _RENDER = "Receiver Assembly"; // ["Receiver Assembly", "Receiver", "ReceiverBackSegment"]
 
+/* [Debugging] */
 _SHOW_RECEIVER            = true;
 _SHOW_RECEIVER_RODS       = true;
 _SHOW_RECEIVER_BACK       = true;
@@ -39,31 +40,40 @@ RECEIVER_TUBE_OD =  1.7501;
 RECEIVER_OD      = 2.0001;
 RECEIVER_ID      = 1.2501;
 
-/* [Bolts] */
-RECEIVER_SIDEPLATE_BOLT = "#8-32";          // ["M4", "#8-32"]
-RECEIVER_SIDEPLATE_BOLT_HEAD = "flat";      // ["socket", "flat"]
-RECEIVER_SIDEPLATE_BOLT_NUT = "heatset";    // ["hex", "heatset"]
-RECEIVER_SIDEPLATE_BOLT_CLEARANCE = 0.005;
+// Threaded rods that extend through the receiver and stock.
+TENSION_BOLT           = "#8-32";   // ["M4", "#8-32", "#10-24", "1/4\"-20"]
+TENSION_NUT_TYPE       = "heatset"; // ["hex", "heatset"]
+TENSION_BOLT_CLEARANCE = 0.01;
+TENSION_BOLT_LENGTH    = 12;
 
-RECEIVER_TENSION_NUT_TYPE = "heatset";    // ["hex", "heatset"]
-RECEIVER_TENSION_BOLT = "#8-32";          // ["M4", "#8-32", "#10-24", "1/4\"-20"]
-RECEIVER_TENSION_BOLT_CLEARANCE = 0.01;
+// Picatinny rail mounts on top of receiver w/ M-LOK
+MLOK_BOLT           = "#8-32";   // ["M4", "#8-32", "#10-24", "1/4\"-20"]
 
 // Settings: Vitamins
-function ReceiverSideplateBolt() = BoltSpec(RECEIVER_SIDEPLATE_BOLT);
-assert(ReceiverSideplateBolt(), "ReceiverSideplateBolt() is undefined. Unknown RECEIVER_SIDEPLATE_BOLT?");
+function TensionBolt() = BoltSpec(TENSION_BOLT);
+assert(TensionBolt(), "TensionBolt() is undefined. Unknown TENSION_BOLT?");
 
-function ReceiverRod() = BoltSpec(RECEIVER_TENSION_BOLT);
-assert(ReceiverRod(), "ReceiverRod() is undefined. Unknown RECEIVER_TENSION_BOLT?");
+function MlokBolt() = BoltSpec(TENSION_BOLT);
+assert(MlokBolt(), "TensionBolt() is undefined. Unknown MLOK_BOLT?");
+
 
 // Settings: Lengths
 function ReceiverLength() = 4.5;
 function ReceiverBackLength() = 0.5;
-function ReceiverStockLength() = 12-ReceiverLength()-ReceiverBackLength()-0.1875;
-function ReceiverTopSlotWidth() = 0.75;
+function ReceiverStockLength() = 12
+                               - ReceiverLength()
+                               - ReceiverBackLength()
+                               - 0.1875;
+
 function ReceiverBottomSlotWidth() = 1;
+
+function ReceiverTopSlotWidth() = 0.75;
+function ReceiverTopSlotHeight() = 1.25;
+
 function ReceiverSideSlotHeight() = 0.5;
-function RecieverSideSlotDepth() = 0.125;
+function ReceiverSideSlotDepth() = 0.125;
+function ReceiverSlotClearance() = 0.005;
+
 
 // Settings: Diameters
 function ReceiverOD()     = RECEIVER_OD;
@@ -75,7 +85,6 @@ function ReceiverIR()     = ReceiverID()/2;
 function WallTensionRod() = 0.1875;
 
 // Settings: Positions
-function LowerOffsetZ() = -1.125;
 
 function TensionRodBottomZ() = -7/8;
 function TensionRodBottomOffsetSide() = 0.75;
@@ -86,10 +95,12 @@ function TensionRodTopOffsetSide() = 0.625;
 function ReceiverBottomZ() = TensionRodBottomZ()-WallTensionRod();
 function ReceiverTopZ() = TensionRodTopZ()-WallTensionRod();
 
+function LowerOffsetZ() = ReceiverBottomZ();
+
 // ************
 // * Vitamins *
 // ************
-module ReceiverRodIterator() {
+module TensionBoltIterator() {
   for (YZ = [[TensionRodTopOffsetSide(),TensionRodTopZ()],
              [-TensionRodTopOffsetSide(),TensionRodTopZ()],
              [TensionRodBottomOffsetSide(),TensionRodBottomZ()],
@@ -98,11 +109,11 @@ module ReceiverRodIterator() {
   rotate([0,-90,0])
   children();
 }
-module ReceiverRods(headType="none", nutType=RECEIVER_TENSION_NUT_TYPE, length=12, cutter=false, clearance=RECEIVER_TENSION_BOLT_CLEARANCE, teardrop=false, debug=false) {
+module TensionBolts(headType="none", nutType=TENSION_NUT_TYPE, length=12, cutter=false, clearance=TENSION_BOLT_CLEARANCE, teardrop=false, debug=false) {
 
   color("Silver") RenderIf(!cutter) DebugHalf(enabled=debug)
-  ReceiverRodIterator()
-  NutAndBolt(bolt=ReceiverRod(),
+  TensionBoltIterator()
+  NutAndBolt(bolt=TensionBolt(),
              boltLength=length+ManifoldGap(2),
              head=headType, capHeightExtra=(cutter?0.375:0),
              nut=nutType,
@@ -111,7 +122,7 @@ module ReceiverRods(headType="none", nutType=RECEIVER_TENSION_NUT_TYPE, length=1
 }
 
 
-module ReceiverBottomSlot(clearance=0.005) {
+module ReceiverBottomSlot(clearance=ReceiverSlotClearance()) {
   translate([-0.5, -(ReceiverBottomSlotWidth()/2)-clearance,0])
   mirror([1,0,0])
   mirror([0,0,1])
@@ -123,34 +134,82 @@ module ReceiverBottomSlot(clearance=0.005) {
   cube([ReceiverLength()-0.5,ReceiverBottomSlotWidth()-0.25+(clearance*2),abs(TensionRodBottomZ())+25]);
 }
 
-module ReceiverTopSlot(length=ReceiverLength(), width=ReceiverTopSlotWidth(), height=2, clearance=0.005) {
+module ReceiverMlokBolts(headType="flat", nutType="heatset", length=0.5, cutter=false, clearance=0.005, teardrop=false) {
+  color("Silver") RenderIf(!cutter)
+  for (X = [0,UnitsMetric(60),UnitsMetric(80)])
+  translate([-0.75-X,0,ReceiverTopSlotHeight()])
+  NutAndBolt(bolt=MlokBolt(),
+             boltLength=length+ManifoldGap(2),
+             head=headType,
+             nut=nutType,
+             teardrop=cutter&&teardrop, teardropAngle=180,
+             clearance=cutter?clearance:0);
+}
+// ***********
+// * Cutters *
+// ***********
+module ReceiverMlokSlot(depth=0.05, clearance=0) {
+  width = UnitsMetric(7)+clearance;
+  
+  translate([0, -width/2, ReceiverTopZ()+1+ManifoldGap()])
+  mirror([0,0,1])
+  mirror([1,0,0])
+  cube([ReceiverLength(), width, depth]);
+}
+module ReceiverTopSlot(length=ReceiverLength(), width=ReceiverTopSlotWidth(), height=ReceiverTopSlotHeight(), clearance=ReceiverSlotClearance()) {
   chamferRadius = 1/32;
   
-  intersection() {
-    translate([ManifoldGap()+chamferRadius, -(width/2)-clearance,0])
-    mirror([1,0,0])
-    ChamferedCube([ManifoldGap()+length+(chamferRadius*2),width+(clearance*2),height], r=chamferRadius);
-  
-    translate([ManifoldGap(), -(width/2)-clearance,0])
-    mirror([1,0,0])
-    cube([ManifoldGap()+length,width+(clearance*2),height]);
-  }
+  rotate([0,-90,0])
+  linear_extrude(length)
+  translate([0,-(width/2)-clearance])
+  ChamferedSquare([height+clearance, width+(clearance*2)],
+                   r=chamferRadius,
+                   teardropTop=false, teardropBottom=false);
 }
 
-module ReceiverSegment(length=1, chamferFront=true, chamferBack=true) {
+module ReceiverSideSlot(length=ReceiverLength(), clearance=ReceiverSlotClearance()) {
+  clear = clearance;
+  clear2 = clear*2;
+  
+  width = (ReceiverIR()+ReceiverSideSlotDepth()+clear)*2;
+  height = ReceiverSideSlotHeight();
+  
+  translate([0,-width/2,-height/2])
+  rotate([0,-90,0])
+  linear_extrude(length)
+  ChamferedSquare(xy=[height,width], r=1/16,
+                  teardropTop=false, teardropBottom=false);
+}
+// **********
+// * Shapes *
+// **********
+module ReceiverTopSegment(length=1) {
+  translate([0, -TensionRodTopOffsetSide(), ReceiverTopZ()])
+  rotate([0,-90,0])
+  linear_extrude(length)
+  ChamferedSquare(xy=[1,(TensionRodTopOffsetSide()*2)], r=1/16,
+                  teardropBottom=false,
+                  teardropTop=false);
+}
+
+module ReceiverSegment(length=1, chamferFront=true, chamferBack=true, highTop=true) {
   hull() {
     
     // Around the stock tube
     rotate([0,-90,0])
     ChamferedCylinder(r1=ReceiverOR(), r2=1/16,h=length,
                       chamferBottom=chamferFront, chamferTop=chamferBack,
-                      $fn=Resolution(30,60));
+                      $fn=Resolution(50,120));
     
     // Tension bolt supports
-    ReceiverRodIterator()
+    TensionBoltIterator()
     ChamferedCylinder(r1=WallTensionRod(), r2=1/16, h=length,
                       chamferBottom=chamferFront, chamferTop=chamferBack,
                       teardropTop=true, $fn=Resolution(15,30));
+    
+    // Top cover
+    if (highTop)
+    ReceiverTopSegment(length=length);
   }
   
   // Flat bottom
@@ -160,22 +219,15 @@ module ReceiverSegment(length=1, chamferFront=true, chamferBack=true) {
   ChamferedSquare(xy=[(TensionRodBottomOffsetSide())*2,ReceiverOR()], r=1/16,
                   teardropBottom=false,
                   teardropTop=false);
-  
-  // Flat sides
-  *translate([-length, -ReceiverOR(), -1/2])
-  rotate([90,0,90])
-  linear_extrude(height=length)
-  ChamferedSquare(xy=[ReceiverOD(),1], r=1/16,
-                  teardropBottom=false,
-                  teardropTop=false);
-  
-  *translate([-length, -ReceiverOR(), -1/2])
-  ChamferedCube([length, ReceiverOD(),1],
-                 chamferXYZ=[1,0,chamferFront||chamferBack?1:0], r=1/16);
 }
-module Receiver(receiverLength=ReceiverLength(), topSlotHeight=ManifoldGap(), doRender=true, alpha=1, debug=false) {
 
-  color("DimGray", alpha) RenderIf(doRender)
+
+// *****************
+// * Printed Parts *
+// *****************
+module Receiver(receiverLength=ReceiverLength(), doRender=true, alpha=1, debug=false) {
+
+  color("Tan", alpha) RenderIf(doRender)
   DebugHalf(enabled=debug)
   difference() {
     union() {
@@ -189,19 +241,14 @@ module Receiver(receiverLength=ReceiverLength(), topSlotHeight=ManifoldGap(), do
     rotate([0,-90,0])
     cylinder(r=ReceiverIR(), h=6, $fn=Resolution(40,80));
     
-    ReceiverTopSlot(height=topSlotHeight);
-    ReceiverBottomSlot();
-
-    // Side slots
-    translate([-0.5,-(ReceiverIR()+RecieverSideSlotDepth()),-ReceiverSideSlotHeight()/2])
-    mirror([1,0,0])
-    ChamferedCube([ReceiverLength(),
-                   (ReceiverIR()+RecieverSideSlotDepth())*2,
-                   ReceiverSideSlotHeight()],
-                  r=1/16, teardropXYZ=[false, false, false],
-                  teardropTopXYZ=[false, false, false]);
+    ReceiverMlokSlot();
+    ReceiverMlokBolts(cutter=true, teardrop=true);
     
-    ReceiverRods(cutter=true);
+    ReceiverTopSlot();
+    ReceiverBottomSlot();
+    ReceiverSideSlot();
+    
+    TensionBolts(cutter=true);
   }
 }
 
@@ -209,10 +256,12 @@ module ReceiverBackSegment(length=ReceiverBackLength()) {
   color("Brown") render()
   difference() {
     translate([-ReceiverLength(),0,0])
-    ReceiverSegment(length=length, chamferBack=false, chamferFront=false);
+    ReceiverSegment(length=length,
+                    chamferBack=false, chamferFront=false);
     
-    ReceiverRods(nutType="none", headType="none", cutter=true);
+    TensionBolts(nutType="none", headType="none", cutter=true);
     
+    // Spring hole
     translate([-ReceiverLength(),0,0])
     rotate([0,-90,0])
     ChamferedCircularHole(r1=0.65/2, r2=1/16, chamferTop=false,
@@ -228,11 +277,14 @@ module ReceiverBackSegment_print() {
 
 module ReceiverAssembly(debug=false) {
   if (_SHOW_RECEIVER_RODS)
-  ReceiverRods();
+  TensionBolts(debug=debug);
 
-  if (_SHOW_RECEIVER)
-  Receiver(alpha=_RECEIVER_ALPHA, debug=debug)
-  children();
+  if (_SHOW_RECEIVER) {
+    Receiver(alpha=_RECEIVER_ALPHA, debug=debug)
+    children();
+    
+    ReceiverMlokBolts();
+  }
 }
 
 
@@ -245,10 +297,6 @@ if (_RENDER == "Receiver Assembly") {
 scale(25.4) {
   
   if (_RENDER == "Receiver")
-  rotate([0,90,0])
-  Receiver();
-  
-  if (_RENDER == "MiniReceiver")
   rotate([0,90,0])
   Receiver();
   

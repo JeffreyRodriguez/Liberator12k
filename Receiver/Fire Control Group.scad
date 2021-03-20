@@ -1,28 +1,26 @@
-include <../../Meta/Animation.scad>;
+include <../Meta/Animation.scad>;
 
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Units.scad>;
-use <../../Meta/Debug.scad>;
-use <../../Meta/Resolution.scad>;
-use <../../Meta/RenderIf.scad>;
+use <../Meta/Manifold.scad>;
+use <../Meta/Units.scad>;
+use <../Meta/Debug.scad>;
+use <../Meta/Resolution.scad>;
+use <../Meta/RenderIf.scad>;
 
-use <../Lower/Lower.scad>;
-use <../Lower/Trigger.scad>;
+use <../Shapes/Teardrop.scad>;
+use <../Shapes/Chamfer.scad>;
+use <../Shapes/Components/Pivot.scad>;
 
-use <../../Shapes/Teardrop.scad>;
-use <../../Shapes/Chamfer.scad>;
-use <../../Shapes/Components/Pivot.scad>;
+use <../Vitamins/Bearing.scad>;
+use <../Vitamins/Nuts And Bolts.scad>;
+use <../Vitamins/Nuts and Bolts/BoltSpec.scad>;
+use <../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
+use <../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 
-use <../../Vitamins/Bearing.scad>;
-use <../../Vitamins/Nuts And Bolts.scad>;
-use <../../Vitamins/Nuts and Bolts/BoltSpec.scad>;
-use <../../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
-use <../../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
-use <../../Vitamins/Rod.scad>;
+use <Lower/Lower.scad>;
+use <Lower/Trigger.scad>;
+use <Lower/Mount.scad>;
 
-use <../Receiver.scad>;
-use <../Lugs.scad>;
-use <../Frame.scad>;
+use <Receiver.scad>;
 
 /* [What to Render] */
 
@@ -39,6 +37,7 @@ _SHOW_RECOIL_PLATE = true;
 _SHOW_RECOIL_PLATE_BOLTS = true;
 
 _SHOW_RECEIVER      = true;
+_SHOW_LOWER         = true;
 
 /* [Assembly Transparency] */
 _ALPHA_FIRING_PIN_HOUSING = 1; // [0:0.1:1]
@@ -81,7 +80,8 @@ FIRING_PIN_BODY_LENGTH = 1;
 // Measured: Vitamins
 function RecoilPlateLength() = 1/4;
 function RecoilPlateWidth() = 2;
-function RecoilPlateHeight() = 1.5;
+function RecoilPlateHeight() = 2.25;
+function RecoilPlateTopZ() = 0.75;
 
 function RecoilPlateBolt() = BoltSpec(RECOIL_PLATE_BOLT);
 function RecoilPlateBoltOffsetY() = 0.375;
@@ -103,8 +103,6 @@ function ChargingRodOffset() =  0.75+RodRadius(ChargingRod());
 function ChamferRadius() = 1/16;
 function CR() = 1/16;
 chargerTravel = 2;
-
-function FiringPinBoltOffsetZ() = 0.5;
 
 function FiringPinDiameter(clearance=0) = FIRING_PIN_DIAMETER+clearance;
 function FiringPinRadius(clearance=0) = FiringPinDiameter(clearance)/2;
@@ -212,9 +210,11 @@ module HammerBolt(clearance=0.01, cutter=false, debug=false) {
              capOrientation=true,
              clearance=(cutter?clearance:0));
 }
-module FiringPin(radius=FiringPinRadius(), cutter=false, clearance=FIRING_PIN_CLEARANCE, debug=_CUTAWAY_FIRING_PIN) {
+module FiringPin(radius=FiringPinRadius(), cutter=false, clearance=FIRING_PIN_CLEARANCE, template=false, debug=_CUTAWAY_FIRING_PIN) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
+  
+  radius = template ? 1/16 : radius;
 
   // Body
   color("Silver")
@@ -227,11 +227,11 @@ module FiringPin(radius=FiringPinRadius(), cutter=false, clearance=FIRING_PIN_CL
     
       // Pin
       cylinder(r=radius+clear,
-               h=FiringPinLength());
+               h=FiringPinLength()+ManifoldGap());
       
       // Body
       cylinder(r=FiringPinBodyRadius()+clear,
-               h=FiringPinBodyLength()+(cutter?0.5+FiringPinTravel()+clear:0));
+               h=FiringPinBodyLength()+(cutter?0.25+FiringPinTravel():0));
     }
     
     translate([FiringPinBodyRadius()-(1/16)+clear,-FiringPinBodyRadius()-clear,0])
@@ -250,30 +250,29 @@ module FiringPinSpring(debug=_CUTAWAY_FIRING_PIN_SPRING) {
 
 
 
-module RecoilPlateBolts(bolt=RecoilPlateBolt(), boltLength=0.5, template=false, cutter=false, clearance=RECOIL_PLATE_BOLT_CLEARANCE) {
+module RecoilPlateBolts(bolt=RecoilPlateBolt(), boltLength=1.5, template=false, cutter=false, clearance=RECOIL_PLATE_BOLT_CLEARANCE) {
   bolt     = template ? BoltSpec("Template") : bolt;
   boltHead = template ? "none"               : "flat";
   
   color("Silver")
   RenderIf(!cutter)
   for (M = [0,1]) mirror([0,M,0])
-  translate([0.5+ManifoldGap(),(0.75/2),0])
+  translate([0.5+ManifoldGap(),(1/2),0])
   rotate([0,-90,0])
-  Bolt(bolt=bolt, length=1.5+ManifoldGap(2),
+  Bolt(bolt=bolt, length=boltLength+ManifoldGap(2),
         head=boltHead, capHeightExtra=(cutter?1:0),
         clearance=cutter?clearance:0);
 }
+
 module RecoilPlate(cutter=false, debug=false) {
   color("LightSteelBlue")
   RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
-    translate([0.25, -1-ManifoldGap(2), -RecoilPlateHeight()/2])
-    ChamferedCube([RecoilPlateLength()+(cutter?(1/8):0),
-                   RecoilPlateWidth()+ManifoldGap(4),
-                   RecoilPlateHeight()],
-                  r=1/32,
-                  teardropXYZ=[false, false, false],
-                  teardropTopXYZ=[false, false, false]);
+    translate([0.25, -1-ManifoldGap(2), RecoilPlateTopZ()])
+    mirror([0,0,1])
+    cube([RecoilPlateLength()+(cutter?(1/8):0),
+          RecoilPlateWidth()+ManifoldGap(4),
+          RecoilPlateHeight()]);
 
     if (!cutter)
     RecoilPlateBolts(cutter=true);
@@ -369,11 +368,11 @@ module Hammer(cutter=false, clearance=UnitsImperial(0.02), debug=_CUTAWAY_HAMMER
       
       // Wings
       translate([hammerCockedX,
-                 -(ReceiverIR()+RecieverSideSlotDepth()-clearance),
+                 -(ReceiverIR()+ReceiverSideSlotDepth()-clearance),
                  -(ReceiverSideSlotHeight()/2)+clearance])
       mirror([1,0,0])
       ChamferedCube([hammerHeadLength,
-                     (ReceiverIR()+RecieverSideSlotDepth()-clearance)*2,
+                     (ReceiverIR()+ReceiverSideSlotDepth()-clearance)*2,
                      ReceiverSideSlotHeight()-(clearance*2)],
                     r=1/16,teardropFlip=[true, true, true]);
 
@@ -414,7 +413,7 @@ module Disconnector(pivotFactor=0, cutter=false, clearance=0.01, alpha=1, debug=
           
     children();
     
-    color("Tan", alpha)
+    color("Chocolate", alpha)
     RenderIf(!cutter)
     DebugHalf(enabled=debug)
     difference() {
@@ -491,12 +490,26 @@ module FireControlHousing(debug=_CUTAWAY_FIRING_PIN_HOUSING, alpha=_ALPHA_FIRING
           translate([-FiringPinHousingLength(),-(0.75/2),0])
           ChamferedCube([0.75, 0.75, ActionRodZ()-0.125],
                          r=1/32, teardropFlip=[false,true,true]);
+          
+          // Wings
+          hull()
+          translate([0.5,
+                     -(ReceiverIR()+ReceiverSideSlotDepth()-0.01),
+                     -(ReceiverSideSlotHeight()/2)+0.01])
+          mirror([1,0,0])
+          ChamferedCube([FiringPinHousingLength()+1,
+                         (ReceiverIR()+ReceiverSideSlotDepth()-0.01)*2,
+                         ReceiverSideSlotHeight()-(0.01*2)],
+                        r=1/16,
+                        teardropXYZ=[false, false, false],
+                        teardropTopXYZ=[false, false, false]);
         }
         
         // Flatten the bottom
-        translate([-FiringPinHousingLength(), -ReceiverIR(),-0.25])
+        translate([-FiringPinHousingLength(),
+                   -ReceiverIR()-ReceiverSideSlotDepth(),-0.25])
         ChamferedCube([FiringPinHousingLength(),
-                       ReceiverID(),
+                       ReceiverID()+(ReceiverSideSlotDepth()*2),
                        ReceiverID()+ActionRodZ()],
                       r=1/32, teardropFlip=[false,true,true]);
       }
@@ -546,7 +559,7 @@ module RecoilPlateJig(firingPinRadius=1/32, clearance=0.005, extend=0.125) {
 //**************
 //* Assemblies *
 //**************
-module SimpleFireControlAssembly(debug=false) {
+module SimpleFireControlAssembly(recoilPlate=_SHOW_RECOIL_PLATE, debug=false) {
   disconnectStart = 0.8;
   disconnectLetdown = 0.2;
   connectStart = 0.99;
@@ -596,7 +609,7 @@ module SimpleFireControlAssembly(debug=false) {
   if (_SHOW_RECOIL_PLATE_BOLTS)
   RecoilPlateBolts();
   
-  if (_SHOW_RECOIL_PLATE)
+  if (recoilPlate)
   RecoilPlate();
   
   if (_SHOW_FIRE_CONTROL_HOUSING)
@@ -616,6 +629,15 @@ if (_RENDER == "Assembly") {
   
   if (_SHOW_RECEIVER)
   ReceiverAssembly(debug=_CUTAWAY_RECEIVER);
+  
+  if (_SHOW_LOWER) {
+    LowerMount();
+    
+    translate([-LowerMaxX(),0,LowerOffsetZ()])
+    Lower(showTrigger=true,
+          showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
+          searLength=SearLength()+abs(LowerOffsetZ())+SearTravel()-(0.25/2));
+  }
 }
 
 scale(25.4) {

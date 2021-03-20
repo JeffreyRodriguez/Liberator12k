@@ -6,19 +6,15 @@ use <../../Meta/Resolution.scad>;
 use <../../Meta/Units.scad>;
 
 use <../../Shapes/Chamfer.scad>;
+use <../../Shapes/Components/Grip Handle.scad>;
 
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 
-use <../../Vitamins/Pipe.scad>;
-use <../../Vitamins/Rod.scad>;
-
-use <Receiver Lugs.scad>;
+use <Lugs.scad>;
 use <Trigger.scad>;
-
-use <../../Shapes/Components/Grip Handle.scad>;
 
 
 /* [What to Render] */
@@ -412,21 +408,19 @@ module Lower(showReceiverLugs=false, showReceiverLugBolts=false,
                   showLeft=showLeft, showRight=showRight, alpha=alpha);
 }
 
+if (_RENDER == "Assembly") {
 
+  AnimateSpin(SPIN_REVOLUTIONS)
+  Lower(showReceiverLugs=true, showReceiverLugBolts=true,
+        showGuardBolt=true,
+        showHandleBolts=true,
+        showTrigger=true,
+        triggerAnimationFactor=sin(180*$t),
+        showMiddle=true,
+        alpha=1);
+}
 
 scale(25.4) {
-  if (_RENDER == "Assembly") {
-
-    AnimateSpin(SPIN_REVOLUTIONS)
-    Lower(showReceiverLugs=true, showReceiverLugBolts=true,
-          showGuardBolt=true,
-          showHandleBolts=true,
-          showTrigger=true,
-          triggerAnimationFactor=sin(180*$t),
-          showMiddle=true,
-          alpha=1);
-  }
-
   if (_RENDER == "LowerLeft")
     LowerLeft_print();
 

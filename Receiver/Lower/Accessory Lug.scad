@@ -5,48 +5,49 @@ use <../../Meta/Resolution.scad>;
 use <../../Meta/Units.scad>;
 
 use <../../Vitamins/Nuts And Bolts.scad>;
-use <../../Vitamins/Pipe.scad>;
-use <../../Vitamins/Rod.scad>;
+use <../../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
 
-use <Receiver Lugs.scad>;
+use <Lugs.scad>;
 use <Lower.scad>;
 
 
-function LowerLugMinX() = ReceiverLugFrontMaxX()+0.5;
-function LowerLugMaxX() = LowerLugMinX()+0.5;
-function LowerLugLength() = LowerLugMaxX() - LowerLugMinX();
+function FrontLugMinX() = ReceiverLugFrontMaxX()+0.5;
+function FrontLugMaxX() = LowerLugMinX()+0.5;
+function FrontLugLength() = LowerLugMaxX() - LowerLugMinX();
 
-function LowerLugMaxZ() = 0;
-function LowerLugMinZ() = LowerLugMaxZ()-0.75;
-function LowerLugHeight() = LowerLugMaxZ() - LowerLugMinZ();
+function FrontLugMaxZ() = 0;
+function FrontLugMinZ() = LowerLugMaxZ()-0.75;
+function FrontLugHeight() = LowerLugMaxZ() - LowerLugMinZ();
 
-function LowerLugBoltX() = ReceiverLugFrontMaxX()+0.75;
-function LowerLugBoltZ() = -0.5;
+function FrontLugBoltX() = ReceiverLugFrontMaxX()+0.75;
+function FrontLugBoltZ() = -0.5;
 
-module LowerLug(holes=true, cutter=false) {
+module FrontLug(holes=true, cutter=false) {
   clearance = cutter ? 0.005 : 0;
 
   render()
   difference() {
-    translate([LowerLugMinX(),-clearance, LowerLugMinZ()-clearance])
+    translate([FrontLugMinX(),-clearance, FrontLugMinZ()-clearance])
     translate([0,-0.25,0])
-    cube([LowerLugLength()+clearance,
+    cube([FrontLugLength()+clearance,
           0.5+ManifoldGap(),
-          LowerLugHeight()+(clearance*2)]);
+          FrontLugHeight()+(clearance*2)]);
 
     if (holes)
-    LowerLugBolts(clearance=true);
+    FrontLugBolts(cutter=true);
   }
 }
 
-module LowerLugBolts(boltSpec=Spec_BoltM3(), length=UnitsMetric(30), clearance=true) {
+module FrontLugBolts(boltSpec=BoltSpec("M3"), length=UnitsMetric(30), clearance=0.005, cutter=false) {
+  clear = cutter ? clearance : 0;
+  
   color("Silver")
-  translate([LowerLugBoltX(),0, -0.5])
+  translate([FrontLugBoltX(),0, -0.5])
   translate([0,(GripWidth()/2)+0.125,0.25])
   rotate([90,0,0])
-  NutAndBolt(bolt=boltSpec, boltLength=length, clearance=clearance);
+  NutAndBolt(bolt=boltSpec, boltLength=length, clearance=clear);
 }
 
 Lower();
-LowerLug(holes=true, cutter=false);
-LowerLugBolts();
+FrontLug(holes=true, cutter=false);
+FrontLugBolts();

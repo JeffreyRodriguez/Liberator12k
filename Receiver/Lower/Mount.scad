@@ -1,22 +1,19 @@
-use <../Shapes/Chamfer.scad>;
 
-use <Lower/Receiver Lugs.scad>;
-use <Lower/Lower.scad>;
-use <Lower/Trigger.scad>;
+use <Lugs.scad>;
+use <Lower.scad>;
+use <Trigger.scad>;
 
 
-use <../Meta/Debug.scad>;
-use <../Meta/Manifold.scad>;
-use <../Meta/Resolution.scad>;
-use <../Meta/RenderIf.scad>;
+use <../../Meta/Debug.scad>;
+use <../../Meta/Manifold.scad>;
+use <../../Meta/Resolution.scad>;
+use <../../Meta/RenderIf.scad>;
 
-use <../Shapes/Semicircle.scad>;
-use <../Shapes/Teardrop.scad>;
+use <../../Shapes/Chamfer.scad>;
+use <../../Shapes/Semicircle.scad>;
+use <../../Shapes/Teardrop.scad>;
 
-use <../Vitamins/Pipe.scad>;
-use <../Vitamins/Rod.scad>;
-
-use <Receiver.scad>;
+use <../Receiver.scad>;
 
 /* [What to Render] */
 
@@ -26,7 +23,6 @@ _RENDER = "Assembly"; // ["Assembly", "LowerLugs", "LowerLug_Front", "LowerLug_R
 _CUTAWAY_RECEIVER = false;
 
 // Settings: Positions
-function LowerOffsetZ() = -1.0625;
 function LowerLugHeight() = 0.0;
 
 module ReceiverBottomSlotInterface(length=0.75, height=abs(LowerOffsetZ()+LowerLugHeight())) {
@@ -41,7 +37,7 @@ module ReceiverBottomSlotInterface(length=0.75, height=abs(LowerOffsetZ()+LowerL
   }
 }
 
-module LowerLugs(id=1.25-0.02, alpha=1, debug=false) {
+module LowerMount(id=1.25-0.02, alpha=1, debug=false) {
   color("Tan")
   render() DebugHalf(enabled=debug)
   translate([-LowerMaxX(),0,0])
@@ -86,7 +82,7 @@ module LowerLugs(id=1.25-0.02, alpha=1, debug=false) {
 module LowerLugs_print() {
   rotate([0,90,0])
   translate([0.5,0,-LowerOffsetZ()])
-  LowerLugs();
+  LowerMount();
 }
 
 module LowerLug_Front(id=1.25-0.02, alpha=1, debug=false) {
@@ -153,25 +149,25 @@ module LowerLug_Rear(id=1.25-0.02, alpha=1, debug=false) {
 
 if (_RENDER == "Assembly") {
   ReceiverAssembly(debug=_CUTAWAY_RECEIVER);
-  LowerLugs();
+  LowerMount();
 
   translate([-LowerMaxX(),0,LowerOffsetZ()])
   Lower(showTrigger=true,
         showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
         searLength=SearLength()+abs(LowerOffsetZ())+SearTravel()-(0.25/2));
-  
 }
 
-scale(25.4)
-if (_RENDER == "LowerLugs") {
-  LowerLugs_print();
-} else if (_RENDER == "LowerLug_Front") {
-  rotate([0,90,0])
-  translate([0.5,0,-LowerOffsetZ()])
-  LowerLug_Front();
-  
-} else if (_RENDER == "LowerLug_Rear") {
-  rotate([0,90,0])
-  translate([LowerMaxX()-ReceiverLugRearMaxX(),0,-LowerOffsetZ()])
-  LowerLug_Rear();
+scale(25.4) {
+  if (_RENDER == "LowerLugs") {
+    LowerLugs_print();
+  } else if (_RENDER == "LowerLug_Front") {
+    rotate([0,90,0])
+    translate([0.5,0,-LowerOffsetZ()])
+    LowerLug_Front();
+    
+  } else if (_RENDER == "LowerLug_Rear") {
+    rotate([0,90,0])
+    translate([LowerMaxX()-ReceiverLugRearMaxX(),0,-LowerOffsetZ()])
+    LowerLug_Rear();
+  }
 }

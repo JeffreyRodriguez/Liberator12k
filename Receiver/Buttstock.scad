@@ -57,7 +57,7 @@ module ButtpadBolt(debug=false, cutter=false, teardrop=true, clearance=0.01, tea
   translate([ButtpadX()-ButtpadLength(), 0, Z])
   rotate([0,-90,0])
   NutAndBolt(bolt=ButtpadBolt(),
-             boltLength=3,
+             boltLength=3.5,
              head="flat", capHeightExtra=(cutter?ButtpadLength():0),
              nut="heatset", nutHeightExtra=(cutter?1:0), capOrientation=true,
              clearance=clear);
@@ -71,41 +71,32 @@ topCoverHeight = 1;
     translate([-ReceiverLength(),0,0])
     union() {
       
-      // Merge large frame top cover into the body
+      // Merge high-top receiver to into the body
       hull() {
         
-        
-        // Top cover
-        translate([0, -TensionRodTopOffsetSide(), ReceiverTopZ()])
-        rotate([0,-90,0])
-        linear_extrude(height=0.0625)
-        ChamferedSquare(xy=[topCoverHeight,(TensionRodTopOffsetSide()*2)], r=1/16,
-                        teardropBottom=false,
-                        teardropTop=false);
+        // Merge to body
+        ReceiverSegment(length=0.25, highTop=true,
+                        chamferFront=false, chamferBack=false);
         
         // Merge to body
-        translate([0,-TensionRodTopOffsetSide(),0])
-        rotate([0,-90,0])
-        linear_extrude(height=1.5)
-        ChamferedSquare(xy=[ReceiverTopZ(),(TensionRodTopOffsetSide()*2)], r=1/16,
-                        teardropBottom=false,
-                        teardropTop=false);
+        ReceiverSegment(length=1.5, highTop=false,
+                        chamferFront=false, chamferBack=false);
       }
       
       // Main body
-      ReceiverSegment(length=length,
+      ReceiverSegment(length=length, highTop=false,
                     chamferFront=false, chamferBack=false);
       
       // Buttpad attachment
       translate([-length,0,0])
       hull() {
-        ReceiverSegment(length=1-0.25,
+        ReceiverSegment(length=1-0.25, highTop=false,
                         chamferFront=false, chamferBack=false);
         
         translate([-1,0,0])
         scale([1,1.1,1.1])
         mirror([1,0,0])
-        ReceiverSegment(length=ManifoldGap(),
+        ReceiverSegment(length=ManifoldGap(), highTop=false,
                         chamferFront=false, chamferBack=false);
         
         translate([-1,0,-2])
@@ -141,7 +132,7 @@ topCoverHeight = 1;
     rotate([0,-90,0])
     cylinder(r1=0, r2=0.75, h=0.75, $fn=80);
     
-    ReceiverRods(nutType="none", headType="none", cutter=true);
+    TensionBolts(nutType="none", headType="none", cutter=true);
     
     ButtpadBolt(cutter=true);
   }
@@ -179,7 +170,7 @@ module Buttpad(doRender=true, debug=_CUTAWAY_BUTTPAD, alpha=1) {
                          $fn=Resolution(20,50));
       scale([1,1.1,1.1])
       mirror([1,0,0])
-      ReceiverSegment(length=0.5,
+      ReceiverSegment(length=0.5, highTop=false,
                       chamferFront=false, chamferBack=false);
       
       translate([0,0,-2])
@@ -202,8 +193,8 @@ module Buttpad(doRender=true, debug=_CUTAWAY_BUTTPAD, alpha=1) {
     ButtpadBolt(cutter=true);
     
     translate([ButtpadX()+0.5,0,0])
-    ReceiverRodIterator()
-    cylinder(r=NutHexRadius(ReceiverRod(), 0.02), h=0.5, $fn=20);
+    TensionBoltIterator()
+    cylinder(r=NutHexRadius(TensionBolt(), 0.02), h=0.5, $fn=20);
   }
 }
 
@@ -213,15 +204,15 @@ module Buttpad_print() {
   Buttpad();
 }
 
-module StockAssembly() {
+module StockAssembly(debug=_DEBUG_ASSEMBLY) {
   if (_SHOW_BUTTPAD_BOLT)
   ButtpadBolt();
   
   if (_SHOW_STOCK)
-  Stock(alpha=_ALPHA_STOCK);
+  Stock(alpha=_ALPHA_STOCK, debug=debug);
   
   if (_SHOW_BUTTPAD)
-  Buttpad(alpha=_ALPHA_BUTTPAD);
+  Buttpad(alpha=_ALPHA_BUTTPAD, debug=debug);
 }
 
 if (_RENDER == "StockAssembly") {

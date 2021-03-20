@@ -29,10 +29,10 @@ use <../../Ammo/Cartridges/Cartridge_12GA.scad>;
 use <../Lower/Lower.scad>;
 
 use <../Buttstock.scad>;
-use <../Lugs.scad>;
+use <../Lower/Mount.scad>;
 use <../Frame.scad>;
 use <../Receiver.scad>;
-use <../FCG/Simple.scad>;
+use <../Fire Control Group.scad>;
 
 /* [What to Render] */
 
@@ -76,9 +76,10 @@ GP_BOLT_CLEARANCE = 0.015;
 BARREL_SET_SCREW = "#8-32"; // ["M4", "#8-32"]
 BARREL_SET_SCREW_CLEARANCE = -0.05;
 
-//CHAMBER_OUTSIDE_DIAMETER = 1;
-//CHAMBER_INSIDE_DIAMETER = 0.813;
-
+/* [Barrel] */
+BARREL_OUTSIDE_DIAMETER = 1.0001;
+BARREL_INSIDE_DIAMETER = 0.813;
+BARREL_CLEARANCE = 0.005;
 
 $fs = UnitsFs()*0.5;
 
@@ -92,7 +93,6 @@ assert(BarrelSetScrew(), "BarrelSetScrew() is undefined. Unknown BARREL_SET_SCER
 
 function GPBolt() = BoltSpec(GP_BOLT);
 assert(GPBolt(), "GPBolt() is undefined. Unknown GP_BOLT?");
-
 
 // Settings: Dimensions
 function BarrelLength() = 18;
@@ -127,11 +127,11 @@ function LatchCollarLength() = PivotX()+(PivotRadius()*(sqrt(2)/2));
 function LatchCollarLength() = ForendLength()+0.25;
 
 // Calculated: Dimensions
-function BarrelRadius(clearance=undef)
-    = PipeOuterRadius(BarrelPipe(), clearance);
+function BarrelRadius(clearance=0)
+    = BarrelDiameter(clearance*2);
 
-function BarrelDiameter(clearance=undef)
-    = PipeOuterDiameter(BarrelPipe(), clearance);
+function BarrelDiameter(clearance=0)
+    = BARREL_OUTSIDE_DIAMETER+clearance;
 
 function BarrelSleeveRadius(clearance=undef)
     = PipeOuterRadius(BarrelSleevePipe(), clearance);
@@ -347,32 +347,43 @@ module PumpLockRod(cutter=false, clearance=0.008) {
   }
 }
 
-module Barrel(barrel=BarrelPipe(), length=BarrelLength(),
-              clearance=PipeClearanceLoose(),
+module Barrel(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER,
+              length=BarrelLength(),
+              clearance=BARREL_CLEARANCE,
+              cartridgeRimThickness=0.03,
               cutter=false, alpha=1, debug=false) {
+                
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
 
   color("Silver") RenderIf(!cutter) DebugHalf(enabled=debug)
   translate([0,0,BarrelOffsetZ()])
   difference() {
     rotate([0,90,0])
     union() {
-      Pipe(pipe=BarrelSleevePipe(),
+      *Pipe(pipe=BarrelSleevePipe(),
            length=BarrelSleeveLength(),
            hollow=!cutter, clearance=(cutter?clearance:undef));
 
-      translate([0,0,CartridgeRimThickness(Spec_Cartridge_12GA())])
-      Pipe(pipe=barrel, clearance=(cutter?clearance:undef),
-           hollow=!cutter, length=length);
+      translate([0,0,cartridgeRimThickness])
+      cylinder(r=(od/2)+clear, h=length);
     }
 
-    // Extractor notch
-    if (!cutter)
-    rotate([90,0,0])
-    translate([0,-0.813*0.5,0])
-    rotate(40)
-    translate([ExtractorBitWidth()/4,0.813*0.5*0.1,-ExtractorBitWidth()/2])
-    mirror([1,1,0])
-    cube([BarrelDiameter(), BarrelRadius(), ExtractorBitWidth()]);
+    if (!cutter) {
+      
+      // Hollow inside
+      translate([0,0,cartridgeRimThickness])
+      cylinder(r=(id/2)+clear, h=length);
+      
+      
+      // Extractor notch
+      rotate([90,0,0])
+      translate([0,-0.813*0.5,0])
+      rotate(40)
+      translate([ExtractorBitWidth()/4,0.813*0.5*0.1,-ExtractorBitWidth()/2])
+      mirror([1,1,0])
+      cube([BarrelDiameter(), BarrelRadius(), ExtractorBitWidth()]);
+    }
   }
 }
 
@@ -381,14 +392,19 @@ module ReceiverFront(debug=false, alpha=1) {
   color("MediumSlateBlue", alpha) render() DebugHalf(enabled=debug)
   difference() {
     mirror([1,0,0]) {
-      FrameSupport(length=ReceiverFrontLength());
-      CouplingSupport(length=ReceiverFrontLength());
+      hull() {
+        translate([ReceiverFrontLength(),0,0])
+        ReceiverSegment(length=ManifoldGap());
+        
+        FrameSupport(length=ReceiverFrontLength());
+        CouplingSupport(length=ReceiverFrontLength());
 
-      // Match the recoil plate
-      translate([0,-2.25/2,LowerOffsetZ()])
-      cube([ReceiverFrontLength(),
-                     2.25,
-                     abs(LatchZ())+FrameBoltZ()]);
+        // Match the recoil plate
+        translate([0,-2.25/2,LowerOffsetZ()])
+        cube([ReceiverFrontLength(),
+                       2.25,
+                       abs(LatchZ())+FrameBoltZ()]);
+      }
     }
 
     // Bolt Slot
@@ -503,7 +519,7 @@ module Latch_print() {
 module ReceiverForend(clearance=0.01, debug=false, alpha=1) {
   color("MediumSlateBlue", alpha) render() DebugHalf(enabled=debug)
   difference() {
-    union() {
+    hull() {
       FrameSupport(length=ForendLength());
       CouplingSupport(length=ForendLength());
 
@@ -688,7 +704,7 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1, receiverFrontAlpha=1,
   // Pivoting barrel assembly
   BreakActionPivot(factor=pivotFactor) {
       
-    PumpLockRod();
+    *PumpLockRod();
 
     translate([-(ChargerTravel()*chargeFactor),0,0])
     translate([0.5*lockFactor,0,0]) {
@@ -750,15 +766,15 @@ if (_RENDER == "Assembly") {
   translate([-ReceiverFrontLength(),0,0]) {
     
     if (_SHOW_LOWER_LUGS)
-    LowerLugs();
+    LowerMount();
 
     if (_SHOW_LOWER)
-    translate([-LowerMaxX(),0,LowerOffsetZ()+0.0625])
+    translate([-LowerMaxX(),0,LowerOffsetZ()])
     Lower(showTrigger=true,
           showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true);
     
     if (_SHOW_RECEIVER) {
-      ReceiverRods();
+      TensionBolts();
       
       Receiver_LargeFrameAssembly(debug=_CUTAWAY_RECEIVER);
     }

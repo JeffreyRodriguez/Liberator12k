@@ -14,7 +14,6 @@ function GripCeilingZ() = -GripCeiling();
 function LowerMaxWidth() = GripWidth()+0.25;
 function LowerMaxY() = (GripWidth()/2)+0.125;
 
-
 function ReceiverLugWidth() = 1;
 
 function ReceiverLugFrontLength() = 0.75;

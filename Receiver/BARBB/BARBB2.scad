@@ -19,7 +19,7 @@ use <../../Receiver/Magwells/AR15 Magwell.scad>;
 
 use <../Components/AR15 Trunnion.scad>;
 use <../Receiver.scad>;
-use <../Lugs.scad>;
+use <../Lower/Lugs.scad>;
 use <../Buttstock.scad>;
 use <../Charging Pump.scad>;
 

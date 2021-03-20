@@ -18,16 +18,15 @@ use <../../Vitamins/Rod.scad>;
 use <../../Vitamins/AR15/Barrel.scad>;
 use <../../Vitamins/AR15/Bolt.scad>;
 
+use <../Components/AR15 Trunnion.scad>;
 use <../Magwells/AR15 Magwell.scad>;
 
 use <../Buttstock.scad>;
 use <../Receiver.scad>;
 use <../Lower/Lower.scad>;
-use <../Lugs.scad>;
+use <../Lower/Mount.scad>;
 use <../Frame.scad>;
-use <../Action Rod.scad>;
 use <../Charging Pump.scad>;
-use <../Components/AR15 Trunnion.scad>;
 
 /* [What to Render] */
 
@@ -98,6 +97,14 @@ boltCarrierMinX = BarrelMinX()
 helixBottom = 0.1875;
                 
 camPinLockedX = BarrelMinX()-AR15_CamPinOffset()-0.5;
+
+module ActionRod(width=0.25, length=12, cutter=false, clearance=0.005) {
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
+  
+  translate([0,-(width/2)-clear, -(width/2)-clear])
+  cube([length, width+clear2, width+clear2]);
+}
 
 module BarrelCollar(clearance=0.002, cutter=false, debug=false) {
   clear = cutter ? clearance : 0;
@@ -279,13 +286,11 @@ module ReceiverCutters() {
                      extraTop=0.75);
   
   mirror([1,0,0])
-  ReceiverRods(cutter=true, nutType="none", length=12);
+  TensionBolts(cutter=true, nutType="none", length=12);
 }
 
 module AR15Forend(debug=false, alpha=1) {
-  length = ForendLength()
-             - AR15BarrelExtensionLipLength()
-             - AR15BarrelExtensionLength();
+  length = ForendLength();
   
   color("MediumSlateBlue", alpha)
   DebugHalf(enabled=debug) render()
@@ -293,7 +298,8 @@ module AR15Forend(debug=false, alpha=1) {
     union() {
       translate([ForendMinX(),0,0])
       mirror([1,0,0])
-      ReceiverSegment(length=length);
+      ReceiverSegment(length=length,
+                      chamferFront=false, chamferBack=false);
       
       translate([MagazineMinX(),0,-0.5])
       AR15_Magwell(cut=false,
@@ -316,9 +322,9 @@ module ReceiverBoltTrack(length=2.5, alpha=1) {
       mirror([1,0,0])
       ReceiverSegment(length=length);
     
-      translate([ForendMinX()+0.25,-(ReceiverSlotWidth()/2),0])
+      translate([ForendMinX()+0.25,-(ReceiverBottomSlotWidth()/2),0])
       mirror([1,0,0])
-      ChamferedCube([length+0.25, ReceiverSlotWidth(), (7/8)+0.01], r=1/16);
+      ChamferedCube([length+0.25, ReceiverBottomSlotWidth(), (7/8)+0.01], r=1/16);
 
       translate([ForendMinX(),0,0])
       rotate([0,-90,0])
@@ -360,7 +366,7 @@ if (_RENDER == "Assembly") {
       translate([boltCarrierMinX,0,0])
       ActionRod(length=10);
 
-      translate([camPinLockedX+helixBottom,0,0])
+      *translate([camPinLockedX+helixBottom,0,0])
       ActionRodBolt(angle=180,
                    length=ActionRodZ()
                          -(ActionRodWidth()/2)
@@ -387,7 +393,7 @@ if (_RENDER == "Assembly") {
   
   translate([-LowerMaxX(),0,LowerOffsetZ()])
   Lower();
-  LowerLugs();
+  LowerMount();
 
 }
 

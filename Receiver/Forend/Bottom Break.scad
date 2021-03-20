@@ -19,18 +19,15 @@ use <../../Shapes/Components/Pump Grip.scad>;
 
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/Pipe.scad>;
-use <../../Vitamins/Rod.scad>;
+//use <../../Vitamins/Rod.scad>;
 
 use <../Lower/Lower.scad>;
-use <../Components/Compact Linear Hammer.scad>;
+use <../Lower/Mount.scad>;
 
-use <../FCG/Simple.scad>;
-
-use <../Lugs.scad>;
+use <../Fire Control Group.scad>;
 use <../Buttstock.scad>;
 use <../Frame.scad>;
 use <../Receiver.scad>;
-use <../Recoil Plate.scad>;
 
 use <Bipod.scad>;
 
@@ -780,7 +777,7 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1,
 
     BarrelPivotCollar(debug=debug);
 
-    BarrelLatchCollar(debug=debug, alpha=1);
+    BarrelLatchCollar(debug=debug);
 
     translate([(0.5*lockFactor)-(ChargerTravel()*chargeFactor),0,0])
     Foregrip();
@@ -789,7 +786,7 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1,
     Bipod();
   }
 
-  BreakActionForend(debug=debug, alpha=0.25);
+  BreakActionForend(debug=debug);
 }
 
 if (_RENDER == "Assembly") {
@@ -812,10 +809,9 @@ if (_RENDER == "Assembly") {
                    travel=-1);
 
     Receiver_LargeFrameAssembly();
-    ReceiverBackSegment();
     StockAssembly();
     
-    LowerLugs();
+    LowerMount();
     
     translate([-LowerMaxX(),0,LowerOffsetZ()])
     Lower();
