@@ -12,14 +12,16 @@ use <../../Vitamins/Square Tube.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/AR15/Barrel.scad>;
 use <../../Vitamins/AR15/Bolt.scad>;
-use <../Lower/Receiver Lugs.scad>;
+
 use <../Lower/Lower.scad>;
+use <../Lower/Lugs.scad>;
+use <../Lower/Mount.scad>;
 use <../Lower/Trigger.scad>;
-use <../../Receiver/Magwells/AR15 Magwell.scad>;
 
 use <../Components/AR15 Trunnion.scad>;
+use <../Magwells/AR15 Magwell.scad>;
+
 use <../Receiver.scad>;
-use <../Lower/Lugs.scad>;
 use <../Buttstock.scad>;
 use <../Charging Pump.scad>;
 
@@ -168,7 +170,7 @@ module BARBB_UpperReceiver() {
         AR15_Magwell(wallFront=0.125, wallBack=0.25, cut=false);
         
         translate([StockLength(),0,0])
-        Buttstock();
+        StockAssembly();
       
       // Barrel section
       rotate([0,90,0])

@@ -12,10 +12,13 @@ use <../../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
 use <../../Vitamins/AR15/Bolt.scad>;
 use <../../Vitamins/AR15/Barrel.scad>;
-use <../Lower/Receiver Lugs.scad>;
+
+use <../../Receiver/Magwells/AR15 Magwell.scad>;
+
+use <../Lower/Lugs.scad>;
 use <../Lower/Lower.scad>;
 use <../Lower/Trigger.scad>;
-use <../../Receiver/Magwells/AR15 Magwell.scad>;
+
 
 $fn=60;
 
@@ -174,7 +177,7 @@ module BARBB_HammerCutOut(extraX=0) {
     // Hammer linear track
     cube([abs(hammerMaxX-hammerMinX)+extraX,
                     hammerWidth,
-                    barrelZ-tubeCenterZ+(hammerWidth/2)+firingPinRadius], r=chamferRadius);
+                    barrelZ-tubeCenterZ+(hammerWidth/2)+firingPinRadius]);
     
     
     // Hammer rotary track
@@ -259,7 +262,7 @@ module BARBB_LowerReceiver(clearance=0.007, extraFront=0,wall=tubeWall) {
       
       translate([LowerMaxX(),0,0])
       rotate([0,-90,0])
-      ChamferedSquareHole(side=tube_width, length=lowerLength, center=true,
+      ChamferedSquareHole(sides=[tube_width,tube_width], length=lowerLength, center=true,
                            chamferTop=true, chamferBottom=true, chamferRadius=chamferRadius,
                            corners=true, cornerRadius=0.0625);
       
@@ -332,7 +335,7 @@ module BARBB_UpperReceiver(magwell=false) {
     translate([upperMinX,0,tubeCenterZ])
     translate([ManifoldGap(),0,0])
     rotate([0,90,0])
-    ChamferedSquareHole(side=tube_width, length=upperLength, center=true,
+    ChamferedSquareHole(sides=[tube_width,tube_width], length=upperLength, center=true,
                          chamferTop=true, chamferBottom=true,
                          teardropTop=true, teardropBottom=false,
                          chamferRadius=chamferRadius,
@@ -649,7 +652,7 @@ module BARBB_Stock(topDiameter=tube_width+(tubeWall*2), bottomDiameter=1,
     // Square Tube Hole
     translate([hammerMaxX-ManifoldGap(),0,tubeCenterZ])
     rotate([0,90,0])
-    ChamferedSquareHole(side=tube_width+clear2, length=stockLength, center=true,
+    ChamferedSquareHole(sides=[tube_width+clear2,tube_width+clear2], length=stockLength, center=true,
                        chamferTop=true, chamferBottom=false, chamferRadius=chamferRadius,
                        corners=true, cornerRadius=0.0625);
     
@@ -694,7 +697,7 @@ module BARBB_Foregrip(topDiameter=tube_width+(tubeWall*2), bottomDiameter=1,
     
     // Square Tube cener axis
     translate([0,0,-frontWall-ManifoldGap()])
-    ChamferedSquareHole(side=tube_width, length=extend, center=true,
+    ChamferedSquareHole(sides=[tube_width,tube_width], length=extend, center=true,
                          chamferTop=true, chamferBottom=true, chamferRadius=chamferRadius,
                          corners=true, cornerRadius=0.0625);
     
@@ -745,12 +748,12 @@ module BARBB_Bipod(topDiameter=tube_width+(tubeWall*2), bottomDiameter=1,
       rotate([0,-90,0])
       ChamferedCircularHole(r1=(1.625/2)+0.01, r2=chamferRadius,
                             h=length,
-                            chamferTop=true, teardropBottom=true, teardrop=true);
+                            chamferTop=true, teardropBottom=true);
       
       // Square Tube center axis
       translate([-frontWall,0,tubeCenterZ])
       rotate([0,-90,0])
-      ChamferedSquareHole(side=tube_width, length=length-frontWall, center=true,
+      ChamferedSquareHole(sides=[tube_width,tube_width], length=length-frontWall, center=true,
                            chamferTop=true, chamferBottom=false, teardropTop=true,
                            chamferRadius=chamferRadius,
                            corners=true, cornerRadius=0.0625);
@@ -817,7 +820,7 @@ module BARBB_RailMount(id=1, clearance=0.003, length=1, height=1, wall=tubeWall)
     translate([0,0,tubeCenterZ]) {
       
       rotate([0,-90,0])
-      ChamferedSquareHole(side=tube_width+(clearance*2), length=length, center=true,
+      ChamferedSquareHole(sides=[tube_width+(clearance*2),tube_width+(clearance*2)], length=length, center=true,
                            chamferTop=true, chamferBottom=true, chamferRadius=chamferRadius,
                            corners=true, cornerRadius=0.0625);
       
@@ -871,7 +874,7 @@ module AR15_Bolt(clearance=0.007, camPin=true, firingPinRetainer=true,
     // Firing Pin-to-bolt-back taper
     translate([0,0,boltLength])
     rotate([180,0,0])
-    cylinder(r=firingPinRadius+clear2, r2=boltBackRadius+clearance,
+    cylinder(r1=firingPinRadius+clear2, r2=boltBackRadius+clearance,
             h=firingPinRadius+ManifoldGap());
     
     // Firing Pin
