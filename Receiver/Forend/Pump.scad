@@ -10,19 +10,21 @@ use <../../Shapes/Semicircle.scad>;
 use <../../Shapes/Teardrop.scad>;
 
 use <../../Vitamins/Nuts And Bolts.scad>;
+use <../../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 use <../../Vitamins/Pipe.scad>;
 use <../../Vitamins/Rod.scad>;
 use <../../Vitamins/Square Tube.scad>;
 
-use <../Lower/Receiver Lugs.scad>;
-use <../Lower/Trigger.scad>;
 use <../Lower/Lower.scad>;
+use <../Lower/Mount.scad>;
+use <../Lower/Trigger.scad>;
 
 use <../../Ammo/Shell Slug.scad>;
 
 use <../Receiver.scad>;
-//use <../Frame.scad>;
-use <../Recoil Plate.scad>;
+use <../Frame.scad>;
+use <../Buttstock.scad>;
+use <../Fire Control Group.scad>;
 
 // Measured: Vitamins
 function BarrelCollarSteelDiameter() = 1.75;
@@ -33,6 +35,7 @@ function BarrelCollarSteelWidth() = 5/8;
 function ReceiverPipe()  = Spec_OnePointFiveSch40ABS();
 function ReceiverPipe()  = Spec_OnePointSevenFivePCTube();
 function BarrelPipe() = Spec_TubingOnePointOneTwoFive();
+function CouplingBolt() = BoltSpec("1/4\"-20");
 
 // Settings: Lengths
 function ReceiverFrontLength() = 0.5;
@@ -41,62 +44,40 @@ function BarrelLength() = 18;
 function MagazineOffset() = (BarrelCollarSteelRadius()+0.5);
 function BarrelTravel() = 4;
 function UpperLength() = 6.5;
+function WallFrameSide() = 0.125;
 
 function MagazineSquareTube() = Spec_SquareTubeOneInch();
 
-module PumpMagazine2d(hollow=false, clearance=undef) {
-  translate([-(SquareTubeOuter(MagazineSquareTube(), clearance)/2),
-             -SquareTubeOuter(MagazineSquareTube(), clearance)/2])
-  Tubing2D(spec=MagazineSquareTube(),
-           hollow=hollow,
-           clearance=clearance);
-}
 
+// ************
+// * Vitamins *
+// ************
 module PumpMagazine(height=10.875, hollow=false, clearance=undef, alpha=1, debug=false) {
 
-  translate([0,0,0])
+  color("Silver", alpha)
   for (R = [90]) rotate([R,0,0])
-  translate([0,MagazineOffset(),0]) {
-    color("Red")
-    for (i = [1:3])
-    translate([(i-1)*2.8,0,0])
-    rotate([0,90,0])
-    ShellSlugBall(height=2.0);
-
-    color("Silver", alpha)
-    rotate([0,90,0])
-    DebugHalf(enabled=debug)
-    linear_extrude(height=height)
-    rotate(0)
-    PumpMagazine2d(hollow=hollow);
-  }
-}
-
-/*
-module PumpRails(length=UpperLength(), cutter=false, clearance=0.002, extraRadius=0) {
-  clear = cutter ? clearance : 0;
-  clear2 = clear*2;
-
-  translate([-clear,0,0])
+  translate([0,MagazineOffset(),0])
   rotate([0,90,0])
-  rotate(180)
-  linear_extrude(height=length+clear2)
-  Teardrop(r=WallFrameSide()+BoltRadius(CouplingBolt())+extraRadius+clear,
-           $fn=Resolution(20,30));
-}
-*/
-
-module ShellLoadingSupport() {
+  DebugHalf(enabled=debug)
+  linear_extrude(height=height)
+  rotate(0)
+  PumpMagazine2d(hollow=hollow);
 }
 
-
+module PumpMagazineShells() {
+  color("Red")
+  for (i = [1:3])
+  translate([(i-1)*2.8,0,0])
+  rotate([0,90,0])
+  ShellSlugBall(height=2.0);
+}
 module BarrelCollar(clearance=0.002, cutter=false, debug=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
   color("Silver") DebugHalf(enabled=debug)
   difference() {
-    translate([4.5,0,0])
+    translate([8,0,0])
     rotate([0,90,0])
     cylinder(r=BarrelCollarSteelRadius()+clear,
              h=BarrelCollarSteelWidth(), $fn=40);
@@ -106,7 +87,8 @@ module BarrelCollar(clearance=0.002, cutter=false, debug=false) {
   }
 }
 
-module Barrel(barrel=BarrelPipe(), barrelLength=BarrelLength(), hollow=true,
+module Barrel(barrel=BarrelPipe(), barrelLength=BarrelLength(),
+              hollow=true, cutter=false,
               clearance=undef, alpha=1, debug=false) {
   color("SteelBlue", alpha) DebugHalf(enabled=debug)
   translate([0,0,0])
@@ -116,51 +98,57 @@ module Barrel(barrel=BarrelPipe(), barrelLength=BarrelLength(), hollow=true,
 }
 
 
+
+// **********
+// * Shapes *
+// **********
+module PumpMagazine2d(hollow=false, clearance=undef) {
+  translate([-(SquareTubeOuter(MagazineSquareTube(), clearance)/2),
+             -SquareTubeOuter(MagazineSquareTube(), clearance)/2])
+  Tubing2D(spec=MagazineSquareTube(),
+           hollow=hollow,
+           clearance=clearance);
+}
+
+
+module PumpRails(length=UpperLength(), cutter=false, clearance=0.002, extraRadius=0) {
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
+
+  *translate([-clear,0,0])
+  rotate([0,90,0])
+  rotate(180)
+  linear_extrude(height=length+clear2)
+  Teardrop(r=WallFrameSide()+BoltRadius(CouplingBolt())+extraRadius+clear,
+           $fn=Resolution(20,30));
+}
+
+module ShellLoadingSupport() {
+}
+
+
+
+
+
+// *****************
+// * Printed Parts *
+// *****************
+module ReceiverFront(alpha=1, debug=false) {
+  difference() {
+    ReceiverSegment(length=ReceiverFrontLength());
+    
+    TensionBolts(cutter=true);
+  }
+}
+
 module PumpForend(alpha=1, debug=false) {
   ForendWall=0.25;
-  ForendLength=0.5;
+  ForendLength=5;
 
   color("Green", alpha) DebugHalf(enabled=debug)
   difference() {
-    union() {
-      hull() {
-        translate([UpperLength(),0,0])
-        rotate([0,90,0])
-        ChamferedCylinder(r1=PipeCapRadius(ReceiverPipe())+ForendWall,
-                          r2=0.0625,
-                          h=ForendLength,
-                          $fn=Resolution(20,50));
-
-
-        translate([6.75,0,0])
-        rotate([0,90,0])
-        linear_extrude(height=ForendLength)
-        offset(r=0.1875)
-        PumpMagazine2d(clearance=SquareTubeClearanceSnug());
-      }
-
-      hull() {
-
-        translate([0,0,0])
-        rotate([0,90,0])
-        intersection() {
-
-          ChamferedCylinder(r1=PipeCapRadius(ReceiverPipe())+ForendWall,
-                            r2=0.0625,
-                            h=UpperLength()+ForendLength,
-                            $fn=Resolution(20,50));
-
-          translate([-ManifoldGap(),
-                     -PipeCapRadius(ReceiverPipe())-ForendWall-ManifoldGap(),
-                     -ManifoldGap()])
-          cube([PipeCapDiameter(ReceiverPipe())+(ForendWall*2)+ManifoldGap(2),
-                PipeCapDiameter(ReceiverPipe())+(ForendWall*2)+ManifoldGap(2),
-                UpperLength()+ForendLength+ManifoldGap(2)]);
-        }
-
-        PumpRails(extraRadius=0.1875, length=UpperLength()+ForendLength);
-      }
-    }
+    mirror([1,0,0])
+    ReceiverSegment(length=ForendLength);
 
     translate([0,-(SquareTubeOuter(MagazineSquareTube(),SquareTubeClearanceLoose())/2)-0.1875,0])
     cube([UpperLength(),
@@ -182,14 +170,32 @@ module PumpForend(alpha=1, debug=false) {
   }
 }
 
+
+// **************
+// * Assemblies *
+// **************
 module PumpShotgunAssembly(debug=false) {
 
   ShellLoadingSupport();
 
-  translate([-ReceiverFrontLength(),0,0])
-  Receiver(debug=debug);
+  translate([-ReceiverFrontLength(),0,0]) {
+    Receiver(debug=debug);
+    *Receiver_LargeFrame(debug=debug);
+    
+    StockAssembly();
+    
+    LowerMount();
+    
+    translate([-LowerMaxX(),0,LowerOffsetZ()])
+    Lower(showTrigger=true,
+          showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
+          searLength=SearLength()+abs(LowerOffsetZ())+SearTravel()-(0.25/2));
+    
+  }
+  
+  PumpForend();
 
-  *color("LightSteelBlue")
+  color("LightSteelBlue")
   ReceiverFront();
 
   // In position for load

@@ -1,5 +1,3 @@
-include <../Meta/Animation.scad>;
-
 use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
 use <../Meta/Debug.scad>;
@@ -93,9 +91,7 @@ function TensionRodTopZ() = 0.75;
 function TensionRodTopOffsetSide() = 0.625;
 
 function ReceiverBottomZ() = TensionRodBottomZ()-WallTensionRod();
-function ReceiverTopZ() = TensionRodTopZ()-WallTensionRod();
-
-function LowerOffsetZ() = ReceiverBottomZ();
+function ReceiverTopZ() = TensionRodTopZ()+WallTensionRod()+0.625;
 
 // ************
 // * Vitamins *
@@ -137,17 +133,17 @@ module ReceiverBottomSlot(clearance=ReceiverSlotClearance()) {
 module ReceiverMlokBolts(headType="flat", nutType="heatset", length=0.5, cutter=false, clearance=0.005, teardrop=false) {
   color("Silver") RenderIf(!cutter)
   for (X = [0,UnitsMetric(60),UnitsMetric(80)])
-  translate([-0.75-X,0,ReceiverTopSlotHeight()])
+  translate([-0.75-X,0,ReceiverTopSlotHeight()+ReceiverSlotClearance()])
   NutAndBolt(bolt=MlokBolt(),
              boltLength=length+ManifoldGap(2),
              head=headType,
-             nut=nutType,
+             nut=nutType, nutHeightExtra=(cutter?1:0),
              teardrop=cutter&&teardrop, teardropAngle=180,
              clearance=cutter?clearance:0);
 }
-// ***********
-// * Cutters *
-// ***********
+// **********
+// * Shapes *
+// **********
 module ReceiverMlokSlot(depth=0.05, clearance=0) {
   width = UnitsMetric(7)+clearance;
   
@@ -180,16 +176,13 @@ module ReceiverSideSlot(length=ReceiverLength(), clearance=ReceiverSlotClearance
   ChamferedSquare(xy=[height,width], r=1/16,
                   teardropTop=false, teardropBottom=false);
 }
-// **********
-// * Shapes *
-// **********
 module ReceiverTopSegment(length=1) {
-  translate([0, -TensionRodTopOffsetSide(), ReceiverTopZ()])
+  translate([0, -TensionRodTopOffsetSide(), 0])
   rotate([0,-90,0])
   linear_extrude(length)
-  ChamferedSquare(xy=[1,(TensionRodTopOffsetSide()*2)], r=1/16,
+  ChamferedSquare(xy=[ReceiverTopZ(),(TensionRodTopOffsetSide()*2)], r=1/4,
                   teardropBottom=false,
-                  teardropTop=false);
+                  teardropTop=false, $fn=50);
 }
 
 module ReceiverSegment(length=1, chamferFront=false, chamferBack=false, highTop=true) {
@@ -273,6 +266,9 @@ module ReceiverBackSegment_print() {
   ReceiverBackSegment();
 }
 
+// **************
+// * Assemblies *
+// **************
 module ReceiverAssembly(debug=false) {
   if (_SHOW_RECEIVER_RODS)
   TensionBolts(debug=debug);

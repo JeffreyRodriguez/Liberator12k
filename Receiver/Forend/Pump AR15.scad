@@ -69,7 +69,7 @@ function MagazineMinX() = BarrelMinX()-0.125
 function ActionRodZ() = 0.75+(1/32);
 function FrameFrontMinX() = BreechFrontX()+3;
 
-function ForendMinX() = 0;//-ReceiverFrontLength();
+function ForendMinX() = 0;
 function ForendLength() = BarrelMinX()
              + AR15BarrelExtensionLipLength()
              + AR15BarrelExtensionLength()
@@ -98,6 +98,9 @@ helixBottom = 0.1875;
                 
 camPinLockedX = BarrelMinX()-AR15_CamPinOffset()-0.5;
 
+// ************
+// * Vitamins *
+// ************
 module ActionRod(width=0.25, length=12, cutter=false, clearance=0.005) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
@@ -124,6 +127,8 @@ module BarrelCollar(clearance=0.002, cutter=false, debug=false) {
 module Barrel(barrelLength=BarrelLength(), hollow=true,
               cutter=false, clearance=undef,
               alpha=1, debug=false) {
+  
+  color("DimGrey") RenderIf(!cutter)
   translate([BarrelMinX(),0,0])
   rotate([0,90,0])
   rotate(180)
@@ -141,37 +146,11 @@ module Bolt(cutter=false, clearance=0.005) {
             clearance=(cutter?clearance:0));
 }
 
-module BoltCarrierCamTrackSupport(cutter=false, clearance=0.008) {
-  clear = cutter ? clearance : 0;
-  clear2 = clear*2;
-  
-  trackRadius = boltCarrierTrackRadius;
-  trackLength = boltCarrierLength
-              - AR15_CamPinOffset()
-              + AR15_BoltLockLengthDiff()
-              + AR15_CamPinDiameter();
-  
-  translate([boltCarrierMinX,0,0])
-  rotate([0,90,0])
-  intersection() {
-    linear_extrude(height=trackLength)
-    hull() {
-      rotate(180+11.25)
-      semicircle(od=(boltCarrierTrackRadius+clear)*2,
-                angle=90-AR15_CamPinAngle() +(cutter?1:0), center=true, $fn=50);
-      
-      circle(r=ArcLength(90-AR15_CamPinAngle(),
-                         (boltCarrierDiameter/2)+AR15_CamPinSquareHeight())/2,
-           $fn=50);
-    }
-    
-    ChamferedCylinder(r1=boltCarrierTrackRadius+clear,
-                      r2=boltCarrierTrackRadius/2,
-                       h=trackLength,
-                      teardropTop=true, chamferBottom=false, $fn=50);
-  }
-}
 
+
+// ***********
+// * Cutters *
+// ***********
 module BoltCarrierMagazineTrack(length=boltCarrierLength, clearance=0, clearanceAngle=0) {
     translate([boltCarrierMinX,0,0])
     rotate([0,90,0])
@@ -184,48 +163,32 @@ module BoltCarrierMagazineTrack(length=boltCarrierLength, clearance=0, clearance
     
   
 
-module BoltCarrier(cutter=false, clearance=0.01, chamferRadius=1/16, alpha=1) {
-  clear = cutter ? clearance : 0;
-  clear2 = clear*2;
 
-  color("Tan", alpha) RenderIf(!cutter)
+module ReceiverBoltTrack(length=2.5, alpha=1) {
+
+  color("OliveDrab", alpha) render()
   difference() {
+    translate([ForendMinX(),0,0])
+    difference() {
+      *translate([ForendMinX(),0,0])
+      mirror([1,0,0])
+      ReceiverSegment(length=length);
     
-    union() {
-      translate([boltCarrierMinX,0,0])
-      rotate([0,90,0])
-      ChamferedCylinder(r1=boltCarrierRadius+clear,
-                        r2=AR15BarrelExtensionDiameter()-AR15_BoltHeadDiameter(),
-                        h=boltCarrierLength,
-                        teardropTop=true, chamferBottom=false,
-                        $fn=50);
-      
-      BoltCarrierCamTrackSupport(clearance=clear);
-    }
-    
-    translate([-ManifoldGap(),0,0])
-    BoltCarrierMagazineTrack(clearance=clear);
-    
-    if (!cutter) {
-      
-      Bolt(cutter=true);
-      
-      translate([camPinLockedX,0,0]) 
+      translate([ForendMinX()+0.25,-(ReceiverBottomSlotWidth()/2),0])
+      mirror([1,0,0])
+      ChamferedCube([length+0.25, ReceiverBottomSlotWidth(), (7/8)+0.01], r=1/16);
+
+      translate([ForendMinX(),0,0])
       rotate([0,-90,0])
-      rotate(-AR15_CamPinAngle())
-      *HelixSegment(radius=boltCarrierTrackRadius,
-                    width=ActionRodWidth()+0.02, depth=0.1875,
-                    top=0, bottom=helixBottom,
-                    angle=-AR15_CamPinAngle());
+      ChamferedCylinder(r1=ReceiverIR()-0.005, r2=1/32,
+                         h=length,
+                        teardropTop=true,
+                        $fn=Resolution(30,60));
     }
+    
+    ReceiverCutters();
   }
 }
-
-module BoltCarrier_print() {
-  rotate([0,-90,0])
-  BoltCarrier();
-}
-
 
 module ReceiverCutters() {
     
@@ -289,6 +252,88 @@ module ReceiverCutters() {
   TensionBolts(cutter=true, nutType="none", length=12);
 }
 
+
+// **********
+// * Shapes *
+// **********
+module BoltCarrierCamTrackSupport(cutter=false, clearance=0.008) {
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
+  
+  trackRadius = boltCarrierTrackRadius;
+  trackLength = boltCarrierLength
+              - AR15_CamPinOffset()
+              + AR15_BoltLockLengthDiff()
+              + AR15_CamPinDiameter();
+  
+  translate([boltCarrierMinX,0,0])
+  rotate([0,90,0])
+  intersection() {
+    linear_extrude(height=trackLength)
+    hull() {
+      rotate(180+11.25)
+      semicircle(od=(boltCarrierTrackRadius+clear)*2,
+                angle=90-AR15_CamPinAngle() +(cutter?1:0), center=true, $fn=50);
+      
+      circle(r=ArcLength(90-AR15_CamPinAngle(),
+                         (boltCarrierDiameter/2)+AR15_CamPinSquareHeight())/2,
+           $fn=50);
+    }
+    
+    ChamferedCylinder(r1=boltCarrierTrackRadius+clear,
+                      r2=boltCarrierTrackRadius/2,
+                       h=trackLength,
+                      teardropTop=true, chamferBottom=false, $fn=50);
+  }
+}
+
+
+// *****************
+// * Printed Parts *
+// *****************
+module BoltCarrier(cutter=false, clearance=0.01, chamferRadius=1/16, alpha=1) {
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
+
+  color("Tan", alpha) RenderIf(!cutter)
+  difference() {
+    
+    union() {
+      translate([boltCarrierMinX,0,0])
+      rotate([0,90,0])
+      ChamferedCylinder(r1=boltCarrierRadius+clear,
+                        r2=AR15BarrelExtensionDiameter()-AR15_BoltHeadDiameter(),
+                        h=boltCarrierLength,
+                        teardropTop=true, chamferBottom=false,
+                        $fn=50);
+      
+      BoltCarrierCamTrackSupport(clearance=clear);
+    }
+    
+    translate([-ManifoldGap(),0,0])
+    BoltCarrierMagazineTrack(clearance=clear);
+    
+    if (!cutter) {
+      
+      Bolt(cutter=true);
+      
+      translate([camPinLockedX,0,0]) 
+      rotate([0,-90,0])
+      rotate(-AR15_CamPinAngle())
+      *HelixSegment(radius=boltCarrierTrackRadius,
+                    width=ActionRodWidth()+0.02, depth=0.1875,
+                    top=0, bottom=helixBottom,
+                    angle=-AR15_CamPinAngle());
+    }
+  }
+}
+
+module BoltCarrier_print() {
+  rotate([0,-90,0])
+  BoltCarrier();
+}
+
+
 module AR15Forend(debug=false, alpha=1) {
   length = ForendLength();
   
@@ -310,35 +355,21 @@ module AR15Forend(debug=false, alpha=1) {
     ReceiverCutters();
   }
 }
-
-module ReceiverBoltTrack(length=2.5, alpha=1) {
-
-  color("OliveDrab", alpha) render()
+module AR15ForendCap(debug=false, alpha=1) {
+  length = 7.5;
+  
+  color("SlateBlue", alpha)
+  DebugHalf(enabled=debug) render()
   difference() {
-    translate([ForendMinX(),0,0])
-    difference() {
-      *translate([ForendMinX(),0,0])
+    union() {
+      translate([ForendMinX()+ForendLength(),0,0])
       mirror([1,0,0])
       ReceiverSegment(length=length);
-    
-      translate([ForendMinX()+0.25,-(ReceiverBottomSlotWidth()/2),0])
-      mirror([1,0,0])
-      ChamferedCube([length+0.25, ReceiverBottomSlotWidth(), (7/8)+0.01], r=1/16);
-
-      translate([ForendMinX(),0,0])
-      rotate([0,-90,0])
-      ChamferedCylinder(r1=ReceiverIR()-0.005, r2=1/32,
-                         h=length,
-                        teardropTop=true,
-                        $fn=Resolution(30,60));
     }
     
     ReceiverCutters();
   }
 }
-
-
-
 
 if (_RENDER == "Assembly") {
   
@@ -348,8 +379,8 @@ if (_RENDER == "Assembly") {
   translate([-1-2,0,0])
   *HammerAssembly(insertRadius=0.75, alpha=1);
 
-  color("DimGrey") render()
   Barrel();
+  BarrelCollar();
 
   animate_unlock1 = SubAnimate(ANIMATION_STEP_UNLOCK, end=0.25)
                  - SubAnimate(ANIMATION_STEP_LOCK, start=0.75);
@@ -385,7 +416,8 @@ if (_RENDER == "Assembly") {
 
   ReceiverBoltTrack(alpha=0.25);
 
-  AR15Forend(debug=false);
+  AR15Forend();
+  AR15ForendCap();
 
   ReceiverAssembly();
   StockAssembly();

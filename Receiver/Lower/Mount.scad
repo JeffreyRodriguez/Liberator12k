@@ -25,6 +25,8 @@ _CUTAWAY_RECEIVER = false;
 // Settings: Positions
 function LowerMountHeight() = 0.0;
 
+function LowerOffsetZ() = ReceiverBottomZ();
+
 module ReceiverBottomSlotInterface(length=0.75, height=abs(LowerOffsetZ()+LowerMountHeight())) {
   difference() {
     union() {

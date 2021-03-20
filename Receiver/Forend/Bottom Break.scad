@@ -19,7 +19,6 @@ use <../../Shapes/Components/Pump Grip.scad>;
 
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/Pipe.scad>;
-//use <../../Vitamins/Rod.scad>;
 
 use <../Lower/Lower.scad>;
 use <../Lower/Mount.scad>;
@@ -814,7 +813,9 @@ if (_RENDER == "Assembly") {
     LowerMount();
     
     translate([-LowerMaxX(),0,LowerOffsetZ()])
-    Lower();
+    Lower(showTrigger=true,
+          showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true);
+    
   }
 }
 

@@ -49,6 +49,9 @@ function ButtpadLength() = 2.5;
 function ButtpadWall() = 0.1875;
 function ButtpadX() = -(ReceiverLength()+StockLength()+1.5);
 
+// ************
+// * Vitamins *
+// ************
 module ButtpadBolt(debug=false, cutter=false, teardrop=true, clearance=0.01, teardropAngle=0) {
   clear = cutter ? clearance : 0;
 
@@ -63,6 +66,10 @@ module ButtpadBolt(debug=false, cutter=false, teardrop=true, clearance=0.01, tea
              clearance=clear);
 }
 
+
+// *****************
+// * Printed Parts *
+// *****************
 module Stock(length=StockLength(), doRender=true, debug=_CUTAWAY_STOCK, alpha=1) {
 topCoverHeight = 1;
   color("Chocolate", alpha=alpha)
@@ -198,6 +205,9 @@ module Buttpad_print() {
   Buttpad();
 }
 
+// **************
+// * Assemblies *
+// **************
 module StockAssembly(debug=_DEBUG_ASSEMBLY) {
   if (_SHOW_BUTTPAD_BOLT)
   ButtpadBolt();

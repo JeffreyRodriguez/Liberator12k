@@ -1,5 +1,3 @@
- include <../Meta/Animation.scad>;
-
 use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
 use <../Meta/Debug.scad>;
@@ -73,6 +71,9 @@ function FrameExtension(length=FrameBoltLength()) = length
                                                   - FrameReceiverLength()
                                                   - NutHexHeight(FrameBolt());
 
+// ************
+// * Vitamins *
+// ************
 module FrameBoltIterator() {
     for (Y = [FrameBoltY(),-FrameBoltY()])
     translate([-FrameReceiverLength()-FrameBackLength()-ManifoldGap(),
@@ -81,8 +82,7 @@ module FrameBoltIterator() {
     children();
 }
 
-module FrameBolts(length=FrameBoltLength(),
-              debug=false, cutter=false, clearance=0.008, alpha=1) {
+module FrameBolts(length=FrameBoltLength(), debug=false, cutter=false, clearance=0.008, alpha=1) {
   clear = cutter ? clearance : 0;
 
   color("Silver", alpha) RenderIf(!cutter)
@@ -108,6 +108,9 @@ module CouplingBolts(yz = [COUPLING_BOLT_Y, COUPLING_BOLT_Z], boltHead="flat", n
              clearance=cutter?clearance:0);
 }
 
+// **********
+// * Shapes *
+// **********
 module FrameSupport(length=FRAME_SPACER_LENGTH, width=(FrameBoltY()+FrameBoltRadius()+WallFrameBolt())*2, height=(FrameBoltRadius()+WallFrameBolt())*2, extraBottom=0, $fn=Resolution(20,60)) {
   translate([0, -width/2, FrameBoltZ()-(height/2)-extraBottom])
   rotate([90,0,90])
@@ -136,6 +139,10 @@ module CouplingSupport(yz = [COUPLING_BOLT_Y, COUPLING_BOLT_Z], length=1) {
   }
 }
 
+
+// ****************
+// * Printed Parts*
+// ****************
 module FrameSpacer(length=FRAME_SPACER_LENGTH, debug=false, alpha=1) {
   color("Tan", alpha)
   DebugHalf(enabled=debug) render()
@@ -173,6 +180,7 @@ module Receiver_LargeFrame(couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z], do
   
   topCoverHeight = 1;
   
+  // Branding text
   color("DimGrey")
   RenderIf(doRender) DebugHalf(enabled=debug) {
       
@@ -201,13 +209,7 @@ module Receiver_LargeFrame(couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z], do
         mirror([1,0,0])
         FrameSupport(length=FrameReceiverLength()+FrameBackLength());
 
-        // Top cover
-        translate([0, -TensionRodTopOffsetSide(), ReceiverTopZ()])
-        rotate([0,-90,0])
-        linear_extrude(height=FrameReceiverLength())
-        ChamferedSquare(xy=[1,(TensionRodTopOffsetSide()*2)], r=1/16,
-                      teardropBottom=false,
-                      teardropTop=false);
+        ReceiverTopSegment(length=FrameReceiverLength());
       }
       
       translate([0,-ReceiverOR(),-1/16])
@@ -243,23 +245,16 @@ module Receiver_LargeFrame_print(couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_
 }
 
 
-module Receiver_LargeFrameAssembly(length=FrameBoltLength(),
-                     spacerLength=FRAME_SPACER_LENGTH,
-                     couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z],
-                     couplingBoltLength=0.5,
-                     debug=_CUTAWAY_RECEIVER, alpha=1) {
-
+// **************
+// * Assemblies *
+// **************
+module Receiver_LargeFrameAssembly(length=FrameBoltLength(), spacerLength=FRAME_SPACER_LENGTH, couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z], couplingBoltLength=0.5, debug=_CUTAWAY_RECEIVER, alpha=1) {
   Receiver_LargeFrame(couplingBoltYZ=couplingBoltYZ, debug=debug);
   
-  //if (frame)
   color("Silver")
   render()
   CouplingBolts(yz=couplingBoltYZ, extension=couplingBoltLength);
   
-  //if (frame && frameBack)
-  //FrameBack(length=FrameBackLength(), debug=debug);
-
-  //if (frame && frameBolts)
   FrameBolts(length=length);
                        
   FrameBolts(length=length, debug=debug, alpha=alpha);

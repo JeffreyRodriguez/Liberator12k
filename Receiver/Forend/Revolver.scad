@@ -451,6 +451,7 @@ module Revolver_ReceiverFront_print() {
 module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND, $fn=Resolution(30,100)) {
   extraBottom=0;
   
+  // Branding text
   color("DimGrey", alpha) 
   RenderIf(doRender) {
     
@@ -481,14 +482,9 @@ module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND, $
         FrameSupport(length=Revolver_BarrelSupportLength(),
                      extraBottom=extraBottom);
         
-        // Top cover
-        translate([ForendMinX(), -TensionRodTopOffsetSide(), ReceiverTopZ()])
+        translate([ForendMinX(), 0, 0])
         mirror([1,0,0])
-        rotate([0,-90,0])
-        linear_extrude(height=Revolver_BarrelSupportLength())
-        ChamferedSquare(xy=[1,(TensionRodTopOffsetSide()*2)], r=1/16,
-                        teardropBottom=false,
-                        teardropTop=false);
+        ReceiverTopSegment(length=Revolver_BarrelSupportLength());
       }
 
       // Around the barrel
@@ -614,14 +610,8 @@ module Revolver_FrameSpacer(length=ForendMinX(), debug=false, alpha=_ALPHA_FOREN
       // Rear corner guides
       FrameSupport(length=ManifoldGap(), extraBottom=0.5);
       
-      // Top cover
-      translate([0, -TensionRodTopOffsetSide(), ReceiverTopZ()])
       mirror([1,0,0])
-      rotate([0,-90,0])
-      linear_extrude(height=length)
-      ChamferedSquare(xy=[1,(TensionRodTopOffsetSide()*2)], r=1/16,
-                      teardropBottom=false,
-                      teardropTop=false);
+      ReceiverTopSegment(length=length);
     }
 
     FrameBolts(cutter=true);
