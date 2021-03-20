@@ -96,7 +96,7 @@ module ReceiverLugFront(width=UnitsImperial(0.5), extraTop=ManifoldGap(),
         cutter=cutter);
 }
 
-ReceiverLugRear(cutter=true, clearVertical=true);
+ReceiverLugRear(cutter=false);
 
 ReceiverLugFront();
 

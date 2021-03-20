@@ -50,10 +50,12 @@ module T_Lug(length=0.75,
   } else {
     union() {
       translate([0,-tabWidth/2,0])
-      ChamferedCube([length, tabWidth, tabHeight], r=1/32);
+      ChamferedCube([length, tabWidth, tabHeight], r=1/16,
+                     teardropFlip=[true,false,true]);
 
       translate([0,-width/2,0])
-      ChamferedCube([length, width, height], r=1/32);
+      ChamferedCube([length, width, height], r=1/16,
+                     teardropFlip=[true,false,true]);
     }
   }
 }
