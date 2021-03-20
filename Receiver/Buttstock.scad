@@ -75,29 +75,24 @@ topCoverHeight = 1;
       hull() {
         
         // Merge to body
-        ReceiverSegment(length=0.25, highTop=true,
-                        chamferFront=false, chamferBack=false);
+        ReceiverSegment(length=0.25, highTop=true);
         
         // Merge to body
-        ReceiverSegment(length=1.5, highTop=false,
-                        chamferFront=false, chamferBack=false);
+        ReceiverSegment(length=1.5, highTop=false);
       }
       
       // Main body
-      ReceiverSegment(length=length, highTop=false,
-                    chamferFront=false, chamferBack=false);
+      ReceiverSegment(length=length, highTop=false);
       
       // Buttpad attachment
       translate([-length,0,0])
       hull() {
-        ReceiverSegment(length=1-0.25, highTop=false,
-                        chamferFront=false, chamferBack=false);
+        ReceiverSegment(length=1-0.25, highTop=false);
         
         translate([-1,0,0])
         scale([1,1.1,1.1])
         mirror([1,0,0])
-        ReceiverSegment(length=ManifoldGap(), highTop=false,
-                        chamferFront=false, chamferBack=false);
+        ReceiverSegment(length=ManifoldGap(), highTop=false);
         
         translate([-1,0,-2])
         rotate([0,90,0])
@@ -170,8 +165,7 @@ module Buttpad(doRender=true, debug=_CUTAWAY_BUTTPAD, alpha=1) {
                          $fn=Resolution(20,50));
       scale([1,1.1,1.1])
       mirror([1,0,0])
-      ReceiverSegment(length=0.5, highTop=false,
-                      chamferFront=false, chamferBack=false);
+      ReceiverSegment(length=0.5, highTop=false);
       
       translate([0,0,-2])
       rotate([0,90,0])

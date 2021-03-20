@@ -298,8 +298,7 @@ module AR15Forend(debug=false, alpha=1) {
     union() {
       translate([ForendMinX(),0,0])
       mirror([1,0,0])
-      ReceiverSegment(length=length,
-                      chamferFront=false, chamferBack=false);
+      ReceiverSegment(length=length);
       
       translate([MagazineMinX(),0,-0.5])
       AR15_Magwell(cut=false,

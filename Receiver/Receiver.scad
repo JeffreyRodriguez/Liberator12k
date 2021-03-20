@@ -192,7 +192,7 @@ module ReceiverTopSegment(length=1) {
                   teardropTop=false);
 }
 
-module ReceiverSegment(length=1, chamferFront=true, chamferBack=true, highTop=true) {
+module ReceiverSegment(length=1, chamferFront=false, chamferBack=false, highTop=true) {
   hull() {
     
     // Around the stock tube
@@ -231,8 +231,7 @@ module Receiver(receiverLength=ReceiverLength(), doRender=true, alpha=1, debug=f
   DebugHalf(enabled=debug)
   difference() {
     union() {
-      ReceiverSegment(length=ReceiverLength(),
-                      chamferFront=false, chamferBack=false);
+      ReceiverSegment(length=ReceiverLength());
       
       children();
     }
@@ -256,8 +255,7 @@ module ReceiverBackSegment(length=ReceiverBackLength()) {
   color("Brown") render()
   difference() {
     translate([-ReceiverLength(),0,0])
-    ReceiverSegment(length=length,
-                    chamferBack=false, chamferFront=false);
+    ReceiverSegment(length=length);
     
     TensionBolts(nutType="none", headType="none", cutter=true);
     
