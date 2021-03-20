@@ -117,6 +117,10 @@ module AR15_Magwell(width=UnitsImperial(1.125),
                wallFront=UnitsImperial(0),
                 wallBack=UnitsImperial(0),
                 tabWidth=0.5, tabHeight = 1, cut=true) {
+                  
+  length = AR15_MagazineBaseLength()
+         + AR15_MagazineRearTabLength()
+         + wallFront;
 
   color("Orange")
   difference() {
@@ -130,11 +134,14 @@ module AR15_Magwell(width=UnitsImperial(1.125),
         translate([AR15_MagazineRearTabLength()-wallBack, -(width/2)-wall])
         mirror([1,0])
         rotate(90)
-        ChamferedSquare([width+(wall*2),AR15_MagazineBaseLength()+AR15_MagazineRearTabLength()+wallBack+wallFront]);
+        ChamferedSquare([width+(wall*2),
+                         length], r=1/8);
 
-        translate([0, -(width/2)])mirror([1,0])
+        translate([0, -(width/2)])
+        mirror([1,0])
         rotate(90)
-        ChamferedSquare([width,AR15_MagazineBaseLength()+AR15_MagazineRearTabLength()+wallFront]);
+        ChamferedSquare([width,
+                         length + wallBack], r=1/8);
       }
     }
 
