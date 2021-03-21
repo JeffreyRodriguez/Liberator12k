@@ -518,16 +518,6 @@ module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND, $
       ChamferedCube([1,
                      0.6875,
                      1], r=CR(), teardropFlip=[false,true,true]);
-      
-      // Fillet barrel to the frame
-      for (M = [0,1]) mirror([0,M,0])
-      translate([ForendMinX()+BlastPlateThickness()+CR(),
-                 BarrelRadius()+WallBarrel()-ManifoldGap(2),
-                 FrameBottomZ()-extraBottom+ManifoldGap()])
-      rotate([0,90,0])
-      rotate(-90)
-      Fillet(r=WallFrameBolt(), h=Revolver_BarrelSupportLength()-BlastPlateThickness()-(CR()*2),
-                     taperEnds=true);
     }
     
     // Weld clearance: Barrel to blast plate fillet

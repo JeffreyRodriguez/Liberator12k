@@ -202,32 +202,13 @@ module Receiver_LargeFrame(couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z], do
   RenderIf(doRender) DebugHalf(enabled=debug)
   difference() {
     Receiver(doRender=false) {
-      
       hull() {
         
-        // Frame bolt supports
         mirror([1,0,0])
         FrameSupport(length=FrameReceiverLength()+FrameBackLength());
 
         ReceiverTopSegment(length=FrameReceiverLength());
       }
-      
-      translate([0,-ReceiverOR(),-1/16])
-      mirror([1,0,0])
-      cube([FrameReceiverLength()+FrameBackLength(),
-            ReceiverOD(),FrameBoltZ()]);
-      
-      // Fillet
-      for (M = [0,1]) mirror([0,M,0])
-      mirror([1,0,0])
-      translate([0,
-                 ReceiverOR()-ManifoldGap(),
-                 FrameBottomZ()+ManifoldGap()])
-      rotate([0,90,0])
-      rotate(-90)
-      Fillet(r=WallFrameBolt(),
-             h=FrameReceiverLength()+FrameBackLength(),
-             taperEnds=true);
     }
     
     ReceiverMlokSlot();
