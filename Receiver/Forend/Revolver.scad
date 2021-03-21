@@ -143,6 +143,9 @@ function CR() = 1/16;
 // Measured: Vitamins
 function BlastPlateThickness() = BLAST_PLATE_THICKNESS;
 function BlastPlateWidth() = CYLINDER_DIAMETER;
+function ShieldLength() = 0.5;
+function ShieldWidth() = 0.125;
+function ShieldHeight() = 0.75;
 
 function RecoilPlateThickness() = 1/4;
 function RecoilPlateWidth() = 2;
@@ -392,6 +395,12 @@ module Revolver_Shield(cutter=false, debug=false) {
   linear_extrude(height=0.5)
   rotate(90)
   semidonut(minor=CylinderDiameter()-0.25, major=CylinderDiameter(), angle=180, $fn=100);
+  
+  color("LightSteelBlue")
+  RenderIf(!cutter) DebugHalf(enabled=debug)
+  for (M = [0,1]) mirror([0,M,0])
+  translate([BarrelMinX()+BlastPlateThickness()-ShieldLength(),CylinderRadius()-ShieldWidth(),CylinderZ()-ShieldHeight()])
+  cube([ShieldLength(), ShieldWidth(), ShieldHeight()]);
 }
 
 //*****************
