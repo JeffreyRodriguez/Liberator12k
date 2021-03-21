@@ -147,7 +147,7 @@ module ReceiverMlokBolts(headType="flat", nutType="heatset", length=0.5, cutter=
 module ReceiverMlokSlot(depth=0.05, clearance=0) {
   width = UnitsMetric(7)+clearance;
   
-  translate([0, -width/2, ReceiverTopZ()+1+ManifoldGap()])
+  translate([0, -width/2, ReceiverTopZ()+ManifoldGap()])
   mirror([0,0,1])
   mirror([1,0,0])
   cube([ReceiverLength(), width, depth]);
