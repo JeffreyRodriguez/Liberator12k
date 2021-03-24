@@ -2,17 +2,25 @@ use <../Meta/Units.scad>;
 use <../Meta/Manifold.scad>;
 use <../Meta/slookup.scad>;
 use <../Shapes/Teardrop.scad>;
+use <../Shapes/Teardrop Taper.scad>;
 
 //use <Nuts and Bolts/NutSpec.scad>;
 use <Nuts and Bolts/BoltSpec.scad>;
 use <Nuts and Bolts/BoltSpec_Inch.scad>;
 use <Nuts and Bolts/BoltSpec_Metric.scad>;
 
+// Bolt
+BOLT = "#8-32"; // ["#4-40", "#6-32", "#8-32", "#10-24", "1/4\"-20", "5/16\"-18", "1/2\"-13"]
+
 // Bolt Head Type
-HEAD = ""; // ["", "flat", "hex", "socket"]
+HEAD = "flat"; // ["", "flat", "hex", "socket"]
+CAP_HEIGHT_EXTRA = 1;
 
 // Nut Type
-NUT = ""; // ["", "hex", "heatset"]
+NUT = "heatset"; // ["", "hex", "heatset"]
+NUT_HEIGHT_EXTRA = 1;
+
+TEARDROP = false;
 
 BOLTS = [
   ["Template", Spec_BoltTemplate()],
@@ -20,9 +28,9 @@ BOLTS = [
   ["#6-32", Spec_Bolt6_32()],
   ["#8-32", Spec_Bolt8_32()],
   ["#10-24", Spec_Bolt10_24()],
+  ["1/4\"-20", Spec_BoltOneQuarter()],
   ["5/16\"-18", Spec_BoltFiveSixteenths()],
   ["1/2\"-13", Spec_BoltOneHalf()],
-  ["1/4\"-20", Spec_BoltOneQuarter()],
   ["M3", Spec_BoltM3()],
   ["M4", Spec_BoltM4()],
   ["M5", Spec_BoltM5()],
@@ -92,26 +100,20 @@ module Bolt(bolt=Spec_BoltTemplate(), length=1,
 }
 
 module BoltFlatHead(bolt, clearance=0, capHeightExtra=0, teardrop=false, teardropAngle=0) {
-  hull() {
-
-    // Taper
+  union() {
     if (teardrop) {
-      translate([0,0,-BoltFlatHeadHeight(bolt)-clearance])
-      linear_extrude(height=ManifoldGap())
-      rotate(teardropAngle)
-      Teardrop(r=BoltRadius(bolt, clearance));
-      
-      linear_extrude(height=ManifoldGap())
-      rotate(teardropAngle)
-      Teardrop(r=BoltFlatHeadRadius(bolt, clearance));
+      mirror([0,0,1])
+      TeardropTaper(h=BoltFlatHeadHeight(bolt),
+                    r1=BoltFlatHeadRadius(bolt, clearance),
+                    r2=BoltRadius(bolt, clearance));
     } else {
       mirror([0,0,1])
       cylinder(r1=BoltFlatHeadRadius(bolt, clearance),
                r2=BoltRadius(bolt, clearance),
                 h=BoltFlatHeadHeight(bolt));
     }
-
-    // Taper teardrop hack
+    
+    // Extension
     linear_extrude(height=(clearance?capHeightExtra:ManifoldGap()))
     if (teardrop) {
       rotate(teardropAngle)
@@ -163,27 +165,55 @@ module NutHex(spec,
 };
 
 
-module NutHeatset(spec, extraLength=0) {
-      cylinder(r1=NutHeatsetMajorRadius(spec), r2=NutHeatsetMinorRadius(spec),
-               h=NutHeatsetHeight(spec));
-
-      if (extraLength > 0) {
-        translate([0,0,-extraLength])
-        cylinder(r=NutHeatsetMajorRadius(spec),
-                 h=extraLength+ManifoldGap());
-      }
+module NutHeatset(spec, teardrop=false, teardropAngle=0, extraLength=0) {
+  if (teardrop) {
+    rotate(teardropAngle)
+    TeardropTaper(h=NutHeatsetHeight(spec),
+                  r1=NutHeatsetMajorRadius(spec),
+                  r2=NutHeatsetMinorRadius(spec));
+  } else {
+    cylinder(r1=NutHeatsetMajorRadius(spec),
+             r2=NutHeatsetMinorRadius(spec),
+              h=NutHeatsetHeight(spec));
+  }
+  
+  // Extension
+  if (extraLength > 0) {
+    mirror([0,0,1])
+    linear_extrude(height=extraLength)
+    if (teardrop) {
+      rotate(teardropAngle)
+      Teardrop(r=NutHeatsetMajorRadius(spec));
+    } else {
+      circle(r=NutHeatsetMajorRadius(spec));
+    }
+  }
 };
 
-module NutHeatsetLong(spec, extraLength=0) {
-      cylinder(r1=NutHeatsetLongMajorRadius(spec),
-               r2=NutHeatsetLongMinorRadius(spec),
-               h=NutHeatsetLongHeight(spec));
-
-      if (extraLength > 0) {
-        translate([0,0,-extraLength])
-        cylinder(r=NutHeatsetLongMajorRadius(spec),
-                 h=extraLength+ManifoldGap());
-      }
+module NutHeatsetLong(spec, teardrop=false, teardropAngle=0, extraLength=0) {
+  
+  if (teardrop) {
+    rotate(teardropAngle)
+    TeardropTaper(h=NutHeatsetLongHeight(spec),
+                  r1=NutHeatsetLongMajorRadius(spec),
+                  r2=NutHeatsetLongMinorRadius(spec));
+  } else {
+    cylinder(r1=NutHeatsetLongMajorRadius(spec),
+             r2=NutHeatsetLongMinorRadius(spec),
+              h=NutHeatsetLongHeight(spec));
+  }
+  
+  // Extension
+  if (extraLength > 0) {
+    mirror([0,0,1])
+    linear_extrude(height=(clearance?capHeightExtra:ManifoldGap()))
+    if (teardrop) {
+      rotate(teardropAngle)
+      Teardrop(r=NutHeatsetLongMajorRadius(spec));
+    } else {
+      circle(r=NutHeatsetLongMajorRadius(spec));
+    }
+  }
 };
 
 
@@ -211,9 +241,9 @@ module NutAndBolt(bolt=Spec_BoltTemplate(), boltLength=1, boltLengthExtra=0,
     if (nut == "hex") {
       NutHex(bolt, nutHeightExtra=nutHeightExtra, clearance=clearance);
     } else if (nut == "heatset") {
-      NutHeatset(bolt, extraLength=nutHeightExtra);
+      NutHeatset(bolt, teardrop=teardrop, teardropAngle=teardropAngle, extraLength=nutHeightExtra);
     } else if (nut == "heatset-long") {
-      NutHeatsetLong(bolt, extraLength=nutHeightExtra);
+      NutHeatsetLong(bolt, teardrop=teardrop, teardropAngle=teardropAngle, extraLength=nutHeightExtra);
     }
   }
 }
@@ -269,7 +299,8 @@ module FlatHeadBolt(diameter=UnitsImperial(0.193),
   }
 }
 
-NutAndBolt(bolt=Spec_Bolt8_32(),
-           head=HEAD,
-           nut=NUT,
-           clearance=0);
+NutAndBolt(bolt=BoltSpec(BOLT),
+           head=HEAD, capHeightExtra=CAP_HEIGHT_EXTRA,
+           nut=NUT, nutHeightExtra=NUT_HEIGHT_EXTRA,
+           teardrop=TEARDROP,
+           clearance=0.001);
