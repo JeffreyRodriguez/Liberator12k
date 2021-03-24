@@ -121,8 +121,7 @@ module TriggerSearPinTrack() {
   }
 }
 
-module SearSupportTab(cutter=false) {
-  clearance=cutter ? 0.01 : 0;
+module SearSupportTab(cutter=false, clearance=0.015) {
 
   color("LightGrey")
   render(convexity=4)
@@ -134,7 +133,7 @@ module SearSupportTab(cutter=false) {
         // Sear Body
         translate([ReceiverLugRearMaxX(),0])
         mirror([0,1])
-        square([abs(ReceiverLugRearMaxX())+0.375, TriggerHeight()]);
+        square([abs(ReceiverLugRearMaxX())+0.375, TriggerHeight()-clearance]);
 
         // Front Corner
         translate([0,GripCeilingZ()])
@@ -151,9 +150,9 @@ module SearSupportTab(cutter=false) {
     translate([0,0,-SearTravel()])
     SearCutter(length=SearLength()+(SearTravel()*4), wideTrack=true);
 
-    ReceiverLugFront(cutter=true);
+    ReceiverLugFront(cutter=true, clearance=clearance);
 
-    ReceiverLugRear(cutter=true, hole=false);
+    ReceiverLugRear(cutter=true, clearance=clearance, hole=false);
 
   }
 }
@@ -235,9 +234,6 @@ module TriggerBody() {
           GripCeiling()+0.01+ManifoldGap()]);
   }
 }
-
-!scale(25.4)
-TriggerBody();
 
 module Trigger(animationFactor=TriggerAnimationFactor(),
                left=true, leftAlpha=1,
@@ -325,9 +321,9 @@ rotate([90,0,00])
 SearSupportTab(cutter=false);
 
 
-TriggerGroup(animationFactor=sin(180*$t), searLength=1.1525);
+TriggerGroup(animationFactor=sin(180*$t), searLength=1.67188);
 
-TRIGGER_PLATER_MIDDLE = false;
+TRIGGER_PLATER_MIDDLE = true;
 TRIGGER_PLATER_LEFT = false;
 TRIGGER_PLATER_RIGHT = false;
 

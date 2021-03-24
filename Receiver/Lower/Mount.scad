@@ -1,9 +1,3 @@
-
-use <Lugs.scad>;
-use <Lower.scad>;
-use <Trigger.scad>;
-
-
 use <../../Meta/Debug.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Resolution.scad>;
@@ -15,55 +9,68 @@ use <../../Shapes/Teardrop.scad>;
 
 use <../Receiver.scad>;
 
+use <Lugs.scad>;
+use <Lower.scad>;
+use <Trigger.scad>;
+
 /* [What to Render] */
 
 // Assembly is not for printing.
-_RENDER = "Assembly"; // ["Assembly", "LowerMounts", "LowerMount_Front", "LowerMount_Rear"]
+_RENDER = "Assembly"; // ["Assembly", "LowerMount_Front", "LowerMount_Rear"]
 
 _CUTAWAY_RECEIVER = false;
 
 // Settings: Positions
-function LowerMountHeight() = 0.0;
-
 function LowerOffsetZ() = ReceiverBottomZ();
 
-module ReceiverBottomSlotInterface(length=0.75, height=abs(LowerOffsetZ()+LowerMountHeight())) {
+//**********
+//* Shapes *
+//**********
+module ReceiverBottomSlotInterface(length=0.75, height=abs(LowerOffsetZ()), clearance=0.005) {
   difference() {
     union() {
-      translate([-length,-1/2,-height+0.1875+0.005])
-      ChamferedCube([length, 1, height], r=1/32);
+      translate([-length,-1/2,-height+WallTensionRod()+clearance])
+      ChamferedCube([length, 1, height-WallTensionRod()], r=1/32, teardropFlip=[true,true,true]);
       
-      translate([-length,-0.75/2,-height+0.005])
-      ChamferedCube([length, 0.75, height], r=1/32);
+      translate([-length,-0.75/2,-height])
+      ChamferedCube([length, 0.75, height], r=1/32, teardropFlip=[true,true,true]);
     }
   }
 }
 
+//*****************
+//* Printed Parts *
+//*****************
 module LowerMount_Front(id=ReceiverID(), alpha=1, debug=false) {
+  mountLength = 1.75-0.01;
+  
   color("Tan")
   render() DebugHalf(enabled=debug)
   translate([-LowerMaxX(),0,0])
   difference() {
     union() {
       translate([0,0,LowerOffsetZ()])
-      ReceiverLugFront(extraTop=-LowerOffsetZ()+LowerMountHeight());
+      ReceiverLugFront(extraTop=-LowerOffsetZ());
       
       translate([ReceiverLugFrontMaxX(),0,0])
-      ReceiverBottomSlotInterface(length=1.75);
+      ReceiverBottomSlotInterface(length=mountLength);
     }
     
-    // Receiver ID
     difference() {
-      translate([LowerMaxX(),0,0])
-      rotate([0,-90,0])
-      cylinder(r=(id/2), h=4.5, $fn=80);
       
+      // Receiver ID
+      translate([ReceiverLugFrontMaxX(),0,0])
+      rotate([0,-90,0])
+      ChamferedCircularHole(r1=id/2, r2=1/8, h=mountLength, $fn=80,
+                            teardropBottom=true,
+                            teardropTop=true);
+      // Sear support
       hull() {
-        translate([0.125,-0.3125/2,-(id/2)-0.25])
-        ChamferedCube([0.25, 0.3125, id/2], r=1/32);
+        translate([0.125,-0.3125/2,-(id/2)-0.3125])
+        ChamferedCube([0.25, 0.3125, id/2], r=1/16, teardropFlip=[true,true,true]);
         
         translate([LowerMaxX()-1.25,-0.3125/2,-(id/2)-0.25])
-        ChamferedCube([0.25, 0.3125, 0.25], r=1/32);
+        ChamferedCube([0.25, 0.3125, 0.25], r=1/16, teardropFlip=[true,true,true]);
       }
     }
     
@@ -73,6 +80,11 @@ module LowerMount_Front(id=ReceiverID(), alpha=1, debug=false) {
 }
 
 module LowerMount_Rear(id=ReceiverID(), alpha=1, debug=false) {
+  mountLength = ReceiverLength()
+              - abs(ReceiverLugRearMaxX())
+              - LowerMaxX()
+              - ManifoldGap();
+  
   color("Tan")
   render() DebugHalf(enabled=debug)
   translate([-LowerMaxX(),0,0])
@@ -80,33 +92,49 @@ module LowerMount_Rear(id=ReceiverID(), alpha=1, debug=false) {
     union() {
       
       translate([0,0,LowerOffsetZ()])
-      ReceiverLugRear(extraTop=-LowerOffsetZ()+LowerMountHeight());
+      ReceiverLugRear(extraTop=-LowerOffsetZ());
       
       translate([ReceiverLugRearMaxX(),0,0])
-      ReceiverBottomSlotInterface(length=0.75+0.75);
+      ReceiverBottomSlotInterface(length=mountLength);
     }
     
     difference() {
       
       // Receiver ID
-      translate([LowerMaxX(),0,0])
+      translate([ReceiverLugRearMaxX(),0,0])
       rotate([0,-90,0])
-      cylinder(r=id/2, h=4.5, $fn=80);
+      ChamferedCircularHole(r1=id/2, r2=1/8, h=mountLength, $fn=80,
+                            teardropBottom=true,
+                            teardropTop=true);
       
       // Hammer Guide
       translate([ReceiverLugRearMaxX(),-0.3125/2,-(id/2)-0.375])
       mirror([1,0,0])
-      ChamferedCube([0.75, 0.3125, id/2], r=1/32);
+      ChamferedCube([0.75, 0.3125, id/2], r=1/16, teardropFlip=[true,true,true]);
     }
   }
 }
 
+//**************
+//* Assemblies *
+//**************
 module LowerMount(id=ReceiverID(), alpha=1, debug=false) {
   LowerMount_Front();
   
   LowerMount_Rear();
 }
 
+
+//*************
+//* Rendering *
+//*************
+
+
+echo("Sear length: ", SearLength()+abs(LowerOffsetZ()));
+*!scale(25.4)
+translate([0.125,abs(LowerOffsetZ()),0.125])
+rotate([90,0,0])
+Sear(length=SearLength()+abs(LowerOffsetZ()));
 
 if (_RENDER == "Assembly") {
   ReceiverAssembly(debug=_CUTAWAY_RECEIVER);
