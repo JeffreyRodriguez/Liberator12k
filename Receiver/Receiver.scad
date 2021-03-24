@@ -80,7 +80,7 @@ function ReceiverID()     = RECEIVER_ID;
 function ReceiverIR()     = ReceiverID()/2;
 
 // Settings: Walls
-function WallTensionRod() = 0.1875;
+function WallTensionRod() = 0.25;
 
 // Settings: Positions
 
@@ -118,18 +118,6 @@ module TensionBolts(headType="none", nutType=TENSION_NUT_TYPE, length=12, cutter
 }
 
 
-module ReceiverBottomSlot(clearance=ReceiverSlotClearance()) {
-  translate([-0.5, -(ReceiverBottomSlotWidth()/2)-clearance,0])
-  mirror([1,0,0])
-  mirror([0,0,1])
-  cube([ReceiverLength()-0.5,ReceiverBottomSlotWidth()+(clearance*2),abs(TensionRodBottomZ())]);
-
-  translate([-0.5, -(ReceiverBottomSlotWidth()/2)+0.125-clearance,0])
-  mirror([1,0,0])
-  mirror([0,0,1])
-  cube([ReceiverLength()-0.5,ReceiverBottomSlotWidth()-0.25+(clearance*2),abs(TensionRodBottomZ())+25]);
-}
-
 module ReceiverMlokBolts(headType="flat", nutType="heatset", length=0.5, cutter=false, clearance=0.005, teardrop=false) {
   color("Silver") RenderIf(!cutter)
   for (X = [0,UnitsMetric(60),UnitsMetric(80)])
@@ -144,7 +132,7 @@ module ReceiverMlokBolts(headType="flat", nutType="heatset", length=0.5, cutter=
 // **********
 // * Shapes *
 // **********
-module ReceiverMlokSlot(depth=0.05, clearance=0) {
+module ReceiverMlokSlot(depth=0.0625, clearance=0) {
   width = UnitsMetric(7)+clearance;
   
   translate([0, -width/2, ReceiverTopZ()+ManifoldGap()])
@@ -152,6 +140,18 @@ module ReceiverMlokSlot(depth=0.05, clearance=0) {
   mirror([1,0,0])
   cube([ReceiverLength(), width, depth]);
 }
+module ReceiverBottomSlot(clearance=ReceiverSlotClearance()) {
+  translate([-0.5, -(ReceiverBottomSlotWidth()/2)-clearance,0])
+  mirror([1,0,0])
+  mirror([0,0,1])
+  cube([ReceiverLength()-0.5,ReceiverBottomSlotWidth()+(clearance*2),abs(TensionRodBottomZ())]);
+
+  translate([-0.5, -(ReceiverBottomSlotWidth()/2)+0.125-clearance,0])
+  mirror([1,0,0])
+  mirror([0,0,1])
+  cube([ReceiverLength()-0.5,ReceiverBottomSlotWidth()-0.25+(clearance*2),abs(TensionRodBottomZ())+25]);
+}
+
 module ReceiverTopSlot(length=ReceiverLength(), width=ReceiverTopSlotWidth(), height=ReceiverTopSlotHeight(), clearance=ReceiverSlotClearance()) {
   chamferRadius = 1/32;
   
@@ -198,7 +198,7 @@ module ReceiverSegment(length=1, chamferFront=false, chamferBack=false, highTop=
     TensionBoltIterator()
     ChamferedCylinder(r1=WallTensionRod(), r2=1/16, h=length,
                       chamferBottom=chamferFront, chamferTop=chamferBack,
-                      teardropTop=true, $fn=Resolution(15,30));
+                      teardropTop=true, $fn=Resolution(20,40));
     
     // Top cover
     if (highTop)
