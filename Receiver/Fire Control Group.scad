@@ -48,7 +48,8 @@ _CUTAWAY_FIRING_PIN_HOUSING = false;
 _CUTAWAY_DISCONNECTOR = false;
 _CUTAWAY_HAMMER = false;
 _CUTAWAY_HAMMER_CHARGER = false;
-_CUTAWAY_RECEIVER = false;
+_CUTAWAY_RECEIVER = true;
+_CUTAWAY_RECOIL_PLATE = true;
 _CUTAWAY_FIRING_PIN = false;
 _CUTAWAY_FIRING_PIN_SPRING = false;
 
@@ -610,7 +611,7 @@ module SimpleFireControlAssembly(recoilPlate=_SHOW_RECOIL_PLATE, debug=false) {
   RecoilPlateBolts();
   
   if (recoilPlate)
-  RecoilPlate();
+  RecoilPlate(debug=_CUTAWAY_RECOIL_PLATE);
   
   if (_SHOW_FIRE_CONTROL_HOUSING)
   FireControlHousing();
