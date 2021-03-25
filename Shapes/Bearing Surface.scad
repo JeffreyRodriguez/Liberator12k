@@ -17,15 +17,15 @@ module BearingSurface2D(r=4, depth=1, segments=6) {
 }
 
 module BearingSurface(r=4, depth=1, segments=6, length=30, taperDepth=2, center=true) {
-  render()
+  
+  translate([0,0,(center ? length/2 : 0)])
   union() {
-    linear_extrude(height=length, center=true)
+    linear_extrude(height=length)
     BearingSurface2D(r, depth, segments);
 
-    for (m = [0,1])
-    mirror([0,0,m])
-    translate([0,0,-(length/2)+taperDepth+ManifoldGap()])
-    mirror([0,0,1])
+    for (m = [0,1]) mirror([0,0,m])
+    translate([0,0,(m ? 0 : length)])
+    translate([0,0,-taperDepth+ManifoldGap()])
     linear_extrude(height=(r+depth)*2, scale=2)
     BearingSurface2D(r, depth, segments);
   }
