@@ -41,11 +41,12 @@ function SearLength() = abs(SearPinOffsetZ()) + SearTravel();
 function TriggerAnimationFactor() = SubAnimate(ANIMATION_STEP_TRIGGER)-SubAnimate(ANIMATION_STEP_CHARGER_RESET, end=0.1);
 
 module Sear(animationFactor=TriggerAnimationFactor(), length=SearLength(), cutter=false, clearance=0.01) {
+  
+  color("Silver")
   RenderIf(!cutter)
   difference() {
     translate([0,0,-SearTravel()*animationFactor])
     translate([0,0,SearPinOffsetZ()-SearBottomOffset()])
-    color("LightGreen")
     SquareRod(rod=SearRod(), length=length);
     
     if (!cutter)

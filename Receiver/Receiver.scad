@@ -245,7 +245,7 @@ module Receiver(receiverLength=ReceiverLength(), doRender=true, alpha=1, debug=f
 }
 
 module ReceiverBackSegment(length=ReceiverBackLength()) {
-  color("Brown") render()
+  color("Chocolate") render()
   difference() {
     translate([-ReceiverLength(),0,0])
     ReceiverSegment(length=length);

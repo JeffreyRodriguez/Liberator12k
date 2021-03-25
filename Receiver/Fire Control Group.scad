@@ -289,7 +289,7 @@ module HammerCharger(debug=false, cutter=false, clearance=0.015) {
   width = ReceiverTopSlotWidth();
   chamferRadius = 1/32;
   
-  color("Green")
+  color("OliveDrab")
   RenderIf(!cutter)
   DebugHalf(enabled=debug)
   difference() {
@@ -335,7 +335,7 @@ module Hammer(cutter=false, clearance=UnitsImperial(0.02), debug=_CUTAWAY_HAMMER
   clear2 = clear*2;
   
   // Head
-  color("CornflowerBlue", alpha)
+  color("Olive", alpha)
   RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
     union() {
@@ -413,7 +413,7 @@ module Disconnector(pivotFactor=0, cutter=false, clearance=0.01, alpha=1, debug=
           
     children();
     
-    color("Chocolate", alpha)
+    color("Olive", alpha)
     RenderIf(!cutter)
     DebugHalf(enabled=debug)
     difference() {
@@ -471,7 +471,7 @@ module Disconnector(pivotFactor=0, cutter=false, clearance=0.01, alpha=1, debug=
 }
 module FireControlHousing(debug=_CUTAWAY_FIRING_PIN_HOUSING, alpha=_ALPHA_FIRING_PIN_HOUSING) {
   
-  color("Olive", alpha) render()
+  color("Chocolate", alpha) render()
   DebugHalf(enabled=debug)
   difference() {
     
@@ -614,9 +614,6 @@ module SimpleFireControlAssembly(recoilPlate=_SHOW_RECOIL_PLATE, debug=false) {
   
   if (_SHOW_FIRE_CONTROL_HOUSING)
   FireControlHousing();
-  
-  translate([-LowerMaxX(),0,LowerOffsetZ()])
-  Sear(length=SearLength()+abs(LowerOffsetZ())+SearTravel()-0.25);
 }
 
 
@@ -636,7 +633,7 @@ if (_RENDER == "Assembly") {
     translate([-LowerMaxX(),0,LowerOffsetZ()])
     Lower(showTrigger=true,
           showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
-          searLength=SearLength()+abs(LowerOffsetZ())+SearTravel()-(0.25/2));
+          searLength=SearLength()+abs(LowerOffsetZ()));
   }
 }
 

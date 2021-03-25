@@ -320,7 +320,7 @@ translate([0,0.25,2.125])
 LowerSidePlates(boltSpec=LowerBolt(), head=head, nut=nut, showLeft=false, showRight=true);
 
 module LowerMiddle(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT) {
-  color("SaddleBrown")
+  color("Chocolate")
   render()
   difference() {
     intersection() {

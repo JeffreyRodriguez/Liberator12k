@@ -44,7 +44,7 @@ module ReceiverBottomSlotInterface(length=0.75, height=abs(LowerOffsetZ()), clea
 module LowerMount_Front(id=ReceiverID(), alpha=1, debug=false) {
   mountLength = 1.75-0.01;
   
-  color("Tan")
+  color("Chocolate")
   render() DebugHalf(enabled=debug)
   translate([-LowerMaxX(),0,0])
   difference() {
@@ -85,7 +85,7 @@ module LowerMount_Rear(id=ReceiverID(), alpha=1, debug=false) {
               - LowerMaxX()
               - ManifoldGap();
   
-  color("Tan")
+  color("Chocolate")
   render() DebugHalf(enabled=debug)
   translate([-LowerMaxX(),0,0])
   difference() {
