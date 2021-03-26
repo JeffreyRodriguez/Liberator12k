@@ -26,7 +26,6 @@ use <Receiver.scad>;
 
 // Configure settings below, then choose a part to render. Render that part (F6) then export STL (F7). Assembly is not for printing.
 _RENDER = "Assembly"; // ["Assembly", "FireControlHousing", "Disconnector", "HammerCharger", "Hammer", "RecoilPlateJig"]
-//$t = 1; // [0:0.01:1]
 
 _SHOW_FIRE_CONTROL_HOUSING = true;
 _SHOW_DISCONNECTOR = true;
@@ -38,6 +37,7 @@ _SHOW_RECOIL_PLATE_BOLTS = true;
 
 _SHOW_RECEIVER      = true;
 _SHOW_LOWER         = true;
+_SHOW_LOWER_LEFT    = false;
 
 /* [Assembly Transparency] */
 _ALPHA_FIRING_PIN_HOUSING = 1; // [0:0.1:1]
@@ -633,7 +633,7 @@ if (_RENDER == "Assembly") {
     LowerMount();
     
     translate([-LowerMaxX(),0,LowerOffsetZ()])
-    Lower(showTrigger=true,
+    Lower(showTrigger=true, showLeft=_SHOW_LOWER_LEFT,
           showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
           searLength=SearLength()+abs(LowerOffsetZ()));
   }
