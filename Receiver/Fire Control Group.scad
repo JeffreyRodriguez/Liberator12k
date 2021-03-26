@@ -326,7 +326,7 @@ module HammerCharger(debug=false, cutter=false, clearance=0.015) {
   }
 }
 
-module Hammer(cutter=false, clearance=UnitsImperial(0.02), debug=_CUTAWAY_HAMMER, alpha=_ALPHA_HAMMER) {
+module Hammer(cutter=false, clearance=UnitsImperial(0.01), debug=_CUTAWAY_HAMMER, alpha=_ALPHA_HAMMER) {
   
   hammerHeadLength=2;
   hammerBodyWidth=0.5;
@@ -470,49 +470,50 @@ module Disconnector(pivotFactor=0, cutter=false, clearance=0.01, alpha=1, debug=
     }
   }
 }
-module FireControlHousing(debug=_CUTAWAY_FIRING_PIN_HOUSING, alpha=_ALPHA_FIRING_PIN_HOUSING) {
+module FireControlHousing(clearance=0.01, debug=_CUTAWAY_FIRING_PIN_HOUSING, alpha=_ALPHA_FIRING_PIN_HOUSING) {
   
   color("Chocolate", alpha) render()
   DebugHalf(enabled=debug)
   difference() {
     
     // Insert plug
-    intersection() {
-        
-        union() {
+    union() {
+      intersection() {
           
           // Round body
           rotate([0,-90,0])
-          ChamferedCylinder(r1=ReceiverIR()-0.01, r2=1/32,
+          ChamferedCylinder(r1=ReceiverIR()-clearance, r2=1/16,
                              h=FiringPinHousingLength(),
                           teardropTop=true, teardropBottom=true, $fn=80);
         
-          // Disconnector support
-          translate([-FiringPinHousingLength(),-(0.75/2),0])
-          ChamferedCube([0.75, 0.75, ActionRodZ()-0.125],
-                         r=1/32, teardropFlip=[false,true,true]);
-          
-          // Wings
-          hull()
-          translate([0.5,
-                     -(ReceiverIR()+ReceiverSideSlotDepth()-0.01),
-                     -(ReceiverSideSlotHeight()/2)+0.01])
-          mirror([1,0,0])
-          ChamferedCube([FiringPinHousingLength()+1,
-                         (ReceiverIR()+ReceiverSideSlotDepth()-0.01)*2,
-                         ReceiverSideSlotHeight()-(0.01*2)],
-                        r=1/16,
-                        teardropXYZ=[false, false, false],
-                        teardropTopXYZ=[false, false, false]);
-        }
         
         // Flatten the bottom
         translate([-FiringPinHousingLength(),
-                   -ReceiverIR()-ReceiverSideSlotDepth(),-0.25])
+                   -ReceiverIR()-ReceiverSideSlotDepth(),-0.25+clearance])
         ChamferedCube([FiringPinHousingLength(),
                        ReceiverID()+(ReceiverSideSlotDepth()*2),
-                       ReceiverID()+ActionRodZ()],
-                      r=1/32, teardropFlip=[false,true,true]);
+                       ReceiverID()+0.25-(clearance*2)],
+                      r=1/16, teardropFlip=[false,true,true]);
+      }
+        
+      // Disconnector support
+      translate([-FiringPinHousingLength(),-(0.75/2),clearance])
+      ChamferedCube([0.75, 0.75, ActionRodZ()-0.125-(clearance*2)],
+                     r=1/16, teardropFlip=[false,true,true]);
+      
+      // Wings
+      hull()
+      translate([0,
+                 -(ReceiverIR()+ReceiverSideSlotDepth()-0.01),
+                 -(ReceiverSideSlotHeight()/2)+0.01])
+      mirror([1,0,0])
+      ChamferedCube([FiringPinHousingLength(),
+                     (ReceiverIR()+ReceiverSideSlotDepth()-0.01)*2,
+                     ReceiverSideSlotHeight()-(0.01*2)],
+                    r=1/16,
+                    teardropXYZ=[false, true, true],
+                    teardropTopXYZ=[false, true, true],
+                    teardropFlip=[false, true, true]);
       }
     
     FiringPin(cutter=true);
