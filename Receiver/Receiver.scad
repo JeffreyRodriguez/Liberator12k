@@ -154,13 +154,24 @@ module ReceiverBottomSlot(clearance=ReceiverSlotClearance()) {
 
 module ReceiverTopSlot(length=ReceiverLength(), width=ReceiverTopSlotWidth(), height=ReceiverTopSlotHeight(), clearance=ReceiverSlotClearance()) {
   chamferRadius = 1/32;
+  horizontalWidth = width+0.25;
+  horizontalHeight = 0.25;
   
   rotate([0,-90,0])
-  linear_extrude(length)
-  translate([0,-(width/2)-clearance])
-  ChamferedSquare([height+clearance, width+(clearance*2)],
-                   r=chamferRadius,
-                   teardropTop=false, teardropBottom=false);
+  linear_extrude(length) {
+    
+    // Vertical slot
+    translate([0,-(width/2)-clearance])
+    ChamferedSquare([height+clearance, width+(clearance*2)],
+                     r=chamferRadius,
+                     teardropTop=false, teardropBottom=false);
+    
+    // Horizontal slot
+    translate([TensionRodTopZ()+WallTensionRod(),-(horizontalWidth/2)-clearance])
+    ChamferedSquare([horizontalHeight+clearance, horizontalWidth+(clearance*2)],
+                     r=chamferRadius,
+                     teardropTop=false, teardropBottom=false);
+  }
 }
 
 module ReceiverSideSlot(length=ReceiverLength(), clearance=ReceiverSlotClearance()) {
