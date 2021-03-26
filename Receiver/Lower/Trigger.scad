@@ -324,7 +324,7 @@ SearSupportTab(cutter=false);
 
 TriggerGroup(animationFactor=sin(180*$t), searLength=1.67188);
 
-TRIGGER_PLATER_MIDDLE = true;
+TRIGGER_PLATER_MIDDLE = false;
 TRIGGER_PLATER_LEFT = false;
 TRIGGER_PLATER_RIGHT = false;
 

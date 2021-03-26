@@ -22,8 +22,10 @@ use <Trigger.scad>;
 // Assembly is not for printing.
 _RENDER = "Assembly"; // ["Assembly", "LowerLeft", "LowerRight", "LowerMiddle", "TriggerLeft", "TriggerRight", "TriggerMiddle"]
 
-// Animation Revolutions
-SPIN_REVOLUTIONS=0;
+_SHOW_LOWER_LEFT = true;
+_SHOW_LOWER_RIGHT = true;
+_SHOW_LOWER_MIDDLE = true;
+_SHOW_TRIGGER = true;
 
 /* [Screws] */
 LOWER_BOLT = "#8-32"; // ["M4", "#8-32"]
@@ -375,7 +377,7 @@ module Lower(showReceiverLugs=false, showReceiverLugBolts=false,
             showGuardBolt=false, showHandleBolts=false,
             showTrigger=false,
             showMiddle=true, showLeft=true, showRight=true,
-            searLength=1.1525, triggerAnimationFactor=0,
+            searLength=1.25, triggerAnimationFactor=TriggerAnimationFactor(),
             boltSpec=LowerBolt(), boltHead=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT,
             alpha=1) {
       boltLength = 1.25;
@@ -410,13 +412,15 @@ module Lower(showReceiverLugs=false, showReceiverLugBolts=false,
 
 if (_RENDER == "Assembly") {
 
-  AnimateSpin(SPIN_REVOLUTIONS)
+  AnimateSpin()
   Lower(showReceiverLugs=true, showReceiverLugBolts=true,
         showGuardBolt=true,
         showHandleBolts=true,
         showTrigger=true,
         triggerAnimationFactor=sin(180*$t),
-        showMiddle=true,
+        showLeft=_SHOW_LOWER_LEFT,
+        showMiddle=_SHOW_LOWER_MIDDLE,
+        showRight=_SHOW_LOWER_RIGHT,
         alpha=1);
 }
 
