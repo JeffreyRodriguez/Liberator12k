@@ -296,6 +296,7 @@ module ReceiverAssembly(debug=false) {
 if (_RENDER == "Receiver Assembly") {
   ReceiverAssembly(debug=_DEBUG_ASSEMBLY);
   
+  if (_SHOW_RECEIVER_BACK)
   ReceiverBackSegment();
 }
   
