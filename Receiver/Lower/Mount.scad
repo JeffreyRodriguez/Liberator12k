@@ -110,7 +110,7 @@ module LowerMount_Rear(id=ReceiverID(), alpha=1, debug=false) {
       // Hammer Guide
       translate([ReceiverLugRearMaxX(),-0.3125/2,-(id/2)-0.375])
       mirror([1,0,0])
-      ChamferedCube([0.75, 0.3125, id/2], r=1/16, teardropFlip=[true,true,true]);
+      ChamferedCube([mountLength, 0.3125, id/2], r=1/16, teardropFlip=[true,true,true]);
     }
   }
 }
