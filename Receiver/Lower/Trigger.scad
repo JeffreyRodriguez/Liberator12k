@@ -124,7 +124,7 @@ module TriggerSearPinTrack() {
 
 module SearSupportTab(cutter=false, clearance=0.015) {
 
-  color("LightGrey")
+  color("Chocolate")
   render(convexity=4)
   difference() {
     union() {
@@ -245,7 +245,7 @@ module Trigger(animationFactor=TriggerAnimationFactor(),
   translate([-(TriggerTravel()*animationFactor),0,0]) {
 
     if (right)
-    color("Gold", rightAlpha)
+    color("Olive", rightAlpha)
     render()
     difference() {
       translate([0,RodRadius(SearRod(), RodClearanceSnug()),0])
@@ -274,7 +274,7 @@ module Trigger(animationFactor=TriggerAnimationFactor(),
     }
 
     if (left)
-    color("Gold", leftAlpha)
+    color("Olive", leftAlpha)
     render()
     difference() {
       translate([0,(TriggerWidth()/2),0])
