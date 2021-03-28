@@ -67,6 +67,8 @@ function ReceiverBottomSlotWidth() = 1;
 
 function ReceiverTopSlotWidth() = 0.75;
 function ReceiverTopSlotHeight() = 1.25;
+function ReceiverTopSlotHorizontalWidth() = ReceiverTopSlotWidth()+0.25;
+function ReceiverTopSlotHorizontalHeight() = 0.25;
 
 function ReceiverSideSlotHeight() = 0.5;
 function ReceiverSideSlotDepth() = 0.125;
@@ -154,8 +156,8 @@ module ReceiverBottomSlot(clearance=ReceiverSlotClearance()) {
 
 module ReceiverTopSlot(length=ReceiverLength(), width=ReceiverTopSlotWidth(), height=ReceiverTopSlotHeight(), clearance=ReceiverSlotClearance()) {
   chamferRadius = 1/32;
-  horizontalWidth = width+0.25;
-  horizontalHeight = 0.25;
+  horizontalWidth = ReceiverTopSlotHorizontalWidth();
+  horizontalHeight = ReceiverTopSlotHorizontalHeight();
   
   rotate([0,-90,0])
   linear_extrude(length) {
