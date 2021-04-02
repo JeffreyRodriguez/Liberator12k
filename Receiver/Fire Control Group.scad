@@ -41,7 +41,8 @@ _SHOW_LOWER_LEFT    = false;
 
 /* [Assembly Transparency] */
 _ALPHA_FIRING_PIN_HOUSING = 1; // [0:0.1:1]
-_ALPHA_HAMMER = 1; // [0:0.1:1]
+_ALPHA_RECOIL_PLATE = 0.5; // [0:0.1:1]
+_ALPHA_HAMMER = 0.5; // [0:0.1:1]
 
 /* [Assembly Cutaways] */
 _CUTAWAY_FIRING_PIN_HOUSING = false;
@@ -49,7 +50,7 @@ _CUTAWAY_DISCONNECTOR = false;
 _CUTAWAY_HAMMER = false;
 _CUTAWAY_HAMMER_CHARGER = false;
 _CUTAWAY_RECEIVER = true;
-_CUTAWAY_RECOIL_PLATE = true;
+_CUTAWAY_RECOIL_PLATE = false;
 _CUTAWAY_FIRING_PIN = false;
 _CUTAWAY_FIRING_PIN_SPRING = false;
 
@@ -265,8 +266,8 @@ module RecoilPlateBolts(bolt=RecoilPlateBolt(), boltLength=1.5, template=false, 
         clearance=cutter?clearance:0);
 }
 
-module RecoilPlate(cutter=false, debug=false) {
-  color("LightSteelBlue")
+module RecoilPlate(cutter=false, debug=false, alpha=1) {
+  color("LightSteelBlue", alpha)
   RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
     translate([0.25, -1-ManifoldGap(2), RecoilPlateTopZ()])
@@ -611,11 +612,11 @@ module SimpleFireControlAssembly(recoilPlate=_SHOW_RECOIL_PLATE, debug=false) {
   if (_SHOW_RECOIL_PLATE_BOLTS)
   RecoilPlateBolts();
   
-  if (recoilPlate)
-  RecoilPlate(debug=_CUTAWAY_RECOIL_PLATE);
-  
   if (_SHOW_FIRE_CONTROL_HOUSING)
   FireControlHousing();
+  
+  if (recoilPlate)
+  RecoilPlate(debug=_CUTAWAY_RECOIL_PLATE, alpha=_ALPHA_RECOIL_PLATE);
 }
 
 
@@ -623,10 +624,6 @@ module SimpleFireControlAssembly(recoilPlate=_SHOW_RECOIL_PLATE, debug=false) {
 //*************
 //* Rendering *
 //*************
-  SimpleFireControlAssembly();
-  
-  if (_SHOW_RECEIVER)
-  ReceiverAssembly(debug=_CUTAWAY_RECEIVER);
 if ($preview && _RENDER == "Assembly") {
   
   if (_SHOW_LOWER) {
@@ -637,6 +634,11 @@ if ($preview && _RENDER == "Assembly") {
           showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
           searLength=SearLength()+abs(LowerOffsetZ()));
   }
+  
+  SimpleFireControlAssembly();
+  
+  if (_SHOW_RECEIVER)
+  ReceiverAssembly(debug=_CUTAWAY_RECEIVER);
 }
 
 scale(25.4) {
