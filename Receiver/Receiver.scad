@@ -181,7 +181,7 @@ module ReceiverSideSlot(length=ReceiverLength(), clearance=ReceiverSlotClearance
   clear2 = clear*2;
   
   width = (ReceiverIR()+ReceiverSideSlotDepth()+clear)*2;
-  height = ReceiverSideSlotHeight();
+  height = ReceiverSideSlotHeight()+clear2;
   
   translate([0,-width/2,-height/2])
   rotate([0,-90,0])
