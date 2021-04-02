@@ -240,7 +240,9 @@ module CylinderChamferEnds(r1=1, r2=0.25, h=1,
 
 module ChamferedCylinder(r1=0.5, r2=0.25, h=1,
                          chamferBottom=true, chamferTop=true,
-                           teardropBottom=true, teardropTop=false) {
+                         teardropBottom=true, teardropTop=false,
+                         center=false) {
+  translate([0,0,(center ? -h/2 : 0)])
   difference() {
     cylinder(r=r1, h=h);
     CylinderChamferEnds(r1=r1, r2=r2, h=h,
