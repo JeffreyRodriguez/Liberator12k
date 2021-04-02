@@ -58,16 +58,16 @@ module TriggerFingerSlot(radius=TriggerFingerRadius(), length=0.6, $fn=Resolutio
              h=1.25, $fn=$fn);
 
     // Chamfered rear edge
-    difference() {
+    intersection() {
       translate([0.65, 0, TriggerFingerOffsetZ()])
       translate([0,GripWidth()/2,-radius])
       rotate([90,0,0])
-      ChamferedCircularHole(r1=radius, r2=1/16,
+      ChamferedCircularHole(r1=radius, r2=1/4,
                h=GripWidth(), $fn=$fn);
 
-      translate([0, 0, TriggerFingerOffsetZ()])
-      translate([0,-GripWidth(),0])
-      cube([length+(radius*4), GripWidth()*2, abs(TriggerFingerOffsetZ())]);
+      translate([0,-GripWidth(),TriggerFingerOffsetZ()])
+      mirror([0,0,1])
+      cube([length+(radius*4), GripWidth()*2, radius*2]);
     }
 
     // Slot hull
