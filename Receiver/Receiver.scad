@@ -86,6 +86,8 @@ function WallTensionRod() = 0.25;
 
 // Settings: Positions
 
+function TensionBoltLength() = TENSION_BOLT_LENGTH;
+
 function TensionRodBottomZ() = -7/8;
 function TensionRodBottomOffsetSide() = 0.75;
 
