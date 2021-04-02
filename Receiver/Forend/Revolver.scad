@@ -277,7 +277,7 @@ module Revolver_CylinderSpindle(template=false, cutter=false, clearance=0.01) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
-  radius = template ? SpindleRadius() : TemplateHoleRadius();
+  radius = template ? TemplateHoleRadius() : SpindleRadius();
   length = ForendMaxX()-ForendMinX()
          - 1.5
          + (cutter?BlastPlateThickness()+0.5:0)
@@ -293,7 +293,7 @@ module Revolver_ForendSpindle(template=false, cutter=false, clearance=0.01) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
-  radius = template ? SpindleRadius() : TemplateHoleRadius();
+  radius = template ? TemplateHoleRadius() : SpindleRadius();
 
   color("Silver") RenderIf(!cutter)
   translate([ForendMinX()-BlastPlateThickness()-ManifoldGap(),0,CylinderZ()])
