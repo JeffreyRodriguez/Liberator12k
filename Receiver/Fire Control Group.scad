@@ -25,7 +25,7 @@ use <Receiver.scad>;
 /* [What to Render] */
 
 // Configure settings below, then choose a part to render. Render that part (F6) then export STL (F7). Assembly is not for printing.
-_RENDER = "Assembly"; // ["Assembly", "FireControlHousing", "Disconnector", "HammerCharger", "Hammer", "RecoilPlateJig"]
+_RENDER = "Assembly"; // ["Assembly", "FireControlHousing", "ChargingHandle", "Disconnector", "Hammer", "HammerTail", "RecoilPlateJig"]
 
 _SHOW_FIRE_CONTROL_HOUSING = true;
 _SHOW_DISCONNECTOR = true;
@@ -93,8 +93,8 @@ function RecoilPlateBoltOffsetY() = 0.375;
 function HammerBolt() = BoltSpec(HAMMER_BOLT);
 assert(HammerBolt(), "HammerBolt() is undefined. Unknown HAMMER_BOLT?");
 
-function ActionRodBolt() = BoltSpec(ACTION_ROD_BOLT);
-assert(ActionRodBolt(), "ActionRodBolt() is undefined. Unknown ACTION_ROD_BOLT?");
+function DisconnectorTripBolt() = BoltSpec(ACTION_ROD_BOLT);
+assert(DisconnectorTripBolt(), "DisconnectorTripBolt() is undefined. Unknown ACTION_ROD_BOLT?");
 
 function RecoilPlateBolt() = BoltSpec(RECOIL_PLATE_BOLT);
 assert(RecoilPlateBolt(), "RecoilPlateBolt() is undefined. Unknown RECOIL_PLATE_BOLT?");
@@ -127,11 +127,20 @@ function RecoilPlateRearX()  = 0.25;
 
 function ActionRodZ() = 0.75+(ActionRodWidth()/2);
 
+
+hammerHeadLength=2;
+hammerHeadHeight=ReceiverIR()+0.25;
+
+hammerTailMinX = -ReceiverLength()-1;
+hammerTailMaxX = -ReceiverLength();
+hammerTailLength = 1;
+
 hammerFiredX  = FiringPinMinX();
 hammerCockedX = -LowerMaxX()-0.125;
 
 hammerTravelX = abs(hammerCockedX-hammerFiredX);
 hammerOvertravelX = 0.25;
+echo("hammerTravelX", hammerTravelX);
 echo("hammerOvertravelX", hammerOvertravelX);
 
 disconnectorOffsetY = -0.125;
@@ -140,7 +149,7 @@ disconnectorPivotZ = 0.5;
 disconnectorPivotAngle=-6;
 disconnectorThickness = 0.5;
 disconnectorHeight = 0.25;
-disconnectorTripBackset = 0.0625;
+disconnectorTripBackset = 0.1875;
 disconnectDistance = 0.125;
 disconnectorExtension = 0;
 disconnectorPivotX = -disconnectorOffset;
@@ -167,16 +176,17 @@ module ActionRod(length=10, debug=false, cutter=false, clearance=0.01) {
   translate([0,-(ActionRodWidth()/2)-clear,-(ActionRodWidth()/2)-clear])
   cube([length, ActionRodWidth()+clear2, ActionRodWidth()+clear2]);
 }
-module ActionRodBolt(debug=false, cutter=false, teardrop=false, clearance=0.01) {
+module DisconnectorTripBolt(debug=false, cutter=false, teardrop=false, clearance=0.01) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
   color("Silver") RenderIf(!cutter)
-  translate([-0.25,
-             0,
-             ActionRodZ()+0.375])
-  NutAndBolt(bolt=ActionRodBolt(), boltLength=0.5,
-             head="flat", capOrientation=true,
+  translate([-0.3125,
+             -(ActionRodWidth()/2),
+             ActionRodZ()])
+  rotate([-90,0,0])
+  NutAndBolt(bolt=DisconnectorTripBolt(), boltLength=0.25,
+             head="socket",
              clearance=clear, teardrop=cutter);
 }
 module DisconnectorPivotPin(debug=false, cutter=false, teardrop=false, clearance=0.005) {
@@ -233,7 +243,9 @@ module FiringPin(radius=FiringPinRadius(), cutter=false, clearance=FIRING_PIN_CL
       
       // Body
       cylinder(r=FiringPinBodyRadius()+clear,
-               h=FiringPinBodyLength()+(cutter?0.25+FiringPinTravel():0));
+               h=FiringPinBodyLength()
+                + (cutter?0.25+FiringPinTravel():0)
+                + ManifoldGap());
     }
     
     translate([FiringPinBodyRadius()-(1/16)+clear,-FiringPinBodyRadius()-clear,0])
@@ -281,58 +293,125 @@ module RecoilPlate(cutter=false, debug=false, alpha=1) {
   }
 }
 
-//*****************
-//* Printed Parts *
-//*****************
-module HammerCharger(debug=false, cutter=false, clearance=0.015) {
+module ChargingHandleSpring(cutter=false, clearance=0.002) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
-  width = ReceiverTopSlotWidth();
-  chamferRadius = 1/32;
+  color("SteelBlue")
+  translate([-0.25,0,ReceiverTopSlotHeight()-(0.22/2)])
+  rotate([0,-90,0])
+  cylinder(r=(0.22/2)+clear, h=1.625);
+}
+module ChargingHandleSpringGuide(cutter=false, clearance=0.002) {
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
   
-  color("OliveDrab")
-  RenderIf(!cutter)
-  DebugHalf(enabled=debug)
+  color("Silver")
+  translate([ManifoldGap(),0,ReceiverTopSlotHeight()-(0.25/2)])
+  rotate([0,-90,0])
+  cylinder(r=(3/32/2)+clear, h=ReceiverLength());
+}
+//*****************
+//* Printed Parts *
+//*****************
+module ChargingHandle(clearance=0.005) {
+  clear = clearance;
+  clear2 = clear*2;
+  
+  width = ReceiverTopSlotHorizontalWidth();
+  
+  rearExtension = ReceiverTopSlotHorizontalWidth();
+  bottomZ = ReceiverTopSlotHeight()
+          - ReceiverTopSlotHorizontalHeight();
+  prongWidth = (ReceiverTopSlotHorizontalWidth()-ReceiverTopSlotWidth()-clear2)/2;
+  fingerHoleDiameter = ReceiverTopSlotHorizontalWidth()-0.25;
+  fingerHoleRadius = fingerHoleDiameter/2;
+  fingerHoleHeight = min(ReceiverTopZ()
+                   - ReceiverTopSlotHeight()
+                   + ReceiverTopSlotHorizontalHeight(), 0.375);
+  fingerHoleX = -ReceiverLength()-(rearExtension/2);
+  rearLength = (rearExtension/2) + ReceiverLength();
+  
+  color("Olive") render()
   difference() {
     union() {
       
-      // Top
-      translate([-0.5-(cutter?1:0),
-                 -(width/2)-clear,
-                 ActionRodZ()+0.375+clear])
-      mirror([0,0,1])
-      ChamferedCube([0.5+(cutter?2:0),
-                     width+clear2,
-                     0.25+clear2],
-                    r=chamferRadius);
-    
-      // Side Trip
-      translate([-0.5-(cutter?1:0),
-                 (ActionRodWidth()/2)-clear,
-                 ActionRodZ()+0.375+clear])
-      mirror([0,0,1])
-      ChamferedCube([0.5-disconnectorTripBackset+(cutter?2:0),
-                     0.25+clear2,
-                     0.5+clear2],
-                    r=chamferRadius);
-    }
+      // Solid section
+      translate([fingerHoleX,-(width/2)+clear,bottomZ+clear])
+      ChamferedCube([rearLength, 
+                     width-clear2,
+                     ReceiverTopSlotHorizontalHeight()-clear2], r=1/32);
       
-    
-    if (!cutter) {
-      ActionRod(cutter=true, clearance=0.005);
-      ActionRodBolt(cutter=true);
+      // Extended finger section
+      translate([fingerHoleX,0,bottomZ+clear])
+      ChamferedCylinder(r1=ReceiverTopSlotHorizontalWidth()/2,
+                        r2=1/32,
+                        h=fingerHoleHeight-clear2);
     }
-      
+    
+    hull() for (Z = [0,0.25])
+    translate([-ReceiverLength()+0.25,0,bottomZ+(0.22/2)+Z])
+    rotate([0,90,0])
+    cylinder(r=0.22/2, h=ReceiverLength()-0.5);
+    
+    translate([-ReceiverLength()+0.25,-(0.25/2)-clearance,bottomZ+clear])
+    ChamferedSquareHole([hammerTravelX+0.5, 0.25+(clearance*2)],
+                          ReceiverTopSlotHorizontalHeight()-clear2,
+                          corners=false, center=false, chamferRadius=1/32);
+    
+    translate([fingerHoleX,0,bottomZ+clear])
+    ChamferedCircularHole(r1=fingerHoleRadius, r2=1/16, h=fingerHoleHeight-clear2);
+    
+    ChargingHandleSpringGuide(cutter=true);
+  }
+}
+
+module ChargingHandleMiddle(clearance=0.005) {
+  clear = clearance;
+  clear2 = clear*2;
+  
+  width = ReceiverTopSlotHorizontalWidth();
+  
+  rearExtension = ReceiverTopSlotHorizontalWidth();
+  bottomZ = ReceiverTopSlotHeight()
+          - ReceiverTopSlotHorizontalHeight();
+  prongWidth = (ReceiverTopSlotHorizontalWidth()-ReceiverTopSlotWidth()-clear2)/2;
+  fingerHoleDiameter = ReceiverTopSlotHorizontalWidth()-0.25;
+  fingerHoleRadius = fingerHoleDiameter/2;
+  fingerHoleHeight = min(ReceiverTopZ()
+                   - ReceiverTopSlotHeight()
+                   + ReceiverTopSlotHorizontalHeight(), 0.375);
+  fingerHoleX = -ReceiverLength()-(rearExtension/2);
+  rearLength = (rearExtension/2) + ReceiverLength();
+  
+  color("Olive") render()
+  difference() {
+    
+    // Solid section
+    translate([fingerHoleX,-(width/2)+clear,bottomZ+clear])
+    ChamferedCube([rearLength, 
+                   width-clear2,
+                   ReceiverTopSlotHorizontalHeight()-clear2], r=1/32);
+    
+    
+    hull() for (Z = [0,0.25])
+    translate([-ReceiverLength()+0.25,0,bottomZ+(0.22/2)+Z])
+    rotate([0,90,0])
+    cylinder(r=0.22/2, h=ReceiverLength()-0.5);
+    
+    translate([-ReceiverLength()+0.25,-(0.25/2)-clearance,bottomZ+clear])
+    ChamferedSquareHole([hammerTravelX+0.5, 0.25+(clearance*2)],
+                          ReceiverTopSlotHorizontalHeight()-clear2,
+                          corners=false, center=false, chamferRadius=1/32);
+    
+    translate([fingerHoleX,0,bottomZ+clear])
+    ChamferedCircularHole(r1=fingerHoleRadius, r2=1/16, h=fingerHoleHeight-clear2);
+    
+    ChargingHandleSpringGuide(cutter=true);
   }
 }
 
 module Hammer(cutter=false, clearance=UnitsImperial(0.01), debug=_CUTAWAY_HAMMER, alpha=_ALPHA_HAMMER) {
-  
-  hammerHeadLength=2;
-  hammerBodyWidth=0.5;
-  hammerHeadHeight=ReceiverIR()+0.25;
-  
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
@@ -356,17 +435,13 @@ module Hammer(cutter=false, clearance=UnitsImperial(0.01), debug=_CUTAWAY_HAMMER
       }
       
       // Charging Tip
-      hull() {
-        translate([hammerCockedX, -(0.5/2), 0])
-        mirror([1,0,0])
-        ChamferedCube([0.25, 0.5, ActionRodZ()+0.125],
-                       r=1/32, teardropFlip=[false,true,true]);
-        
-        translate([hammerCockedX, -(0.5/2), 0])
-        mirror([1,0,0])
-        ChamferedCube([ActionRodZ()+0.25, 0.5, 0.25],
-                       r=1/32, teardropFlip=[false,true,true]);
-      }
+      hull()
+      for (XYZ = [[0.25, 0, ActionRodZ()+0.125],
+                  [ActionRodZ()+0.125, 0, 0.25]])
+      translate([hammerCockedX, -(ReceiverTopSlotWidth()/2)+clearance, 0])
+      mirror([1,0,0])
+      ChamferedCube([XYZ.x, ReceiverTopSlotWidth()-(clearance*2), XYZ.z],
+                     r=1/32, teardropFlip=[false,true,true]);
       
       // Wings
       translate([hammerCockedX,
@@ -377,7 +452,6 @@ module Hammer(cutter=false, clearance=UnitsImperial(0.01), debug=_CUTAWAY_HAMMER
                      (ReceiverIR()+ReceiverSideSlotDepth()-clearance)*2,
                      ReceiverSideSlotHeight()-(clearance*2)],
                     r=1/16,teardropFlip=[true, true, true]);
-
     }
     
     // Trigger Slot
@@ -395,16 +469,58 @@ module Hammer(cutter=false, clearance=UnitsImperial(0.01), debug=_CUTAWAY_HAMMER
     translate([hammerCockedX-1.25,0,0])
     rotate([0,-90,0])
     cylinder(r=0.65/2, h=1.75, $fn=30);
-    
-    // Chop the bottom to avoid the lower lugs
-    translate([hammerCockedX+0.125,-ReceiverIR(),-BoltFlatHeadRadius(HammerBolt())-0.3125])
-    mirror([1,0,0])
-    mirror([0,0,1])
-    cube([hammerHeadLength+0.25, ReceiverID(), ReceiverIR()]);
   }
 }
 
-module Disconnector(pivotFactor=0, cutter=false, clearance=0.01, alpha=1, debug=_CUTAWAY_DISCONNECTOR) {
+module HammerTail(cutter=false, clearance=UnitsImperial(0.01), debug=_CUTAWAY_HAMMER, alpha=_ALPHA_HAMMER) {
+
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
+  
+  color("Chocolate", alpha)
+  RenderIf(!cutter) DebugHalf(enabled=debug)
+  difference() {
+    union() {
+      
+      intersection() {
+      
+        // Body
+        translate([hammerTailMinX,0,0])   
+        rotate([0,90,0])
+        ChamferedCylinder(r1=ReceiverIR()-clearance, r2=1/32,
+                           h=hammerTailLength,
+                          teardropTop=true, teardropBottom=true, $fn=80);
+    
+        // Only the top half
+        translate([hammerTailMinX,-(ReceiverIR())-clearance, 0])
+        cube([hammerTailLength, ReceiverID()+(clearance*2),ReceiverIR()]);
+      }
+      
+      // Wings
+      translate([hammerTailMinX,
+                 -(ReceiverIR()+ReceiverSideSlotDepth()-clearance),
+                 -(ReceiverSideSlotHeight()/2)+clearance])
+      ChamferedCube([hammerTailLength,
+                     (ReceiverIR()+ReceiverSideSlotDepth()-clearance)*2,
+                     ReceiverSideSlotHeight()-(clearance*2)],
+                    r=1/16,teardropFlip=[true, true, true]);
+
+    }
+    
+    // Hammer Hole
+    translate([hammerTailMinX,0,0])
+    rotate([0,90,0])
+    ChamferedCircularHole(r1=0.3125/2, r2=1/16,
+                          h=hammerTailLength-0.3125, $fn=40);
+    
+    // Spring Hole
+    translate([hammerTailMaxX,0,0])
+    rotate([0,-90,0])
+    ChamferedCircularHole(r1=0.65/2, r2=1/16, chamferTop=false,
+                          h=0.25, $fn=40);
+  }
+}
+module Disconnector(pivotFactor=0, cutter=false, clearance=0.005, alpha=1, debug=_CUTAWAY_DISCONNECTOR) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
@@ -423,19 +539,19 @@ module Disconnector(pivotFactor=0, cutter=false, clearance=0.01, alpha=1, debug=
         
         // Trip
         hull() {
+          translate([-disconnectorTripBackset+clear,
+                     disconnectorOffsetY+0.25-clear,
+                     disconnectorPivotZ-0.125-clear])
+          mirror([1,0,0])
+          ChamferedCube([(1/16)+clear2,
+                0.25+clear2,
+                ActionRodZ()-disconnectorPivotZ+clear2], r=1/64);
+          
           translate([clear,
                      disconnectorOffsetY+0.25-clear,
                      disconnectorPivotZ-0.125-clear])
           mirror([1,0,0])
-          ChamferedCube([(disconnectorTripBackset),
-                0.25+clear2,
-                ActionRodZ()-disconnectorPivotZ+clear2], r=1/64);
-          
-          translate([-clear,
-                     disconnectorOffsetY+0.25-clear,
-                     disconnectorPivotZ-0.125-clear])
-          mirror([1,0,0])
-          ChamferedCube([disconnectorTripBackset+0.25+(cutter?0.125:0),
+          ChamferedCube([0.3125+clear2,
                 0.25+clear2,
                 0.25+clear2], r=1/64);
         }
@@ -448,12 +564,12 @@ module Disconnector(pivotFactor=0, cutter=false, clearance=0.01, alpha=1, debug=
               (5/16)+clear2,
               0.25+clear2], r=1/64);
         
-        // Prong
-        translate([0,
+        // Hammer Stop Prong
+        translate([clear,
                    disconnectorOffsetY-clear,
                    disconnectorPivotZ-0.125-clear])
         mirror([1,0,0])
-        ChamferedCube([abs(disconnectorPivotX)+disconnectorLength+clear,
+        ChamferedCube([abs(disconnectorPivotX)+disconnectorLength+clear2,
               0.25+clear2,
               disconnectorHeight+clear2], r=1/64);
       }
@@ -479,7 +595,7 @@ module FireControlHousing(clearance=0.01, debug=_CUTAWAY_FIRING_PIN_HOUSING, alp
     
     // Insert plug
     union() {
-      intersection() {
+      *intersection() {
           
           // Round body
           rotate([0,-90,0])
@@ -499,7 +615,7 @@ module FireControlHousing(clearance=0.01, debug=_CUTAWAY_FIRING_PIN_HOUSING, alp
         
       // Disconnector support
       translate([-FiringPinHousingLength(),-(0.75/2),clearance])
-      ChamferedCube([0.75, 0.75, ActionRodZ()-0.125-(clearance*2)],
+      ChamferedCube([FiringPinHousingLength()/*0.625*/, 0.75, ActionRodZ()-0.125-(clearance*2)],
                      r=1/16, teardropFlip=[false,true,true]);
       
       // Wings
@@ -578,11 +694,17 @@ module SimpleFireControlAssembly(recoilPlate=_SHOW_RECOIL_PLATE, debug=false) {
   chargeAF = Animate(ANIMATION_STEP_CHARGE)
            - Animate(ANIMATION_STEP_CHARGER_RESET);
 
+  ChargingHandleSpringGuide();
+  ChargingHandleSpring();
+
+  translate([SubAnimate(ANIMATION_STEP_CHARGE, start=hammerChargeStart)*-(hammerTravelX+hammerOvertravelX),0,0])
+  translate([SubAnimate(ANIMATION_STEP_CHARGER_RESET)*(hammerOvertravelX),0,0])
+  ChargingHandle();
+
   if (_SHOW_ACTION_ROD)
   translate([-chargerTravel*chargeAF,0,0]) {
-    HammerCharger(debug=_CUTAWAY_HAMMER_CHARGER);
     ActionRod();
-    ActionRodBolt();
+    DisconnectorTripBolt();
     children();
   }
   
@@ -592,13 +714,17 @@ module SimpleFireControlAssembly(recoilPlate=_SHOW_RECOIL_PLATE, debug=false) {
   Disconnector(pivotFactor=disconnectorAF);
 
   // Linear Hammer
-  if (_SHOW_HAMMER)
-  translate([Animate(ANIMATION_STEP_FIRE)*hammerTravelX,0,0])
-  translate([SubAnimate(ANIMATION_STEP_CHARGE, start=hammerChargeStart)*-(hammerTravelX+hammerOvertravelX),0,0])
-  translate([SubAnimate(ANIMATION_STEP_CHARGER_RESET, end=0.1)*(hammerOvertravelX-disconnectDistance),0,0])
-  translate([SubAnimate(ANIMATION_STEP_CHARGER_RESET, start=0.97, end=1)*disconnectDistance,0,0]) {
-    Hammer();
-    HammerBolt();
+  if (_SHOW_HAMMER) {
+  
+    translate([Animate(ANIMATION_STEP_FIRE)*hammerTravelX,0,0])
+    translate([SubAnimate(ANIMATION_STEP_CHARGE, start=hammerChargeStart)*-(hammerTravelX+hammerOvertravelX),0,0])
+    translate([SubAnimate(ANIMATION_STEP_CHARGER_RESET, end=0.1)*(hammerOvertravelX-disconnectDistance),0,0])
+    translate([SubAnimate(ANIMATION_STEP_CHARGER_RESET, start=0.97, end=1)*disconnectDistance,0,0]) {
+      HammerBolt();
+      Hammer();
+    }
+  
+    HammerTail();
   }
  
   if (_SHOW_FIRING_PIN) {
@@ -651,11 +777,19 @@ scale(25.4) {
   translate([-hammerCockedX,0,0])
   Hammer();
   
+  if (_RENDER == "HammerTail")
+  rotate([0,-90,0])
+  translate([-hammerTailMinX,0,0])
+  HammerTail();
   
-  if (_RENDER == "HammerCharger")
+  if (_RENDER == "ChargingHandle")
+  translate([ReceiverLength(),0,-ReceiverTopSlotHeight()+ReceiverTopSlotHorizontalHeight()])
+  ChargingHandle();
+  
+  if (_RENDER == "DisconnectorTrip")
   rotate([0,-90,0])
   translate([0.5, 0, -ActionRodZ()])
-  HammerCharger();
+  DisconnectorTrip();
 
   if (_RENDER == "Disconnector")
   rotate([90,0,0])
