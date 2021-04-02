@@ -120,8 +120,7 @@ module FrameSupport(length=FRAME_SPACER_LENGTH, width=(FrameBoltY()+FrameBoltRad
                   teardropTop=false);
 }
 
-module CouplingSupport(yz = [COUPLING_BOLT_Y, COUPLING_BOLT_Z], length=1) {
-  
+module CouplingSupport(yz = [COUPLING_BOLT_Y, COUPLING_BOLT_Z], length=1, chamferFront=false, chamferBack=false) {
   hull() {
     
     // Coupling bolt supports
@@ -129,13 +128,10 @@ module CouplingSupport(yz = [COUPLING_BOLT_Y, COUPLING_BOLT_Z], length=1) {
     translate([0,Y*yz[0],yz[1]])
     rotate([0,90,0])
     ChamferedCylinder(r1=0.3125, r2=1/16, h=length,
+                      chamferTop=chamferFront, chamferBottom=chamferBack,
                       teardropTop=true, $fn=Resolution(20,40));
     
-    // Hull to receiver
-    rotate([0,90,0])
-    ChamferedCylinder(r1=ReceiverOR(), r2=1/16, h=length,
-                      chamferBottom=false, chamferTop=true,
-                      $fn=Resolution(30,60));
+    children();
   }
 }
 
@@ -229,9 +225,10 @@ module Receiver_LargeFrame_print(couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_
 // **************
 // * Assemblies *
 // **************
-module Receiver_LargeFrameAssembly(length=FrameBoltLength(), spacerLength=FRAME_SPACER_LENGTH, couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z], couplingBoltLength=0.5, debug=_CUTAWAY_RECEIVER, alpha=1) {
+module Receiver_LargeFrameAssembly(length=FrameBoltLength(), couplingBolts=true, couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z], couplingBoltLength=0.5, debug=_CUTAWAY_RECEIVER, alpha=1) {
   Receiver_LargeFrame(couplingBoltYZ=couplingBoltYZ, debug=debug);
   
+  if (couplingBolts)
   color("Silver")
   render()
   CouplingBolts(yz=couplingBoltYZ, extension=couplingBoltLength);

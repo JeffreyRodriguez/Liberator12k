@@ -107,6 +107,7 @@ BLAST_PLATE_THICKNESS = 1/8;
 //COUPLING_BOLT_Y =  1.875001; //1.1250;
 COUPLING_BOLT_Z = -0.8750;
 COUPLING_BOLT_Y =  1.1250;
+COUPLING_BOLT_ENABLED = false;
 
 /* [Screws] */
 GP_BOLT = "#8-32"; // ["M4", "#8-32"]
@@ -417,6 +418,8 @@ module Revolver_ReceiverFront(debug=_CUTAWAY_RECEIVER_FRONT, alpha=_ALPHA_RECEIV
         FrameSupport(length=length, extraBottom=FrameBottomZ()+abs(CylinderZ()));
         
         // Coupling bolt supports
+        
+        if (COUPLING_BOLT_ENABLED)
         CouplingSupport(yz=[COUPLING_BOLT_Y, COUPLING_BOLT_Z],
                         length=length);
         
@@ -433,6 +436,7 @@ module Revolver_ReceiverFront(debug=_CUTAWAY_RECEIVER_FRONT, alpha=_ALPHA_RECEIV
     
     FrameBolts(cutter=true);
     
+    if (COUPLING_BOLT_ENABLED)
     CouplingBolts(yz=[COUPLING_BOLT_Y, COUPLING_BOLT_Z],
                   extension=ReceiverFrontLength(),
                   boltHead="flat", cutter=true);
@@ -609,12 +613,14 @@ module Revolver_FrameSpacer(length=ForendMinX(), debug=false, alpha=_ALPHA_FOREN
       // Rear corner guides
       FrameSupport(length=ManifoldGap(), extraBottom=0.5);
       
+      
       mirror([1,0,0])
       ReceiverTopSegment(length=length);
     }
 
     FrameBolts(cutter=true);
     
+    if (COUPLING_BOLT_ENABLED)
     CouplingBolts(yz=[COUPLING_BOLT_Y, COUPLING_BOLT_Z],
                    extension=ReceiverFrontLength(),
                   boltHead="flat", cutter=true);
@@ -890,6 +896,7 @@ module RevolverAssembly(stock=true) {
       TensionBolts();
       
       Receiver_LargeFrameAssembly(
+        couplingBolts=COUPLING_BOLT_ENABLED,
         couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z],
         couplingBoltLength=ReceiverFrontLength(),
         debug=_CUTAWAY_RECEIVER);
