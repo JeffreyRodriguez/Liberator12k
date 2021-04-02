@@ -1,13 +1,8 @@
 use <../Meta/Manifold.scad>;
 
 DEFAULT_DOVETAIL_ANGLE  = 65;
-DEFAULT_DOVETAIL_LENGTH = 15;
-DEFAULT_DOVETAIL_WIDTH  = 30;
-DEFAULT_DOVETAIL_HEIGHT = 25.4;
-
 DEFAULT_DOVETAIL_LENGTH = 10;
 DEFAULT_DOVETAIL_WIDTH  = 42;
-DEFAULT_DOVETAIL_HEIGHT = 10;
 
 function DovetailTabOffset(length=DEFAULT_DOVETAIL_LENGTH,
                             angle=DEFAULT_DOVETAIL_ANGLE)
@@ -40,3 +35,8 @@ module Dovetail2d(width=DEFAULT_DOVETAIL_WIDTH,
   translate([(cos(angle)*length)-1,-1])
   square([width-(cos(angle)*length*2)+2,(sin(angle)*length)/2]);
 }
+
+Dovetail2d(angle=DEFAULT_DOVETAIL_ANGLE,
+           width=DEFAULT_DOVETAIL_WIDTH,
+           length=DEFAULT_DOVETAIL_LENGTH,
+           center=true);
