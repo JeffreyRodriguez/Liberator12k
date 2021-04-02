@@ -623,11 +623,11 @@ module SimpleFireControlAssembly(recoilPlate=_SHOW_RECOIL_PLATE, debug=false) {
 //*************
 //* Rendering *
 //*************
-if (_RENDER == "Assembly") {
   SimpleFireControlAssembly();
   
   if (_SHOW_RECEIVER)
   ReceiverAssembly(debug=_CUTAWAY_RECEIVER);
+if ($preview && _RENDER == "Assembly") {
   
   if (_SHOW_LOWER) {
     LowerMount();

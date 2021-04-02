@@ -929,7 +929,7 @@ module RevolverAssembly(stock=true) {
   RevolverForendAssembly(debug=false);
 }
 
-if (_RENDER == "Revolver Assembly")
+if ($preview && _RENDER == "Revolver Assembly")
 RevolverAssembly();
 
 //**********

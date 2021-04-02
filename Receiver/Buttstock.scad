@@ -219,7 +219,7 @@ module StockAssembly(debug=_DEBUG_ASSEMBLY) {
   Buttpad(alpha=_ALPHA_BUTTPAD, debug=debug);
 }
 
-if (_RENDER == "StockAssembly") {
+if ($preview && _RENDER == "StockAssembly") {
   ReceiverAssembly();
   StockAssembly();
 }
