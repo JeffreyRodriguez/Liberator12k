@@ -71,9 +71,11 @@ _ALPHA_RECEIVER_FRONT = 1;     // [0:0.1:1]
 _ALPHA_RECOIL_PLATE_HOUSING=1; // [0:0.1:1]
 _ALPHA_SPINDLE = 1;            // [0:0.1:1]
 _ALPHA_FCG = 1;                // [0:0.1:1]
+_ALPHA_STOCK = 1;              // [0:0.1:1]
 
 /* [Assembly Cutaways] */
 _CUTAWAY_RECOIL_PLATE = false;
+_CUTAWAY_SHIELD = false;
 _CUTAWAY_BARREL_SUPPORT = false;
 _CUTAWAY_CYLINDER = false;
 _CUTAWAY_RECEIVER = false;
@@ -103,11 +105,11 @@ SPINDLE_DIAMETER = 0.31251;
 BLAST_PLATE_THICKNESS = 1/8;
 
 /* [Coupling Bolts] */
-//COUPLING_BOLT_Z = -0.40001; //-0.8750;
-//COUPLING_BOLT_Y =  1.875001; //1.1250;
-COUPLING_BOLT_Z = -0.8750;
-COUPLING_BOLT_Y =  1.1250;
 COUPLING_BOLT_ENABLED = false;
+COUPLING_BOLT_Z = -0.40001; //-0.8750;
+COUPLING_BOLT_Y =  1.875001; //1.1250;
+//COUPLING_BOLT_Z = -0.8750;
+//COUPLING_BOLT_Y =  1.1250;
 
 /* [Screws] */
 GP_BOLT = "#8-32"; // ["M4", "#8-32"]
@@ -347,6 +349,17 @@ module Revolver_PumpLockRod(cutter=false, clearance=0.005) {
   cube([length, width+clear2, width+clear2]);
 }
 
+module Revolver_BlastPlateBolts(bolt=RecoilPlateBolt(), boltLength=Revolver_BarrelSupportLength(), template=false, cutter=false, clearance=0.01, debug=false) {
+  clear = cutter ? clearance : 0;
+  
+  color("Silver")
+  RenderIf(!cutter) DebugHalf(enabled=debug)
+  for (M = [0,1]) mirror([0,M,0])
+  translate([ForendMaxX(),BarrelRadius()+0.375,0])
+  rotate([0,90,0])
+  Bolt(bolt=bolt, length=boltLength+ManifoldGap(), clearance=clear, head="hex", capOrientation=true);
+}
+
 module Revolver_BlastPlate(clearance=0.01, holeClearance=0.002, cutter=false, debug=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
@@ -379,6 +392,7 @@ module Revolver_BlastPlate(clearance=0.01, holeClearance=0.002, cutter=false, de
     Revolver_Barrel(cutter=true, clearance=holeClearance);
     ActionRod(cutter=true);
     Revolver_ForendSpindle(cutter=true, clearance=holeClearance);
+    Revolver_BlastPlateBolts(cutter=true);
   }
 }
 
@@ -466,7 +480,7 @@ module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND, $
   
   // Branding text
   color("DimGrey", alpha) 
-  RenderIf(doRender) {
+  RenderIf(doRender) DebugHalf(enabled=debug) {
     
     fontSize = 0.375;
     
@@ -498,6 +512,11 @@ module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND, $
         translate([ForendMinX(), 0, 0])
         mirror([1,0,0])
         ReceiverTopSegment(length=Revolver_BarrelSupportLength());
+        
+        if (COUPLING_BOLT_ENABLED)
+        translate([ForendMinX(),0,0])
+        CouplingSupport(yz=[BarrelRadius()+0.375, 0],
+                        length=Revolver_BarrelSupportLength(), chamferFront=true);
       }
 
       // Around the barrel
@@ -536,7 +555,7 @@ module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND, $
     // Weld clearance: Barrel to blast plate fillet
     translate([ForendMinX()+BlastPlateThickness(), 0, 0])
     rotate([0,90,0])
-    HoleChamfer(r1=BarrelRadius(), r2=0.25, teardrop=true);
+    HoleChamfer(r1=BarrelRadius(), r2=0.3125, teardrop=true);
     
     // Weld clearance: Shield to blast plate fillet
     translate([ForendMinX(), 0, CylinderZ()])
@@ -577,6 +596,8 @@ module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND, $
 
     Revolver_BlastPlate(cutter=true);
     
+    Revolver_BlastPlateBolts(cutter=true);
+    
     Revolver_ForendSpindle(cutter=true);
     
     hull() {
@@ -613,6 +634,9 @@ module Revolver_FrameSpacer(length=ForendMinX(), debug=false, alpha=_ALPHA_FOREN
       // Rear corner guides
       FrameSupport(length=ManifoldGap(), extraBottom=0.5);
       
+      if (COUPLING_BOLT_ENABLED)
+      CouplingSupport(yz=[COUPLING_BOLT_Y, COUPLING_BOLT_Z],
+                      length=length);
       
       mirror([1,0,0])
       ReceiverTopSegment(length=length);
@@ -695,7 +719,7 @@ module Revolver_ForendSpindleToggleHandle(pivot=0, cutter=false, clearance=0.01,
   
   Pivot(pivotX=SpindleTogglePinX(), pivotZ=SpindleTogglePinZ(),
         angle=-60,factor=pivot) {
-    color("Brown") render()
+    color("Chocolate") RenderIf(!cutter)
     difference() {
       union() {
         
@@ -841,10 +865,12 @@ module RevolverForendAssembly(pipeAlpha=1, debug=false) {
     Revolver_Barrel(debug=debug);
   
   if (_SHOW_BLAST_PLATE)
-    Revolver_BlastPlate();
+  Revolver_BlastPlate(debug=_CUTAWAY_SHIELD);
+  
+  Revolver_BlastPlateBolts(debug=_CUTAWAY_SHIELD);
   
   if (_SHOW_SHIELD)
-    Revolver_Shield();
+  Revolver_Shield(debug=_CUTAWAY_SHIELD);
 
   if (_SHOW_FRAME_SPACER)
   Revolver_FrameSpacer(debug=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
@@ -893,17 +919,14 @@ module RevolverAssembly(stock=true) {
           searLength=SearLength()+abs(LowerOffsetZ())+SearTravel()-(0.25/2));
     
     if (_SHOW_RECEIVER) {
-      TensionBolts();
+      
+      TensionBolts(debug=_CUTAWAY_RECEIVER);
       
       Receiver_LargeFrameAssembly(
         couplingBolts=COUPLING_BOLT_ENABLED,
         couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z],
         couplingBoltLength=ReceiverFrontLength(),
         debug=_CUTAWAY_RECEIVER);
-    }
-
-    if (_SHOW_STOCK) {
-      StockAssembly(debug=_CUTAWAY_STOCK);
     }
 
     if (_SHOW_RECOIL_PLATE) {
@@ -930,6 +953,10 @@ module RevolverAssembly(stock=true) {
       *translate([0.25+ForendMaxX(),0,ActionRodZ()])
       rotate([-90,0,0])
       cylinder(r=0.125, h=0.15+0.125+3);
+    }
+
+    if (_SHOW_STOCK) {
+      StockAssembly(debug=_CUTAWAY_STOCK, alphaStock=_ALPHA_STOCK);
     }
   }
 
