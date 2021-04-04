@@ -129,7 +129,7 @@ function LatchCollarLength() = ForendLength()+0.25;
 
 // Calculated: Dimensions
 function BarrelRadius(clearance=0)
-    = BarrelDiameter(clearance*2);
+    = BarrelDiameter(clearance*2)/2;
 
 function BarrelDiameter(clearance=0)
     = BARREL_OUTSIDE_DIAMETER+clearance;
