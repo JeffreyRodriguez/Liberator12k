@@ -762,7 +762,7 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1, receiverFrontAlpha=1,
                  travel=ChargerTravel());
 }
 
-if (_RENDER == "Assembly") {
+if ($preview && _RENDER == "Assembly") {
   
   translate([-ReceiverFrontLength(),0,0]) {
     
