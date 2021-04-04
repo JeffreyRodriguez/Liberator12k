@@ -81,6 +81,7 @@ BARREL_OUTSIDE_DIAMETER = 1.0001;
 BARREL_INSIDE_DIAMETER = 0.813;
 BARREL_CLEARANCE = 0.005;
 
+FRAME_BOLT_LENGTH = 10;
 $fs = UnitsFs()*0.5;
 
 // Settings: Vitamins
@@ -113,13 +114,13 @@ function ActionRodLength() = 10;
 function LatchSpringLength() = 2;
 function LatchSpringDiameter() = 0.65;
 
-function FrameBoltLength() = 10;
+function FrameBoltLength() = FRAME_BOLT_LENGTH;
 
 function ReceiverFrontLength() = 0.5;
 function FrameBackLength() = 0.75+0.5;
-function ForendLength() = FrameExtension(length=FrameBoltLength())
-                        -ReceiverFrontLength()
-                        -FrameBackLength();
+function ForendLength() = FrameExtension(length=FRAME_BOLT_LENGTH)
+                        - 0.5
+                        -ReceiverFrontLength();
                         
 function LatchTravel() = 0.5;
 function ChargerTravel() = 1.75;
@@ -776,7 +777,8 @@ if (_RENDER == "Assembly") {
     if (_SHOW_RECEIVER) {
       TensionBolts();
       
-      Receiver_LargeFrameAssembly(debug=_CUTAWAY_RECEIVER);
+      Receiver_LargeFrameAssembly(length=FRAME_BOLT_LENGTH,
+                                  debug=_CUTAWAY_RECEIVER);
     }
 
     if (_SHOW_STOCK) {
