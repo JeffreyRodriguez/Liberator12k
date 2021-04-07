@@ -22,11 +22,12 @@ use <Lower/Mount.scad>;
 
 use <Receiver.scad>;
 
-/* [What to Render] */
+/* [Print] */
 
-// Configure settings below, then choose a part to render. Render that part (F6) then export STL (F7). Assembly is not for printing.
-_RENDER = "Assembly"; // ["Assembly", "FireControlHousing", "ChargingHandle", "Disconnector", "Hammer", "HammerTail", "RecoilPlateJig"]
+// First Render the part (F6) then Export to STL (F7)
+_RENDER = "Choose a part!"; // ["Choose a part!", "FireControlHousing", "ChargingHandle", "Disconnector", "Hammer", "HammerTail", "RecoilPlateJig"]
 
+/* [Assembly] */
 _SHOW_FIRE_CONTROL_HOUSING = true;
 _SHOW_DISCONNECTOR = true;
 _SHOW_HAMMER = true;
@@ -39,12 +40,12 @@ _SHOW_RECEIVER      = true;
 _SHOW_LOWER         = true;
 _SHOW_LOWER_LEFT    = false;
 
-/* [Assembly Transparency] */
+/* [Transparency] */
 _ALPHA_FIRING_PIN_HOUSING = 1; // [0:0.1:1]
 _ALPHA_RECOIL_PLATE = 0.5; // [0:0.1:1]
 _ALPHA_HAMMER = 0.5; // [0:0.1:1]
 
-/* [Assembly Cutaways] */
+/* [Cutaways] */
 _CUTAWAY_FIRING_PIN_HOUSING = false;
 _CUTAWAY_DISCONNECTOR = false;
 _CUTAWAY_HAMMER = false;
@@ -131,9 +132,9 @@ function ActionRodZ() = 0.75+(ActionRodWidth()/2);
 hammerHeadLength=2;
 hammerHeadHeight=ReceiverIR()+0.25;
 
-hammerTailMinX = -ReceiverLength()-1;
+function HammerTailLength() = 0.5;
+hammerTailMinX = -ReceiverLength()-HammerTailLength();
 hammerTailMaxX = -ReceiverLength();
-hammerTailLength = 1;
 
 hammerFiredX  = FiringPinMinX();
 hammerCockedX = -LowerMaxX()-0.125;
@@ -253,12 +254,15 @@ module FiringPin(radius=FiringPinRadius(), cutter=false, clearance=FIRING_PIN_CL
   }
 }
 
-module FiringPinSpring(debug=_CUTAWAY_FIRING_PIN_SPRING) {
+module FiringPinSpring(cutter=false, clearance=0.005, debug=_CUTAWAY_FIRING_PIN_SPRING) {
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
+  
   color("SteelBlue")
   DebugHalf(enabled=debug)
   translate([-0.375,0,0])
   rotate([0,90,0])
-  cylinder(r=0.125,
+  cylinder(r=0.125+clear,
            h=0.625);
 }
 
@@ -278,15 +282,19 @@ module RecoilPlateBolts(bolt=RecoilPlateBolt(), boltLength=1.5, template=false, 
         clearance=cutter?clearance:0);
 }
 
-module RecoilPlate(cutter=false, debug=false, alpha=1) {
+module RecoilPlate(cutter=false, debug=false, alpha=1, clearance=0.005) {
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
+  
   color("LightSteelBlue", alpha)
   RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
-    translate([0.25, -1-ManifoldGap(2), RecoilPlateTopZ()])
+    translate([0.5-clear, -(RecoilPlateWidth()/2)-clear, RecoilPlateTopZ()+clear])
     mirror([0,0,1])
-    cube([RecoilPlateLength()+(cutter?(1/8):0),
-          RecoilPlateWidth()+ManifoldGap(4),
-          RecoilPlateHeight()]);
+    mirror([1,0,0])
+    cube([RecoilPlateLength()+(cutter?(1/8):0)+clear,
+          RecoilPlateWidth()+clear2,
+          RecoilPlateHeight()+clear2]);
 
     if (!cutter)
     RecoilPlateBolts(cutter=true);
@@ -488,19 +496,19 @@ module HammerTail(cutter=false, clearance=UnitsImperial(0.01), debug=_CUTAWAY_HA
         translate([hammerTailMinX,0,0])   
         rotate([0,90,0])
         ChamferedCylinder(r1=ReceiverIR()-clearance, r2=1/32,
-                           h=hammerTailLength,
+                           h=HammerTailLength(),
                           teardropTop=true, teardropBottom=true, $fn=80);
     
         // Only the top half
         translate([hammerTailMinX,-(ReceiverIR())-clearance, 0])
-        cube([hammerTailLength, ReceiverID()+(clearance*2),ReceiverIR()]);
+        cube([HammerTailLength(), ReceiverID()+(clearance*2),ReceiverIR()]);
       }
       
       // Wings
       translate([hammerTailMinX,
                  -(ReceiverIR()+ReceiverSideSlotDepth()-clearance),
                  -(ReceiverSideSlotHeight()/2)+clearance])
-      ChamferedCube([hammerTailLength,
+      ChamferedCube([HammerTailLength(),
                      (ReceiverIR()+ReceiverSideSlotDepth()-clearance)*2,
                      ReceiverSideSlotHeight()-(clearance*2)],
                     r=1/16,teardropFlip=[true, true, true]);
@@ -511,7 +519,7 @@ module HammerTail(cutter=false, clearance=UnitsImperial(0.01), debug=_CUTAWAY_HA
     translate([hammerTailMinX,0,0])
     rotate([0,90,0])
     ChamferedCircularHole(r1=0.3125/2, r2=1/16,
-                          h=hammerTailLength-0.3125, $fn=40);
+                          h=HammerTailLength()-0.3125, $fn=40);
     
     // Spring Hole
     translate([hammerTailMaxX,0,0])
@@ -678,7 +686,7 @@ module RecoilPlateJig(firingPinRadius=1/32, clearance=0.005, extend=0.125) {
 //**************
 //* Assemblies *
 //**************
-module SimpleFireControlAssembly(recoilPlate=_SHOW_RECOIL_PLATE, debug=false) {
+module SimpleFireControlAssembly(actionRod=_SHOW_ACTION_ROD, recoilPlate=_SHOW_RECOIL_PLATE, debug=false) {
   disconnectStart = 0.8;
   disconnectLetdown = 0.2;
   connectStart = 0.99;
@@ -701,7 +709,7 @@ module SimpleFireControlAssembly(recoilPlate=_SHOW_RECOIL_PLATE, debug=false) {
   translate([SubAnimate(ANIMATION_STEP_CHARGER_RESET)*(hammerOvertravelX),0,0])
   ChargingHandle();
 
-  if (_SHOW_ACTION_ROD)
+  if (actionRod)
   translate([-chargerTravel*chargeAF,0,0]) {
     ActionRod();
     DisconnectorTripBolt();
@@ -750,7 +758,7 @@ module SimpleFireControlAssembly(recoilPlate=_SHOW_RECOIL_PLATE, debug=false) {
 //*************
 //* Rendering *
 //*************
-if ($preview && _RENDER == "Assembly") {
+if ($preview) {
   
   if (_SHOW_LOWER) {
     LowerMount();
@@ -765,9 +773,7 @@ if ($preview && _RENDER == "Assembly") {
   
   if (_SHOW_RECEIVER)
   ReceiverAssembly(debug=_CUTAWAY_RECEIVER);
-}
-
-scale(25.4) {
+} else scale(25.4) {
   
   if (_RENDER == "FireControlHousing")
   FireControlHousing_print();
