@@ -38,12 +38,13 @@ use <../Buttstock.scad>;
 
 use <../Fire Control Group.scad>;
 
-/* [What to Render] */
 
-// Configure settings below, then choose a part to render. Render that part (F6) then export STL (F7). Assembly is not for printing.
-_RENDER = "Revolver Assembly"; // ["Revolver Assembly", "Receiver_LargeFrame", "Revolver_ReceiverFront", "Revolver_FrameSpacer", "Foregrip", "Revolver_CylinderCore", "Revolver_CylinderShell", "Revolver_BarrelSupport", "Revolver_ForendSpindleToggleLinkage", "Revolver_ForendSpindleToggleHandle", "Revolver_Projection_Cylinder", "Revolver_Projection_CylinderCore", "Revolver_Projection_BlastPlate", "Revolver_Projection_RecoilPlate"]
-//$t = 1; // [0:0.01:1]
+/* [Print] */
 
+// First Render the part (F6) then Export to STL (F7)
+_RENDER = "Choose a part!"; // ["Choose a part!", "Receiver_LargeFrame", "Revolver_ReceiverFront", "Revolver_FrameSpacer", "Foregrip", "Revolver_CylinderCore", "Revolver_CylinderShell", "Revolver_BarrelSupport", "Revolver_ForendSpindleToggleLinkage", "Revolver_ForendSpindleToggleHandle", "Revolver_Projection_Cylinder", "Revolver_Projection_CylinderCore", "Revolver_Projection_BlastPlate", "Revolver_Projection_RecoilPlate"]
+
+/* [Assembly] */
 _SHOW_RECEIVER = true;
 _SHOW_LOWER_LUGS = true;
 _SHOW_LOWER = true;
@@ -61,19 +62,7 @@ _SHOW_BLAST_PLATE = true;
 _SHOW_SHIELD = true;
 _SHOW_SPINDLE = true;
 
-/* [Assembly Transparency] */
-_ALPHA_BARREL_SUPPORT = 1;     // [0:0.1:1]
-_ALPHA_CYLINDER = 1;           // [0:0.1:1]
-_ALPHA_FOREND = 1;             // [0:0.1:1]
-_ALPHA_RECEIVER_TUBE = 1;      // [0:0.1:1]
-_ALPHA_RECEIVER_COUPLING = 1;  // [0:0.1:1]
-_ALPHA_RECEIVER_FRONT = 1;     // [0:0.1:1]
-_ALPHA_RECOIL_PLATE_HOUSING=1; // [0:0.1:1]
-_ALPHA_SPINDLE = 1;            // [0:0.1:1]
-_ALPHA_FCG = 1;                // [0:0.1:1]
-_ALPHA_STOCK = 1;              // [0:0.1:1]
-
-/* [Assembly Cutaways] */
+/* [Cutaway] */
 _CUTAWAY_RECOIL_PLATE = false;
 _CUTAWAY_SHIELD = false;
 _CUTAWAY_BARREL_SUPPORT = false;
@@ -86,32 +75,27 @@ _CUTAWAY_DISCONNECTOR = false;
 _CUTAWAY_HAMMER = false;
 _CUTAWAY_STOCK = false;
 
-/* [Barrel and Cylinder Dimensions] */
-BARREL_LENGTH = 15.5;
-BARREL_DIAMETER = 1.0001;
-BARREL_CLEARANCE = 0.008;
+/* [Transparency] */
+_ALPHA_BARREL_SUPPORT = 1;     // [0:0.1:1]
+_ALPHA_CYLINDER = 1;           // [0:0.1:1]
+_ALPHA_FOREND = 1;             // [0:0.1:1]
+_ALPHA_RECEIVER_TUBE = 1;      // [0:0.1:1]
+_ALPHA_RECEIVER_COUPLING = 1;  // [0:0.1:1]
+_ALPHA_RECEIVER_FRONT = 1;     // [0:0.1:1]
+_ALPHA_RECOIL_PLATE_HOUSING=1; // [0:0.1:1]
+_ALPHA_SPINDLE = 1;            // [0:0.1:1]
+_ALPHA_FCG = 1;                // [0:0.1:1]
+_ALPHA_STOCK = 1;              // [0:0.1:1]
 
-CYLINDER_DIAMETER = 3.501;
-CYLINDER_LENGTH = 2.4375;
-CYLINDER_CLEARANCE = 0.005;
-CYLINDER_OFFSET = 1.0001;
-CHAMBER_LENGTH = 3;
-CHAMBER_ID = 0.8101;
-
+/* [Vitamins] */
 SPINDLE_DIAMETER = 0.31251;
 
-
-/* [Shield Dimensions] */
-BLAST_PLATE_THICKNESS = 1/8;
-
-/* [Coupling Bolts] */
 COUPLING_BOLT_ENABLED = false;
 COUPLING_BOLT_Z = -0.40001; //-0.8750;
 COUPLING_BOLT_Y =  1.875001; //1.1250;
-//COUPLING_BOLT_Z = -0.8750;
-//COUPLING_BOLT_Y =  1.1250;
 
-/* [Screws] */
+FRAME_BOLT_LENGTH = 10;
+
 GP_BOLT = "#8-32"; // ["M4", "#8-32"]
 GP_BOLT_CLEARANCE = 0.015;
 
@@ -120,6 +104,21 @@ FOREGRIP_BOLT_CLEARANCE = 0.015;
 
 RECOIL_PLATE_BOLT = "#8-32"; // ["M4", "#8-32"]
 RECOIL_PLATE_BOLT_CLEARANCE = 0.015;
+
+ENABLE_BLAST_SHIELD = false;
+BLAST_PLATE_THICKNESS = 1/8;
+
+/* [Barrel and Cylinder] */
+BARREL_LENGTH = 15.5;
+BARREL_DIAMETER = 1.0001;
+BARREL_CLEARANCE = 0.008;
+
+CYLINDER_DIAMETER = 3.501;
+CYLINDER_LENGTH = 2.4375;
+CYLINDER_CLEARANCE = 0.005;
+CYLINDER_OFFSET = 1.0001;
+CHAMBER_LENGTH = 3.0001;
+CHAMBER_ID = 0.8101;
 
 /* [Branding] */
 BRANDING_MODEL_NAME = "ZZR 6x12ga";
@@ -188,7 +187,7 @@ function CylinderDiameter() = CYLINDER_DIAMETER;
 function CylinderRadius() = CylinderDiameter()/2;
 
 // Calculated: Lengths
-function ForendLength() = FrameExtension(length=FrameBoltLength())
+function ForendLength() = FrameExtension(length=FRAME_BOLT_LENGTH)
                         - ReceiverFrontLength()
                         - NutHexHeight(FrameBolt());
 
@@ -513,7 +512,6 @@ module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND, $
         mirror([1,0,0])
         ReceiverTopSegment(length=Revolver_BarrelSupportLength());
         
-        if (COUPLING_BOLT_ENABLED)
         translate([ForendMinX(),0,0])
         CouplingSupport(yz=[BarrelRadius()+0.375, 0],
                         length=Revolver_BarrelSupportLength(), chamferFront=true);
@@ -631,13 +629,18 @@ module Revolver_FrameSpacer(length=ForendMinX(), debug=false, alpha=_ALPHA_FOREN
       // Main support
       FrameSupport(length=length);
       
-      // Rear corner guides
+      // Match the coupling supports for the blast shield
+      *translate([0,0,0])
+      CouplingSupport(yz=[BarrelRadius()+0.375, 0],
+                      length=length);
+      
+      // Rear ears
       FrameSupport(length=ManifoldGap(), extraBottom=0.5);
       
       if (COUPLING_BOLT_ENABLED)
       CouplingSupport(yz=[COUPLING_BOLT_Y, COUPLING_BOLT_Z],
                       length=length);
-      
+    
       mirror([1,0,0])
       ReceiverTopSegment(length=length);
     }
@@ -808,7 +811,7 @@ module Revolver_CylinderShell_print() {
   
     translate([0,0, CYLINDER_LENGTH])
     rotate([0,180,0])
-    Revolver_Cylinder(render_cylinder=false);
+    Revolver_Cylinder(render_cylinder=false, chambers=false);
     
     cylinder(r=CYLINDER_OFFSET+0.0625, h=CYLINDER_LENGTH+ManifoldGap(), $fn=100);
   }
@@ -923,6 +926,7 @@ module RevolverAssembly(stock=true) {
       TensionBolts(debug=_CUTAWAY_RECEIVER);
       
       Receiver_LargeFrameAssembly(
+        length=FRAME_BOLT_LENGTH,
         couplingBolts=COUPLING_BOLT_ENABLED,
         couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z],
         couplingBoltLength=ReceiverFrontLength(),
@@ -963,18 +967,13 @@ module RevolverAssembly(stock=true) {
   RevolverForendAssembly(debug=false);
 }
 
-if ($preview && _RENDER == "Revolver Assembly")
-RevolverAssembly();
-
-//**********
-//* Prints *
-//**********
-scale(25.4) {
+if ($preview) {
+  RevolverAssembly();
+} else scale(25.4) {
   
   if (_RENDER == "Receiver_LargeFrame")      
   rotate([0,90,0])
-  Receiver_LargeFrame(
-    couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z]);
+  Receiver_LargeFrame(couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z]);
 
   if (_RENDER == "Revolver_ReceiverFront")
   Revolver_ReceiverFront_print();
