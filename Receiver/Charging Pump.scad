@@ -129,35 +129,30 @@ module ChargingRod(clearance=RodClearanceLoose(),
 }
 
 
-module ChargingPump(innerRadius=1.1/2,
+module ChargingPump(id=1.1, clearance=0.05,
+                    rodWidth=0.25, rodClearance=0.005,
                     debug=false, alpha=1,
                     $fn=Resolution(20,50)) {
+
+  innerRadius = (id/2)+clearance;
 
   color("Tan", alpha)
   DebugHalf(enabled=debug) render()
   difference() {
-    union() {
+    
+    // Body around the barrel
+    translate([ForegripFrontX(),0,0])
+    rotate([0,90,0])
+    PumpGrip(innerRadius=innerRadius) {
 
       // Body around the charging rod
-      translate([ForegripFrontX(),-RodRadius(ChargingRod())-0.25,0])
+      translate([,-RodRadius(ChargingRod())-0.25,0])
       rotate([0,90,0])
       mirror([1,0,0])
       ChamferedCube([ChargingRodOffset()+RodRadius(ChargingRod())+0.125,
                      RodDiameter(ChargingRod())+0.5,
                      ChargingRodStaticLength()], r=1/16);
-
-      // Body around the barrel
-      translate([ForegripFrontX(),0,0])
-      rotate([0,90,0])
-      PumpGrip();
     }
-
-    // Barrel hole, but with a bearing profile
-    translate([ForegripFrontX()+(PumpGripLength()/2),0,0])
-    rotate([0,90,0])
-    BearingSurface(r=innerRadius, length=PumpGripLength(),
-                   depth=0.0625, segments=6, taperDepth=0.125,
-                   center=true);
 
     ChargingRod(length=ChargingRodLength(),
                 travel=ChargerTravel(),

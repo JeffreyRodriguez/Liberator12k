@@ -2,6 +2,8 @@ use <../../Meta/Debug.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Resolution.scad>;
 use <../../Meta/RenderIf.scad>;
+
+use <../Bearing Surface.scad>;
 use <../Chamfer.scad>;
 use <../Teardrop.scad>;
 use <../TeardropTorus.scad>;
@@ -11,7 +13,8 @@ function PumpGripRadius() = PumpGripDiameter()/2;
 
 function PumpGripLength() = 5.25;
 
-module PumpGrip(outerRadius=PumpGripRadius(), length=PumpGripLength(),
+module PumpGrip(outerRadius=PumpGripRadius(), innerRadius=1.1/2,
+                length=PumpGripLength(),
                 rings=true, ringRadius=3/32, ringGap=0.75,
                 doRender=false, alpha=1, $fn=Resolution(20,100)) {
 
@@ -19,9 +22,9 @@ module PumpGrip(outerRadius=PumpGripRadius(), length=PumpGripLength(),
   RenderIf(doRender)
   difference() {
     union() {
-
-      // Body around the barrel
       ChamferedCylinder(r1=outerRadius, r2=1/16, h=length);
+      
+      children();
     }
 
     // Gripping cutout rings
@@ -38,8 +41,13 @@ module PumpGrip(outerRadius=PumpGripRadius(), length=PumpGripLength(),
     linear_extrude(height=length+ManifoldGap(2))
     for (R =[1,-1]) rotate(90*R)
     Teardrop(r=ringRadius*2);
+
+    // Inner bearing profile
+    if (is_num(innerRadius))
+    BearingSurface(r=innerRadius, length=length, center=false,
+                   depth=0.0625, segments=6, taperDepth=0.125);
   }
 }
 
 DebugHalf(enabled=false)
-PumpGrip();
+PumpGrip(doRender=true);
