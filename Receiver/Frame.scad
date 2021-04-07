@@ -154,7 +154,7 @@ module FrameSpacer_print() {
   FrameSpacer();
 }
 
-module Receiver_LargeFrame(couplingBolts=true, couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z], doRender=true, debug=false) {
+module Receiver_LargeFrame(couplingBolts=false, couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z], doRender=true, debug=false) {
   
   topCoverHeight = 1;
   
@@ -208,7 +208,7 @@ module Receiver_LargeFrame(couplingBolts=true, couplingBoltYZ=[COUPLING_BOLT_Y, 
   }
 }
 
-module Receiver_LargeFrame_print(couplingBolts=true, couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z]) {
+module Receiver_LargeFrame_print(couplingBolts=false, couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z]) {
   rotate([0,90,0])
   Receiver_LargeFrame(couplingBolts=couplingBolts, couplingBoltYZ=couplingBoltYZ);
 }
@@ -216,7 +216,7 @@ module Receiver_LargeFrame_print(couplingBolts=true, couplingBoltYZ=[COUPLING_BO
 // **************
 // * Assemblies *
 // **************
-module Receiver_LargeFrameAssembly(length=FrameBoltLength(), couplingBolts=true, couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z], couplingBoltLength=0.5, debug=_CUTAWAY_RECEIVER, alpha=1) {
+module Receiver_LargeFrameAssembly(length=FrameBoltLength(), couplingBolts=false, couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z], couplingBoltLength=0.5, debug=_CUTAWAY_RECEIVER, alpha=1) {
   Receiver_LargeFrame(couplingBoltYZ=couplingBoltYZ, debug=debug);
   
   if (couplingBolts)
