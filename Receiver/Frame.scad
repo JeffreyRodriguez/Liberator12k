@@ -18,7 +18,6 @@ use <Receiver.scad>;
 _SHOW_RECEIVER = true;
 _SHOW_RECEIVER_RODS = true;
 
-
 _CUTAWAY_RECEIVER = false;
 
 FRAME_SPACER_LENGTH = 4.5;
@@ -111,7 +110,7 @@ module CouplingBolts(yz = [COUPLING_BOLT_Y, COUPLING_BOLT_Z], boltHead="flat", n
 // **********
 // * Shapes *
 // **********
-module FrameSupport(length=FRAME_SPACER_LENGTH, width=(FrameBoltY()+FrameBoltRadius()+WallFrameBolt())*2, height=(FrameBoltRadius()+WallFrameBolt())*2, extraBottom=0, $fn=Resolution(20,60)) {
+module FrameSupport(length=1, width=(FrameBoltY()+FrameBoltRadius()+WallFrameBolt())*2, height=(FrameBoltRadius()+WallFrameBolt())*2, extraBottom=0, $fn=Resolution(20,60)) {
   translate([0, -width/2, FrameBoltZ()-(height/2)-extraBottom])
   rotate([90,0,90])
   linear_extrude(height=length)
@@ -155,24 +154,7 @@ module FrameSpacer_print() {
   FrameSpacer();
 }
 
-module FrameBack(length=FrameBackLength(), clearance=0.01, debug=false, alpha=1) {
-  color("Chocolate", alpha) render() DebugHalf(enabled=debug)
-  difference() {
-    translate([-(FrameReceiverLength()+length),0,0])
-    FrameSpacer(length=length);
-    
-    hull()
-    Receiver(doRender=false);
-  }
-}
-
-module FrameBack_print() {
-  rotate([0,-90,0])
-  translate([(FrameReceiverLength()+FrameBackLength()),0,-FrameBoltZ()])
-  FrameBack();
-}
-
-module Receiver_LargeFrame(couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z], doRender=true, debug=false) {
+module Receiver_LargeFrame(couplingBolts=true, couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z], doRender=true, debug=false) {
   
   topCoverHeight = 1;
   
@@ -204,6 +186,13 @@ module Receiver_LargeFrame(couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z], do
         FrameSupport(length=FrameReceiverLength()+FrameBackLength());
 
         ReceiverTopSegment(length=FrameReceiverLength());
+      }      
+      
+      *hull()
+      mirror([1,0,0]) {
+        
+        
+        CouplingSupport(yz=couplingBoltYZ);
       }
     }
     
@@ -211,16 +200,18 @@ module Receiver_LargeFrame(couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z], do
     ReceiverMlokBolts(cutter=true, teardrop=true);
     ReceiverTopSlot(length=ReceiverLength());
     
-    CouplingBolts(yz=couplingBoltYZ, cutter=true);
     FrameBolts(cutter=true);
+    
+    
+    if (couplingBolts)
+    CouplingBolts(yz=couplingBoltYZ, cutter=true);
   }
 }
 
-module Receiver_LargeFrame_print(couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z]) {
+module Receiver_LargeFrame_print(couplingBolts=true, couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z]) {
   rotate([0,90,0])
-  Receiver_LargeFrame(couplingBoltYZ=couplingBoltYZ);
+  Receiver_LargeFrame(couplingBolts=couplingBolts, couplingBoltYZ=couplingBoltYZ);
 }
-
 
 // **************
 // * Assemblies *
@@ -232,12 +223,8 @@ module Receiver_LargeFrameAssembly(length=FrameBoltLength(), couplingBolts=true,
   color("Silver")
   render()
   CouplingBolts(yz=couplingBoltYZ, extension=couplingBoltLength);
-  
-  FrameBolts(length=length);
                        
   FrameBolts(length=length, debug=debug, alpha=alpha);
-
-  *FrameSpacer(length=spacerLength);
 }
 
 if ($preview) {
@@ -252,5 +239,5 @@ if ($preview) {
   }
 } else {
   scale(25.4)
-  Receiver_LargeFrame_print();
+  Receiver_LargeFrame_print(couplingBolts=false);
 }
