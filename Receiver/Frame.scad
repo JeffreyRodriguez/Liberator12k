@@ -22,17 +22,10 @@ _CUTAWAY_RECEIVER = false;
 
 FRAME_SPACER_LENGTH = 4.5;
 
-COUPLING_BOLT = "1/4\"-20";    // ["1/4\"-20", "M4", "#8-32"]
-COUPLING_BOLT_NUT = "heatset"; // ["hex", "heatset"]
-COUPLING_BOLT_CLEARANCE = 0.015;
-COUPLING_BOLT_Z = -0.8750;
-COUPLING_BOLT_Y = 1.1250;
-
 // Settings: Lengths
 function FrameBoltLength() = 10;
 function FrameReceiverLength() = 2.5;
 function FrameBackLength() = 0.5;
-function ReceiverCouplingLength() = 1;
 function LogoTextSize() = 11/32;
 function LogoTextDepth() = 1/32;
 
@@ -41,10 +34,6 @@ function WallFrameBolt() = 0.1875;
 
 // Settings: Vitamins
 function FrameBolt() = Spec_BoltOneHalf();
-
-function CouplingBolt() = BoltSpec(COUPLING_BOLT);
-assert(CouplingBolt(), "CouplingBolt() is undefined. Unknown COUPLING_BOLT?");
-
 
 // Shorthand: Measurements
 function FrameBoltRadius(clearance=0)
@@ -93,20 +82,6 @@ module FrameBolts(length=FrameBoltLength(), debug=false, cutter=false, clearance
   }
 }
 
-module CouplingBolts(yz = [COUPLING_BOLT_Y, COUPLING_BOLT_Z], boltHead="flat", nutType=COUPLING_BOLT_NUT, extension=0.5, clearance=0.005, cutter=false, teardrop=false, debug=false) {
-                         for (Y = [-1,1])
-  translate([-ReceiverCouplingLength()-ManifoldGap(),
-             yz[0]*Y,
-             yz[1]])
-  rotate([0,90,0])
-  NutAndBolt(bolt=CouplingBolt(),
-             boltLength=ReceiverCouplingLength()+extension+ManifoldGap(2),
-             head=boltHead,
-             nut=nutType,
-             teardrop=cutter&&teardrop,
-             clearance=cutter?clearance:0);
-}
-
 // **********
 // * Shapes *
 // **********
@@ -118,22 +93,6 @@ module FrameSupport(length=1, width=(FrameBoltY()+FrameBoltRadius()+WallFrameBol
                   teardropBottom=false,
                   teardropTop=false);
 }
-
-module CouplingSupport(yz = [COUPLING_BOLT_Y, COUPLING_BOLT_Z], length=1, chamferFront=false, chamferBack=false) {
-  hull() {
-    
-    // Coupling bolt supports
-    for (Y = [-1,1])
-    translate([0,Y*yz[0],yz[1]])
-    rotate([0,90,0])
-    ChamferedCylinder(r1=0.3125, r2=1/16, h=length,
-                      chamferTop=chamferFront, chamferBottom=chamferBack,
-                      teardropTop=true, $fn=Resolution(20,40));
-    
-    children();
-  }
-}
-
 
 // ****************
 // * Printed Parts*
@@ -154,7 +113,7 @@ module FrameSpacer_print() {
   FrameSpacer();
 }
 
-module Receiver_LargeFrame(couplingBolts=false, couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z], doRender=true, debug=false) {
+module Receiver_LargeFrame(doRender=true, debug=false) {
   
   topCoverHeight = 1;
   
@@ -186,13 +145,6 @@ module Receiver_LargeFrame(couplingBolts=false, couplingBoltYZ=[COUPLING_BOLT_Y,
         FrameSupport(length=FrameReceiverLength()+FrameBackLength());
 
         ReceiverTopSegment(length=FrameReceiverLength());
-      }      
-      
-      *hull()
-      mirror([1,0,0]) {
-        
-        
-        CouplingSupport(yz=couplingBoltYZ);
       }
     }
     
@@ -201,29 +153,21 @@ module Receiver_LargeFrame(couplingBolts=false, couplingBoltYZ=[COUPLING_BOLT_Y,
     ReceiverTopSlot(length=ReceiverLength());
     
     FrameBolts(cutter=true);
-    
-    
-    if (couplingBolts)
-    CouplingBolts(yz=couplingBoltYZ, cutter=true);
   }
 }
 
-module Receiver_LargeFrame_print(couplingBolts=false, couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z]) {
+module Receiver_LargeFrame_print() {
   rotate([0,90,0])
-  Receiver_LargeFrame(couplingBolts=couplingBolts, couplingBoltYZ=couplingBoltYZ);
+  Receiver_LargeFrame();
 }
 
 // **************
 // * Assemblies *
 // **************
-module Receiver_LargeFrameAssembly(length=FrameBoltLength(), couplingBolts=false, couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z], couplingBoltLength=0.5, debug=_CUTAWAY_RECEIVER, alpha=1) {
-  Receiver_LargeFrame(couplingBoltYZ=couplingBoltYZ, debug=debug);
+module Receiver_LargeFrameAssembly(length=FrameBoltLength(), frameBolts=true, debug=_CUTAWAY_RECEIVER, alpha=1) {
+  Receiver_LargeFrame(debug=debug);
   
-  if (couplingBolts)
-  color("Silver")
-  render()
-  CouplingBolts(yz=couplingBoltYZ, extension=couplingBoltLength);
-                       
+  if (frameBolts)
   FrameBolts(length=length, debug=debug, alpha=alpha);
 }
 
@@ -233,11 +177,10 @@ if ($preview) {
   TensionBolts();
 
   if (_SHOW_RECEIVER) {
-  Receiver_LargeFrameAssembly(couplingBoltYZ=[2,-0.5]);
-    
+    Receiver_LargeFrameAssembly();
     ReceiverMlokBolts();
   }
 } else {
   scale(25.4)
-  Receiver_LargeFrame_print(couplingBolts=false);
+  Receiver_LargeFrame_print();
 }

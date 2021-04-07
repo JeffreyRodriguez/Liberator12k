@@ -262,7 +262,6 @@ module BreakActionReceiverFront(debug=false, alpha=1) {
     translate([-ReceiverFrontLength(),0,0])
     union() {
       FrameSupport(length=ReceiverFrontLength());
-      CouplingSupport(length=ReceiverFrontLength());
       
       hull() {
 

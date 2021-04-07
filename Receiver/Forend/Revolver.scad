@@ -90,10 +90,6 @@ _ALPHA_STOCK = 1;              // [0:0.1:1]
 /* [Vitamins] */
 SPINDLE_DIAMETER = 0.31251;
 
-COUPLING_BOLT_ENABLED = false;
-COUPLING_BOLT_Z = -0.40001; //-0.8750;
-COUPLING_BOLT_Y =  1.875001; //1.1250;
-
 FRAME_BOLT_LENGTH = 10;
 
 GP_BOLT = "#8-32"; // ["M4", "#8-32"]
@@ -430,12 +426,6 @@ module Revolver_ReceiverFront(debug=_CUTAWAY_RECEIVER_FRONT, alpha=_ALPHA_RECEIV
       hull() {
         FrameSupport(length=length, extraBottom=FrameBottomZ()+abs(CylinderZ()));
         
-        // Coupling bolt supports
-        
-        if (COUPLING_BOLT_ENABLED)
-        CouplingSupport(yz=[COUPLING_BOLT_Y, COUPLING_BOLT_Z],
-                        length=length);
-        
         mirror([1,0,0])
         ReceiverTopSegment(length=length);
       }
@@ -448,11 +438,6 @@ module Revolver_ReceiverFront(debug=_CUTAWAY_RECEIVER_FRONT, alpha=_ALPHA_RECEIV
     }
     
     FrameBolts(cutter=true);
-    
-    if (COUPLING_BOLT_ENABLED)
-    CouplingBolts(yz=[COUPLING_BOLT_Y, COUPLING_BOLT_Z],
-                  extension=ReceiverFrontLength(),
-                  boltHead="flat", cutter=true);
 
     Revolver_RecoilPlate(cutter=true);
     
@@ -511,10 +496,6 @@ module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND, $
         translate([ForendMinX(), 0, 0])
         mirror([1,0,0])
         ReceiverTopSegment(length=Revolver_BarrelSupportLength());
-        
-        translate([ForendMinX(),0,0])
-        CouplingSupport(yz=[BarrelRadius()+0.375, 0],
-                        length=Revolver_BarrelSupportLength(), chamferFront=true);
       }
 
       // Around the barrel
@@ -629,28 +610,14 @@ module Revolver_FrameSpacer(length=ForendMinX(), debug=false, alpha=_ALPHA_FOREN
       // Main support
       FrameSupport(length=length);
       
-      // Match the coupling supports for the blast shield
-      *translate([0,0,0])
-      CouplingSupport(yz=[BarrelRadius()+0.375, 0],
-                      length=length);
-      
       // Rear ears
       FrameSupport(length=ManifoldGap(), extraBottom=0.5);
-      
-      if (COUPLING_BOLT_ENABLED)
-      CouplingSupport(yz=[COUPLING_BOLT_Y, COUPLING_BOLT_Z],
-                      length=length);
     
       mirror([1,0,0])
       ReceiverTopSegment(length=length);
     }
 
     FrameBolts(cutter=true);
-    
-    if (COUPLING_BOLT_ENABLED)
-    CouplingBolts(yz=[COUPLING_BOLT_Y, COUPLING_BOLT_Z],
-                   extension=ReceiverFrontLength(),
-                  boltHead="flat", cutter=true);
     
     ActionRod(cutter=true);
     
@@ -927,9 +894,6 @@ module RevolverAssembly(stock=true) {
       
       Receiver_LargeFrameAssembly(
         length=FRAME_BOLT_LENGTH,
-        couplingBolts=COUPLING_BOLT_ENABLED,
-        couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z],
-        couplingBoltLength=ReceiverFrontLength(),
         debug=_CUTAWAY_RECEIVER);
     }
 
@@ -973,7 +937,7 @@ if ($preview) {
   
   if (_RENDER == "Receiver_LargeFrame")      
   rotate([0,90,0])
-  Receiver_LargeFrame(couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z]);
+  Receiver_LargeFrame();
 
   if (_RENDER == "Revolver_ReceiverFront")
   Revolver_ReceiverFront_print();
