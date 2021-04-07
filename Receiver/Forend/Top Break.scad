@@ -418,7 +418,8 @@ module ReceiverFront(debug=false, alpha=1) {
     translate([-ReceiverFrontLength(),0,0])
     union() {
       hull() {
-        ReceiverTopSegment(length=ManifoldGap());
+        mirror([1,0,0])
+        ReceiverTopSegment(length=1/16);
         
         FrameSupport(length=ReceiverFrontLength());
       }
