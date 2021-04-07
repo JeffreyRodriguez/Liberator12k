@@ -64,7 +64,6 @@ _ALPHA_FOREND = 1;  // [0:0.1:1]
 _ALPHA_LATCH = 1; // [0:0.1:1]
 _ALPHA_COLLAR = 1; // [0:0.1:1]
 _ALPHA_RECEIVER_TUBE = 1; // [0:0.1:1]
-_ALPHA_RECEIVER_COUPLING = 1;  // [0:0.1:1]
 _ALPHA_EXTRACTOR = 1; // [0:0.1:1]
 _ALPHA_RECOIL_PLATE_HOUSING=1; // [0:0.1:1]
 
@@ -74,9 +73,6 @@ GP_BOLT_CLEARANCE = 0.015;
 
 BARREL_SET_SCREW = "#8-32"; // ["M4", "#8-32"]
 BARREL_SET_SCREW_CLEARANCE = -0.05;
-
-COUPLING_BOLT_Z = -1.0001; //-0.8750;
-COUPLING_BOLT_Y =  1.25; //1.1250;
 
 /* [Barrel] */
 BARREL_OUTSIDE_DIAMETER = 1.0001;
@@ -423,9 +419,6 @@ module ReceiverFront(debug=false, alpha=1) {
         
         FrameSupport(length=ReceiverFrontLength());
       }
-      
-      *CouplingSupport(yz=[COUPLING_BOLT_Y, COUPLING_BOLT_Z],
-                      length=ReceiverFrontLength());
 
       // Recoil plate backing
       translate([0,-(RecoilPlateWidth()/2)-0.25,RecoilPlateTopZ()])
@@ -435,23 +428,14 @@ module ReceiverFront(debug=false, alpha=1) {
                      RecoilPlateHeight()+0.25],
                     r=1/16);
     }
-
-    translate([-ReceiverFrontLength(),0,0])
-    *CouplingBolts(yz=[COUPLING_BOLT_Y, COUPLING_BOLT_Z],
-                  extension=ReceiverFrontLength(),
-                  boltHead="none", cutter=true);
     
     FrameBolts(cutter=true);
 
     translate([-ReceiverFrontLength(),0,0]) {
       RecoilPlate(cutter=true);
-      
       RecoilPlateBolts(cutter=true);
-      
       FiringPin(cutter=true);
       FiringPinSpring(cutter=true);
-      
-      *ActionRod(cutter=true);
     }
   }
 }
@@ -486,10 +470,7 @@ module ReceiverForend(clearance=0.005, debug=false, alpha=1) {
   render() DebugHalf(enabled=debug)
   difference() {
     union() {
-        FrameSupport(length=ForendLength());
-        *CouplingSupport(yz=[COUPLING_BOLT_Y, COUPLING_BOLT_Z],
-                        length=ForendLength());
-      
+      FrameSupport(length=ForendLength());
       
       hull() {
         translate([PivotX(), 0, PivotZ()])
@@ -560,10 +541,6 @@ module ReceiverForend(clearance=0.005, debug=false, alpha=1) {
     }
 
     FrameBolts(cutter=true);
-    
-    *CouplingBolts(yz=[COUPLING_BOLT_Y, COUPLING_BOLT_Z],
-                  extension=ForendLength(),
-                  boltHead="none", cutter=true);
      
     Extractor(cutter=true);
 
@@ -854,9 +831,6 @@ if ($preview) {
       TensionBolts();
       
       Receiver_LargeFrameAssembly(
-        couplingBolts=false,
-        couplingBoltYZ=[COUPLING_BOLT_Y, COUPLING_BOLT_Z],
-        couplingBoltLength=ForendLength(),
         length=FRAME_BOLT_LENGTH,
         debug=_CUTAWAY_RECEIVER);
     }
