@@ -289,10 +289,10 @@ module RecoilPlate(cutter=false, debug=false, alpha=1, clearance=0.005) {
   color("LightSteelBlue", alpha)
   RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
-    translate([0.5-clear, -(RecoilPlateWidth()/2)-clear, RecoilPlateTopZ()+clear])
+    translate([0.5+clear, -(RecoilPlateWidth()/2)-clear, RecoilPlateTopZ()+clear])
     mirror([0,0,1])
     mirror([1,0,0])
-    cube([RecoilPlateLength()+(cutter?(1/8):0)+clear,
+    cube([RecoilPlateLength()+clear2,
           RecoilPlateWidth()+clear2,
           RecoilPlateHeight()+clear2]);
 
