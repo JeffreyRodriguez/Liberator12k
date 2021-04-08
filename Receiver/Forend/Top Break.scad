@@ -490,19 +490,6 @@ module ReceiverForend(clearance=0.005, debug=false, alpha=1) {
       }
     }
     
-    // Scallop the sides
-    *for (M = [0,1]) mirror([0,M,0])
-    translate([0,1.75,0])
-    hull() {
-      translate([0.5,0,0])
-      scale([1.25,1,1.25])
-      sphere(r=0.5);
-      
-      translate([PivotX()-0.25,0,0])
-      scale([1.25,1,1.25])
-      sphere(r=0.5);
-    }
-    
     // Allow the barrel to be installed
     translate([PivotX(), 0, PivotZ()])
     rotate([0,180+PivotAngleBack(),0]) rotate([90,0,0])
@@ -539,6 +526,12 @@ module ReceiverForend(clearance=0.005, debug=false, alpha=1) {
       Barrel(length=ForendLength(), cutter=true);
       BarrelCollar(rearExtension=2, cutter=true);
     }
+    
+    // Printability allowance
+    translate([ForendLength(),0,0])
+    rotate([0,-90,0])
+    HoleChamfer(r1=BarrelRadius(BARREL_CLEARANCE), r2=1/4,
+                teardrop=true, $fn=60);
 
     FrameBolts(cutter=true);
      
