@@ -25,6 +25,7 @@ _RENDER = "Choose a part!"; // ["Choose a part!", "Stock", "StockButtonHousing",
 /* [Assembly] */
 _SHOW_RECEIVER = true;
 _SHOW_STOCK = true;
+_SHOW_STOCK_LATCH = true;
 _SHOW_BUTTPAD = true;
 _SHOW_STOCK_PLUG = true;
 _SHOW_BUTTPAD_BOLT = true;
@@ -413,10 +414,11 @@ module StockAssembly(debug=_CUTAWAY_ASSEMBLY, debugStock=_CUTAWAY_STOCK, alphaSt
   if (_SHOW_BUTTPAD_BOLT)
   ButtpadBolt();
   
-  StockLatchPivotBolts();
-  
-  StockButtons(angle=8*sin(180*$t));
-  StockLatchHousing();
+  if (_SHOW_STOCK_LATCH) {
+    StockLatchPivotBolts();
+    StockButtons(angle=8*sin(180*$t));
+    StockLatchHousing();
+  }
   
   if (_SHOW_STOCK)
   Stock(alpha=alphaStock, debug=(debug || debugStock));
