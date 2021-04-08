@@ -271,7 +271,7 @@ module StockLatchHousing(length=0.5, cutter=false, clearance=0.003) {
     StockLatchPivotBolts(cutter=true);
   }
 }
-module StockPlug(length=0.5, extension=0.375, chamferRadius=1/16, clearance=0.005) {
+module StockPlug(length=0.5, extension=0.375, chamferRadius=1/16, clearance=0.008) {
   height = 1;
   width = ReceiverBottomSlotWidth()-(clearance*2);
   tabWidth = StockPlugSlotWidth()-(clearance*2);
