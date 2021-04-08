@@ -328,15 +328,15 @@ module ChargingHandle(clearance=0.005) {
   
   width = ReceiverTopSlotHorizontalWidth();
   
-  rearExtension = ReceiverTopSlotHorizontalWidth();
+  rearExtension = 1.5;
   bottomZ = ReceiverTopSlotHeight()
           - ReceiverTopSlotHorizontalHeight();
   prongWidth = (ReceiverTopSlotHorizontalWidth()-ReceiverTopSlotWidth()-clear2)/2;
-  fingerHoleDiameter = ReceiverTopSlotHorizontalWidth()-0.25;
+  fingerHoleDiameter = rearExtension-0.375;
   fingerHoleRadius = fingerHoleDiameter/2;
   fingerHoleHeight = min(ReceiverTopZ()
                    - ReceiverTopSlotHeight()
-                   + ReceiverTopSlotHorizontalHeight(), 0.375);
+                   + ReceiverTopSlotHorizontalHeight(), 0.625);
   fingerHoleX = -ReceiverLength()-(rearExtension/2);
   rearLength = (rearExtension/2) + ReceiverLength();
   
@@ -352,9 +352,9 @@ module ChargingHandle(clearance=0.005) {
       
       // Extended finger section
       translate([fingerHoleX,0,bottomZ+clear])
-      ChamferedCylinder(r1=ReceiverTopSlotHorizontalWidth()/2,
+      ChamferedCylinder(r1=rearExtension/2,
                         r2=1/32,
-                        h=fingerHoleHeight-clear2);
+                        h=fingerHoleHeight-clear2, $fn=50);
     }
     
     hull() for (Z = [0,0.25])
@@ -368,7 +368,8 @@ module ChargingHandle(clearance=0.005) {
                           corners=false, center=false, chamferRadius=1/32);
     
     translate([fingerHoleX,0,bottomZ+clear])
-    ChamferedCircularHole(r1=fingerHoleRadius, r2=1/16, h=fingerHoleHeight-clear2);
+    ChamferedCircularHole(r1=fingerHoleRadius, r2=1/16,
+                          h=fingerHoleHeight-clear2, $fn=50);
     
     ChargingHandleSpringGuide(cutter=true);
   }
