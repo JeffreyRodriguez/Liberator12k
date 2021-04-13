@@ -13,6 +13,9 @@ use <../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 
 use <Lower/Mount.scad>;
 
+use <Lower/Lower.scad>;
+use <Lower/Trigger.scad>;
+
 use <Frame.scad>;
 use <Receiver.scad>;
 
@@ -433,6 +436,13 @@ module StockAssembly(debug=_CUTAWAY_ASSEMBLY, debugStock=_CUTAWAY_STOCK, alphaSt
 if ($preview) {
   if (_SHOW_RECEIVER)
   ReceiverAssembly();
+  
+  LowerMount();
+
+  translate([-LowerMaxX(),0,LowerOffsetZ()])
+  Lower(showTrigger=true,
+        showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
+        searLength=SearLength()+abs(LowerOffsetZ())+SearTravel()-(0.25/2));
   
   StockAssembly();
 } else scale(25.4) {
