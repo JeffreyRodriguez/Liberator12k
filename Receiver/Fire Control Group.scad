@@ -59,6 +59,9 @@ _CUTAWAY_FIRING_PIN_SPRING = false;
 HAMMER_BOLT = "1/4\"-20"; // ["M6", "1/4\"-20"] 
 HAMMER_BOLT_CLEARANCE = 0.015;
 
+CHARGING_HANDLE_BOLT = "#8-32"; // ["M4", "#8-32"]
+CHARGING_HANDLE_BOLT_CLEARANCE = 0.015;
+
 ACTION_ROD_BOLT = "#8-32"; // ["M4", "#8-32"]
 ACTION_ROD_BOLT_CLEARANCE = 0.015;
 
@@ -93,6 +96,9 @@ function RecoilPlateBoltOffsetY() = 0.375;
 // Settings: Vitamins
 function HammerBolt() = BoltSpec(HAMMER_BOLT);
 assert(HammerBolt(), "HammerBolt() is undefined. Unknown HAMMER_BOLT?");
+
+function ChargingHandleBolt() = BoltSpec(CHARGING_HANDLE_BOLT);
+assert(ChargingHandleBolt(), "HammerBolt() is undefined. Unknown HAMMER_BOLT?");
 
 function DisconnectorTripBolt() = BoltSpec(ACTION_ROD_BOLT);
 assert(DisconnectorTripBolt(), "DisconnectorTripBolt() is undefined. Unknown ACTION_ROD_BOLT?");
@@ -301,6 +307,17 @@ module RecoilPlate(cutter=false, debug=false, alpha=1, clearance=0.005) {
   }
 }
 
+module ChargingHandleBolt(bolt=ChargingHandleBolt(), boltLength=0.25, cutter=false, clearance=CHARGING_HANDLE_BOLT_CLEARANCE) {
+  color("Silver")
+  RenderIf(!cutter)
+  translate([-0.75,-0.25,ReceiverTopSlotHeight()])
+  mirror([0,0,1])
+  NutAndBolt(bolt=bolt, boltLength=boltLength+ManifoldGap(2),
+        head="socket", nut="heatset",
+        clearance=cutter?clearance:0);
+}
+
+
 module ChargingHandleSpring(cutter=false, clearance=0.002) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
@@ -372,6 +389,8 @@ module ChargingHandle(clearance=0.005) {
                           h=fingerHoleHeight-clear2, $fn=50);
     
     ChargingHandleSpringGuide(cutter=true);
+    
+    ChargingHandleBolt(cutter=true);
   }
 }
 
@@ -445,8 +464,8 @@ module Hammer(cutter=false, clearance=UnitsImperial(0.01), debug=_CUTAWAY_HAMMER
       
       // Charging Tip
       hull()
-      for (XYZ = [[0.25, 0, ActionRodZ()+0.125],
-                  [ActionRodZ()+0.125, 0, 0.25]])
+      for (XYZ = [[0.125, 0, ActionRodZ()+0.125],
+                  [ActionRodZ(), 0, 0.25]])
       translate([hammerCockedX, -(ReceiverTopSlotWidth()/2)+clearance, 0])
       mirror([1,0,0])
       ChamferedCube([XYZ.x, ReceiverTopSlotWidth()-(clearance*2), XYZ.z],
@@ -707,8 +726,10 @@ module SimpleFireControlAssembly(actionRod=_SHOW_ACTION_ROD, recoilPlate=_SHOW_R
   ChargingHandleSpring();
 
   translate([SubAnimate(ANIMATION_STEP_CHARGE, start=hammerChargeStart)*-(hammerTravelX+hammerOvertravelX),0,0])
-  translate([SubAnimate(ANIMATION_STEP_CHARGER_RESET)*(hammerOvertravelX),0,0])
-  ChargingHandle();
+  translate([SubAnimate(ANIMATION_STEP_CHARGER_RESET)*(hammerTravelX+hammerOvertravelX),0,0]) {
+    ChargingHandle();
+    ChargingHandleBolt();
+  }
 
   if (actionRod)
   translate([-chargerTravel*chargeAF,0,0]) {
