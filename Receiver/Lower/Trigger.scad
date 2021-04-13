@@ -44,8 +44,8 @@ module Sear(animationFactor=TriggerAnimationFactor(), length=SearLength(), cutte
   
   color("Silver")
   RenderIf(!cutter)
+  translate([0,0,-SearTravel()*animationFactor])
   difference() {
-    translate([0,0,-SearTravel()*animationFactor])
     translate([0,0,SearPinOffsetZ()-SearBottomOffset()])
     SquareRod(rod=SearRod(), length=length);
     
