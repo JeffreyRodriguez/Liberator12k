@@ -19,7 +19,7 @@ function SearPinRod() = Spec_RodThreeThirtysecondInch();
 function SearRadius(clearance)   = RodRadius(SearRod(), clearance);
 function SearDiameter(clearance) = RodDiameter(SearRod(), clearance);
 
-function SearSpringCompressed() = 0.4;
+function SearSpringCompressed() = 0.3;
 
 function SearPinOffsetZ() = -0.25-RodRadius(SearPinRod());
 function SearBottomOffset() = 0.25;
