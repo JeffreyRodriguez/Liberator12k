@@ -19,6 +19,7 @@ use <Trigger.scad>;
 _RENDER = "Assembly"; // ["Assembly", "LowerMount_Front", "LowerMount_Rear"]
 
 _CUTAWAY_RECEIVER = false;
+_SHOW_RECEIVER = true;
 
 // Settings: Positions
 function LowerOffsetZ() = ReceiverBottomZ();
@@ -137,6 +138,7 @@ rotate([90,0,0])
 Sear(length=SearLength()+abs(LowerOffsetZ()));
 
 if (_RENDER == "Assembly") {
+  if (_SHOW_RECEIVER)
   ReceiverAssembly(debug=_CUTAWAY_RECEIVER);
   
   LowerMount();
