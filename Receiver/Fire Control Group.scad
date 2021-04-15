@@ -87,7 +87,7 @@ FIRING_PIN_BODY_LENGTH = 1;
 function RecoilPlateLength() = 1/4;
 function RecoilPlateWidth() = 2;
 function RecoilPlateHeight() = 2.25;
-function RecoilPlateTopZ() = 0.75;
+function RecoilPlateTopZ() = 0.625;
 
 function RecoilPlateBolt() = BoltSpec(RECOIL_PLATE_BOLT);
 function RecoilPlateBoltOffsetY() = 0.375;
