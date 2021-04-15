@@ -24,8 +24,8 @@ use <Receiver.scad>;
 
 /* [Print] */
 
-// First Render the part (F6) then Export to STL (F7)
-_RENDER = "Choose a part!"; // ["Choose a part!", "FireControlHousing", "ChargingHandle", "Disconnector", "Hammer", "HammerTail", "RecoilPlateJig"]
+// Select a part, Render (F6), then Export to STL (F7)
+_RENDER = ""; // ["", "FireControlHousing", "ChargingHandle", "Disconnector", "Hammer", "HammerTail", "RecoilPlateJig"]
 
 /* [Assembly] */
 _SHOW_FIRE_CONTROL_HOUSING = true;
@@ -35,17 +35,14 @@ _SHOW_ACTION_ROD = true;
 _SHOW_FIRING_PIN = true;
 _SHOW_RECOIL_PLATE = true;
 _SHOW_RECOIL_PLATE_BOLTS = true;
-
 _SHOW_RECEIVER      = true;
 _SHOW_LOWER         = true;
 _SHOW_LOWER_LEFT    = false;
 
-/* [Transparency] */
 _ALPHA_FIRING_PIN_HOUSING = 1; // [0:0.1:1]
 _ALPHA_RECOIL_PLATE = 0.5; // [0:0.1:1]
 _ALPHA_HAMMER = 0.5; // [0:0.1:1]
 
-/* [Cutaways] */
 _CUTAWAY_FIRING_PIN_HOUSING = false;
 _CUTAWAY_DISCONNECTOR = false;
 _CUTAWAY_HAMMER = false;
@@ -55,7 +52,7 @@ _CUTAWAY_RECOIL_PLATE = false;
 _CUTAWAY_FIRING_PIN = false;
 _CUTAWAY_FIRING_PIN_SPRING = false;
 
-/* [Screws] */
+/* [Vitamins] */
 HAMMER_BOLT = "1/4\"-20"; // ["M6", "1/4\"-20"] 
 HAMMER_BOLT_CLEARANCE = 0.015;
 

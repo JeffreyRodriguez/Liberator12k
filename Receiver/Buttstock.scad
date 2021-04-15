@@ -22,8 +22,8 @@ use <Receiver.scad>;
 
 /* [Print] */
 
-// First Render the part (F6) then Export to STL (F7)
-_RENDER = "Choose a part!"; // ["Choose a part!", "Stock", "StockButtonHousing", "StockButton_Left", "StockButton_Right", "StockPlug", "Buttpad"]
+// Select a part, Render (F6), then Export to STL (F7)
+_RENDER = ""; // ["", "Stock", "StockButtonHousing", "StockButton_Left", "StockButton_Right", "StockPlug", "Buttpad"]
 
 /* [Assembly] */
 _SHOW_RECEIVER = true;
@@ -33,16 +33,12 @@ _SHOW_BUTTPAD = true;
 _SHOW_STOCK_PLUG = true;
 _SHOW_BUTTPAD_BOLT = true;
 
-
-/* [Cutaway] */
-_CUTAWAY_STOCK = false;
-_CUTAWAY_BUTTPAD = false;
-
-_CUTAWAY_ASSEMBLY = false;
-
-/* [Transparency] */
 _ALPHA_STOCK = 1; // [0:0.1:1]
 _ALPHA_BUTTPAD = 1; // [0:0.1:1]
+
+_CUTAWAY_STOCK = false;
+_CUTAWAY_BUTTPAD = false;
+_CUTAWAY_ASSEMBLY = false;
 
 /* [Vitamins] */
 BUTTPAD_BOLT = "1/4\"-20"; // ["#8-32", "1/4\"-20","M4", "M6"]

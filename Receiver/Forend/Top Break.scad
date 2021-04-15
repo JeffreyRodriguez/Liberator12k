@@ -35,9 +35,10 @@ use <../Fire Control Group.scad>;
 
 /* [Print] */
 
-// First Render the part (F6) then Export to STL (F7)
-_RENDER = "Choose a part!"; // ["Choose a part!", "ReceiverFront", "ReceiverForend", "BarrelCollar", "Extractor", "Latch", "Foregrip"]
+// Select a part, Render it (F6), then Export to STL (F7)
+_RENDER = ""; // ["", "ReceiverFront", "ReceiverForend", "BarrelCollar", "Extractor", "Latch", "Foregrip"]
 
+/* [Assembly] */
 _SHOW_BARREL = true;
 _SHOW_FOREND = true;
 _SHOW_FRAME = true;
@@ -51,21 +52,18 @@ _SHOW_LOWER = true;
 _SHOW_LOWER_MOUNT = true;
 _SHOW_LATCH = true;
 
-/* [Cutaway] */
-_CUTAWAY_RECEIVER = false;
-_CUTAWAY_FOREND = false;
-_CUTAWAY_COLLAR = false;
-_CUTAWAY_EXTRACTOR = false;
-_CUTAWAY_LATCH = false;
-
-
-/* [Transparency] */
 _ALPHA_FOREND = 1;  // [0:0.1:1]
 _ALPHA_LATCH = 1; // [0:0.1:1]
 _ALPHA_COLLAR = 1; // [0:0.1:1]
 _ALPHA_RECEIVER_TUBE = 1; // [0:0.1:1]
 _ALPHA_EXTRACTOR = 1; // [0:0.1:1]
 _ALPHA_RECOIL_PLATE_HOUSING=1; // [0:0.1:1]
+
+_CUTAWAY_RECEIVER = false;
+_CUTAWAY_FOREND = false;
+_CUTAWAY_COLLAR = false;
+_CUTAWAY_EXTRACTOR = false;
+_CUTAWAY_LATCH = false;
 
 /* [Vitamins] */
 GP_BOLT = "#8-32"; // ["M4", "#8-32"]
@@ -74,7 +72,6 @@ GP_BOLT_CLEARANCE = 0.015;
 BARREL_SET_SCREW = "#8-32"; // ["M4", "#8-32"]
 BARREL_SET_SCREW_CLEARANCE = -0.05;
 
-/* [Barrel] */
 BARREL_OUTSIDE_DIAMETER = 1.0001;
 BARREL_INSIDE_DIAMETER = 0.813;
 BARREL_CLEARANCE = 0.005;
@@ -513,6 +510,7 @@ module ReceiverForend(clearance=0.005, debug=false, alpha=1) {
                         r2=1/16, $fn=100);
       PivotInnerBearing(cutter=true);
     }
+    
     
     // Cut a path through the full range of motion
     hull() for (A = [0, PivotAngle()])

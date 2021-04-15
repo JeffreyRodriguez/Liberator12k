@@ -15,25 +15,43 @@ use <../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 
 use <Receiver.scad>;
 
+/* [Print] */
+
+// Select a part, Render (F6), then Export to STL (F7)
+_RENDER = "Receiver_Frame"; // ["Reciever_Frame"]
+
+/* [Assembly] */
 _SHOW_RECEIVER = true;
 _SHOW_RECEIVER_RODS = true;
 
 _CUTAWAY_RECEIVER = false;
 
+/* [Vitamins] */
+FRAME_BOLT = "1/2\"-13"; // ["1/2\"-13"]
+FRAME_BOLT_Y = 1.25;
+FRAME_BOLT_Z = 0.875;
+
+
+/* [Fine Tuning] */
+FRAME_RECEIVER_LENGTH = 3;
 FRAME_SPACER_LENGTH = 4.5;
+FRAME_WALL = 0.18751;
+
+/* [Branding] */
+FRAME_BRANDING_TEXT = "#Liberator12k";
 
 // Settings: Lengths
 function FrameBoltLength() = 10;
-function FrameReceiverLength() = 2.5;
 function FrameBackLength() = 0.5;
+function FrameReceiverLength() = FRAME_RECEIVER_LENGTH;
 function LogoTextSize() = 11/32;
 function LogoTextDepth() = 1/32;
 
 // Settings: Walls
-function WallFrameBolt() = 0.1875;
+function WallFrameBolt() = FRAME_WALL;
 
 // Settings: Vitamins
-function FrameBolt() = Spec_BoltOneHalf();
+function FrameBolt() = BoltSpec(FRAME_BOLT);
 
 // Shorthand: Measurements
 function FrameBoltRadius(clearance=0)
@@ -43,8 +61,8 @@ function FrameBoltDiameter(clearance=0)
     = BoltDiameter(FrameBolt(), clearance);
 
 // Settings: Positions
-function FrameBoltZ() = 7/8;
-function FrameBoltY() = 1.25;
+function FrameBoltY() = FRAME_BOLT_Y;
+function FrameBoltZ() = FRAME_BOLT_Z;
 function FrameWidth() = (FrameBoltY()
                        + FrameBoltRadius()
                        + WallFrameBolt()) * 2;

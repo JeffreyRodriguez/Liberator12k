@@ -16,27 +16,21 @@ use <../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 use <../Vitamins/Pipe.scad>;
 use <../Vitamins/Rod.scad>;
 
-/* [What to Render] */
+/* [Print] */
 
-// Configure settings below, then choose a part to render. Render that part (F6) then export STL (F7). Assembly is not for printing.
-_RENDER = "Receiver Assembly"; // ["Receiver Assembly", "Receiver", "ReceiverBackSegment"]
+// Select a part, Render (F6), then Export to STL (F7)
+_RENDER = ""; // ["", "Receiver", "ReceiverBackSegment"]
 
-/* [Debugging] */
+/* [Assembly] */
 _SHOW_RECEIVER            = true;
 _SHOW_RECEIVER_RODS       = true;
 _SHOW_RECEIVER_BACK       = true;
-_SHOW_RECEIVER_STOCK      = true;
-_SHOW_RECEIVER_SIDEPLATES = true;
 
-_RECEIVER_ALPHA = 1; // [0:0.1:1]
+_ALPHA_RECEIVER = 1; // [0:0.1:1]
 
-// Cut assembly view in half
-_DEBUG_ASSEMBLY = false;
+_CUTAWAY_RECEIVER = false;
 
-/* [Receiver Options] */
-RECEIVER_TUBE_OD =  1.7501;
-RECEIVER_OD      = 2.0001;
-RECEIVER_ID      = 1.2501;
+/* [Vitamins] */
 
 // Threaded rods that extend through the receiver and stock.
 TENSION_BOLT           = "#8-32";   // ["M4", "#8-32", "#10-24", "1/4\"-20"]
@@ -76,16 +70,15 @@ function ReceiverSlotClearance() = 0.005;
 
 
 // Settings: Diameters
-function ReceiverOD()     = RECEIVER_OD;
+function ReceiverOD()     = 2;
 function ReceiverOR()     = ReceiverOD()/2;
-function ReceiverID()     = RECEIVER_ID;
+function ReceiverID()     = 1.25;
 function ReceiverIR()     = ReceiverID()/2;
 
 // Settings: Walls
 function WallTensionRod() = 0.25;
 
 // Settings: Positions
-
 function TensionBoltLength() = TENSION_BOLT_LENGTH;
 
 function TensionRodBottomZ() = -7/8;
@@ -289,7 +282,7 @@ module ReceiverAssembly(debug=false) {
   TensionBolts(debug=debug);
 
   if (_SHOW_RECEIVER) {
-    Receiver(alpha=_RECEIVER_ALPHA, debug=debug)
+    Receiver(alpha=_ALPHA_RECEIVER, debug=debug)
     children();
     
     ReceiverMlokBolts();
@@ -297,14 +290,12 @@ module ReceiverAssembly(debug=false) {
 }
 
 
-if (_RENDER == "Receiver Assembly") {
-  ReceiverAssembly(debug=_DEBUG_ASSEMBLY);
+if ($preview) {
+  ReceiverAssembly(debug=_CUTAWAY_RECEIVER);
   
   if (_SHOW_RECEIVER_BACK)
   ReceiverBackSegment();
-}
-  
-scale(25.4) {
+} else scale(25.4) {
   
   if (_RENDER == "Receiver")
   rotate([0,90,0])

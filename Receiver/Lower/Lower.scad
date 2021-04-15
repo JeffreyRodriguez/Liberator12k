@@ -17,17 +17,20 @@ use <Lugs.scad>;
 use <Trigger.scad>;
 
 
-/* [What to Render] */
+/* [Print] */
 
-// Assembly is not for printing.
-_RENDER = "Assembly"; // ["Assembly", "LowerLeft", "LowerRight", "LowerMiddle", "TriggerLeft", "TriggerRight", "TriggerMiddle"]
+// Select a part, Render (F6), then Export to STL (F7)
+_RENDER = ""; // ["", "LowerLeft", "LowerRight", "LowerMiddle", "TriggerLeft", "TriggerRight", "TriggerMiddle"]
 
+/* [Assembly] */
 _SHOW_LOWER_LEFT = true;
 _SHOW_LOWER_RIGHT = true;
 _SHOW_LOWER_MIDDLE = true;
 _SHOW_TRIGGER = true;
 
-/* [Screws] */
+_ALPHA_LOWER = 1;  // [0:0.1:1]
+
+/* [Vitamins] */
 LOWER_BOLT = "#8-32"; // ["M4", "#8-32"]
 LOWER_BOLT_CLEARANCE = 0.015;
 LOWER_BOLT_HEAD = "flat"; // ["socket", "flat"]
@@ -410,7 +413,7 @@ module Lower(showReceiverLugs=false, showReceiverLugBolts=false,
                   showLeft=showLeft, showRight=showRight, alpha=alpha);
 }
 
-if (_RENDER == "Assembly") {
+if ($preview) {
 
   AnimateSpin()
   Lower(showReceiverLugs=true, showReceiverLugBolts=true,
@@ -421,10 +424,8 @@ if (_RENDER == "Assembly") {
         showLeft=_SHOW_LOWER_LEFT,
         showMiddle=_SHOW_LOWER_MIDDLE,
         showRight=_SHOW_LOWER_RIGHT,
-        alpha=1);
-}
-
-scale(25.4) {
+        alpha=_ALPHA_LOWER);
+} else scale(25.4) {
   if (_RENDER == "LowerLeft")
     LowerLeft_print();
 

@@ -41,8 +41,8 @@ use <../Fire Control Group.scad>;
 
 /* [Print] */
 
-// First Render the part (F6) then Export to STL (F7)
-_RENDER = "Choose a part!"; // ["Choose a part!", "Receiver_LargeFrame", "Revolver_ReceiverFront", "Revolver_FrameSpacer", "Foregrip", "Revolver_CylinderCore", "Revolver_CylinderShell", "Revolver_BarrelSupport", "Revolver_ForendSpindleToggleLinkage", "Revolver_ForendSpindleToggleHandle", "Revolver_Projection_Cylinder", "Revolver_Projection_CylinderCore", "Revolver_Projection_BlastPlate", "Revolver_Projection_RecoilPlate"]
+// Select a part, Render (F6), then Export to STL (F7)
+_RENDER = ""; // ["", "Receiver_LargeFrame", "Revolver_ReceiverFront", "Revolver_FrameSpacer", "Foregrip", "Revolver_CylinderCore", "Revolver_CylinderShell", "Revolver_BarrelSupport", "Revolver_ForendSpindleToggleLinkage", "Revolver_ForendSpindleToggleHandle", "Revolver_Projection_Cylinder", "Revolver_Projection_CylinderCore", "Revolver_Projection_BlastPlate", "Revolver_Projection_RecoilPlate"]
 
 /* [Assembly] */
 _SHOW_RECEIVER = true;
@@ -62,7 +62,17 @@ _SHOW_BLAST_PLATE = true;
 _SHOW_SHIELD = true;
 _SHOW_SPINDLE = true;
 
-/* [Cutaway] */
+_ALPHA_BARREL_SUPPORT = 1;     // [0:0.1:1]
+_ALPHA_CYLINDER = 1;           // [0:0.1:1]
+_ALPHA_FOREND = 1;             // [0:0.1:1]
+_ALPHA_RECEIVER_TUBE = 1;      // [0:0.1:1]
+_ALPHA_RECEIVER_COUPLING = 1;  // [0:0.1:1]
+_ALPHA_RECEIVER_FRONT = 1;     // [0:0.1:1]
+_ALPHA_RECOIL_PLATE_HOUSING=1; // [0:0.1:1]
+_ALPHA_SPINDLE = 1;            // [0:0.1:1]
+_ALPHA_FCG = 1;                // [0:0.1:1]
+_ALPHA_STOCK = 1;              // [0:0.1:1]
+
 _CUTAWAY_RECOIL_PLATE = false;
 _CUTAWAY_SHIELD = false;
 _CUTAWAY_BARREL_SUPPORT = false;
@@ -74,18 +84,6 @@ _CUTAWAY_FCG = false;
 _CUTAWAY_DISCONNECTOR = false;
 _CUTAWAY_HAMMER = false;
 _CUTAWAY_STOCK = false;
-
-/* [Transparency] */
-_ALPHA_BARREL_SUPPORT = 1;     // [0:0.1:1]
-_ALPHA_CYLINDER = 1;           // [0:0.1:1]
-_ALPHA_FOREND = 1;             // [0:0.1:1]
-_ALPHA_RECEIVER_TUBE = 1;      // [0:0.1:1]
-_ALPHA_RECEIVER_COUPLING = 1;  // [0:0.1:1]
-_ALPHA_RECEIVER_FRONT = 1;     // [0:0.1:1]
-_ALPHA_RECOIL_PLATE_HOUSING=1; // [0:0.1:1]
-_ALPHA_SPINDLE = 1;            // [0:0.1:1]
-_ALPHA_FCG = 1;                // [0:0.1:1]
-_ALPHA_STOCK = 1;              // [0:0.1:1]
 
 /* [Vitamins] */
 SPINDLE_DIAMETER = 0.31251;
@@ -104,7 +102,6 @@ RECOIL_PLATE_BOLT_CLEARANCE = 0.015;
 ENABLE_BLAST_SHIELD = false;
 BLAST_PLATE_THICKNESS = 1/8;
 
-/* [Barrel and Cylinder] */
 BARREL_LENGTH = 15.5;
 BARREL_DIAMETER = 1.0001;
 BARREL_CLEARANCE = 0.008;
