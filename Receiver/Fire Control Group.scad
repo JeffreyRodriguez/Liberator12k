@@ -138,7 +138,7 @@ function ActionRodZ() = 0.75+(ActionRodWidth()/2);
 hammerHeadLength=2;
 hammerHeadHeight=ReceiverIR()+0.25;
 
-function HammerTailLength() = 0.5;
+function HammerTailLength() = 1;
 hammerTailMinX = -ReceiverLength()-HammerTailLength();
 hammerTailMaxX = -ReceiverLength();
 
