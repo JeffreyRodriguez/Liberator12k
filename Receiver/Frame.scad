@@ -5,6 +5,7 @@ use <../Meta/Resolution.scad>;
 use <../Meta/RenderIf.scad>;
 
 use <../Shapes/Chamfer.scad>;
+use <../Shapes/FlipMirror.scad>;
 use <../Shapes/Semicircle.scad>;
 use <../Shapes/Teardrop.scad>;
 
@@ -137,21 +138,11 @@ module Receiver_LargeFrame(doRender=true, debug=false) {
   
   // Branding text
   color("DimGrey")
-  RenderIf(doRender) DebugHalf(enabled=debug) {
-      
-    // Right-side text
-    translate([-FrameReceiverLength()+0.0625,-FrameWidth()/2,FrameBoltZ()-(LogoTextSize()/2)])
-    rotate([90,0,0])
-    linear_extrude(height=LogoTextDepth(), center=true)
-    text("Liberator12k", size=LogoTextSize(), font="Impact");
-
-    // Left-side text
-    translate([-0.0625,FrameWidth()/2,FrameBoltZ()-(LogoTextSize()/2)])
-    rotate([90,0,0])
-    linear_extrude(height=LogoTextDepth(), center=true)
-    mirror([1,0])
-    text("Liberator12k", size=LogoTextSize(), font="Impact");
-  }
+  RenderIf(doRender) DebugHalf(enabled=debug)
+  FlipMirror([-FrameReceiverLength()/2, (FrameWidth()/2), FrameBoltZ()])
+  rotate([90,0,0])
+  linear_extrude(height=LogoTextDepth(), center=true)
+  text(FRAME_BRANDING_TEXT, size=LogoTextSize(), font="Impact", halign="center", valign="center");
   
   color("Tan")
   RenderIf(doRender) DebugHalf(enabled=debug)
