@@ -288,7 +288,7 @@ module AR15Forend(debug=false, alpha=1) {
       translate([MagazineMinX(),0,-0.5])
       AR15_Magwell(cut=false,
                    height=AR15_MagwellDepth()+0.125,
-                   wallFront=0.125, wallBack=AR15_MagazineRearTabLength(),
+                   wallFront=0.125, wallBack=AR15_MagazineRearTabLength()+0.025,
                    wall=0.125);
     }
     
