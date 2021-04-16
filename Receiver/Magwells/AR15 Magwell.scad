@@ -11,7 +11,7 @@ function AR15_MagazineBaseLength() = 2.4;
 function AR15_MagCatchZ() = -0.813;
 function AR15_MagCatchX() = -0.058;
 
-function AR15_MagwellDepth() = UnitsImperial(2.5); //UnitsImperial(2);
+function AR15_MagwellDepth() = UnitsImperial(2.375); //UnitsImperial(2);
 
 module AR15_MagwellTemplate(baseWidth=AR15_MagazineBaseWidth(), baseLength=AR15_MagazineBaseLength(),
                        sideTrackOffset=0.825, sideTrackDepth=0.08, centerY=true,
