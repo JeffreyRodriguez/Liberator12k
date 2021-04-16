@@ -146,7 +146,7 @@ module ChargingPump(id=1.1, clearance=0.05,
     PumpGrip(innerRadius=innerRadius) {
 
       // Body around the charging rod
-      translate([,-RodRadius(ChargingRod())-0.25,0])
+      translate([0,-RodRadius(ChargingRod())-0.25,0])
       rotate([0,90,0])
       mirror([1,0,0])
       ChamferedCube([ChargingRodOffset()+RodRadius(ChargingRod())+0.125,
