@@ -10,7 +10,7 @@ module semicircle(od=20, angle=225, center=false) {
 
         // 90* Angle cutters
         if (angle < 360)
-        for (i=[0: (angle / 90)]) {
+        for (i=[0:1:(angle / 90)]) {
 
           // First angle, angle mod 90
           if (i == 0)
