@@ -164,8 +164,10 @@ module ReceiverTopSlot(length=ReceiverLength(), width=ReceiverTopSlotWidth(), he
                      teardropTop=false, teardropBottom=false);
     
     // Horizontal slot
-    translate([TensionRodTopZ()+WallTensionRod(),-(horizontalWidth/2)-clearance])
-    ChamferedSquare([horizontalHeight+clearance, horizontalWidth+(clearance*2)],
+    translate([TensionRodTopZ()+WallTensionRod()-clearance,
+               -(horizontalWidth/2)-clearance])
+    ChamferedSquare([horizontalHeight+clearance*2,
+                     horizontalWidth+(clearance*2)],
                      r=chamferRadius,
                      teardropTop=false, teardropBottom=false);
   }
