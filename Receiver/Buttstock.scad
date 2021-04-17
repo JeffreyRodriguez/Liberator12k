@@ -27,6 +27,7 @@ _RENDER = ""; // ["", "Stock", "StockButtonHousing", "StockButton_Left", "StockB
 
 /* [Assembly] */
 _SHOW_RECEIVER = true;
+_SHOW_LOWER = true;
 _SHOW_STOCK = true;
 _SHOW_STOCK_LATCH = true;
 _SHOW_BUTTPAD = true;
@@ -433,12 +434,14 @@ if ($preview) {
   if (_SHOW_RECEIVER)
   ReceiverAssembly();
   
-  LowerMount();
+  if (_SHOW_LOWER) {
+    LowerMount();
 
-  translate([-LowerMaxX(),0,LowerOffsetZ()])
-  Lower(showTrigger=true,
-        showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
-        searLength=SearLength()+abs(LowerOffsetZ())+SearTravel()-(0.25/2));
+    translate([-LowerMaxX(),0,LowerOffsetZ()])
+    Lower(showTrigger=true,
+          showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
+          searLength=SearLength()+abs(LowerOffsetZ())+SearTravel()-(0.25/2));
+  }
   
   StockAssembly();
 } else scale(25.4) {
