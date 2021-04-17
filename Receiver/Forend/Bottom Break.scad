@@ -257,7 +257,7 @@ module LatchScrews(debug=false, cutter=false, clearance=0.008) {
 
 
 module BreakActionReceiverFront(debug=false, alpha=1) {
-  color("MediumSlateBlue", alpha) render() DebugHalf(enabled=debug)
+  color("Tan", alpha) render() DebugHalf(enabled=debug)
   difference() {
     translate([-ReceiverFrontLength(),0,0])
     union() {
@@ -385,7 +385,7 @@ module ExtractorAssembly(cutter=false) {
 module BreakActionForend(debug=false, alpha=1) {
 
   // Forward plate
-  color("MediumSlateBlue", alpha) render() DebugHalf(enabled=debug)
+  color("Tan", alpha) render() DebugHalf(enabled=debug)
   difference() {
     union() {
 
@@ -446,7 +446,7 @@ module BreakActionForend(debug=false, alpha=1) {
 
     FrameBolts(cutter=true);
 
-    translate([0,0,ActionRodZ()])
+    *translate([0,0,ActionRodZ()])
     ActionRod(length=ActionRodLength(), cutter=true);
   }
 }
@@ -561,7 +561,7 @@ module LatchFront_print() {
 
 
 module BarrelLatchCollar(debug=false, alpha=1, cutter=false) {
-  color("DarkSlateBlue", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("Chocolate", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
     union() {
 
@@ -637,7 +637,7 @@ module BarrelLatchCollar_print() {
 module BarrelPivotCollar(length=((PivotRadius()+WallPivot())*2),
                          debug=false, alpha=1, cutter=false) {
 
-  color("DarkSlateBlue", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("Chocolate", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
     union() {
 
@@ -693,7 +693,7 @@ module BarrelPivotCollar(length=((PivotRadius()+WallPivot())*2),
 
     Barrel(cutter=true);
 
-    translate([0,0,ActionRodZ()])
+    *translate([0,0,ActionRodZ()])
     ActionRod(cutter=true,
               length=ActionRodLength());
 
@@ -749,7 +749,7 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1,
       
       LatchScrews();
 
-      translate([-ReceiverFrontLength(),0,ActionRodZ()])
+      *translate([-ReceiverFrontLength(),0,ActionRodZ()])
       ActionRod(length=ActionRodLength());
     }
 

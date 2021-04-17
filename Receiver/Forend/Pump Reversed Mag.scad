@@ -3,6 +3,7 @@ include <../../Meta/Animation.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
 use <../../Meta/Debug.scad>;
+use <../../Meta/RenderIf.scad>;
 use <../../Meta/Resolution.scad>;
 
 use <../../Shapes/Chamfer.scad>;
@@ -14,7 +15,7 @@ use <../../Vitamins/Pipe.scad>;
 use <../../Vitamins/Rod.scad>;
 use <../../Vitamins/Square Tube.scad>;
 
-use <../Lower/Receiver Lugs.scad>;
+use <../Lower/Mount.scad>;
 use <../Lower/Trigger.scad>;
 use <../Lower/Lower.scad>;
 
@@ -23,14 +24,56 @@ use <../../Ammo/Shell Slug.scad>;
 use <../Frame.scad>;
 use <../Receiver.scad>;
 
+
+BARREL_OUTSIDE_DIAMETER = 1.0001;
+BARREL_INSIDE_DIAMETER = 0.813;
+BARREL_CLEARANCE = 0.005;
+BARREL_LENGTH = 18;
+RIM_WIDTH = 0.0301;
+RIM_DIAMETER = 0.8875;
+
+function BarrelTravel() = 3;
+function BarrelLength() = 18;
+
 function UpperLength() = 6.75;
 function MagazineCenterZ() = 1.5;
+
+// Vitamins
+module Barrel(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, length=BarrelLength(), clearance=BARREL_CLEARANCE, cartridgeRimThickness=RIM_WIDTH, cutter=false, alpha=1, debug=false) {
+
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
+
+  color("Silver") RenderIf(!cutter) DebugHalf(enabled=debug)
+  translate([(cutter?0:cartridgeRimThickness),0,0])
+  difference() {
+    
+    rotate([0,90,0])
+    cylinder(r=(od/2)+clear, h=length, $fn=60);
+
+    if (!cutter) {
+      
+      // Hollow inside
+      rotate([0,90,0])
+      cylinder(r=(id/2)+clear, h=length);
+      
+      // Extractor notch
+      *#rotate([90,0,0])
+      translate([0,-0.813*0.5,0])
+      rotate(40)
+      translate([ExtractorBitWidth()/4,0.813*0.5*0.1,-ExtractorBitWidth()/2])
+      mirror([1,1,0])
+      cube([BarrelDiameter(), BarrelRadius(), ExtractorBitWidth()]);
+    }
+  }
+}
+
 
 module PumpRails(length=UpperLength(), cutter=false, clearance=0.002, extraRadius=0) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
-  FrameIterator()
+  *FrameIterator()
   translate([-clear,0,0])
   rotate([0,90,0])
   rotate(180)
@@ -50,9 +93,8 @@ module PumpUpper(cutter=false, clearance=0.002, alpha=1, debug=false) {
   difference() {
     union() {
       translate([-clear,0,0])
-      PipeHousingBase(mainBodyEnabled=false,
-                      length=UpperLength()+clear2,
-                      magazineLength=BarrelTravel());
+      mirror([1,0,0])
+      ReceiverSegment(length=UpperLength());
 
       PumpRails(cutter=cutter);
     }
@@ -66,26 +108,24 @@ module PumpUpper(cutter=false, clearance=0.002, alpha=1, debug=false) {
       for (Z = [0,MagazineCenterZ()])
       translate([-ManifoldGap(),0,MagazineCenterZ()-Z])
       rotate([0,90,0])
-      cylinder(r=SquareTubeInner(MagazineSquareTube(),
-                                 SquareTubeClearanceLoose())/2,
+      cylinder(r=0.813/2,
                h=3+ManifoldGap(),
                $fn=Resolution(12,30));
     }
 
     if (!cutter)
     hull() for (X = [-ManifoldGap(),BarrelTravel()]) translate([X,0,0])
-    Barrel(barrelLength=UpperLength(),
-           hollow=false, clearance=PipeClearanceLoose());
+    Barrel(cutter=true);
 
     if (!cutter)
     hull() for (X = [-1.5-ManifoldGap(),BarrelTravel()]) translate([X,0,0])
-    BarrelCollar(cutter=true);
+    *BarrelCollar(cutter=true);
 
-    if (!cutter)
+    *if (!cutter)
     hull()
     Breech(cutter=true);
 
-    if (!cutter)
+    *if (!cutter)
     Frame(cutter=true);
   }
 }
@@ -99,12 +139,7 @@ module PumpForend(alpha=1, debug=false) {
   difference() {
     union() {
       hull() {
-        translate([+ForendLength,0,0])
-        rotate([0,90,0])
-        ChamferedCylinder(r1=PipeCapRadius(StockPipe())+ForendWall,
-                          r2=0.0625,
-                          h=ForendLengthExtra,
-                          $fn=Resolution(20,50));
+        translate([ForendLength,0,0])ReceiverSegment(length=ForendLengthExtra);
 
 
         *translate([+6.75,0,0])
@@ -151,7 +186,7 @@ module PumpForend(alpha=1, debug=false) {
                       $fn=Resolution(20,50));
 
     translate([-ManifoldGap(),0,0])
-    Barrel(hollow=false, cutter=true, clearance=PipeClearanceLoose());
+    Barrel(cutter=true, clearance=PipeClearanceLoose());
 
     PumpMagazine(hollow=false, clearance=SquareTubeClearanceLoose());
   }
@@ -178,9 +213,9 @@ color("Red") {
 }
 
 translate([BarrelTravel()*(Animate(ANIMATION_STEP_UNLOAD)-Animate(ANIMATION_STEP_LOAD)),0,0]) {
-  Barrel(hollow=true);
-  BarrelCollar();
-  PumpForend(alpha=1, debug=true);
+  Barrel();
+  //BarrelCollar();
+  *PumpForend(alpha=1, debug=true);
 }
 
 PumpUpper(alpha=0.75, debug=false);

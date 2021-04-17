@@ -1,4 +1,5 @@
 use <../../Meta/Debug.scad>;
+use <../../Meta/Units.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Resolution.scad>;
 use <../../Shapes/Semicircle.scad>;
@@ -25,12 +26,36 @@ use <../Receiver.scad>;
 use <../Buttstock.scad>;
 use <../Charging Pump.scad>;
 
+/* [Print] */
 
-$fn=Resolution(20, 60);
+// Select a part, Render (F6), then Export to STL (F7)
+_RENDER = ""; // ["", "BARBB_Forend", "BARBB_BoltCarrier"]
+
+/* [Assembly] */
+_SHOW_RECEIVER = true;
+_SHOW_FOREND = true;
+_SHOW_BUTTPAD = true;
+_SHOW_MAGWELL = true;
+_SHOW_BARREL = true;
+_SHOW_BOLT = true;
+_SHOW_BOLT_CARRIER = true;
+_SHOW_FCG = true;
+
+_CUTAWAY_RECEIVER = false;
+_CUTAWAY_FOREND = false;
+_CUTAWAY_MAGWELL = false;
+
+_ALPHA_FOREND = 1; // [0:0.1:1])
+_ALPHA_MAGWELL = 1; // [0:0.1:1]
+
+/* [Vitamins] */
+
+/* [Fine Tuning] */
 barrelLength=24;
 
-// Bullpup AR Barrel Bolt-action (BARBB)
+$fs = UnitsFs()*0.25;
 
+// Bullpup AR Barrel Bolt-action (BARBB)
 BARREL_PIPE = Spec_TubingZeroPointSevenFive();
 RECEIVER_PIPE = Spec_OnePointFiveSch40ABS();
 BOLT_ROD = Spec_RodOneHalfInch();
@@ -60,9 +85,13 @@ gasShaftCollarWidth = 9/16;
 gasShaftCollarOD    = 1.25;
 
 
+magwellX = -2.675;
+magwellZ = -0.4375;
+magwellWallFront = 0.125;
+magwellWallBack = 0.25;
+
 // Calculated Values
-boltSleeveDiameter = AR15BarrelExtensionDiameter();
-boltSleeveRadius   = AR15BarrelExtensionRadius();
+boltCarrierRadius   = ReceiverIR()-0.01;
 
 
 tubeCenterZ = tubeWall+(tube_width/2);
@@ -76,18 +105,18 @@ lowerX = -ReceiverLugFrontMinX()+AR15BarrelGasLength()+gasShaftCollarWidth;
 camPinLockedMaxX = boltLockedMaxX -AR15_CamPinOffset();
 camPinLockedMinX = camPinLockedMaxX -AR15_CamPinDiameter();
 
-upperLength = AR15BarrelExtensionLength()+abs(camPinLockedMaxX)+AR15BarrelExtensionLipLength()-0.01;
-upperMinX = -upperLength+AR15BarrelExtensionLength()+AR15BarrelExtensionLipLength();
-upperMaxX = upperMinX+upperLength;
+forendLength = AR15BarrelExtensionLength()+abs(magwellX)+magwellWallFront; //+abs(camPinLockedMaxX)+AR15BarrelExtensionLipLength()-0.01
+forendMinX = -forendLength+AR15BarrelExtensionLength()+AR15BarrelExtensionLipLength();
+forendMaxX = forendMinX+forendLength;
 
 firingPinMinX  = boltLockedMinX -AR15_FiringPinExtension();
 hammerMaxX = firingPinMinX;
 hammerMinX = firingPinMinX;
 
 stockMinX = hammerMinX-stockWall;
-stockLength=abs(hammerMinX)+upperMinX+stockWall;
+stockLength=abs(hammerMinX)+forendMinX+stockWall;
 
-barbbBoltLength = stockLength
+boltCarrierLength = stockLength
                 + barrelExtensionLandingHeight;
 handleLength=abs(hammerMinX-hammerMaxX)+AR15_FiringPinExtension();
 handleMinX = stockMinX;//+stockWall;
@@ -157,64 +186,76 @@ module BARBB_HammerCutOut(extraX=0) {
 }
 
 
-module BARBB_UpperReceiver() {
-  
-  render()
+module BARBB_Forend(clearance=0.01, debug=false, alpha=1) {
+  color("Tan", alpha) render()
+  DebugHalf(enabled=debug)
   difference() {
-    union() {
-
-        translate([AR15_TrunnionLength(),0,0])
-        ReceiverSegment(length=upperLength+2.675);
-        
-        translate([-2.675,0,-0.4375])
-        AR15_Magwell(wallFront=0.125, wallBack=0.25, cut=false);
-        
-        translate([StockLength(),0,0])
-        StockAssembly();
-      
-      // Barrel section
-      rotate([0,90,0])
-      *ChamferedCylinder(r1=AR15BarrelExtensionRadius()+barrelWall, r2=chamferRadius,
-                        h=upperLength-ManifoldGap());
-    }
+    translate([AR15_TrunnionLength(),0,0])
+    ReceiverSegment(length=forendLength);
     
     // Barrel center axis
-    translate([upperMinX,0,0]) {
+    translate([forendMinX,0,0]) {
     
       // Bolt Head Passage
       rotate([0,90,0])
-      cylinder(r=AR15_BoltHeadRadius()+0.01, h=upperLength+ManifoldGap(2));
+      cylinder(r=AR15_BoltHeadRadius()+clearance, h=forendLength+ManifoldGap(2));
     
       // Bolt Sleeve  Passage
       translate([-ManifoldGap(),0,0])
       rotate([0,90,0])
-      cylinder(r=boltSleeveRadius+0.015,
+      cylinder(r=boltCarrierRadius+clearance,
                h=barrelExtensionLandingHeight+ManifoldGap(2));
       
       // Chamfer the bolt passage inside diameter
       rotate([0,90,0])
-      HoleChamfer(r1=boltSleeveRadius+0.015, r2=chamferRadius, teardrop=true);
+      HoleChamfer(r1=boltCarrierRadius+clearance, r2=chamferRadius, teardrop=true);
       
       // Barrel Extension Rear Support Cone
       translate([barrelExtensionLandingHeight,0,0])
       rotate([0,90,0])
-      cylinder(r1=boltSleeveRadius+0.015, r2=AR15_BoltHeadRadius()+0.008,
-               h=boltSleeveRadius/3);
+      cylinder(r1=boltCarrierRadius+clearance, r2=AR15_BoltHeadRadius()+0.008,
+               h=boltCarrierRadius/3);
     }
+    
+    // Bolt Track
+    translate([stockMinX-ManifoldGap(),0,0])
+    rotate([0,90,0])
+    ChamferedCircularHole(r1=boltCarrierRadius+(clearance*2), r2=chamferRadius,
+                           h=stockLength+ManifoldGap(2));
+    
+    BARBB_HammerCutOut(extraX=1);
+    
+    translate([magwellX,0,magwellZ])
+    AR15_MagwellInsert(extraTop=abs(magwellZ));
     
     rotate([0,90,0])
     rotate(180)
     AR15_Barrel(clearance=0.005);
+  }
+}
+
+module BARBB_Magwell(alpha=1, debug=false) {
+  color("Chocolate", alpha=alpha) render()
+  DebugHalf(enabled=debug)
+  difference() {
     
-    translate([-2.675,0,-0.4375])
+    translate([magwellX,0,magwellZ])
+    AR15_Magwell(wallFront=magwellWallFront, wallBack=magwellWallBack, cut=false);
+    
+    // Cutout the central hole
+    rotate([0,-90,0])
+    cylinder(r=ReceiverIR(), h=abs(magwellX)+magwellWallFront+magwellWallBack);
+    
+    translate([magwellX,0,magwellZ])
     AR15_MagwellInsert();
   }
 }
 
-module BARBB_Bolt(clearance=0.01) {
+
+module BARBB_BoltCarrier(clearance=0.01) {
   chamferClearance = 0.01;
   
-  echo("barbbBoltLength", barbbBoltLength);
+  echo("boltCarrierLength", boltCarrierLength);
   
   render()
   difference() {
@@ -224,24 +265,30 @@ module BARBB_Bolt(clearance=0.01) {
     union() {
       
       // Body
-      ChamferedCylinder(r1=boltSleeveRadius,
+      ChamferedCylinder(r1=boltCarrierRadius,
                         r2=chamferRadius,
-                        h=barbbBoltLength);
+                        h=boltCarrierLength);
       
       // Cam Pin Shelf
       // This keeps the bolt forward while we rotate across several lug positions
       // while also allowing a longer opening for ejection.
       rotate(90+AR15_CamPinAngle()+AR15_CamPinAngleExtra())
       translate([0,-AR15_CamPinSquareWidth()/2,
-                 barbbBoltLength
+                 boltCarrierLength
                  +barrelExtensionLandingHeight
                  +AR15_BoltLockLengthDiff()
                  -AR15_CamPinOffset()-AR15_CamPinDiameter()-AR15_CamPinShelfLength()])
-      ChamferedCube([boltSleeveRadius+AR15_CamPinSquareHeight()-clearance,
+      ChamferedCube([boltCarrierRadius+AR15_CamPinSquareHeight()-clearance,
                      AR15_CamPinSquareWidth(),
                      AR15_CamPinShelfLength()-clearance], r=AR15_CamPinSquareHeight()/3);
     }
-    
+     
+    #translate([boltLockedMaxX,0,0])
+    rotate([0,-90,0]) {
+      AR15_Bolt(camPin=false, teardrop=false, firingPinRetainer=false);
+      
+      BARBB_CamPinCutout(chamferBack=false);
+    }
     
     // Hammer Safety Catch
     translate([hammerMinX,0,tubeCenterZ+hammerWidth])
@@ -283,102 +330,74 @@ module BARBB_Bolt(clearance=0.01) {
   }
 }
 
-module BARBB_UpperRear(topDiameter=tube_width+(tubeWall*2), bottomDiameter=1,
-                  wall=0.25, clearance=0.008) {
-                    
-  clear2 = clearance*2;
-                     
-  echo("stockLength = ", stockLength);
-                     leverMinX=0;
 
-  render()
-  difference() {
-    
-      // Body
-      translate([stockMinX,0,0])
-      rotate([0,90,0])
-      ChamferedCylinder(r1=AR15BarrelExtensionRadius()+barrelWall,
-                        r2=chamferRadius,
-                         h=stockLength);
+module BARBB_Assembly() {
+  rotate([0,90,0]) {
+    rotate(180)
+    if (_SHOW_BARREL)
+    AR15_Barrel(length=barrelLength);
       
-    translate([boltLockedMaxX,0,0])
-    rotate([0,-90,0]) {
-      AR15_Bolt(camPin=false, teardrop=false, firingPinRetainer=false);
+    color("LightGrey") {
       
-      BARBB_CamPinCutout(chamferBack=false);
+      // Gas block shaft collar
+      translate([0,0,AR15BarrelGasLength()+ManifoldGap(2)])
+      cylinder(r=gasShaftCollarOD/2, h=gasShaftCollarWidth);
+      
+      // Suppressor
+      *translate([0,0,barrelLength-0.5])
+      ChamferedCylinder(r1=(1.625/2), r2=chamferRadius, h=9);
+    }
+  }
+
+  if (_SHOW_BOLT)
+  color("DimGrey")
+  translate([boltLockedMaxX,0,0])
+  rotate([0,-90,0])
+  AR15_Bolt(teardrop=false, firingPinRetainer=false, extraFiringPin=0);
+  
+  if (_SHOW_BOLT_CARRIER)
+  color("Olive")
+  BARBB_BoltCarrier();
+  
+  if (_SHOW_FOREND)
+  BARBB_Forend(debug=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
+  
+  if (_SHOW_RECEIVER)
+  translate([forendMinX,0,0])
+  Receiver(debug=_CUTAWAY_RECEIVER, doRender=true);
+  
+  if (_SHOW_BUTTPAD)
+  translate([magwellX-ReceiverLength(),0,0])
+  Buttpad();
+  
+  if (_SHOW_MAGWELL)
+  BARBB_Magwell(alpha=_ALPHA_MAGWELL, debug=_CUTAWAY_MAGWELL);
+  
+  *translate([AR15BarrelGasLength()+2,0,0]) {
+    translate([-3,0,0]) {
+      ChargingRod(length=18, minX=-8.5);
+      ChargingPump();
     }
     
-    // Bolt Track
-    translate([stockMinX-ManifoldGap(),0,0])
-    rotate([0,90,0])
-    ChamferedCircularHole(r1=boltSleeveRadius+clear2, r2=chamferRadius,
-                           h=stockLength+ManifoldGap(2));
-    
-    BARBB_HammerCutOut(extraX=1);
   }
 }
 
 
-rotate([0,90,0]) {
-  rotate(180)
-  AR15_Barrel(length=barrelLength);
-    
-  color("LightGrey") {
-    
-    // Gas block shaft collar
-    translate([0,0,AR15BarrelGasLength()+ManifoldGap(2)])
-    cylinder(r=gasShaftCollarOD/2, h=gasShaftCollarWidth);
-    
-    // Suppressor
-    *translate([0,0,barrelLength-0.5])
-    ChamferedCylinder(r1=(1.625/2), r2=chamferRadius, h=9);
-  }
-}
+if ($preview) {
+  BARBB_Assembly();
+  
 
-color("DimGrey")
-translate([boltLockedMaxX,0,0])
-rotate([0,-90,0])
-AR15_Bolt(teardrop=false, firingPinRetainer=false, extraFiringPin=0);
+  if (_RENDER == "BARBB_Forend")
+  rotate([0,-90,0])
+  BARBB_Forend();
+} else scale(25.4) {
+  
+  if (_RENDER == "BARBB_UpperReceiver")
+  rotate([0,-90,0])
+  BARBB_UpperReceiver();
 
-
-
-color("Olive")
-//render() DebugHalf()
-BARBB_Bolt();
-
-color("Tan", 0.25)
-DebugHalf(enabled=false)
-BARBB_UpperReceiver();
-
-color("Tan", 0.25)
-DebugHalf(enabled=false)
-BARBB_UpperRear();
-
-*translate([AR15BarrelGasLength()+2,0,0]) {
-  translate([-3,0,0]) {
-    ChargingRod(length=18, minX=-8.5);
-    ChargingPump();
-  }
+  if (_RENDER == "BARBB_BoltCarrier")
+  rotate([0,-90,0])
+  BARBB_BoltCarrier();
   
 }
-*ReceiverAssembly(debug=false);
-
-*!scale(25.4)
-rotate([0,90,0])
-BARBB_HammerSpringTrunnion();
-
-*!scale(25.4)
-rotate([0,-90,0])
-BARBB_HammerGuide();
-
-*!scale(25.4)
-rotate([0,-90,0])
-BARBB_Bolt();
-*!scale(25.4)
-rotate([0,-90,0])
-BARBB_UpperReceiver(extraRear=0);
-
-*!scale(25.4)
-rotate([0,-90,0])
-BARBB_UpperRear();
-
