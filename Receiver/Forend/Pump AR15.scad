@@ -33,7 +33,7 @@ use <../Charging Pump.scad>;
 /* [Print] */
 
 // Assembly is not for printing.
-_RENDER = ""; // ["", "Forend", "Bolt Carrier", "Handguard"]
+_RENDER = ""; // ["", "Bolt Carrier", "Forend", "CamGuide", "Handguard"]
 
 /* [Preview] */
 _SHOW_ACTION_ROD = true;
@@ -43,17 +43,20 @@ _SHOW_BOLT = true;
 _SHOW_BOLT_CARRIER = true;
 _SHOW_FCG = true;
 _SHOW_FOREND = true;
+_SHOW_CAM_GUIDE = true;
 _SHOW_HANDGUARD = true;
 _SHOW_STOCK = true;
 _SHOW_LOWER = true;
 _CUTAWAY_RECEIVER = false;
 _CUTAWAY_BOLT_CARRIER = false;
 _CUTAWAY_FOREND = false;
+_CUTAWAY_CAM_GUIDE = false;
 _CUTAWAY_HANDGUARD = false;
 _CUTAWAY_STOCK = false;
 _ALPHA_RECIEVER = 1; // [0:0.1:1]
 _ALPHA_BOLT_CARRIER = 1; // [0:0.1:1]
 _ALPHA_FOREND = 1; // [0:0.1:1]
+_ALPHA_CAM_GUIDE = 1; // [0:0.1:1]
 _ALPHA_HANDGUARD = 1; // [0:0.1:1]
 
 // Cut assembly view in half
@@ -91,25 +94,34 @@ function ForendMinX() = 0;
 function ForendLength() = BarrelMinX()
              + AR15BarrelExtensionLength()
              - ForendMinX();
+             
+function CamPinX() = BarrelMinX()
+                   + AR15_BoltLockLengthDiff()
+                   - AR15_CamPinOffset()
+                   - AR15_CamPinRadius();
 
 chamferClearance = 0.01;
 boltCarrierClearance = 0.01;
-boltCarrierRadius = ReceiverIR()-0.01;
-boltCarrierChamferRadius = (ReceiverID()-AR15_BoltHeadDiameter())/2;
+boltCarrierRadius = AR15_CamPinSquareOffset();
+boltCarrierChamferRadius = boltCarrierRadius-0.125;
 boltCarrierRearWall=0.1875;
-boltCarrierRearExtension=0;
 boltCarrierTrackRadius = boltCarrierRadius+AR15_CamPinSquareHeight()+0.05;
 
 boltCarrierLength = AR15_BoltLockedLength()
-                  + AR15_FiringPinExtension()
-                  + boltCarrierRearExtension;
+                  + AR15_FiringPin_Extension()
+                  - AR15_FiringPin_HeadLength();
 
 boltCarrierMinX = BarrelMinX()
-                - AR15_BoltLockedLength()
-                - AR15_FiringPinExtension()
-                - boltCarrierRearExtension;
+                - boltCarrierLength;
 
 helixBottom = 0.1875;
+
+// Locating modules
+module BoltPosition() {
+  translate([BarrelMinX()+AR15_BoltLockLengthDiff(),0,0])
+  rotate([0,-90,0])
+  children();
+}
 
 // ************
 // * Vitamins *
@@ -143,15 +155,11 @@ module Barrel(barrelLength=BarrelLength(), cutter=false, clearance=0.005, alpha=
   AR15_Barrel(cutter=cutter, clearance=clearance);
 }
 module Bolt(cutter=false, clearance=0.005) {
-  translate([BarrelMinX()+AR15_BoltLockLengthDiff(),0,0])
-  rotate([0,-90,0])
-  color("DimGrey") render()
-  AR15_Bolt(teardrop=cutter,
-            firingPinRetainer=false,
-            extraFiringPin=0,            
-            extraCamPinSquareHeight=(cutter?1:0),
-            extraCamPinSquareLength=cutter?1:0,
-            clearance=(cutter?clearance:0));
+  BoltPosition() {
+    AR15_Bolt(cutter=cutter);
+    AR15_CamPin(cutter=cutter);
+    AR15_FiringPin(cutter=cutter, extraShoulder=(cutter?1:0));
+  }
 }
 
 // **********
@@ -195,13 +203,20 @@ module BoltCarrier(cutter=false, clearance=0.01, chamferRadius=1/16, debug=false
         ReceiverSideSlot(length=boltCarrierLength,
                          clearance=clear);
         
-        hull() for (X = [0, boltCarrierLength-ReceiverIR()-0.0625])
+        hull() for (X = [0, boltCarrierLength-ReceiverID()-0.0625])
         translate([boltCarrierMinX+X, 0, 0])
         linear_extrude(ReceiverIR(), center=true)
         Teardrop(r=ReceiverIR()+ReceiverSideSlotDepth()+clear,
                  truncated=true,
                  $fn=40);
       }
+      
+      // Extension
+      translate([boltCarrierMinX,-(AR15_CamPinSquareWidth()/2)-clear,0])
+      ChamferedCube([CamPinX()-AR15_CamPinDiameter()+(cutter?AR15_CamPinDiameter()*1.5:0),
+                     AR15_CamPinSquareWidth()+clear2,
+                     0.75], r=1/16,
+                    teardropFlip=[false,true,true]);
     }
     
     if (!cutter) {
@@ -225,7 +240,8 @@ module BoltCarrier(cutter=false, clearance=0.01, chamferRadius=1/16, debug=false
         translate([helixLength/slices*slice,0,0])
         rotate([0,90,0])
         rotate(AR15_CamPinAngle()/slices*slice)
-        AR15_CamPin(rectangleTop=false, teardropAngle=180, teardropTruncate=true, clearance=0.005);
+        AR15_CamPin(rectangleTop=false, cutter=true, clearance=0.005,
+                    teardropAngle=180, teardropTruncate=true);
         
         translate([helixLength/slices*(slice-1),0,0])
         rotate([0,90,0])
@@ -242,27 +258,6 @@ module BoltCarrier(cutter=false, clearance=0.01, chamferRadius=1/16, debug=false
         
         translate([0,0,slotExtension])
         AR15_CamPin(rectangleTop=false, clearance=0.005);
-      }
-        
-      
-      // Rectangular portion rotation
-      translate([-AR15_BoltLength()+AR15_CamPinOffset()-clearance-0.03,0,0])
-      translate([BarrelMinX()+AR15_BoltLockLengthDiff(),0,0])
-      //mirror([0,0,1])
-      rotate([0,90,0])
-      linear_extrude(height=2+AR15_CamPinDiameter()+(clearance*2))
-      rotate(180-(AR15_CamPinAngle()/2))
-      difference() {
-        hull() {
-          semicircle(od=(AR15_CamPinSquareOffset()
-                        +AR15_CamPinSquareHeight()+0.05)*2,
-                     angle=AR15_CamPinAngle()*2.67,
-                     center=true, $fn=60);
-          
-          circle(r=AR15_CamPinSquareWidth()/2, $fn=30);
-        }
-        
-        circle(r=(AR15_CamPinSquareOffset()-0.01), $fn=50);
       }
     }
   }
@@ -285,39 +280,56 @@ module AR15Forend(debug=false, alpha=1) {
       mirror([1,0,0])
       ReceiverSegment(length=length);
       
-      translate([MagazineMinX(),0,-0.5])
+      *translate([MagazineMinX(),0,-0.5])
       AR15_Magwell(cut=false,
                    height=AR15_MagwellDepth()+0.125,
                    wallFront=0.125, wallBack=AR15_MagazineRearTabLength()+0.025,
                    wall=0.125);
     }
     
-    translate([BarrelMinX(),0,0])
+    *translate([BarrelMinX(),0,0])
     ReceiverTopSlot();
   
     Barrel(cutter=true);
 
     translate([MagazineMinX(),0,-0.5-0.25])
     AR15_MagwellInsert(catch=false,
-                       extraTop=0.75);
+                       extraTop=0.5);
     
     mirror([1,0,0])
     TensionBolts(cutter=true, nutType="none", length=12);
-      
-    // Action rod main hole
+    
     translate([0,0,ActionRodZ()])
     ActionRod(cutter=true);
     
-    // Action rod pin travel slot
-    hull() for (Z = [0, ActionRodZ()]) translate([0,0,Z])
-    translate([-FrameReceiverLength(),0,0])
-    ActionRod(length=2+FrameReceiverLength(), cutter=true);
-      
     // Bolt Carrier + Travel
     for (X = [0:-1:-3]) translate([X,0,0])
     BoltCarrier(cutter=true);
+    
+    // Cam pin slot
+    translate([-AR15_CamPinRadius(),0,0])
+    hull()
+    for (X = [0,-ReceiverLength()]) translate([X,0,0])
+    BoltPosition()
+    AR15_CamPin(cutter=true, clearance=0.01);
+    
+    // Allow the cam pin to pivot
+    translate([CamPinX(),0,0])
+    rotate([0,-90,0])
+    hull() {
+      cylinder(r=AR15_CamPinSquareOffset(),
+               h=AR15_CamPinDiameter()*3,
+               center=true, $fn=30);
+      
+      linear_extrude(height=AR15_CamPinDiameter()+0.04, center=true)
+      rotate(AR15_CamPinAngle()/2)
+      semicircle(od=(AR15_CamPinSquareOffset()
+                    +AR15_CamPinSquareHeight()+0.05)*2,
+                 angle=AR15_CamPinAngle()*2.75,
+                 center=true, $fn=60);
+    }
 
-    color("LightBlue")  
+    // Ejection Port
     union() {
       
       // Ejection slot
@@ -339,6 +351,33 @@ module AR15Forend(debug=false, alpha=1) {
                      AR15BarrelExtensionLipRadius()+WallBarrel()+1,
                      0.5], r=1/16);
     }
+  }
+}
+module CamGuide(length=BarrelMinX(), debug=false, alpha=1) {
+  color("Chocolate", alpha) render()
+  DebugHalf(enabled=debug)
+  difference() {
+    translate([length,0,0])
+    ReceiverTopSlot(length=length, clearance=-0.005);
+    
+    // Allow the cam pin to pivot
+    translate([BarrelMinX()+AR15_BoltLockLengthDiff(),0,0])
+    rotate([0,-90,0])
+    cylinder(r=AR15_CamPinSquareOffset()
+              +AR15_CamPinSquareHeight()
+              +0.06, //AR15_CamPinSquareWidth()
+             h=AR15_CamPinOffset()+AR15_CamPinDiameter()+0.02, $fn=50);
+    
+    // Bolt Carrier + Travel
+    for (X = [0:-1:-3]) translate([X,0,0])
+    BoltCarrier(cutter=true);
+      
+    hull()
+    for (X = [0,-ReceiverLength()]) translate([X,0,0])
+    BoltPosition()
+    AR15_CamPin(cutter=true, clearance=0.01);
+    
+    
   }
 }
 module Handguard(debug=false, alpha=1) {
@@ -390,6 +429,9 @@ if ($preview) {
     if (_SHOW_BOLT_CARRIER)
     BoltCarrier(debug=_CUTAWAY_BOLT_CARRIER, alpha=_ALPHA_BOLT_CARRIER);
   }
+  
+  if (_SHOW_CAM_GUIDE)
+  CamGuide(debug=_CUTAWAY_CAM_GUIDE, alpha=_ALPHA_CAM_GUIDE);
 
   if (_SHOW_FOREND)
   AR15Forend(debug=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
@@ -411,11 +453,15 @@ if ($preview) {
 
 } else scale(25.4) {
   if (_RENDER == "Bolt Carrier")
-    BoltCarrier_print();
+  BoltCarrier_print();
 
   if (_RENDER == "Forend")
-    rotate([0,-90,0])
-    AR15Forend();
+  rotate([0,-90,0])
+  AR15Forend();
+  
+  if (_RENDER == "CamGuide")
+  rotate([0,-90,0])
+  CamGuide();
   
   if (_RENDER == "Handguard")
   rotate([0,-90,0])

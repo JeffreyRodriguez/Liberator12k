@@ -1,5 +1,6 @@
 use <../../Meta/Debug.scad>;
 use <../../Meta/Manifold.scad>;
+use <../../Meta/RenderIf.scad>;
 use <../../Meta/Resolution.scad>;
 use <../../Shapes/Chamfer.scad>;
 use <../../Shapes/Teardrop.scad>;
@@ -30,30 +31,85 @@ function AR15_BoltMiddleRadius() = 0.49/2;
 function AR15_BoltMiddleLength() = 2.25;
 function AR15_BoltBackRadius() = 0.25/2;
 
-function AR15_firingPinRadius() = (0.337/2)+0.01;
-function AR15_FiringPinExtension() = 0.55;      // From the back of the bolt
+function AR15_FiringPin_TipRadius() = 0.0585/2;
+function AR15_FiringPin_TipLength() = 0.118;
+
+function AR15_FiringPin_FrontRadius() = 0.1/2;
+function AR15_FiringPin_FrontLength() = 0.867;
+
+function AR15_FiringPin_Radius() = 0.15/2;
+function AR15_FiringPin_Length() = 1.84;
+
+function AR15_FiringPin_ShoulderRadius() = (0.372/2);
+function AR15_FiringPin_ShoulderLength() = 0.0715;
+function AR15_FiringPin_HeadRadius() = 0.247/2;
+function AR15_FiringPin_HeadLength() = 0.2;
+
+function AR15_FiringPin_Extension() = 0.55;      // From the back of the bolt
+function AR15_FiringPin_ExtensionRadius() = 0.156/2;
 function AR15_FiringPinRetainerOffset() = 0.35; // From the back of the bolt
 
-module AR15_Bolt(camPin=true, firingPinRetainer=true,
-                 clearance=0.007,
-                 extraFiringPin=0, // Ugly, but it'll do
-                 extraCamPinSquareHeight=0,
-                 extraCamPinSquareLength=0,
-                 teardrop=true, $fn=Resolution(20,60)) {
-  clear2 = clearance*2;
-
-  color("Gold")
+module AR15_FiringPin(cutter=false, clearance=0.007, extraShoulder=0, $fn=Resolution(20,60)) {
+  clear2 = clearance *2;
+  
+  color("Silver") RenderIf(!cutter)
   union() {
 
-    // Lugs
-    cylinder(r=AR15_BoltHeadRadius(), h=AR15_BoltLugLength());
+    // Firing Pin Tip
+    cylinder(r=AR15_FiringPin_TipRadius()+clear2,
+             h=AR15_FiringPin_TipLength()+ManifoldGap(2));
 
-    // Bolt Cam Pin
-    if (camPin)
+    // Firing Pin Front
+    translate([0,0,AR15_BoltLength()-AR15_FiringPin_Length()-ManifoldGap()])
+    mirror([0,0,1])
+    cylinder(r=AR15_FiringPin_FrontRadius()+clear2,
+             h=AR15_FiringPin_FrontLength()+ManifoldGap(2));
+
+    // Firing Pin Body
+    translate([0,0,AR15_BoltLength()-ManifoldGap()])
+    mirror([0,0,1])
+    cylinder(r=AR15_FiringPin_Radius()+clear2,
+             h=AR15_FiringPin_Length()+ManifoldGap(2));
+
+    // Firing Pin Shoulder
+    translate([0,0,AR15_BoltLength()-ManifoldGap()])
+    cylinder(r=AR15_FiringPin_ShoulderRadius()+clear2,
+             h=AR15_FiringPin_ShoulderLength()+extraShoulder+ManifoldGap(2));
+
+    // Firing Pin Head
+    translate([0,0,AR15_BoltLength()+AR15_FiringPin_Extension()])
+    mirror([0,0,1])
+    ChamferedCylinder(r1=AR15_FiringPin_HeadRadius()+clear2,
+                      r2=1/16, chamferTop=false, chamferBottom=true, teardropBottom=false,
+                      h=AR15_FiringPin_HeadLength()+ManifoldGap(2));
+
+    // Firing Pin Extension
+    translate([0,0,AR15_BoltLength()-ManifoldGap()])
+    cylinder(r=AR15_FiringPin_ExtensionRadius()+clear2,
+             h=AR15_FiringPin_Extension()+ManifoldGap(2));
+    
+    // Firing Pin-to-bolt-back taper
+    if (cutter)
+    translate([0,0,AR15_BoltLength()])
+    rotate([180,0,0])
+    cylinder(r1=AR15_FiringPin_ShoulderRadius()+clear2, r2=AR15_BoltBackRadius()+clearance,
+            h=AR15_FiringPin_ShoulderRadius()+ManifoldGap());
+  }
+}
+
+module AR15_CamPin(cutter=false, clearance=0.007,
+                   extraCamPinSquareHeight=0,
+                   extraCamPinSquareLength=0,
+                   rectangleTop=true,
+                   teardrop=true, teardropTruncate=true, teardropAngle=0,
+                   $fn=Resolution(20,60)) {
+                     
+    color("Silver") RenderIf(!cutter)
     translate([0,0,AR15_CamPinOffset()+AR15_CamPinRadius()])
     rotate([0,90,0]) {
 
       // Rectangular potion
+      if (rectangleTop)
       translate([-AR15_CamPinRadius()-clearance,
                  -(AR15_CamPinSquareWidth()/2)-clearance,
                  AR15_CamPinSquareOffset()])
@@ -64,10 +120,24 @@ module AR15_Bolt(camPin=true, firingPinRetainer=true,
 
       linear_extrude(height=AR15_CamPinSquareOffset()+AR15_CamPinSquareHeight()+ManifoldGap())
       if (teardrop)
-        Teardrop(r=AR15_CamPinRadius()+clearance);
+        rotate(teardropAngle)
+        Teardrop(r=AR15_CamPinRadius()+clearance, truncated=teardropTruncate);
       else
         circle(r=AR15_CamPinRadius()+clearance);
     }
+}
+
+module AR15_Bolt(cutter=false, camPin=true, firingPinRetainer=false,
+                 clearance=0.007,
+                 teardrop=false, $fn=Resolution(20,60)) {
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;;
+
+  color("DimGrey")
+  union() {
+
+    // Lugs
+    cylinder(r=AR15_BoltHeadRadius(), h=AR15_BoltLugLength());
 
     // Front
     translate([0,0,AR15_BoltLugLength()])
@@ -84,21 +154,10 @@ module AR15_Bolt(camPin=true, firingPinRetainer=true,
     translate([0,0,-ManifoldGap()])
     cylinder(r=AR15_BoltBackRadius()+clearance, h=AR15_BoltLength()+ManifoldGap(2));
 
-    // Firing Pin-to-bolt-back taper
-    translate([0,0,AR15_BoltLength()])
-    rotate([180,0,0])
-    cylinder(r1=AR15_firingPinRadius()+clear2, r2=AR15_BoltBackRadius()+clearance,
-            h=AR15_firingPinRadius()+ManifoldGap());
-
-    // Firing Pin
-    color("Silver")
-    translate([0,0,AR15_BoltLength()-ManifoldGap()])
-    cylinder(r=AR15_firingPinRadius()+clear2, h=AR15_FiringPinExtension()+extraFiringPin+ManifoldGap(2));
-
     // Firing Pin Retainer
     if (firingPinRetainer)
-    translate([-AR15_firingPinRadius()-ManifoldGap(),
-               AR15_firingPinRadius()+(7/25.4),
+    translate([-AR15_FiringPin_ShoulderRadius()-ManifoldGap(),
+               AR15_FiringPin_ShoulderRadius()+(7/25.4),
                AR15_BoltLength()+AR15_FiringPinRetainerOffset()])
     rotate([90,0,0])
     NutAndBolt(bolt=BoltSpec("M3"), boltLength=20/25.4,
@@ -162,5 +221,13 @@ module AR15_BoltCamPinTrack(length=2,
           AR15_CamPinSquareOffset()+AR15_CamPinSquareHeight()+clearance]);
 }
 
-#AR15_BoltCamPinTrack();
-AR15_Bolt(teardrop=false, firingPinRetainer=false, extraFiringPin=0);
+
+module AR15_BoltAssembly(cutter=false) {
+  
+  AR15_Bolt(cutter=cutter);
+  AR15_CamPin(cutter=cutter);
+  AR15_FiringPin(cutter=cutter);
+}
+
+//AR15_BoltCamPinTrack();
+AR15_BoltAssembly();
