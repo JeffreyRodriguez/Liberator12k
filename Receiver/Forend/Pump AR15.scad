@@ -32,10 +32,10 @@ use <../Charging Pump.scad>;
 
 /* [Print] */
 
-// Assembly is not for printing.
+// Select a part, Render (F6), then Export to STL (F7)
 _RENDER = ""; // ["", "Bolt Carrier", "Forend", "CamGuide", "Handguard"]
 
-/* [Preview] */
+/* [Assembly] */
 _SHOW_ACTION_ROD = true;
 _SHOW_RECEIVER = true;
 _SHOW_BARREL = true;
@@ -394,6 +394,7 @@ module Handguard(debug=false, alpha=1) {
   }
 }
 
+scale(25.4)
 if ($preview) {
 
   if (_SHOW_BARREL) {
@@ -451,7 +452,7 @@ if ($preview) {
     LowerMount();
   }
 
-} else scale(25.4) {
+} else {
   if (_RENDER == "Bolt Carrier")
   BoltCarrier_print();
 

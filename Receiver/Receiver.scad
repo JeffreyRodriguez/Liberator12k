@@ -292,12 +292,14 @@ module ReceiverAssembly(debug=false) {
 }
 
 
+
+scale(25.4)
 if ($preview) {
   ReceiverAssembly(debug=_CUTAWAY_RECEIVER);
   
   if (_SHOW_RECEIVER_BACK)
   ReceiverBackSegment();
-} else scale(25.4) {
+} else {
   
   if (_RENDER == "Receiver")
   rotate([0,90,0])

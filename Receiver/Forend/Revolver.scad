@@ -928,9 +928,10 @@ module RevolverAssembly(stock=true) {
   RevolverForendAssembly(debug=false);
 }
 
+scale(25.4)
 if ($preview) {
   RevolverAssembly();
-} else scale(25.4) {
+} else {
   
   if (_RENDER == "Receiver_LargeFrame")      
   rotate([0,90,0])

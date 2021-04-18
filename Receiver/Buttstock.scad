@@ -430,6 +430,7 @@ module StockAssembly(debug=_CUTAWAY_ASSEMBLY, debugStock=_CUTAWAY_STOCK, alphaSt
   Buttpad(alpha=alphaButtpad, debug=debug);
 }
 
+scale(25.4)
 if ($preview) {
   if (_SHOW_RECEIVER)
   ReceiverAssembly();
@@ -444,7 +445,7 @@ if ($preview) {
   }
   
   StockAssembly();
-} else scale(25.4) {
+} else {
   
   if (_RENDER == "StockButton_Left")
   rotate([180,0,0])

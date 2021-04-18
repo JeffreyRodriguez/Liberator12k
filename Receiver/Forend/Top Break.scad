@@ -806,6 +806,8 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1, receiverFrontAlpha=1,
   ReceiverForend(debug=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
 }
 
+
+scale(25.4)
 if ($preview) {
   
   translate([-ReceiverFrontLength(),0,0]) {
@@ -839,7 +841,7 @@ if ($preview) {
                                  -Animate(ANIMATION_STEP_LOCK),
                       extractFactor=Animate(ANIMATION_STEP_UNLOAD)
                                  -SubAnimate(ANIMATION_STEP_LOAD, end=0.25));
-} else scale(25.4) {
+} else {
 
   if (_RENDER == "BarrelCollar")
   BarrelCollar_print();

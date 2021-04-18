@@ -413,6 +413,7 @@ module Lower(showReceiverLugs=false, showReceiverLugBolts=false,
                   showLeft=showLeft, showRight=showRight, alpha=alpha);
 }
 
+scale(25.4)
 if ($preview) {
 
   AnimateSpin()
@@ -425,7 +426,7 @@ if ($preview) {
         showMiddle=_SHOW_LOWER_MIDDLE,
         showRight=_SHOW_LOWER_RIGHT,
         alpha=_ALPHA_LOWER);
-} else scale(25.4) {
+} else {
   if (_RENDER == "LowerLeft")
     LowerLeft_print();
 

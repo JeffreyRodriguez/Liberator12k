@@ -777,6 +777,7 @@ module SimpleFireControlAssembly(actionRod=_SHOW_ACTION_ROD, recoilPlate=_SHOW_R
 //*************
 //* Rendering *
 //*************
+scale(25.4)
 if ($preview) {
   
   if (_SHOW_LOWER) {
@@ -792,7 +793,7 @@ if ($preview) {
   
   if (_SHOW_RECEIVER)
   ReceiverAssembly(debug=_CUTAWAY_RECEIVER);
-} else scale(25.4) {
+} else {
   
   if (_RENDER == "FireControlHousing")
   FireControlHousing_print();

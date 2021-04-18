@@ -34,7 +34,7 @@ use <Bipod.scad>;
 /* [What to Render] */
 
 // Configure settings below, then choose a part to render. Render that part (F6) then export STL (F7). Assembly is not for printing.
-_RENDER = "Assembly"; // ["Assembly", "BarrelPivotCollar", "BarrelLatchCollar", "RecoilPlateHousing", "Forend", "Foregrip", "Extractor", "Latch", "LatchFront"]
+_RENDER = ""; // ["", "BarrelPivotCollar", "BarrelLatchCollar", "RecoilPlateHousing", "Forend", "Foregrip", "Extractor", "Latch", "LatchFront"]
 
 // Cut assembly view in half
 _DEBUG_ASSEMBLY = false;
@@ -787,7 +787,8 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1,
   BreakActionForend(debug=debug);
 }
 
-if (_RENDER == "Assembly") {
+scale(25.4)
+if ($preview) {
   BreakActionAssembly(debug=_DEBUG_ASSEMBLY,
                       pivotFactor=Animate(ANIMATION_STEP_UNLOAD)
                                  -Animate(ANIMATION_STEP_LOAD),
@@ -816,9 +817,7 @@ if (_RENDER == "Assembly") {
           showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true);
     
   }
-}
-
-scale(25.4) {
+} else {
 
   if (_RENDER == "BarrelPivotCollar")
   BarrelPivotCollar_print();

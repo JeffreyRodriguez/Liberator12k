@@ -180,6 +180,7 @@ module Receiver_LargeFrameAssembly(length=FrameBoltLength(), frameBolts=true, de
   FrameBolts(length=length, debug=debug, alpha=alpha);
 }
 
+scale(25.4)
 if ($preview) {
   
   if (_SHOW_RECEIVER_RODS)
@@ -190,6 +191,5 @@ if ($preview) {
     ReceiverMlokBolts();
   }
 } else {
-  scale(25.4)
   Receiver_LargeFrame_print();
 }

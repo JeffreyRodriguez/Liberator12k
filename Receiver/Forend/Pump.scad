@@ -26,6 +26,39 @@ use <../Frame.scad>;
 use <../Buttstock.scad>;
 use <../Fire Control Group.scad>;
 
+/* [Print] */
+
+// Select a part, Render it (F6), then Export to STL (F7)
+_RENDER = ""; // ["", "PumpForend"]
+
+/* [Assembly] */
+//_SHOW_RECEIVER = true;
+//_SHOW_BARREL = true;
+//_SHOW_FOREND = true;
+//_SHOW_FRAME = true;
+//_SHOW_COLLAR = true;
+//_SHOW_EXTRACTOR = true;
+//_SHOW_RECEIVER_FRONT = true;
+//_SHOW_FCG = true;
+//_SHOW_STOCK = true;
+//_SHOW_LOWER = true;
+//_SHOW_LOWER_MOUNT = true;
+//_SHOW_LATCH = true;
+//
+//_ALPHA_FOREND = 1;  // [0:0.1:1]
+//_ALPHA_LATCH = 1; // [0:0.1:1]
+//_ALPHA_COLLAR = 1; // [0:0.1:1]
+//_ALPHA_RECEIVER_TUBE = 1; // [0:0.1:1]
+//_ALPHA_EXTRACTOR = 1; // [0:0.1:1]
+//_ALPHA_RECOIL_PLATE_HOUSING=1; // [0:0.1:1]
+//
+//_CUTAWAY_RECEIVER = false;
+//_CUTAWAY_FOREND = false;
+//_CUTAWAY_COLLAR = false;
+//_CUTAWAY_EXTRACTOR = false;
+//_CUTAWAY_LATCH = false;
+
+
 // Measured: Vitamins
 function BarrelCollarSteelDiameter() = 1.75;
 function BarrelCollarSteelRadius() = BarrelCollarSteelDiameter()/2;
@@ -212,6 +245,14 @@ module PumpShotgunAssembly(debug=false) {
   PumpMagazine(hollow=true, debug=false, alpha=0.5);
 }
 
-PumpShotgunAssembly(debug=false);
+scale(25.4)
+if ($preview) {
+  PumpShotgunAssembly(debug=false);
+} else {
+  if (_RENDER == "PumpForend")
+  rotate([0,-90,0])
+  PumpForend();
+  
+}
 
 //$t=0.75;
