@@ -87,7 +87,7 @@ PIVOT_WIDTH = 1.75;
 FRAME_BOLT_LENGTH = 10;
 
 /* [Branding] */
-BRANDING_MODEL_NAME = "Top Break 12ga";
+BRANDING_MODEL_NAME = "CAFE 12ga";
 
 $fs = UnitsFs()*0.5;
 
