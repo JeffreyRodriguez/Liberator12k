@@ -108,7 +108,7 @@ forendLength = AR15BarrelExtensionLength()+abs(magwellX)+magwellWallFront; //+ab
 forendMinX = -forendLength+AR15BarrelExtensionLength()+AR15BarrelExtensionLipLength();
 forendMaxX = forendMinX+forendLength;
 
-firingPinMinX  = boltLockedMinX -AR15_FiringPinExtension();
+firingPinMinX  = boltLockedMinX -AR15_FiringPin_Extension();
 hammerMaxX = firingPinMinX;
 hammerMinX = firingPinMinX;
 
@@ -117,7 +117,7 @@ stockLength=abs(hammerMinX)+forendMinX+stockWall;
 
 boltCarrierLength = stockLength
                 + barrelExtensionLandingHeight;
-handleLength=abs(hammerMinX-hammerMaxX)+AR15_FiringPinExtension();
+handleLength=abs(hammerMinX-hammerMaxX)+AR15_FiringPin_Extension();
 handleMinX = stockMinX;//+stockWall;
 
 function AR15_CamPinAngleExtra() = 0;
@@ -167,18 +167,18 @@ module BARBB_HammerCutOut(extraX=0) {
     // Hammer linear track
     cube([abs(hammerMaxX-hammerMinX)+extraX,
           hammerWidth,
-          abs(-tubeCenterZ+(hammerWidth/2)+AR15_firingPinRadius())]);
+          abs(-tubeCenterZ+(hammerWidth/2)+AR15_FiringPin_ShoulderRadius())]);
     
     
     // Hammer rotary track
     rotate([0,90,0])
     linear_extrude(height=hammerWidth)
     rotate(-90)
-    semicircle(od=abs((-tubeCenterZ+(hammerWidth/2)+AR15_firingPinRadius())*2), angle=90);
+    semicircle(od=abs((-tubeCenterZ+(hammerWidth/2)+AR15_FiringPin_ShoulderRadius())*2), angle=90);
     
     // Hammer rotary track, rounded inside corner)
     translate([hammerWidth,0,0])
-    linear_extrude(height=-tubeCenterZ+(hammerWidth/2)+AR15_firingPinRadius())
+    linear_extrude(height=-tubeCenterZ+(hammerWidth/2)+AR15_FiringPin_ShoulderRadius())
     rotate(180)
     RoundedBoolean(edgeOffset=0, edgeSign=-1, r=hammerWidth);
   }
@@ -297,7 +297,7 @@ module BARBB_BoltCarrier(clearance=0.01) {
     // Firing Pin Rear Hole Chamfer
     translate([stockMinX,0,0])
     rotate([0,90,0])
-    HoleChamfer(r1=AR15_firingPinRadius()+(clearance*2), r2=chamferRadius, teardrop=true);
+    HoleChamfer(r1=AR15_FiringPin_ShoulderRadius()+(clearance*2), r2=chamferRadius, teardrop=true);
     
     translate([boltLockedMaxX,0,0])
     rotate([0,-90,0])
@@ -319,7 +319,7 @@ module BARBB_BoltCarrier(clearance=0.01) {
       
         linear_extrude(height=(hammerWidth*2))
         rotate(180)
-        semicircle(od=(AR15_firingPinRadius())*2, angle=90);
+        semicircle(od=(AR15_FiringPin_ShoulderRadius())*2, angle=90);
       }
     
       // Hammer travel
@@ -352,7 +352,7 @@ module BARBB_Assembly() {
   color("DimGrey")
   translate([boltLockedMaxX,0,0])
   rotate([0,-90,0])
-  AR15_Bolt(teardrop=false, firingPinRetainer=false, extraFiringPin=0);
+  AR15_Bolt(teardrop=false, firingPinRetainer=false);
   
   if (_SHOW_BOLT_CARRIER)
   color("Olive")
