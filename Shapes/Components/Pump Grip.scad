@@ -13,7 +13,7 @@ function PumpGripRadius() = PumpGripDiameter()/2;
 
 function PumpGripLength() = 5.25;
 
-module PumpGrip(outerRadius=PumpGripRadius(), innerRadius=1.1/2,
+module PumpGrip(outerRadius=PumpGripRadius(),
                 length=PumpGripLength(),
                 rings=true, ringRadius=3/32, ringGap=0.75,
                 doRender=false, alpha=1, $fn=Resolution(20,100)) {
@@ -21,11 +21,7 @@ module PumpGrip(outerRadius=PumpGripRadius(), innerRadius=1.1/2,
   color("Tan", alpha)
   RenderIf(doRender)
   difference() {
-    union() {
-      ChamferedCylinder(r1=outerRadius, r2=1/16, h=length);
-      
-      children();
-    }
+    ChamferedCylinder(r1=outerRadius, r2=1/16, h=length);
 
     // Gripping cutout rings
     if (rings)
@@ -41,11 +37,6 @@ module PumpGrip(outerRadius=PumpGripRadius(), innerRadius=1.1/2,
     linear_extrude(height=length+ManifoldGap(2))
     for (R =[1,-1]) rotate(90*R)
     Teardrop(r=ringRadius*2);
-
-    // Inner bearing profile
-    if (is_num(innerRadius))
-    BearingSurface(r=innerRadius, length=length, center=false,
-                   depth=0.0625, segments=6, taperDepth=0.125);
   }
 }
 

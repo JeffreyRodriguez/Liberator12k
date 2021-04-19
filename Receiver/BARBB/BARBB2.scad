@@ -24,7 +24,6 @@ use <../Magwells/AR15 Magwell.scad>;
 
 use <../Receiver.scad>;
 use <../Buttstock.scad>;
-use <../Charging Pump.scad>;
 
 /* [Print] */
 

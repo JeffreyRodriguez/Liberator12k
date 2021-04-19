@@ -45,6 +45,9 @@ use <../Fire Control Group.scad>;
 _RENDER = ""; // ["", "Receiver_LargeFrame", "Revolver_ReceiverFront", "Revolver_FrameSpacer", "Foregrip", "Revolver_CylinderCore", "Revolver_CylinderShell", "Revolver_BarrelSupport", "Revolver_ForendSpindleToggleLinkage", "Revolver_ForendSpindleToggleHandle", "Revolver_Projection_Cylinder", "Revolver_Projection_CylinderCore", "Revolver_Projection_BlastPlate", "Revolver_Projection_RecoilPlate"]
 
 /* [Assembly] */
+
+_FOREGRIP = "Standard"; // ["Standard", "Vertical"]
+
 _SHOW_RECEIVER = true;
 _SHOW_LOWER_LUGS = true;
 _SHOW_LOWER = true;
@@ -55,7 +58,7 @@ _SHOW_RECOIL_PLATE = true;
 _SHOW_ACTION_ROD = true;
 _SHOW_BARREL_SUPPORT = true;
 _SHOW_CYLINDER = true;
-_SHOW_PUMP = true;
+_SHOW_FOREGRIP = true;
 _SHOW_FRAME_SPACER = true;
 _SHOW_BARREL = true;
 _SHOW_BLAST_PLATE = true;
@@ -65,6 +68,7 @@ _SHOW_SPINDLE = true;
 _ALPHA_BARREL_SUPPORT = 1;     // [0:0.1:1]
 _ALPHA_CYLINDER = 1;           // [0:0.1:1]
 _ALPHA_FOREND = 1;             // [0:0.1:1]
+_ALPHA_FOREGRIP = 1;           // [0:0.1:1]
 _ALPHA_RECEIVER_TUBE = 1;      // [0:0.1:1]
 _ALPHA_RECEIVER_COUPLING = 1;  // [0:0.1:1]
 _ALPHA_RECEIVER_FRONT = 1;     // [0:0.1:1]
@@ -80,6 +84,7 @@ _CUTAWAY_CYLINDER = false;
 _CUTAWAY_RECEIVER = false;
 _CUTAWAY_RECEIVER_FRONT = false;
 _CUTAWAY_FOREND = false;
+_CUTAWAY_FOREGRIP = false;
 _CUTAWAY_FCG = false;
 _CUTAWAY_DISCONNECTOR = false;
 _CUTAWAY_HAMMER = false;
@@ -284,6 +289,13 @@ module Revolver_CylinderSpindle(template=false, cutter=false, clearance=0.01) {
   cylinder(r=radius+clear, h=length);
 }
 
+module Revolver_ForegripBolts(template=false, bolt=ForegripBolt(), cutter=false) {
+  color("Silver") RenderIf(!cutter)
+  for (X = [ForegripMinX()+0.5, ForegripMinX()+1.375])
+  translate([X,0,ActionRodZ()+0.375])
+  Bolt(bolt=bolt, capOrientation=true, head="socket",
+       length=(cutter?ActionRodZ()+0.375:5/8), teardrop=cutter, teardropTruncated=cutter);
+}
 module Revolver_ForendSpindle(template=false, cutter=false, clearance=0.01) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
@@ -781,13 +793,14 @@ module Revolver_CylinderShell_print() {
   }
 }
 
-module Foregrip(length=2) {
-  render()
+module Revolver_VerticalForegrip(length=2, debug=true, alpha=1) {
+  color("Tan", alpha) render() DebugHalf(enabled=debug) 
   difference() {
-    union() {      
+    union() {
       translate([ForegripMinX(),0,0])
       rotate([0,90,0])
-      ChamferedCylinder(r1=BarrelRadius()+WallBarrel(), r2=1/16, h=length);
+      ChamferedCylinder(r1=BarrelRadius()+WallBarrel(),
+                        r2=1/16, h=length, $fn=Resolution(40,80));
       
       // Grip block
       translate([ForegripMinX(),-1/2,0])
@@ -795,23 +808,86 @@ module Foregrip(length=2) {
       ChamferedCube([abs(CylinderZ())+0.25, 1, length], r=1/16);
       
       // Action Rod Support Block
-      translate([ForegripMinX(),-0.75/2,0])
-      ChamferedCube([1, 0.75, 1.125], r=1/16);
+      translate([ForegripMinX(),-TensionRodTopOffsetSide(),0])
+      ChamferedCube([length, (TensionRodTopOffsetSide()*2), ReceiverTopZ()], r=1/4,
+                     teardropFlip=[false, true,true]);
     }
+    
+    // Inner bearing profile
+    translate([ForegripMinX(),0,0])
+    rotate([0,90,0])
+    BearingSurface(r=BarrelRadius()+0.02,
+                   length=length, center=false,
+                   depth=0.0625, segments=6, taperDepth=0.125);
     
     ActionRod(cutter=true);
     Revolver_Barrel(cutter=true);
-    
-    // Foregrip bolt
-    translate([ForegripMinX()+0.5,0,0])
-    cylinder(r=1/8/2, h=2);
+    Revolver_ForegripBolts(cutter=true);
   }
 }
 
-module Foregrip_print() {
+module Revolver_VerticalForegrip_print() {
   rotate([0,-90,0])
   translate([-ForegripMinX(),0,0])
-  Foregrip();
+  Revolver_VerticalForegrip();
+}
+
+module Revolver_Foregrip(length=PumpGripLength(), debug=false, alpha=1) {
+  color("Tan", alpha) render() DebugHalf(enabled=debug)
+  difference() {
+    
+    // Body around the barrel
+    union() {
+      translate([ForegripMinX(),0,0])
+      rotate([0,90,0])
+      PumpGrip(length=length);
+      
+      // Action Rod Support Block
+      translate([ForegripMinX(),-0.75/2,0])
+      ChamferedCube([2, 0.75, ActionRodZ()+0.375], r=1/8);
+    }
+    
+    // Inner bearing profile
+    translate([ForegripMinX(),0,0])
+    rotate([0,90,0])
+    BearingSurface(r=BarrelRadius()+0.02,
+                   length=length, center=false,
+                   depth=0.0625, segments=6, taperDepth=0.125);
+    
+    ActionRod(cutter=true);
+    Revolver_ForegripBolts(cutter=true);
+    //Revolver_Barrel(cutter=true);
+  }
+}
+
+module Revolver_Foregrip_print() {
+  rotate([0,-90,0])
+  translate([-ForegripMinX(),0,0])
+  Revolver_Foregrip();
+}
+
+
+module Revolver_ActionRodJig() {
+  height=0.75;
+  width=0.75;
+
+  difference() {
+    translate([0,-(width/2),0])
+    ChamferedCube([length,
+                   width,
+                   height], r=1/16);
+
+    // Charging rod
+    translate([0,0,height-RodRadius(ChargingRod())])
+    rotate([0,90,0])
+    SquareRod(ChargingRod(), length=length+ManifoldGap(),
+              clearance=RodClearanceSnug());
+
+    // ZigZag Actuator
+    for (X = [0,ChargerTravel()+(ChargerTowerLength()/2)])
+    translate([(ChargerTowerLength()/2)+X,0,-ManifoldGap()])
+    cylinder(r=3/32/2, h=height, $fn=8);
+  }
 }
 
 
@@ -901,12 +977,18 @@ module RevolverAssembly(stock=true) {
     if (_SHOW_FCG)
     SimpleFireControlAssembly(recoilPlate=false) {
   
-      if (_SHOW_PUMP)
-      translate([ForegripMinX()+0.5,0,0])
-      rotate([0,90,0])
-      color("Tan") render()
-      PumpGrip();
-      //Foregrip();
+      if (_SHOW_FOREGRIP) {
+        
+        Revolver_ForegripBolts();
+        
+        if (_FOREGRIP == "Standard") {
+          Revolver_Foregrip(debug=_CUTAWAY_FOREGRIP,
+                            alpha=_ALPHA_FOREGRIP);
+        } else {
+          Revolver_VerticalForegrip(debug=_CUTAWAY_FOREGRIP,
+                                    alpha=_ALPHA_FOREGRIP);
+        }
+      }
     
       // Actuator pin
       *translate([0.125+ReceiverFrontLength()+ActionRodTravel(),0,ActionRodZ()])

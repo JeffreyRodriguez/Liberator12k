@@ -28,7 +28,6 @@ use <../Fire Control Group.scad>;
 use <../Lower/Lower.scad>;
 use <../Lower/Mount.scad>;
 use <../Frame.scad>;
-use <../Charging Pump.scad>;
 
 /* [Print] */
 
