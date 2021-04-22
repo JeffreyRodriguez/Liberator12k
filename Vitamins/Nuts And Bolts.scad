@@ -49,10 +49,10 @@ $fs = UnitsFs()*0.25;
  */
 module Bolt2d(bolt=Spec_BoltTemplate(),
               clearance=0, threaded=false,
-              teardrop=false, teardropAngle=0) {
+              teardrop=false, teardropTruncated=false, teardropAngle=0) {
   if (teardrop) {
     Teardrop(r=BoltRadius(bolt, clearance, threaded),
-             rotation=teardropAngle);
+             rotation=teardropAngle, truncated=teardropTruncated);
   } else {
     circle(r=BoltRadius(bolt, clearance, threaded));
   }
@@ -61,7 +61,7 @@ module Bolt2d(bolt=Spec_BoltTemplate(),
 module Bolt(bolt=Spec_BoltTemplate(), length=1,
             head=undef,
             clearance=0, threaded=false,
-            teardrop=false, teardropAngle=0,
+            teardrop=false, teardropTruncated=false, teardropAngle=0,
             capHeightExtra=0, $fn=undef,
             capOrientation=false) {
 
@@ -72,7 +72,8 @@ module Bolt(bolt=Spec_BoltTemplate(), length=1,
     linear_extrude(height=length)
     Bolt2d(bolt=bolt, clearance=clearance,
     threaded=threaded,
-    teardrop=teardrop, teardropAngle=teardropAngle);
+    teardrop=teardrop, teardropTruncated=teardropTruncated,
+    teardropAngle=teardropAngle);
 
     // Bolt head
     translate([0,0,length])
