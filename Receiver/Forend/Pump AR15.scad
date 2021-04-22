@@ -26,7 +26,7 @@ use <../Buttstock.scad>;
 use <../Receiver.scad>;
 use <../Fire Control Group.scad>;
 use <../Lower/Lower.scad>;
-use <../Lower/Mount.scad>;
+use <../Lower/LowerMount.scad>;
 use <../Frame.scad>;
 
 /* [Print] */

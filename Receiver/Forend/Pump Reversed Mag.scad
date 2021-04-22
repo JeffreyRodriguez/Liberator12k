@@ -15,7 +15,7 @@ use <../../Vitamins/Pipe.scad>;
 use <../../Vitamins/Rod.scad>;
 use <../../Vitamins/Square Tube.scad>;
 
-use <../Lower/Mount.scad>;
+use <../Lower/LowerMount.scad>;
 use <../Lower/Trigger.scad>;
 use <../Lower/Lower.scad>;
 

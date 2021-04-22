@@ -1,5 +1,5 @@
 use <../Vitamins/Pipe.scad>;
-include <../AR15 Grip Mount.scad>;
+include <../AR15 Grip LowerMount.scad>;
 
 wall = TeeWidth(receiverTee)/2 - TeeRimDiameter(receiverTee)/2 - TeeRimWidth(receiverTee);
 

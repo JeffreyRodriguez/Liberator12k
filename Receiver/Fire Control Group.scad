@@ -18,7 +18,7 @@ use <../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 
 use <Lower/Lower.scad>;
 use <Lower/Trigger.scad>;
-use <Lower/Mount.scad>;
+use <Lower/LowerMount.scad>;
 
 use <Receiver.scad>;
 

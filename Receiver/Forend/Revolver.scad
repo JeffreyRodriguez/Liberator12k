@@ -11,7 +11,7 @@ use <../../Meta/Math/Triangles.scad>;
 
 use <../Lower/Lower.scad>;
 use <../Lower/Trigger.scad>;
-use <../Lower/Mount.scad>;
+use <../Lower/LowerMount.scad>;
 
 use <../../Shapes/Chamfer.scad>;
 use <../../Shapes/Helix.scad>;
