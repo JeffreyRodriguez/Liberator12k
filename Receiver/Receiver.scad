@@ -129,13 +129,13 @@ module ReceiverMlokBolts(headType="flat", nutType="heatset", length=0.5, cutter=
 // **********
 // * Shapes *
 // **********
-module ReceiverMlokSlot(depth=0.0625, clearance=0) {
+module ReceiverMlokSlot(length=ReceiverLength(), depth=0.0625, clearance=0) {
   width = UnitsMetric(7)+clearance;
   
   translate([0, -width/2, ReceiverTopZ()+ManifoldGap()])
   mirror([0,0,1])
   mirror([1,0,0])
-  cube([ReceiverLength(), width, depth]);
+  cube([length, width, depth]);
 }
 module ReceiverBottomSlot(clearance=ReceiverSlotClearance()) {
   translate([-0.5, -(ReceiverBottomSlotWidth()/2)-clearance,0])
