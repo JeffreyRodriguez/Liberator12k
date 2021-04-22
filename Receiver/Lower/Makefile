@@ -25,8 +25,9 @@ LowerMount_STL=LowerMount_Front.stl LowerMount_Rear.stl
 				$<; \
 	done
 
-%.mp4: %.scad .frames/%.mp4
+%.mp4: .frames/%.mp4
 	../../bin/animate.sh .frames/$@/ $@
+
 
 %.png: %.scad
 	$(OSBIN) $(OSOPTS) -o $@ \
