@@ -64,4 +64,4 @@ clean_PNG:
 .SECONDEXPANSION:
 all:  Trigger Lower
 
-Trigger Lower: $$($$@_STL) $$@.html
+Trigger Lower: $$($$@_STL) $$@.html $$@.mp4
