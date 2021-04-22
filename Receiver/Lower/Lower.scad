@@ -20,7 +20,7 @@ use <Trigger.scad>;
 /* [Print] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "LowerLeft", "LowerRight", "LowerMiddle", "TriggerLeft", "TriggerRight", "TriggerMiddle"]
+_RENDER = ""; // ["", "Lower_Left", "Lower_Right", "Lower_Middle"]
 
 /* [Assembly] */
 _SHOW_LOWER_LEFT = true;
@@ -280,7 +280,7 @@ module LowerCutouts(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_N
 
   TriggerFingerSlot();
 
-  SearCutter();
+  Sear(cutter=true);
 }
 
 
@@ -313,18 +313,18 @@ module LowerSidePlates(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOL
 
 }
 
-module LowerLeft_print(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT)
+module Lower_Left_print(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT)
 rotate(180)
 rotate([90,0,0])
 translate([0,-0.25,2.125])
 LowerSidePlates(boltSpec=LowerBolt(), head=head, nut=nut, showLeft=true, showRight=false);
 
-module LowerRight_print(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT)
+module Lower_Right_print(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT)
 rotate([-90,0,0])
 translate([0,0.25,2.125])
 LowerSidePlates(boltSpec=LowerBolt(), head=head, nut=nut, showLeft=false, showRight=true);
 
-module LowerMiddle(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT) {
+module Lower_Middle(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT) {
   color("Chocolate")
   render()
   difference() {
@@ -357,11 +357,11 @@ module LowerMiddle(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NU
   }
 }
 
-module LowerMiddle_print(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT)
+module Lower_Middle_print(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT)
 rotate(180)
 rotate([90,0,0])
 translate([0,0.25,2.125])
-LowerMiddle(boltSpec=LowerBolt(), head=head, nut=nut);
+Lower_Middle(boltSpec=LowerBolt(), head=head, nut=nut);
 
 module LowerMatchplate2d() {
   union() {
@@ -387,7 +387,7 @@ module Lower(showReceiverLugs=false, showReceiverLugBolts=false,
 
   // Trigger Guard Center
   if (showMiddle)
-  LowerMiddle();
+  Lower_Middle();
 
   // Trigger
   if (showTrigger) {
@@ -427,21 +427,12 @@ if ($preview) {
         showRight=_SHOW_LOWER_RIGHT,
         alpha=_ALPHA_LOWER);
 } else {
-  if (_RENDER == "LowerLeft")
-    LowerLeft_print();
+  if (_RENDER == "Lower_Left")
+    Lower_Left_print();
 
-  if (_RENDER == "LowerRight")
-    LowerRight_print();
+  if (_RENDER == "Lower_Right")
+    Lower_Right_print();
 
-  if (_RENDER == "LowerMiddle")
-    LowerMiddle_print();
-
-  if (_RENDER == "TriggerLeft")
-    TriggerLeft_print();
-
-  if (_RENDER == "TriggerRight")
-    TriggerRight_print();
-
-  if (_RENDER == "TriggerMiddle")
-    TriggerMiddle_print();
+  if (_RENDER == "Lower_Middle")
+    Lower_Middle_print();
 }

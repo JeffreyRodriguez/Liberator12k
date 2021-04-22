@@ -77,7 +77,7 @@ module ar15_grip(mount_height=1, mount_length=1, top_extension = 0, extension=0,
     }
     
     translate([-LowerMaxX(),0,0])
-    #SearCutter();
+    Sear(cutter=true);
 
     *union() {
 

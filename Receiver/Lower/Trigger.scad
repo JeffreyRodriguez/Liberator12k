@@ -12,12 +12,28 @@ use <../../Vitamins/Rod.scad>;
 
 use <Lugs.scad>;
 
+/* [Print] */
+
+// Select a part, Render (F6), then Export to STL (F7)
+_RENDER = ""; // ["", "Trigger_Left", "Trigger_Right", "Trigger_Middle"]
+
+/* [Assembly] */
+_SHOW_TRIGGER_LEFT = true;
+_SHOW_TRIGGER_RIGHT = true;
+_SHOW_TRIGGER_MIDDLE = true;
+
+/* [Vitamins] */
+SEAR_WIDTH = 0.2501;
+SEAR_CLEARANCE = 0.005;
+SEAR_PIN_DIAMETER = 0.09375;
+SEAR_PIN_CLEARANCE = 0.01;
+
 function SearRod() = Spec_RodOneQuarterInch();
 function SearPinRod() = Spec_RodThreeThirtysecondInch();
 
 // Shorthand: Measurements
-function SearRadius(clearance)   = RodRadius(SearRod(), clearance);
-function SearDiameter(clearance) = RodDiameter(SearRod(), clearance);
+function SearDiameter(clearance) = SEAR_WIDTH+(clearance*2);
+function SearRadius(clearance)   = SearDiameter(clearance)/2;
 
 function SearSpringCompressed() = 0.3;
 
@@ -40,43 +56,28 @@ function SearLength() = abs(SearPinOffsetZ()) + SearTravel();
 
 function TriggerAnimationFactor() = SubAnimate(ANIMATION_STEP_TRIGGER)-SubAnimate(ANIMATION_STEP_CHARGER_RESET, end=0.1);
 
-module Sear(animationFactor=TriggerAnimationFactor(), length=SearLength(), cutter=false, clearance=0.01) {
+module Sear(animationFactor=TriggerAnimationFactor(), length=SearLength(), cutter=false, clearance=SEAR_CLEARANCE) {
+  clear = cutter ? clearance : 0;
   
-  color("Silver")
-  RenderIf(!cutter)
-  translate([0,0,-SearTravel()*animationFactor])
-  difference() {
-    translate([0,0,SearPinOffsetZ()-SearBottomOffset()])
-    SquareRod(rod=SearRod(), length=length);
+  translate([0,0,-SearTravel()*animationFactor]) {
     
-    if (!cutter)
-    SearPin(cutter=true);
+    color("Silver") RenderIf(!cutter)
+    difference() {
+      translate([-SearRadius(clear),-SearRadius(clear),SearPinOffsetZ()-SearBottomOffset()-(cutter?SearTravel()+SearSpringCompressed():0)])
+      cube([SearDiameter(clear), SearDiameter(clear), length]);
+      
+      if (!cutter)
+      SearPin(cutter=true);
+    }
+    
+    children();
   }
 }
-module SearPin(cutter=false, clearance=0.005) {
+module SearPin(cutter=false, clearance=SEAR_PIN_CLEARANCE) {
   translate([0,0,SearPinOffsetZ()])
   rotate([90,0,0])
-  color("Red") RenderIf(!cutter)
+  color("SteelBlue") RenderIf(!cutter)
   Rod(rod=SearPinRod(), clearance=cutter?RodClearanceLoose():undef, length=0.5, center=true);
-}
-
-module SearCutter(length=SearLength()+SearTravel(), searLengthExtra=0, crosspin=true,wideTrack=false) {
-  
-  color("Red", 0.25)
-  union() {
-    translate([0,0,SearPinOffsetZ()-SearBottomOffset()-SearTravel()-SearSpringCompressed()])
-    SquareRod(rod=SearRod(),
-        clearance=RodClearanceLoose(),
-        length=length+searLengthExtra);
-
-    if (wideTrack)
-    translate([-RodDiameter(SearRod())*0.4,
-               -RodRadius(SearRod()),
-               SearPinOffsetZ()-SearBottomOffset()-SearTravel()-SearSpringCompressed()])
-    cube([RodDiameter(SearRod())*0.8,
-          RodDiameter(SearRod()),
-          SearLength()+SearTravel()+searLengthExtra]);
-  }
 }
 
 module SearJig(width=0.75, height=1) {
@@ -149,7 +150,7 @@ module SearSupportTab(cutter=false, clearance=0.015) {
 
     if (!cutter)
     translate([0,0,-SearTravel()])
-    SearCutter(length=SearLength()+(SearTravel()*4), wideTrack=true);
+    Sear(length=SearLength()+(SearTravel()*4));
 
     ReceiverLugFront(cutter=true, clearance=clearance);
 
@@ -236,9 +237,7 @@ module TriggerBody() {
   }
 }
 
-module Trigger(animationFactor=TriggerAnimationFactor(),
-               left=true, leftAlpha=1,
-               right=true, rightAlpha=1) {
+module Trigger(animationFactor=TriggerAnimationFactor(), left=true, leftAlpha=1, right=true, rightAlpha=1) {
   sideplateWidth = (TriggerWidth()/2)
                  - RodRadius(SearRod(), RodClearanceSnug());
 
@@ -294,48 +293,46 @@ module Trigger(animationFactor=TriggerAnimationFactor(),
 
 module TriggerGroup(animationFactor=TriggerAnimationFactor(),
                     searLength=SearLength()) {
-  Sear(animationFactor=animationFactor, length=searLength);
+  Sear(animationFactor=animationFactor, length=searLength)
+  SearPin();
+  
   SearSupportTab();
   Trigger(animationFactor=animationFactor,
-          left=true, leftAlpha=0.3,
+          left=true, leftAlpha=1,
           right=true, rightAlpha=1);
 }
 
-module TriggerLeft_print()
+module Trigger_Left_print()
 rotate(180)
 translate([0,-TriggerHeight()/2,0])
 rotate([90,0,0])
 translate([0,-RodRadius(SearRod(), RodClearanceLoose()),0])
 Trigger(left=true, right=false);
 
-module TriggerRight_print()
+module Trigger_Right_print()
 rotate(180)
 translate([0,-TriggerHeight()/2,0])
 rotate([90,0,0])
 translate([0,TriggerWidth()/2,0])
 Trigger(left=false, right=true);
 
-module TriggerMiddle_print()
+module Trigger_Middle_print()
 rotate(180)
 translate([0,-TriggerHeight()/2,0.12])
 rotate([90,0,00])
 SearSupportTab(cutter=false);
 
+scale(25.4)
+if ($preview) {
+  TriggerGroup(animationFactor=sin(180*$t), searLength=1.67188);
+} else {
+  
+  if (_RENDER == "Trigger_Middle")
+  Trigger_Middle_print();
 
-TriggerGroup(animationFactor=sin(180*$t), searLength=1.67188);
+  if (_RENDER == "Trigger_Left")
+  Trigger_Left_print();
 
-TRIGGER_PLATER_MIDDLE = false;
-TRIGGER_PLATER_LEFT = false;
-TRIGGER_PLATER_RIGHT = false;
-
-if (TRIGGER_PLATER_MIDDLE)
-!scale(25.4)
-TriggerMiddle_print();
-
-if (TRIGGER_PLATER_LEFT)
-!scale(25.4)
-TriggerLeft_print();
-
-if (TRIGGER_PLATER_RIGHT)
-!scale(25.4)
-TriggerRight_print();
+  if (_RENDER == "Trigger_Right")
+  Trigger_Right_print();
+}

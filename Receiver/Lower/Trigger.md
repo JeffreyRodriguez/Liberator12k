@@ -1,6 +1,7 @@
-# #Liberator12k > Lower > Trigger
+# #Liberator12k Manual
+## Lower Receiver: Trigger
 
-A simple trigger based on [The Unknown Cat's](https://www.youtube.com/user/TweezerAddict) design.
+A simple trigger based on [The Unknown Cat's](https://www.youtube.com/channel/UCNR0HGw5airGKkiPcquS0TA) design.
 
 <!-- blank line -->
 <figure class="video_container">
@@ -11,61 +12,70 @@ A simple trigger based on [The Unknown Cat's](https://www.youtube.com/user/Tweez
 <!-- blank line -->
 
 ## How it Works
-The sear is a square rod with a cross-pin near the bottom.
-An inclined slot in each side of the trigger forces the cross-pin and sear
-downward when the trigger is pulled.
-A spring pushes the sear upwards into the cocked position.
+The sear is a square rod (Silver) with a cross-pin (SteelBlue) near the bottom.
+An inclined slot in each side of the trigger (Olive) forces the cross-pin and
+sear downward when the trigger is pulled. A central support tab (Chocolate)
+keeps the sear and its return spring (not pictured) oriented vertically.
+
+A compression spring located below the sear, and pushes the sear into the upward
+position, driving the trigger forward via the sear pin.
 
 ## Bill of Materials
+
+### Hardware
+
+| Purpose            | Part                             | Quantity | Buy Online       |
+|--------------------|----------------------------------|----------|------------------|
+| Sear               | 1/4"x1.67" Steel Square Rod      | 1        | #L12k/HWS/Online |
+| Sear Cross-Pin     | 3/32"x1/2" Music Wire            | 1        | #L12k/HWS/Online |
+| Sear Return Spring | 0.02" Wire, 0.25"x1.25"          | 1        | #L12k/HWS/Online |
+
+#### Sear
+ * 1/8" hole 5/16" from the bottom for the sear cross-pin
+ * This hole should be drilled under-size and reamed if possible.
+ * Filing any burrs is Good Enough.
+ 
+#### Sear Cross-Pin
+ * 3/32" Music Wire
+ * 1/2" long
+ * Ends should be slightly rounded and smooth.
+
 ### Prints
- * Trigger Middle [Trigger_M.stl](Trigger_M.stl)
- * Trigger Left Side [Trigger_L.stl](Trigger_M.stl)
- * Trigger Right Side [Trigger_R.stl](Trigger_M.stl)
+25g, 1h03m
 
-![Trigger_M.stl](Trigger_M.stl.png)
-![Trigger_L.stl](Trigger_L.stl.png)
-![Trigger_R.stl](Trigger_R.stl.png)
-
-### Vitamins
-
-Sear
-
-  * 1/4" Steel Square Rod
-  * 1.1525" long
-  * 1/8" hole 5/16" from the bottom for the sear cross-pin
-   * This hole should be drilled under-size and reamed if possible.
-   * Filing any burrs is Good Enough.
-
-Sear Cross-Pin
-
-  * 1/8" Steel Round Rod
-  * 1/2" long
-  * Ends should be slightly rounded and smooth.
-
-Sear Return Spring
-
-  * 0.02" Wire
-  * 0.25" OD
-  * 1.25" Length
-  * Sizes are approximate
+| Part                                                                                      | Settings       | Filament | Time |
+|-------------------------------------------------------------------------------------------|----------------|----------|------|
+| ![Trigger_Middle.stl](Trigger_Middle_thumb.png)<br>[Trigger_Left.stl](Trigger_Middle.stl) | Solid          | 6g       | 33m  |
+| ![Trigger_Left.stl](Trigger_Left_thumb.png)<br>[Trigger_Left.stl](Trigger_Left.stl)       | Solid          | 11g      | 56m  |
+| ![Trigger_Right.stl](Trigger_Right_thumb.png)<br>[Trigger_Right.stl](Trigger_Right.stl)   | Solid          | 8g       | 46m  |
 
 ## Instructions
-### Welding Trigger Sides
-The left and right trigger sides need to be permanently attached.
+All three parts of the trigger should be printed 100% solid.
 
-1. Verify the 1/8" sear cross-pin will slide smoothly in the slot.
-2. Apply MEK or Acetone to the raised portions of the right trigger side.
+### Glue Trigger Sides
+![Trigger](Trigger_thumb.png)
+
+The left and right trigger sides need to be permanently attached with super glue or epoxy.
+
+* Trigger_Left.stl
+* Trigger_Right.stl
+
+1. Verify the sear cross-pin will slide smoothly in the individual slots.
+2. Apply glue to the raised portions of Trigger_Right
 3. Set the left side on top of the right side.
-4. Align the parts with a 123 block, or similar in the back corner.
+4. Align the parts with straight edge (123 blocks).
 5. Apply pressure to the left side plate for a good bond.
-6. Wait until dry before completing assembly.
 
 ### Assembly
-1. From the top of the trigger sides, insert the trigger middle.
-2. Install the sear return spring into the trigger middle.
-3. Depress the sear return spring with the sear.
-4. Insert cross-pin from the inclined slot through the sear.
-5. Verify the trigger moves freely or use a needle file to clean up the slot
-and/or cross-pin hole.
+1. Insert the trigger middle portion into the glued sides. It should slide freely.
+2. Drop the sear return spring into the trigger middle.
+3. Insert the sear and and compress the return spring until the pin hole is visible through the side slot.
+4. Insert cross-pin through the inclined slot through the sear. It should lay flush or just below the surface of the trigger sides.
+5. Verify the trigger moves freely.
 6. Oil the cross-pin hole, both sides of the slot, front and rear of the sear.
 7. Squeezing the trigger should now feel silky smooth.
+
+### Finishing
+1. Polish and oil the sear surfaces and pin.
+2. Sand/polish the friction surfaces of the trigger sides.
+3. Use a needle file to clean up the inclined slot

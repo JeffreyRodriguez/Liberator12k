@@ -1,9 +1,10 @@
-# #Liberator12k > Lower
+# #Liberator12k Manual
+## Lower Receiver: Lower
 
-A lower receiver designed for easy reuse.
+A lower receiver designed for printer-friendly reuse.
 
 Provides a grip, trigger guard, and means of attachment via T-shaped
-"Receiver Lugs".
+"Receiver Lugs" and T-slot mounts.
 
 Uses the Unknown Cat-style trigger.
 
@@ -16,52 +17,38 @@ Uses the Unknown Cat-style trigger.
 <!-- blank line -->
 
 ## How it Works
-The sear is a square rod with a cross-pin near the bottom.
-An inclined slot in each side of the trigger forces the cross-pin and sear
-downward when the trigger is pulled.
-A spring pushes the sear upwards into the cocked position.
+The printed parts are sandwiched and bolted together.
 
 ## Bill of Materials
+
+### Hardware
+| Purpose            | Part                             | Quantity | Buy Online       |
+|--------------------|----------------------------------|----------|------------------|
+| Lower Nut          | #8-32 Threaded Insert            | 5        | #L12k/HWS/Online |
+| Lower Bolt         | #8-32x1.25 SS Flat-Head Bolt     | 5        | #L12k/HWS/Online |
+
 ### Prints
- * Lower Middle [Lower_M.stl](Lower_M.stl)
- * Lower Left Side [Lower_L.stl](Lower_M.stl)
- * Lower Right Side [Lower_R.stl](Lower_M.stl)
+-g, -h--m
 
-![Lower_M.stl](Lower_M.stl.png)
-![Lower_L.stl](Lower_L.stl.png)
-![Lower_R.stl](Lower_R.stl.png)
+| Part                                                                              | Settings       | Filament | Time |
+|-----------------------------------------------------------------------------------|----------------|----------|------|
+| ![Lower_Middle.stl](Lower_Middle_thumb.png)<br>[Lower_Left.stl](Lower_Middle.stl) | Solid          | 6g       | 33m  |
+| ![Lower_Left.stl](Lower_Left_thumb.png)<br>[Lower_Left.stl](Lower_Left.stl)       | Solid          | 11g      | 56m  |
+| ![Lower_Right.stl](Lower_Right_thumb.png)<br>[Lower_Right.stl](Lower_Right.stl)   | Solid          | 8g       | 46m  |
 
-### Vitamins
-
-Sear
-
-  * 1/4" Steel Square Rod
-  * 1.1525" long
-  * 1/8" hole 5/16" from the bottom for the sear cross-pin
-   * This hole should be drilled under-size and reamed if possible.
-   * Filing any burrs is Good Enough.
-
-Sear Cross-Pin
-
-  * 1/8" Steel Round Rod
-  * 1/2" long
-  * Ends should be slightly rounded and smooth.
-
-Sear Return Spring
-
-  * 0.02" Wire
-  * 0.25" OD
-  * 1.25" Length
-  * Sizes are approximate
+### Components
+ * ![Trigger](Trigger.png)<br>[Trigger](Trigger.html)
+ * ![Mount](Mount.png)<br>[Mount](Mount.html)
 
 ## Instructions
 
+#### Heatset Nuts
+1. Heatset the lower nuts into the left-side of the lower.
+
 ### Assembly
-1. From the top of the trigger sides, insert the trigger middle.
-2. Install the sear return spring into the trigger middle.
-3. Depress the sear return spring with the sear.
-4. Insert cross-pin from the inclined slot through the sear.
-5. Verify the trigger moves freely or use a needle file to clean up the slot
-and/or cross-pin hole.
-6. Oil the cross-pin hole, both sides of the slot, front and rear of the sear.
-7. Squeezing the trigger should now feel silky smooth.
+1. Insert the Front and Rear Mounts into the left-side of the lower.
+2. Slide the trigger between the mounts, and add the middle part of the lower.
+3. Stack the right-side of the lower and start screwing in the lower bolts.
+
+### Finishing
+1. Oil the friction surfaces of the trigger and lower.

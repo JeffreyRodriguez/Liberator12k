@@ -78,7 +78,7 @@ module LowerMount_Front(id=ReceiverID(), alpha=1, debug=false) {
     }
     
     translate([-0.01,0,0])
-    SearCutter();
+    Sear(cutter=true);
   }
 }
 

@@ -1,145 +1,66 @@
-MDBIN=markdown
+MDBIN=cmark-gfm -e table --unsafe
 OSBIN=nice openscad
-OSOPTS=--colorscheme=$(COLORSCHEME)
+THUMBNAILBIN=convert -thumbnail 200
+OSOPTS=--imgsize=1920,1080
 RENDER_ANIMATIONS=true
 RENDER_STL=true
 RENDER_HTML=true
 COLORSCHEME=Starnight
-FRAME_COUNT=100
+FRAME_COUNT=2
 FRAMES=$(shell seq 0 $(FRAME_COUNT))
 SLOW_FRAME_COUNT=300
 SLOW_FRAMES=$(shell seq 0 $(SLOW_FRAME_COUNT))
 
-#Trigger_Orthogonal.mp4:
-#	(sh -c '../bin/animate.sh . Trigger_Orthogonal.mp4')
+Trigger_STL=Trigger_Left.stl Trigger_Middle.stl Trigger_Right.stl
+Lower_STL=Lower_Left.stl Lower_Middle.stl Lower_Right.stl
+LowerMount_STL=LowerMount_Front.stl LowerMount_Rear.stl
 
-all: HTML STL
-
-HTML: Trigger.html
-STL: Trigger_STL Lower_STL
-
-
-Trigger_STL: Trigger_M.stl Trigger_L.stl Trigger_R.stl
-
-Trigger_M.stl:
-	$(OSBIN) $(OSOPTS) -o $@ \
-	  -D TRIGGER_PLATER_MIDDLE=true \
-	  "Trigger.scad"
-Trigger_L.stl:
-	$(OSBIN) $(OSOPTS) -o $@ \
-	  -D TRIGGER_PLATER_LEFT=true \
-	  "Trigger.scad"
-Trigger_R.stl:
-	$(OSBIN) $(OSOPTS) -o $@ \
-	  -D TRIGGER_PLATER_RIGHT=true \
-	  "Trigger.scad"
-Trigger_M.stl.png:
-	$(OSBIN) $(OSOPTS) -o $@ \
-	  -D TRIGGER_PLATER_MIDDLE=true \
-    --camera=0,0,200,0,0,0 --projection=p \
-    --imgsize=1920,1080 \
-	  "Trigger.scad"
-Trigger_L.stl.png:
-	$(OSBIN) $(OSOPTS) -o $@ \
-	  -D TRIGGER_PLATER_LEFT=true \
-    --camera=0,0,200,0,0,0 --projection=p \
-    --imgsize=1920,1080 \
-	  "Trigger.scad"
-Trigger_R.stl.png:
-	$(OSBIN) $(OSOPTS) -o $@ \
-	  -D TRIGGER_PLATER_RIGHT=true \
-    --camera=0,0,200,0,0,0 --projection=p \
-    --imgsize=1920,1080 \
-	  "Trigger.scad"
-
-Trigger.png:
-	$(OSBIN) $(OSOPTS) -o $@ \
-	--camera=5,7,2,0,0,-0.75 --projection=p \
-	--imgsize=1920,1080 \
-	"Trigger.scad"
-Trigger.mp4:
+.frames/%.mp4: %.scad
+	mkdir -p $@
 	for i in $(FRAMES); do \
-	  FILE=`printf '$@_%05d.png' $$i`; \
+	  FILE=`printf '$@/frame%05d.png' $$i`; \
 	  T=`echo "1/$(FRAME_COUNT)*$$i" | bc -l`; \
 	  $(OSBIN) $(OSOPTS) -o $$FILE -D '$$t'=`printf '%0.4f' $$T` \
-		    --projection=p \
-				--camera=5,7,2,0,0,-0.75 \
-			  --imgsize=1920,1080 \
-				"Trigger.scad"; \
+				--projection=p --autocenter --viewall \
+				$<; \
 	done
-	cd .. && ./bin/animate.sh Lower/$@_%05d.png Lower/$@
 
-Trigger.html: Trigger.png Trigger.mp4 Trigger_M.stl.png Trigger_L.stl.png  Trigger_R.stl.png
-	$(MDBIN) Trigger.md > $@
+%.mp4: %.scad .frames/%.mp4
+	../../bin/animate.sh .frames/$@/ $@
 
-Lower_STL: Lower_M.stl Lower_L.stl Lower_R.stl
+%.png: %.scad
+	$(OSBIN) $(OSOPTS) -o $@ \
+	--projection=p --autocenter --viewall \
+	"$(basename $@).scad"
+	
+	$(THUMBNAILBIN) $@ $(basename $@)_thumb.png
 
-Lower_M.stl:
-	$(OSBIN) $(OSOPTS) -o $@ \
-	  -D LOWER_PLATER_MIDDLE=true \
-	  "Lower.scad"
-Lower_L.stl:
-	$(OSBIN) $(OSOPTS) -o $@ \
-	  -D LOWER_PLATER_LEFT=true \
-	  "Lower.scad"
-Lower_R.stl:
-	$(OSBIN) $(OSOPTS) -o $@ \
-	  -D LOWER_PLATER_RIGHT=true \
-	  "Lower.scad"
+%.html: %.scad %.md %.png %.mp4
+	$(MDBIN) $(basename $@).md > $@
 
-Lower_M.stl.png:
-	$(OSBIN) $(OSOPTS) -o $@ \
-	  -D LOWER_PLATER_MIDDLE=true \
-		--projection=p \
-		--camera=0,0,500,0,0,0 \
-    --imgsize=1920,1080 \
-	  "Lower.scad"
-Lower_L.stl.png:
-	$(OSBIN) $(OSOPTS) -o $@ \
-	  -D LOWER_PLATER_LEFT=true \
-		--projection=p \
-		--camera=0,0,500,0,0,0 \
-    --imgsize=1920,1080 \
-	  "Lower.scad"
-Lower_R.stl.png:
-	$(OSBIN) $(OSOPTS) -o $@ \
-	  -D LOWER_PLATER_RIGHT=true \
-		--projection=p \
-		--camera=0,0,500,0,0,0 \
-    --imgsize=1920,1080 \
-	  "Lower.scad"
-Lower_Spin.mp4:
-	for i in $(SLOW_FRAMES); do \
-	  FILE=`printf '$@_%05d.png' $$i`; \
-	  T=`echo "1/$(SLOW_FRAME_COUNT)*$$i" | bc -l`; \
-	  $(OSBIN) $(OSOPTS) -o $$FILE -D '$$t'=`printf '%0.4f' $$T` \
-	  		-D SPIN_REVOLUTIONS=2 \
-			  --camera=4,12,3,0,0,-1.5 --projection=p \
-			  --imgsize=1920,1080 \
-				"Lower.scad"; \
-	done
-	cd .. && ./bin/animate.sh Lower/$@_%05d.png Lower/$@
+%_Left.stl %_Right.stl %_Middle.stl %_Front.stl %_Rear.stl: %.scad
+	$(OSBIN) $(OSOPTS) -o $@ -o $(basename $@).png \
+	  --render -D _RENDER='"$(basename $@)"' \
+		--projection=p --autocenter --viewall \
+	  $<
 
-Lower.mp4:
-	for i in $(FRAMES); do \
-	  FILE=`printf '$@_%05d.png' $$i`; \
-	  T=`echo "1/$(FRAME_COUNT)*$$i" | bc -l`; \
-	  $(OSBIN) $(OSOPTS) -o $$FILE -D '$$t'=`printf '%0.4f' $$T` \
-	  	  -D SHOW_RIGHT=false \
-			  --camera=4,12,3,0,0,-1.5 --projection=p \
-			  --imgsize=1920,1080 \
-				"Lower.scad"; \
-	done
-	cd .. && ./bin/animate.sh Lower/$@_%05d.png Lower/$@
-Lower.html: $(foreach var,.png _M.stl.png _L.stl.png _R.stl.png,$@$var)
-	$(MDBIN) Trigger.md > $@
+	$(THUMBNAILBIN) $(basename $@).png $(basename $@)_thumb.png
 
-clean: clean_STL clean_MP4 clean_HTML clean_PNG
+clean: clean_ANIMATE clean_STL cleanGCODE cleanMP4 clean_HTML clean_PNG
+clean_ANIMATE:
+	rm -rf .frames
+cleanGCODE:
+	rm -f *.gcode
 clean_STL:
 	rm -f *.stl
-clean_MP4:
+cleanMP4:
 	rm -f *.mp4
 clean_HTML:
 	rm -f *.html
 clean_PNG:
-	rm -f f*.png
+	rm -f *.png
+
+.SECONDEXPANSION:
+all:  Trigger Lower
+
+Trigger Lower: $$($$@_STL) $$@.html

@@ -296,7 +296,7 @@ module BARBB_LowerReceiver(clearance=0.007, extraFront=0,wall=tubeWall) {
       HoleChamfer(r1=(0.75/2)+0.01, r2=chamferRadius, teardrop=true);
     }
     
-    SearCutter(length=tubeCenterZ+0.9+SearTravel());
+    Sear(cutter=true, length=tubeCenterZ+0.9+SearTravel());
   }
 }
 
