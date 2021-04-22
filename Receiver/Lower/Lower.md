@@ -1,12 +1,8 @@
 # #Liberator12k Manual
 ## Lower Receiver: Lower
 
-A lower receiver designed for printer-friendly reuse.
-
-Provides a grip, trigger guard, and means of attachment via T-shaped
-"Receiver Lugs" and T-slot mounts.
-
-Uses the Unknown Cat-style trigger.
+Provides a grip, standard trigger, trigger guard, means of attachment via
+T-shaped "Receiver Lugs" and T-slot mounts.
 
 <!-- blank line -->
 <figure class="video_container">
@@ -28,13 +24,13 @@ The printed parts are sandwiched and bolted together.
 | Lower Bolt         | #8-32x1.25 SS Flat-Head Bolt     | 5        | #L12k/HWS/Online |
 
 ### Prints
--g, -h--m
+179g, 15h06m
 
-| Part                                                                              | Settings       | Filament | Time |
-|-----------------------------------------------------------------------------------|----------------|----------|------|
-| ![Lower_Middle.stl](Lower_Middle_thumb.png)<br>[Lower_Left.stl](Lower_Middle.stl) | Solid          | 6g       | 33m  |
-| ![Lower_Left.stl](Lower_Left_thumb.png)<br>[Lower_Left.stl](Lower_Left.stl)       | Solid          | 11g      | 56m  |
-| ![Lower_Right.stl](Lower_Right_thumb.png)<br>[Lower_Right.stl](Lower_Right.stl)   | Solid          | 8g       | 46m  |
+| Part                                                                              | Settings       | Filament | Time   |
+|-----------------------------------------------------------------------------------|----------------|----------|--------|
+| ![Lower_Middle.stl](Lower_Middle_thumb.png)<br>[Lower_Left.stl](Lower_Middle.stl) | Thicc          | 61g      | 4h37m  |
+| ![Lower_Left.stl](Lower_Left_thumb.png)<br>[Lower_Left.stl](Lower_Left.stl)       | Thicc          | 59g      | 5h15m  |
+| ![Lower_Right.stl](Lower_Right_thumb.png)<br>[Lower_Right.stl](Lower_Right.stl)   | Thicc          | 59g      | 5h14m  |
 
 ### Components
  * ![Trigger](Trigger.png)<br>[Trigger](Trigger.html)
