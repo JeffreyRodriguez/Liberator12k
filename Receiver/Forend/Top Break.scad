@@ -21,10 +21,6 @@ use <../../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 use <../../Vitamins/Pipe.scad>;
 use <../../Vitamins/Rod.scad>;
 
-use <../../Ammo/Shell Slug.scad>;
-use <../../Ammo/Cartridges/Cartridge.scad>;
-use <../../Ammo/Cartridges/Cartridge_12GA.scad>;
-
 use <../Lower/Lower.scad>;
 use <../Lower/LowerMount.scad>;
 
