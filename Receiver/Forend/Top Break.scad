@@ -72,12 +72,13 @@ BARREL_OUTSIDE_DIAMETER = 1.0001;
 BARREL_INSIDE_DIAMETER = 0.813;
 BARREL_CLEARANCE = 0.005;
 BARREL_LENGTH = 18;
+BARREL_Z = 0.001;
 RIM_WIDTH = 0.0301;
 RIM_DIAMETER = 0.8875;
 
 /* [Fine Tuning] */
 PIVOT_X = 4.501;
-PIVOT_Z = -1;
+PIVOT_RADIUS = 0.501;
 PIVOT_ANGLE = 30;
 PIVOT_WIDTH = 1.75;
 FRAME_BOLT_LENGTH = 10;
@@ -102,6 +103,7 @@ function BarrelDiameter(clearance=0)
     
 function BarrelWall() = (BarrelDiameter() - BARREL_INSIDE_DIAMETER)/2;
     
+function BarrelZ() = BARREL_Z; // -0.11 for .22LR rimfire
 
 // Settings: Dimensions
 function BarrelLength() = BARREL_LENGTH;
@@ -112,9 +114,9 @@ function WallPivot() = 0.25;
 function PivotAngleBack() = -25;
 function PivotAngle() = PIVOT_ANGLE;
 function PivotX() = PIVOT_X;
-function PivotZ() = -BarrelRadius();//PIVOT_Z;
+function PivotZ() = BarrelZ()-BarrelRadius();//PIVOT_Z;
 function PivotWidth() = PIVOT_WIDTH;
-function PivotRadius() = 1/2;
+function PivotRadius() = PIVOT_RADIUS;
 function PivotDiameter() = PivotRadius()*2;
 function PivotClearance() = 0.01;
 
@@ -162,8 +164,8 @@ function ExtractorSpringRadius() = ExtractorSpringDiameter()/2;
 function ExtractorLength() = (PivotX()-PivotRadius())
                            - ExtractorSpringLength()
                            - WallPivot();
-function ExtractorBitZ() = -BarrelRadius()+BarrelWall();
-function ExtractorZ() = -BarrelRadius()-ExtractorHeight()-ExtractorWall();
+function ExtractorBitZ() = BarrelZ()-BarrelRadius()+BarrelWall();
+function ExtractorZ() = BarrelZ()-BarrelRadius()-ExtractorHeight()-max(ExtractorWall(),0.1875);
 
 function ExtractorHousingWidth() = ExtractorWidth()+(ExtractorWall()*2);
 function BarrelCollarBottomZ() = ExtractorZ() - ExtractorWall(); //PivotZ()-(PivotRadius()*0.5);
@@ -362,7 +364,7 @@ module Barrel(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, length=Barr
   clear2 = clear*2;
 
   color("Silver") RenderIf(!cutter) DebugHalf(enabled=debug)
-  translate([(cutter?0:cartridgeRimThickness),0,BarrelOffsetZ()])
+  translate([(cutter?0:cartridgeRimThickness),0,BarrelZ()])
   difference() {
     
     rotate([0,90,0])
@@ -522,7 +524,7 @@ module ReceiverForend(clearance=0.005, debug=false, alpha=1) {
     }
     
     // Printability allowance
-    translate([ForendLength(),0,0])
+    translate([ForendLength(),0,BarrelZ()])
     rotate([0,-90,0])
     HoleChamfer(r1=BarrelRadius(BARREL_CLEARANCE), r2=1/4,
                 teardrop=true, $fn=60);
@@ -559,7 +561,7 @@ module BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, debug=false, 
         union() {
           
           // Around the barrel
-          translate([RIM_WIDTH,0,0])
+          translate([RIM_WIDTH,0,BarrelZ()])
           rotate([0,90,0])
           ChamferedCylinder(r1=BarrelRadius()+WallBarrel()+clear,
                             h=LatchCollarLength()-RIM_WIDTH+clear,
