@@ -212,9 +212,9 @@ module PivotOuterBearing(intersect=true, cutter=false, clearance=0.01) {
   intersection() {
     
     // Pivot radius
-     translate([PivotX(), (PivotWidth()/2)+clear, PivotZ()])
+    translate([PivotX(), (PivotWidth()/2)+clear, PivotZ()])
     rotate([90,0,0])
-    ChamferedCylinder(r1=abs(PivotZ())+BarrelRadius()+clear,//abs(PivotZ())+FrameBoltZ()+clear,
+    ChamferedCylinder(r1=abs(PivotZ())+FrameBoltZ()+clear,//abs(PivotZ())+FrameBoltZ()+clear,
                       r2=PivotWidth()/2,
                       teardropTop=true, teardropBottom=true,
                       h=PivotWidth()+clear2, $fn=Resolution(20,80));
@@ -236,9 +236,9 @@ module PivotInnerBearing(cutter=false, clearance=0.01) {
   translate([PivotX(), -(PivotWidth()/2)-clear, PivotZ()])
   rotate([-90,0,0])
   ChamferedCircularHole(r1=PivotRadius()+clearance-clear,
-                        r2=PivotRadius(),
+                        r2=1/8,
                         h=PivotWidth()+clear2,
-                        teardropTop=true, teardropBottom=true,
+                        teardropTop=false, teardropBottom=false,
                         $fn=Resolution(20,50));
 }
 
