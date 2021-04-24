@@ -20,7 +20,7 @@ _RENDER = ""; // ["", "LowerMount_Front", "LowerMount_Rear"]
 
 /* [Assembly] */
 _CUTAWAY_RECEIVER = false;
-_SHOW_RECEIVER = true;
+_SHOW_RECEIVER = false;
 _SHOW_LOWER = true;
 
 // Settings: Positions
@@ -139,6 +139,7 @@ translate([0.125,abs(LowerOffsetZ()),0.125])
 rotate([90,0,0])
 Sear(length=SearLength()+abs(LowerOffsetZ()));
 
+scale(25.4)
 if ($preview) {
   if (_SHOW_RECEIVER)
   ReceiverAssembly(debug=_CUTAWAY_RECEIVER);
@@ -150,7 +151,7 @@ if ($preview) {
   Lower(showTrigger=true,
         showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
         searLength=SearLength()+abs(LowerOffsetZ())+SearTravel()-(0.25/2));
-} else scale(25.4) {
+} else {
   if (_RENDER == "LowerMount_Front") {
     rotate([0,90,0])
     translate([0.5,0,-LowerOffsetZ()])

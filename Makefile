@@ -1,0 +1,66 @@
+MDBIN=cmark-gfm -e table --unsafe
+OSBIN=nice openscad
+ANIMATE_BIN=./bin/animate.sh
+THUMBNAILBIN=convert -thumbnail 200
+OSOPTS=--imgsize=1920,1080
+RENDER_ANIMATIONS=true
+RENDER_STL=true
+RENDER_HTML=true
+COLORSCHEME=Starnight
+FRAME_COUNT=20
+FRAMES=$(shell seq 0 $(FRAME_COUNT))
+SLOW_FRAME_COUNT=300
+SLOW_FRAMES=$(shell seq 0 $(SLOW_FRAME_COUNT))
+
+.frames/%.mp4: %.scad
+	mkdir -p $@
+	
+	for i in $(FRAMES); do \
+	  echo $(OSBIN) $(OSOPTS) \
+		  -o `printf '$@/frame%05d.png' $$i` \
+		  -D \'\$$t=`echo "1/$(FRAME_COUNT)*$$i" | bc -l`\' \
+			--projection=p --autocenter --viewall \
+				$<; \
+  done | parallel --line-buffer
+	
+	touch $@
+
+%.mp4: .frames/%.mp4
+	$(ANIMATE_BIN) .frames/$@/ $@
+
+%.png: %.scad
+	$(OSBIN) $(OSOPTS) -o $@ \
+	--projection=p --autocenter --viewall \
+	"$(basename $@).scad"
+	
+	$(THUMBNAILBIN) $@ $(basename $@)_thumb.png
+
+%.html: %.scad %.md %.png %.mp4
+	$(MDBIN) $(basename $@).md > $@
+
+%.stl:
+	$(OSBIN) $(OSOPTS) -o $@ -o $(basename $@).png \
+	  --render -D _RENDER='"$(basename $@)"' \
+		--projection=p --autocenter --viewall \
+	  `echo $(basename $@) | awk -F _ '{ print $$1 }'`.scad
+	$(THUMBNAILBIN) $(basename $@).png $(basename $@)_thumb.png
+
+clean: clean_ANIMATE clean_STL cleanGCODE cleanMP4 clean_HTML clean_PNG
+clean_ANIMATE:
+	rm -rf .frames
+cleanGCODE:
+	rm -f *.gcode
+clean_STL:
+	rm -f *.stl
+cleanMP4:
+	rm -f *.mp4
+clean_HTML:
+	rm -f *.html
+clean_PNG:
+	rm -f *.png
+
+index.html: README.md
+	$(MDBIN) $^ > $@
+	
+QuickStart.html: QuickStart.md
+	$(MDBIN) $^ > $@

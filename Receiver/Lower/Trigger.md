@@ -1,4 +1,4 @@
-# #Liberator12k Manual
+# [\#Liberator12k Manual](../../index.html)
 ## Lower Receiver: Trigger
 
 A simple trigger based on [The Unknown Cat's](https://www.youtube.com/channel/UCNR0HGw5airGKkiPcquS0TA) design.
@@ -17,7 +17,7 @@ An inclined slot in each side of the trigger (Olive) forces the cross-pin and
 sear downward when the trigger is pulled. A central support tab (Chocolate)
 keeps the sear and its return spring (not pictured) oriented vertically.
 
-A compression spring located below the sear, and pushes the sear into the upward
+A compression spring located below the sear pushes the sear into the upward
 position, driving the trigger forward via the sear pin.
 
 ## Bill of Materials
@@ -43,11 +43,11 @@ position, driving the trigger forward via the sear pin.
 ### Prints
 25g, 1h03m
 
-| Part                                                                                      | Settings       | Filament | Time |
-|-------------------------------------------------------------------------------------------|----------------|----------|------|
-| ![Trigger_Middle.stl](Trigger_Middle_thumb.png)<br>[Trigger_Left.stl](Trigger_Middle.stl) | Solid          | 6g       | 33m  |
-| ![Trigger_Left.stl](Trigger_Left_thumb.png)<br>[Trigger_Left.stl](Trigger_Left.stl)       | Solid          | 11g      | 56m  |
-| ![Trigger_Right.stl](Trigger_Right_thumb.png)<br>[Trigger_Right.stl](Trigger_Right.stl)   | Solid          | 8g       | 46m  |
+| Part                                                                                        | Settings       | Filament | Time |
+|---------------------------------------------------------------------------------------------|----------------|----------|------|
+| ![Trigger_Middle.stl](Trigger_Middle_thumb.png)<br>[Trigger_Middle.stl](Trigger_Middle.stl) | Solid          | 6g       | 33m  |
+| ![Trigger_Left.stl](Trigger_Left_thumb.png)<br>[Trigger_Left.stl](Trigger_Left.stl)         | Solid          | 11g      | 56m  |
+| ![Trigger_Right.stl](Trigger_Right_thumb.png)<br>[Trigger_Right.stl](Trigger_Right.stl)     | Solid          | 8g       | 46m  |
 
 ## Instructions
 All three parts of the trigger should be printed 100% solid.
@@ -55,10 +55,7 @@ All three parts of the trigger should be printed 100% solid.
 ### Glue Trigger Sides
 ![Trigger](Trigger_thumb.png)
 
-The left and right trigger sides need to be permanently attached with super glue or epoxy.
-
-* Trigger_Left.stl
-* Trigger_Right.stl
+The left and right trigger sides need to be permanently attached with super glue or epoxy
 
 1. Verify the sear cross-pin will slide smoothly in the individual slots.
 2. Apply glue to the raised portions of Trigger_Right

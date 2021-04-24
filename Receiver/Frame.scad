@@ -19,7 +19,7 @@ use <Receiver.scad>;
 /* [Print] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = "Receiver_Frame"; // ["Reciever_Frame"]
+_RENDER = "Frame_Receiver"; // ["Frame_Receiver"]
 
 /* [Assembly] */
 _SHOW_RECEIVER = true;

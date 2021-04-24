@@ -1,11 +1,8 @@
-# Welcome to #Liberator12k project!
-
-Reliable self-defense for everyone - forever.
+# [\#Liberator12k Manual](index.html)
 
 [Liberator12k.com](https://Liberator12k.com)
 
-### Quick Start
-[Impatient or experienced? Go here.](./Documentation/Quick%20Start.md)
+Read the [Quick Start](QuickStart.html).
 
 ### "What?" - Concept
 Future-proof the individual's power to produce arms and ammunition.
@@ -37,7 +34,7 @@ Self-defense is an individual imperative and weapons are the means of self-defen
 These guns are real. You can make them yourself.
 
 * Please do not hurt people who've done you no harm.
-* Please do not damage or take the stuff from other people.
+* Please do not damage or take stuff from other people.
 * Please do be responsible when shooting.
 * Please do use for self-defense, sport, and fun.
 
@@ -47,8 +44,7 @@ These guns are real. You can make them yourself.
 
 ### "How?" - Build your own
 
-#### Minimum Safety Standard
-
+## Safety
 DANGER - ART AT YOUR OWN RISK
 
 Safety precautions and procedures *are not fully documented here*. Before you shoot a DIY gun from your hands **test it first**. You will need:
@@ -58,9 +54,7 @@ Safety precautions and procedures *are not fully documented here*. Before you sh
 * A string long enough to pull the trigger from behind cover.
 * At least 5 of the highest pressure cartridges you can find.
 
-
-Tech Levels
------------
+## Tech Levels
 The original \#Liberator12k project goal was to design a safe and
 functional shotgun from readily available parts, assembled with hand tools
 and no drilling. I broke this no-drill rule twice - when safety *demanded* it;
@@ -81,8 +75,7 @@ A "Plus" tech level describes the 'better than minimal' tools for that level.
 | One Plus   | Lab power supply                                                |
 
 
-Designing New Guns
----------------
+## Designing New Guns
 The real "secret sauce" of this project, is the software library I developed
 during the design process of these guns. I tried a lot of different ideas,
 and what I came away with, is an OpenSCAD software library chock-full of
@@ -101,8 +94,7 @@ major functional areas:
 
 There are more directories than mentioned above, but this should give you a taste of what's in here.
 
-Unlicense
-=======
+## Unlicense
 This is free and unencumbered software released into the public domain.
 
 Anyone is free to copy, modify, publish, use, compile, sell, or

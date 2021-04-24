@@ -19,7 +19,7 @@ use <../Vitamins/Rod.scad>;
 /* [Print] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Receiver", "ReceiverBackSegment"]
+_RENDER = ""; // ["", "Receiver", "Receiver_Back"]
 
 /* [Assembly] */
 _SHOW_RECEIVER            = true;
@@ -304,11 +304,8 @@ if ($preview) {
   if (_RENDER == "Receiver")
   rotate([0,90,0])
   Receiver();
-  
-  if (_RENDER == "ReceiverStockSegment")
-  ReceiverStockSegment_print();
 
-  if (_RENDER == "ReceiverBackSegment")
+  if (_RENDER == "Receiver_Back")
   ReceiverBackSegment_print();
   
 }

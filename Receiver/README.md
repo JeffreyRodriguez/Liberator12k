@@ -1,3 +1,7 @@
-\#Liberator12k - Basic
-================
-This documentation is incomplete and out of date WRT the new receiver.
+# [\#Liberator12k Manual](index.html)
+
+* [Lower](Lower/Lower.html)
+ * [LowerMount](Lower/LowerMount.html)
+ * [Trigger](Lower/Trigger.html)
+* [Receiver](Receiver.html)
+* [Frame](Frame.html)

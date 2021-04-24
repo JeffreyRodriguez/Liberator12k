@@ -1,9 +1,8 @@
-# #Liberator12k Manual
+# [\#Liberator12k Manual](../../index.html)
 ## Lower Receiver: Lower
 
 Provides a grip, standard trigger, trigger guard, means of attachment via
 T-shaped "Receiver Lugs" and T-slot mounts.
-
 <!-- blank line -->
 <figure class="video_container">
   <video width="640" loop="true" preload="auto" controls="false" allowfullscreen="true" poster="Lower.png">
@@ -23,18 +22,22 @@ The printed parts are sandwiched and bolted together.
 | Lower Nut          | #8-32 Threaded Insert            | 5        | #L12k/HWS/Online |
 | Lower Bolt         | #8-32x1.25 SS Flat-Head Bolt     | 5        | #L12k/HWS/Online |
 
-### Prints
-179g, 15h06m
+### Components
+[LowerMount](LowerMount.html)
+[Trigger](Trigger.html)
 
-| Part                                                                              | Settings       | Filament | Time   |
-|-----------------------------------------------------------------------------------|----------------|----------|--------|
-| ![Lower_Middle.stl](Lower_Middle_thumb.png)<br>[Lower_Left.stl](Lower_Middle.stl) | Thicc          | 61g      | 4h37m  |
-| ![Lower_Left.stl](Lower_Left_thumb.png)<br>[Lower_Left.stl](Lower_Left.stl)       | Thicc          | 59g      | 5h15m  |
-| ![Lower_Right.stl](Lower_Right_thumb.png)<br>[Lower_Right.stl](Lower_Right.stl)   | Thicc          | 59g      | 5h14m  |
+### Prints
+200g, 17h04m
+
+| Part                                                                                | Settings             | Filament | Time   |
+|-------------------------------------------------------------------------------------|----------------------|----------|--------|
+| ![Lower_Left.stl](Lower_Left_thumb.png)<br>[Lower_Left.stl](Lower_Left.stl)         | 3mm Walls 50% Infill | 66g      | 5h52m  |
+| ![Lower_Middle.stl](Lower_Middle_thumb.png)<br>[Lower_Middle.stl](Lower_Middle.stl) | 3mm Walls 50% Infill | 68g      | 5h20m  |
+| ![Lower_Right.stl](Lower_Right_thumb.png)<br>[Lower_Right.stl](Lower_Right.stl)     | 3mm Walls 50% Infill | 66g      | 5h52m  |
 
 ### Components
- * ![Trigger](Trigger.png)<br>[Trigger](Trigger.html)
- * ![Mount](Mount.png)<br>[Mount](Mount.html)
+ * ![Trigger](Trigger_thumb.png)<br>[Trigger](Trigger.html)
+ * ![LowerMount](LowerMount_thumb.png)<br>[LowerMount](LowerMount.html)
 
 ## Instructions
 

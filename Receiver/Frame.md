@@ -1,18 +1,18 @@
-# [\#Liberator12k Manual](index.html)
-## Platform Components: Receiver
+# [\#Liberator12k Manual](../index.html)
+## Platform Components: Frame
 
-The universal receiver in its base configuration.
+The universal receiver in its "large frame" configuration.
 
 <!-- blank line -->
 <figure class="video_container">
-  <video width="640" loop="true" preload="auto" controls="false" allowfullscreen="true" poster="Receiver.png">
-    <source src="Receiver.mp4" type="video/mp4">
+  <video width="640" loop="true" preload="auto" controls="false" allowfullscreen="true" poster="Frame.png">
+    <source src="Frame.mp4" type="video/mp4">
   </video>
 </figure>
 <!-- blank line -->
 
 ## How it Works
-The receiver has an assortment of slots and tabs to support different designs.
+The basic universal receiver, but now featuring two large frame bolts to support heavy forends.
 
 ## Bill of Materials
 
@@ -23,27 +23,21 @@ The receiver has an assortment of slots and tabs to support different designs.
 | Tension Bolt Nut       | #8-32 Threaded Insert            | 4        | #L12k/HWS/Online |
 | Tension Bolt Washer    | #8-32 Washer                     | 4        | #L12k/HWS/Online |
 | Tension Bolt Acorn Nut | #8-32 Acorn Nut                  | 4        | #L12k/HWS/Online |
+| Frame Bolt             | 1/2-13x10 Hex Bolt (Grade 8)     | 2        | #L12k/HWS/Online |
+| Frame Nut              | 1/2-13 Hex Nut                   | 4        | #L12k/HWS/Online |
 
 
 ### Prints
 179g, 15h06m
 
-| Part                                                                | Settings       | Filament | Time   |
-|---------------------------------------------------------------------|----------------|----------|--------|
-| ![Receiver.stl](Receiver_thumb.png)<br>[Receiver.stl](Receiver.stl) | Thicc  | 61g      | 4h37m  |
+| Part                                                                                        | Settings       | Filament | Time    |
+|---------------------------------------------------------------------------------------------|----------------|----------|---------|
+| ![Frame_Receiver.stl](Frame_Receiver_thumb.png)<br>[Frame_Receiver.stl](Frame_Receiver.stl) | Standard       | 272g     | 1d3h59m |
 
 ### Components
- * ![Receiver](Receiver_thumb.png)<br>[Receiver](Receiver.html)
+ * ![Lower](Lower_thumb.png)<br>[Lower](Lower.html)
+ * ![Trigger](Trigger_thumb.png)<br>[Trigger](Trigger.html)
  * ![Receiver](LowerMount_thumb.png)<br>[LowerMount](LowerMount.html)
-
-### Prints
- * Receiver [Receiver.stl](Receiver.stl)
- * Receiver_Back.stl [Trigger_L.stl](Trigger_M.stl)
- * Trigger Right Side [Trigger_R.stl](Trigger_M.stl)
-
-![Trigger_M.stl](Trigger_M.stl.png)
-![Trigger_L.stl](Trigger_L.stl.png)
-![Trigger_R.stl](Trigger_R.stl.png)
 
 ### Vitamins
 
