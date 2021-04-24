@@ -1,4 +1,4 @@
-include ../../Makefile
+include ../../Makefile.in
 
 ANIMATE_BIN=../../bin/animate.sh
 

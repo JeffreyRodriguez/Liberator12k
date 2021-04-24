@@ -185,7 +185,6 @@ module BoltCarrier(cutter=false, clearance=0.01, chamferRadius=1/16, debug=false
   color("Olive", alpha) RenderIf(!cutter)
   DebugHalf(enabled=debug)
   difference() {
-    
     union() {
       translate([boltCarrierMinX,0,0])
       rotate([0,90,0])
@@ -200,7 +199,7 @@ module BoltCarrier(cutter=false, clearance=0.01, chamferRadius=1/16, debug=false
         translate([boltCarrierMinX,0,0])
         mirror([1,0,0])
         ReceiverSideSlot(length=boltCarrierLength,
-                         clearance=clear);
+                         clearance=(cutter?clear:-clearance));
         
         hull() for (X = [0, boltCarrierLength-ReceiverID()-0.0625])
         translate([boltCarrierMinX+X, 0, 0])

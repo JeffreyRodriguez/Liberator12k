@@ -102,7 +102,9 @@ function BarrelDiameter(clearance=0)
     = BARREL_OUTSIDE_DIAMETER+clearance;
     
 function BarrelWall() = (BarrelDiameter() - BARREL_INSIDE_DIAMETER)/2;
-    
+
+// Calculated: Positions
+//function ActionRodZ() = FrameBoltZ()-WallFrameBolt()-(ActionRodWidth()/2);
 function BarrelZ() = BARREL_Z; // -0.11 for .22LR rimfire
 
 // Settings: Dimensions
@@ -158,7 +160,7 @@ function ExtractorHeight() = 0.65;
 function ExtractorTravel() = 0.3125;
 function ExtractorBitWidth() = (1/4);
 function ExtractorBitLength() = 1;
-function ExtractorSpringLength() = 2;
+function ExtractorSpringLength() = 1.75;
 function ExtractorSpringDiameter() = 0.625;
 function ExtractorSpringRadius() = ExtractorSpringDiameter()/2;
 function ExtractorLength() = (PivotX()-PivotRadius())
@@ -282,13 +284,12 @@ module ExtractorRetainer(debug=false, cutter=false, teardrop=false, clearance=0.
 
   // Secure the latch block to the latch rod
   color("Silver") RenderIf(!cutter)
-  translate([ExtractorWidth()+ExtractorTravel()+0.75-clear,
+  translate([ExtractorWidth()+ExtractorTravel()+0.5-clear,
              0,
-             ExtractorZ()])
-  mirror([0,0,1])
+             ExtractorZ()+ExtractorHeight()])
   NutAndBolt(bolt=GPBolt(),
        boltLength=ExtractorHeight()+ManifoldGap(), clearance=clear,
-       head="socket", capHeightExtra=(cutter?1:0), capOrientation=true,
+       head="socket", capHeightExtra=(cutter?abs(ExtractorZ())+FrameBoltZ():0), capOrientation=true,
        nut="heatset", teardrop=teardrop);
 }
 
@@ -526,7 +527,7 @@ module ReceiverForend(clearance=0.005, debug=false, alpha=1) {
     // Printability allowance
     translate([ForendLength(),0,BarrelZ()])
     rotate([0,-90,0])
-    HoleChamfer(r1=BarrelRadius(BARREL_CLEARANCE), r2=1/4,
+    HoleChamfer(r1=BarrelRadius(BARREL_CLEARANCE), r2=1/16,
                 teardrop=true, $fn=60);
 
     FrameBolts(cutter=true);
@@ -580,6 +581,9 @@ module BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, debug=false, 
     PivotInnerBearing(cutter=true);
     
     if (!cutter) {
+      
+      mirror([1,0,0])
+      ReceiverMlokSlot();
     
       // Angled cut for supportless printability
       translate([0,-(PivotWidth()/2),PivotZ()])
@@ -587,7 +591,7 @@ module BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, debug=false, 
       cube([3, PivotWidth(), 3]);
       
       // Angled cut to remove the front-bottom tip of the pivot bearing interface
-      translate([PivotX(),-(PivotWidth()/2)-clear, 0])
+      *translate([PivotX(),-(PivotWidth()/2)-clear, 0])
       translate([0,0,PivotZ()])
       rotate([0,PivotAngle(),0])
       translate([0,0,BarrelCollarBottomZ()])
@@ -822,6 +826,7 @@ if ($preview) {
       TensionBolts();
       
       Receiver_LargeFrameAssembly(
+        frameBolts=_SHOW_FRAME,
         length=FRAME_BOLT_LENGTH,
         debug=_CUTAWAY_RECEIVER);
     }

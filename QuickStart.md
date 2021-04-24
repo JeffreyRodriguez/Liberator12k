@@ -1,7 +1,7 @@
 # [\#Liberator12k Manual](index.html)
 ## Quick Start
 
-Welcome to the project. There's a lot of reasons you might be here. ECM, Revolver, BARBB, E-Primers, Printed Ammo - lots going on. This document is currently mostly about making a revolver or break-action.
+Welcome to the project. There's a lot of reasons you might be here. ECM, Revolver, BARBB, E-Primers, Printed Ammo - lots going on. This document is currently mostly about making a break-action. The revolver is still a work in progress, but you can make one with the information here. Just know there are issues not yet sorted.
 
 If you're running Linux and have `make` available, there's a Makefile to do it all. Otherwise, you'll have to render the individual STLs.
 
@@ -10,7 +10,7 @@ If you're running Linux and have `make` available, there's a Makefile to do it a
 
 You will also need the complete source code ZIP for the project, if you're reading this you should have a copy already. If not, download the source from [the website](https://Liberator12k.com).
 
-### OpenSCAD in 5 minutes (STLs!)
+### How to render STLs from OpenSCAD
 OpenSCAD has a "Customizer" pane which can be enabled from the View menu. Only
 advanced users and developers need to touch the source code - everything else
 can be done with the customizer panel:
@@ -24,10 +24,18 @@ Some of the designs have other presets, like the break-action:
 #### Print
 ![Customizer Print Section](.manual/customizer_print.png)
 
-Choose the part you want and push F6 to render it, or from the *Design* menu, select *Render*.
-Once you've rendered a part for printing, you need to export the STL.
-Push F7 or *File* -> *Export* -> *Export as STL*.
-Save it with a unique filename based on the part name.stl
+1. Choose the part you want and push F6 to render it, or from the *Design* menu, select *Render*.
+2. Once you've rendered a part for printing, you need to export the STL.
+3. Push F7 or *File* -> *Export* -> *Export as STL*.
+4. Save it with a unique filename based on the part name.stl
+
+For instance:
+ * ReceiverFront.stl
+ * ReceiverForend.stl
+ * BarrelCollar.stl
+ * Extractor.stl
+ * Latch.stl
+ * Foregrip.stl
 
 #### Assembly
 ![Customizer Assembly Section](.manual/customizer_assembly.png)
