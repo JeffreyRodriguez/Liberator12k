@@ -1,7 +1,7 @@
 # [\#Liberator12k Manual](index.html)
 ## Quick Start
 
-Welcome to the project. There's a lot of reasons you might be here. ECM, Revolver, BARBB, E-Primers, Printed Ammo - lots going on. This document is currently mostly about making a break-action. The revolver is still a work in progress, but you can make one with the information here. Just know there are issues not yet sorted.
+Welcome to the project. There's a lot of reasons you might be here. ECM, Revolver, BARBB, E-Primers, Printed Ammo - lots going on. This document is mostly about making a break-action. The revolver is still a work in progress, but you can make one with the information here. Just know that gap blast is not yet sorted.
 
 If you're running Linux and have `make` available, there's a Makefile to do it all. Otherwise, you'll have to render the individual STLs.
 
@@ -63,10 +63,3 @@ Control the branding text by model.
 Designed to work in either PLA or ABS. If you try other filaments, let me know.
 Bigger nozzles print *much faster*, 20x difference between 0.4mm and 1.5mm.
 Almost everything prints the same: 3mm thick walls, ceilings, floors and 50% infill.
-
-### Files to Print
-* [Receiver](Receiver/Receiver.html)
-* [Frame](Receiver/Frame.html)
-* [Lower](Receiver/Lower/Lower.html)
-* [LowerMount](Receiver/Lower/LowerMount.html)
-* [Trigger](Receiver/Lower/Trigger.html)

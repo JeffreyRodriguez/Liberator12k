@@ -6,15 +6,15 @@ PumpAR15_STL=
 Trigun_STL=
 
 
-%.stl:
-	$(OSBIN) $(OSOPTS) -o $@ -o $(basename $@).png \
-		--cache="`echo $(basename $@) | awk -F _ '{ print $$1 }'`.cache" \
-	  --render -D _RENDER='"$(basename $@)"' \
-		--projection=p --camera 0,1000,0,0,0,0\
-	  `echo $(basename $@) | awk -F _ '{ print $$1 }'`.scad
-	$(THUMBNAILBIN) $(basename $@).png $(basename $@)_thumb.png
+CAFE12: CAFE12.html
+CAFE12.html: CAFE12.md
+	$(MDBIN) $^ > $@
+	
+FP37: FP37.html
+FP37.html: FP37.md
+	$(MDBIN) $^ > $@
 
 .SECONDEXPANSION:
-all: index.html TopBreak Revolver PumpAR15 Trigun
+all: index.html TopBreak Revolver PumpAR15 Trigun CAFE12 FP37
 
 TopBreak Revolver PumpAR15 Trigun: $$($$@_STL) $$@.html $$@.mp4 $$@.png

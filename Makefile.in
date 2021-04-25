@@ -2,7 +2,7 @@ MDBIN=cmark-gfm -e table --unsafe
 OSBIN=nice openscad
 ANIMATE_BIN=./bin/animate.sh
 THUMBNAILBIN=convert -thumbnail 200
-OSOPTS=--imgsize=1920,1080
+OSOPTS=--imgsize=1920,1080 --quiet
 RENDER_ANIMATIONS=true
 RENDER_STL=true
 RENDER_HTML=true
@@ -19,23 +19,18 @@ SLOW_FRAMES=$(shell seq 0 $(SLOW_FRAME_COUNT))
 	
 	for i in $(FRAMES); do \
 	  echo $(OSBIN) $(OSOPTS) \
-			--cache=file \
-			--quiet \
 		  -o `printf '$@/frame%05d.png' $$i` \
 		  -D \'\$$t=`echo "1/$(FRAME_COUNT)*$$i" | bc -l`\' \
 			--projection=p --autocenter --viewall \
 				$<; \
-  done | parallel --line-buffer
-	
-	touch $@
+  done | parallel -v --line-buffer \
+	&& touch $@
 
 %.mp4: .frames/%.mp4
 	$(ANIMATE_BIN) .frames/$@/ $@
 
 %.png: %.scad
 	$(OSBIN) $(OSOPTS) -o $@ \
-  --cache=file \
-	--quiet \
 	--projection=p --camera 200,1000,200,0,0,0 \
 	"$(basename $@).scad"
 	
@@ -46,8 +41,6 @@ SLOW_FRAMES=$(shell seq 0 $(SLOW_FRAME_COUNT))
 
 %.stl:
 	$(OSBIN) $(OSOPTS) -o $@ -o $(basename $@).png \
-		--cache=file \
-		--quiet \
 	  --render -D _RENDER='"$(basename $@)"' \
 		--projection=p --autocenter --viewall \
 	  `echo $(basename $@) | awk -F _ '{ print $$1 }'`.scad
