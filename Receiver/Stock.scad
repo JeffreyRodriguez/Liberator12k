@@ -518,12 +518,12 @@ if ($preview) {
   StockAssembly();
 } else {
   
-  if (_RENDER == "StockButton_Left")
+  if (_RENDER == "Stock_Button_Left")
   rotate([180,0,0])
   translate([-StockButtonPivotX,-StockButtonPivotY,-ReceiverSideSlotHeight()/2])
   StockButton();
   
-  if (_RENDER == "StockButton_Right")
+  if (_RENDER == "Stock_Button_Right")
   mirror([0,1,0])
   rotate([180,0,0])
   translate([-StockButtonPivotX,-StockButtonPivotY,-ReceiverSideSlotHeight()/2])
