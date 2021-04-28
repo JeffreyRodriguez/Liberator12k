@@ -146,7 +146,24 @@ module ReceiverBottomSlot(length=ReceiverLength(), clearance=ReceiverSlotClearan
   translate([-0.5, -(ReceiverBottomSlotWidth()/2)+0.125-clearance,0])
   mirror([1,0,0])
   mirror([0,0,1])
-  cube([length-0.5,ReceiverBottomSlotWidth()-0.25+(clearance*2),abs(TensionRodBottomZ())+25]);
+  cube([length-0.5,ReceiverBottomSlotWidth()-0.25+(clearance*2),abs(TensionRodBottomZ())+0.25]);
+  
+  // Bottom edge curves
+  translate([-0.5,0,ReceiverBottomZ()])
+  rotate([0,-90,0])
+  linear_extrude(length-0.5)
+  for (M = [0,1]) mirror([0,M])
+  translate([0,(ReceiverBottomSlotWidth()/2)-0.125+clearance])
+  rotate(-90)
+  RoundedBoolean(r=1/32, edgeOffset=0, $fn=40);
+  
+  // Top edge curves
+  translate([-0.5,0,ReceiverBottomZ()+0.25])
+  rotate([0,-90,0])
+  linear_extrude(length-0.5)
+  for (M = [0,1]) mirror([0,M])
+  translate([0,(ReceiverBottomSlotWidth()/2)-0.125+clearance])
+  RoundedBoolean(r=1/32, edgeOffset=0, $fn=40);
 }
 
 module ReceiverBottomSlotInterface(length=0.75, height=ReceiverOR(), extension=0, clearance=0.005) {
