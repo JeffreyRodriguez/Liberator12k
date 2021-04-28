@@ -22,7 +22,7 @@ use <../../Vitamins/AR15/Bolt.scad>;
 use <../Components/AR15 Trunnion.scad>;
 use <../Magwells/AR15 Magwell.scad>;
 
-use <../Buttstock.scad>;
+use <../Stock.scad>;
 use <../Receiver.scad>;
 use <../Fire Control Group.scad>;
 use <../Lower/Lower.scad>;

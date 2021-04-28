@@ -27,7 +27,7 @@ use <../../Ammo/Cartridges/Cartridge_12GA.scad>;
 
 use <../Lower/Lower.scad>;
 
-use <../Buttstock.scad>;
+use <../Stock.scad>;
 use <../Lower/LowerMount.scad>;
 use <../Frame.scad>;
 use <../Receiver.scad>;

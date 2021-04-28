@@ -23,7 +23,7 @@ use <../Components/AR15 Trunnion.scad>;
 use <../Magwells/AR15 Magwell.scad>;
 
 use <../Receiver.scad>;
-use <../Buttstock.scad>;
+use <../Stock.scad>;
 
 /* [Print] */
 

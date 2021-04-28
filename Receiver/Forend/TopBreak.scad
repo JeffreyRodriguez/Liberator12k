@@ -24,7 +24,7 @@ use <../../Vitamins/Rod.scad>;
 use <../Lower/Lower.scad>;
 use <../Lower/LowerMount.scad>;
 
-use <../Buttstock.scad>;
+use <../Stock.scad>;
 use <../Frame.scad>;
 use <../Receiver.scad>;
 use <../Fire Control Group.scad>;
