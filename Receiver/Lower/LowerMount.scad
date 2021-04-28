@@ -26,21 +26,6 @@ _SHOW_LOWER = true;
 // Settings: Positions
 function LowerOffsetZ() = ReceiverBottomZ();
 
-//**********
-//* Shapes *
-//**********
-module ReceiverBottomSlotInterface(length=0.75, height=abs(LowerOffsetZ()), clearance=0.005) {
-  difference() {
-    union() {
-      translate([-length,-1/2,-height+WallTensionRod()+clearance])
-      ChamferedCube([length, 1, height-WallTensionRod()], r=1/32, teardropFlip=[true,true,true]);
-      
-      translate([-length,-0.75/2,-height])
-      ChamferedCube([length, 0.75, height], r=1/32, teardropFlip=[true,true,true]);
-    }
-  }
-}
-
 //*****************
 //* Printed Parts *
 //*****************
@@ -56,7 +41,7 @@ module LowerMount_Front(id=ReceiverID(), alpha=1, debug=false) {
       ReceiverLugFront(extraTop=-LowerOffsetZ());
       
       translate([ReceiverLugFrontMaxX(),0,0])
-      ReceiverBottomSlotInterface(length=mountLength);
+      ReceiverBottomSlotInterface(length=mountLength, height=abs(LowerOffsetZ()));
     }
     
     difference() {
@@ -98,7 +83,7 @@ module LowerMount_Rear(id=ReceiverID(), alpha=1, debug=false) {
       ReceiverLugRear(extraTop=-LowerOffsetZ());
       
       translate([ReceiverLugRearMaxX(),0,0])
-      ReceiverBottomSlotInterface(length=mountLength);
+      ReceiverBottomSlotInterface(length=mountLength, height=abs(LowerOffsetZ()));
     }
     
     difference() {

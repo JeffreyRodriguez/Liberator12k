@@ -137,18 +137,32 @@ module ReceiverMlokSlot(length=ReceiverLength(), depth=0.0625, clearance=0) {
   mirror([1,0,0])
   cube([length, width, depth]);
 }
-module ReceiverBottomSlot(clearance=ReceiverSlotClearance()) {
+module ReceiverBottomSlot(length=ReceiverLength(), clearance=ReceiverSlotClearance()) {
   translate([-0.5, -(ReceiverBottomSlotWidth()/2)-clearance,0])
   mirror([1,0,0])
   mirror([0,0,1])
-  cube([ReceiverLength()-0.5,ReceiverBottomSlotWidth()+(clearance*2),abs(TensionRodBottomZ())]);
+  cube([length-0.5,ReceiverBottomSlotWidth()+(clearance*2),abs(TensionRodBottomZ())]);
 
   translate([-0.5, -(ReceiverBottomSlotWidth()/2)+0.125-clearance,0])
   mirror([1,0,0])
   mirror([0,0,1])
-  cube([ReceiverLength()-0.5,ReceiverBottomSlotWidth()-0.25+(clearance*2),abs(TensionRodBottomZ())+25]);
+  cube([length-0.5,ReceiverBottomSlotWidth()-0.25+(clearance*2),abs(TensionRodBottomZ())+25]);
 }
 
+module ReceiverBottomSlotInterface(length=0.75, height=ReceiverOR(), extension=0, clearance=0.005) {
+  clear = clearance;
+  clear2 = clear*2;
+  
+  difference() {
+    union() {
+      translate([-length,-(1/2)+clear,-height+WallTensionRod()+clear])
+      ChamferedCube([length, 1-clear2, height-WallTensionRod()], r=1/32, teardropFlip=[true,true,true]);
+      
+      translate([-length,-(0.75/2)+clear,-height-extension])
+      ChamferedCube([length, 0.75-clear2, height+extension], r=1/32, teardropFlip=[true,true,true]);
+    }
+  }
+}
 module ReceiverTopSlot(length=ReceiverLength(), width=ReceiverTopSlotWidth(), height=ReceiverTopSlotHeight(), clearance=ReceiverSlotClearance()) {
   chamferRadius = 1/32;
   horizontalWidth = ReceiverTopSlotHorizontalWidth();
