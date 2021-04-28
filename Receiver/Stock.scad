@@ -24,14 +24,13 @@ use <Receiver.scad>;
 /* [Print] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Stock", "StockButtonHousing", "StockLatchPlunger", "StockButton_Left", "StockButton_Right", "Buttpad"]
+_RENDER = ""; // ["", "Stock", "Stock_Latch", "Stock_LatchPlunger", "Stock_Button_Left", "Stock_Button_Right", "Stock_Buttpad"]
 
 /* [Assembly] */
 _SHOW_RECEIVER = true;
 _SHOW_LOWER = true;
 _SHOW_STOCK = true;
 _SHOW_STOCK_LATCH = true;
-_SHOW_STOCK_LATCH_HOUSING = true;
 _SHOW_STOCK_LATCH_BUTTONS = true;
 _SHOW_STOCK_PIVOT_PIN = true;
 _SHOW_STOCK_LATCH_PLUNGER = true;
@@ -40,12 +39,12 @@ _SHOW_BUTTPAD_BOLT = true;
 
 _ALPHA_STOCK = 1; // [0:0.1:1]
 _ALPHA_BUTTPAD = 1; // [0:0.1:1]
-_ALPHA_STOCK_LATCH_HOUSING = 1; // [0:0.1:1]
+_ALPHA_STOCK_LATCH = 1; // [0:0.1:1]
 
 _CUTAWAY_STOCK = false;
 _CUTAWAY_BUTTPAD = false;
 _CUTAWAY_RECEIVER = false;
-_CUTAWAY_STOCK_LATCH_HOUSING = false;
+_CUTAWAY_STOCK_LATCH = false;
 
 /* [Vitamins] */
 BUTTPAD_BOLT = "1/4\"-20"; // ["#8-32", "1/4\"-20","M4", "M6"]
@@ -59,7 +58,7 @@ MERGE_HIGH_TOP = false;
 
 $fs = UnitsFs()*0.25;
 
-StockLatchPlungerDistance = 0.25;
+Stock_LatchPlungerDistance = 0.25;
 StockButtonLength = 1;
 StockButtonBackset = 1.25;
 StockButtonPivotAngle = 15;
@@ -71,11 +70,11 @@ StockButtonMinX = StockButtonPivotX-StockButtonBackset;
 function ButtpadBolt() = BoltSpec(BUTTPAD_BOLT);
 assert(ButtpadBolt(), "ButtpadBolt() is undefined. Unknown BUTTPAD_BOLT?");
 
-function StockLatchPivotBolt() = BoltSpec(STOCK_LATCH_BOLT);
-assert(StockLatchPivotBolt(), "StockLatchPivotBolt() is undefined. Unknown STOCK_LATCH_BOLT?");
+function Stock_LatchPivotBolt() = BoltSpec(STOCK_LATCH_BOLT);
+assert(Stock_LatchPivotBolt(), "Stock_LatchPivotBolt() is undefined. Unknown STOCK_LATCH_BOLT?");
 
-function StockLatchBodyBolt() = BoltSpec(STOCK_LATCH_BOLT);
-assert(StockLatchBodyBolt(), "StockLatchBodyBolt() is undefined. Unknown STOCK_LATCH_BOLT?");
+function Stock_LatchBodyBolt() = BoltSpec(STOCK_LATCH_BOLT);
+assert(Stock_LatchBodyBolt(), "Stock_LatchBodyBolt() is undefined. Unknown STOCK_LATCH_BOLT?");
 
 function StockLength() = TensionBoltLength()-ReceiverLength()-0.22;
 //function StockLength() = 2;
@@ -84,7 +83,7 @@ function ButtpadSleeveLength() = 1;
 function ButtpadLength() = 3;
 function ButtpadWall() = 0.1875;
 function ButtpadX() = -(ReceiverLength()+StockLength());
-function StockLatchHousingLength() = abs(ButtpadX()-StockButtonPivotX)+StockButtonPivotWall+0.375+0.0625;
+function Stock_LatchLength() = abs(ButtpadX()-StockButtonPivotX)+StockButtonPivotWall+0.375+0.0625;
 
 // ************
 // * Vitamins *
@@ -121,13 +120,13 @@ module StockButtonPin(debug=false, cutter=false, clearance=0.005) {
   cylinder(r=(3/32/2)+clear, h=0.75);
   
 }
-module StockLatchBolt(debug=false, cutter=false, clearance=0.005) {
+module Stock_LatchBolt(debug=false, cutter=false, clearance=0.005) {
   clear = cutter ? clearance : 0;
 
   color("Silver") RenderIf(!cutter) DebugHalf(enabled=debug)
   translate([StockButtonPivotX-1, 0, ReceiverIR()])
   rotate([0,180,0])
-  NutAndBolt(bolt=StockLatchPivotBolt(), 
+  NutAndBolt(bolt=Stock_LatchPivotBolt(), 
              boltLength=1.5,
              head="flat",
              nut="heatset", nutBackset=1/16, nutHeightExtra=(cutter?1:0),
@@ -259,11 +258,11 @@ module StockButtons(factor=0, cutter=false) {
   }
 }
 
-module StockLatchHousing(cutter=false, clearance=0.008, alpha=1, debug=false) {
+module Stock_Latch(cutter=false, clearance=0.008, alpha=1, debug=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   height = ReceiverSideSlotHeight();
-  length = StockLatchHousingLength();
+  length = Stock_LatchLength();
   
   color("Chocolate", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
@@ -354,11 +353,11 @@ module StockLatchHousing(cutter=false, clearance=0.008, alpha=1, debug=false) {
     }
     
     StockButtonPivotPin(cutter=true);
-    StockLatchPlunger(cutter=true);
+    Stock_LatchPlunger(cutter=true);
   }
 }
 
-module StockLatchPlunger(cutter=false, clearance=0.005, alpha=1, debug=false) {
+module Stock_LatchPlunger(cutter=false, clearance=0.005, alpha=1, debug=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
@@ -383,10 +382,17 @@ module StockLatchPlunger(cutter=false, clearance=0.005, alpha=1, debug=false) {
     }
     
     // Extension
-    translate([ButtpadX()+StockLatchHousingLength()+plungerExtension, -0.125-clear, -0.75-clear])
+    translate([ButtpadX()+Stock_LatchLength()+plungerExtension, -0.125-clear, -0.75-clear])
     mirror([1,0,0])
-    ChamferedCube([StockLatchPlungerDistance+1+plungerExtension+(cutter?1:0),
+    ChamferedCube([Stock_LatchPlungerDistance+1+plungerExtension+(cutter?1:0),
                    0.25+clear2,0.5+clear2], r=1/16);
+    
+    if (cutter) {
+      translate([StockButtonPivotX+StockButtonPivotWall, -0.125-clear, -0.75-clear])
+      mirror([1,0,0])
+      ChamferedCube([1,
+                     0.25+clear2,0.75+clear2], r=1/16);
+    }
   }
   //StockButtonPivotX-StockButtonBackset+0.5
 }
@@ -482,11 +488,11 @@ module StockAssembly() {
   StockButtons(factor=sin(180*$t));
   
   if (_SHOW_STOCK_LATCH_PLUNGER)
-  translate([-StockLatchPlungerDistance*sin(180*$t),0,0])
-  StockLatchPlunger();
+  translate([-Stock_LatchPlungerDistance*sin(180*$t),0,0])
+  Stock_LatchPlunger();
   
-  if (_SHOW_STOCK_LATCH_HOUSING)
-  StockLatchHousing(alpha=_ALPHA_STOCK_LATCH_HOUSING, debug=_CUTAWAY_STOCK_LATCH_HOUSING);
+  if (_SHOW_STOCK_LATCH)
+  Stock_Latch(alpha=_ALPHA_STOCK_LATCH, debug=_CUTAWAY_STOCK_LATCH);
   
   if (_SHOW_BUTTPAD)
   Buttpad(alpha=_ALPHA_BUTTPAD, debug=_CUTAWAY_BUTTPAD);
@@ -523,19 +529,19 @@ if ($preview) {
   translate([-StockButtonPivotX,-StockButtonPivotY,-ReceiverSideSlotHeight()/2])
   StockButton();
   
-  if (_RENDER == "StockButtonHousing")
+  if (_RENDER == "Stock_Latch")
   rotate([0,90,0])
-  translate([-ButtpadX()-StockLatchHousingLength(),0,0])
-  StockLatchHousing();
+  translate([-ButtpadX()-Stock_LatchLength(),0,0])
+  Stock_Latch();
   
-  if (_RENDER == "StockLatchPlunger")
+  if (_RENDER == "Stock_LatchPlunger")
   rotate([180,0,0])
   translate([-ButtpadX()-1, 0, 0.25])
-  StockLatchPlunger();
+  Stock_LatchPlunger();
 
   if (_RENDER == "Stock")
   Stock_print();
   
-  if (_RENDER == "Buttpad")
+  if (_RENDER == "Stock_Buttpad")
   Buttpad_print();
 }
