@@ -50,7 +50,7 @@ assert(MlokBolt(), "TensionBolt() is undefined. Unknown MLOK_BOLT?");
 
 
 // Settings: Lengths
-function ReceiverLength() = 4.5;
+function ReceiverLength() = 5;
 function ReceiverBackLength() = 0.5;
 function ReceiverStockLength() = 12
                                - ReceiverLength()
@@ -86,6 +86,9 @@ function TensionRodBottomOffsetSide() = 0.75;
 
 function TensionRodTopZ() = 0.75;
 function TensionRodTopOffsetSide() = 0.625;
+
+function ReceiverTakedownPinX() = -ReceiverLength()+0.375;
+function ReceiverTakedownPinZ() = TensionRodBottomZ()+WallTensionRod();
 
 function ReceiverBottomZ() = TensionRodBottomZ()-WallTensionRod();
 function ReceiverTopZ() = TensionRodTopZ()+WallTensionRod()+0.625;
@@ -126,6 +129,21 @@ module ReceiverMlokBolts(headType="flat", nutType="heatset", length=0.5, cutter=
              teardrop=cutter&&teardrop, teardropAngle=180,
              clearance=cutter?clearance:0);
 }
+module ReceiverTakedownPin(cutter=false, clearance=0.005, alpha=1, debug=false) {
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
+  
+  color("Silver") RenderIf(!cutter) DebugHalf(enabled=debug)
+  translate([ReceiverTakedownPinX(),
+             0,
+             ReceiverTakedownPinZ()])
+  rotate([90,0,180])
+  linear_extrude(ReceiverOD(), center=true)
+  Teardrop(r=0.125+clear, enabled=cutter);
+}
+
+//*****************
+
 // **********
 // * Shapes *
 // **********
@@ -137,36 +155,93 @@ module ReceiverMlokSlot(length=ReceiverLength(), depth=0.0625, clearance=0) {
   mirror([1,0,0])
   cube([length, width, depth]);
 }
-module ReceiverBottomSlot(length=ReceiverLength(), clearance=ReceiverSlotClearance()) {
-  translate([-0.5, -(ReceiverBottomSlotWidth()/2)-clearance,0])
-  mirror([1,0,0])
+module ReceiverRoundSlot(length=ReceiverLength(), clearance=ReceiverSlotClearance()) {
+  
+  // ID cutout
+  rotate([0,-90,0])
+  cylinder(r=ReceiverIR()+clearance, h=length, $fn=Resolution(40,80));
+  
+  rotate([0,-90,0])
+  HoleChamfer(r1=ReceiverIR(), r2=3/32, teardrop=true, $fn=80);
+  
+  translate([-length,0,0])
+  rotate([0,90,0])
+  HoleChamfer(r1=ReceiverIR(), r2=3/32, teardrop=true, $fn=80);
+}
+module ReceiverBottomSlot(length=ReceiverLength(), clearance=ReceiverSlotClearance(), chamferBottom=true) {
+  
+  // Wide Vertical slot
+  translate([0,-(ReceiverBottomSlotWidth()/2)-clearance,0])
   mirror([0,0,1])
-  cube([length-0.5,ReceiverBottomSlotWidth()+(clearance*2),abs(TensionRodBottomZ())]);
-
-  translate([-0.5, -(ReceiverBottomSlotWidth()/2)+0.125-clearance,0])
-  mirror([1,0,0])
+  rotate([0,-90,0])
+  ChamferedSquareHole(sides=[abs(TensionRodBottomZ())+clearance,
+                             ReceiverBottomSlotWidth()+(clearance*2)],
+                       length=length,
+                      chamferBottom=chamferBottom,
+                      center=false, corners=false, chamferRadius=1/16);
+  
+  
+  // Narrow Vertical slot
+  translate([0,-(ReceiverBottomSlotWidth()/2)+0.125-clearance,0])
   mirror([0,0,1])
-  cube([length-0.5,ReceiverBottomSlotWidth()-0.25+(clearance*2),abs(TensionRodBottomZ())+0.25]);
+  rotate([0,-90,0])
+  ChamferedSquareHole(sides=[abs(TensionRodBottomZ())+0.25+clearance,
+                             ReceiverBottomSlotWidth()-0.25+(clearance*2)],
+                       length=length,
+                      chamferBottom=chamferBottom,
+                      center=false, corners=false, chamferRadius=1/16);
   
   // Bottom edge curves
-  translate([-0.5,0,ReceiverBottomZ()])
+  translate([0,0,ReceiverBottomZ()])
   rotate([0,-90,0])
-  linear_extrude(length-0.5)
+  linear_extrude(length)
   for (M = [0,1]) mirror([0,M])
   translate([0,(ReceiverBottomSlotWidth()/2)-0.125+clearance])
   rotate(-90)
-  RoundedBoolean(r=1/32, edgeOffset=0, $fn=40);
+  RoundedBoolean(r=1/16, edgeOffset=0, $fn=20);
   
   // Top edge curves
-  translate([-0.5,0,ReceiverBottomZ()+0.25])
+  translate([0,0,ReceiverBottomZ()+0.25-clearance])
   rotate([0,-90,0])
-  linear_extrude(length-0.5)
+  linear_extrude(length)
   for (M = [0,1]) mirror([0,M])
   translate([0,(ReceiverBottomSlotWidth()/2)-0.125+clearance])
-  RoundedBoolean(r=1/32, edgeOffset=0, $fn=40);
+  RoundedBoolean(r=1/32, edgeOffset=0, $fn=20);
 }
 
-module ReceiverBottomSlotInterface(length=0.75, height=ReceiverOR(), extension=0, clearance=0.005) {
+module ReceiverTopSlot(length=ReceiverLength(), width=ReceiverTopSlotWidth(), height=ReceiverTopSlotHeight(), clearance=ReceiverSlotClearance()) {
+  chamferRadius = 1/16;
+  horizontalWidth = ReceiverTopSlotHorizontalWidth();
+  horizontalHeight = ReceiverTopSlotHorizontalHeight();
+  
+  rotate([0,-90,0]) {
+    
+    // Vertical slot
+    translate([0,-(width/2)-clearance])
+    ChamferedSquareHole(sides=[height+clearance,width+(clearance*2)], length=length,
+                        center=false, corners=false, chamferRadius=chamferRadius);
+    
+    // Horizontal slot
+    translate([TensionRodTopZ()+WallTensionRod()-clearance,
+               -(horizontalWidth/2)-clearance])
+    ChamferedSquareHole(sides=[horizontalHeight+(clearance*2),horizontalWidth+(clearance*2)], length=length,
+                        center=false, corners=false, chamferRadius=chamferRadius);
+  }
+}
+
+module ReceiverSideSlot(length=ReceiverLength(), clearance=ReceiverSlotClearance()) {
+  clear = clearance;
+  clear2 = clear*2;
+  
+  width = (ReceiverIR()+ReceiverSideSlotDepth()+clear)*2;
+  height = ReceiverSideSlotHeight()+clear2;
+  
+  translate([0,-width/2,-height/2])
+  rotate([0,-90,0])
+  ChamferedSquareHole(sides=[height,width], length=length,
+                      center=false, corners=false, chamferRadius=1/16);
+}
+module ReceiverBottomSlotInterface(length=ReceiverLength(), height=ReceiverOR(), extension=0, clearance=0.005) {
   clear = clearance;
   clear2 = clear*2;
   
@@ -180,44 +255,7 @@ module ReceiverBottomSlotInterface(length=0.75, height=ReceiverOR(), extension=0
     }
   }
 }
-module ReceiverTopSlot(length=ReceiverLength(), width=ReceiverTopSlotWidth(), height=ReceiverTopSlotHeight(), clearance=ReceiverSlotClearance()) {
-  chamferRadius = 1/32;
-  horizontalWidth = ReceiverTopSlotHorizontalWidth();
-  horizontalHeight = ReceiverTopSlotHorizontalHeight();
-  
-  rotate([0,-90,0])
-  linear_extrude(length) {
-    
-    // Vertical slot
-    translate([0,-(width/2)-clearance])
-    ChamferedSquare([height+clearance, width+(clearance*2)],
-                     r=chamferRadius,
-                     teardropTop=false, teardropBottom=false);
-    
-    // Horizontal slot
-    translate([TensionRodTopZ()+WallTensionRod()-clearance,
-               -(horizontalWidth/2)-clearance])
-    ChamferedSquare([horizontalHeight+clearance*2,
-                     horizontalWidth+(clearance*2)],
-                     r=chamferRadius,
-                     teardropTop=false, teardropBottom=false);
-  }
-}
-
-module ReceiverSideSlot(length=ReceiverLength(), clearance=ReceiverSlotClearance()) {
-  clear = clearance;
-  clear2 = clear*2;
-  
-  width = (ReceiverIR()+ReceiverSideSlotDepth()+clear)*2;
-  height = ReceiverSideSlotHeight()+clear2;
-  
-  translate([0,-width/2,-height/2])
-  rotate([0,-90,0])
-  linear_extrude(length)
-  ChamferedSquare(xy=[height,width], r=1/16,
-                  teardropTop=false, teardropBottom=false);
-}
-module ReceiverTopSegment(length=1) {
+module ReceiverTopSegment(length=ReceiverLength()) {
   translate([0, -TensionRodTopOffsetSide(), 0])
   rotate([0,-90,0])
   linear_extrude(length)
@@ -270,17 +308,16 @@ module Receiver(receiverLength=ReceiverLength(), doRender=true, alpha=1, debug=f
       children();
     }
     
-    // ID cutout
-    rotate([0,-90,0])
-    cylinder(r=ReceiverIR(), h=6, $fn=Resolution(40,80));
-    
     ReceiverMlokSlot();
     ReceiverMlokBolts(cutter=true, teardrop=true);
     
+    translate([-0.5,0,0])
+    ReceiverBottomSlot(length=ReceiverLength()-0.5, chamferBottom=false);
+    ReceiverRoundSlot();
     ReceiverTopSlot();
-    ReceiverBottomSlot();
     ReceiverSideSlot();
     
+    ReceiverTakedownPin(cutter=true);
     TensionBolts(cutter=true);
   }
 }
@@ -292,12 +329,6 @@ module ReceiverBackSegment(length=ReceiverBackLength()) {
     ReceiverSegment(length=length);
     
     TensionBolts(nutType="none", headType="none", cutter=true);
-    
-    // Spring hole
-    translate([-ReceiverLength(),0,0])
-    rotate([0,-90,0])
-    ChamferedCircularHole(r1=0.65/2, r2=1/16, chamferTop=false,
-                          h=length-0.1875, $fn=40);
   }
 }
 
