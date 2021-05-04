@@ -135,9 +135,9 @@ function ActionRodZ() = 0.75+(ActionRodWidth()/2);
 hammerHeadLength=2;
 hammerHeadHeight=ReceiverIR()+0.25;
 
-function HammerTailLength() = 1;
-hammerTailMinX = -ReceiverLength()-HammerTailLength();
-hammerTailMaxX = -ReceiverLength();
+function HammerTailLength() = 0.625;
+hammerTailMinX = -ReceiverLength();
+hammerTailMaxX = hammerTailMinX-HammerTailLength();
 
 hammerFiredX  = FiringPinMinX();
 hammerCockedX = -LowerMaxX()-0.125;
@@ -497,13 +497,9 @@ module Hammer(cutter=false, clearance=UnitsImperial(0.01), debug=_CUTAWAY_HAMMER
   }
 }
 
-module HammerTail(cutter=false, clearance=UnitsImperial(0.01), debug=_CUTAWAY_HAMMER, alpha=_ALPHA_HAMMER) {
-
-  clear = cutter ? clearance : 0;
-  clear2 = clear*2;
-  
+module HammerTail(clearance=UnitsImperial(0.01), debug=_CUTAWAY_HAMMER, alpha=_ALPHA_HAMMER) {
   color("Chocolate", alpha)
-  RenderIf(!cutter) DebugHalf(enabled=debug)
+  render() DebugHalf(enabled=debug)
   difference() {
     union() {
       
@@ -520,6 +516,15 @@ module HammerTail(cutter=false, clearance=UnitsImperial(0.01), debug=_CUTAWAY_HA
         translate([hammerTailMinX,-(ReceiverIR())-clearance, 0])
         cube([HammerTailLength(), ReceiverID()+(clearance*2),ReceiverIR()]);
       }
+      
+      // Top Stop
+      translate([hammerTailMinX,
+                 -((ReceiverTopSlotWidth()/2)-clearance),
+                 0])
+      ChamferedCube([HammerTailLength(),
+                     (ReceiverTopSlotWidth()-(clearance*2)),
+                     ReceiverTopSlotHeight()-ReceiverTopSlotHorizontalHeight()-clearance],
+                    r=1/16,teardropFlip=[true, true, true]);
       
       // Wings
       translate([hammerTailMinX,
@@ -538,8 +543,8 @@ module HammerTail(cutter=false, clearance=UnitsImperial(0.01), debug=_CUTAWAY_HA
     ChamferedCircularHole(r1=0.3125/2, r2=1/16,
                           h=HammerTailLength()-0.3125, $fn=40);
     
-    // Spring Hole
-    translate([hammerTailMaxX,0,0])
+    // Main Spring Hole
+    translate([hammerTailMinX+HammerTailLength(),0,0])
     rotate([0,-90,0])
     ChamferedCircularHole(r1=0.65/2, r2=1/16, chamferTop=false,
                           h=0.25, $fn=40);
