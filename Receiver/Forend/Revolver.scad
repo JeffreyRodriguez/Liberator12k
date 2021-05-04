@@ -808,9 +808,8 @@ module Revolver_VerticalForegrip(length=2, debug=true, alpha=1) {
       ChamferedCube([abs(CylinderZ())+0.25, 1, length], r=1/16);
       
       // Action Rod Support Block
-      translate([ForegripMinX(),-TensionRodTopOffsetSide(),0])
-      ChamferedCube([length, (TensionRodTopOffsetSide()*2), ReceiverTopZ()], r=1/4,
-                     teardropFlip=[false, true,true]);
+      translate([ForegripMinX(),-0.75/2,0])
+      ChamferedCube([2, 0.75, ActionRodZ()+0.375], r=1/8);
     }
     
     // Inner bearing profile
@@ -1033,8 +1032,8 @@ if ($preview) {
   if (_RENDER == "Revolver_FrameSpacer")
   Revolver_FrameSpacer_print();
   
-  if (_RENDER == "Foregrip")
-  Foregrip_print();
+  if (_RENDER == "Revolver_Foregrip")
+  Revolver_Foregrip_print();
   
   if (_RENDER == "Revolver_CylinderCore")
   Revolver_CylinderCore_print();

@@ -175,7 +175,7 @@ module ActionRod(length=10, debug=false, cutter=false, clearance=0.01) {
   
   // Action Rod
   color("Silver")
-  translate([-0.5-(cutter?1:0),0,ActionRodZ()])
+  translate([-0.5,0,ActionRodZ()])
   DebugHalf(enabled=debug)
   translate([0,-(ActionRodWidth()/2)-clear,-(ActionRodWidth()/2)-clear])
   cube([length, ActionRodWidth()+clear2, ActionRodWidth()+clear2]);
