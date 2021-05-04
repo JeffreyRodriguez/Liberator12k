@@ -56,7 +56,7 @@ function SearLength() = abs(SearPinOffsetZ()) + SearTravel();
 
 function TriggerAnimationFactor() = SubAnimate(ANIMATION_STEP_TRIGGER)-SubAnimate(ANIMATION_STEP_CHARGER_RESET, end=0.1);
 
-module Sear(animationFactor=TriggerAnimationFactor(), length=SearLength(), cutter=false, clearance=SEAR_CLEARANCE) {
+module Sear(animationFactor=0, length=SearLength(), cutter=false, clearance=SEAR_CLEARANCE) {
   clear = cutter ? clearance : 0;
   
   translate([0,0,-SearTravel()*animationFactor]) {
