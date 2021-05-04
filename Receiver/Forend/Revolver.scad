@@ -856,7 +856,6 @@ module Revolver_Foregrip(length=PumpGripLength(), debug=false, alpha=1) {
     
     ActionRod(cutter=true);
     Revolver_ForegripBolts(cutter=true);
-    //Revolver_Barrel(cutter=true);
   }
 }
 
