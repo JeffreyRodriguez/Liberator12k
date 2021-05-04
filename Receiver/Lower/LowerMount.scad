@@ -19,12 +19,36 @@ use <Trigger.scad>;
 _RENDER = ""; // ["", "LowerMount_Front", "LowerMount_Rear"]
 
 /* [Assembly] */
-_CUTAWAY_RECEIVER = false;
-_SHOW_RECEIVER = false;
+_SHOW_RECEIVER = true;
 _SHOW_LOWER = true;
+_SHOW_LOWERMOUNT_FRONT = true;
+_SHOW_LOWERMOUNT_REAR = true;
+_CUTAWAY_RECEIVER = true;
+_CUTAWAY_LOWERMOUNT_FRONT = false;
+_CUTAWAY_LOWERMOUNT_REAR = false;
 
 // Settings: Positions
 function LowerOffsetZ() = ReceiverBottomZ();
+
+
+//************
+//* Vitamins *
+//************
+module LowerMount_TakedownPinRetainer(cutter=false, clearance=0.005) {
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
+  
+  color("Silver") RenderIf(!cutter)
+  translate([-LowerMaxX()+ReceiverLugRearMaxX(), 0, ReceiverTakedownPinZ()-0.125])
+  rotate([0,-90,0])
+  cylinder(r=(3/32/2)+clear, h=ReceiverLugRearMaxX()-ReceiverTakedownPinX()-LowerMaxX()+0.125, $fn=20);
+  
+  if (cutter)
+  translate([-LowerMaxX()+ReceiverLugRearMinX(), 0, ReceiverTakedownPinZ()-0.125])
+  rotate([0,-90,0])
+  cylinder(r=0.125, h=2, $fn=20);
+  
+}
 
 //*****************
 //* Printed Parts *
@@ -62,8 +86,8 @@ module LowerMount_Front(id=ReceiverID(), alpha=1, debug=false) {
       }
     }
     
-    translate([-0.01,0,0])
-    Sear(cutter=true);
+    translate([-0.01,0,LowerOffsetZ()])
+    Sear(length=SearLength()+abs(LowerOffsetZ()), cutter=true);
   }
 }
 
@@ -82,9 +106,15 @@ module LowerMount_Rear(id=ReceiverID(), alpha=1, debug=false) {
       translate([0,0,LowerOffsetZ()])
       ReceiverLugRear(extraTop=-LowerOffsetZ());
       
-      translate([ReceiverLugRearMaxX(),0,0])
-      ReceiverBottomSlotInterface(length=mountLength, height=abs(LowerOffsetZ()));
+      translate([ReceiverLugRearMaxX(),0,-0.26])
+      ReceiverBottomSlotInterface(length=mountLength, height=abs(LowerOffsetZ())-0.26);
     }
+      
+    translate([LowerMaxX(),0,0])
+    ReceiverTakedownPin(cutter=true);
+    
+    translate([LowerMaxX(),0,0])
+    LowerMount_TakedownPinRetainer(cutter=true);
     
     difference() {
       
@@ -99,6 +129,12 @@ module LowerMount_Rear(id=ReceiverID(), alpha=1, debug=false) {
       translate([ReceiverLugRearMaxX(),-0.3125/2,-(id/2)-0.375])
       mirror([1,0,0])
       ChamferedCube([mountLength, 0.3125, id/2], r=1/16, teardropFlip=[true,true,true]);
+      
+      // Bevel
+      translate([LowerMaxX()-ReceiverLength()+00.75,-ReceiverIR(),-ReceiverIR()])
+      rotate([0,-90-45,0])
+      cube([ReceiverID(), ReceiverID(), ReceiverID()]);
+      
     }
   }
 }
@@ -107,9 +143,15 @@ module LowerMount_Rear(id=ReceiverID(), alpha=1, debug=false) {
 //* Assemblies *
 //**************
 module LowerMount(id=ReceiverID(), alpha=1, debug=false) {
-  LowerMount_Front();
+  LowerMount_TakedownPinRetainer();
   
-  LowerMount_Rear();
+  ReceiverTakedownPin();
+  
+  if (_SHOW_LOWERMOUNT_FRONT)
+  LowerMount_Front(debug=_CUTAWAY_LOWERMOUNT_FRONT);
+  
+  if (_SHOW_LOWERMOUNT_REAR)
+  LowerMount_Rear(debug=_CUTAWAY_LOWERMOUNT_REAR);
 }
 
 
