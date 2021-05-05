@@ -43,7 +43,7 @@ COLORSCHEME=Starnight
 	  --render -D _RENDER=\"`echo "$(notdir $@)" | sed 's/.stl$\$///'`\" \
 		--projection=p --autocenter --viewall \
 		`if [ '$(dir "$@")' != './' ]; then echo -P '$(dir $@)' | sed 's/\/$///'; fi` \
-	  `echo $(notdir $@) | awk -F _ '{ print $$1 }'`.scad
+	  `echo $(notdir $@) | sed 's/.stl//' | awk -F _ '{ print $$1 }'`.scad
 	$(THUMBNAILBIN) $(basename $@).png $(basename $@)_thumb.png
 	
 FORCE:
