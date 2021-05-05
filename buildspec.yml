@@ -1,0 +1,25 @@
+version: 0.2
+
+run-as: ubuntu
+
+batch:
+  fast-fail: true
+
+phases:
+  install:
+    run-as: root
+    on-failure: ABORT
+    commands:
+      - add-apt-repository -y ppa:openscad/releases
+      - apt-get update
+      - apt install -y openscad
+  build:
+    on-failure: ABORT
+    commands:
+      - make all dist
+artifacts:
+  files:
+    - *
+  name: Liberator12k.zip
+  discard-paths: no
+  base-directory: dist
