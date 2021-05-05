@@ -1,13 +1,10 @@
 version: 0.2
 
-run-as: ubuntu
-
 batch:
   fast-fail: true
 
 phases:
   install:
-    run-as: root
     on-failure: ABORT
     commands:
       - add-apt-repository -y ppa:openscad/releases
