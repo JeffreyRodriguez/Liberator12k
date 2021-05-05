@@ -21,7 +21,7 @@ COLORSCHEME=Starnight
 		  -D \'\$$t=`echo "1/$(FRAME_COUNT)*$$i" | bc -l`\' \
 			--projection=p --camera `echo "(600*s(6.28*(1/$(FRAME_COUNT)*$$i)))-300" | bc -l`,`echo "(600*c(6.28*(1/$(FRAME_COUNT)*$$i)))-300" | bc -l`,300,0,0,0 \
 				$<; \
-  done | time parallel -v --line-buffer \
+  done | parallel -v --line-buffer \
 	&& touch $@
 
 %.mp4: .frames/%.mp4
