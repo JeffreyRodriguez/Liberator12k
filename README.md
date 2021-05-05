@@ -16,6 +16,7 @@
  * [Lower](Receiver/Lower/Lower.html)
  * [LowerMount](Receiver/Lower/LowerMount.html)
  * [Trigger](Receiver/Lower/Trigger.html)
+ * [Stock](Receiver/Stock.html)
 
 ## Safety
 DANGER - ART AT YOUR OWN RISK
