@@ -3,7 +3,7 @@ FRAMES=$(shell seq 0 $(FRAME_COUNT))
 SLOW_FRAME_COUNT=300
 SLOW_FRAMES=$(shell seq 0 $(SLOW_FRAME_COUNT))
 MDBIN=cmark-gfm -e table --unsafe
-OSBIN=nice openscad
+OSBIN=nice xvfb-run -a openscad
 OSOPTS=--imgsize=1920,1080
 OS_CAM_AUTO=--projection=p --autocenter --viewall
 ANIMATE_BIN=./bin/animate.sh
