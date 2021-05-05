@@ -1,16 +1,14 @@
-MDBIN=cmark-gfm -e table --unsafe
-OSBIN=nice openscad
-ANIMATE_BIN=./bin/animate.sh
-THUMBNAILBIN=convert -thumbnail 200
-OSOPTS=--imgsize=1920,1080 --quiet
-RENDER_ANIMATIONS=true
-RENDER_STL=true
-RENDER_HTML=true
-COLORSCHEME=Starnight
-FRAME_COUNT=20
+FRAME_COUNT=50
 FRAMES=$(shell seq 0 $(FRAME_COUNT))
 SLOW_FRAME_COUNT=300
 SLOW_FRAMES=$(shell seq 0 $(SLOW_FRAME_COUNT))
+MDBIN=cmark-gfm -e table --unsafe
+OSBIN=nice openscad
+OSOPTS=--imgsize=1920,1080 --cache=redis,127.0.0.1,6379,
+OS_CAM_AUTO=--projection=p --autocenter --viewall
+ANIMATE_BIN=./bin/animate.sh
+THUMBNAILBIN=convert -thumbnail 200
+COLORSCHEME=Starnight
 
 .DEFAULT_GOAL := all
 
@@ -21,9 +19,9 @@ SLOW_FRAMES=$(shell seq 0 $(SLOW_FRAME_COUNT))
 	  echo $(OSBIN) $(OSOPTS) \
 		  -o `printf '$@/frame%05d.png' $$i` \
 		  -D \'\$$t=`echo "1/$(FRAME_COUNT)*$$i" | bc -l`\' \
-			--projection=p --autocenter --viewall \
+			--projection=p --camera `echo "(600*s(6.28*(1/$(FRAME_COUNT)*$$i)))-300" | bc -l`,`echo "(600*c(6.28*(1/$(FRAME_COUNT)*$$i)))-300" | bc -l`,300,0,0,0 \
 				$<; \
-  done | parallel -v --line-buffer \
+  done | time parallel -v --line-buffer \
 	&& touch $@
 
 %.mp4: .frames/%.mp4
@@ -39,11 +37,13 @@ SLOW_FRAMES=$(shell seq 0 $(SLOW_FRAME_COUNT))
 %.html: %.scad %.md %.png %.mp4
 	$(MDBIN) $(basename $@).md > $@
 
-%.stl:
+*/%.stl %.stl:
+	mkdir -p $(dir $@)
 	$(OSBIN) $(OSOPTS) -o $@ -o $(basename $@).png \
-	  --render -D _RENDER='"$(basename $@)"' \
+	  --render -D _RENDER=\"`echo "$(notdir $@)" | sed 's/.stl$\$///'`\" \
 		--projection=p --autocenter --viewall \
-	  `echo $(basename $@) | awk -F _ '{ print $$1 }'`.scad
+		`if [ '$(dir "$@")' != './' ]; then echo -P '$(dir $@)' | sed 's/\/$///'; fi` \
+	  `echo $(notdir $@) | awk -F _ '{ print $$1 }'`.scad
 	$(THUMBNAILBIN) $(basename $@).png $(basename $@)_thumb.png
 	
 FORCE:
