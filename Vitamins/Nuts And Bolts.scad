@@ -103,6 +103,7 @@ module Bolt(bolt=Spec_BoltTemplate(), length=1,
 module BoltFlatHead(bolt, clearance=0, capHeightExtra=0, teardrop=false, teardropAngle=0) {
   union() {
     if (teardrop) {
+      rotate(teardropAngle)
       mirror([0,0,1])
       TeardropTaper(h=BoltFlatHeadHeight(bolt),
                     r1=BoltFlatHeadRadius(bolt, clearance),
