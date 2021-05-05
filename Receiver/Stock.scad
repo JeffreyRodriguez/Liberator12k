@@ -30,7 +30,9 @@ _SHOW_STOCK_LATCH = true;
 _SHOW_STOCK_LATCH_BUTTONS = true;
 _SHOW_STOCK_LATCH_CAP = true;
 _SHOW_STOCK_LATCH_PLUNGER = true;
+_SHOW_STOCK_LATCH_SPRING_PIN = true;
 _SHOW_STOCK_PIVOT_PIN = true;
+_SHOW_STOCK_MLOK_BOLTS = true;
 _SHOW_BUTTPAD = true;
 _SHOW_BUTTPAD_BOLT = true;
 
@@ -101,6 +103,18 @@ module ButtpadBolt(debug=false, head="flat", nut="heatset", cutter=false, teardr
              nut=nut, nutHeightExtra=(cutter?1:0),
              clearance=clear, teardrop=cutter&&teardrop);
 }
+module Stock_MlokBolts(headType="flat", nutType="heatset", length=0.625, cutter=false, clearance=0.005, teardrop=false) {
+  color("Silver") RenderIf(!cutter)
+  for (M = [0,1]) mirror([0,M,0])
+  translate([ButtpadX()+1,UnitsMetric(10),ReceiverBottomZ()])
+  mirror([0,0,1])
+  NutAndBolt(bolt=MlokBolt(),
+             boltLength=length+ManifoldGap(2),
+             head=headType,
+             nut=nutType, nutHeightExtra=(cutter?0.25:0),
+             teardrop=cutter&&teardrop, teardropAngle=180,
+             clearance=cutter?clearance:0);
+}
 module Stock_ButtonPivotPin(debug=false, cutter=false, clearance=0.005) {
   clear = cutter ? clearance : 0;
 
@@ -129,6 +143,15 @@ module Stock_LatchSpringPin(debug=false, cutter=false, teardrop=false, clearance
   linear_extrude(Stock_LatchLength()-0.5+(cutter?0.75:0), center=false)
   Teardrop(r=(3/32/2)+clear, enabled=cutter&&teardrop);
   
+}
+
+
+// ************
+// * Shapes *
+// ************
+module Stock_MlokSlot(length=1.5, width = UnitsMetric(7)+0.005, depth=0.0625) {  
+  translate([ButtpadX()+1-(width/2), -(length/2), ReceiverBottomZ()-0.5])
+  cube([width, length, depth]);
 }
 
 // ********
@@ -330,6 +353,10 @@ module Stock_Latch(cutter=false, clearance=0.008, alpha=1, debug=false) {
     
     ButtpadBolt(cutter=true, teardrop=false);
     
+    Stock_MlokBolts(cutter=true, teardrop=true);
+    
+    Stock_MlokSlot();
+    
     hull()
     for (M = [0,1]) mirror([0,M]) {
       for (F = [0,1]) StockButtonPivot(factor=F)
@@ -509,12 +536,16 @@ module StockAssembly() {
   if (_SHOW_BUTTPAD_BOLT)
   ButtpadBolt();
   
+  if (_SHOW_STOCK_MLOK_BOLTS)
+  Stock_MlokBolts();
+  
   if (_SHOW_STOCK_PIVOT_PIN)
   Stock_ButtonPivotPin();
     
   if (_SHOW_STOCK_LATCH_BUTTONS)
   Stock_LatchButtons(factor=sin(180*$t));
   
+  if (_SHOW_STOCK_LATCH_SPRING_PIN)
   Stock_LatchSpringPin();
   
   if (_SHOW_STOCK_LATCH_PLUNGER)

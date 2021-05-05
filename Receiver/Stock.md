@@ -38,8 +38,11 @@ Bill of Materials
 
 **Hardware**:
 
-| Part                                      | Source             | Quantity |
-|-------------------------------------------|--------------------|----------|
-| 3/32"x1" Music Wire                       | HWS                | 2pcs     |
-| 3/32"x0.75" Music Wire                    | HWS                | 2pcs     |
+| Part                                      | Quantity |
+|-------------------------------------------|----------|
+| 3/32"x1.5" Music Wire                     | 2pcs     |
+| 3/32"x1" Music Wire                       | 2pcs     |
+| 3/32"x0.75" Music Wire                    | 2pcs     |
+| 0.22" OD x 2" Long Spring                 | 2pcs     |
+| 1/4-20 Heatset Nut                        | 2pcs     |
 
