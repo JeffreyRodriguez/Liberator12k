@@ -147,9 +147,7 @@ module ReceiverTakedownPin(cutter=false, clearance=0.005, alpha=1, debug=false) 
 // **********
 // * Shapes *
 // **********
-module ReceiverMlokSlot(length=ReceiverLength(), depth=0.0625, clearance=0) {
-  width = UnitsMetric(7)+clearance;
-  
+module ReceiverMlokSlot(length=ReceiverLength(), width = UnitsMetric(7)+0.005, depth=0.0625) {  
   translate([0, -width/2, ReceiverTopZ()+ManifoldGap()])
   mirror([0,0,1])
   mirror([1,0,0])
