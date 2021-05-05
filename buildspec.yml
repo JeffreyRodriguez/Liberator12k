@@ -19,7 +19,7 @@ phases:
       - make all dist
 artifacts:
   files:
-    - *
+    - '**/*'
   name: Liberator12k.zip
   discard-paths: no
   base-directory: dist
