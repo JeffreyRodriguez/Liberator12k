@@ -9,7 +9,7 @@ phases:
     commands:
       - add-apt-repository -y ppa:openscad/releases
       - apt-get update
-      - apt install -y xvfb openscad cmark-gfm imagemagick
+      - apt install -y xvfb openscad cmark-gfm imagemagick bc parallel
   build:
     on-failure: ABORT
     commands:
