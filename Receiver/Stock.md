@@ -45,4 +45,8 @@ Bill of Materials
 | 3/32"x0.75" Music Wire                    | 2pcs     |
 | 0.22" OD x 2" Long Spring                 | 2pcs     |
 | 1/4-20 Heatset Nut                        | 2pcs     |
+| 1/4-20x3-1/2" Flat Head Screw             | 2pcs     |
+| #8-32 Heatset Nut                         | 2pcs     |
+| #8-32x1/2" Socket Cap Screw SS            | 2pcs     |
+| M-LOK QD Stud                             | 1pcs     |
 
