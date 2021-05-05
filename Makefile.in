@@ -1,4 +1,4 @@
-FRAME_COUNT=50
+FRAME_COUNT=100
 FRAMES=$(shell seq 0 $(FRAME_COUNT))
 SLOW_FRAME_COUNT=300
 SLOW_FRAMES=$(shell seq 0 $(SLOW_FRAME_COUNT))
@@ -19,7 +19,7 @@ COLORSCHEME=Starnight
 	  echo $(OSBIN) $(OSOPTS) \
 		  -o `printf '$@/frame%05d.png' $$i` \
 		  -D \'\$$t=`echo "1/$(FRAME_COUNT)*$$i" | bc -l`\' \
-			--projection=p --camera `echo "(600*s(6.28*(1/$(FRAME_COUNT)*$$i)))-300" | bc -l`,`echo "(600*c(6.28*(1/$(FRAME_COUNT)*$$i)))-300" | bc -l`,300,0,0,0 \
+			--projection=p --camera `echo "600*s(6.28*(1/$(FRAME_COUNT)*$$i))" | bc -l`,`echo "600*c(6.28*(1/$(FRAME_COUNT)*$$i))" | bc -l`,300,0,0,0 \
 				$<; \
   done | parallel -v --line-buffer \
 	&& touch $@
