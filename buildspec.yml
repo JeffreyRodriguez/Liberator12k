@@ -9,7 +9,7 @@ phases:
     commands:
       - add-apt-repository -y ppa:openscad/releases
       - apt-get update
-      - apt install -y openscad cmark-gfm
+      - apt install -y xvfb openscad cmark-gfm
   build:
     on-failure: ABORT
     commands:
