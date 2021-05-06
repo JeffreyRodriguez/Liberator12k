@@ -13,7 +13,8 @@ phases:
   build:
     on-failure: ABORT
     commands:
-      - make -j -Otarget -l 2.5 all dist
+      - make -j -Otarget -l 2.5 all
+      - make dist
 artifacts:
   files:
     - '**/*'
