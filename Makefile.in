@@ -12,6 +12,8 @@ COLORSCHEME=Starnight
 
 .DEFAULT_GOAL := all
 
+.PRECIOUS: .frames/%.mp4
+
 .frames/%.mp4: %.scad
 	mkdir -p $@
 	
@@ -35,7 +37,7 @@ COLORSCHEME=Starnight
 	$(THUMBNAILBIN) $@ $(basename $@)_thumb.png
 
 %.html: %.scad %.md %.png %.mp4
-	$(MDBIN) $(basename $@).md > $@
+	$(MDBIN) $(basename $@).md | sed 's/\.md/\.html/' > $@
 
 */%.stl %.stl:
 	mkdir -p $(dir $@)
