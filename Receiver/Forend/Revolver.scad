@@ -42,7 +42,7 @@ use <../Fire Control Group.scad>;
 /* [Print] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Receiver_LargeFrame", "Revolver_ReceiverFront", "Revolver_FrameSpacer", "Foregrip", "Revolver_CylinderCore", "Revolver_CylinderShell", "Revolver_BarrelSupport", "Revolver_ForendSpindleToggleLinkage", "Revolver_ForendSpindleToggleHandle", "Revolver_Projection_Cylinder", "Revolver_Projection_CylinderCore", "Revolver_Projection_BlastPlate", "Revolver_Projection_RecoilPlate"]
+_RENDER = ""; // ["", "Receiver_LargeFrame", "Revolver_ReceiverFront", "Revolver_FrameSpacer", "Revolver_Foregrip", "Revolver_VerticalForegrip", "Revolver_CylinderCore", "Revolver_CylinderShell", "Revolver_BarrelSupport", "Revolver_ForendSpindleToggleLinkage", "Revolver_ForendSpindleToggleHandle", "Revolver_Projection_Cylinder", "Revolver_Projection_CylinderCore", "Revolver_Projection_BlastPlate", "Revolver_Projection_RecoilPlate"]
 
 /* [Assembly] */
 
@@ -1001,7 +1001,7 @@ module RevolverAssembly(stock=true) {
     }
 
     if (_SHOW_STOCK) {
-      StockAssembly(debug=_CUTAWAY_STOCK, alphaStock=_ALPHA_STOCK);
+      StockAssembly();
     }
   }
 

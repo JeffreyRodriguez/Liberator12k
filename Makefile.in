@@ -4,7 +4,7 @@ SLOW_FRAME_COUNT=300
 SLOW_FRAMES=$(shell seq 0 $(SLOW_FRAME_COUNT))
 MDBIN=cmark-gfm -e table --unsafe
 OSBIN=nice xvfb-run -a openscad
-OSOPTS=--imgsize=1920,1080
+OSOPTS=--imgsize=1920,1080 --quiet
 OS_CAM_AUTO=--projection=p --autocenter --viewall
 ANIMATE_BIN=./bin/animate.sh
 THUMBNAILBIN=convert -thumbnail 200
@@ -19,9 +19,9 @@ COLORSCHEME=Starnight
 	  echo $(OSBIN) $(OSOPTS) \
 		  -o `printf '$@/frame%05d.png' $$i` \
 		  -D \'\$$t=`echo "1/$(FRAME_COUNT)*$$i" | bc -l`\' \
-			--projection=p --camera `echo "600*s(6.28*(1/$(FRAME_COUNT)*$$i))" | bc -l`,`echo "600*c(6.28*(1/$(FRAME_COUNT)*$$i))" | bc -l`,300,0,0,0 \
+			--projection=p --camera `echo "600*s(6.28*(1/$(FRAME_COUNT)*$$i))" | bc -l`,`echo "600*c(6.28*(1/$(FRAME_COUNT)*$$i))" | bc -l`,200,0,0,0 \
 				$<; \
-  done | parallel -v --line-buffer \
+  done | parallel -v \
 	&& touch $@
 
 %.mp4: .frames/%.mp4

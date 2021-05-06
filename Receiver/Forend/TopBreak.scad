@@ -32,34 +32,34 @@ use <../Fire Control Group.scad>;
 /* [Print] */
 
 // Select a part, Render it (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "ReceiverFront", "ReceiverForend", "BarrelCollar", "Extractor", "Latch", "Foregrip"]
+_RENDER = ""; // ["", "TopBreak_ReceiverFront", "TopBreak_Forend", "TopBreak_BarrelCollar", "TopBreak_Extractor", "TopBreak_Latch", "TopBreak_Foregrip"]
 
 /* [Assembly] */
 _SHOW_BARREL = true;
 _SHOW_FOREND = true;
 _SHOW_FRAME = true;
 _SHOW_COLLAR = true;
-_SHOW_EXTRACTOR = true;
+_SHOW_TOPBREAK_EXTRACTOR = true;
 _SHOW_RECEIVER = true;
 _SHOW_RECEIVER_FRONT = true;
 _SHOW_FCG = true;
 _SHOW_STOCK = true;
 _SHOW_LOWER = true;
 _SHOW_LOWER_MOUNT = true;
-_SHOW_LATCH = true;
+_SHOW_TOPBREAK_LATCH = true;
 
 _ALPHA_FOREND = 1;  // [0:0.1:1]
-_ALPHA_LATCH = 1; // [0:0.1:1]
+_ALPHA_TopBreak_Latch = 1; // [0:0.1:1]
 _ALPHA_COLLAR = 1; // [0:0.1:1]
 _ALPHA_RECEIVER_TUBE = 1; // [0:0.1:1]
-_ALPHA_EXTRACTOR = 1; // [0:0.1:1]
+_ALPHA_TOPBREAK_EXTRACTOR = 1; // [0:0.1:1]
 _ALPHA_RECOIL_PLATE_HOUSING=1; // [0:0.1:1]
 
 _CUTAWAY_RECEIVER = false;
 _CUTAWAY_FOREND = false;
 _CUTAWAY_COLLAR = false;
-_CUTAWAY_EXTRACTOR = false;
-_CUTAWAY_LATCH = false;
+_CUTAWAY_TOPBREAK_EXTRACTOR = false;
+_CUTAWAY_TOPBREAK_LATCH = false;
 
 /* [Vitamins] */
 GP_BOLT = "#8-32"; // ["M4", "#8-32"]
@@ -84,7 +84,7 @@ PIVOT_WIDTH = 1.75;
 FRAME_BOLT_LENGTH = 10;
 
 /* [Branding] */
-BRANDING_MODEL_NAME = "CAFE 12ga";
+BRANDING_MODEL_NAME = "CAFE12";
 
 $fs = UnitsFs()*0.5;
 
@@ -123,71 +123,71 @@ function PivotDiameter() = PivotRadius()*2;
 function PivotClearance() = 0.01;
 
 function ActionRodLength() = 10;
-function LatchGuideWidth() = 0.125;
-function LatchGuideHeight() = 0.1875;
-function LatchSpringLength() = 2;
-function LatchSpringDiameter() = 0.65;
+function TopBreak_LatchGuideWidth() = 0.125;
+function TopBreak_LatchGuideHeight() = 0.1875;
+function TopBreak_LatchSpringLength() = 2;
+function TopBreak_LatchSpringDiameter() = 0.65;
 
 function FrameBoltLength() = FRAME_BOLT_LENGTH;
 
-function ReceiverFrontLength() = 0.5;
+function TopBreak_ReceiverFrontLength() = 0.5;
 function FrameBackLength() = 0.75+0.5;
 function ForendLength() = FrameExtension(length=FRAME_BOLT_LENGTH)
                         - 0.5
-                        -ReceiverFrontLength();
+                        -TopBreak_ReceiverFrontLength();
                         
-function LatchTravel() = 0.3125;
+function TopBreak_LatchTravel() = 0.3125;
 function ChargerTravel() = 1.75;
-function LatchCollarLength() = PivotX();//+(PivotRadius()*(sqrt(2)/2));
-//function LatchCollarLength() = ForendLength()+0.25;
+function TopBreak_LatchCollarLength() = PivotX();//+(PivotRadius()*(sqrt(2)/2));
+//function TopBreak_LatchCollarLength() = ForendLength()+0.25;
 
 // Calculated: Dimensions
-function LatchSpringRadius() = LatchSpringDiameter()/2;
-function LatchSupportWidth() = (LatchSpringRadius()+LatchWall())*2;
+function TopBreak_LatchSpringRadius() = TopBreak_LatchSpringDiameter()/2;
+function TopBreak_LatchSupportWidth() = (TopBreak_LatchSpringRadius()+TopBreak_LatchWall())*2;
 
 
 // Calculated: Lengths
-function ForegripOffsetX() = 6+ChargerTravel();
-function ForegripLength() = 4.625;
+function TopBreak_ForegripOffsetX() = 6+ChargerTravel();
+function TopBreak_ForegripLength() = 4.625;
 
 // Calculated: Positions
 //function ActionRodZ() = FrameBoltZ()-WallFrameBolt()-(ActionRodWidth()/2);
 function BarrelOffsetZ() = 0; // -0.11 for .22LR rimfire
 
-function ExtractorWall() = 0.125;
-function ExtractorWidth() = 0.65;
-function ExtractorHeight() = 0.65;
-function ExtractorTravel() = 0.3125;
-function ExtractorBitWidth() = (1/4);
-function ExtractorBitLength() = 1;
-function ExtractorSpringLength() = 1.75;
-function ExtractorSpringDiameter() = 0.625;
-function ExtractorSpringRadius() = ExtractorSpringDiameter()/2;
-function ExtractorLength() = (PivotX()-PivotRadius())
-                           - ExtractorSpringLength()
+function TopBreak_ExtractorWall() = 0.125;
+function TopBreak_ExtractorWidth() = 0.65;
+function TopBreak_ExtractorHeight() = 0.65;
+function TopBreak_ExtractorTravel() = 0.3125;
+function TopBreak_ExtractorBitWidth() = (1/4);
+function TopBreak_ExtractorBitLength() = 1;
+function TopBreak_ExtractorSpringLength() = 1.75;
+function TopBreak_ExtractorSpringDiameter() = 0.625;
+function TopBreak_ExtractorSpringRadius() = TopBreak_ExtractorSpringDiameter()/2;
+function TopBreak_ExtractorLength() = (PivotX()-PivotRadius())
+                           - TopBreak_ExtractorSpringLength()
                            - WallPivot();
-function ExtractorBitZ() = BarrelZ()-BarrelRadius()+BarrelWall();
-function ExtractorZ() = BarrelZ()-BarrelRadius()-ExtractorHeight()-max(ExtractorWall(),0.1875);
+function TopBreak_ExtractorBitZ() = BarrelZ()-BarrelRadius()+BarrelWall();
+function TopBreak_ExtractorZ() = BarrelZ()-BarrelRadius()-TopBreak_ExtractorHeight()-max(TopBreak_ExtractorWall(),0.1875);
 
-function ExtractorHousingWidth() = ExtractorWidth()+(ExtractorWall()*2);
-function BarrelCollarBottomZ() = ExtractorZ() - ExtractorWall(); //PivotZ()-(PivotRadius()*0.5);
+function TopBreak_ExtractorHousingWidth() = TopBreak_ExtractorWidth()+(TopBreak_ExtractorWall()*2);
+function TopBreak_BarrelCollarBottomZ() = TopBreak_ExtractorZ() - TopBreak_ExtractorWall(); //PivotZ()-(PivotRadius()*0.5);
 
 
-function LatchGuideZ() = ExtractorZ();
-function LatchHeight() = 1;
-function LatchWall() = 0.1875;
-function LatchWidth() = ExtractorHousingWidth()+(LatchGuideWidth()*2)+(LatchWall()*2);
-function LatchZ() = BarrelCollarBottomZ()-LatchWall()-0.25;
-function LatchLength() = ActionRodWidth()
-                       + (ActionRodWidth() + LatchWall())
+function TopBreak_LatchGuideZ() = TopBreak_ExtractorZ();
+function TopBreak_LatchHeight() = 1;
+function TopBreak_LatchWall() = 0.1875;
+function TopBreak_LatchWidth() = TopBreak_ExtractorHousingWidth()+(TopBreak_LatchGuideWidth()*2)+(TopBreak_LatchWall()*2);
+function TopBreak_LatchZ() = TopBreak_BarrelCollarBottomZ()-TopBreak_LatchWall()-0.25;
+function TopBreak_LatchLength() = ActionRodWidth()
+                       + (ActionRodWidth() + TopBreak_LatchWall())
                        + ChargerTravel()
-                       + (ActionRodWidth() + LatchWall());
+                       + (ActionRodWidth() + TopBreak_LatchWall());
                        
-function PumpLockRodX() = LatchCollarLength()+0.5;
+function PumpLockRodX() = TopBreak_LatchCollarLength()+0.5;
 function PumpLockRodZ() = BarrelRadius();
-function PumpLockRodLength() = ForegripOffsetX()
-                             - LatchCollarLength()
-                             + LatchTravel();
+function PumpLockRodLength() = TopBreak_ForegripOffsetX()
+                             - TopBreak_LatchCollarLength()
+                             + TopBreak_LatchTravel();
 
 // Pivot modules
 module PivotClearanceCut(cut=true, width=PivotWidth(), depth=2,
@@ -223,10 +223,10 @@ module PivotOuterBearing(intersect=true, cutter=false, clearance=0.01) {
   
     // Square off front and bottom edges
     if (intersect)
-    translate([0, -(PivotWidth()/2)-clear, BarrelCollarBottomZ()])
-    ChamferedCube([LatchCollarLength(),
+    translate([0, -(PivotWidth()/2)-clear, TopBreak_BarrelCollarBottomZ()])
+    ChamferedCube([TopBreak_LatchCollarLength(),
                    PivotWidth()+clear2,
-                   abs(BarrelCollarBottomZ())+FrameTopZ()+clear],
+                   abs(TopBreak_BarrelCollarBottomZ())+FrameTopZ()+clear],
                    r=1/16);
   }
 }
@@ -252,81 +252,81 @@ module BreakActionPivot(factor=0) {
 }
 
 // Vitamins
-module ExtractorBit(cartridgeRimThickness=RIM_WIDTH, cutter=false, clearance=0.003) {
+module TopBreak_ExtractorBit(cartridgeRimThickness=RIM_WIDTH, cutter=false, clearance=0.003) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
 
   color("DimGrey") RenderIf(!cutter)
   translate([cartridgeRimThickness,0,0])
-  translate([ExtractorBitWidth()/8,0,ExtractorBitZ()])
+  translate([TopBreak_ExtractorBitWidth()/8,0,TopBreak_ExtractorBitZ()])
   rotate([0,155,0])
   difference() {
     rotate(30)
-    cylinder(r=((ExtractorBitWidth()/2)/cos(30))+clear,
-             h=ExtractorBitLength(), $fn=6);
+    cylinder(r=((TopBreak_ExtractorBitWidth()/2)/cos(30))+clear,
+             h=TopBreak_ExtractorBitLength(), $fn=6);
 
     // Cut the flattened tip
     if (!cutter)
     for (M = [0,1]) mirror([M,0,0])
-    hull() for (Z = [0,ExtractorBitWidth()/2])
-    translate([ExtractorBitWidth()*0.7,0,Z])
+    hull() for (Z = [0,TopBreak_ExtractorBitWidth()/2])
+    translate([TopBreak_ExtractorBitWidth()*0.7,0,Z])
     scale([1,1,1.75])
     rotate([90,0,0])
-    cylinder(r=ExtractorBitWidth()/2,
-             h=ExtractorBitWidth()*(1+cos(30)),
+    cylinder(r=TopBreak_ExtractorBitWidth()/2,
+             h=TopBreak_ExtractorBitWidth()*(1+cos(30)),
              center=true);
   }
 }
 
-module ExtractorRetainer(debug=false, cutter=false, teardrop=false, clearance=0.008) {
+module TopBreak_ExtractorRetainer(debug=false, cutter=false, teardrop=false, clearance=0.008) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
 
-  // Secure the latch block to the latch rod
+  // Secure the TopBreak_Latch block to the TopBreak_Latch rod
   color("Silver") RenderIf(!cutter)
-  translate([ExtractorWidth()+ExtractorTravel()+0.5-clear,
+  translate([TopBreak_ExtractorWidth()+TopBreak_ExtractorTravel()+0.5-clear,
              0,
-             ExtractorZ()+ExtractorHeight()])
+             TopBreak_ExtractorZ()+TopBreak_ExtractorHeight()])
   NutAndBolt(bolt=GPBolt(),
-       boltLength=ExtractorHeight()+ManifoldGap(), clearance=clear,
-       head="socket", capHeightExtra=(cutter?abs(ExtractorZ())+FrameBoltZ():0), capOrientation=true,
+       boltLength=TopBreak_ExtractorHeight()+ManifoldGap(), clearance=clear,
+       head="socket", capHeightExtra=(cutter?abs(TopBreak_ExtractorZ())+FrameBoltZ():0), capOrientation=true,
        nut="heatset", teardrop=teardrop);
 }
 
 
-module LatchRetainer(cutter=false, clearance=0.005) {
+module TopBreak_LatchRetainer(cutter=false, clearance=0.005) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
   color("Silver")
   translate([ChargerTravel()+0.375+(ActionRodWidth()/2),
-             -(LatchWidth()/2)-LatchWall()-clear,
+             -(TopBreak_LatchWidth()/2)-TopBreak_LatchWall()-clear,
              -(ActionRodWidth()*1.5)-clear])
   cube([ActionRodWidth()+clear,
-        LatchWidth()+(LatchWall()*2)+clear2,
+        TopBreak_LatchWidth()+(TopBreak_LatchWall()*2)+clear2,
         ActionRodWidth()+clear2]);
 }
-module LatchSpring(length=LatchSpringLength(), compress=0, cutter=false, clearance=0.015, alpha=1) {
+module TopBreak_LatchSpring(length=TopBreak_LatchSpringLength(), compress=0, cutter=false, clearance=0.015, alpha=1) {
   clear = cutter?clearance:0;
 
   color("Silver", alpha) RenderIf(!cutter)
-  translate([LatchLength()+LatchSpringLength(), 0, 0])
+  translate([TopBreak_LatchLength()+TopBreak_LatchSpringLength(), 0, 0])
   rotate([0,-90,0])
-  cylinder(r=LatchSpringRadius()+clear,
+  cylinder(r=TopBreak_LatchSpringRadius()+clear,
            h=length-compress);
 }
 
-module LatchScrews(debug=false, cutter=false, clearance=0.008) {
+module TopBreak_LatchScrews(debug=false, cutter=false, clearance=0.008) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
 
-  // Secure the latch block to the latch rod
+  // Secure the TopBreak_Latch block to the TopBreak_Latch rod
   color("Silver") RenderIf(!cutter)
   for(Y = [-0.3125, 0.3125])
-  translate([0,Y,LatchZ()+0.1875])
+  translate([0,Y,TopBreak_LatchZ()+0.1875])
   rotate([0,-90,0])
   Bolt(bolt=GPBolt(),
-       length=LatchLength()+ManifoldGap(), clearance=clear,
+       length=TopBreak_LatchLength()+ManifoldGap(), clearance=clear,
        head="socket", capHeightExtra=(cutter?1:0), capOrientation=true);
 
 }
@@ -343,14 +343,14 @@ module PumpLockRod(cutter=false, clearance=0.008) {
           ActionRodWidth()+clear2,
           ActionRodWidth()+clear2]);
 
-    // Secure the latch block to the latch rod
+    // Secure the TopBreak_Latch block to the TopBreak_Latch rod
     color("Gold") RenderIf(!cutter)
     translate([PumpLockRodX()+0.375,0,PumpLockRodZ()-0.01])
     Bolt(bolt=BarrelSetScrew(), head="none",
          length=(cutter?FrameTopZ():0.5),
          clearance=clear, teardrop=cutter, teardropAngle=180);
     
-    // Secure the latch block to the latch rod
+    // Secure the TopBreak_Latch block to the TopBreak_Latch rod
     color("Silver") RenderIf(!cutter)
     translate([PumpLockRodX()+PumpLockRodLength()-0.375,0,PumpLockRodZ()-0.01])
     Bolt(bolt=BarrelSetScrew(), head="socket",
@@ -377,49 +377,49 @@ module Barrel(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, length=Barr
       rotate([0,90,0])
       cylinder(r=(id/2)+clear, h=length);
       
-      // Extractor notch
+      // TopBreak_Extractor notch
       *#rotate([90,0,0])
       translate([0,-0.813*0.5,0])
       rotate(40)
-      translate([ExtractorBitWidth()/4,0.813*0.5*0.1,-ExtractorBitWidth()/2])
+      translate([TopBreak_ExtractorBitWidth()/4,0.813*0.5*0.1,-TopBreak_ExtractorBitWidth()/2])
       mirror([1,1,0])
-      cube([BarrelDiameter(), BarrelRadius(), ExtractorBitWidth()]);
+      cube([BarrelDiameter(), BarrelRadius(), TopBreak_ExtractorBitWidth()]);
     }
   }
 }
 
 // Shapes
-module LatchGuides(cutter=false, clearance=0.01) {
+module TopBreak_LatchGuides(cutter=false, clearance=0.01) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
   translate([0,
-             -(ExtractorHousingWidth()/2)-LatchGuideWidth()-clear,
-             LatchGuideZ()-clear])
-  ChamferedCube([LatchCollarLength(),
-                 ExtractorHousingWidth()+(LatchGuideWidth()*2)+clear2,
-                 LatchGuideHeight()+clear2],
+             -(TopBreak_ExtractorHousingWidth()/2)-TopBreak_LatchGuideWidth()-clear,
+             TopBreak_LatchGuideZ()-clear])
+  ChamferedCube([TopBreak_LatchCollarLength(),
+                 TopBreak_ExtractorHousingWidth()+(TopBreak_LatchGuideWidth()*2)+clear2,
+                 TopBreak_LatchGuideHeight()+clear2],
                 r=1/16);
 }
 
 // Printed Parts
-module ReceiverFront(debug=false, alpha=1) {
+module TopBreak_ReceiverFront(debug=false, alpha=1) {
   color("Tan", alpha) render() DebugHalf(enabled=debug)
   difference() {
     
-    translate([-ReceiverFrontLength(),0,0])
+    translate([-TopBreak_ReceiverFrontLength(),0,0])
     union() {
       hull() {
         mirror([1,0,0])
         ReceiverTopSegment(length=1/16);
         
-        FrameSupport(length=ReceiverFrontLength());
+        FrameSupport(length=TopBreak_ReceiverFrontLength());
       }
 
       // Recoil plate backing
       translate([0,-(RecoilPlateWidth()/2)-0.25,RecoilPlateTopZ()])
       mirror([0,0,1])
-      ChamferedCube([ReceiverFrontLength(),
+      ChamferedCube([TopBreak_ReceiverFrontLength(),
                      RecoilPlateWidth()+0.5,
                      RecoilPlateHeight()+0.25],
                     r=1/16);
@@ -427,7 +427,7 @@ module ReceiverFront(debug=false, alpha=1) {
     
     FrameBolts(cutter=true);
 
-    translate([-ReceiverFrontLength(),0,0]) {
+    translate([-TopBreak_ReceiverFrontLength(),0,0]) {
       RecoilPlate(cutter=true);
       RecoilPlateBolts(cutter=true);
       FiringPin(cutter=true);
@@ -436,12 +436,12 @@ module ReceiverFront(debug=false, alpha=1) {
   }
 }
 
-module ReceiverFront_print() {
-  rotate([0,-90,0]) translate([--ReceiverFrontLength(),0,0])
-  ReceiverFront();
+module TopBreak_ReceiverFront_print() {
+  rotate([0,-90,0]) translate([--TopBreak_ReceiverFrontLength(),0,0])
+  TopBreak_ReceiverFront();
 }
 
-module ReceiverForend(clearance=0.005, debug=false, alpha=1) {  
+module TopBreak_Forend(clearance=0.005, debug=false, alpha=1) {  
   // Branding text
   color("DimGrey", alpha) 
   render() DebugHalf(enabled=debug) {
@@ -521,7 +521,7 @@ module ReceiverForend(clearance=0.005, debug=false, alpha=1) {
     for (A = [0, PivotAngle()])
     Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1) {
       Barrel(length=ForendLength(), cutter=true);
-      BarrelCollar(rearExtension=2, cutter=true);
+      TopBreak_BarrelCollar(rearExtension=2, cutter=true);
     }
     
     // Printability allowance
@@ -532,20 +532,20 @@ module ReceiverForend(clearance=0.005, debug=false, alpha=1) {
 
     FrameBolts(cutter=true);
      
-    Extractor(cutter=true);
+    TopBreak_Extractor(cutter=true);
 
-    *translate([-ReceiverFrontLength(),0,0])
+    *translate([-TopBreak_ReceiverFrontLength(),0,0])
     ActionRod(length=ActionRodLength(), cutter=true);
   }
 }
-module ReceiverForend_print() {
+module TopBreak_Forend_print() {
   rotate([0,90,0])
   translate([-ForendLength(),0,0])
-  ReceiverForend();
+  TopBreak_Forend();
 }
 
 
-module BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, debug=false, alpha=1) {
+module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, debug=false, alpha=1) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
                            
@@ -555,8 +555,8 @@ module BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, debug=false, 
       union() {
         PivotOuterBearing(cutter=cutter);
         
-        // Latch guiderails
-        LatchGuides(cutter=cutter);
+        // TopBreak_Latch guiderails
+        TopBreak_LatchGuides(cutter=cutter);
         
         PivotClearanceCut(cut=!cutter)
         union() {
@@ -565,14 +565,14 @@ module BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, debug=false, 
           translate([RIM_WIDTH,0,BarrelZ()])
           rotate([0,90,0])
           ChamferedCylinder(r1=BarrelRadius()+WallBarrel()+clear,
-                            h=LatchCollarLength()-RIM_WIDTH+clear,
+                            h=TopBreak_LatchCollarLength()-RIM_WIDTH+clear,
                             r2=1/16, $fn=100);
           
-          // Extractor and latch support
-          translate([RIM_WIDTH-rearExtension-clear,-(ExtractorHousingWidth()/2)-clear,BarrelCollarBottomZ()-clear])
-          ChamferedCube([LatchCollarLength()-RIM_WIDTH+rearExtension+clear2,
-                         ExtractorHousingWidth()+clear2,
-                         abs(BarrelCollarBottomZ())+clear],
+          // TopBreak_Extractor and TopBreak_Latch support
+          translate([RIM_WIDTH-rearExtension-clear,-(TopBreak_ExtractorHousingWidth()/2)-clear,TopBreak_BarrelCollarBottomZ()-clear])
+          ChamferedCube([TopBreak_LatchCollarLength()-RIM_WIDTH+rearExtension+clear2,
+                         TopBreak_ExtractorHousingWidth()+clear2,
+                         abs(TopBreak_BarrelCollarBottomZ())+clear],
                          r=1/16, teardropFlip=[false,true,true]);
         }
       }
@@ -594,25 +594,25 @@ module BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, debug=false, 
       *translate([PivotX(),-(PivotWidth()/2)-clear, 0])
       translate([0,0,PivotZ()])
       rotate([0,PivotAngle(),0])
-      translate([0,0,BarrelCollarBottomZ()])
+      translate([0,0,TopBreak_BarrelCollarBottomZ()])
       cube([PivotX(),
             PivotWidth()+clear2,
-            abs(BarrelCollarBottomZ())+PivotRadius()]);
+            abs(TopBreak_BarrelCollarBottomZ())+PivotRadius()]);
       
       // Pic rail slot
       *translate([0,-(UnitsImperial(0.617)/2)-clear,FrameTopZ()-0.125])
-      cube([LatchCollarLength(),
+      cube([TopBreak_LatchCollarLength(),
             UnitsImperial(0.617)+clear2,
             FrameTopZ()+clear]);
 
-      for (X = [0,-ExtractorTravel()])
+      for (X = [0,-TopBreak_ExtractorTravel()])
       translate([X,0,0])
-      Extractor(cutter=true);
+      TopBreak_Extractor(cutter=true);
       
       hull()
-      for (X = [0,-ExtractorTravel()])
+      for (X = [0,-TopBreak_ExtractorTravel()])
       translate([X,0,0])
-      ExtractorRetainer(cutter=true, teardrop=true);
+      TopBreak_ExtractorRetainer(cutter=true, teardrop=true);
 
       Barrel(cutter=true);
     }
@@ -620,12 +620,12 @@ module BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, debug=false, 
 
 }
 
-module BarrelCollar_print() {
+module TopBreak_BarrelCollar_print() {
   rotate([0,-90,0])
-  BarrelCollar();
+  TopBreak_BarrelCollar();
 }
 
-module Extractor(cutter=false, clearance=0.015, chamferRadius=1/16, debug=false, alpha=1) {
+module TopBreak_Extractor(cutter=false, clearance=0.015, chamferRadius=1/16, debug=false, alpha=1) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
@@ -637,31 +637,31 @@ module Extractor(cutter=false, clearance=0.015, chamferRadius=1/16, debug=false,
 
       // Long lower section
       translate([clear,
-                 -(ExtractorWidth()/2)-clear,
-                 ExtractorZ()-clear])
-      ChamferedCube([ExtractorLength()+(cutter?ExtractorSpringLength()+clear:0),
-                     ExtractorWidth()+clear2,
-                     ExtractorHeight()+clear2], r=chamferRadius);
+                 -(TopBreak_ExtractorWidth()/2)-clear,
+                 TopBreak_ExtractorZ()-clear])
+      ChamferedCube([TopBreak_ExtractorLength()+(cutter?TopBreak_ExtractorSpringLength()+clear:0),
+                     TopBreak_ExtractorWidth()+clear2,
+                     TopBreak_ExtractorHeight()+clear2], r=chamferRadius);
 
       // Tall portion to hold the retainer
       hull() {
         
         // Wide section
         translate([clear,
-                   -(ExtractorWidth()/2)-clear,
-                   ExtractorZ()])
-        ChamferedCube([ExtractorBitWidth()+clear,
-                       ExtractorWidth()+clear2,
-                       abs(ExtractorZ())],
+                   -(TopBreak_ExtractorWidth()/2)-clear,
+                   TopBreak_ExtractorZ()])
+        ChamferedCube([TopBreak_ExtractorBitWidth()+clear,
+                       TopBreak_ExtractorWidth()+clear2,
+                       abs(TopBreak_ExtractorZ())],
                       r=chamferRadius);
         
         // Narrow section
         translate([clear,
-                   -(ExtractorBitWidth()/2)-clear,
-                   ExtractorZ()])
+                   -(TopBreak_ExtractorBitWidth()/2)-clear,
+                   TopBreak_ExtractorZ()])
         ChamferedCube([0.75+clear,
-                       ExtractorBitWidth()+clear2,
-                       abs(ExtractorZ())],
+                       TopBreak_ExtractorBitWidth()+clear2,
+                       abs(TopBreak_ExtractorZ())],
                       r=chamferRadius*2);
       }
     }
@@ -674,69 +674,69 @@ module Extractor(cutter=false, clearance=0.015, chamferRadius=1/16, debug=false,
       
       Barrel(cutter=true);
 
-      ExtractorBit(cutter=true);
-      ExtractorRetainer(cutter=true);
+      TopBreak_ExtractorBit(cutter=true);
+      TopBreak_ExtractorRetainer(cutter=true);
       
       // Chamfer the back edge for smooth operation
-      translate([0, 0, ExtractorZ()])
+      translate([0, 0, TopBreak_ExtractorZ()])
       rotate([90,0,0])
-      linear_extrude(height=ExtractorWidth()+ManifoldGap(2), center=true)
+      linear_extrude(height=TopBreak_ExtractorWidth()+ManifoldGap(2), center=true)
       mirror([1,0])
       RoundedBoolean(edgeOffset=0, r=1/2, teardrop=true, $fn=50);
     }
   }
 }
 
-module Extractor_print() {
-  translate([0,0,-ExtractorZ()])
-  Extractor();
+module TopBreak_Extractor_print() {
+  translate([0,0,-TopBreak_ExtractorZ()])
+  TopBreak_Extractor();
 }
 
-module Latch(debug=false, cutter=false, clearance=0.01, alpha=1) { 
+module TopBreak_Latch(debug=false, cutter=false, clearance=0.01, alpha=1) { 
   clear = cutter?clearance:0;
   clear2 = clear*2;
 
-  // Latch block
+  // TopBreak_Latch block
   color("Tan", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
     translate([clear,
-               -(LatchWidth()/2)-clear,
-               LatchZ()-clear])
-    ChamferedCube([LatchLength()+(cutter?LatchSpringLength()+clear:0),
-                   LatchWidth()+clear2,
-                   LatchHeight()+clear2], r=1/16, teardropFlip=[false,true,true]);
+               -(TopBreak_LatchWidth()/2)-clear,
+               TopBreak_LatchZ()-clear])
+    ChamferedCube([TopBreak_LatchLength()+(cutter?TopBreak_LatchSpringLength()+clear:0),
+                   TopBreak_LatchWidth()+clear2,
+                   TopBreak_LatchHeight()+clear2], r=1/16, teardropFlip=[false,true,true]);
 
     if (!cutter) {
-      // Latch lip
+      // TopBreak_Latch lip
       translate([-0.5,-2,RecoilPlateTopZ()-RecoilPlateHeight()])
       cube([0.5,3,1]);
       
       
       translate([-0.5,0,0])
-      BarrelCollar(cutter=true);
+      TopBreak_BarrelCollar(cutter=true);
       
-      LatchScrews(cutter=true);
+      TopBreak_LatchScrews(cutter=true);
       
       hull()
-      for (X = [0,-LatchTravel()])
+      for (X = [0,-TopBreak_LatchTravel()])
       translate([X,0,0])
-      ExtractorRetainer(cutter=true, teardrop=true);
-      LatchRetainer(cutter=true);
+      TopBreak_ExtractorRetainer(cutter=true, teardrop=true);
+      TopBreak_LatchRetainer(cutter=true);
       
       ActionRod(cutter=true);
     }
   }
 }
-module Latch_print() {
+module TopBreak_Latch_print() {
   rotate([0,90,0])
-  translate([-LatchLength(),0,-LatchZ()])
-  Latch();
+  translate([-TopBreak_LatchLength(),0,-TopBreak_LatchZ()])
+  TopBreak_Latch();
 }
 
-module Foregrip(length=ForegripLength(), debug=false, alpha=1) {
+module TopBreak_Foregrip(length=TopBreak_ForegripLength(), debug=false, alpha=1) {
   color("Tan",alpha) render() DebugHalf(enabled=debug)
   difference() {
-    translate([ForegripOffsetX()+ChargerTravel(),0,0])
+    translate([TopBreak_ForegripOffsetX()+ChargerTravel(),0,0])
     rotate([0,90,0])
     PumpGrip(length=length);
 
@@ -744,26 +744,26 @@ module Foregrip(length=ForegripLength(), debug=false, alpha=1) {
   }
 }
 
-module Foregrip_print() {
+module TopBreak_Foregrip_print() {
   rotate([0,90,0])
-  translate([-ForegripLength(),0,0])
-  translate([-(ForegripOffsetX()+ChargerTravel()),0,0])
-  Foregrip();
+  translate([-TopBreak_ForegripLength(),0,0])
+  translate([-(TopBreak_ForegripOffsetX()+ChargerTravel()),0,0])
+  TopBreak_Foregrip();
 }
 
 
 // Assemblies
-module ExtractorAssembly(debug=false, alpha=1, cutter=false) {
-  ExtractorBit(cutter=cutter);
-  ExtractorRetainer(cutter=cutter);
-  Extractor(debug=debug, alpha=alpha, cutter=cutter);
+module TopBreak_ExtractorAssembly(debug=false, alpha=1, cutter=false) {
+  TopBreak_ExtractorBit(cutter=cutter);
+  TopBreak_ExtractorRetainer(cutter=cutter);
+  TopBreak_Extractor(debug=debug, alpha=alpha, cutter=cutter);
 }
 
-module BreakActionAssembly(receiverLength=12, pipeAlpha=1, receiverFrontAlpha=1, pivotFactor=0, extractFactor=0, chargeFactor=0, lockFactor=0, stock=true, tailcap=false, debug=false) {
+module BreakActionAssembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontAlpha=1, pivotFactor=0, extractFactor=0, chargeFactor=0, lockFactor=0, stock=true, tailcap=false, debug=false) {
 
 
   if (_SHOW_FCG)
-  translate([-ReceiverFrontLength(),0,0]) {
+  translate([-TopBreak_ReceiverFrontLength(),0,0]) {
     SimpleFireControlAssembly(actionRod=false);
   }
   
@@ -773,46 +773,46 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1, receiverFrontAlpha=1,
     if (_SHOW_BARREL)
     Barrel();
 
-    // Extractor Spring
-    %translate([PivotX()-PivotRadius()-WallPivot(),0,ExtractorZ()+ExtractorSpringRadius()])
+    // TopBreak_Extractor Spring
+    %translate([PivotX()-PivotRadius()-WallPivot(),0,TopBreak_ExtractorZ()+TopBreak_ExtractorSpringRadius()])
     rotate([0,-90,0])
-    cylinder(r=ExtractorSpringRadius(),
-              h=ExtractorSpringLength()+(ExtractorTravel()*extractFactor));
+    cylinder(r=TopBreak_ExtractorSpringRadius(),
+              h=TopBreak_ExtractorSpringLength()+(TopBreak_ExtractorTravel()*extractFactor));
     
-    translate([-ExtractorTravel()*extractFactor,0,0]) {
-      ExtractorAssembly(debug=_CUTAWAY_EXTRACTOR, alpha=_ALPHA_EXTRACTOR);
+    translate([-TopBreak_ExtractorTravel()*extractFactor,0,0]) {
+      TopBreak_ExtractorAssembly(debug=_CUTAWAY_TOPBREAK_EXTRACTOR, alpha=_ALPHA_TOPBREAK_EXTRACTOR);
     }
 
     if (_SHOW_COLLAR)
-    BarrelCollar(debug=_CUTAWAY_COLLAR, alpha=_ALPHA_COLLAR);
+    TopBreak_BarrelCollar(debug=_CUTAWAY_COLLAR, alpha=_ALPHA_COLLAR);
 
     *translate([(0.5*lockFactor)-(ChargerTravel()*chargeFactor),0,0])
-    Foregrip();
+    TopBreak_Foregrip();
     
-    *LatchSpring(compress=(0.5*lockFactor), alpha=0.25);
+    *TopBreak_LatchSpring(compress=(0.5*lockFactor), alpha=0.25);
 
-    if (_SHOW_LATCH)
+    if (_SHOW_TOPBREAK_LATCH)
     translate([0.5*lockFactor,0,0]) {
-      Latch(debug=_CUTAWAY_LATCH, alpha=_ALPHA_LATCH);
-      LatchScrews();
+      TopBreak_Latch(debug=_CUTAWAY_TOPBREAK_LATCH, alpha=_ALPHA_TopBreak_Latch);
+      TopBreak_LatchScrews();
       
-      *LatchRetainer();
+      *TopBreak_LatchRetainer();
     }
 
   }
   
   if (_SHOW_RECEIVER_FRONT)
-  ReceiverFront(debug=debug, alpha=_ALPHA_RECOIL_PLATE_HOUSING);
+  TopBreak_ReceiverFront(debug=debug, alpha=_ALPHA_RECOIL_PLATE_HOUSING);
 
   if (_SHOW_FOREND)
-  ReceiverForend(debug=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
+  TopBreak_Forend(debug=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
 }
 
 
 scale(25.4)
 if ($preview) {
   
-  translate([-ReceiverFrontLength(),0,0]) {
+  translate([-TopBreak_ReceiverFrontLength(),0,0]) {
     
     if (_SHOW_LOWER_MOUNT)
     LowerMount();
@@ -846,21 +846,21 @@ if ($preview) {
                                  -SubAnimate(ANIMATION_STEP_LOAD, end=0.25));
 } else {
 
-  if (_RENDER == "BarrelCollar")
-  BarrelCollar_print();
+  if (_RENDER == "TopBreak_BarrelCollar")
+  TopBreak_BarrelCollar_print();
 
-  if (_RENDER == "ReceiverFront")
-  ReceiverFront_print();
+  if (_RENDER == "TopBreak_ReceiverFront")
+  TopBreak_ReceiverFront_print();
 
-  if (_RENDER == "ReceiverForend")
-  ReceiverForend_print();
+  if (_RENDER == "TopBreak_Forend")
+  TopBreak_Forend_print();
 
-  if (_RENDER == "Foregrip")
+  if (_RENDER == "TopBreak_Foregrip")
   Foregrip_print();
 
-  if (_RENDER == "Extractor")
-  Extractor_print();
+  if (_RENDER == "TopBreak_Extractor")
+  TopBreak_Extractor_print();
 
-  if (_RENDER == "Latch")
-  Latch_print();
+  if (_RENDER == "TopBreak_Latch")
+  TopBreak_Latch_print();
 }

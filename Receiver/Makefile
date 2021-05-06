@@ -6,6 +6,7 @@ Stock_STL=Stock.stl Stock_Buttpad.stl \
           Stock_Latch.stl Stock_LatchPlunger.stl Stock_LatchRetainer.stl\
 					Stock_LatchButton_Left.stl Stock_LatchButton_Right.stl
 
+# Subdirs
 Forend Lower: FORCE
 		$(MAKE) -C $@
 
