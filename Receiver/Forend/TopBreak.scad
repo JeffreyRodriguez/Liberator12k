@@ -27,7 +27,7 @@ use <../Lower/LowerMount.scad>;
 use <../Stock.scad>;
 use <../Frame.scad>;
 use <../Receiver.scad>;
-use <../Fire Control Group.scad>;
+use <../FCG.scad>;
 
 /* [Print] */
 
@@ -68,7 +68,7 @@ GP_BOLT_CLEARANCE = 0.015;
 BARREL_SET_SCREW = "#8-32"; // ["M4", "#8-32"]
 BARREL_SET_SCREW_CLEARANCE = -0.05;
 
-BARREL_OUTSIDE_DIAMETER = 1.0001;
+BARREL_OUTSIDE_DIAMETER = 1.3251;
 BARREL_INSIDE_DIAMETER = 0.813;
 BARREL_CLEARANCE = 0.005;
 BARREL_LENGTH = 18;
@@ -80,8 +80,9 @@ RIM_DIAMETER = 0.8875;
 PIVOT_X = 4.501;
 PIVOT_RADIUS = 0.501;
 PIVOT_ANGLE = 30;
-PIVOT_WIDTH = 1.75;
+PIVOT_WIDTH = 2;
 FRAME_BOLT_LENGTH = 10;
+WALL_BARREL = 0.1875;
 
 /* [Branding] */
 BRANDING_MODEL_NAME = "CAFE12";
@@ -110,7 +111,7 @@ function BarrelZ() = BARREL_Z; // -0.11 for .22LR rimfire
 // Settings: Dimensions
 function BarrelLength() = BARREL_LENGTH;
 function BarrelSleeveLength() = 4;
-function WallBarrel() = 0.125;
+function WallBarrel() = WALL_BARREL;
 
 function WallPivot() = 0.25;
 function PivotAngleBack() = -25;

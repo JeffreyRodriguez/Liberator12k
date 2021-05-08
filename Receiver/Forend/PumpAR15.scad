@@ -24,7 +24,7 @@ use <../Magwells/AR15 Magwell.scad>;
 
 use <../Stock.scad>;
 use <../Receiver.scad>;
-use <../Fire Control Group.scad>;
+use <../FCG.scad>;
 use <../Lower/Lower.scad>;
 use <../Lower/LowerMount.scad>;
 use <../Frame.scad>;
@@ -442,7 +442,7 @@ if ($preview) {
   ReceiverAssembly(debug=_CUTAWAY_RECEIVER);
   
   if (_SHOW_STOCK)
-  StockAssembly(debug=_CUTAWAY_STOCK);
+  StockAssembly();
   
   if (_SHOW_LOWER) {
     translate([-LowerMaxX(),0,LowerOffsetZ()])

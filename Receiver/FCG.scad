@@ -105,7 +105,6 @@ assert(RecoilPlateBolt(), "RecoilPlateBolt() is undefined. Unknown RECOIL_PLATE_
 
 // Settings: Lengths
 function ActionRodWidth() = 0.25;
-function ChargingRodOffset() =  0.75+RodRadius(ChargingRod());
 function ChamferRadius() = 1/16;
 function CR() = 1/16;
 chargerTravel = 2;
@@ -320,18 +319,19 @@ module ChargingHandleSpring(cutter=false, clearance=0.002) {
   clear2 = clear*2;
   
   color("SteelBlue")
-  translate([-0.25,0,ReceiverTopSlotHeight()-(0.22/2)])
-  rotate([0,-90,0])
+  translate([-ReceiverLength(),
+             0,//(ReceiverTopSlotHorizontalWidth()/2)-0.125,
+             ReceiverIR()-0.125])
+  rotate([0,90,0])
   cylinder(r=(0.22/2)+clear, h=1.625);
 }
-module ChargingHandleSpringGuide(cutter=false, clearance=0.002) {
+module ChargingHandleSpringGuiderod(cutter=false, clearance=0.003) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
-  color("Silver")
-  translate([ManifoldGap(),0,ReceiverTopSlotHeight()-(0.25/2)])
-  rotate([0,-90,0])
-  cylinder(r=(3/32/2)+clear, h=ReceiverLength());
+  translate([-ReceiverLength()-0.5, 0, ReceiverIR()-0.125])
+  rotate([0,90,0])
+  cylinder(r=(3/32/2)+clear, h=2.5);
 }
 //*****************
 //* Printed Parts *
@@ -371,12 +371,12 @@ module ChargingHandle(clearance=0.005) {
                         h=fingerHoleHeight-clear2, $fn=50);
     }
     
-    hull() for (Z = [0,0.25])
+    *hull() for (Z = [0,0.25])
     translate([-ReceiverLength()+0.25,0,bottomZ+(0.22/2)+Z])
     rotate([0,90,0])
     cylinder(r=0.22/2, h=ReceiverLength()-0.5);
     
-    translate([-ReceiverLength()+0.25,-(0.25/2)-clearance,bottomZ+clear])
+    *translate([-ReceiverLength()+0.25,-(0.25/2)-clearance,bottomZ+clear])
     ChamferedSquareHole([hammerTravelX+0.5, 0.25+(clearance*2)],
                           ReceiverTopSlotHorizontalHeight()-clear2,
                           corners=false, center=false, chamferRadius=1/32);
@@ -385,7 +385,7 @@ module ChargingHandle(clearance=0.005) {
     ChamferedCircularHole(r1=fingerHoleRadius, r2=1/16,
                           h=fingerHoleHeight-clear2, $fn=50);
     
-    ChargingHandleSpringGuide(cutter=true);
+    ChargingHandleSpring(cutter=true);
     
     ChargingHandleBolt(cutter=true);
   }
@@ -432,7 +432,6 @@ module ChargingHandleMiddle(clearance=0.005) {
     translate([fingerHoleX,0,bottomZ+clear])
     ChamferedCircularHole(r1=fingerHoleRadius, r2=1/16, h=fingerHoleHeight-clear2);
     
-    ChargingHandleSpringGuide(cutter=true);
   }
 }
 
@@ -536,6 +535,8 @@ module HammerTail(clearance=UnitsImperial(0.01), debug=_CUTAWAY_HAMMER, alpha=_A
                     r=1/16,teardropFlip=[true, true, true]);
 
     }
+    
+    ChargingHandleSpringGuiderod(cutter=true);
     
     // Hammer Hole
     translate([hammerTailMinX,0,0])
@@ -724,8 +725,7 @@ module SimpleFireControlAssembly(actionRod=_SHOW_ACTION_ROD, recoilPlate=_SHOW_R
   chargeAF = Animate(ANIMATION_STEP_CHARGE)
            - Animate(ANIMATION_STEP_CHARGER_RESET);
 
-  ChargingHandleSpringGuide();
-  ChargingHandleSpring();
+  *ChargingHandleSpring();
 
   translate([SubAnimate(ANIMATION_STEP_CHARGE, start=hammerChargeStart)*-(hammerTravelX+hammerOvertravelX),0,0])
   translate([SubAnimate(ANIMATION_STEP_CHARGER_RESET)*(hammerTravelX+hammerOvertravelX),0,0]) {
@@ -747,6 +747,8 @@ module SimpleFireControlAssembly(actionRod=_SHOW_ACTION_ROD, recoilPlate=_SHOW_R
 
   // Linear Hammer
   if (_SHOW_HAMMER) {
+    
+    *ChargingHandleSpringGuiderod();
   
     translate([Animate(ANIMATION_STEP_FIRE)*hammerTravelX,0,0])
     translate([SubAnimate(ANIMATION_STEP_CHARGE, start=hammerChargeStart)*-(hammerTravelX+hammerOvertravelX),0,0])

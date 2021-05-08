@@ -36,7 +36,7 @@ use <../Receiver.scad>;
 use <../Frame.scad>;
 use <../Stock.scad>;
 
-use <../Fire Control Group.scad>;
+use <../FCG.scad>;
 
 
 /* [Print] */
