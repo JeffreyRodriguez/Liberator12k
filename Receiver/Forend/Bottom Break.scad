@@ -23,7 +23,7 @@ use <../../Vitamins/Pipe.scad>;
 use <../Lower/Lower.scad>;
 use <../Lower/LowerMount.scad>;
 
-use <../Fire Control Group.scad>;
+use <../FCG.scad>;
 use <../Stock.scad>;
 use <../Frame.scad>;
 use <../Receiver.scad>;

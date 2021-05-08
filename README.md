@@ -1,14 +1,18 @@
 # [\#Liberator12k Manual](index.html)
 ## [Liberator12k.com](https://Liberator12k.com)
 
-[Quick Start](QuickStart.html)
+Welcome!
 
 [About the Project](About.html)
 
+[Developers / Advanced Users](Developers.html)
+
 ## Configurations
- * [CAFE12](Receiver/Forend/CAFE12.html)
- * [FP37](Receiver/Forend/FP37.html)
- * [ZZR 6x12](Receiver/Forend/ZZR.html)
+ * [Top Break](Receiver/Forend/TopBreak.html)
+   * [CAFE12](Receiver/Forend/CAFE12.html)
+   * [FP37](Receiver/Forend/FP37.html)
+ * [Revolver](Receiver/Forend/Revolver.html)
+   * [ZZR 6x12](Receiver/Forend/ZZR.html)
   
 ### Common Components
  * [Receiver](Receiver/Receiver.html)
@@ -17,16 +21,22 @@
  * [LowerMount](Receiver/Lower/LowerMount.html)
  * [Trigger](Receiver/Lower/Trigger.html)
  * [Stock](Receiver/Stock.html)
+ 
+## Tooling
+
+
+ 
 
 ## Safety
-DANGER - ART AT YOUR OWN RISK
+DANGER - AT YOUR OWN RISK
 
-Safety precautions and procedures *are not fully documented here*. Before you shoot a DIY gun from your hands **test it first**. You will need:
+Safety precautions and procedures *are not fully documented here*. Before you shoot any DIY gun from your hands **test it first**.
 
-* A secure test rig to hold the gun pointed in a **safe direction**.
-* A bulletproof barrier, such as several feet of dirt or very large tree.
+* Use a secure test rig to hold the gun pointed in a **safe direction**.
+* Stand behind a bulletproof barrier, such as several feet of dirt, concrete blocks, or very large tree.
+* Ensure there is no direct path from the gun to anyone or anything of value.
 * A string long enough to pull the trigger from behind cover.
-* At least 5 of the highest pressure cartridges you can find.
+* Test with at least 5 of the highest pressure cartridges you can find.
 
 ## Unlicense
 This is free and unencumbered software released into the public domain.

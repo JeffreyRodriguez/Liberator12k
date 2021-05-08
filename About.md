@@ -1,8 +1,36 @@
 # [\#Liberator12k Manual](index.html)
 ## About
 
-### "What?" - Concept
-Future-proof the individual's power to produce arms and ammunition.
+Self-defense is an individual imperative and weapons are the means of self-defense.
+The guns are real. They work. You can make them yourself.
+
+* Please do not hurt people who've done you no harm.
+* Please do not damage or take stuff from other people.
+* Please do be responsible when shooting.
+* Please do use for self-defense, sport, and fun.
+
+## Modularity Weapons Platform
+One receiver, multiple forends. A driving force in \#Liberator12k weapon design is reuse of the same receiver.
+
+Similar to the AR15 modular lower/upper concept, the L12k is conceptually split into receiver/forend.
+
+The real "secret sauce" of this project, is the software library I developed
+during the design process of these guns. I tried a lot of different ideas,
+and what I came away with, is an OpenSCAD software library chock-full of
+useful *configurable* objects.
+
+If you browse through the code, you'll see the project has been grouped into
+major functional areas:
+
+  * Ammo - Printable Ammunition
+  * Documentation - All sorts of docs; including barrel wall calculator.
+  * Meta - 3D modeling-specific code
+  * Receiver - Lower+Universal Receiver; interchangeable Forends
+  * Tooling - Printable tools for gun making
+  * Vitamins - Store-bought parts, nut and bolts, collars, etc.
+  * Toys - Things I've tried and thrown away (maybe)
+
+There are more directories than mentioned above, but this should give you a taste of what's in here.
 
 #### Simplicity and Availability
 Firearm operating mechanisms should be simple to understand and produce by
@@ -15,33 +43,8 @@ pistol barrels. Lots of quality metal is available on Amazon, Aliexpress, McMast
 
 A printer and power drill are the only tools absolutely required. Drill bits and taps notwithstanding. A drill press will *greatly* simplify some processes.
 
-#### Reuse and Upgrades
-A driving force in \#Liberator12k weapon design is reuse of the same receiver.
-
-Similar to the AR15 modular lower/upper concept, the L12k is conceptually split into receiver/forend.
-
-One receiver, multiple forends. It remains to be seen if the fixed recoil plate design can accommodate pump and semiautomatic fire. It's perfect for a break-action and revolver.
-
-#### DIY Tooling
+## DIY Tooling
 The project took on a tooling aspect when Electrochemical Machining (ECM) entered the picture.
-
-### "Why?" - Motivation
-Self-defense is an individual imperative and weapons are the means of self-defense.
-
-These guns are real. You can make them yourself.
-
-* Please do not hurt people who've done you no harm.
-* Please do not damage or take stuff from other people.
-* Please do be responsible when shooting.
-* Please do use for self-defense, sport, and fun.
-
-### "When?" - Timeline
-
-### "Who?" - About the artist
-
-### "How?" - Build your own
-
-
 
 ## Tech Levels
 The original \#Liberator12k project goal was to design a safe and
@@ -62,23 +65,3 @@ A "Plus" tech level describes the 'better than minimal' tools for that level.
 | Zero Plus  | Cutoff Wheel, Bench Grinder, Drill Press, Bolt Cutters          |
 | One        | 12v power supply (battery, charger, 3D printer, or lab supply)  |
 | One Plus   | Lab power supply                                                |
-
-
-## Designing New Guns
-The real "secret sauce" of this project, is the software library I developed
-during the design process of these guns. I tried a lot of different ideas,
-and what I came away with, is an OpenSCAD software library chock-full of
-useful *configurable* objects.
-
-If you browse through the code, you'll see the project has been grouped into
-major functional areas:
-
-  * Ammo - Printable Ammunition
-  * Documentation - All sorts of docs; including barrel wall calculator.
-  * Meta - 3D modeling-specific code
-  * Receiver - Lower+Universal Receiver; interchangeable Forends
-  * Tooling - Printable tools for gun making
-  * Vitamins - Store-bought parts, nut and bolts, collars, etc.
-  * Toys - Things I've tried and thrown away (maybe)
-
-There are more directories than mentioned above, but this should give you a taste of what's in here.

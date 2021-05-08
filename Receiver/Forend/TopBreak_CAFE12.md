@@ -26,6 +26,21 @@ Bill of Materials
 | Receiver/Forend/TopBreak.scad | TopBreak_Extractor      | CAFE12 | Standard       | -mm           | -h-m       |
 | Receiver/Forend/TopBreak.scad | TopBreak_Latch          | CAFE12 | Standard       | -mm           | -h-m       |
 
+
+
+### Prints
+179g, 15h06m
+
+| Part                                                                                        | Settings       | Filament | Time    |
+|---------------------------------------------------------------------------------------------|----------------|----------|---------|
+| ![Frame_Receiver.stl](Frame_Receiver_thumb.png)<br>[Frame_Receiver.stl](Frame_Receiver.stl) | Standard       | 272g     | 1d3h59m |
+
+### Components
+ * ![Lower](Lower_thumb.png)<br>[Lower](Lower.html)
+ * ![Trigger](Trigger_thumb.png)<br>[Trigger](Trigger.html)
+ * ![Receiver](LowerMount_thumb.png)<br>[LowerMount](LowerMount.html)
+
+
 **Hardware**:
 
 | Part                                      | Source             | Quantity | Print Time |

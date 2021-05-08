@@ -15,7 +15,6 @@ use <../../Vitamins/AR15/Barrel.scad>;
 use <../Receiver.scad>;
 use <../Lower/Lower.scad>;
 use <../Lower/Lugs.scad>;
-use <../Action Rod.scad>;
 
 /* [What to Render] */
 

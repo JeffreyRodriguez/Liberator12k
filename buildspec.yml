@@ -13,7 +13,8 @@ phases:
   build:
     on-failure: ABORT
     commands:
-      - make -j -Otarget -l 2.5 all
+      - xvfb-run -f .Xauthority -n 99 -s "-screen 0 1920x1080x24 +extension GLX +render -noreset" sleep infinity &
+      - env DISPLAY=:99 XAUTHPROTO=. XAUTHORITY=`pwd`/.Xauthority make -j -Otarget -l 2.5 all
       - make dist
 artifacts:
   files:

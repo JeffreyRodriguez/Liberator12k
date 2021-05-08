@@ -5,12 +5,14 @@ Frame_STL=Frame_Receiver.stl
 Stock_STL=Stock.stl Stock_Buttpad.stl \
           Stock_Latch.stl Stock_LatchPlunger.stl Stock_LatchRetainer.stl\
 					Stock_LatchButton_Left.stl Stock_LatchButton_Right.stl
+FCG_STL=FCG_ChargingHandle.stl FCG_Disconnector.stl FCG_Housing.stl \
+        FCG_Hammer.stl FCG_HammerTail.stl
 
 # Subdirs
 Forend Lower: FORCE
 		$(MAKE) -C $@
 
 .SECONDEXPANSION:
-Receiver Frame Stock: $$($$@_STL) $$@.html $$@.mp4 $$@.png
+Receiver FCG Frame Stock: $$($$@_STL) $$@.html $$@.mp4 $$@.png
 
-all: index.html Receiver Frame Stock Lower Forend
+all: index.html Receiver FCG Frame Stock Lower Forend
