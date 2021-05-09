@@ -3,7 +3,7 @@ include Makefile.in
 Receiver: FORCE
 	$(MAKE) -C $@
 	
-QuickStart.html: QuickStart.md
+Developers.html: Developerss.md
 	$(MDBIN) $^ > $@
 	
 About.html: About.md
@@ -12,4 +12,4 @@ About.html: About.md
 dist: FORCE
 	zip Liberator12k.zip `find . -regextype egrep -iregex '.*?\.(html|png|mp4|stl)$$' | egrep -v '.frames|./Media|./Documentation'`
 
-all: index.html QuickStart.html About.html Receiver
+all: index.html Developers.html About.html Receiver
