@@ -3,7 +3,7 @@ include Makefile.in
 Receiver: FORCE
 	$(MAKE) -C $@
 	
-Developers.html: Developerss.md
+Developers.html: Developers.md
 	$(MDBIN) $^ > $@
 	
 About.html: About.md
