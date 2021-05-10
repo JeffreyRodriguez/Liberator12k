@@ -150,7 +150,7 @@ module SearSupportTab(cutter=false, clearance=0.015) {
 
     if (!cutter)
     translate([0,0,-SearTravel()])
-    Sear(length=SearLength()+(SearTravel()*4));
+    Sear(length=SearLength()+(SearTravel()*4), cutter=true);
 
     ReceiverLugFront(cutter=true, clearance=clearance);
 
