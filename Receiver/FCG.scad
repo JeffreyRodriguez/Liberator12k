@@ -570,14 +570,18 @@ module FCG_Disconnector(pivotFactor=0, cutter=false, clearance=0.005, alpha=1, d
         
         // Trip
         hull() {
-          translate([-FCG_DisconnectorTripBackset+clear,
+          
+          // Peak
+          translate([(cutter?(1/64):-FCG_DisconnectorTripBackset+clear),
                      FCG_DisconnectorOffsetY+0.25-clear,
                      FCG_DisconnectorPivotZ-0.125-clear])
           mirror([1,0,0])
-          ChamferedCube([(1/16)+clear2,
+          ChamferedCube([(cutter?FCG_DisconnectorTripBackset+clear2:(1/16)),
                 0.25+clear2,
-                ActionRodZ()-FCG_DisconnectorPivotZ+clear2], r=1/64);
+                ActionRodZ()-FCG_DisconnectorPivotZ+clear2],
+          r=1/64);
           
+          // Base
           translate([clear,
                      FCG_DisconnectorOffsetY+0.25-clear,
                      FCG_DisconnectorPivotZ-0.125-clear])
@@ -587,15 +591,15 @@ module FCG_Disconnector(pivotFactor=0, cutter=false, clearance=0.005, alpha=1, d
                 0.25+clear2], r=1/64);
         }
         
-        // Trip Extension
+        // Pivot Extension
         translate([-1,
                    FCG_DisconnectorOffsetY-clear,
                    FCG_DisconnectorPivotZ-0.125-clear])
-        ChamferedCube([1,
+        ChamferedCube([1+(cutter?(1/16):0),
               (5/16)+clear2,
               0.25+clear2], r=1/64);
         
-        // FCG_Hammer Stop Prong
+        // Hammer Stop Prong
         translate([clear,
                    FCG_DisconnectorOffsetY-clear,
                    FCG_DisconnectorPivotZ-0.125-clear])
@@ -626,23 +630,6 @@ module FCG_Housing(clearance=0.01, debug=_CUTAWAY_FIRING_PIN_HOUSING, alpha=_ALP
     
     // Insert plug
     union() {
-      *intersection() {
-          
-          // Round body
-          rotate([0,-90,0])
-          ChamferedCylinder(r1=ReceiverIR()-clearance, r2=1/16,
-                             h=FiringPinHousingLength(),
-                          teardropTop=true, teardropBottom=true, $fn=80);
-        
-        
-        // Flatten the bottom
-        translate([-FiringPinHousingLength(),
-                   -ReceiverIR()-ReceiverSideSlotDepth(),-0.25+clearance])
-        ChamferedCube([FiringPinHousingLength(),
-                       ReceiverID()+(ReceiverSideSlotDepth()*2),
-                       ReceiverID()+0.25-(clearance*2)],
-                      r=1/16, teardropFlip=[false,true,true]);
-      }
         
       // FCG_Disconnector support
       translate([-FiringPinHousingLength(),-(0.75/2),clearance])
@@ -662,7 +649,7 @@ module FCG_Housing(clearance=0.01, debug=_CUTAWAY_FIRING_PIN_HOUSING, alpha=_ALP
                     teardropXYZ=[false, true, true],
                     teardropTopXYZ=[false, true, true],
                     teardropFlip=[false, true, true]);
-      }
+    }
     
     FiringPin(cutter=true);
     
