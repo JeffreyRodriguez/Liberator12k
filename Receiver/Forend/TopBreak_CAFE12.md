@@ -1,6 +1,6 @@
 # [\#Liberator12k Manual](../../index.html)
 ## Platform Configuration: CAFE12
-### Cheap-as-fuck Edition
+### Cheap-as-fuck Edition 12ga
 A 12ga [Top Break](TopBreak.html) variant using pipes from the hardware store.
 
 This is the gun I set out to make when I started the project; better than a
@@ -16,24 +16,15 @@ slamfire in two simple ways: It has an extractor and a trigger.
 
 Bill of Materials
 -----------------
-**Printed: CAFE12 Forend**: XXXXg, 0h00m
+**Printed: CAFE12 Forend**: 420g, 2d08h09m @ 0.4mm
 
-| File                          | Part                    | Preset | Print Settings | Filament Used | Print Time |
-|-------------------------------|-------------------------|--------|----------------|---------------|------------|
-| Receiver/Forend/TopBreak.scad | TopBreak_ReceiverFront  | CAFE12 | Standard       | -mm           | -h-m       |
-| Receiver/Forend/TopBreak.scad | TopBreak_Forend         | CAFE12 | Standard       | -mm           | -h-m       |
-| Receiver/Forend/TopBreak.scad | TopBreak_BarrelCollar   | CAFE12 | Standard       | -mm           | -h-m       |
-| Receiver/Forend/TopBreak.scad | TopBreak_Extractor      | CAFE12 | Standard       | -mm           | -h-m       |
-| Receiver/Forend/TopBreak.scad | TopBreak_Latch          | CAFE12 | Standard       | -mm           | -h-m       |
-
-
-
-### Prints
-179g, 15h06m
-
-| Part                                                                                        | Settings       | Filament | Time    |
-|---------------------------------------------------------------------------------------------|----------------|----------|---------|
-| ![Frame_Receiver.stl](Frame_Receiver_thumb.png)<br>[Frame_Receiver.stl](Frame_Receiver.stl) | Standard       | 272g     | 1d3h59m |
+| File                          | Part                    | Preset | Print Settings | Filament Used | Print Time @ 0.4mm |
+|-------------------------------|-------------------------|--------|----------------|---------------|--------------------|
+| Receiver/Forend/TopBreak.scad | TopBreak_ReceiverFront  | CAFE12 | Std. 3mm Shell | 57g           |   07h17m           |
+| Receiver/Forend/TopBreak.scad | TopBreak_Forend         | CAFE12 | Std. 3mm Shell | 189g          | 1d01h10m           |
+| Receiver/Forend/TopBreak.scad | TopBreak_BarrelCollar   | CAFE12 | Std. 3mm Shell | 114g          |   15h00m           |
+| Receiver/Forend/TopBreak.scad | TopBreak_Extractor      | CAFE12 | Std. 3mm Shell | 14g           |    1h55m           |
+| Receiver/Forend/TopBreak.scad | TopBreak_Latch          | CAFE12 | Std. 3mm Shell | 46g           |    6h47m           |
 
 ### Components
  * ![Lower](Lower_thumb.png)<br>[Lower](Lower.html)
