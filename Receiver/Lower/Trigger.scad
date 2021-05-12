@@ -142,7 +142,7 @@ module SearSupportTab(cutter=false, clearance=0.015) {
         square([ReceiverLugFrontMinX()+TriggerTravel(), GripCeiling()-ManifoldGap()]);
 
         // Back Corner
-        translate([ReceiverLugRearMinX(),ReceiverLugRearZ()+ManifoldGap()])
+        translate([ReceiverLugRearMinX()+0.01,ReceiverLugRearZ()+ManifoldGap()])
         mirror([0,1])
         square([abs(ReceiverLugRearMinX()), 0.375]);
       }
@@ -188,6 +188,7 @@ module Trigger2d() {
     circle(r=TriggerFingerRadius(), $fn=Resolution(16,30));
 
 
+    // Retainer cutout
     translate([-triggerBack,ReceiverLugRearZ()-0.375])
     square([ReceiverLugRearLength(),
             abs(ReceiverLugRearZ())+0.375]);
