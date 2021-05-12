@@ -45,8 +45,8 @@ MLOK_BOLT           = "#8-32";   // ["M4", "#8-32", "#10-24", "1/4\"-20"]
 function TensionBolt() = BoltSpec(TENSION_BOLT);
 assert(TensionBolt(), "TensionBolt() is undefined. Unknown TENSION_BOLT?");
 
-function MlokBolt() = BoltSpec(TENSION_BOLT);
-assert(MlokBolt(), "TensionBolt() is undefined. Unknown MLOK_BOLT?");
+function MlokBolt() = BoltSpec(MLOK_BOLT);
+assert(MlokBolt(), "MlokBolt() is undefined. Unknown MLOK_BOLT?");
 
 
 // Settings: Lengths
