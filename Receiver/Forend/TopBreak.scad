@@ -741,7 +741,7 @@ module TopBreak_Foregrip(length=TopBreak_ForegripLength(), debug=false, alpha=1)
     rotate([0,90,0])
     PumpGrip(length=length);
 
-    Barrel(cutter=true, clearance=PipeClearanceLoose());
+    Barrel(cutter=true);
   }
 }
 
