@@ -32,5 +32,11 @@ all: index.html TopBreak Revolver PumpAR15 Trigun TopBreak_CAFE12 TopBreak_FP37
 
 TopBreak Revolver PumpAR15 Trigun: $$($$@_STL) $$@.html $$@.mp4 $$@.png
 
+TopBreak_CAFE12.html: TopBreak_CAFE12.md
+	$(MDBIN) $(basename $@).md | sed 's/\.md/\.html/' > $@
+
+TopBreak_FP37.html: TopBreak_FP37.md
+	$(MDBIN) $(basename $@).md | sed 's/\.md/\.html/' > $@
+
 TopBreak_FP37: $$($$@_STL) $$@.html
 TopBreak_CAFE12: $$($$@_STL) $$@.html

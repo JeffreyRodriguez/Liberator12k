@@ -1,26 +1,27 @@
 # [\#Liberator12k Manual](index.html)
 ## [Liberator12k.com](https://Liberator12k.com)
 
-Welcome!
-
 [About the Project](About.html)
 
 [Developers / Advanced Users](Developers.html)
 
 ## Configurations
  * [Top Break](Receiver/Forend/TopBreak.html)
-   * [CAFE12](Receiver/Forend/CAFE12.html)
-   * [FP37](Receiver/Forend/FP37.html)
+   * [CAFE12](Receiver/Forend/TopBreak_CAFE12.html)
+   * [FP37](Receiver/Forend/TopBreak_FP37.html)
  * [Revolver](Receiver/Forend/Revolver.html)
-   * [ZZR 6x12](Receiver/Forend/ZZR.html)
+   * [ZZR 6x12](Receiver/Forend/Revolver_ZZR612.html)
+ * Built with AR15 Parts
+   * [BARBB](Receiver/BARBB/BARBB.html)
   
 ### Common Components
  * [Receiver](Receiver/Receiver.html)
- * [Frame](Receiver/Frame.html)
+ * [Frame](Receiver/Frame.html) (A bigger receiver)
  * [Lower](Receiver/Lower/Lower.html)
  * [LowerMount](Receiver/Lower/LowerMount.html)
  * [Trigger](Receiver/Lower/Trigger.html)
  * [Stock](Receiver/Stock.html)
+ * [Fire Control Group](Receiver/FCG.html)
  
 ## Tooling
 

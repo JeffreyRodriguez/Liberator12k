@@ -28,8 +28,8 @@ COLORSCHEME=Starnight
 
 %.mp4: .frames/%.mp4
 	$(ANIMATE_BIN) .frames/$@/ $@
-
-%.png: %.scad
+	
+%.jpg %.png: %.scad
 	$(OSBIN) $(OSOPTS) -o $@ \
 	--projection=p --camera 200,1000,200,0,0,0 \
 	"$(basename $@).scad"

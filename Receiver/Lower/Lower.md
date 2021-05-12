@@ -35,7 +35,7 @@ The printed parts are sandwiched and bolted together.
 | ![Lower_Middle.stl](Lower_Middle_thumb.png)<br>[Lower_Middle.stl](Lower_Middle.stl) | 3mm Walls 50% Infill | 68g      | 5h20m  |
 | ![Lower_Right.stl](Lower_Right_thumb.png)<br>[Lower_Right.stl](Lower_Right.stl)     | 3mm Walls 50% Infill | 66g      | 5h52m  |
 
-### Components
+### Required Components
  * ![Trigger](Trigger_thumb.png)<br>[Trigger](Trigger.html)
  * ![LowerMount](LowerMount_thumb.png)<br>[LowerMount](LowerMount.html)
 
