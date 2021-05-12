@@ -467,7 +467,8 @@ module TopBreak_Forend(clearance=0.005, debug=false, alpha=1) {
   render() DebugHalf(enabled=debug)
   difference() {
     union() {
-      FrameSupport(length=ForendLength());
+      FrameSupport(length=ForendLength(),
+                   chamferBack=true, teardropBack=true);
       
       hull() {
         translate([PivotX(), 0, PivotZ()])
@@ -478,12 +479,14 @@ module TopBreak_Forend(clearance=0.005, debug=false, alpha=1) {
         // Front face
         translate([ForendLength(), 0,0])
         mirror([1,0,0])
-        FrameSupport(length=ManifoldGap(),
-                     extraBottom=FrameBottomZ()+abs(PivotZ()));
+        FrameSupport(length=1/8,
+                     extraBottom=FrameBottomZ()+abs(PivotZ()),
+                     chamferFront=true, teardropFront=true);
         
         translate([ForendLength(), 0,0])
         mirror([1,0,0])
-        FrameSupport(length=PivotRadius()+(ForendLength()-PivotX())+abs(PivotZ())+FrameTopZ());
+        FrameSupport(length=PivotRadius()+(ForendLength()-PivotX())+abs(PivotZ())+FrameTopZ(),
+                     chamferFront=true, teardropFront=true);
       }
     }
     

@@ -104,13 +104,27 @@ module FrameBolts(length=FrameBoltLength(), debug=false, cutter=false, clearance
 // **********
 // * Shapes *
 // **********
-module FrameSupport(length=1, width=(FrameBoltY()+FrameBoltRadius()+WallFrameBolt())*2, height=(FrameBoltRadius()+WallFrameBolt())*2, extraBottom=0, $fn=Resolution(20,60)) {
-  translate([0, -width/2, FrameBoltZ()-(height/2)-extraBottom])
-  rotate([90,0,90])
-  linear_extrude(height=length)
-  ChamferedSquare(xy=[width,height+extraBottom], r=1/4,
-                  teardropBottom=false,
-                  teardropTop=false);
+module FrameSupport(length=1, extraBottom=0, chamferFront=false, chamferBack=false, chamferRadius=1/16, , teardropFront=false, teardropBack=false, $fn=Resolution(20,60)) {
+  cr = 1/4;
+  height = (FrameBoltRadius()+WallFrameBolt())*2;
+  width=(FrameBoltY()+FrameBoltRadius()+WallFrameBolt())*2;
+  
+  translate([0,0,FrameBoltZ()])  
+  hull() {
+    for (M = [0,1]) mirror([0,M,0]) {
+      translate([0,(width/2)-cr,(FrameBoltRadius()+WallFrameBolt())-cr])
+      rotate([0,90,0])
+      ChamferedCylinder(h=length, r1=cr, r2=chamferRadius,
+                        chamferBottom=chamferFront, teardropBottom=teardropFront,
+                        chamferTop=chamferBack,     teardropTop=teardropBack);
+      
+      translate([0,(width/2)-cr,cr-(FrameBoltRadius()+WallFrameBolt())-extraBottom])
+      rotate([0,90,0])
+      ChamferedCylinder(h=length, r1=cr, r2=chamferRadius,
+                        chamferBottom=chamferFront, teardropBottom=teardropFront,
+                        chamferTop=chamferBack,     teardropTop=teardropBack);
+    }
+  }
 }
 
 // ****************
@@ -151,7 +165,8 @@ module Receiver_LargeFrame(doRender=true, debug=false) {
       hull() {
         
         mirror([1,0,0])
-        FrameSupport(length=FrameReceiverLength()+FrameBackLength());
+        FrameSupport(length=FrameReceiverLength()+FrameBackLength(),
+                     chamferBack=true);
 
         ReceiverTopSegment(length=FrameReceiverLength());
       }
