@@ -37,6 +37,7 @@ _RENDER = ""; // ["", "TopBreak_ReceiverFront", "TopBreak_Forend", "TopBreak_Bar
 /* [Assembly] */
 _SHOW_BARREL = true;
 _SHOW_FOREND = true;
+_SHOW_FOREGRIP = true;
 _SHOW_FRAME = true;
 _SHOW_COLLAR = true;
 _SHOW_TOPBREAK_EXTRACTOR = true;
@@ -790,7 +791,8 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFron
     if (_SHOW_COLLAR)
     TopBreak_BarrelCollar(debug=_CUTAWAY_COLLAR, alpha=_ALPHA_COLLAR);
 
-    *translate([(0.5*lockFactor)-(ChargerTravel()*chargeFactor),0,0])
+    if (_SHOW_FOREGRIP)
+    translate([(0.5*lockFactor)-(ChargerTravel()*chargeFactor),0,0])
     TopBreak_Foregrip();
     
     *TopBreak_LatchSpring(compress=(0.5*lockFactor), alpha=0.25);
@@ -860,7 +862,7 @@ if ($preview) {
   TopBreak_Forend_print();
 
   if (_RENDER == "TopBreak_Foregrip")
-  Foregrip_print();
+  TopBreak_Foregrip_print();
 
   if (_RENDER == "TopBreak_Extractor")
   TopBreak_Extractor_print();
