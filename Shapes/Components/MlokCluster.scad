@@ -36,13 +36,12 @@ module MlokCluster(boltSpec=BoltSpec(MLOK_BOLT),
                   innerRadius=1.35/2, width=0.75,
                   wall=0.1875, extension=0.375+(3/32),
                   length=MlokClusterLength(),
-                  debug=false, doRender=false,
+                  debug=false,
                   alpha=1, $fn=Resolution(20,100)) {
 
 assert(boltSpec, "boltSpec is undefined. Unknown MLOK_BOLT?");
 
-  color("Tan", alpha)
-  RenderIf(doRender)
+  color("Tan", alpha) render()
   difference() {
     hull() {
       ChamferedCylinder(r1=innerRadius+wall, r2=1/16, h=length);

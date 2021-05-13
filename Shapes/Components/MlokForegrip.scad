@@ -33,13 +33,12 @@ module MlokForegripBolts(boltSpec=BoltSpec(MLOK_BOLT), headType="flat", nutType=
 
 module MlokForegrip(boltSpec=BoltSpec(MLOK_BOLT),
                   length=MlokForegripLength(),
-                  debug=false, doRender=false,
+                  debug=false,
                   alpha=1, $fn=Resolution(20,100)) {
 
 assert(boltSpec, "boltSpec is undefined. Unknown MLOK_BOLT?");
 
-  color("Tan", alpha)
-  RenderIf(doRender)
+  color("Tan", alpha) render()
   difference() {
     union() {
       
@@ -59,8 +58,8 @@ scale(25.4)
 if ($preview) {
   MlokForegripBolts();
 
-  MlokForegrip(doRender=true, debug=false);
+  MlokForegrip(debug=false);
 } else {
   
-  MlokForegrip(doRender=true, debug=false);
+  MlokForegrip(debug=false);
 }
