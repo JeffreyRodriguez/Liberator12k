@@ -1,4 +1,4 @@
-# [\#Liberator12k Manual](../..//index.html)
+# [\#Liberator12k Manual](../..//README.md)
 
 ## Platform Components
 * [Lower](Lower.html)

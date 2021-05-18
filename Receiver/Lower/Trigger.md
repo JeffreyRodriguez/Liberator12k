@@ -1,4 +1,4 @@
-# [\#Liberator12k Manual](../../index.html)
+# [\#Liberator12k Manual](../../README.md)
 ## Lower Receiver: Trigger
 
 A simple trigger based on [The Unknown Cat's](https://www.youtube.com/channel/UCNR0HGw5airGKkiPcquS0TA) design.

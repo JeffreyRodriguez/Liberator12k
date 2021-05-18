@@ -1,4 +1,4 @@
-# [\#Liberator12k Manual](../../index.html)
+# [\#Liberator12k Manual](../../README.md)
 ## Platform Configuration: FP37
 ###  "Flare Projector" 37mm - It's not a weapon.
 

@@ -1,4 +1,4 @@
-# [\#Liberator12k Manual](../index.html)
+# [\#Liberator12k Manual](../README.md)
 ## Platform Component: Stock
 
 A stock and buttpad designed to fit the standard receiver.

@@ -1,4 +1,4 @@
-# [\#Liberator12k Manual](../../index.html)
+# [\#Liberator12k Manual](../../README.md)
 ## Lower Receiver: Lower
 
 Provides a grip, standard trigger, trigger guard, means of attachment via

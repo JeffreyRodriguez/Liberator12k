@@ -1,4 +1,4 @@
-# [\#Liberator12k Manual](../index.html)
+# [\#Liberator12k Manual](../README.md)
 ## Platform Components: Fire Control Group (FCG)
 
 A stock and buttpad designed to fit the standard receiver.

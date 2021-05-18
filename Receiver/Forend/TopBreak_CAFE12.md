@@ -1,4 +1,4 @@
-# [\#Liberator12k Manual](../../index.html)
+# [\#Liberator12k Manual](../../README.md)
 ## Platform Configuration: CAFE12
 ### Cheap As Fuck Edition 12ga
 A 12ga [Top Break](TopBreak.html) variant based on the venerable pipe shotgun.

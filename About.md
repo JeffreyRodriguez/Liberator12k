@@ -1,4 +1,4 @@
-# [\#Liberator12k Manual](index.html)
+# [\#Liberator12k Manual](README.md)
 ## About
 
 Self-defense is an individual imperative and weapons are the means of self-defense.

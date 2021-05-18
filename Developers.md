@@ -1,4 +1,4 @@
-# [\#Liberator12k Manual](index.html)
+# [\#Liberator12k Manual](README.md)
 ## Quick Start
 
 If you're running Linux/Mac and have `make` available, there's a Makefile to do it all. Otherwise, you'll have to render the individual STLs.

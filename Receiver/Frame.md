@@ -1,4 +1,4 @@
-# [\#Liberator12k Manual](../index.html)
+# [\#Liberator12k Manual](../README.md)
 ## Platform Components: Frame
 
 The universal receiver in its "large frame" configuration.

@@ -1,4 +1,4 @@
-# [\#Liberator12k Manual](../../index.html)
+# [\#Liberator12k Manual](../../README.md)
 ## Lower Receiver: Lower Mount
 
 This component couples the lower to the receiver. It has clearances and supports for the standard linear hammer.
