@@ -174,7 +174,7 @@ module Stock(length=StockLength(), doRender=true, debug=false, alpha=1) {
     
     // Main body
     translate([-ReceiverLength(),0,0])
-    ReceiverSegment(length=length, highTop=false);
+    ReceiverSegment(length=length, highTop=false, chamferBack=true);
     
     TensionBolts(nutType="none", headType="none", cutter=true);
     
