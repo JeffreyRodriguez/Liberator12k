@@ -435,7 +435,7 @@ module FCG_ChargingHandleMiddle(clearance=0.005) {
   }
 }
 
-module FCG_Hammer(cutter=false, clearance=UnitsImperial(0.01), debug=_CUTAWAY_FCG_Hammer, alpha=_ALPHA_FCG_Hammer) {
+module FCG_Hammer(cutter=false, clearance=UnitsImperial(0.01), debug=false, alpha=1) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
@@ -551,7 +551,7 @@ module FCG_HammerTail(clearance=UnitsImperial(0.01), debug=_CUTAWAY_FCG_Hammer, 
                           h=0.25, $fn=40);
   }
 }
-module FCG_Disconnector(pivotFactor=0, cutter=false, clearance=0.005, alpha=1, debug=_CUTAWAY_FCG_Disconnector) {
+module FCG_Disconnector(pivotFactor=0, cutter=false, clearance=0.005, alpha=1, debug=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
@@ -622,7 +622,7 @@ module FCG_Disconnector(pivotFactor=0, cutter=false, clearance=0.005, alpha=1, d
     }
   }
 }
-module FCG_Housing(clearance=0.01, debug=_CUTAWAY_FIRING_PIN_HOUSING, alpha=_ALPHA_FIRING_PIN_HOUSING) {
+module FCG_Housing(clearance=0.01, debug=false, alpha=1) {
   
   color("Chocolate", alpha) render()
   DebugHalf(enabled=debug)
@@ -731,6 +731,8 @@ module SimpleFireControlAssembly(actionRod=_SHOW_ACTION_ROD, recoilPlate=_SHOW_R
   
   if (_SHOW_FCG_Disconnector)
   FCG_Disconnector(pivotFactor=FCG_DisconnectorAF);
+  
+  FCG_HammerTail(debug=_CUTAWAY_FCG_Hammer, alpha=_ALPHA_FCG_Hammer);
 
   // Linear FCG_Hammer
   if (_SHOW_FCG_Hammer) {
@@ -742,7 +744,7 @@ module SimpleFireControlAssembly(actionRod=_SHOW_ACTION_ROD, recoilPlate=_SHOW_R
     translate([SubAnimate(ANIMATION_STEP_CHARGER_RESET, end=0.1)*(FCG_HammerOvertravelX-disconnectDistance),0,0])
     translate([SubAnimate(ANIMATION_STEP_CHARGER_RESET, start=0.97, end=1)*disconnectDistance,0,0]) {
       FCG_HammerBolt();
-      FCG_Hammer();
+      FCG_Hammer(debug=_CUTAWAY_FCG_Hammer, alpha=_ALPHA_FCG_Hammer);
     }
   
     FCG_HammerTail();
