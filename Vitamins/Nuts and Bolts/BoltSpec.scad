@@ -103,7 +103,7 @@ function NutHeatsetHeight(spec=undef)
 function NutHeatsetLongMajorDiameter(spec=undef)
           = slookup("NutHeatsetLongMajorDiameter", spec);
 
-function NutHeatsetMajorRadius(spec=undef) = NutHeatsetMajorDiameter(spec)/2;
+function NutHeatsetLongMajorRadius(spec=undef) = NutHeatsetLongMajorDiameter(spec)/2;
 
 function NutHeatsetLongMinorDiameter(spec=undef)
           = slookup("NutHeatsetLongMinorDiameter", spec);
