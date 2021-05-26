@@ -164,6 +164,10 @@ FCG_DisconnectorLength = abs(FCG_HammerCockedX-FCG_DisconnectorPivotX)
                    + disconnectDistance
                    + FCG_DisconnectorExtension;
 
+FCG_DisconnectorSpringY = FCG_DisconnectorOffsetY
+                        + FCG_Disconnector_SPRING_DIAMETER
+                        + (1/16);
+
 //$t= AnimationDebug(ANIMATION_STEP_CHARGE);
 //$t= AnimationDebug(ANIMATION_STEP_CHARGER_RESET, start=0.85);
 
@@ -207,18 +211,12 @@ module FCG_DisconnectorPivotPin(debug=false, cutter=false, teardrop=false, clear
   Teardrop(r=(3/32/2)+clear, enabled=teardrop, $fn=20);
 }
 module FCG_DisconnectorSpring(debug=false, cutter=false, clearance=FCG_Disconnector_SPRING_CLEARANCE) {
+  color("SteelBlue")
+  RenderIf(!cutter)
   translate([-(3/16),
-             FCG_DisconnectorOffsetY+FCG_Disconnector_SPRING_DIAMETER,
+             FCG_DisconnectorSpringY,
              FCG_DisconnectorPivotZ-0.125-(6/32)])
-  ChamferedCylinder(r1=(FCG_Disconnector_SPRING_DIAMETER/2), r2=1/32, h=0.3125);
-  
-  // FCG_Disconnector spring access
-  if (cutter)
-  translate([0.125,
-             FCG_DisconnectorOffsetY+(FCG_Disconnector_SPRING_DIAMETER/2),
-             FCG_DisconnectorPivotZ-0.125-0.125])
-  mirror([1,0,0])
-  ChamferedCube([0.3125, FCG_Disconnector_SPRING_DIAMETER, 0.125], r=1/32);
+  ChamferedCylinder(r1=(FCG_Disconnector_SPRING_DIAMETER/2), r2=1/32, h=0.34375);
 }
 module FCG_HammerBolt(clearance=0.01, cutter=false, debug=false) {
   color("Silver") RenderIf(!cutter)
@@ -773,6 +771,8 @@ module SimpleFireControlAssembly(actionRod=_SHOW_ACTION_ROD, recoilPlate=_SHOW_R
     FCG_DisconnectorTripBolt();
     children();
   }
+  
+  FCG_DisconnectorSpring();
   
   FCG_DisconnectorPivotPin();
   
