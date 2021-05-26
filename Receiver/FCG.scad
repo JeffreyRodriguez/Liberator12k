@@ -25,7 +25,7 @@ use <Receiver.scad>;
 /* [Print] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "FCG_Housing", "FCG_ChargingHandle", "FCG_Disconnector", "FCG_Hammer", "FCG_HammerTail", "FCG_RecoilPlateJig"]
+_RENDER = ""; // ["", "FCG_Housing", "FCG_ChargingHandle", "FCG_Disconnector", "FCG_Hammer", "FCG_HammerTail", "FCG_FiringPinCollar", "FCG_RecoilPlateJig"]
 
 /* [Assembly] */
 _SHOW_FIRE_CONTROL_HOUSING = true;
@@ -68,8 +68,11 @@ RECOIL_PLATE_BOLT_CLEARANCE = 0.015;
 FCG_Disconnector_SPRING_DIAMETER = 0.23;
 FCG_Disconnector_SPRING_CLEARANCE = 0.01;
 
+// Firing pin head thickness
+FIRING_PIN_HEAD_THICKNESS = 0.025; // 6D Box Nail
+
 // Firing pin diameter
-FIRING_PIN_DIAMETER = 0.09375;
+FIRING_PIN_DIAMETER = 0.095; // 6D Box Nail
 
 // Firing pin clearance
 FIRING_PIN_CLEARANCE = 0.01;
@@ -109,12 +112,13 @@ function ChamferRadius() = 1/16;
 function CR() = 1/16;
 chargerTravel = 2;
 
+function FiringPinHeadThickness() = FIRING_PIN_HEAD_THICKNESS;
 function FiringPinDiameter(clearance=0) = FIRING_PIN_DIAMETER+clearance;
 function FiringPinRadius(clearance=0) = FiringPinDiameter(clearance)/2;
 
 function FiringPinBodyDiameter() = FIRING_PIN_BODY_DIAMETER;
 function FiringPinBodyRadius() = FiringPinBodyDiameter()/2;
-function FiringPinBodyLength() = 0.75;
+function FiringPinBodyLength() = 1;
 
 function FiringPinTravel() = 0.05;
 function FiringPinHousingLength() = 1;
@@ -225,7 +229,7 @@ module FCG_HammerBolt(clearance=0.01, cutter=false, debug=false) {
              capOrientation=true,
              clearance=(cutter?clearance:0));
 }
-module FiringPin(radius=FiringPinRadius(), cutter=false, clearance=FIRING_PIN_CLEARANCE, template=false, debug=_CUTAWAY_FIRING_PIN) {
+module FiringPin(radius=FiringPinRadius(), cutter=false, clearance=FIRING_PIN_CLEARANCE, template=false, debug=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
@@ -237,35 +241,34 @@ module FiringPin(radius=FiringPinRadius(), cutter=false, clearance=FIRING_PIN_CL
   DebugHalf(enabled=debug)
   translate([-FiringPinHousingLength()-FiringPinTravel(),0,0])
   rotate([0,90,0])
-  difference() {
-    union() {
+  union() {
     
-      // Pin
-      cylinder(r=radius+clear,
-               h=FiringPinLength()+ManifoldGap());
-      
-      // Body
-      cylinder(r=FiringPinBodyRadius()+clear,
-               h=FiringPinBodyLength()
-                + (cutter?0.25+FiringPinTravel():0)
-                + ManifoldGap());
-    }
+    // Pin
+    cylinder(r=radius+clear,
+             h=FiringPinLength()+ManifoldGap());
     
-    translate([FiringPinBodyRadius()-(1/16)+clear,-FiringPinBodyRadius()-clear,0])
-    cube([FiringPinBodyDiameter(),FiringPinBodyDiameter()+clear2,0.25+FiringPinTravel()]);
+    // Head
+    cylinder(r=(0.3/2)+clear,
+             h=0.025);
   }
 }
 
-module FiringPinSpring(cutter=false, clearance=0.005, debug=_CUTAWAY_FIRING_PIN_SPRING) {
+module FiringPinSpring(cutter=false, clearance=0.005, debug=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
   color("SteelBlue")
   DebugHalf(enabled=debug)
-  translate([-0.375,0,0])
+  translate([-0.25,0,0])
   rotate([0,90,0])
-  cylinder(r=0.125+clear,
-           h=0.625);
+  cylinder(r=(0.22/2)+clear,
+           h=0.5);
+  
+  if (cutter)
+  translate([-0.25,0,0])
+  rotate([0,-90,0])
+  cylinder(r1=(0.22/2)+clear, r2=FiringPinRadius(),
+           h=(0.22/2)+clear);
 }
 
 
@@ -325,17 +328,47 @@ module FCG_ChargingHandleSpring(cutter=false, clearance=0.002) {
   rotate([0,90,0])
   cylinder(r=(0.22/2)+clear, h=1.625);
 }
-module FCG_ChargingHandleSpringGuiderod(cutter=false, clearance=0.003) {
-  clear = cutter ? clearance : 0;
-  clear2 = clear*2;
-  
-  translate([-ReceiverLength()-0.5, 0, ReceiverIR()-0.125])
-  rotate([0,90,0])
-  cylinder(r=(3/32/2)+clear, h=2.5);
-}
 //*****************
 //* Printed Parts *
 //*****************
+module FCG_FiringPinCollar(cutter=false, clearance=FIRING_PIN_CLEARANCE, template=false, debug=false) {
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
+  
+  color("Olive")
+  RenderIf(!cutter)
+  DebugHalf(enabled=debug)
+  difference() {
+    
+    union() {
+      
+      // Body
+      translate([-FiringPinHousingLength()-FiringPinTravel()+0.025,0,0])
+      rotate([0,90,0])
+      ChamferedCylinder(r1=FiringPinBodyRadius()+clear, r2=1/32,
+               h=FiringPinBodyLength() -0.025
+                + (cutter?0.25+FiringPinTravel():0)
+                + ManifoldGap());
+      
+      // Flare
+      translate([-FiringPinTravel(),0,0])
+      rotate([0,-90,0])
+      cylinder(r1=FiringPinBodyRadius()+(1/16)+clear, r2=FiringPinBodyRadius()+clear,
+               h=(1/8));
+      
+      // Flare (cutter)
+      if (cutter)
+      rotate([0,-90,0])
+      cylinder(r=FiringPinBodyRadius()+(1/16)+clear,
+               h=FiringPinTravel()+ManifoldGap());
+    }
+    
+    if (!cutter) {
+      FiringPinSpring(cutter=true);
+      FiringPin(cutter=true, clearance=0.004);
+    }
+  } 
+}
 module FCG_ChargingHandle(clearance=0.005) {
   clear = clearance;
   clear2 = clear*2;
@@ -651,7 +684,21 @@ module FCG_Housing(clearance=0.01, debug=false, alpha=1) {
                     teardropFlip=[false, true, true]);
     }
     
+    // Firing pin hole chamfer
+    translate([-FiringPinHousingLength(),0,0])
+    rotate([0,90,0])
+    HoleChamfer(r1=FiringPinBodyRadius()+FIRING_PIN_CLEARANCE,
+                 r2=1/32, teardrop=true);
+    
+    // Disconnector spring access
+    translate([0.125,
+               FCG_DisconnectorSpringY-(FCG_Disconnector_SPRING_DIAMETER/2)-0.005,
+               FCG_DisconnectorPivotZ-0.125-0.125])
+    mirror([1,0,0])
+    ChamferedCube([0.3125, FCG_Disconnector_SPRING_DIAMETER+0.01, 0.25], r=1/32);
+    
     FiringPin(cutter=true);
+    FCG_FiringPinCollar(cutter=true);
     
     for (PF = [0,1])
     FCG_Disconnector(pivotFactor=PF, cutter=true);
@@ -752,8 +799,10 @@ module SimpleFireControlAssembly(actionRod=_SHOW_ACTION_ROD, recoilPlate=_SHOW_R
  
   if (_SHOW_FIRING_PIN) {
     translate([(3/32)*SubAnimate(ANIMATION_STEP_FIRE, start=0.95),0,0])
-    translate([-(3/32)*SubAnimate(ANIMATION_STEP_CHARGE, start=0.07, end=0.2),0,0])
-    FiringPin(cutter=false, debug=false);
+    translate([-(3/32)*SubAnimate(ANIMATION_STEP_CHARGE, start=0.07, end=0.2),0,0]) {
+      FiringPin(debug=_CUTAWAY_FIRING_PIN);
+      FCG_FiringPinCollar(debug=_CUTAWAY_FIRING_PIN);
+    }
     
     FiringPinSpring();
   }
@@ -812,6 +861,11 @@ if ($preview) {
   rotate([90,0,0])
   translate([-FCG_DisconnectorPivotX,-FCG_DisconnectorOffsetY,-FCG_DisconnectorPivotZ])
   FCG_Disconnector();
+  
+  if (_RENDER == "FCG_FiringPinCollar")
+  rotate([0,90,0])
+  translate([FiringPinTravel(),0,0])
+  FCG_FiringPinCollar();
   
   if (_RENDER == "FCG_RecoilPlateJig")
   RecoilPlateJig();
