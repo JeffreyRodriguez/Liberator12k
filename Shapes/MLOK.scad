@@ -19,9 +19,13 @@ function MlokSlotWidth() = UnitsMetric(7);
 module MlokSlot(length=UnitsMetric(20), extension=UnitsMetric(20), center=true, clearance=0.005) {  
   translate([0, (center?-(MlokSlotWidth()/2):0),-MlokSlotDepth()])
   cube([length, MlokSlotWidth(), MlokSlotDepth()+ManifoldGap()]);
-  
+}
+
+
+module MlokSlotBack(length=UnitsMetric(20), extension=UnitsMetric(20), center=true, clearance=0.005) {  
   translate([0,(center?-(MlokBackWidth()/2):-(MlokBackWidth()-MlokSlotWidth())/2),-MlokSlotDepth()-extension])
   cube([length, MlokBackWidth(), extension]);
 }
 
 MlokSlot();
+MlokSlotBack();
