@@ -27,6 +27,7 @@ _SHOW_LOWER_LEFT = true;
 _SHOW_LOWER_RIGHT = true;
 _SHOW_LOWER_MIDDLE = true;
 _SHOW_TRIGGER = true;
+_SHOW_LOWER_LUGS = true;
 
 _ALPHA_LOWER = 1;  // [0:0.1:1]
 
@@ -36,7 +37,7 @@ LOWER_BOLT_CLEARANCE = 0.015;
 LOWER_BOLT_HEAD = "flat"; // ["socket", "flat"]
 LOWER_BOLT_NUT = "heatset"; // ["hex", "heatset"]
 
-function LowerCenterWidth() = TriggerWidth()+0.01;
+function LowerCenterWidth() = 0.51;
 
 function LowerBolt() = BoltSpec(LOWER_BOLT);
 assert(LowerBolt(), "LowerBolt() is undefined. Unknown LOWER_BOLT?");
@@ -269,8 +270,10 @@ module LowerTriggerPocket() {
 }
 
 module LowerCutouts(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT) {
-  ReceiverLugFront(width=TriggerWidth(), cutter=true);
-  ReceiverLugRear(width=TriggerWidth(), cutter=true, hole=false);
+  ReceiverLugFront(width=TriggerWidth(),
+                   cutter=true, chamferCutterHorizontal=true);
+  ReceiverLugRear(width=TriggerWidth(), hole=false,
+                   cutter=true, chamferCutterHorizontal=true);
 
   GuardBolt(length=1.25, boltSpec=boltSpec, head=head, nut=nut, cutter=true);
 
@@ -417,10 +420,10 @@ scale(25.4)
 if ($preview) {
 
   AnimateSpin()
-  Lower(showReceiverLugs=true, showReceiverLugBolts=true,
+  Lower(showReceiverLugs=_SHOW_LOWER_LUGS, showReceiverLugBolts=true,
         showGuardBolt=true,
         showHandleBolts=true,
-        showTrigger=true,
+        showTrigger=_SHOW_TRIGGER,
         triggerAnimationFactor=sin(180*$t),
         showLeft=_SHOW_LOWER_LEFT,
         showMiddle=_SHOW_LOWER_MIDDLE,

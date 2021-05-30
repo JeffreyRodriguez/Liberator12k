@@ -49,7 +49,7 @@ function TriggerFingerOffsetZ() = GripCeilingZ();
 function TriggerFingerWall() = 0.3;
 
 function TriggerHeight() = GripCeiling()+TriggerFingerDiameter();
-function TriggerWidth() = 0.49;
+function TriggerWidth() = 0.50;
 function SearTravel() = 0.25;
 function TriggerTravel() = SearTravel()*1.5;
 function SearLength() = abs(SearPinOffsetZ()) + SearTravel();

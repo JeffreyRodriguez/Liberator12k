@@ -67,6 +67,7 @@ module ReceiverLugBolts(boltSpec=Spec_BoltM4(),
 
 module ReceiverLugRear(width=UnitsImperial(0.5), extraTop=ManifoldGap(),
                        cutter=false, clearance=UnitsImperial(0.002), clearVertical=false,
+                       chamferCutterHorizontal=false,
                        teardrop=true, teardropAngle=90, hole=true) {
 
   color("DarkOrange")
@@ -75,7 +76,8 @@ module ReceiverLugRear(width=UnitsImperial(0.5), extraTop=ManifoldGap(),
     translate([ReceiverLugRearMinX(),0,ReceiverLugRearZ()])
     T_Lug(width=width, length=ReceiverLugRearLength(),
           height=abs(ReceiverLugRearZ())+extraTop,
-          cutter=cutter, clearance=clearance, clearVertical=clearVertical);
+          cutter=cutter, clearance=clearance, clearVertical=clearVertical,
+          chamferCutterHorizontal=chamferCutterHorizontal);
 
     // Grip Bolt Hole
     if (hole)
@@ -85,14 +87,16 @@ module ReceiverLugRear(width=UnitsImperial(0.5), extraTop=ManifoldGap(),
 }
 
 module ReceiverLugFront(width=UnitsImperial(0.5), extraTop=ManifoldGap(),
-                        cutter=false, clearance=UnitsImperial(0.002), clearVertical=false) {
+                        cutter=false, clearance=UnitsImperial(0.002), clearVertical=false,
+                        chamferCutterHorizontal=false,) {
   color("DarkOrange")
   render()
   translate([ReceiverLugFrontMaxX(),0,ReceiverLugFrontZ()])
   mirror([1,0,0])
   T_Lug(width=width, length=ReceiverLugFrontLength(), tabWidth=1.25,
         height=abs(ReceiverLugFrontZ())+extraTop,
-        cutter=cutter, clearance=clearance, clearVertical=clearVertical);
+        cutter=cutter, clearance=clearance, clearVertical=clearVertical,
+        chamferCutterHorizontal=chamferCutterHorizontal);
 }
 
 ReceiverLugRear(cutter=false);

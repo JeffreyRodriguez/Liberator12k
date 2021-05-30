@@ -2,6 +2,9 @@ use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
 use <../Chamfer.scad>;
 
+CUTTER=false;
+CUTTER_CHAMFER_HORIZONTAL=false;
+
 module T_Lug2d(
               width=UnitsImperial(0.5),
              height=UnitsImperial(1),
@@ -10,17 +13,19 @@ module T_Lug2d(
           clearance=UnitsImperial(0.005),
           clearVertical=false,
              cutter=false) {
-  clearance = cutter ? clearance : 0;
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
+               
   render()
   union() {
 
     // Vertical
-    translate([-height, -(width/2)-(clearVertical ? clearance : 0)])
-    square([height+clearance, width+(clearVertical ? clearance*2 : 0)]);
+    translate([-height, -(width/2)-(clearVertical ? clear : 0)])
+    square([height+clearance, width+(clearVertical ? clear2 : 0)]);
 
     // Horizontal
-    translate([-tabHeight-clearance, -(tabWidth/2)-clearance])
-    square([tabHeight+(clearance*2),tabWidth+(clearance*2)]);
+    translate([-tabHeight-clear, -(tabWidth/2)-clear])
+    square([tabHeight+clear2,tabWidth+clear2]);
   }
 }
 
@@ -29,17 +34,19 @@ module T_Lug(length=0.75,
              height=UnitsImperial(1),
           tabHeight=UnitsImperial(0.25),
            tabWidth=UnitsImperial(1),
-          clearance=UnitsImperial(0.002),
+          clearance=UnitsImperial(0.005),
       clearVertical=false,
+      chamferCutterHorizontal=false,
              cutter=false) {
 
-  clearance = cutter ? clearance : 0;
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
 
   render()
   if (cutter) {
     rotate([0,90,0])
-    translate([0,0,-clearance])
-    linear_extrude(height=length+(clearance*2))
+    translate([0,0,-clear])
+    linear_extrude(height=length+clear2)
     T_Lug2d(width=width,
            height=height,
         tabHeight=tabHeight,
@@ -47,12 +54,21 @@ module T_Lug(length=0.75,
         clearance=clearance,
     clearVertical=clearVertical,
            cutter=cutter);
+    
+    if (chamferCutterHorizontal)
+    for (M = [0,1]) mirror([0,M,0])
+    translate([0,(width/2)-clear,tabHeight+clear2])
+    rotate([-90,0,0])
+    SquareHoleEndChamfer([length+clear2, tabHeight+clear2], r=1/16);
   } else {
     union() {
+      
+      // Horizontal
       translate([0,-tabWidth/2,0])
       ChamferedCube([length, tabWidth, tabHeight], r=3/64,
                      teardropFlip=[true,true,true]);
 
+      // Vertical
       translate([0,-width/2,0])
       ChamferedCube([length, width, height], r=3/64,
                      teardropFlip=[true,true,true]);
@@ -60,4 +76,4 @@ module T_Lug(length=0.75,
   }
 }
 
-T_Lug(cutter=false);
+T_Lug(cutter=CUTTER, chamferCutterHorizontal=CUTTER_CHAMFER_HORIZONTAL);
