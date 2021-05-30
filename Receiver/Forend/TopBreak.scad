@@ -418,13 +418,27 @@ module TopBreak_ReceiverFront(debug=false, alpha=1) {
         FrameSupport(length=TopBreak_ReceiverFrontLength());
       }
 
-      // Recoil plate backing
-      translate([0,-(RecoilPlateWidth()/2)-0.25,RecoilPlateTopZ()])
-      mirror([0,0,1])
-      ChamferedCube([TopBreak_ReceiverFrontLength(),
-                     RecoilPlateWidth()+0.5,
-                     RecoilPlateHeight()+0.25],
-                    r=1/16);
+      hull() {
+        
+        // Recoil plate backing
+        translate([0,-(RecoilPlateWidth()/2)-0.25,RecoilPlateTopZ()])
+        mirror([0,0,1])
+        ChamferedCube([TopBreak_ReceiverFrontLength(),
+                       RecoilPlateWidth()+0.5,
+                       RecoilPlateHeight()+0.25],
+                      r=1/16);
+        
+        // Comfort square back
+        translate([0,-(1.25/2),LowerOffsetZ()-LowerGuardHeight()])
+        ChamferedCube([1/4, 1.25, LowerGuardHeight()], r=1/16,
+                      teardropFlip=[true, true, true]);
+        
+        // Comfort rounded front edge
+        translate([0,0,LowerOffsetZ()-LowerGuardHeight()+(1)])
+        rotate([0,90,0])
+        ChamferedCylinder(r1=(1/2), h=TopBreak_ReceiverFrontLength(), r2=1/4);
+        
+      }
     }
     
     FrameBolts(cutter=true);

@@ -229,30 +229,6 @@ animateLock = (SubAnimate(ANIMATION_STEP_UNLOCK, start=0, end=1)
 //************
 //* Vitamins *
 //************
-module Revolver_RecoilPlateBolts(bolt=RecoilPlateBolt(), boltLength=ReceiverFrontLength(), template=false, cutter=false) {
-  translate([0,0,CylinderZ()])
-  RecoilPlateBolts(bolt=bolt, template=template, boltLength=boltLength, cutter=cutter);
-}
-module Revolver_RecoilPlate(template=false, cutter=false, clearance=0.005, debug=false) {
-  clear = cutter ? clearance : 0;
-  clear2 = clear*2;
-  
-  color("LightSteelBlue")
-  RenderIf(!cutter) DebugHalf(enabled=debug)
-  difference() {
-    translate([ReceiverFrontLength()-RecoilPlateThickness(), -1-clear, FrameBoltZ()-0.25-clear])
-    mirror([0,0,1])
-    cube([RecoilPlateThickness(), 2+clear2, 2.25+clear2]);
-
-    if (!cutter) {
-      FiringPin(template=template, cutter=true);
-      RecoilPlateBolts(template=template, cutter=true);
-      Revolver_RecoilPlateBolts(template=template, cutter=true);
-      Revolver_CylinderSpindle(template=template, cutter=true);
-    }
-  }
-}
-
 module Revolver_Barrel(barrelLength=BarrelLength(), clearance=BARREL_CLEARANCE, cutter=false, alpha=1, debug=false) {
 
   clear = (cutter ? clearance : 0);
@@ -425,7 +401,7 @@ module Revolver_Shield(cutter=false, debug=false) {
 //*****************
 //* Printed Parts *
 //*****************
-module Revolver_ReceiverFront(debug=_CUTAWAY_RECEIVER_FRONT, alpha=_ALPHA_RECEIVER_FRONT) {
+module Revolver_ReceiverFront(contoured=true, debug=_CUTAWAY_RECEIVER_FRONT, alpha=_ALPHA_RECEIVER_FRONT) {
   length = abs(RecoilSpreaderThickness());
   
   color("Chocolate", alpha)
@@ -448,12 +424,11 @@ module Revolver_ReceiverFront(debug=_CUTAWAY_RECEIVER_FRONT, alpha=_ALPHA_RECEIV
     
     FrameBolts(cutter=true);
 
-    Revolver_RecoilPlate(cutter=true);
+    RecoilPlate(contoured=contoured, spindleZ=CylinderZ(), cutter=true);
     
     FiringPin(cutter=true);
     
     RecoilPlateBolts(cutter=true);
-    Revolver_RecoilPlateBolts(cutter=true);
     TensionBolts(cutter=true);
     
     ActionRod(cutter=true);
@@ -968,12 +943,8 @@ module RevolverAssembly(stock=true) {
         debug=_CUTAWAY_RECEIVER);
     }
 
-    if (_SHOW_RECOIL_PLATE) {
-      Revolver_RecoilPlate();
-    }
-
     if (_SHOW_FCG)
-    SimpleFireControlAssembly(recoilPlate=false) {
+    SimpleFireControlAssembly(recoilPlate=_SHOW_RECOIL_PLATE) {
   
       if (_SHOW_FOREGRIP) {
         
@@ -1048,11 +1019,6 @@ if ($preview) {
   if (_RENDER == "Revolver_Projection_CylinderCore")
   projection(cut=true)
   Revolver_CylinderCore_print();
-  
-  if (_RENDER == "Revolver_Projection_RecoilPlate")
-  projection()
-  rotate([0,90,0])
-  Revolver_RecoilPlate(template=true);
   
   if (_RENDER == "Revolver_Projection_BlastPlate")
   Revolver_BlastPlate_Projection();
