@@ -287,6 +287,15 @@ module RecoilPlateBolts(bolt=RecoilPlateBolt(), boltLength=1.5, template=false, 
   Bolt(bolt=bolt, length=1.5+ManifoldGap(2),
         head=boltHead, capHeightExtra=(cutter?1:0),
         clearance=cutter?clearance:0);
+  
+  color("Silver") RenderIf(!cutter)
+  translate([0.5,0,0])
+  TensionBoltIterator()
+  NutAndBolt(bolt=bolt,
+             boltLength=0.5+ManifoldGap(2),
+             head="flat",
+             nut="none",
+             clearance=cutter?clearance:0);
 }
 
 module RecoilPlate(spindleZ=-1, contoured=true, cutter=false, debug=false, alpha=1, clearance=0.005, template=false, templateHoleDiameter=0.08) {
@@ -344,10 +353,6 @@ module RecoilPlate(spindleZ=-1, contoured=true, cutter=false, debug=false, alpha
     } else if (!cutter) {
       FiringPin(cutter=true);
       RecoilPlateBolts(cutter=true);
-      
-      translate([0.5-RecoilPlateLength(),0,0])
-      mirror([1,0,0])
-      TensionBolts(nutType="none");
       
       // ZZR cylinder spindle
       translate([0.5-RecoilPlateLength(),0,-1])
