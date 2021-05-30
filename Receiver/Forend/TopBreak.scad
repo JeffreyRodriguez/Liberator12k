@@ -175,11 +175,20 @@ function TopBreak_ExtractorSpringRadius() = TopBreak_ExtractorSpringDiameter()/2
 function TopBreak_ExtractorLength() = (PivotX()-PivotRadius())
                            - TopBreak_ExtractorSpringLength()
                            - WallPivot();
-function TopBreak_ExtractorBitZ() = BarrelZ()-BarrelRadius()+BarrelWall();
-function TopBreak_ExtractorZ() = BarrelZ()-BarrelRadius()-TopBreak_ExtractorHeight()-max(TopBreak_ExtractorWall(),0.1875);
 
-function TopBreak_ExtractorHousingWidth() = TopBreak_ExtractorWidth()+(TopBreak_ExtractorWall()*2);
-function TopBreak_BarrelCollarBottomZ() = TopBreak_ExtractorZ() - TopBreak_ExtractorWall(); //PivotZ()-(PivotRadius()*0.5);
+function TopBreak_ExtractorBitZ() = BarrelZ()
+                                  - BarrelSleeveRadius()
+                                  + BarrelWall();
+
+function TopBreak_ExtractorZ() = BarrelZ()
+                               - BarrelSleeveRadius()
+                               - TopBreak_ExtractorHeight()
+                               - max(TopBreak_ExtractorWall(),0.1875);
+
+function TopBreak_ExtractorHousingWidth() = TopBreak_ExtractorWidth()
+                                          + (TopBreak_ExtractorWall()*2);
+function TopBreak_BarrelCollarBottomZ() = TopBreak_ExtractorZ()
+                                        - TopBreak_ExtractorWallBottom();
 
 
 function TopBreak_LatchGuideZ() = TopBreak_ExtractorZ();
@@ -289,7 +298,8 @@ module TopBreak_ExtractorRetainer(debug=false, cutter=false, teardrop=false, cle
   color("Silver") RenderIf(!cutter)
   translate([TopBreak_ExtractorWidth()+TopBreak_ExtractorTravel()+0.5-clear,
              0,
-             TopBreak_ExtractorZ()+TopBreak_ExtractorHeight()])
+             TopBreak_ExtractorZ()])
+  mirror([0,0,1])
   NutAndBolt(bolt=GPBolt(),
        boltLength=TopBreak_ExtractorHeight()+ManifoldGap(), clearance=clear,
        head="socket", capHeightExtra=(cutter?abs(TopBreak_ExtractorZ())+FrameBoltZ():0), capOrientation=true,
@@ -553,30 +563,37 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, debu
                            
   color("Chocolate", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
-    intersection() {
+    union() {
+      PivotOuterBearing(cutter=cutter);
+      
+      PivotClearanceCut(cut=!cutter)
       union() {
-        PivotOuterBearing(cutter=cutter);
         
-        // TopBreak_Latch guiderails
-        TopBreak_LatchGuides(cutter=cutter);
+        // Around the barrel
+        translate([RIM_WIDTH,0,BarrelZ()])
+        rotate([0,90,0])
+        ChamferedCylinder(r1=BarrelSleeveRadius()+WallBarrel()+clear,
+                          h=TopBreak_LatchCollarLength()-RIM_WIDTH+clear,
+                          r2=1/16, $fn=100);
         
-        PivotClearanceCut(cut=!cutter)
-        union() {
-          
-          // Around the barrel
-          translate([RIM_WIDTH,0,BarrelZ()])
-          rotate([0,90,0])
-          ChamferedCylinder(r1=BarrelRadius()+WallBarrel()+clear,
-                            h=TopBreak_LatchCollarLength()-RIM_WIDTH+clear,
-                            r2=1/16, $fn=100);
-          
-          // TopBreak_Extractor and TopBreak_Latch support
-          translate([RIM_WIDTH-rearExtension-clear,-(TopBreak_ExtractorHousingWidth()/2)-clear,TopBreak_BarrelCollarBottomZ()-clear])
-          ChamferedCube([TopBreak_LatchCollarLength()-RIM_WIDTH+rearExtension+clear2,
-                         TopBreak_ExtractorHousingWidth()+clear2,
-                         abs(TopBreak_BarrelCollarBottomZ())+clear],
-                         r=1/16, teardropFlip=[false,true,true]);
-        }
+        // Extractor support
+        translate([RIM_WIDTH-rearExtension-clear,-(TopBreak_ExtractorHousingWidth()/2)-clear,TopBreak_BarrelCollarBottomZ()-clear])
+        ChamferedCube([TopBreak_LatchCollarLength()-RIM_WIDTH+rearExtension+clear2,
+                       TopBreak_ExtractorHousingWidth()+clear2,
+                       abs(TopBreak_BarrelCollarBottomZ())+clear],
+                       r=1/16, teardropFlip=[false,true,true]);
+      }
+      
+      
+      // Optics Rail Support
+      hull() {
+        translate([RIM_WIDTH,-0.375,0])
+        ChamferedCube([3,0.75, ReceiverTopZ()],
+                       r=1/16,teardropFlip=[true,true,true]);
+        
+        translate([RIM_WIDTH,-BarrelSleeveRadius(),0])
+        ChamferedCube([1,BarrelSleeveDiameter(), BarrelSleeveRadius()],
+                       r=1/16,teardropFlip=[true,true,true]);
       }
     }
     
