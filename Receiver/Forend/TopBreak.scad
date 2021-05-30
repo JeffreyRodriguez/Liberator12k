@@ -192,12 +192,6 @@ function TopBreak_LatchLength() = ActionRodWidth()
                        + ChargerTravel()
                        + (ActionRodWidth() + TopBreak_LatchWall());
                        
-function PumpLockRodX() = TopBreak_LatchCollarLength()+0.5;
-function PumpLockRodZ() = BarrelRadius();
-function PumpLockRodLength() = TopBreak_ForegripOffsetX()
-                             - TopBreak_LatchCollarLength()
-                             + TopBreak_LatchTravel();
-
 // Pivot modules
 module PivotClearanceCut(cut=true, width=PivotWidth(), depth=2,
                          clearance=0.005) {
@@ -340,33 +334,6 @@ module TopBreak_LatchScrews(debug=false, cutter=false, clearance=0.008) {
 
 }
 
-module PumpLockRod(cutter=false, clearance=0.008) {
-  clear = cutter ? clearance : 0;
-  clear2 = clear*2;
-  for (R = [180]) rotate([R,0,0]) {
-    color("Silver")
-    translate([PumpLockRodX()-clear,
-               -(ActionRodWidth()/2)-clear,
-               PumpLockRodZ()-clear])
-    cube([PumpLockRodLength()+clear,
-          ActionRodWidth()+clear2,
-          ActionRodWidth()+clear2]);
-
-    // Secure the TopBreak_Latch block to the TopBreak_Latch rod
-    color("Gold") RenderIf(!cutter)
-    translate([PumpLockRodX()+0.375,0,PumpLockRodZ()-0.01])
-    Bolt(bolt=BarrelSetScrew(), head="none",
-         length=(cutter?FrameTopZ():0.5),
-         clearance=clear, teardrop=cutter, teardropAngle=180);
-    
-    // Secure the TopBreak_Latch block to the TopBreak_Latch rod
-    color("Silver") RenderIf(!cutter)
-    translate([PumpLockRodX()+PumpLockRodLength()-0.375,0,PumpLockRodZ()-0.01])
-    Bolt(bolt=BarrelSetScrew(), head="socket",
-         length=(cutter?FrameTopZ():0.25),
-         clearance=clear, teardrop=cutter, teardropAngle=180);
-  }
-}
 module Barrel(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, length=BarrelLength(), clearance=BARREL_CLEARANCE, cartridgeRimThickness=RIM_WIDTH, sleeve=true, cutter=false, alpha=1, debug=false) {
 
   clear = cutter ? clearance : 0;
