@@ -1,27 +1,27 @@
 # [\#Liberator12k Manual](README.md)
 ## [Liberator12k.com](https://Liberator12k.com)
 
-[About the Project](About.html)
+[About the Project](About.md)
 
-[Developers / Advanced Users](Developers.html)
+[Developers / Advanced Users](Developers.md)
 
 ## Configurations
- * [Top Break](Receiver/Forend/TopBreak.html)
-   * [CAFE12](Receiver/Forend/TopBreak_CAFE12.html)
-   * [FP37](Receiver/Forend/TopBreak_FP37.html)
- * [Revolver](Receiver/Forend/Revolver.html)
-   * [ZZR 6x12](Receiver/Forend/Revolver_ZZR612.html)
+ * [Top Break](Receiver/Forend/TopBreak.md)
+   * [CAFE12](Receiver/Forend/TopBreak_CAFE12.md)
+   * [FP37](Receiver/Forend/TopBreak_FP37.md)
+ * [Revolver](Receiver/Forend/Revolver.md)
+   * [ZZR 6x12](Receiver/Forend/Revolver_ZZR612.md)
  * Built with AR15 Parts
-   * [BARBB](Receiver/BARBB/BARBB.html)
+   * [BARBB](Receiver/BARBB/BARBB.md)
   
 ### Common Components
- * [Receiver](Receiver/Receiver.html)
- * [Frame](Receiver/Frame.html) (A bigger receiver)
- * [Lower](Receiver/Lower/Lower.html)
- * [LowerMount](Receiver/Lower/LowerMount.html)
- * [Trigger](Receiver/Lower/Trigger.html)
- * [Stock](Receiver/Stock.html)
- * [Fire Control Group](Receiver/FCG.html)
+ * [Receiver](Receiver/Receiver.md)
+ * [Frame](Receiver/Frame.md) (A bigger receiver)
+ * [Lower](Receiver/Lower/Lower.md)
+ * [LowerMount](Receiver/Lower/LowerMount.md)
+ * [Trigger](Receiver/Lower/Trigger.md)
+ * [Stock](Receiver/Stock.md)
+ * [Fire Control Group](Receiver/FCG.md)
  
 ## Tooling
 

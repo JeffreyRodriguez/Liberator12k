@@ -23,8 +23,8 @@ The printed parts are sandwiched and bolted together.
 | Lower Bolt         | #8-32x1.25 SS Flat-Head Bolt     | 5        | #L12k/HWS/Online |
 
 ### Components
-[LowerMount](LowerMount.html)
-[Trigger](Trigger.html)
+[LowerMount](LowerMount.md)
+[Trigger](Trigger.md)
 
 ### Prints
 200g, 17h04m
@@ -36,8 +36,8 @@ The printed parts are sandwiched and bolted together.
 | ![Lower_Right.stl](Lower_Right_thumb.png)<br>[Lower_Right.stl](Lower_Right.stl)     | 3mm Walls 50% Infill | 66g      | 5h52m  |
 
 ### Required Components
- * ![Trigger](Trigger_thumb.png)<br>[Trigger](Trigger.html)
- * ![LowerMount](LowerMount_thumb.png)<br>[LowerMount](LowerMount.html)
+ * ![Trigger](Trigger_thumb.png)<br>[Trigger](Trigger.md)
+ * ![LowerMount](LowerMount_thumb.png)<br>[LowerMount](LowerMount.md)
 
 ## Instructions
 

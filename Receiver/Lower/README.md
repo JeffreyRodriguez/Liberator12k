@@ -1,6 +1,6 @@
 # [\#Liberator12k Manual](../..//README.md)
 
 ## Platform Components
-* [Lower](Lower.html)
-* [LowerMount](LowerMount.html)
-* [Trigger](Trigger.html)
+* [Lower](Lower.md)
+* [LowerMount](LowerMount.md)
+* [Trigger](Trigger.md)

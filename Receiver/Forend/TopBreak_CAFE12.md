@@ -1,7 +1,7 @@
 # [\#Liberator12k Manual](../../README.md)
 ## Platform Configuration: CAFE12
 ### Cheap As Fuck Edition 12ga
-A 12ga [Top Break](TopBreak.html) variant based on the venerable pipe shotgun.
+A 12ga [Top Break](TopBreak.md) variant based on the venerable pipe shotgun.
 
 This is the gun I set out to make when I started the project; better than a
 slamfire in two big ways: It has an extractor and a trigger. Additionally, the
@@ -46,10 +46,10 @@ barrel isn't a separate piece you need 3 hands to reload. Since it's built with
 ### Required Components
 | Part | Preview |
 |-|-|
-| [Frame](../Frame.html) | ![Frame](../Frame_thumb.png) |
-| [Stock](../Stock.html) | ![Stock](../Stock_thumb.png) |
-| [Lower](../Lower/Lower.html) | ![Lower](../Lower/Lower_thumb.png) |
-| [LowerMount](../Lower/LowerMount.html) | ![LowerMount](../Lower/LowerMount_thumb.png) |
-| [Trigger](../Lower/Trigger.html) | ![Trigger](../Lower/Trigger_thumb.png) |
-| [FCG](../FCG.html) | ![FCG](../FCG_thumb.png) |
+| [Frame](../Frame.md) | ![Frame](../Frame_thumb.png) |
+| [Stock](../Stock.md) | ![Stock](../Stock_thumb.png) |
+| [Lower](../Lower/Lower.md) | ![Lower](../Lower/Lower_thumb.png) |
+| [LowerMount](../Lower/LowerMount.md) | ![LowerMount](../Lower/LowerMount_thumb.png) |
+| [Trigger](../Lower/Trigger.md) | ![Trigger](../Lower/Trigger_thumb.png) |
+| [FCG](../FCG.md) | ![FCG](../FCG_thumb.png) |
 

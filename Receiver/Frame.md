@@ -35,9 +35,9 @@ The basic universal receiver, but now featuring two large frame bolts to support
 | ![Frame_Receiver.stl](Frame_Receiver_thumb.png)<br>[Frame_Receiver.stl](Frame_Receiver.stl) | Standard       | 272g     | 1d3h59m |
 
 ### Components
- * ![Lower](Lower_thumb.png)<br>[Lower](Lower.html)
- * ![Trigger](Trigger_thumb.png)<br>[Trigger](Trigger.html)
- * ![Receiver](LowerMount_thumb.png)<br>[LowerMount](LowerMount.html)
+ * ![Lower](Lower_thumb.png)<br>[Lower](Lower.md)
+ * ![Trigger](Trigger_thumb.png)<br>[Trigger](Trigger.md)
+ * ![Receiver](LowerMount_thumb.png)<br>[LowerMount](LowerMount.md)
 
 ### Vitamins
 
