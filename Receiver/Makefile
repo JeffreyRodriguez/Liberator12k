@@ -5,8 +5,8 @@ Frame_STL=Frame_Receiver.stl
 Stock_STL=Stock.stl Stock_Buttpad.stl \
           Stock_Latch.stl Stock_LatchPlunger.stl Stock_LatchRetainer.stl\
 					Stock_LatchButton_Left.stl Stock_LatchButton_Right.stl
-FCG_STL=FCG_ChargingHandle.stl FCG_Disconnector.stl FCG_Housing.stl \
-        FCG_Hammer.stl FCG_HammerTail.stl
+FCG_STL=FCG_ChargingHandle.stl FCG_Disconnector.stl FCG_FiringPinCollar.stl \
+        FCG_Housing.stl FCG_Hammer.stl FCG_HammerHead.stl FCG_HammerTail.stl
 
 # Subdirs
 Forend Lower: FORCE
