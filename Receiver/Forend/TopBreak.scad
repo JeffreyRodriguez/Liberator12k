@@ -432,11 +432,6 @@ module TopBreak_ReceiverFront(debug=false, alpha=1) {
   }
 }
 
-module TopBreak_ReceiverFront_print() {
-  rotate([0,-90,0]) translate([--TopBreak_ReceiverFrontLength(),0,0])
-  TopBreak_ReceiverFront();
-}
-
 module TopBreak_Forend(clearance=0.005, debug=false, alpha=1) {  
   // Branding text
   color("DimGrey", alpha) 
@@ -552,13 +547,6 @@ module TopBreak_Forend(clearance=0.005, debug=false, alpha=1) {
     ActionRod(length=ActionRodLength(), cutter=true);
   }
 }
-module TopBreak_Forend_print() {
-  rotate([0,90,0])
-  translate([-ForendLength(),0,0])
-  TopBreak_Forend();
-}
-
-
 module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, debug=false, alpha=1) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
@@ -634,11 +622,6 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, debu
 
 }
 
-module TopBreak_BarrelCollar_print() {
-  rotate([0,-90,0])
-  TopBreak_BarrelCollar();
-}
-
 module TopBreak_Extractor(cutter=false, clearance=0.015, chamferRadius=1/16, debug=false, alpha=1) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
@@ -701,11 +684,6 @@ module TopBreak_Extractor(cutter=false, clearance=0.015, chamferRadius=1/16, deb
   }
 }
 
-module TopBreak_Extractor_print() {
-  translate([0,0,-TopBreak_ExtractorZ()])
-  TopBreak_Extractor();
-}
-
 module TopBreak_Latch(debug=false, cutter=false, clearance=0.01, alpha=1) { 
   clear = cutter?clearance:0;
   clear2 = clear*2;
@@ -741,12 +719,6 @@ module TopBreak_Latch(debug=false, cutter=false, clearance=0.01, alpha=1) {
     }
   }
 }
-module TopBreak_Latch_print() {
-  rotate([0,90,0])
-  translate([-TopBreak_LatchLength(),0,-TopBreak_LatchZ()])
-  TopBreak_Latch();
-}
-
 module TopBreak_Foregrip(length=TopBreak_ForegripLength(), debug=false, alpha=1) {
   color("Tan",alpha) render() DebugHalf(enabled=debug)
   difference() {
@@ -756,13 +728,6 @@ module TopBreak_Foregrip(length=TopBreak_ForegripLength(), debug=false, alpha=1)
 
     Barrel(cutter=true);
   }
-}
-
-module TopBreak_Foregrip_print() {
-  rotate([0,90,0])
-  translate([-TopBreak_ForegripLength(),0,0])
-  translate([-(TopBreak_ForegripOffsetX()+ChargerTravel()),0,0])
-  TopBreak_Foregrip();
 }
 
 
@@ -868,20 +833,31 @@ if ($preview) {
 } else {
 
   if (_RENDER == "TopBreak_BarrelCollar")
-  TopBreak_BarrelCollar_print();
+  rotate([0,-90,0])
+  TopBreak_BarrelCollar();
 
   if (_RENDER == "TopBreak_ReceiverFront")
-  TopBreak_ReceiverFront_print();
+  rotate([0,-90,0])
+  translate([--TopBreak_ReceiverFrontLength(),0,0])
+  TopBreak_ReceiverFront();
 
   if (_RENDER == "TopBreak_Forend")
-  TopBreak_Forend_print();
+  rotate([0,90,0])
+  translate([-ForendLength(),0,0])
+  TopBreak_Forend();
 
   if (_RENDER == "TopBreak_Foregrip")
-  TopBreak_Foregrip_print();
+  rotate([0,90,0])
+  translate([-TopBreak_ForegripLength(),0,0])
+  translate([-(TopBreak_ForegripOffsetX()+ChargerTravel()),0,0])
+  TopBreak_Foregrip();
 
   if (_RENDER == "TopBreak_Extractor")
-  TopBreak_Extractor_print();
+  translate([0,0,-TopBreak_ExtractorZ()])
+  TopBreak_Extractor();
 
   if (_RENDER == "TopBreak_Latch")
-  TopBreak_Latch_print();
+  rotate([0,90,0])
+  translate([-TopBreak_LatchLength(),0,-TopBreak_LatchZ()])
+  TopBreak_Latch();
 }
