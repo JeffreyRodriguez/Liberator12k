@@ -21,6 +21,8 @@ use <../../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 use <../../Vitamins/Pipe.scad>;
 use <../../Vitamins/Rod.scad>;
 
+use <../Components/Sightpost.scad>;
+
 use <../Lower/Lower.scad>;
 use <../Lower/LowerMount.scad>;
 
@@ -791,6 +793,12 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFron
 
     if (_SHOW_BARREL)
     Barrel();
+    
+    translate([BarrelLength(),0,0])
+    rotate([0,-90,0]) {
+      Sightpost(radius=1.06/2);
+      SightpostBolts(radius=1.06/2);
+    }
 
     // TopBreak_Extractor Spring
     %translate([PivotX()-PivotRadius()-WallPivot(),0,TopBreak_ExtractorZ()+TopBreak_ExtractorSpringRadius()])
