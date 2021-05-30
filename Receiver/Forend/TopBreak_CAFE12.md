@@ -51,4 +51,5 @@ barrel isn't a separate piece you need 3 hands to reload. Since it's built with
 | [Lower](../Lower/Lower.html) | ![Lower](../Lower/Lower_thumb.png) |
 | [LowerMount](../Lower/LowerMount.html) | ![LowerMount](../Lower/LowerMount_thumb.png) |
 | [Trigger](../Lower/Trigger.html) | ![Trigger](../Lower/Trigger_thumb.png) |
+| [FCG](../FCG.html) | ![FCG](../FCG_thumb.png) |
 
