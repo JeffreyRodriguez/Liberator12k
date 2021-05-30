@@ -71,7 +71,8 @@ GP_BOLT_CLEARANCE = 0.015;
 BARREL_SET_SCREW = "#8-32"; // ["M4", "#8-32"]
 BARREL_SET_SCREW_CLEARANCE = -0.05;
 
-BARREL_OUTSIDE_DIAMETER = 1.3251;
+BARREL_SLEEVE_DIAMETER = 1.3251;
+BARREL_OUTSIDE_DIAMETER = 1.06;
 BARREL_INSIDE_DIAMETER = 0.813;
 BARREL_CLEARANCE = 0.005;
 BARREL_LENGTH = 18;
@@ -99,6 +100,12 @@ assert(BarrelSetScrew(), "BarrelSetScrew() is undefined. Unknown BARREL_SET_SCER
 function GPBolt() = BoltSpec(GP_BOLT);
 assert(GPBolt(), "GPBolt() is undefined. Unknown GP_BOLT?");
 
+function BarrelSleeveRadius(clearance=0)
+    = BarrelSleeveDiameter(clearance*2)/2;
+
+function BarrelSleeveDiameter(clearance=0)
+    = BARREL_SLEEVE_DIAMETER+clearance;
+
 function BarrelRadius(clearance=0)
     = BarrelDiameter(clearance*2)/2;
 
@@ -113,14 +120,13 @@ function BarrelZ() = BARREL_Z; // -0.11 for .22LR rimfire
 
 // Settings: Dimensions
 function BarrelLength() = BARREL_LENGTH;
-function BarrelSleeveLength() = 4;
 function WallBarrel() = WALL_BARREL;
 
 function WallPivot() = 0.25;
 function PivotAngleBack() = -25;
 function PivotAngle() = PIVOT_ANGLE;
 function PivotX() = PIVOT_X;
-function PivotZ() = BarrelZ()-BarrelRadius();//PIVOT_Z;
+function PivotZ() = BarrelZ()-BarrelSleeveRadius();
 function PivotWidth() = PIVOT_WIDTH;
 function PivotRadius() = PIVOT_RADIUS;
 function PivotDiameter() = PivotRadius()*2;
@@ -142,8 +148,7 @@ function ForendLength() = FrameExtension(length=FRAME_BOLT_LENGTH)
                         
 function TopBreak_LatchTravel() = 0.3125;
 function ChargerTravel() = 1.75;
-function TopBreak_LatchCollarLength() = PivotX();//+(PivotRadius()*(sqrt(2)/2));
-//function TopBreak_LatchCollarLength() = ForendLength()+0.25;
+function TopBreak_LatchCollarLength() = PivotX();
 
 // Calculated: Dimensions
 function TopBreak_LatchSpringRadius() = TopBreak_LatchSpringDiameter()/2;
@@ -362,32 +367,38 @@ module PumpLockRod(cutter=false, clearance=0.008) {
          clearance=clear, teardrop=cutter, teardropAngle=180);
   }
 }
-
-module Barrel(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, length=BarrelLength(), clearance=BARREL_CLEARANCE, cartridgeRimThickness=RIM_WIDTH, cutter=false, alpha=1, debug=false) {
+module Barrel(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, length=BarrelLength(), clearance=BARREL_CLEARANCE, cartridgeRimThickness=RIM_WIDTH, sleeve=true, cutter=false, alpha=1, debug=false) {
 
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
   color("Silver") RenderIf(!cutter) DebugHalf(enabled=debug)
-  translate([(cutter?0:cartridgeRimThickness),0,BarrelZ()])
+  translate([0,0,BarrelZ()])
   difference() {
+    union() {
     
-    rotate([0,90,0])
-    cylinder(r=(od/2)+clear, h=length, $fn=60);
-
+      // Barrel
+      rotate([0,90,0])
+      cylinder(r=(od/2)+clear, h=BarrelLength(), $fn=60);
+      
+      // Barrel Sleeve
+      rotate([0,90,0])
+      cylinder(r=BarrelSleeveRadius()+clear, h=PivotX(), $fn=60);
+    }
+    
     if (!cutter) {
       
       // Hollow inside
       rotate([0,90,0])
       cylinder(r=(id/2)+clear, h=length);
       
-      // TopBreak_Extractor notch
+      // Extractor notch
       *#rotate([90,0,0])
       translate([0,-0.813*0.5,0])
       rotate(40)
       translate([TopBreak_ExtractorBitWidth()/4,0.813*0.5*0.1,-TopBreak_ExtractorBitWidth()/2])
       mirror([1,1,0])
-      cube([BarrelDiameter(), BarrelRadius(), TopBreak_ExtractorBitWidth()]);
+      cube([BarrelSleeveDiameter(), BarrelSleeveRadius(), TopBreak_ExtractorBitWidth()]);
     }
   }
 }
@@ -507,16 +518,22 @@ module TopBreak_Forend(clearance=0.005, debug=false, alpha=1) {
       }
     }
     
-    // Allow the barrel to be installed
+    // Cutout the bottom/back to allow the barrel to be installed
     translate([PivotX(), 0, PivotZ()])
     rotate([0,180+PivotAngleBack(),0]) rotate([90,0,0])
-    linear_extrude(BarrelDiameter()+(WallBarrel()*2)+(clearance*2), center=true) {
+    linear_extrude(BarrelSleeveDiameter()+(WallBarrel()*2)+(clearance*2), center=true) {
       rotate(-PivotAngle()+PivotAngleBack())
       translate([abs(PivotZ()),PivotZ()])
       square([PivotX()*3/2, abs(PivotZ())]);
       
       semidonut(major=PivotX()*3, minor=abs(PivotZ())*2, angle=PivotAngle()-PivotAngleBack());
     }
+    
+    
+    // Ensure the barrel and sleeve can pivot
+    for (A = [PivotAngleBack(), 0, PivotAngle()])
+    Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1)
+    Barrel(length=ForendLength()-PivotX(), cutter=true);
     
     // Clearance for the barrel collar
     difference() {
@@ -532,18 +549,27 @@ module TopBreak_Forend(clearance=0.005, debug=false, alpha=1) {
     }
     
     
+    // Cut a path through the full range of motion (Barrel Sleeve)
+    hull() for (A = [0, PivotAngle()])
+    Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1)
+    translate([PivotX(),0,0])
+    rotate([0,90,0])
+    cylinder(r=BarrelRadius()+clearance,
+             h=ForendLength()-PivotX(), $fn=80);
+    
+    
     // Cut a path through the full range of motion
     hull() for (A = [0, PivotAngle()])
     Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1)
     translate([PivotX(),0,0])
-    Barrel(length=ForendLength()-PivotX(), cutter=true);
+    rotate([0,90,0])
+    cylinder(r=BarrelRadius()+BARREL_CLEARANCE,
+             h=ForendLength()-PivotX(), $fn=80);
     
     // Cut a path through the full range of motion
     for (A = [0, PivotAngle()])
-    Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1) {
-      Barrel(length=ForendLength(), cutter=true);
-      TopBreak_BarrelCollar(rearExtension=2, cutter=true);
-    }
+    Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1)
+    TopBreak_BarrelCollar(rearExtension=2, cutter=true);
     
     // Printability allowance
     translate([ForendLength(),0,BarrelZ()])
