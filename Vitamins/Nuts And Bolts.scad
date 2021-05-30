@@ -208,7 +208,7 @@ module NutHeatsetLong(spec, teardrop=false, teardropAngle=0, extraLength=0) {
   // Extension
   if (extraLength > 0) {
     mirror([0,0,1])
-    linear_extrude(height=(clearance?capHeightExtra:ManifoldGap()))
+    linear_extrude(height=extraLength)
     if (teardrop) {
       rotate(teardropAngle)
       Teardrop(r=NutHeatsetLongMajorRadius(spec));
