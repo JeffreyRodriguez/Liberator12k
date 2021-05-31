@@ -16,24 +16,24 @@ MLOK_BOLT           = "#8-32";   // ["M4", "#8-32"]
 
 function MlokClusterLength() = 1.375;
 
-module MlokClusterBolts(innerRadius=1.35/2, boltSpec=BoltSpec(MLOK_BOLT), headType="none", nutType="heatset", length=0.5, cutter=false, clearance=0.005, teardrop=false) {
+module MlokClusterBolts(radius=1.35/2, boltSpec=BoltSpec(MLOK_BOLT), headType="none", nutType="heatset", length=0.5, cutter=false, clearance=0.005, teardrop=false) {
   
   assert(boltSpec, "boltSpec is undefined. Unknown MLOK_BOLT?");
   
   color("Silver") RenderIf(!cutter)
   for (Z = [-UnitsMetric(10),UnitsMetric(10)])
-  translate([0,-innerRadius,MlokClusterLength()/2-Z])
+  translate([0,-radius,MlokClusterLength()/2-Z])
   rotate([90,0,0])
   NutAndBolt(bolt=boltSpec,
              boltLength=0.75+ManifoldGap(2),
              head=headType,
-             nut=nutType, nutHeightExtra=(cutter?innerRadius:0),
+             nut=nutType, nutHeightExtra=(cutter?radius:0),
              teardrop=cutter&&teardrop, teardropAngle=90,
              clearance=cutter?clearance:0);
 }
 
 module MlokCluster(boltSpec=BoltSpec(MLOK_BOLT),
-                  innerRadius=1.35/2, width=0.75,
+                  radius=1.35/2, width=0.75,
                   wall=0.1875, extension=0.375+(3/32),
                   length=MlokClusterLength(),
                   debug=false,
@@ -44,23 +44,23 @@ assert(boltSpec, "boltSpec is undefined. Unknown MLOK_BOLT?");
   color("Tan", alpha) render()
   difference() {
     hull() {
-      ChamferedCylinder(r1=innerRadius+wall, r2=1/16, h=length);
+      ChamferedCylinder(r1=radius+wall, r2=1/16, h=length);
     
       for (R = [0,90,-90,180]) rotate(R)  
-      translate([-width/2,-innerRadius-extension,0])
+      translate([-width/2,-radius-extension,0])
       ChamferedCube([width, extension, length], r=1/16);
     }
     
-    ChamferedCircularHole(r1=innerRadius, r2=1/16, h=length);
+    ChamferedCircularHole(r1=radius, r2=1/16, h=length);
     
     for (R = [0,90,-90,180]) rotate(R)
-    MlokClusterBolts(innerRadius=innerRadius, cutter=true, teardrop=true);
+    MlokClusterBolts(radius=radius, cutter=true, teardrop=true);
     
     // Slot
     mlokSlotWidth = UnitsMetric(7)+0.005;
     mlokSlotDepth = 0.0625;
     for (R = [0,-90,90,180]) rotate(R)
-    translate([-(mlokSlotWidth/2), -innerRadius-extension, 0])
+    translate([-(mlokSlotWidth/2), -radius-extension, 0])
     cube([mlokSlotWidth, mlokSlotDepth, length]);
   }
 }
