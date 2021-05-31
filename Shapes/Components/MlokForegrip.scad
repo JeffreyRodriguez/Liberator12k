@@ -13,15 +13,17 @@ use <../../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 
 // Picatinny rail mounts on top of receiver w/ M-LOK
 MLOK_BOLT           = "#8-32";   // ["M4", "#8-32"]
-function MlokForegripLength() = 2;
+function MlokForegripLength() = 2.5;
+function MlokForegripBoltLength() = 1.5;
+function MlokForegripBoltExtension() = 0.375+(1/16);
 
-module MlokForegripBolts(boltSpec=BoltSpec(MLOK_BOLT), headType="flat", nutType="none", length=1.5, cutter=false, clearance=0.005, teardrop=false) {
+module MlokForegripBolts(boltSpec=BoltSpec(MLOK_BOLT), headType="flat", nutType="none", length=MlokForegripBoltLength(), cutter=false, clearance=0.005, teardrop=false) {
   
   assert(boltSpec, "boltSpec is undefined. Unknown MLOK_BOLT?");
   
   color("Silver") RenderIf(!cutter)
   for (Y = [-UnitsMetric(10),UnitsMetric(10)])
-  translate([0,Y,MlokForegripLength()+(1/16)+(0.1875)])
+  translate([0,Y,MlokForegripLength()+MlokForegripBoltExtension()])
   mirror([0,0,1])
   NutAndBolt(bolt=boltSpec,
              boltLength=length+ManifoldGap(2),
