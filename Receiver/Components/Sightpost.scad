@@ -28,7 +28,7 @@ SIGHTPOST_BOLT = "#8-32";   // ["M4", "#8-32"]
 function SightpostBolt() = BoltSpec(SIGHTPOST_BOLT);
 assert(SightpostBolt(), "SightpostBolt() is undefined. Unknown SIGHTPOST_BOLT?");
 
-function SightZ() = ReceiverTopZ();
+function SightZ() = ReceiverTopZ()+0.5;
 
 module SightpostBolts(height=SightZ(), radius=SIGHTPOST_DIAMETER/2, length=2, cutter=false, clearance=0.005) {
   
@@ -39,7 +39,7 @@ module SightpostBolts(height=SightZ(), radius=SIGHTPOST_DIAMETER/2, length=2, cu
   NutAndBolt(bolt=SightpostBolt(),
              boltLength=height-radius+ManifoldGap(2),
              head="socket",
-             nut="none", nutHeightExtra=(cutter?radius:0),
+             nut="heatset-long",  nutBackset=0.5, nutHeightExtra=(cutter?radius+0.5:0),
              teardrop=cutter, teardropAngle=180,
              clearance=cutter?-clearance:0);
   
