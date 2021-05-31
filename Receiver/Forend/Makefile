@@ -3,18 +3,15 @@ ANIMATE_BIN=../../bin/animate.sh
 TopBreak_STL=TopBreak_ReceiverFront.stl \
              TopBreak_Forend.stl \
              TopBreak_BarrelCollar.stl \
-						 TopBreak_Extractor.stl \
-						 TopBreak_Latch.stl
+						 TopBreak_Extractor.stl
 TopBreak_CAFE12_STL=TopBreak_CAFE12/TopBreak_ReceiverFront.stl \
            TopBreak_CAFE12/TopBreak_Forend.stl \
            TopBreak_CAFE12/TopBreak_BarrelCollar.stl \
-					 TopBreak_CAFE12/TopBreak_Extractor.stl \
-					 TopBreak_CAFE12/TopBreak_Latch.stl
+					 TopBreak_CAFE12/TopBreak_Extractor.stl
 TopBreak_FP37_STL=TopBreak_FP37/TopBreak_ReceiverFront.stl \
 				 TopBreak_FP37/TopBreak_Forend.stl \
 				 TopBreak_FP37/TopBreak_BarrelCollar.stl \
-				 TopBreak_FP37/TopBreak_Extractor.stl \
-				 TopBreak_FP37/TopBreak_Latch.stl
+				 TopBreak_FP37/TopBreak_Extractor.stl
 Revolver_STL=Revolver_ReceiverFront.stl \
              Revolver_FrameSpacer.stl \
 						 Revolver_BarrelSupport.stl \
