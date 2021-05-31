@@ -474,7 +474,7 @@ module TopBreak_Forend(clearance=0.005, debug=false, alpha=1) {
     linear_extrude(BarrelSleeveDiameter()+(WallBarrel()*2)+(clearance*2), center=true) {
       rotate(-PivotAngle()+PivotAngleBack())
       translate([abs(PivotZ()),PivotZ()])
-      square([PivotX()*3/2, abs(PivotZ())]);
+      square([PivotX()*3/2, abs(PivotZ())+ManifoldGap()]);
       
       semidonut(major=PivotX()*3, minor=abs(PivotZ())*2, angle=PivotAngle()-PivotAngleBack());
     }
