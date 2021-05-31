@@ -152,6 +152,7 @@ function TopBreak_ForegripLength() = 4.625;
 function BarrelOffsetZ() = 0; // -0.11 for .22LR rimfire
 
 function TopBreak_ExtractorWall() = 0.125;
+function TopBreak_ExtractorWallBottom() = 0.1875;
 function TopBreak_ExtractorWidth() = 0.65;
 function TopBreak_ExtractorHeight() = 0.65;
 function TopBreak_ExtractorTravel() = 0.3125;
