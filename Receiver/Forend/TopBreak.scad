@@ -750,7 +750,7 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFron
     if (_SHOW_BARREL)
     Barrel();
     
-    translate([BarrelLength(),0,0])
+    translate([BarrelLength()-1,0,0])
     rotate([0,-90,0]) {
       Sightpost(radius=1.06/2);
       SightpostBolts(radius=1.06/2);
