@@ -640,15 +640,6 @@ module FCG_HammerTail(clearance=UnitsImperial(0.01), debug=false, alpha=1) {
                      ReceiverTopSlotHeight()-ReceiverTopSlotHorizontalHeight()-clearance],
                     r=1/16, teardropFlip=[true, true, true]);
       
-      // Charging Handle Stop
-      translate([FCG_HammerTailMinX,
-                 -(0.5/2),
-                 0])
-      ChamferedCube([ReceiverBackLength(),
-                     (0.5),
-                     ReceiverTopZ()-clearance],
-                    r=1/16, teardropFlip=[true, true, true]);
-      
       // Wings
       translate([FCG_HammerTailMinX,
                  -(ReceiverIR()+ReceiverSideSlotDepth()-clearance),
