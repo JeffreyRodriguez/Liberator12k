@@ -24,13 +24,12 @@ Revolver_STL=Revolver_ReceiverFront.stl \
 						 Revolver_ForendSpindleToggleLinkage.stl \
 						 Revolver_ForendSpindleToggleHandle.stl
 PumpAR15_STL=
-Trigun_STL=
 
 
 .SECONDEXPANSION:
-all: index.html TopBreak Revolver PumpAR15 Trigun TopBreak_CAFE12 TopBreak_FP37
+all: index.html TopBreak Revolver PumpAR15 TopBreak_CAFE12 TopBreak_FP37
 
-TopBreak Revolver PumpAR15 Trigun: $$($$@_STL) $$@.html $$@.mp4 $$@.png
+TopBreak Revolver PumpAR15: $$($$@_STL) $$@.html $$@.mp4 $$@.png
 
 TopBreak_CAFE12.html: TopBreak_CAFE12.md
 	$(MDBIN) $(basename $@).md | sed 's/\.md/\.html/' > $@
