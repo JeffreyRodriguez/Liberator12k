@@ -634,6 +634,9 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, debu
       TopBreak_ExtractorRetainer(cutter=true, teardrop=true);
 
       Barrel(cutter=true);
+      
+      translate([3.5,0,0])
+      ReceiverMlokBolts(cutter=true, teardrop=true, teardropAngle=0);
     }
   }
 
@@ -646,7 +649,7 @@ module TopBreak_Extractor(cutter=false, clearance=0.015, chamferRadius=1/16, deb
   color("Olive", alpha)
   RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
-    PivotClearanceCut(cut=!cutter)
+    PivotClearanceCut(cut=!cutter, clearance=0)
     union() {
 
       // Long lower section
