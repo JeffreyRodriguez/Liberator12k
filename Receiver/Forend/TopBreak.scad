@@ -133,11 +133,6 @@ function PivotDiameter() = PivotRadius()*2;
 function PivotClearance() = 0.01;
 
 function ActionRodLength() = 10;
-function TopBreak_LatchGuideWidth() = 0.125;
-function TopBreak_LatchGuideHeight() = 0.1875;
-function TopBreak_LatchSpringLength() = 2;
-function TopBreak_LatchSpringDiameter() = 0.65;
-
 function FrameBoltLength() = FRAME_BOLT_LENGTH;
 
 function TopBreak_ReceiverFrontLength() = 0.5;
@@ -146,14 +141,7 @@ function ForendLength() = FrameExtension(length=FRAME_BOLT_LENGTH)
                         - 0.5
                         -TopBreak_ReceiverFrontLength();
                         
-function TopBreak_LatchTravel() = 0.3125;
 function ChargerTravel() = 1.75;
-function TopBreak_LatchCollarLength() = PivotX();
-
-// Calculated: Dimensions
-function TopBreak_LatchSpringRadius() = TopBreak_LatchSpringDiameter()/2;
-function TopBreak_LatchSupportWidth() = (TopBreak_LatchSpringRadius()+TopBreak_LatchWall())*2;
-
 
 // Calculated: Lengths
 function TopBreak_ForegripOffsetX() = 6+ChargerTravel();
@@ -190,17 +178,6 @@ function TopBreak_ExtractorHousingWidth() = TopBreak_ExtractorWidth()
 function TopBreak_BarrelCollarBottomZ() = TopBreak_ExtractorZ()
                                         - TopBreak_ExtractorWallBottom();
 
-
-function TopBreak_LatchGuideZ() = TopBreak_ExtractorZ();
-function TopBreak_LatchHeight() = 1;
-function TopBreak_LatchWall() = 0.1875;
-function TopBreak_LatchWidth() = TopBreak_ExtractorHousingWidth()+(TopBreak_LatchGuideWidth()*2)+(TopBreak_LatchWall()*2);
-function TopBreak_LatchZ() = TopBreak_BarrelCollarBottomZ()-TopBreak_LatchWall()-0.25;
-function TopBreak_LatchLength() = ActionRodWidth()
-                       + (ActionRodWidth() + TopBreak_LatchWall())
-                       + ChargerTravel()
-                       + (ActionRodWidth() + TopBreak_LatchWall());
-                       
 // Pivot modules
 module PivotClearanceCut(cut=true, width=PivotWidth(), depth=2,
                          clearance=0.005) {
@@ -236,7 +213,7 @@ module PivotOuterBearing(intersect=true, cutter=false, clearance=0.01) {
     // Square off front and bottom edges
     if (intersect)
     translate([0, -(PivotWidth()/2)-clear, TopBreak_BarrelCollarBottomZ()])
-    ChamferedCube([TopBreak_LatchCollarLength(),
+    ChamferedCube([PivotX(),
                    PivotWidth()+clear2,
                    abs(TopBreak_BarrelCollarBottomZ())+FrameTopZ()+clear],
                    r=1/16);
@@ -388,7 +365,7 @@ module TopBreak_LatchGuides(cutter=false, clearance=0.01) {
   translate([0,
              -(TopBreak_ExtractorHousingWidth()/2)-TopBreak_LatchGuideWidth()-clear,
              TopBreak_LatchGuideZ()-clear])
-  ChamferedCube([TopBreak_LatchCollarLength(),
+  ChamferedCube([PivotX(),
                  TopBreak_ExtractorHousingWidth()+(TopBreak_LatchGuideWidth()*2)+clear2,
                  TopBreak_LatchGuideHeight()+clear2],
                 r=1/16);
@@ -573,12 +550,12 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, debu
         translate([RIM_WIDTH,0,BarrelZ()])
         rotate([0,90,0])
         ChamferedCylinder(r1=BarrelSleeveRadius()+WallBarrel()+clear,
-                          h=TopBreak_LatchCollarLength()-RIM_WIDTH+clear,
+                          h=PivotX()-RIM_WIDTH+clear,
                           r2=1/16, $fn=100);
         
         // Extractor support
         translate([RIM_WIDTH-rearExtension-clear,-(TopBreak_ExtractorHousingWidth()/2)-clear,TopBreak_BarrelCollarBottomZ()-clear])
-        ChamferedCube([TopBreak_LatchCollarLength()-RIM_WIDTH+rearExtension+clear2,
+        ChamferedCube([PivotX()-RIM_WIDTH+rearExtension+clear2,
                        TopBreak_ExtractorHousingWidth()+clear2,
                        abs(TopBreak_BarrelCollarBottomZ())+clear],
                        r=1/16, teardropFlip=[false,true,true]);
@@ -620,7 +597,7 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, debu
       
       // Pic rail slot
       *translate([0,-(UnitsImperial(0.617)/2)-clear,FrameTopZ()-0.125])
-      cube([TopBreak_LatchCollarLength(),
+      cube([PivotX(),
             UnitsImperial(0.617)+clear2,
             FrameTopZ()+clear]);
 
@@ -794,16 +771,6 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFron
     if (_SHOW_FOREGRIP)
     translate([(0.5*lockFactor)-(ChargerTravel()*chargeFactor),0,0])
     TopBreak_Foregrip();
-    
-    *TopBreak_LatchSpring(compress=(0.5*lockFactor), alpha=0.25);
-
-    if (_SHOW_TOPBREAK_LATCH)
-    translate([0.5*lockFactor,0,0]) {
-      TopBreak_Latch(debug=_CUTAWAY_TOPBREAK_LATCH, alpha=_ALPHA_TopBreak_Latch);
-      TopBreak_LatchScrews();
-      
-      *TopBreak_LatchRetainer();
-    }
 
   }
   
@@ -875,9 +842,4 @@ if ($preview) {
   if (_RENDER == "TopBreak_Extractor")
   translate([0,0,-TopBreak_ExtractorZ()])
   TopBreak_Extractor();
-
-  if (_RENDER == "TopBreak_Latch")
-  rotate([0,90,0])
-  translate([-TopBreak_LatchLength(),0,-TopBreak_LatchZ()])
-  TopBreak_Latch();
 }
