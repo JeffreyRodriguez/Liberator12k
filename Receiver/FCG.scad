@@ -243,7 +243,8 @@ module FiringPin(radius=FiringPinRadius(), cutter=false, clearance=FIRING_PIN_CL
       
       // Pin
       cylinder(r=radius+clear,
-               h=FiringPinLength()+(cutter?FiringPinTravel():0)+ManifoldGap());
+               h=FiringPinLength()
+                +(cutter?FiringPinTravel():0)+ManifoldGap());
       
       // Head
       cylinder(r=(0.3/2)+clear,
@@ -429,7 +430,7 @@ module FCG_FiringPinCollar(cutter=false, clearance=FIRING_PIN_CLEARANCE, templat
           translate([-FiringPinTravel()-(1/8),0,0])
           rotate([0,90,0])
           cylinder(r=flareRadius+clear,
-                   h=(cutter?FiringPinTravel():(1/4))+ManifoldGap(2));
+                   h=(cutter?(1/4):0.125+ManifoldGap(2)));
         }
         
         // Square it off
