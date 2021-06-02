@@ -67,8 +67,8 @@ assert(boltSpec, "boltSpec is undefined. Unknown MLOK_BOLT?");
 if ($preview) {
   MlokClusterBolts();
 
-  MlokCluster(doRender=true, debug=false);
+  MlokCluster(debug=false);
 } else {
   
-  MlokCluster(doRender=true, debug=false);
+  MlokCluster(debug=false);
 }
