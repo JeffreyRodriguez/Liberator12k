@@ -84,9 +84,9 @@ function FrameExtension(length=FrameBoltLength()) = length
 // * Vitamins *
 // ************
 module FrameBoltIterator() {
-    for (Y = [FrameBoltY(),-FrameBoltY()])
+    for (M = [0,1]) mirror([0,M,0])
     translate([-FrameReceiverLength()-FrameBackLength()-ManifoldGap(),
-               Y, FrameBoltZ()])
+               FrameBoltY(), FrameBoltZ()])
     rotate([0,-90,0])
     children();
 }
@@ -96,9 +96,12 @@ module FrameBolts(length=FrameBoltLength(), debug=false, cutter=false, clearance
 
   color("Silver", alpha) RenderIf(!cutter)
   DebugHalf(enabled=debug) {
+    translate([0.25,0,0])
     FrameBoltIterator()
+    rotate(-11)
     NutAndBolt(bolt=FrameBolt(), boltLength=length,
-         head=(cutter?"none":"hex"), nut=(cutter?"none":"hex"), clearance=clear,
+         head="hex", capHeightExtra=(cutter?FrameBackLength()*2:0),
+         nut=(cutter?"none":"hex"), clearance=clear,
          capOrientation=true);
   }
 }
@@ -168,11 +171,27 @@ module Receiver_LargeFrame(doRender=true, debug=false, alpha=1) {
         
         mirror([1,0,0])
         FrameSupport(length=FrameReceiverLength()+FrameBackLength(),
+                     chamferFront=true, teardropFront=true,
                      chamferBack=true);
 
         ReceiverTopSegment(length=FrameReceiverLength());
       }
-    }
+      
+      // Bolt head support
+      hull() {
+        FrameBoltIterator()
+        mirror([0,0,1])
+        ChamferedCylinder(r1=0.5+(1/32), r2=1/16,
+                          h=0.3125, $fn=50,
+                          teardropBottom=false);
+    
+        translate([-FrameReceiverLength()+0.125,0,0])
+        mirror([1,0,0])
+        FrameSupport(length=FrameBackLength()+0.125,
+                     chamferFront=true, 
+                     chamferBack=true);
+      }
+  }
     
     ReceiverMlokSlot();
     ReceiverMlokBolts(cutter=true, teardrop=true);
