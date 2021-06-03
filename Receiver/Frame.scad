@@ -27,6 +27,8 @@ _SHOW_RECEIVER_RODS = true;
 
 _CUTAWAY_RECEIVER = false;
 
+_ALPHA_FRAME = 1;  // [0:0.1:1]
+
 /* [Vitamins] */
 FRAME_BOLT = "1/2\"-13"; // ["1/2\"-13"]
 FRAME_BOLT_Y = 1.25;
@@ -146,7 +148,7 @@ module FrameSpacer_print() {
   FrameSpacer();
 }
 
-module Receiver_LargeFrame(doRender=true, debug=false) {
+module Receiver_LargeFrame(doRender=true, debug=false, alpha=1) {
   
   topCoverHeight = 1;
   
@@ -158,7 +160,7 @@ module Receiver_LargeFrame(doRender=true, debug=false) {
   linear_extrude(height=LogoTextDepth(), center=true)
   text(FRAME_BRANDING_TEXT, size=LogoTextSize(), font="Impact", halign="center", valign="center");
   
-  color("Tan")
+  color("Tan", alpha)
   RenderIf(doRender) DebugHalf(enabled=debug)
   difference() {
     Receiver(doRender=false) {
@@ -189,10 +191,11 @@ module Receiver_LargeFrame_print() {
 // * Assemblies *
 // **************
 module Receiver_LargeFrameAssembly(length=FrameBoltLength(), frameBolts=true, debug=_CUTAWAY_RECEIVER, alpha=1) {
-  Receiver_LargeFrame(debug=debug);
   
   if (frameBolts)
   FrameBolts(length=length, debug=debug, alpha=alpha);
+  
+  Receiver_LargeFrame(debug=debug, alpha=_ALPHA_FRAME);
 }
 
 scale(25.4)
