@@ -5,6 +5,7 @@ use <../../Meta/Resolution.scad>;
 use <../../Meta/RenderIf.scad>;
 
 use <../Chamfer.scad>;
+use <../MLOK.scad>;
 
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec.scad>;
@@ -14,9 +15,9 @@ use <../../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 // Picatinny rail mounts on top of receiver w/ M-LOK
 MLOK_BOLT           = "#8-32";   // ["M4", "#8-32"]
 
-function MlokClusterLength() = 1.375;
+function MlokClusterLength() = 2;
 
-module MlokClusterBolts(radius=1.35/2, boltSpec=BoltSpec(MLOK_BOLT), headType="none", nutType="heatset", length=0.5, cutter=false, clearance=0.005, teardrop=false) {
+module MlokClusterBolts(radius=1.35/2, boltSpec=BoltSpec(MLOK_BOLT), headType="none", nutType="none", length=0.5, cutter=false, clearance=0.005, teardrop=false) {
   
   assert(boltSpec, "boltSpec is undefined. Unknown MLOK_BOLT?");
   
@@ -27,7 +28,7 @@ module MlokClusterBolts(radius=1.35/2, boltSpec=BoltSpec(MLOK_BOLT), headType="n
   NutAndBolt(bolt=boltSpec,
              boltLength=0.75+ManifoldGap(2),
              head=headType,
-             nut=nutType, nutHeightExtra=(cutter?radius:0),
+             nut=nutType,
              teardrop=cutter&&teardrop, teardropAngle=90,
              clearance=cutter?clearance:0);
 }
@@ -53,15 +54,17 @@ assert(boltSpec, "boltSpec is undefined. Unknown MLOK_BOLT?");
     
     ChamferedCircularHole(r1=radius, r2=1/16, h=length);
     
-    for (R = [0,90,-90,180]) rotate(R)
-    MlokClusterBolts(radius=radius, cutter=true, teardrop=true);
+    //for (R = [0,90,-90,180]) rotate(R)
+    *MlokClusterBolts(radius=radius, cutter=true, teardrop=true);
     
     // Slot
-    mlokSlotWidth = UnitsMetric(7)+0.005;
-    mlokSlotDepth = 0.0625;
     for (R = [0,-90,90,180]) rotate(R)
-    translate([-(mlokSlotWidth/2), -radius-extension, 0])
-    cube([mlokSlotWidth, mlokSlotDepth, length]);
+    translate([0, -radius-extension, 0.25])
+    rotate([0,-90,0])
+    rotate([90,0,0]) {
+      MlokSlot(length-0.5);
+      MlokSlotBack(length-0.5);
+    }
   }
 }
 if ($preview) {

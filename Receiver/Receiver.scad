@@ -94,7 +94,7 @@ function ReceiverTakedownPinZ() = TensionRodBottomZ()+WallTensionRod();
 function ReceiverBottomZ() = TensionRodBottomZ()-WallTensionRod();
 function ReceiverTopZ() = TensionRodTopZ()+WallTensionRod()+0.625;
 
-function Receiver_MlokSideZ() = TensionRodBottomZ()+WallTensionRod()+0.125;
+function Receiver_MlokSideZ() = ReceiverBottomZ()+0.5;
 
 // ************
 // * Vitamins *
@@ -312,7 +312,23 @@ module Receiver(receiverLength=ReceiverLength(), doRender=true, alpha=1, debug=f
       ReceiverSegment(length=ReceiverLength()-ReceiverBackLength(),
                       chamferFront=true);
       
+      // M-LOK side slot support
+      translate([0,-1.125,Receiver_MlokSideZ()-(0.75/2)])
+      mirror([1,0,0])
+      ChamferedCube([UnitsMetric((32*2)+8)+1, 2.25,0.75], r=1/8,
+                     teardropFlip=[true,true,true]);
+      
       children();
+    }
+
+    // M-LOK Side slots
+    for (M = [0,1]) mirror([0,M,0])
+    for (X = [0,MlokSlotLength()+MlokSlotSpacing()]) translate([-X,0,0])
+    mirror([1,0,0])
+    translate([0.5,1.125,Receiver_MlokSideZ()])
+    rotate([-90,0,0]) {
+      MlokSlot();
+      MlokSlotBack();
     }
     
     ReceiverMlokSlot();
