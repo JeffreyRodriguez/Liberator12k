@@ -125,7 +125,7 @@ module ReceiverMlokBolts(headType="flat", nutType="heatset-long", length=0.5, cu
   
   // Top Bolts
   color("Silver") RenderIf(!cutter)
-  for (X = [0,UnitsMetric(60),UnitsMetric(80)])
+  for (X = [0,UnitsMetric(60)])
   translate([-0.75-X,0,ReceiverTopSlotHeight()+ReceiverSlotClearance()])
   NutAndBolt(bolt=MlokBolt(),
              boltLength=length+ManifoldGap(2),
