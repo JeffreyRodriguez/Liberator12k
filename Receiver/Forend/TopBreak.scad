@@ -386,7 +386,8 @@ module TopBreak_ReceiverFront(debug=false, alpha=1) {
         mirror([1,0,0])
         ReceiverTopSegment(length=1/16);
         
-        FrameSupport(length=TopBreak_ReceiverFrontLength());
+        FrameSupport(length=TopBreak_ReceiverFrontLength(),
+                     chamferFront=true, teardropFront=true);
       }
 
       hull() {
@@ -396,23 +397,32 @@ module TopBreak_ReceiverFront(debug=false, alpha=1) {
         mirror([0,0,1])
         ChamferedCube([TopBreak_ReceiverFrontLength(),
                        RecoilPlateWidth()+0.5,
-                       RecoilPlateHeight()+0.25],
-                      r=1/16);
+                       RecoilPlateHeight()-0.5],
+                      r=1/8, teardropFlip=[true,true,true]);
         
-        // Comfort square back
+        // Sling Support
+        translate([0,-(2)/2,0])
+        mirror([0,0,1])
+        ChamferedCube([TopBreak_ReceiverFrontLength(),
+                       2,
+                       2.5],
+                      r=1/8, teardropFlip=[true,true,true]);
+        
+        // Match the lower
         translate([0,-(1.25/2),LowerOffsetZ()-LowerGuardHeight()])
         ChamferedCube([1/4, 1.25, LowerGuardHeight()], r=1/16,
                       teardropFlip=[true, true, true]);
-        
-        // Comfort rounded front edge
-        translate([0,0,LowerOffsetZ()-LowerGuardHeight()+(1)])
-        rotate([0,90,0])
-        ChamferedCylinder(r1=(1/2), h=TopBreak_ReceiverFrontLength(), r2=1/4);
         
       }
     }
     
     FrameBolts(cutter=true);
+    
+    // Sling slot
+    for (M = [0,1]) mirror([0,M,0])
+    translate([0,-0.625-(3/16),LowerOffsetZ()-1.25])
+    rotate([11,0,0]) rotate([0,-90,0])
+    ChamferedSquareHole([1.25,3/32], 0.5, corners=false, chamferRadius=1/32, center=false);
 
     translate([-TopBreak_ReceiverFrontLength(),0,0]) {
       RecoilPlate(cutter=true);
