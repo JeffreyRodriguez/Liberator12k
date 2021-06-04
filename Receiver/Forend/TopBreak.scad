@@ -494,20 +494,21 @@ module TopBreak_Forend(clearance=0.005, debug=false, alpha=1) {
     
     
     // Ensure the barrel and sleeve can pivot
-    for (A = [PivotAngleBack(), 0, PivotAngle()])
+    for (A = [0, PivotAngle()])
     Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1)
     Barrel(length=ForendLength()-PivotX(), cutter=true);
     
     // Clearance for the barrel collar
     difference() {
       hull()
-      for (A = [PivotAngleBack(), 0, PivotAngle()])
+      for (A = [0, PivotAngle()])
       Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1)
       translate([-1,0,0])
       rotate([0,90,0])
-      ChamferedCylinder(r1=BarrelRadius()+WallBarrel()+clearance,
+      ChamferedCylinder(r1=BarrelRadius()+clearance,
                         h=PivotX()+1,
                         r2=1/16, $fn=100);
+      
       PivotInnerBearing(cutter=true);
     }
     
