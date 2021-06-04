@@ -325,15 +325,18 @@ module RecoilPlate(spindleZ=-1, contoured=true, cutter=false, debug=false, alpha
     
     // Contoured or simplified (rectangular) plate
     if (contoured) {
+      translate([0.5-RecoilPlateLength()-clear,0,0])
+      rotate([0,90,0])
+      linear_extrude(RecoilPlateLength()+clear, center=false)
+      offset(r=(cutter?0.007:0))
       hull() {
-        translate([0.5-RecoilPlateLength()-clear,0,0])
-        mirror([1,0,0])
-        ReceiverSegment(length=RecoilPlateLength()+clear2, highTop=false);
+        projection()
+        rotate([0,-90,0])
+        ReceiverSegment(highTop=false);
       
         // 12ga cylinder spindle support
-        translate([0.5-RecoilPlateLength()-clear,0,-1])
-        rotate([0,90,0])
-        cylinder(r=0.375+clear2, h=RecoilPlateLength());
+        translate([1,0])
+        circle(r=0.375+clear2);
       }
     } else {
       translate([0.5-RecoilPlateLength()-clear,-1-clear,ReceiverBottomZ()-0.25-clear])
@@ -356,8 +359,8 @@ module RecoilPlate(spindleZ=-1, contoured=true, cutter=false, debug=false, alpha
       RecoilPlateBolts(cutter=true);
       
       // ZZR cylinder spindle
-      translate([0.5-RecoilPlateLength(),0,-1])
-      rotate([0,90,0])
+      translate([0,0,-1])
+      rotate([0,-90,0])
       cylinder(r=5/16/2, h=RecoilPlateLength());
     }
   }
