@@ -78,14 +78,14 @@ assert(Stock_LatchPivotBolt(), "Stock_LatchPivotBolt() is undefined. Unknown STO
 function Stock_LatchBodyBolt() = BoltSpec(STOCK_LATCH_BOLT);
 assert(Stock_LatchBodyBolt(), "Stock_LatchBodyBolt() is undefined. Unknown STOCK_LATCH_BOLT?");
 
-function StockLength() = TensionBoltLength()-ReceiverLength()-0.22;
-//function StockLength() = 2;
-echo("StockLength", StockLength());
 function ButtpadSleeveLength() = 1;
 function ButtpadLength() = 3;
 function ButtpadWall() = 0.1875;
+
+function StockLength() = TensionBoltLength()-ReceiverLength()-0.125;
 function ButtpadX() = -(ReceiverLength()+StockLength());
-function Stock_LatchLength() = abs(ButtpadX()-StockButtonPivotX)+StockButtonPivotWall+0.375+0.0625;
+function Stock_LatchLength() = abs(ButtpadX()-StockButtonPivotX)
+                             + StockButtonPivotWall+0.375+0.0625;
 
 // ************
 // * Vitamins *

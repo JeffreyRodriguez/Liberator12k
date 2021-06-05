@@ -56,8 +56,3 @@ Allows customizing some of the parameters of a model. Useful for customizing.
 ![Customizer Branding Section](.manual/customizer_branding.png)
 
 Control the branding text by model.
-
-## Print Settings
-Designed to work in either PLA or ABS. If you try other filaments, let me know.
-Bigger nozzles print *much faster*, 20x difference between 0.4mm and 1.5mm.
-Almost everything prints the same: 3mm thick walls, ceilings, floors and 50% infill.

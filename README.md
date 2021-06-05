@@ -1,31 +1,35 @@
-# [\#Liberator12k Manual](README.md)
-## [Liberator12k.com](https://Liberator12k.com)
+# [Liberator12k.com](https://Liberator12k.com)
+## [\#Liberator12k Manual](README.md)
 
 [About the Project](About.md)
 
-[Developers / Advanced Users](Developers.md)
+[Printing Instructions](Printing.md)
 
-## Configurations
- * [Top Break](Receiver/Forend/TopBreak.md)
-   * [CAFE12](Receiver/Forend/TopBreak_CAFE12.md)
-   * [FP37](Receiver/Forend/TopBreak_FP37.md)
- * [Revolver](Receiver/Forend/Revolver.md)
-   * [ZZR 6x12](Receiver/Forend/Revolver_ZZR612.md)
- * Built with AR15 Parts
-   * [BARBB](Receiver/BARBB/BARBB.md)
-  
-### Common Components
+[Advanced Users / Developers](Developers.md)
+
+## \#Liberator12k Models
+| Model | Class |
+|-|-|
+|[CAFE12](Receiver/Forend/TopBreak_CAFE12.md)|[Top Break](Receiver/Forend/TopBreak.md)|
+|[FP37](Receiver/Forend/TopBreak_FP37.md)|[Top Break](Receiver/Forend/TopBreak.md)|
+|[ZZR 6x12](Receiver/Forend/Revolver_ZZR612.md)|[Revolver](Receiver/Forend/Revolver.md)|
+|[BARBB](Receiver/BARBB/BARBB.md)|Exhibition|
+
+
+## Common Components
  * [Receiver](Receiver/Receiver.md)
- * [Frame](Receiver/Frame.md) (A bigger receiver)
+ * [Frame Receiver](Receiver/Frame.md)
+ * [Trigger](Receiver/Lower/Trigger.md)
  * [Lower](Receiver/Lower/Lower.md)
  * [LowerMount](Receiver/Lower/LowerMount.md)
- * [Trigger](Receiver/Lower/Trigger.md)
- * [Stock](Receiver/Stock.md)
  * [Fire Control Group](Receiver/FCG.md)
+ * [Stock](Receiver/Stock.md)
+ 
+## Ammunition
+ * [Printed Shotgun Shells](Ammo/README.md)
  
 ## Tooling
-
-
+ * [ECM Rifling](Tooling/ECM/Rifling/README.md)
  
 
 ## Safety

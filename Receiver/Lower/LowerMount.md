@@ -25,5 +25,6 @@ mount into the lower. The rear mount has a longer T-lug than the front mount.
 | ![LowerMount_Front.stl](LowerMount_Front_thumb.png)<br>[LowerMount_Front.stl](LowerMount_Front.stl) | 3mm Walls 50% Infill | 22g      | 2h09m  |
 | ![LowerMount_Rear.stl](LowerMount_Rear_thumb.png)<br>[LowerMount_Rear.stl](LowerMount_Rear.stl)     | 3mm Walls 50% Infill | 23g      | 2h21m  |
 
-## Instructions
-No additional assembly required. See [Lower](Lower.md).
+## Assembly
+Install 6D nail into the rear mount, from the front to rear.
+See [Lower](Lower.md).

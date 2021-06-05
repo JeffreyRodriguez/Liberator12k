@@ -2,17 +2,16 @@ use <../../../Meta/Manifold.scad>;
 use <../../../Meta/Units.scad>;
 use <../../../Vitamins/Rod.scad>;
 
-BARREL_OD = 1.125+0.025;
 
-BARREL_ID = 0.813+0.015;
-BARREL_ID = 0.75+0.008;
+// Length of the barrel to be rifled
+BARREL_LENGTH = 2;
 
 // 0.44 Magnum
-BARREL_ID = 0.429-0.01;
-TWIST_RATE = 1/20;
+BARREL_ID = 0.429;
+TWIST_RATE = 0.05; // 1 in 20
 
 module ECM_RiflingChannel(outsideDiameter = BARREL_ID,
-                                length = 1,
+                                length = BARREL_LENGTH,
                              twistRate = TWIST_RATE,
                              twistSign = -1,
                            grooveCount = 6,
@@ -109,7 +108,7 @@ module ECM_RiflingMandrel(outsideDiameter = BARREL_ID,
                        grooveDepth=grooveDepth,
                        twistRate=twistRate,
                        outsideDiameter=outsideDiameter,
-                       electrified=false, intersect=true, supportHelix=false);
+                       intersect=true);
     
   }
 }

@@ -39,15 +39,15 @@ The printed parts are sandwiched and bolted together.
  * ![Trigger](Trigger_thumb.png)<br>[Trigger](Trigger.md)
  * ![LowerMount](LowerMount_thumb.png)<br>[LowerMount](LowerMount.md)
 
-## Instructions
+## Assembly
 
 #### Heatset Nuts
-1. Heatset the lower nuts into the left-side of the lower.
+Install the lower nuts into the left-side of the lower.
 
-### Assembly
+### Subassembly
 1. Insert the Front and Rear Mounts into the left-side of the lower.
 2. Slide the trigger between the mounts, and add the middle part of the lower.
 3. Stack the right-side of the lower and start screwing in the lower bolts.
 
 ### Finishing
-1. Oil the friction surfaces of the trigger and lower.
+Oil the friction surfaces of the trigger and lower.

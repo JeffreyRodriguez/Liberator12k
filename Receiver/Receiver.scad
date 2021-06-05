@@ -94,6 +94,7 @@ function ReceiverTakedownPinZ() = TensionRodBottomZ()+WallTensionRod();
 function ReceiverBottomZ() = TensionRodBottomZ()-WallTensionRod();
 function ReceiverTopZ() = TensionRodTopZ()+WallTensionRod()+0.625;
 
+function Receiver_MlokSideY() = 1.25;
 function Receiver_MlokSideZ() = ReceiverBottomZ()+0.5;
 
 // ************
@@ -301,7 +302,8 @@ module ReceiverSegment(length=1, chamferFront=false, chamferBack=false, highTop=
 // * Printed Parts *
 // *****************
 module Receiver(receiverLength=ReceiverLength(), doRender=true, alpha=1, debug=false) {
-
+  mlokSupportHeight=0.75;
+  
   color("Tan", alpha) RenderIf(doRender)
   DebugHalf(enabled=debug)
   difference() {
@@ -313,9 +315,11 @@ module Receiver(receiverLength=ReceiverLength(), doRender=true, alpha=1, debug=f
                       chamferFront=true);
       
       // M-LOK side slot support
-      translate([0,-1.125,Receiver_MlokSideZ()-(0.75/2)])
+      translate([0,-Receiver_MlokSideY(),Receiver_MlokSideZ()-(mlokSupportHeight/2)])
       mirror([1,0,0])
-      ChamferedCube([UnitsMetric((32*2)+8)+1, 2.25,0.75], r=1/8,
+      ChamferedCube([UnitsMetric((32*2)+8)+1,
+                     (Receiver_MlokSideY()*2),
+                     mlokSupportHeight], r=1/16,
                      teardropFlip=[true,true,true]);
       
       children();
@@ -325,7 +329,7 @@ module Receiver(receiverLength=ReceiverLength(), doRender=true, alpha=1, debug=f
     for (M = [0,1]) mirror([0,M,0])
     for (X = [0,MlokSlotLength()+MlokSlotSpacing()]) translate([-X,0,0])
     mirror([1,0,0])
-    translate([0.5,1.125,Receiver_MlokSideZ()])
+    translate([0.5,Receiver_MlokSideY(),Receiver_MlokSideZ()])
     rotate([-90,0,0]) {
       MlokSlot();
       MlokSlotBack();

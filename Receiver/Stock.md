@@ -1,21 +1,15 @@
 # [\#Liberator12k Manual](../README.md)
 ## Platform Component: Stock
 
+![Stock](Stock.png)
+
 A stock and buttpad designed to fit the standard receiver.
 
 The stock uses the threaded rods from the receiver - acorn nuts at the end of
 the stock are hidden behind the buttpad.
 
 A latching mechanism keeps the buttpad on the stock - this secures the guts of
-the reciever in place. Remove the buttpad to field strip the gun.
-
-<!-- blank line -->
-<figure class="video_container">
-  <video width="640" loop="true" preload="auto" controls="false" allowfullscreen="true" poster="Stock.png">
-    <source src="Stock.mp4" type="video/mp4">
-  </video>
-</figure>
-<!-- blank line -->
+the receiver in place. Remove the buttpad to field strip the gun.
 
 Bill of Materials
 -----------------
@@ -38,15 +32,28 @@ Bill of Materials
 
 **Hardware**:
 
-| Part                                      | Quantity |
-|-------------------------------------------|----------|
-| 3/32"x1.5" Music Wire                     | 2pcs     |
-| 3/32"x1" Music Wire                       | 2pcs     |
-| 3/32"x0.75" Music Wire                    | 2pcs     |
-| 0.22" OD x 2" Long Spring                 | 2pcs     |
-| 1/4-20 Heatset Nut                        | 2pcs     |
-| 1/4-20x3-1/2" Flat Head Screw             | 2pcs     |
-| #8-32 Heatset Nut                         | 2pcs     |
-| #8-32x1/2" Socket Cap Screw SS            | 2pcs     |
-| M-LOK QD Stud                             | 1pcs     |
+|Purpose| Part                                      | Quantity |
+|-|-------------------------------------------|----------|
+|Stock Latch Button Pin| 3/32"x0.75" Music Wire | 2 |
+|Stock Latch Button Pivot Pin| 3/32"x1" Music Wire | 2 |
+|Stock Latch Retainer Pin | 3/32"x1.5" Music Wire | 2 |
+|Stock Latch Return Spring | 0.22" OD x 2" Long Spring | 2 |
+|Stock Latch Buttpad Nut | 1/4-20 Heatset Nut | 2 |
+|Stock Latch Buttpad Bolt | 1/4-20x3-1/2" Flat Head Screw | 2 |
 
+## Assembly
+
+#### Stock Latch Buttons
+Superglue a *Stock Latch Button Pin* into the *Stock Latch Button*. Repeat the process with the other button, **ensuring to install the pin mirrored**. When finished, the button with be either "left" handed or "right" handed. Take care not to get two left buttons.
+
+#### Stock Latch Retainer
+Superglue the *Stock Latch Retainer Pin* into the *Stock Latch Retainer*.
+Slip the *Stock Latch Return Spring* over the pin.
+
+#### Stock Latch Subassembly
+Insert the *Stock Latch Plunger* into the *Stock Latch*. Lift the rear of the plunger up and install the *Stock Latch Retainer* and spring.
+
+Install the Left and Right *Stock Latch Button*.
+
+#### Buttstock
+Insert the *Stock Latch Buttpad Bolts* through the *Stock_Buttpad*, and screw into the back of the *Stock Latch Subassembly*.
