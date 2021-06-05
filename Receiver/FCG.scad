@@ -806,21 +806,44 @@ module FCG_Housing_print() {
 //****************
 //* Printed Jigs *
 //****************
-module FCG_RecoilPlateJig(firingPinRadius=1/32, clearance=0.005, extend=0.125) {
+module FCG_RecoilPlateJig(spindleZ=-1, extend=0.75) {
+  extend2 = extend*2;
+    
+  TemplateHoles = [
+    [0, 0, 0], // Firing Pin
+    [0, 0, spindleZ], // ZZR Spindle
+  
+    // Recoil plate bolts
+    [0, RecoilPlateBoltOffsetY(), 0],
+    [0, -RecoilPlateBoltOffsetY(), 0],
+  
+    // Tension rod bolts
+    [0, TensionRodTopOffsetSide(),TensionRodTopZ()],
+    [0, -TensionRodTopOffsetSide(),TensionRodTopZ()],
+    [0, TensionRodBottomOffsetSide(),TensionRodBottomZ()],
+    [0, -TensionRodBottomOffsetSide(),TensionRodBottomZ()]
+  ];
+  
   render()
+  rotate([0,-90,0])
   difference() {
-    translate([0,-(RecoilPlateWidth()/2)-extend,-(RecoilPlateHeight()/2)-extend])
-    cube([RecoilPlateLength()+extend, RecoilPlateWidth()+extend, RecoilPlateHeight()+(+extend*2)]);
+    translate([0,
+               -(RecoilPlateWidth()/2)-extend,
+               -(RecoilPlateHeight()/2)-extend-0.125])
+    ChamferedCube([0.5,
+          RecoilPlateWidth()+extend2,
+          RecoilPlateHeight()+extend2], r=1/8);
 
-    RecoilPlate(cutter=true);
-    
-    
-    RecoilPlateBolts(bolt=BoltSpec("Template"), head="none");
+    RecoilPlate(cutter=true, clearance=0.005);
     
     rotate([0,90,0])
-    cylinder(r=firingPinRadius+clearance,
-             h=RecoilPlateLength()+extend+ManifoldGap(2),
-            $fn=8);
+    ChamferedCircularHole(r1=0.625, r2=1/8, h=0.5-RecoilPlateLength(),
+                          teardropTop=true,teardropBottom=true);
+
+    for (Hole = TemplateHoles)
+    translate([-extend,Hole.y,Hole.z])
+    rotate([0,90,0])
+    cylinder(r=5/16/2, h=RecoilPlateLength()+extend2);
   }
 }
 //**************
@@ -948,7 +971,7 @@ if ($preview) {
   FCG_FiringPinCollar();
   
   if (_RENDER == "FCG_RecoilPlateJig")
-  RecoilPlateJig();
+  FCG_RecoilPlateJig();
   
   if (_RENDER == "FCG_Receiver_Projection")
   projection()
