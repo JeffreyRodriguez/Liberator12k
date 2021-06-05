@@ -325,10 +325,10 @@ module RecoilPlate(spindleZ=-1, contoured=true, cutter=false, debug=false, alpha
     
     // Contoured or simplified (rectangular) plate
     if (contoured) {
-      translate([0.5-RecoilPlateLength()-clear,0,0])
+      translate([0.5-RecoilPlateLength(),0,0])
       rotate([0,90,0])
-      linear_extrude(RecoilPlateLength()+clear, center=false)
-      offset(r=(cutter?0.007:0))
+      linear_extrude(RecoilPlateLength(), center=false)
+      offset(r=(cutter?clearance:0))
       hull() {
         projection()
         rotate([0,-90,0])
@@ -339,14 +339,14 @@ module RecoilPlate(spindleZ=-1, contoured=true, cutter=false, debug=false, alpha
         circle(r=0.375+clear2);
       }
     } else {
-      translate([0.5-RecoilPlateLength()-clear,-1-clear,ReceiverBottomZ()-0.25-clear])
-      cube([RecoilPlateLength()+clear2,
+      translate([0.5-RecoilPlateLength(),-1-clear,ReceiverBottomZ()-0.25-clear])
+      cube([RecoilPlateLength(),
             RecoilPlateWidth()+clear2,
             RecoilPlateHeight()+clear2]);
     }
       
-    hull() for (Y = [0,-0.25, 0.25]) translate([0,Y,0])
-    ActionRod(cutter=true);
+    hull() for (Y = [0,-0.25, 0.25]) translate([0,Y,(cutter?clear:0)])
+    ActionRod(cutter=!cutter);
     
     if (template) {
       for (Hole = TemplateHoles)
