@@ -91,7 +91,7 @@ module FrameBoltIterator() {
     children();
 }
 
-module FrameBolts(length=FrameBoltLength(), debug=false, cutter=false, clearance=0.008, alpha=1) {
+module FrameBolts(length=FrameBoltLength(), nut="hex", debug=false, cutter=false, clearance=0.008, alpha=1) {
   clear = cutter ? clearance : 0;
 
   color("Silver", alpha) RenderIf(!cutter)
@@ -101,7 +101,7 @@ module FrameBolts(length=FrameBoltLength(), debug=false, cutter=false, clearance
     rotate(-11)
     NutAndBolt(bolt=FrameBolt(), boltLength=length,
          head="hex", capHeightExtra=(cutter?FrameBackLength()*2:0),
-         nut=(cutter?"none":"hex"), clearance=clear,
+         nut=nut, clearance=clear,
          capOrientation=true);
   }
 }
