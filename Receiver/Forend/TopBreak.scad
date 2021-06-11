@@ -331,7 +331,7 @@ module TopBreak_LatchScrews(debug=false, cutter=false, clearance=0.008) {
 
 }
 
-module Barrel(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, length=BarrelLength(), clearance=BARREL_CLEARANCE, cartridgeRimThickness=RIM_WIDTH, sleeve=true, cutter=false, alpha=1, debug=false) {
+module TopBreak_Barrel(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, length=BarrelLength(), clearance=BARREL_CLEARANCE, cartridgeRimThickness=RIM_WIDTH, sleeve=true, cutter=false, alpha=1, debug=false) {
 
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
@@ -517,7 +517,7 @@ module TopBreak_Forend(clearance=0.005, debug=false, alpha=1) {
     // Ensure the barrel and sleeve can pivot
     for (A = [0, PivotAngle()])
     Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1)
-    Barrel(length=ForendLength()-PivotX(), cutter=true);
+    TopBreak_Barrel(length=ForendLength()-PivotX(), cutter=true);
     
     // Clearance for the barrel collar
     difference() {
@@ -625,7 +625,7 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, debu
       translate([X,0,0])
       TopBreak_ExtractorRetainer(cutter=true, teardrop=true);
 
-      Barrel(cutter=true);
+      TopBreak_Barrel(cutter=true);
     }
   }
 
@@ -678,7 +678,7 @@ module TopBreak_Extractor(cutter=false, clearance=0.015, chamferRadius=1/16, deb
       rotate([0,90,0])
       cylinder(r=RIM_DIAMETER/2, h=RIM_WIDTH+clearance, $fn=80);
       
-      Barrel(cutter=true);
+      TopBreak_Barrel(cutter=true);
 
       TopBreak_ExtractorBit(cutter=true);
       TopBreak_ExtractorRetainer(cutter=true);
@@ -735,7 +735,7 @@ module TopBreak_Foregrip(length=TopBreak_ForegripLength(), debug=false, alpha=1)
     rotate([0,90,0])
     PumpGrip(length=length);
 
-    Barrel(cutter=true);
+    TopBreak_Barrel(cutter=true);
   }
 }
 
@@ -759,7 +759,7 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFron
   BreakActionPivot(factor=pivotFactor) {
 
     if (_SHOW_BARREL)
-    Barrel(debug=_CUTAWAY_BARREL);
+    TopBreak_Barrel(debug=_CUTAWAY_BARREL);
     
     translate([BarrelLength()-1,0,0])
     rotate([0,-90,0]) {
