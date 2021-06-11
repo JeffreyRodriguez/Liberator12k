@@ -290,7 +290,7 @@ module TopBreak_ExtractorRetainer(debug=false, cutter=false, teardrop=false, cle
   NutAndBolt(bolt=GPBolt(),
        boltLength=TopBreak_ExtractorHeight()+ManifoldGap(), clearance=clear,
        head="socket", capHeightExtra=(cutter?abs(TopBreak_ExtractorZ())+FrameBoltZ():0), capOrientation=true,
-       nut="heatset", teardrop=teardrop);
+       nut="heatset-long", teardrop=teardrop);
 }
 
 
