@@ -207,7 +207,7 @@ module PivotClearanceCut(cut=true, width=PivotWidth(), depth=2,
   }
 }
 
-module PivotOuterBearing(intersect=true, cutter=false, clearance=0.01) {
+module PivotOuterBearing(intersect=true, cutter=false, clearance=0.008) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
@@ -230,7 +230,7 @@ module PivotOuterBearing(intersect=true, cutter=false, clearance=0.01) {
                    r=1/16);
   }
 }
-module PivotInnerBearing(cutter=false, clearance=0.01, widthClearance=0.01) {
+module PivotInnerBearing(cutter=false, clearance=0.008, widthClearance=0.008) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
