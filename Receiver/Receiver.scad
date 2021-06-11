@@ -101,11 +101,11 @@ function Receiver_MlokSideZ() = ReceiverBottomZ()+0.5;
 // * Vitamins *
 // ************
 module TensionBoltIterator() {
-  for (YZ = [[TensionRodTopOffsetSide(),TensionRodTopZ()],
-             [-TensionRodTopOffsetSide(),TensionRodTopZ()],
-             [TensionRodBottomOffsetSide(),TensionRodBottomZ()],
-             [-TensionRodBottomOffsetSide(),TensionRodBottomZ()]])
-  translate([0,YZ[0], YZ[1]])
+  for (M = [0,1]) mirror([0,M,0])
+  for (xyz = [[0,TensionRodTopOffsetSide(),TensionRodTopZ(),0],
+              [0,TensionRodBottomOffsetSide(),TensionRodBottomZ(),1]])
+  translate([xyz[0],xyz[1],xyz[2]])
+  mirror([0,0,xyz[3]])
   rotate([0,-90,0])
   children();
 }
