@@ -367,7 +367,7 @@ module Barrel(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, length=Barr
   }
 }
 
-module TopBreak_MlokBolts(headType="flat", nutType="heatset", length=0.625, cutter=false, clearance=0.005, teardrop=false) {
+module TopBreak_MlokBolts(headType="flat", nutType="heatset", length=0.5, cutter=false, clearance=0.005, teardrop=false) {
   
   // Top Bolts
   color("Silver") RenderIf(!cutter)
