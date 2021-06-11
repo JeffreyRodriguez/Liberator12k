@@ -31,11 +31,11 @@ _ALPHA_FRAME = 1;  // [0:0.1:1]
 
 /* [Vitamins] */
 FRAME_BOLT = "1/2\"-13"; // ["1/2\"-13"]
-FRAME_BOLT_Y = 1.25;
-FRAME_BOLT_Z = 0.875;
 
 
 /* [Fine Tuning] */
+FRAME_BOLT_Y = 1.25;
+FRAME_BOLT_Z = 0.875;
 FRAME_RECEIVER_LENGTH = 3;
 FRAME_SPACER_LENGTH = 4.5;
 FRAME_WALL = 0.18751;
