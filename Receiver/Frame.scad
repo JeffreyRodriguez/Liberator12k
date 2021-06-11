@@ -85,19 +85,18 @@ function FrameExtension(length=FrameBoltLength()) = length
 // ************
 module FrameBoltIterator() {
     for (M = [0,1]) mirror([0,M,0])
-    translate([-FrameReceiverLength()-FrameBackLength()-ManifoldGap(),
-               FrameBoltY(), FrameBoltZ()])
-    rotate([0,-90,0])
+    translate([0, FrameBoltY(), FrameBoltZ()])
     children();
 }
 
-module FrameBolts(length=FrameBoltLength(), nut="hex", debug=false, cutter=false, clearance=0.008, alpha=1) {
+module FrameBolts(length=FrameBoltLength(), nut="hex", debug=false, cutter=false, clearance=0.01, alpha=1) {
   clear = cutter ? clearance : 0;
 
   color("Silver", alpha) RenderIf(!cutter)
   DebugHalf(enabled=debug) {
-    translate([0.25,0,0])
+    translate([0.25-FrameReceiverLength()-FrameBackLength()-ManifoldGap(),0,0])
     FrameBoltIterator()
+    rotate([0,-90,0])
     rotate(-11)
     NutAndBolt(bolt=FrameBolt(), boltLength=length,
          head="hex", capHeightExtra=(cutter?FrameBackLength()*2:0),
@@ -179,8 +178,9 @@ module Receiver_LargeFrame(doRender=true, debug=false, alpha=1) {
       
       // Bolt head support
       hull() {
+        translate([-FrameReceiverLength()-0.1875,0,0])
         FrameBoltIterator()
-        mirror([0,0,1])
+        rotate([0,-90,0])
         ChamferedCylinder(r1=0.5+(1/32), r2=1/16,
                           h=0.3125, $fn=50,
                           teardropBottom=false);
