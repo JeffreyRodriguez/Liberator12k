@@ -533,25 +533,15 @@ module TopBreak_Forend(clearance=0.005, debug=false, alpha=1) {
       PivotInnerBearing(cutter=true);
     }
     
-    
-    // Cut a path through the full range of motion (Barrel Sleeve)
+    // Cut a path through the full range of motion (Barrel)
     hull() for (A = [0, PivotAngle()])
     Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1)
     translate([PivotX(),0,0])
     rotate([0,90,0])
-    cylinder(r=BarrelRadius()+clearance,
+    cylinder(r=BarrelSleeveRadius()+BARREL_CLEARANCE,
              h=ForendLength()-PivotX(), $fn=80);
     
-    
-    // Cut a path through the full range of motion
-    hull() for (A = [0, PivotAngle()])
-    Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1)
-    translate([PivotX(),0,0])
-    rotate([0,90,0])
-    cylinder(r=BarrelRadius()+BARREL_CLEARANCE,
-             h=ForendLength()-PivotX(), $fn=80);
-    
-    // Cut a path through the full range of motion
+    // Cut a path through the full range of motion (Collar)
     for (A = [0, PivotAngle()])
     Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1)
     TopBreak_BarrelCollar(rearExtension=2, cutter=true);
@@ -559,7 +549,7 @@ module TopBreak_Forend(clearance=0.005, debug=false, alpha=1) {
     // Printability allowance
     translate([ForendLength(),0,BarrelZ()])
     rotate([0,-90,0])
-    HoleChamfer(r1=BarrelRadius(BARREL_CLEARANCE), r2=1/16,
+    HoleChamfer(r1=BarrelSleeveRadius(BARREL_CLEARANCE), r2=1/16,
                 teardrop=true, $fn=60);
 
     FrameBolts(cutter=true);
