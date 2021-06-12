@@ -110,6 +110,12 @@ function BarrelSleeveRadius(clearance=0)
 function BarrelSleeveDiameter(clearance=0)
     = BARREL_SLEEVE_DIAMETER+clearance;
 
+function BarrelInsideRadius(clearance=0)
+    = BarrelInsideDiameter(clearance*2)/2;
+
+function BarrelInsideDiameter(clearance=0)
+    = BARREL_INSIDE_DIAMETER+clearance;
+
 function BarrelRadius(clearance=0)
     = BarrelDiameter(clearance*2)/2;
 
@@ -174,9 +180,8 @@ function TopBreak_ExtractorLength() = (PivotX()-PivotRadius())
                            - WallPivot();
 
 function TopBreak_ExtractorBitZ() = BarrelZ()
-                                  - BarrelSleeveRadius()
-                                  + BarrelWall()
-                                  + 0.02;
+                                  - BarrelInsideRadius()
+                                  + 0.03;
 
 function TopBreak_ExtractorZ() = BarrelZ()
                                - BarrelSleeveRadius()
