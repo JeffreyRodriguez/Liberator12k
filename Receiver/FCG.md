@@ -35,7 +35,7 @@ XXXXg, 0h00m
 |Firing Pin Spring| 0.22" OD 0.625" Long |1|
 |Hammer| 1/4-20x5" Flat Head Bolt |1|
 |Hammer Bolt| 1/4-20x5" Flat Head Bolt |1|
-|Hammer Bolt Sleeve| 11/64" K&S Brass Tube |1|
+|Hammer Bolt Sleeve| 11/32" K&S Brass Tube |1|
 |Hammer Nut| 1/4-20" Heatset Nut|1|
 |Hammer Cap Nut| 1/4-20" Acorn Nut|1|
 |Hammer Spring| 0.625x3" ~6.3lbs/in Compression Spring|1|
