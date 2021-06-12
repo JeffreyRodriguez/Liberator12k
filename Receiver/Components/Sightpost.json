@@ -1,0 +1,14 @@
+{
+    "parameterSets": {
+        "Sch40 3\/4\" Pipe": {
+            "SIGHTPOST_BOLT": "#8-32",
+            "SIGHTPOST_BOLT_CLEARANCE": "0.005",
+            "SIGHTPOST_CLEARANCE": "0.005",
+            "SIGHTPOST_DIAMETER": "1.06",
+            "_DEBUG_ASSEMBLY": "false",
+            "_RENDER": ""
+        }
+    },
+    "parameterSets": "",
+    "fileFormatVersion": "1"
+}

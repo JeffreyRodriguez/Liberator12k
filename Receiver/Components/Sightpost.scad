@@ -20,17 +20,19 @@ _RENDER = ""; // ["Sightpost"]
 // Cut assembly view in half
 _DEBUG_ASSEMBLY = false;
 
-SIGHTPOST_DIAMETER = 1.06;
+SIGHTPOST_DIAMETER = 1.0001;
+SIGHTPOST_CLEARANCE = 0.005;
 
 // Set Screw and Sight Bead
 SIGHTPOST_BOLT = "#8-32";   // ["M4", "#8-32"]
+SIGHTPOST_BOLT_CLEARANCE = 0.005;
 
 function SightpostBolt() = BoltSpec(SIGHTPOST_BOLT);
 assert(SightpostBolt(), "SightpostBolt() is undefined. Unknown SIGHTPOST_BOLT?");
 
 function SightZ() = ReceiverTopZ()+0.5;
 
-module SightpostBolts(height=SightZ(), radius=SIGHTPOST_DIAMETER/2, length=2, cutter=false, clearance=0.005) {
+module SightpostBolts(height=SightZ(), radius=SIGHTPOST_DIAMETER/2, length=2, cutter=false, clearance=SIGHTPOST_BOLT_CLEARANCE) {
   
   // Bead
   color("Silver") RenderIf(!cutter)
@@ -55,7 +57,7 @@ module SightpostBolts(height=SightZ(), radius=SIGHTPOST_DIAMETER/2, length=2, cu
              clearance=cutter?clearance:0);
 }
 
-module Sightpost(height=SightZ(), length=2, radius=SIGHTPOST_DIAMETER/2, wall=0.125, clearance=0.005, doRender=true) {
+module Sightpost(height=SightZ(), length=2, radius=SIGHTPOST_DIAMETER/2, wall=0.125, clearance=SIGHTPOST_CLEARANCE, doRender=true) {
   CR=1/16;
   
   color("Tan") RenderIf(doRender)
