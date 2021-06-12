@@ -879,7 +879,7 @@ module FCG_RecoilPlate_Fixture(xyz = [1,0.5,0.5], holeRadius=0.1875, spindleZ=-1
     
   }
 }
-!FCG_RecoilPlate_Fixture4();
+
 module FCG_RecoilPlate_Fixture4(xyz = [1,0.375,0.5], holeRadius=0.1875, spindleZ=-1, contoured=FCG_RECOIL_PLATE_CONTOURED) {
   
   width = (RecoilPlateWidth()*2)+ 1.5;
@@ -1043,6 +1043,9 @@ if ($preview) {
   
   if (_RENDER == "FCG_RecoilPlate_Fixture")
   FCG_RecoilPlate_Fixture();
+  
+  if (_RENDER == "FCG_RecoilPlate_Fixture4")
+  FCG_RecoilPlate_Fixture4();
   
   if (_RENDER == "FCG_RecoilPlate_TapGuide")
   FCG_RecoilPlate_TapGuide();
