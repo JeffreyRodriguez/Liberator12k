@@ -83,3 +83,30 @@ The full How To is incomplete, but at a high level:
 1. Print a Recoil Plate template (TODO).
 2. Mark the holes with a punch and drill to specified size.
 3. Tap the holes for the tension rods and FCG Housing holes with #8-32.
+
+### Technical Notes and Alternatives
+
+##### Recoil Plate
+2" wide (fits between the frame bolts)
+and 2.375" high - this covers the tension rods and provides room for the revolver spindle pin.
+
+3/8" thick
+
+That's for mild steel
+If you're getting it cut out of 4130, go ahead and use the 1/4"
+0.25" :)
+
+Really, even mild .25 would probably do at this point.
+It was bowing slightly in the middle, mostly because it's fairly unsupported there
+ABS didn't mind, PLA did
+So I widened it to 2" to put the corners of the plate over the tension rods
+
+Yeah.. any decent steel will give exactly zero fucks
+
+
+10mm thick parameter The requirements for that job are pretty minimal.
+But it's the most important job in the whole gun
+
+##### Firing Pin
+When the hammer is in the full forward position, the back of the *Firing Pin* will be flush with the back of the *FCG Housing*, meaning anything beyond 1.5" will stick out of front of the recoil plate.
+However... nails have a pointed tip - and you have to cut that off.. plus a little deformed metal rear of the tip. So plan for some loss. A bare minimum of, 40mm worth of nail to work with.

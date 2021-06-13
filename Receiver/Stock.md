@@ -13,14 +13,16 @@ the receiver in place. Remove the buttpad to field strip the gun.
 
 Bill of Materials
 -----------------
-**Printed: Stock and Buttpad**: XXXXg, 0h00m
+### Printed: Stock
+XXXXg, 0h00m
 
 | File                | Part             | Print Settings | Filament Used | Print Time |
 |---------------------|------------------|----------------|---------------|------------|
 | Receiver/Stock.scad | Stock            | Standard       | -mm           | -h-m       |
+| Receiver/Stock.scad | Stock_Backplate  | Standard       | -mm           | -h-m       |
 | Receiver/Stock.scad | Stock_Buttpad    | Standard       | -mm           | -h-m       |
 
-**Printed: Stock Latch Assembly**: XXXXg, 0h00m
+### Printed: Stock Latch Assembly XXXXg, 0h00m
 
 | File                | Part                | Print Settings | Filament Used | Print Time |
 |---------------------|---------------------|----------------|---------------|------------|
@@ -30,7 +32,7 @@ Bill of Materials
 | Receiver/Stock.scad | Stock_LatchButton_L | Standard       | -mm           | -h-m       |
 | Receiver/Stock.scad | Stock_LatchButton_R | Standard       | -mm           | -h-m       |
 
-**Hardware**:
+### Hardware:
 
 |Purpose| Part                                      | Quantity |
 |-|-------------------------------------------|----------|
@@ -57,3 +59,6 @@ Install the Left and Right *Stock Latch Button*.
 
 #### Buttstock
 Insert the *Stock Latch Buttpad Bolts* through the *Stock_Buttpad*, and screw into the back of the *Stock Latch Subassembly*.
+
+
+### Technical Notes and Alternatives
