@@ -21,4 +21,4 @@ artifacts:
     - '**/*'
   name: Liberator12k.zip
   discard-paths: no
-  base-directory: dist
+  base-directory: .
