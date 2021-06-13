@@ -9,7 +9,7 @@ FCG_STL=FCG_ChargingHandle.stl FCG_Disconnector.stl FCG_FiringPinCollar.stl \
         FCG_Housing.stl FCG_Hammer.stl FCG_HammerTail.stl
 
 # Subdirs
-Forend Lower: FORCE
+Forend Lower Components: FORCE
 		$(MAKE) -C $@
 
 .SECONDEXPANSION:
