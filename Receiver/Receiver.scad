@@ -228,8 +228,7 @@ module ReceiverTopSlot(length=ReceiverLength(), width=ReceiverTopSlotWidth(), he
     translate([TensionRodTopZ()+WallTensionRod(),
                -(horizontalWidth/2)-clearance])
     ChamferedSquareHole(sides=[horizontalHeight+clearance,horizontalWidth+(clearance*2)], length=length,
-                        center=false, corners=false, chamferRadius=chamferRadius,
-                        chamferTop=false, chamferBottom=false);
+                        center=false, corners=false, chamferRadius=chamferRadius);
   }
 }
 
