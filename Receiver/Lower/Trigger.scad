@@ -23,13 +23,13 @@ _SHOW_TRIGGER_RIGHT = true;
 _SHOW_TRIGGER_MIDDLE = true;
 
 /* [Vitamins] */
-SEAR_WIDTH = 0.2501;
+SEAR_WIDTH = 0.2501; // TODO: Allow picking metric version? 0.23622in or 6mm?
 SEAR_CLEARANCE = 0.005;
 SEAR_PIN_DIAMETER = 0.09375;
 SEAR_PIN_CLEARANCE = 0.01;
 
-function SearRod() = Spec_RodOneQuarterInch();
-function SearPinRod() = Spec_RodThreeThirtysecondInch();
+function SearRod() = Spec_RodOneQuarterInch(); // TODO: respect SEAR_WIDTH
+function SearPinRod() = Spec_RodThreeThirtysecondInch(); // TODO: respect SEAR_PIN_DIAMETER
 
 // Shorthand: Measurements
 function SearDiameter(clearance) = SEAR_WIDTH+(clearance*2);

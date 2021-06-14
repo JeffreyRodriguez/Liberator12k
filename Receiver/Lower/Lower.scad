@@ -35,7 +35,7 @@ _ALPHA_LOWER = 1;  // [0:0.1:1]
 LOWER_BOLT = "#8-32"; // ["M4", "#8-32"]
 LOWER_BOLT_CLEARANCE = 0.015;
 LOWER_BOLT_HEAD = "flat"; // ["socket", "flat"]
-LOWER_BOLT_NUT = "heatset"; // ["hex", "heatset"]
+LOWER_BOLT_NUT = "heatset"; // ["hex", "heatset", "heatset-long"]
 
 function LowerCenterWidth() = 0.51;
 

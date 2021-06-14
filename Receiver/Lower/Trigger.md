@@ -24,11 +24,11 @@ position, driving the trigger forward via the sear pin.
 
 ### Hardware
 
-| Purpose            | Part                             | Quantity | Buy Online       |
-|--------------------|----------------------------------|----------|------------------|
-| Sear               | 1/4"x1.67" Steel Square Rod      | 1        | #L12k/HWS/Online |
-| Sear Cross-Pin     | 3/32"x1/2" Music Wire            | 1        | #L12k/HWS/Online |
-| Sear Return Spring | 0.02" Wire, 0.25"x1.25"          | 1        | #L12k/HWS/Online |
+| Purpose            | Part                        | Metric Alternative                        | Quantity | Buy Online       |
+|--------------------|-----------------------------|-------------------------------------------|----------|------------------|
+| Sear               | 1/4"x1.67" Steel Square Rod | 6mm*42.42mm Steel Square Rod              | 1        | #L12k/HWS/Online |
+| Sear Cross-Pin     | 3/32"x1/2" Music Wire       | None                                      | 1        | #L12k/HWS/Online |
+| Sear Return Spring | 0.02" Wire, 0.25"x1.25"     | 0.5mm Wire, 6.5mm OD, 35mm Length Spring  | 1        | #L12k/HWS/Online |
 
 #### Sear
  * 1/8" hole 5/16" from the bottom for the sear cross-pin

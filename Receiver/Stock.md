@@ -1,15 +1,15 @@
 # [\#Liberator12k Manual](../README.md)
+
 ## Platform Component: Stock
 
 ![Stock](Stock.png)
 
 A stock and buttpad designed to fit the standard receiver.
 
-The stock uses the threaded rods from the receiver - acorn nuts at the end of
-the stock are hidden behind the buttpad.
+The stock uses the threaded rods from the receiver - acorn nuts at the end of the stock are hidden behind the buttpad.
 
-A latching mechanism keeps the buttpad on the stock - this secures the guts of
-the receiver in place. Remove the buttpad to field strip the gun.
+A latching mechanism keeps the buttpad on the stock - this secures the guts of the receiver in place. Remove the buttpad
+to field strip the gun.
 
 Bill of Materials
 -----------------

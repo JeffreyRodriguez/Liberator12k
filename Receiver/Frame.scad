@@ -30,7 +30,7 @@ _CUTAWAY_RECEIVER = false;
 _ALPHA_FRAME = 1;  // [0:0.1:1]
 
 /* [Vitamins] */
-FRAME_BOLT = "1/2\"-13"; // ["1/2\"-13"]
+FRAME_BOLT = "1/2\"-13"; // ["1/2\"-13", "M12"]
 
 
 /* [Fine Tuning] */
