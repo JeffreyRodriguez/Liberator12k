@@ -260,12 +260,12 @@ module ReceiverBottomSlotInterface(length=ReceiverLength(), height=ReceiverOR(),
   }
 }
 module ReceiverTopSegment(length=ReceiverLength()) {
-  translate([0, -TensionRodTopOffsetSide(), 0])
+  CR = 1/4;
+  
+  for (Y = [1,-1]) 
+  translate([0, Y*(TensionRodTopOffsetSide()-CR), ReceiverTopZ()-CR])
   rotate([0,-90,0])
-  linear_extrude(length)
-  ChamferedSquare(xy=[ReceiverTopZ(),(TensionRodTopOffsetSide()*2)], r=1/4,
-                  teardropBottom=false,
-                  teardropTop=false, $fn=50);
+  ChamferedCylinder(r1=CR, r2=1/16, h=length, $fn=50);
 }
 
 module ReceiverSegment(length=1, chamferFront=false, chamferBack=false, highTop=true) {
