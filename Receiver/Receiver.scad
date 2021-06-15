@@ -34,13 +34,13 @@ _CUTAWAY_RECEIVER = false;
 /* [Vitamins] */
 
 // Threaded rods that extend through the receiver and stock.
-TENSION_BOLT           = "#8-32";   // ["M4", "M5", "M6", "#8-32", "#10-24", "1/4\"-20"]
+TENSION_BOLT           = "#8-32";   // ["M4", "#8-32", "#10-24", "1/4\"-20"]
 TENSION_NUT_TYPE       = "heatset-long"; // ["hex", "heatset", "heatset-long"]
 TENSION_BOLT_CLEARANCE = 0.01;
 TENSION_BOLT_LENGTH    = 12;
 
 // Picatinny rail mounts on top of receiver w/ M-LOK
-MLOK_BOLT           = "#8-32";   // ["M4", "M5", "M6", "#8-32", "#10-24", "1/4\"-20"]
+MLOK_BOLT           = "#8-32";   // ["M4", "#8-32", "#10-24", "1/4\"-20"]
 
 // Settings: Vitamins
 function TensionBolt() = BoltSpec(TENSION_BOLT);
