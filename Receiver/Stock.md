@@ -6,10 +6,10 @@
 
 A stock and buttpad designed to fit the standard receiver.
 
-The stock uses the threaded rods from the receiver - acorn nuts at the end of the stock are hidden behind the buttpad.
+Four *Receiver Tension Rods* secure the stock to the *Receiver*.
 
-A latching mechanism keeps the buttpad on the stock - this secures the guts of the receiver in place. Remove the buttpad
-to field strip the gun.
+A *Stock Pin* keeps the *Stock_Backplate* on the stock - this secures the guts
+of the *Receiver* in place. Remove to field strip the gun.
 
 Bill of Materials
 -----------------
@@ -28,8 +28,8 @@ XXXXg, 0h00m
 |--------------------------|-------------------------------|----------------------------------------|----------|
 | Stock Pin                | Universal Clevis Pin 1/4x2"   | None                                   | 1        |
 | Stock Pin Retaining Pin  | 6Dx2" Box Nail                | 2.5x50mm Nail                          | 1        |
-| Stock Latch Buttpad Nut  | 1/4-20 Heatset Nut (Short)    | M6 Heatset Nut (**M6xD9.5xL6**)        | 2        |
-| Stock Latch Buttpad Bolt | 1/4-20x3-1/2" Flat Head Screw | **DIN7991** M6x90 Countersunk Bolt     | 2        |
+| Stock Backplate Nut      | 1/4-20 Heatset Nut (Short)    | M6 Heatset Nut (**M6xD9.5xL6**)        | 2        |
+| Stock Buttpad Bolt       | 1/4-20x3-1/2" Flat Head Screw | **DIN7991** M6x90 Countersunk Bolt     | 2        |
 
 ## Assembly
 
@@ -37,11 +37,21 @@ XXXXg, 0h00m
 Insert the *Stock Pin Retaining Pin* into the back of the *Stock_Backplate*.
 
 #### Buttstock
-Insert the *Stock Latch Buttpad Bolts* through the *Stock_Buttpad*, and screw into the back of the *Stock Latch Subassembly*.
+Insert the *Stock Buttpad Bolts* through the *Stock_Buttpad*, and screw
+into the back of the *Stock Latch Subassembly*.
 
 
 ### Technical Notes and Alternatives
 
-#### Stock Retention Pin
-This can also be a plain 1/4" round rod with a small notch ground/filed into the center.
-The purpose of this notch is to act as a detent for the *Stock Pin Retainer Pin*.
+#### Stock Pin
+The Universal Clevis Pin is simply an off-the-shelf item that works for the job.
+A better, purpose-made pin can be easily made: 2x1/4" round rod.
+Cut a small groove cut around the center to act as a detent for the
+ *Stock Pin Retaining Pin*. This secures the pin in place.
+
+#### Stock Pin Retaining Pin
+I've used 3/32" music wire, 6D box nails, 2.5mm stainless wire.
+It just needs to be about that size and about 2" long.
+
+Drill out the hole in the *Stock_Backplate* to size, and hammer in your pin.
+Add superglue to the last bit before you hammer it all the way in.
