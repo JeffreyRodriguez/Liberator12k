@@ -409,10 +409,11 @@ module Revolver_ReceiverFront(contoured=true, debug=_CUTAWAY_RECEIVER_FRONT, alp
   difference() {
     union() {
       hull() {
-        FrameSupport(length=length, extraBottom=FrameBottomZ()+abs(CylinderZ()));
+        FrameSupport(length=length, extraBottom=FrameBottomZ()+abs(CylinderZ()),
+                     chamferFront=true, teardropFront=true);
         
         mirror([1,0,0])
-        ReceiverTopSegment(length=length);
+        ReceiverTopSegment(length=length, chamferBack=false);
       }
       
       // Cover the back of the cylinder to stop gas blowback
