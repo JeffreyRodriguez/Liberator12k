@@ -1018,8 +1018,8 @@ if ($preview) {
   FCG_Housing_print();
   
   if (_RENDER == "FCG_Hammer")
-  rotate([0,-90,0])
-  translate([FCG_HammerLength-FCG_HammerCockedX,0,0])
+  rotate([0,90,0])
+  translate([FCG_HammerCockedX,0,0])
   FCG_Hammer();
   
   if (_RENDER == "FCG_HammerTail")
