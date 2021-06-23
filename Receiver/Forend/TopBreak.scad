@@ -410,7 +410,7 @@ module TopBreak_ReceiverFront(debug=false, alpha=1) {
     union() {
       hull() {
         mirror([1,0,0])
-        ReceiverTopSegment(length=1/16);
+        ReceiverTopSegment(length=1/8);
         
         FrameSupport(length=TopBreak_ReceiverFrontLength(),
                      chamferFront=true, teardropFront=true);
