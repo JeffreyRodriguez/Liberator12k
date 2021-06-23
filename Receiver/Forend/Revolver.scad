@@ -454,13 +454,13 @@ module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND, $
     fontSize = 0.375;
     
     // Right-side text
-    translate([ForendMaxX()-0.375,-FrameWidth()/2,FrameBoltZ()-(fontSize/2)])
+    translate([ForendMaxX()-0.125,-FrameWidth()/2,FrameBoltZ()-(fontSize/2)])
     rotate([90,0,0])
     linear_extrude(height=LogoTextDepth(), center=true)
     text(BRANDING_MODEL_NAME, size=fontSize, font="Impact", halign="right");
 
     // Left-side text
-    translate([ForendMaxX()-0.375,FrameWidth()/2,FrameBoltZ()-(fontSize/2)])
+    translate([ForendMaxX()-0.125,FrameWidth()/2,FrameBoltZ()-(fontSize/2)])
     rotate([90,0,0])
     linear_extrude(height=LogoTextDepth(), center=true)
     mirror([1,0])
