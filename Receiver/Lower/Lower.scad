@@ -269,11 +269,11 @@ module LowerTriggerPocket() {
   }
 }
 
-module LowerCutouts(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT) {
+module LowerCutouts(chamferLugs=true, boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT) {
   ReceiverLugFront(width=TriggerWidth(),
-                   cutter=true, chamferCutterHorizontal=true);
+                   cutter=true, chamferCutterHorizontal=chamferLugs);
   ReceiverLugRear(width=TriggerWidth(), hole=false,
-                   cutter=true, chamferCutterHorizontal=true);
+                   cutter=true, chamferCutterHorizontal=chamferLugs);
 
   GuardBolt(length=1.25, boltSpec=boltSpec, head=head, nut=nut, cutter=true);
 
@@ -338,7 +338,7 @@ module Lower_Middle(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_N
       GripSplitter(clearance=0);
     }
 
-    LowerCutouts(boltSpec=LowerBolt(), head=head, nut=nut);
+    LowerCutouts(chamferLugs=false, boltSpec=LowerBolt(), head=head, nut=nut);
 
     SearSupportTab(cutter=true);
 
