@@ -476,7 +476,8 @@ module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND, $
       hull() {
         translate([ForendMinX(),0,0])
         FrameSupport(length=Revolver_BarrelSupportLength(),
-                     extraBottom=extraBottom);
+                     extraBottom=extraBottom,
+                     chamferBack=true, teardropBack=true);
         
         translate([ForendMinX(), 0, 0])
         mirror([1,0,0])
@@ -609,7 +610,7 @@ module Revolver_FrameSpacer(length=ForendMinX(), debug=false, alpha=_ALPHA_FOREN
       FrameSupport(length=ManifoldGap(), extraBottom=0.5);
     
       mirror([1,0,0])
-      ReceiverTopSegment(length=length);
+      ReceiverTopSegment(length=length, chamferFront=false, chamferBack=false);
     }
 
     FrameBolts(cutter=true);
