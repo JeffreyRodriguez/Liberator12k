@@ -480,7 +480,17 @@ module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND, $
         
         translate([ForendMinX(), 0, 0])
         mirror([1,0,0])
-        ReceiverTopSegment(length=Revolver_BarrelSupportLength());
+        ReceiverTopSegment(length=Revolver_BarrelSupportLength(),
+                           chamferFront=false);
+      
+      
+        // Barrel Support Bolt Support
+        for (M = [0,1]) mirror([0,M,0])
+        translate([ForendMaxX(),BarrelRadius()+0.375,0])
+        rotate([0,-90,0])
+        ChamferedCylinder(r1=0.25, r2=CR(),
+                 h=Revolver_BarrelSupportLength()-BlastPlateThickness(),
+                            teardropTop=true);
       }
 
       // Around the barrel
