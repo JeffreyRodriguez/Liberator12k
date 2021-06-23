@@ -634,9 +634,9 @@ module Revolver_ForendSpindleToggleLinkage(pivot=0, cutter=false, clearance=0.01
     color("Chocolate") render()
     difference() {
       union() {        
-        translate([0,0.5,0])
+        translate([0,0.625,0])
         rotate([90,0,0])
-        linear_extrude(height=0.125)
+        linear_extrude(height=0.25)
         difference() {
           hull() {
             translate([SpindleLinkagePinX(),CylinderZ()])
