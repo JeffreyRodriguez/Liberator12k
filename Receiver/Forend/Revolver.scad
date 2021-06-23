@@ -197,7 +197,7 @@ function ForegripMinX() = ForendMaxX()+ForegripGap()+ActionRodTravel()+1.5;
 
 function SpindleTogglePinOffset() = 0.5;
 function SpindleTogglePinX() = ForendMaxX()-SpindleTogglePinOffset();
-function SpindleTogglePinZ() = CylinderZ()-0.3215/2;
+function SpindleTogglePinZ() = CylinderZ()-0.3215;
 function SpindlePinMinX() = ForendMinX()+BlastPlateThickness()+0.375;
 function SpindlePinTravel() = RecoilPlateThickness();
 function SpindlePinMaxX() = SpindlePinMinX()+SpindlePinTravel();
@@ -510,7 +510,7 @@ module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND, $
       }
       
       // Spindle toggle pivot pin support
-      translate([ForendMaxX()-1, -(0.6875/2), CylinderZ()-(SpindleRadius()+WallSpindle())])
+      translate([ForendMaxX()-1, -(0.6875/2), CylinderZ()-(SpindleRadius()*2)-WallSpindle()-0.125])
       ChamferedCube([1,
                      0.6875,
                      1], r=CR(), teardropFlip=[false,true,true]);
