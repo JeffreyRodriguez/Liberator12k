@@ -123,5 +123,28 @@ Yeah.. any decent steel will give exactly zero fucks
 But it's the most important job in the whole gun
 
 ##### Firing Pin
-When the hammer is in the full forward position, the back of the *Firing Pin* will be flush with the back of the *FCG Housing*, meaning anything beyond 1.5" will stick out of front of the recoil plate.
-However... nails have a pointed tip - and you have to cut that off.. plus a little deformed metal rear of the tip. So plan for some loss. A bare minimum of, 40mm worth of nail to work with.
+When the hammer is in the full forward position, the back of the *Firing Pin*
+will be flush with the back of the *FCG Housing*, meaning anything beyond 1.5"
+will stick out of front of the recoil plate.
+
+However... nails have a pointed tip - and you have to cut that off..
+plus a little deformed metal rear of the tip. So plan for some loss.
+A bare minimum of, 40mm worth of nail to work with.
+
+The nail is intended to be glued into the collar, and the collar is indexed with
+wide flats, so it can't rotate - making it rimfire-friendly.
+
+##### Hammer Spring
+There's some flexibility here. "If it fits, I sits." >5/16" ID and < 5/8" OD.
+
+You shouldn't need a stupid strong spring - 10lb is probably too much,
+but it shouldn't ever be an issue for the FCG. The hammer tail would probably 
+fail first, or the charging handle bolt. If you can't charge it by hand, it's
+too strong.
+
+##### Trigger Pull
+The coefficient of friction for oiled steel/steel is ~0.16, the trigger has a
+mechanical advantage of 1.5. Give or take, trigger pull is 10% of hammer spring.
+
+Plastic-on-plastic friction probably contributes much more to trigger pull than
+the hammer spring does.
