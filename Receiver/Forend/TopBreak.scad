@@ -76,7 +76,7 @@ BARREL_SET_SCREW = "#8-32"; // ["M4", "#8-32"]
 BARREL_SET_SCREW_CLEARANCE = -0.05;
 
 BARREL_SLEEVE_DIAMETER = 1.2501;
-BARREL_OUTSIDE_DIAMETER = 1;
+BARREL_OUTSIDE_DIAMETER = 1.0001;
 BARREL_INSIDE_DIAMETER = 0.813;
 BARREL_CLEARANCE = 0.008;
 BARREL_LENGTH = 18;
@@ -154,7 +154,7 @@ function FrameBackLength() = 0.75+0.5;
 function ForendLength() = FrameExtension(length=FRAME_BOLT_LENGTH)
                         - 0.5
                         -TopBreak_ReceiverFrontLength();
-                        
+
 function ChargerTravel() = 1.75;
 
 // Calculated: Lengths
