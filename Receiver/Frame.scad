@@ -176,6 +176,7 @@ module Receiver_LargeFrame(doRender=true, debug=false, alpha=1) {
         ReceiverTopSegment(length=FrameReceiverLength());
       }
       
+      rotate([0,-90,0])
       // Bolt head support
       hull() {
         translate([-FrameReceiverLength()-0.1875,0,0])
