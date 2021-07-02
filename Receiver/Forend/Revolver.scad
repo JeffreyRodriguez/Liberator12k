@@ -30,7 +30,6 @@ use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
-use <../../Vitamins/Rod.scad>;
 
 use <../Receiver.scad>;
 use <../Frame.scad>;
@@ -851,7 +850,6 @@ module Revolver_Foregrip_print() {
   Revolver_Foregrip();
 }
 
-
 module Revolver_ActionRodJig() {
   height=0.75;
   width=0.75;
@@ -863,10 +861,10 @@ module Revolver_ActionRodJig() {
                    height], r=1/16);
 
     // Charging rod
-    translate([0,0,height-RodRadius(ChargingRod())])
+    translate([-0.125,-0.125,height-0.125])
     rotate([0,90,0])
-    SquareRod(ChargingRod(), length=length+ManifoldGap(),
-              clearance=RodClearanceSnug());
+    cube([0.25, 0.25, length+ManifoldGap()])
+    SquareRod(ChargingRod(), length=length+ManifoldGap());
 
     // ZigZag Actuator
     for (X = [0,ChargerTravel()+(ChargerTowerLength()/2)])

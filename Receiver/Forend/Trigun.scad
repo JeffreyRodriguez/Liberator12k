@@ -19,7 +19,6 @@ use <../../Shapes/Components/Pump Grip.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 use <../../Vitamins/Pipe.scad>;
-use <../../Vitamins/Rod.scad>;
 
 use <../../Ammo/Shell Slug.scad>;
 use <../../Ammo/Cartridges/Cartridge.scad>;

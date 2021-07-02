@@ -15,7 +15,6 @@ use <../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 use <../Vitamins/Pipe.scad>;
-use <../Vitamins/Rod.scad>;
 
 /* [Print] */
 

@@ -8,7 +8,6 @@ use <../../Shapes/Components/Bipod.scad>;
 use <../../Shapes/Components/T Lug.scad>;
 use <../../Shapes/Chamfer.scad>;
 use <../../Vitamins/Pipe.scad>;
-use <../../Vitamins/Rod.scad>;
 use <../../Vitamins/Square Tube.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/AR15/Barrel.scad>;

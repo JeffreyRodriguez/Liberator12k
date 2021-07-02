@@ -8,7 +8,6 @@ use <../../Meta/Resolution.scad>;
 use <../Chamfer.scad>;
 
 use <../../Vitamins/Nuts And Bolts.scad>;
-use <../../Vitamins/Rod.scad>;
 
 // Settings: Vitamins
 DEFAULT_FIRING_PIN_RETAINER_BOLT = Spec_BoltM4();
