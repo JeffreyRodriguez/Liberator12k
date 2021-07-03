@@ -176,7 +176,18 @@ module Receiver_LargeFrame(doRender=true, debug=false, alpha=1) {
         ReceiverTopSegment(length=FrameReceiverLength());
       }
       
+      // Backfill in receiver-to-frame join
+      translate([0,-ReceiverOR(),-ReceiverOR()])
+      mirror([1,0,0])
+      ChamferedCube([FrameReceiverLength()+FrameBackLength(), ReceiverOD(), ReceiverOD()],
+                    r=1/16, teardropFlip=[true,true,true]);
+      
+      // Fillet receiver-to-frame join
+      for (M = [0, 1]) mirror([0,M,0])
+      translate([0,ReceiverOR()-ManifoldGap(),FrameBottomZ()+ManifoldGap()])
       rotate([0,-90,0])
+      Fillet(h=FrameReceiverLength(), r=1/4);
+      
       // Bolt head support
       hull() {
         translate([-FrameReceiverLength()-0.1875,0,0])
