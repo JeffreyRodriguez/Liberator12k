@@ -58,7 +58,7 @@ _ALPHA_TopBreak_Latch = 1; // [0:0.1:1]
 _ALPHA_COLLAR = 1; // [0:0.1:1]
 _ALPHA_RECEIVER_TUBE = 1; // [0:0.1:1]
 _ALPHA_TOPBREAK_EXTRACTOR = 1; // [0:0.1:1]
-_ALPHA_RECOIL_PLATE_HOUSING=1; // [0:0.1:1]
+_ALPHA_RECEIVER_FRONT=1; // [0:0.1:1]
 
 _CUTAWAY_RECEIVER = false;
 _CUTAWAY_BARREL = false;
@@ -805,7 +805,7 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFron
   }
   
   if (_SHOW_RECEIVER_FRONT)
-  TopBreak_ReceiverFront(debug=debug, alpha=_ALPHA_RECOIL_PLATE_HOUSING);
+  TopBreak_ReceiverFront(debug=debug, alpha=_ALPHA_RECEIVER_FRONT);
 
   if (_SHOW_FOREND)
   TopBreak_Forend(debug=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
