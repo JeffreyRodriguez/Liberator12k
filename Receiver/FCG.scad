@@ -68,6 +68,9 @@ RECOIL_PLATE_BOLT_CLEARANCE = 0.015;
 FCG_Disconnector_SPRING_DIAMETER = 0.23;
 FCG_Disconnector_SPRING_CLEARANCE = 0.005;
 
+HAMMER_BOLT_SLEEVE_DIAMETER = 0.28125;
+HAMMER_BOLT_SLEEVE_CLEARANCE = 0.01;
+
 // Firing pin head thickness
 FIRING_PIN_HEAD_THICKNESS = 0.025; // 6D Box Nail
 
@@ -672,8 +675,9 @@ module FCG_HammerTail(clearance=UnitsImperial(0.01), debug=false, alpha=1) {
     // Hammer Bolt Hole
     translate([FCG_HammerTailMinX,0,0])
     rotate([0,90,0])
-    ChamferedCircularHole(r1=0.28/2, r2=1/32, $fn=40,
-                          h=FCG_HammerTailLength());
+    ChamferedCircularHole(
+      r1=(HAMMER_BOLT_SLEEVE_DIAMETER/2)+HAMMER_BOLT_SLEEVE_CLEARANCE,
+      r2=1/32, $fn=40, h=FCG_HammerTailLength());
     
     // Main Spring Hole
     translate([FCG_HammerTailMinX+FCG_HammerTailLength(),0,0])

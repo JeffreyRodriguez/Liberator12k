@@ -37,7 +37,7 @@ XXXXg, 0h00m
 | Firing Pin Spring     | 0.22" OD 0.625" Long (0.02" wire)                    | 0.5mm Wire, 6mm OD, 20mm Length Spring (Cut to 16mm) | 1        |
 | Hammer                | 1/4-20x5" Flat Head Bolt                             | **DIN7991** M6x130 Countersunk Bolt                  | 1        |
 | Hammer Bolt           | 1/4-20x5" Flat Head Bolt                             | **DIN7991** M6x130 Countersunk Bolt                  | 1        |
-| Hammer Bolt Sleeve    | 11/32" K&S Brass Tube (1/4" ID)                      | 6mm ID Sleeve for _Hammer Bolt_                      | 1        |
+| Hammer Bolt Sleeve    | 9/32"x3.5" K&S Brass Tube (1/4" ID)                  | 6mm ID Sleeve for _Hammer Bolt_                      | 1        |
 | Hammer Nut            | 1/4-20" Heatset Nut (Short)                          | M6 Heatset Nut (**M6xD9.5xL6**)                      | 1        |
 | Hammer Cap Nut        | 1/4-20" Acorn Nut                                    | **DIN1587** M6 Domed Hex Cap Nut                     | 1        |
 | Hammer Spring         | 0.625x3" ~6.3lbs/in Compression Spring (0.052" wire) | 1.4mm Wire, 16mm OD, 80mm Length Spring              | 1        |
