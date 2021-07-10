@@ -39,6 +39,7 @@ FRAME_BOLT_Z = 0.875;
 FRAME_RECEIVER_LENGTH = 3;
 FRAME_SPACER_LENGTH = 4.5;
 FRAME_WALL = 0.18751;
+CHAMFER_RADIUS = 0.0625;
 
 /* [Branding] */
 FRAME_BRANDING_TEXT = "#Liberator12k";
@@ -180,20 +181,20 @@ module Receiver_LargeFrame(doRender=true, debug=false, alpha=1) {
       translate([0,-ReceiverOR(),-ReceiverOR()])
       mirror([1,0,0])
       ChamferedCube([FrameReceiverLength()+FrameBackLength(), ReceiverOD(), ReceiverOD()],
-                    r=1/16, teardropFlip=[true,true,true]);
+                    r=CHAMFER_RADIUS, teardropFlip=[true,true,true]);
       
-      // Fillet receiver-to-frame join
+      // Fillet receiver-to-frame joint
       for (M = [0, 1]) mirror([0,M,0])
-      translate([0,ReceiverOR()-ManifoldGap(),FrameBottomZ()+ManifoldGap()])
+      translate([-CHAMFER_RADIUS,ReceiverOR()-ManifoldGap(),FrameBottomZ()+ManifoldGap()])
       rotate([0,-90,0])
-      Fillet(h=FrameReceiverLength(), r=1/4);
+      Fillet(h=FrameReceiverLength()+FrameBackLength()-CHAMFER_RADIUS, r=1/4, $fn=50);
       
       // Bolt head support
       hull() {
         translate([-FrameReceiverLength()-0.1875,0,0])
         FrameBoltIterator()
         rotate([0,-90,0])
-        ChamferedCylinder(r1=0.5+(1/32), r2=1/16,
+        ChamferedCylinder(r1=0.5+(1/32), r2=CHAMFER_RADIUS,
                           h=0.3125, $fn=50,
                           teardropBottom=false);
     
