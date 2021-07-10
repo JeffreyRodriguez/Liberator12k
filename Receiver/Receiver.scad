@@ -303,6 +303,7 @@ module ReceiverSegment(length=1, chamferFront=false, chamferBack=false, highTop=
 // *****************
 module Receiver(receiverLength=ReceiverLength(), doRender=true, alpha=1, debug=false) {
   mlokSupportHeight=0.75;
+  CHAMFER_RADIUS = 1/16;
   
   color("Tan", alpha) RenderIf(doRender)
   DebugHalf(enabled=debug)
@@ -321,6 +322,14 @@ module Receiver(receiverLength=ReceiverLength(), doRender=true, alpha=1, debug=f
                      (Receiver_MlokSideY()*2),
                      mlokSupportHeight], r=1/16,
                      teardropFlip=[true,true,true]);
+      
+      
+      // Fillet M-LOK-to-frame joint
+      for (M = [0, 1]) mirror([0,M,0])
+      translate([-CHAMFER_RADIUS,ReceiverOR()-ManifoldGap(),Receiver_MlokSideZ()+(mlokSupportHeight/2)-ManifoldGap()])
+      rotate([90,0,0]) rotate([0,-90,0])
+      Fillet(h=UnitsMetric((32*2)+8)+1-(1/8), r=1/8, $fn=50);
+      
       
       children();
     }
