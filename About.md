@@ -9,15 +9,15 @@ The guns are real. They work. You can make them yourself.
 * Please do be responsible when shooting.
 * Please do use for self-defense, sport, and fun.
 
-## Modularity Weapons Platform
-One receiver, multiple forends. A driving force in \#Liberator12k weapon design is reuse of the same receiver.
+## Modular Weapons Platform
+A driving force in \#Liberator12k weapon design is reuse of the same receiver.
 
 Similar to the AR15 modular lower/upper concept, the L12k is conceptually split into receiver/forend.
 
 The real "secret sauce" of this project, is the software library I developed
 during the design process of these guns. I tried a lot of different ideas,
 and what I came away with, is an OpenSCAD software library chock-full of
-useful *configurable* objects.
+useful *configurable* objects. **Gun Legos**
 
 If you browse through the code, you'll see the project has been grouped into
 major functional areas:
@@ -38,13 +38,18 @@ people with minimal tools and access to materials.
 
 Ideally materials should be available from a brick and mortar hardware, grocery, and garden stores in cash. Home Depot, Ace, Tractor Supply, Lowes, Walmart, etc.
 
-These stores do not carry alloy steel tubing suitable for pistol and rifle barrels. At best, Ace Hardware carries Grade 8 bolts which have excellent potential for
-pistol barrels. Lots of quality metal is available on Amazon, Aliexpress, McMaster, Grainger, eBay, and OnlineMetals.
+These stores do not carry alloy steel tubing suitable for pistol and
+rifle barrels. At best, Ace Hardware carries Grade 8 bolts which have excellent
+potential for pistol barrels. Lots of quality metal is available on
+Amazon, Aliexpress, McMaster, Grainger, eBay, and OnlineMetals.
 
-A printer and power drill are the only tools absolutely required. Drill bits and taps notwithstanding. A drill press will *greatly* simplify some processes.
+A printer and power drill are the only tools absolutely required.
+Drill bits and taps notwithstanding.
+A drill press will *greatly* simplify some processes.
 
 ## DIY Tooling
-The project took on a tooling aspect when Electrochemical Machining (ECM) entered the picture.
+The project took on a tooling aspect when Electrochemical Machining (ECM)
+entered the picture.
 
 ## Tech Levels
 The original \#Liberator12k project goal was to design a safe and
