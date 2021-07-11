@@ -109,7 +109,7 @@ module FrameBolts(length=FrameBoltLength(), nut="hex", debug=false, cutter=false
 // **********
 // * Shapes *
 // **********
-module FrameSupport(length=1, extraBottom=0, chamferFront=false, chamferBack=false, chamferRadius=1/16, , teardropFront=false, teardropBack=false, $fn=Resolution(20,60)) {
+module FrameSupport(length=1, extraBottom=0, chamferFront=false, chamferBack=false, chamferRadius=CHAMFER_RADIUS, , teardropFront=false, teardropBack=false, $fn=Resolution(20,60)) {
   cr = 1/4;
   height = (FrameBoltRadius()+WallFrameBolt())*2;
   width=(FrameBoltY()+FrameBoltRadius()+WallFrameBolt())*2;
