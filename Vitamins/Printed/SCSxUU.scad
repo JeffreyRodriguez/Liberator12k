@@ -69,4 +69,4 @@ module SCSxUU(spec=undef, clearance=0.02) {
   }
 }
 
-SCSxUU(spec=Spec_SCS8LUU(), boltSpec=Spec_BoltM4());
+SCSxUU(spec=Spec_SCS8LUU());
