@@ -12,10 +12,6 @@ CAFE12 := $(shell find Receiver/Forend/TopBreak_CAFE12/ -name \*.stl)
 CAFE12+ := $(shell find Receiver/Forend/TopBreak_CAFE12/ -name \*.stl)
 FP37 := $(shell find Receiver/Forend/TopBreak_CAFE12/ -name \*.stl)
 	
-dist/CAFE12: $(CAFE12)
-dist/CAFE12+: $(CAFE12+)
-dist/FP37: $(FP37)
-	
 HTML := index.html About.html Printing.html Developers.html $(shell find Receiver -name \*.html) 
 DOCS := $(HTML) .manual $(shell find Receiver -name \*.png)
 dist/docs: $(DOCS)
@@ -26,6 +22,9 @@ dist/docs: $(DOCS)
 	  cp -r $$file "$@/$$file"; \
   done
 
+dist/CAFE12: $(CAFE12)
+dist/CAFE12+: $(CAFE12+)
+dist/FP37: $(FP37)
 dist/Common dist/CAFE12 dist/CAFE12+ dist/FP37:
 	mkdir -p $@
 	cp  -r $? $@
@@ -34,4 +33,4 @@ Liberator12k.zip: Receiver dist/Common dist/CAFE12 dist/CAFE12+ dist/FP37
 	touch dist/"`git describe --always`".version
 	zip Liberator12k.zip dist/*
 
-all: HTML Receiver Liberator12k.zip
+all: $(HTML) Receiver Liberator12k.zip
