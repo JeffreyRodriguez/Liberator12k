@@ -1,8 +1,14 @@
 *.gcode
 *.stl
+*.dxf
+*.3mf
 *.mp4
+*.html
+*.png
 frame*.png
 animation.gif
 animation.mp4
-Media
+dist/
+Liberator12k.zip
 Legal
+Media
