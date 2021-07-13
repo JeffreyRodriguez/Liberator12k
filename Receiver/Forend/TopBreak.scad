@@ -83,6 +83,8 @@ BARREL_Z = 0.0001;
 RIM_WIDTH = 0.0301;
 RIM_DIAMETER = 0.8875;
 
+RECOIL_PLATE_LENGTH = 0.25;
+
 /* [Fine Tuning] */
 PIVOT_X = 4.501;
 PIVOT_RADIUS = 0.501;
@@ -450,7 +452,7 @@ module TopBreak_ReceiverFront(debug=false, alpha=1) {
     ChamferedSquareHole([1.25,3/32], 0.5, corners=false, chamferRadius=1/32, center=false);
 
     translate([-TopBreak_ReceiverFrontLength(),0,0]) {
-      RecoilPlate(cutter=true);
+      RecoilPlate(length=RECOIL_PLATE_LENGTH, cutter=true);
       RecoilPlateBolts(cutter=true);
       FiringPin(cutter=true);
       FiringPinSpring(cutter=true);

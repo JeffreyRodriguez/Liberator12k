@@ -317,7 +317,7 @@ module RecoilPlateBolts(bolt=RecoilPlateBolt(), boltLength=1.5, template=false, 
              clearance=cutter?clearance:0);
 }
 
-module RecoilPlate(spindleZ=-1, contoured=true, cutter=false, debug=false, alpha=1, clearance=0.005, template=false, templateHoleDiameter=0.08) {
+module RecoilPlate(length=RecoilPlateLength(), spindleZ=-1, contoured=true, cutter=false, debug=false, alpha=1, clearance=0.005, template=false, templateHoleDiameter=0.08) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
@@ -343,9 +343,9 @@ module RecoilPlate(spindleZ=-1, contoured=true, cutter=false, debug=false, alpha
     
     // Contoured or simplified (rectangular) plate
     if (contoured) {
-      translate([0.5-RecoilPlateLength(),0,0])
+      translate([0.5-length,0,0])
       rotate([0,90,0])
-      linear_extrude(RecoilPlateLength(), center=false)
+      linear_extrude(length, center=false)
       offset(r=(cutter?clearance:0))
       hull() {
         projection()
@@ -357,8 +357,8 @@ module RecoilPlate(spindleZ=-1, contoured=true, cutter=false, debug=false, alpha
         circle(r=0.375+clear2);
       }
     } else {
-      translate([0.5-RecoilPlateLength(),-1-clear,ReceiverBottomZ()-0.25-clear])
-      cube([RecoilPlateLength(),
+      translate([0.5-length,-1-clear,ReceiverBottomZ()-0.25-clear])
+      cube([length,
             RecoilPlateWidth()+clear2,
             RecoilPlateHeight()+clear2]);
     }
@@ -368,9 +368,9 @@ module RecoilPlate(spindleZ=-1, contoured=true, cutter=false, debug=false, alpha
     
     if (template) {
       for (Hole = TemplateHoles)
-      translate([0.5-RecoilPlateLength()-clear,Hole.y,Hole.z])
+      translate([0.5-length-clear,Hole.y,Hole.z])
       rotate([0,90,0])
-      cylinder(r=templateHoleDiameter/2, h=RecoilPlateLength(), $fn=8);
+      cylinder(r=templateHoleDiameter/2, h=length, $fn=8);
       
     } else if (!cutter) {
       FiringPin(cutter=true);
@@ -379,7 +379,7 @@ module RecoilPlate(spindleZ=-1, contoured=true, cutter=false, debug=false, alpha
       // ZZR cylinder spindle
       translate([0,0,-1])
       rotate([0,-90,0])
-      cylinder(r=5/16/2, h=RecoilPlateLength());
+      cylinder(r=5/16/2, h=length);
     }
   }
 }
