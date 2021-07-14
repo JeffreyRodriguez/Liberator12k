@@ -73,7 +73,7 @@ $(addsuffix .stl,$(CLASSES)) $(addsuffix .png,$(CLASSES)): $$@.scad
 	$(THUMBNAILBIN) $(CLASS_PRESET)/Assembly.png $(CLASS_PRESET)/Assembly_thumb.png
 
 # HTML file for the preset
-$(CLASS_HTML) $(PRESET_HTML): %/README.html : % %.md $$*.mp4
+$(CLASS_HTML) $(PRESET_HTML): %/README.html : % %.md
 	$(MDBIN) $(basename $^).md | sed 's/\.md/\.html/' > $@
 
 all: README.html $(CLASSES) $(PRESETS) $(PRESET_HTML) $(PRESET_STLS)

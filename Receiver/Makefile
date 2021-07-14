@@ -8,7 +8,7 @@ FCG_STL=FCG_ChargingHandle.stl FCG_Disconnector.stl FCG_FiringPinCollar.stl \
 
 # Subdirs
 Forend Lower Components: FORCE
-		$(MAKE) -C $@
+	$(MAKE) -C $@
 
 .SECONDEXPANSION:
 Receiver FCG Frame Stock: $$($$@_STL) $$@.html $$@.mp4 $$@.png
