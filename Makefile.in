@@ -41,14 +41,14 @@ COLORSCHEME=Starnight
 %.html: %.md
 	$(MDBIN) $(basename $@).md | sed 's/.md/.html/' > $@
 
-*/%.stl %.stl:
-	mkdir -p $(dir $@)
+*.stl:
 	$(OSBIN) $(OSOPTS) -o $@ -o $(basename $@).png \
 	  --render -D _RENDER=\"`echo "$(notdir $@)" | sed 's/.stl$\$///'`\" \
 		--projection=p --autocenter --viewall \
 		`if [ '$(dir "$@")' != './' ]; then echo -P '$(dir $@)' | sed 's/\/$///'; fi` \
 	  `echo $(notdir $@) | sed 's/.stl//' | awk -F _ '{ print $$1 }'`.scad
 	$(THUMBNAILBIN) $(basename $@).png $(basename $@)_thumb.png
+
 FORCE:
 clean: clean_ANIMATE clean_STL cleanGCODE cleanMP4 clean_HTML clean_PNG
 clean_ANIMATE:
