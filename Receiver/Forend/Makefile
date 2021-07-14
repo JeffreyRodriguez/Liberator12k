@@ -35,11 +35,8 @@ CLASS_HTML := $(addsuffix /README.html,$(CLASSES))
 
 .SECONDEXPANSION:
 	
-# Forend Classes
-$(CLASSES): $$@/README.html $$@/$$@.mp4 $$@/$$@.png
-
-# Preset dirs depends on their respective source
-$(PRESETS): $$(addsuffix .scad,$$(firstword $$(subst _, ,$$@)))
+# Class/Preset dirs depend on their respective source
+$(CLASSES) $(PRESETS): $$(addsuffix .scad,$$(firstword $$(subst _, ,$$@)))
 	mkdir -p $@
 	touch $@
 
@@ -61,9 +58,22 @@ $(PRESET_STLS):
 		-P $(PRESET) \
 		$(CLASS).scad
 	$(THUMBNAILBIN) $(CLASS_PRESET)/$(PART).png $(CLASS_PRESET)/$(PART)_thumb.png
+	
+$(addsuffix .stl,$(CLASSES)) $(addsuffix .png,$(CLASSES)): $$@.scad
+	$(eval CLASS_PRESET=$(firstword $(subst /, ,$@)))
+	$(eval CLASS=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$1 }'))
+	$(eval PRESET=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$2 }'))
+	$(eval PART=$(basename $(notdir $@)))
+	$(OSBIN) $(OSOPTS) --render -D _RENDER=\"$(CLASS)_$(PART)\" \
+		--projection=p --autocenter --viewall \
+		-o $@ -o $(CLASS_PRESET)/Assembly.png \
+		-P $(PRESET) \
+		$(CLASS).scad
+	convert $(CLASS_PRESET)/Assembly.png $(CLASS_PRESET)/Assembly.jpg
+	$(THUMBNAILBIN) $(CLASS_PRESET)/Assembly.png $(CLASS_PRESET)/Assembly_thumb.png
 
 # HTML file for the preset
-$(CLASS_HTML) $(PRESET_HTML): %/README.html : %.md
+$(CLASS_HTML) $(PRESET_HTML): %/README.html : % %.md $$*.mp4
 	$(MDBIN) $(basename $^).md | sed 's/\.md/\.html/' > $@
 
 all: README.html $(CLASSES) $(PRESETS) $(PRESET_HTML) $(PRESET_STLS)
