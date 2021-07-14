@@ -460,110 +460,113 @@ module TopBreak_ReceiverFront(debug=false, alpha=1) {
   }
 }
 
-module TopBreak_Forend(clearance=0.005, debug=false, alpha=1) {  
-  // Branding text
-  color("DimGrey", alpha) 
-  render() DebugHalf(enabled=debug) {
+module TopBreak_Forend(clearance=0.005, doRender=true, debug=false, alpha=1) {  
+  union() {
     
-    fontSize = 0.375;
-    
-    // Right-side text
-    translate([ForendLength()-0.375,-FrameWidth()/2,FrameBoltZ()-(fontSize/2)])
-    rotate([90,0,0])
-    linear_extrude(height=LogoTextDepth(), center=true)
-    text(BRANDING_MODEL_NAME, size=fontSize, font="Impact", halign="right");
+    // Branding text
+    color("DimGrey", alpha) 
+    RenderIf(doRender) DebugHalf(enabled=debug) {
+      
+      fontSize = 0.375;
+      
+      // Right-side text
+      translate([ForendLength()-0.375,-FrameWidth()/2,FrameBoltZ()-(fontSize/2)])
+      rotate([90,0,0])
+      linear_extrude(height=LogoTextDepth(), center=true)
+      text(BRANDING_MODEL_NAME, size=fontSize, font="Impact", halign="right");
 
-    // Left-side text
-    translate([ForendLength()-0.375,FrameWidth()/2,FrameBoltZ()-(fontSize/2)])
-    rotate([90,0,0])
-    linear_extrude(height=LogoTextDepth(), center=true)
-    mirror([1,0])
-    text(BRANDING_MODEL_NAME, size=fontSize, font="Impact", halign="left");
-  }
-  
-  color("Tan", alpha)
-  render() DebugHalf(enabled=debug)
-  difference() {
-    union() {
-      FrameSupport(length=ForendLength(),
-                   chamferBack=true, teardropBack=true);
-      
-      hull() {
-        translate([PivotX(), 0, PivotZ()])
-        rotate([90,0,0])
-        ChamferedCylinder(r1=PivotRadius()-0.01, r2=1/4, h=3,
-                          teardropTop=false, teardropBottom=false, center=true);
-        
-        // Front face
-        translate([ForendLength(), 0,0])
-        mirror([1,0,0])
-        FrameSupport(length=1/8,
-                     extraBottom=FrameBottomZ()+abs(PivotZ()),
-                     chamferFront=true, teardropFront=true);
-        
-        translate([ForendLength(), 0,0])
-        mirror([1,0,0])
-        FrameSupport(length=PivotRadius()+(ForendLength()-PivotX())+abs(PivotZ())+FrameTopZ(),
-                     chamferFront=true, teardropFront=true);
-      }
+      // Left-side text
+      translate([ForendLength()-0.375,FrameWidth()/2,FrameBoltZ()-(fontSize/2)])
+      rotate([90,0,0])
+      linear_extrude(height=LogoTextDepth(), center=true)
+      mirror([1,0])
+      text(BRANDING_MODEL_NAME, size=fontSize, font="Impact", halign="left");
     }
     
-    // Cutout the pivot track for the barrel collar to pass
-    translate([PivotX(), 0, PivotZ()])
-    rotate([0,180,0]) rotate([90,0,0])
-    linear_extrude(BarrelSleeveDiameter()+(WallBarrel()*2)+(clearance*2), center=true) {
-      rotate(-PivotAngle())
-      translate([abs(PivotZ()),PivotZ()])
-      square([PivotX()*3/2, abs(PivotZ())+ManifoldGap()]);
-      
-      semidonut(major=PivotX()*3, minor=abs(PivotZ())*2, angle=PivotAngle());
-    }
-    
-    
-    // Ensure the barrel and sleeve can pivot
-    for (A = [0, PivotAngle()])
-    Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1)
-    TopBreak_Barrel(length=ForendLength()-PivotX(), cutter=true);
-    
-    // Clearance for the barrel collar
+    color("Tan", alpha)
+    RenderIf(doRender) DebugHalf(enabled=debug)
     difference() {
-      hull()
+      union() {
+        FrameSupport(length=ForendLength(),
+                     chamferBack=true, teardropBack=true);
+        
+        hull() {
+          translate([PivotX(), 0, PivotZ()])
+          rotate([90,0,0])
+          ChamferedCylinder(r1=PivotRadius()-0.01, r2=1/4, h=3,
+                            teardropTop=false, teardropBottom=false, center=true);
+          
+          // Front face
+          translate([ForendLength(), 0,0])
+          mirror([1,0,0])
+          FrameSupport(length=1/8,
+                       extraBottom=FrameBottomZ()+abs(PivotZ()),
+                       chamferFront=true, teardropFront=true);
+          
+          translate([ForendLength(), 0,0])
+          mirror([1,0,0])
+          FrameSupport(length=PivotRadius()+(ForendLength()-PivotX())+abs(PivotZ())+FrameTopZ(),
+                       chamferFront=true, teardropFront=true);
+        }
+      }
+      
+      // Cutout the pivot track for the barrel collar to pass
+      translate([PivotX(), 0, PivotZ()])
+      rotate([0,180,0]) rotate([90,0,0])
+      linear_extrude(BarrelSleeveDiameter()+(WallBarrel()*2)+(clearance*2), center=true) {
+        rotate(-PivotAngle())
+        translate([abs(PivotZ()),PivotZ()])
+        square([PivotX()*3/2, abs(PivotZ())+ManifoldGap()]);
+        
+        semidonut(major=PivotX()*3, minor=abs(PivotZ())*2, angle=PivotAngle());
+      }
+      
+      
+      // Ensure the barrel and sleeve can pivot
       for (A = [0, PivotAngle()])
       Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1)
-      translate([-1,0,0])
-      rotate([0,90,0])
-      ChamferedCylinder(r1=BarrelRadius()+clearance,
-                        h=PivotX()+1,
-                        r2=1/16, $fn=100);
+      TopBreak_Barrel(length=ForendLength()-PivotX(), cutter=true);
       
-      PivotInnerBearing(cutter=true);
+      // Clearance for the barrel collar
+      difference() {
+        hull()
+        for (A = [0, PivotAngle()])
+        Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1)
+        translate([-1,0,0])
+        rotate([0,90,0])
+        ChamferedCylinder(r1=BarrelRadius()+clearance,
+                          h=PivotX()+1,
+                          r2=1/16, $fn=100);
+        
+        PivotInnerBearing(cutter=true);
+      }
+      
+      // Cut a path through the full range of motion (Barrel)
+      hull() for (A = [0, PivotAngle()])
+      Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1)
+      translate([PivotX(),0,0])
+      rotate([0,90,0])
+      cylinder(r=BarrelSleeveRadius()+BARREL_CLEARANCE,
+               h=ForendLength()-PivotX(), $fn=80);
+      
+      // Cut a path through the full range of motion (Collar)
+      for (A = [0, PivotAngle()])
+      Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1)
+      TopBreak_BarrelCollar(rearExtension=2, cutter=true);
+      
+      // Printability allowance
+      translate([ForendLength(),0,BarrelZ()])
+      rotate([0,-90,0])
+      HoleChamfer(r1=BarrelSleeveRadius(BARREL_CLEARANCE), r2=1/16,
+                  teardrop=true, $fn=60);
+
+      FrameBolts(cutter=true);
+       
+      TopBreak_Extractor(cutter=true);
+
+      *translate([-TopBreak_ReceiverFrontLength(),0,0])
+      ActionRod(length=ActionRodLength(), cutter=true);
     }
-    
-    // Cut a path through the full range of motion (Barrel)
-    hull() for (A = [0, PivotAngle()])
-    Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1)
-    translate([PivotX(),0,0])
-    rotate([0,90,0])
-    cylinder(r=BarrelSleeveRadius()+BARREL_CLEARANCE,
-             h=ForendLength()-PivotX(), $fn=80);
-    
-    // Cut a path through the full range of motion (Collar)
-    for (A = [0, PivotAngle()])
-    Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1)
-    TopBreak_BarrelCollar(rearExtension=2, cutter=true);
-    
-    // Printability allowance
-    translate([ForendLength(),0,BarrelZ()])
-    rotate([0,-90,0])
-    HoleChamfer(r1=BarrelSleeveRadius(BARREL_CLEARANCE), r2=1/16,
-                teardrop=true, $fn=60);
-
-    FrameBolts(cutter=true);
-     
-    TopBreak_Extractor(cutter=true);
-
-    *translate([-TopBreak_ReceiverFrontLength(),0,0])
-    ActionRod(length=ActionRodLength(), cutter=true);
   }
 }
 module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, debug=false, alpha=1) {
