@@ -3,7 +3,6 @@ use <../../../Meta/Units.scad>;
 use <../../../Meta/Resolution.scad>;
 
 use <../../../Vitamins/Nuts And Bolts.scad>;
-use <../../../Vitamins/Rod.scad>;
 
 use <../../../Shapes/Components/AR15/Mating Pins.scad>;
 use <../../../Shapes/Components/AR15/Trigger Pocket.scad>;

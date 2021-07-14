@@ -1,4 +1,5 @@
 # [\#Liberator12k Manual](../../README.md)
+
 ## Lower Receiver: Lower Mount
 
 This component couples the lower to the receiver. It has clearances and supports for the standard linear hammer.
@@ -12,12 +13,14 @@ This component couples the lower to the receiver. It has clearances and supports
 <!-- blank line -->
 
 ## How it Works
-The mount is sandwiched in with the lower side plates. The T-lug tabs secure the
-mount into the lower. The rear mount has a longer T-lug than the front mount.
+
+The mount is sandwiched in with the lower side plates. The T-lug tabs secure the mount into the lower. The rear mount
+has a longer T-lug than the front mount.
 
 ## Bill of Materials
 
 ### Prints
+
 45g, 4h30m
 
 | Part                                                                                                | Settings             | Filament | Time   |
@@ -26,5 +29,5 @@ mount into the lower. The rear mount has a longer T-lug than the front mount.
 | ![LowerMount_Rear.stl](LowerMount_Rear_thumb.png)<br>[LowerMount_Rear.stl](LowerMount_Rear.stl)     | 3mm Walls 50% Infill | 23g      | 2h21m  |
 
 ## Assembly
-Install 6D nail into the rear mount, from the front to rear.
-See [Lower](Lower.md).
+
+Install 6D nail into the rear mount, from the front to rear. See [Lower](Lower.md).

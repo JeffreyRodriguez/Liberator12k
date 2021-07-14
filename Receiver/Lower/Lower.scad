@@ -35,7 +35,7 @@ _ALPHA_LOWER = 1;  // [0:0.1:1]
 LOWER_BOLT = "#8-32"; // ["M4", "#8-32"]
 LOWER_BOLT_CLEARANCE = 0.015;
 LOWER_BOLT_HEAD = "flat"; // ["socket", "flat"]
-LOWER_BOLT_NUT = "heatset"; // ["hex", "heatset"]
+LOWER_BOLT_NUT = "heatset"; // ["hex", "heatset", "heatset-long"]
 
 function LowerCenterWidth() = 0.51;
 
@@ -269,11 +269,11 @@ module LowerTriggerPocket() {
   }
 }
 
-module LowerCutouts(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT) {
+module LowerCutouts(chamferLugs=true, boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT) {
   ReceiverLugFront(width=TriggerWidth(),
-                   cutter=true, chamferCutterHorizontal=true);
+                   cutter=true, chamferCutterHorizontal=chamferLugs);
   ReceiverLugRear(width=TriggerWidth(), hole=false,
-                   cutter=true, chamferCutterHorizontal=true);
+                   cutter=true, chamferCutterHorizontal=chamferLugs);
 
   GuardBolt(length=1.25, boltSpec=boltSpec, head=head, nut=nut, cutter=true);
 
@@ -338,7 +338,7 @@ module Lower_Middle(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_N
       GripSplitter(clearance=0);
     }
 
-    LowerCutouts(boltSpec=LowerBolt(), head=head, nut=nut);
+    LowerCutouts(chamferLugs=false, boltSpec=LowerBolt(), head=head, nut=nut);
 
     SearSupportTab(cutter=true);
 

@@ -31,10 +31,17 @@ BOLTS = [
   ["1/4\"-20", Spec_BoltOneQuarter()],
   ["5/16\"-18", Spec_BoltFiveSixteenths()],
   ["1/2\"-13", Spec_BoltOneHalf()],
+  
+  ["M2", Spec_BoltM2()],
+  ["M2.5", Spec_BoltM2pt5()],
   ["M3", Spec_BoltM3()],
+  ["M3.5", Spec_BoltM3pt5()],
   ["M4", Spec_BoltM4()],
   ["M5", Spec_BoltM5()],
-
+  ["M6", Spec_BoltM6()],
+  ["M8", Spec_BoltM8()],
+  ["M10", Spec_BoltM10()],
+  ["M12", Spec_BoltM12()],
 ];
 
 function BoltSpec(bolt) = slookup(bolt, BOLTS);

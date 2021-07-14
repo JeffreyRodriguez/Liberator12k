@@ -30,7 +30,6 @@ use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
-use <../../Vitamins/Rod.scad>;
 
 use <../Receiver.scad>;
 use <../Frame.scad>;
@@ -197,7 +196,7 @@ function ForegripMinX() = ForendMaxX()+ForegripGap()+ActionRodTravel()+1.5;
 
 function SpindleTogglePinOffset() = 0.5;
 function SpindleTogglePinX() = ForendMaxX()-SpindleTogglePinOffset();
-function SpindleTogglePinZ() = CylinderZ()-0.3215/2;
+function SpindleTogglePinZ() = CylinderZ()-0.3215;
 function SpindlePinMinX() = ForendMinX()+BlastPlateThickness()+0.375;
 function SpindlePinTravel() = RecoilPlateThickness();
 function SpindlePinMaxX() = SpindlePinMinX()+SpindlePinTravel();
@@ -409,10 +408,11 @@ module Revolver_ReceiverFront(contoured=true, debug=_CUTAWAY_RECEIVER_FRONT, alp
   difference() {
     union() {
       hull() {
-        FrameSupport(length=length, extraBottom=FrameBottomZ()+abs(CylinderZ()));
+        FrameSupport(length=length, extraBottom=FrameBottomZ()+abs(CylinderZ()),
+                     chamferFront=true, teardropFront=true);
         
         mirror([1,0,0])
-        ReceiverTopSegment(length=length);
+        ReceiverTopSegment(length=length, chamferBack=false);
       }
       
       // Cover the back of the cylinder to stop gas blowback
@@ -453,13 +453,13 @@ module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND, $
     fontSize = 0.375;
     
     // Right-side text
-    translate([ForendMaxX()-0.375,-FrameWidth()/2,FrameBoltZ()-(fontSize/2)])
+    translate([ForendMaxX()-0.125,-FrameWidth()/2,FrameBoltZ()-(fontSize/2)])
     rotate([90,0,0])
     linear_extrude(height=LogoTextDepth(), center=true)
     text(BRANDING_MODEL_NAME, size=fontSize, font="Impact", halign="right");
 
     // Left-side text
-    translate([ForendMaxX()-0.375,FrameWidth()/2,FrameBoltZ()-(fontSize/2)])
+    translate([ForendMaxX()-0.125,FrameWidth()/2,FrameBoltZ()-(fontSize/2)])
     rotate([90,0,0])
     linear_extrude(height=LogoTextDepth(), center=true)
     mirror([1,0])
@@ -475,11 +475,22 @@ module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND, $
       hull() {
         translate([ForendMinX(),0,0])
         FrameSupport(length=Revolver_BarrelSupportLength(),
-                     extraBottom=extraBottom);
+                     extraBottom=extraBottom,
+                     chamferBack=true, teardropBack=true);
         
         translate([ForendMinX(), 0, 0])
         mirror([1,0,0])
-        ReceiverTopSegment(length=Revolver_BarrelSupportLength());
+        ReceiverTopSegment(length=Revolver_BarrelSupportLength(),
+                           chamferFront=false);
+      
+      
+        // Barrel Support Bolt Support
+        for (M = [0,1]) mirror([0,M,0])
+        translate([ForendMaxX(),BarrelRadius()+0.375,0])
+        rotate([0,-90,0])
+        ChamferedCylinder(r1=0.25, r2=CR(),
+                 h=Revolver_BarrelSupportLength()-BlastPlateThickness(),
+                            teardropTop=true);
       }
 
       // Around the barrel
@@ -509,7 +520,7 @@ module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND, $
       }
       
       // Spindle toggle pivot pin support
-      translate([ForendMaxX()-1, -(0.6875/2), CylinderZ()-(SpindleRadius()+WallSpindle())])
+      translate([ForendMaxX()-1, -(0.6875/2), CylinderZ()-(SpindleRadius()*2)-WallSpindle()-0.125])
       ChamferedCube([1,
                      0.6875,
                      1], r=CR(), teardropFlip=[false,true,true]);
@@ -598,7 +609,7 @@ module Revolver_FrameSpacer(length=ForendMinX(), debug=false, alpha=_ALPHA_FOREN
       FrameSupport(length=ManifoldGap(), extraBottom=0.5);
     
       mirror([1,0,0])
-      ReceiverTopSegment(length=length);
+      ReceiverTopSegment(length=length, chamferFront=false, chamferBack=false);
     }
 
     FrameBolts(cutter=true);
@@ -633,9 +644,9 @@ module Revolver_ForendSpindleToggleLinkage(pivot=0, cutter=false, clearance=0.01
     color("Chocolate") render()
     difference() {
       union() {        
-        translate([0,0.5,0])
+        translate([0,0.625,0])
         rotate([90,0,0])
-        linear_extrude(height=0.125)
+        linear_extrude(height=0.25)
         difference() {
           hull() {
             translate([SpindleLinkagePinX(),CylinderZ()])
@@ -839,7 +850,6 @@ module Revolver_Foregrip_print() {
   Revolver_Foregrip();
 }
 
-
 module Revolver_ActionRodJig() {
   height=0.75;
   width=0.75;
@@ -851,10 +861,10 @@ module Revolver_ActionRodJig() {
                    height], r=1/16);
 
     // Charging rod
-    translate([0,0,height-RodRadius(ChargingRod())])
+    translate([-0.125,-0.125,height-0.125])
     rotate([0,90,0])
-    SquareRod(ChargingRod(), length=length+ManifoldGap(),
-              clearance=RodClearanceSnug());
+    cube([0.25, 0.25, length+ManifoldGap()])
+    SquareRod(ChargingRod(), length=length+ManifoldGap());
 
     // ZigZag Actuator
     for (X = [0,ChargerTravel()+(ChargerTowerLength()/2)])

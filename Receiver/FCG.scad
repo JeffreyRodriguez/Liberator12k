@@ -25,7 +25,7 @@ use <Receiver.scad>;
 /* [Print] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "FCG_Housing", "FCG_ChargingHandle", "FCG_Disconnector", "FCG_Hammer", "FCG_HammerTail", "FCG_FiringPinCollar", "FCG_RecoilPlateJig", "FCG_RecoilPlate_Projection"]
+_RENDER = ""; // ["", "FCG_Housing", "FCG_ChargingHandle", "FCG_Disconnector", "FCG_Hammer", "FCG_HammerTail", "FCG_FiringPinCollar", "FCG_RecoilPlate_Fixture", "FCG_RecoilPlate_Fixture4", "FCG_RecoilPlate_TapGuide", "FCG_RecoilPlate_Projection"]
 
 /* [Assembly] */
 _SHOW_FIRE_CONTROL_HOUSING = true;
@@ -67,6 +67,9 @@ RECOIL_PLATE_BOLT_CLEARANCE = 0.015;
 
 FCG_Disconnector_SPRING_DIAMETER = 0.23;
 FCG_Disconnector_SPRING_CLEARANCE = 0.005;
+
+HAMMER_BOLT_SLEEVE_DIAMETER = 0.28125;
+HAMMER_BOLT_SLEEVE_CLEARANCE = 0.01;
 
 // Firing pin head thickness
 FIRING_PIN_HEAD_THICKNESS = 0.025; // 6D Box Nail
@@ -167,7 +170,22 @@ FCG_DisconnectorLength = abs(FCG_HammerCockedX-FCG_DisconnectorPivotX)
 FCG_DisconnectorSpringY = FCG_DisconnectorOffsetY
                         + FCG_Disconnector_SPRING_DIAMETER
                         + (1/16);
-
+                        
+function FCG_RecoilPlateHoles(spindleZ=-1) = [
+    [0, 0, 0], // Firing Pin
+    [0, 0, spindleZ], // ZZR Spindle
+  
+    // Recoil plate bolts
+    [0, RecoilPlateBoltOffsetY(), 0],
+    [0, -RecoilPlateBoltOffsetY(), 0],
+  
+    // Tension rod bolts
+    [0, TensionRodTopOffsetSide(),TensionRodTopZ()],
+    [0, -TensionRodTopOffsetSide(),TensionRodTopZ()],
+    [0, TensionRodBottomOffsetSide(),TensionRodBottomZ()],
+    [0, -TensionRodBottomOffsetSide(),TensionRodBottomZ()]
+  ];
+  
 //$t= AnimationDebug(ANIMATION_STEP_CHARGE);
 //$t= AnimationDebug(ANIMATION_STEP_CHARGER_RESET, start=0.85);
 
@@ -299,7 +317,7 @@ module RecoilPlateBolts(bolt=RecoilPlateBolt(), boltLength=1.5, template=false, 
              clearance=cutter?clearance:0);
 }
 
-module RecoilPlate(spindleZ=-1, contoured=true, cutter=false, debug=false, alpha=1, clearance=0.005, template=false, templateHoleDiameter=0.08) {
+module RecoilPlate(length=RecoilPlateLength(), spindleZ=-1, contoured=true, cutter=false, debug=false, alpha=1, clearance=0.005, template=false, templateHoleDiameter=0.08) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
@@ -325,10 +343,10 @@ module RecoilPlate(spindleZ=-1, contoured=true, cutter=false, debug=false, alpha
     
     // Contoured or simplified (rectangular) plate
     if (contoured) {
-      translate([0.5-RecoilPlateLength()-clear,0,0])
+      translate([0.5-length,0,0])
       rotate([0,90,0])
-      linear_extrude(RecoilPlateLength()+clear, center=false)
-      offset(r=(cutter?0.007:0))
+      linear_extrude(length, center=false)
+      offset(r=(cutter?clearance:0))
       hull() {
         projection()
         rotate([0,-90,0])
@@ -339,20 +357,20 @@ module RecoilPlate(spindleZ=-1, contoured=true, cutter=false, debug=false, alpha
         circle(r=0.375+clear2);
       }
     } else {
-      translate([0.5-RecoilPlateLength()-clear,-1-clear,ReceiverBottomZ()-0.25-clear])
-      cube([RecoilPlateLength()+clear2,
+      translate([0.5-length,-1-clear,ReceiverBottomZ()-0.25-clear])
+      cube([length,
             RecoilPlateWidth()+clear2,
             RecoilPlateHeight()+clear2]);
     }
       
-    hull() for (Y = [0,-0.25, 0.25]) translate([0,Y,0])
-    ActionRod(cutter=true);
+    hull() for (Y = [0,-0.25, 0.25]) translate([0,Y,(cutter?clear:0)])
+    ActionRod(cutter=!cutter);
     
     if (template) {
       for (Hole = TemplateHoles)
-      translate([0.5-RecoilPlateLength()-clear,Hole.y,Hole.z])
+      translate([0.5-length-clear,Hole.y,Hole.z])
       rotate([0,90,0])
-      cylinder(r=templateHoleDiameter/2, h=RecoilPlateLength(), $fn=8);
+      cylinder(r=templateHoleDiameter/2, h=length, $fn=8);
       
     } else if (!cutter) {
       FiringPin(cutter=true);
@@ -361,7 +379,7 @@ module RecoilPlate(spindleZ=-1, contoured=true, cutter=false, debug=false, alpha
       // ZZR cylinder spindle
       translate([0,0,-1])
       rotate([0,-90,0])
-      cylinder(r=5/16/2, h=RecoilPlateLength());
+      cylinder(r=5/16/2, h=length);
     }
   }
 }
@@ -657,8 +675,9 @@ module FCG_HammerTail(clearance=UnitsImperial(0.01), debug=false, alpha=1) {
     // Hammer Bolt Hole
     translate([FCG_HammerTailMinX,0,0])
     rotate([0,90,0])
-    ChamferedCircularHole(r1=0.28/2, r2=1/32, $fn=40,
-                          h=FCG_HammerTailLength());
+    ChamferedCircularHole(
+      r1=(HAMMER_BOLT_SLEEVE_DIAMETER/2)+HAMMER_BOLT_SLEEVE_CLEARANCE,
+      r2=1/32, $fn=40, h=FCG_HammerTailLength());
     
     // Main Spring Hole
     translate([FCG_HammerTailMinX+FCG_HammerTailLength(),0,0])
@@ -806,23 +825,102 @@ module FCG_Housing_print() {
 //****************
 //* Printed Jigs *
 //****************
-module FCG_RecoilPlateJig(firingPinRadius=1/32, clearance=0.005, extend=0.125) {
+module FCG_RecoilPlate_TapGuide(xyz = [0.25,0.25,1.5], holeRadius=0.1770/2, spindleZ=-1, contoured=FCG_RECOIL_PLATE_CONTOURED) {
+  width = RecoilPlateWidth() + (xyz.x*2);
+  length = RecoilPlateHeight() + (xyz.y*2);
+  height = xyz.z;
+  
+
+  TemplateHoles = FCG_RecoilPlateHoles(spindleZ=spindleZ);
+  
   render()
   difference() {
-    translate([0,-(RecoilPlateWidth()/2)-extend,-(RecoilPlateHeight()/2)-extend])
-    cube([RecoilPlateLength()+extend, RecoilPlateWidth()+extend, RecoilPlateHeight()+(+extend*2)]);
+    translate([-(length/2)+0.125, -(width/2), 0])
+    ChamferedCube([length, width, height], r=1/16);
 
-    RecoilPlate(cutter=true);
-    
-    
-    RecoilPlateBolts(bolt=BoltSpec("Template"), head="none");
-    
-    rotate([0,90,0])
-    cylinder(r=firingPinRadius+clearance,
-             h=RecoilPlateLength()+extend+ManifoldGap(2),
-            $fn=8);
+    rotate([0,-90,0])
+    translate([height-0.5,0,0])
+    RecoilPlate(contoured=contoured, cutter=true, clearance=0.005);
+
+    ChamferedCircularHole(r1=0.25, r2=1/8, h=height-RecoilPlateLength(),
+                          teardropTop=true,teardropBottom=true);
+
+    for (hole = TemplateHoles)
+    translate([-hole.z,hole.y,0])
+    cylinder(r=holeRadius, h=height);
   }
 }
+
+module FCG_RecoilPlate_Fixture(xyz = [1,0.5,0.5], holeRadius=0.1875, spindleZ=-1, contoured=FCG_RECOIL_PLATE_CONTOURED) {
+  width = RecoilPlateWidth() + (xyz.x*2);
+  length = RecoilPlateHeight() + (xyz.y*2);
+  height = xyz.z;
+  
+
+  TemplateHoles = FCG_RecoilPlateHoles(spindleZ=spindleZ);
+  
+  render()
+  difference() {
+    translate([-(length/2)+0.125, -(width/2), 0])
+    ChamferedCube([length, width, height], r=1/16);
+
+    translate([height-0.5,0,0])
+    rotate([0,-90,0])
+    RecoilPlate(cutter=true, clearance=0.005);
+
+    // Template holes
+    for (hole = TemplateHoles)
+    translate([-hole.z,hole.y,0])
+    cylinder(r=holeRadius, h=height);
+    
+    // Fixture holes
+    for (M = [0,1]) mirror([0,M,0])
+    for (hole = [[0,1.5,0],
+                 [1,1.5,0],
+                 [-1,1.5,0]])
+    translate(hole)
+    cylinder(r=(0.2010/2)+0.01, h=height);
+    
+  }
+}
+
+module FCG_RecoilPlate_Fixture4(xyz = [1,0.375,0.5], holeRadius=0.1875, spindleZ=-1, contoured=FCG_RECOIL_PLATE_CONTOURED) {
+  
+  width = (RecoilPlateWidth()*2)+ 1.5;
+  length = (RecoilPlateHeight()*2)+1;
+  height = xyz.z;
+  
+
+  TemplateHoles = FCG_RecoilPlateHoles(spindleZ=spindleZ);
+  
+  render()
+  difference() {
+    translate([-(length/2)-0.125, -(width/2), 0])
+    ChamferedCube([length, width, height], r=1/16);
+
+    for (X = [-1.25, 1.25]) for (Y=[-1.25,1.25]) translate([X,Y,0]) {
+    
+      // Recoil Plate cutout
+      translate([height-0.5,0,0])
+      rotate([0,-90,0])
+      RecoilPlate(contoured=contoured, cutter=true, clearance=0.005);
+
+      // Template holes
+      for (hole = TemplateHoles)
+      translate([-hole.z,hole.y,0])
+      cylinder(r=holeRadius, h=height);
+    }
+      
+    // Fixture holes
+    for (X = [-5:1:5]) for (Y = [0,-2.5,2.5,3.75]) translate([X+0.375,Y,0])
+    cylinder(r=(0.2010/2)+0.01, h=height);
+    
+    // Index pin
+    cylinder(r=3/32/2, h=height);
+  }
+}
+///
+
 //**************
 //* Assemblies *
 //**************
@@ -924,8 +1022,8 @@ if ($preview) {
   FCG_Housing_print();
   
   if (_RENDER == "FCG_Hammer")
-  rotate([0,-90,0])
-  translate([FCG_HammerLength-FCG_HammerCockedX,0,0])
+  rotate([0,90,0])
+  translate([FCG_HammerCockedX,0,0])
   FCG_Hammer();
   
   if (_RENDER == "FCG_HammerTail")
@@ -947,28 +1045,16 @@ if ($preview) {
   translate([FiringPinTravel(),0,0])
   FCG_FiringPinCollar();
   
-  if (_RENDER == "FCG_RecoilPlateJig")
-  RecoilPlateJig();
+  if (_RENDER == "FCG_RecoilPlate_Fixture")
+  FCG_RecoilPlate_Fixture();
   
-  if (_RENDER == "FCG_Receiver_Projection")
-  projection()
-  rotate([0,90,0])
-  difference() {
-    ReceiverSegment(highTop=false);
-    
-    translate([-0.5,0,0])
-    ReceiverBottomSlot(length=ReceiverLength()-0.5, chamferBottom=false);
-    ReceiverRoundSlot();
-    ReceiverSideSlot();
-    
-    TensionBolts(cutter=true, bolt=Spec_BoltTemplate());
-    
-    FiringPin(template=template, cutter=true);
-    RecoilPlateBolts(template=template, cutter=true);
-    Revolver_CylinderSpindle(template=template, cutter=true);
-  }
+  if (_RENDER == "FCG_RecoilPlate_Fixture4")
+  FCG_RecoilPlate_Fixture4();
+  
+  if (_RENDER == "FCG_RecoilPlate_TapGuide")
+  FCG_RecoilPlate_TapGuide();
   
   if (_RENDER == "FCG_RecoilPlate_Projection")
   projection() rotate([0,90,0])
-  RecoilPlate(template=true);
+  RecoilPlate(template=true, contoured=FCG_RECOIL_PLATE_CONTOURED);
 }

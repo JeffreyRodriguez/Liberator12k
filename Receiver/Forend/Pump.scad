@@ -12,7 +12,6 @@ use <../../Shapes/Teardrop.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 use <../../Vitamins/Pipe.scad>;
-use <../../Vitamins/Rod.scad>;
 use <../../Vitamins/Square Tube.scad>;
 
 use <../Lower/Lower.scad>;

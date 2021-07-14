@@ -7,6 +7,10 @@ use <../../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 
 
+/* [Vitamins] */
+RECEIVER_LUG_BOLTS = "M4"; // ["#8-32", "M4"]
+RECEIVER_LUG_BOLTS_CLEARANCE = 0.005;
+
 function GripWidth() = 1;
 function GripCeiling() = 0.75;
 function GripCeilingZ() = -GripCeiling();
@@ -44,11 +48,11 @@ function ReceiverLugBoltsArray() = [
     -0.375]
 ];
 
-module ReceiverLugBolts(boltSpec=Spec_BoltM4(),
+module ReceiverLugBolts(boltSpec=BoltSpec(RECEIVER_LUG_BOLTS),
                             length=UnitsMetric(30),
                             head="socket", nut="hex",
                             cutter=false,
-                            clearance=0.005,
+                            clearance=RECEIVER_LUG_BOLTS_CLEARANCE,
                             teardrop=false,
                             teardropAngle=90, $fn=8) {
 

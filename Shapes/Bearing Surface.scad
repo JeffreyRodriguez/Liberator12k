@@ -18,7 +18,7 @@ module BearingSurface2D(r=4, depth=1, segments=6) {
 
 module BearingSurface(r=4, depth=1, segments=6, length=30, taperDepth=2, center=true) {
   
-  translate([0,0,(center ? length/2 : 0)])
+  translate([0,0,(center ? -length/2 : 0)])
   union() {
     linear_extrude(height=length)
     BearingSurface2D(r, depth, segments);

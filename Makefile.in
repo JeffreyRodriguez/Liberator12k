@@ -4,7 +4,7 @@ SLOW_FRAME_COUNT=300
 SLOW_FRAMES=$(shell seq 0 $(SLOW_FRAME_COUNT))
 MDBIN=cmark-gfm -e table --unsafe
 OSBIN=nice openscad
-OSOPTS=--imgsize=1920,1080 --quiet
+OSOPTS=--imgsize=1920,1080
 OS_CAM_AUTO=--projection=p --autocenter --viewall
 ANIMATE_BIN=./bin/animate.sh
 THUMBNAILBIN=convert -thumbnail 200
@@ -39,19 +39,16 @@ COLORSCHEME=Starnight
 	$(THUMBNAILBIN) $@ $(basename $@)_thumb.png
 
 %.html: %.md
-	$(MDBIN) $(basename $@).md | sed 's/.md/.html/' | sed 's/README.html/index.html/' > $@
-		
-index.html: README.html
-		mv $^ $@
+	$(MDBIN) $(basename $@).md | sed 's/.md/.html/' > $@
 
-*/%.stl %.stl:
-	mkdir -p $(dir $@)
+%.stl:
 	$(OSBIN) $(OSOPTS) -o $@ -o $(basename $@).png \
 	  --render -D _RENDER=\"`echo "$(notdir $@)" | sed 's/.stl$\$///'`\" \
 		--projection=p --autocenter --viewall \
 		`if [ '$(dir "$@")' != './' ]; then echo -P '$(dir $@)' | sed 's/\/$///'; fi` \
 	  `echo $(notdir $@) | sed 's/.stl//' | awk -F _ '{ print $$1 }'`.scad
 	$(THUMBNAILBIN) $(basename $@).png $(basename $@)_thumb.png
+
 FORCE:
 clean: clean_ANIMATE clean_STL cleanGCODE cleanMP4 clean_HTML clean_PNG
 clean_ANIMATE:

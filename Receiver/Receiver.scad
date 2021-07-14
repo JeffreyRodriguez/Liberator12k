@@ -15,7 +15,6 @@ use <../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 use <../Vitamins/Pipe.scad>;
-use <../Vitamins/Rod.scad>;
 
 /* [Print] */
 
@@ -101,11 +100,11 @@ function Receiver_MlokSideZ() = ReceiverBottomZ()+0.5;
 // * Vitamins *
 // ************
 module TensionBoltIterator() {
-  for (YZ = [[TensionRodTopOffsetSide(),TensionRodTopZ()],
-             [-TensionRodTopOffsetSide(),TensionRodTopZ()],
-             [TensionRodBottomOffsetSide(),TensionRodBottomZ()],
-             [-TensionRodBottomOffsetSide(),TensionRodBottomZ()]])
-  translate([0,YZ[0], YZ[1]])
+  for (M = [0,1]) mirror([0,M,0])
+  for (xyz = [[0,TensionRodTopOffsetSide(),TensionRodTopZ(),0],
+              [0,TensionRodBottomOffsetSide(),TensionRodBottomZ(),1]])
+  translate([xyz[0],xyz[1],xyz[2]])
+  mirror([0,0,xyz[3]])
   rotate([0,-90,0])
   children();
 }
@@ -228,8 +227,7 @@ module ReceiverTopSlot(length=ReceiverLength(), width=ReceiverTopSlotWidth(), he
     translate([TensionRodTopZ()+WallTensionRod(),
                -(horizontalWidth/2)-clearance])
     ChamferedSquareHole(sides=[horizontalHeight+clearance,horizontalWidth+(clearance*2)], length=length,
-                        center=false, corners=false, chamferRadius=chamferRadius,
-                        chamferTop=false, chamferBottom=false);
+                        center=false, corners=false, chamferRadius=chamferRadius);
   }
 }
 
@@ -259,13 +257,15 @@ module ReceiverBottomSlotInterface(length=ReceiverLength(), height=ReceiverOR(),
     }
   }
 }
-module ReceiverTopSegment(length=ReceiverLength()) {
-  translate([0, -TensionRodTopOffsetSide(), 0])
+module ReceiverTopSegment(length=ReceiverLength(), chamferFront=true, chamferBack=true, teardropFront=true, teardropBack=true) {
+  CR = 1/4;
+  
+  for (Y = [1,-1]) 
+  translate([0, Y*(TensionRodTopOffsetSide()-CR), ReceiverTopZ()-CR])
   rotate([0,-90,0])
-  linear_extrude(length)
-  ChamferedSquare(xy=[ReceiverTopZ(),(TensionRodTopOffsetSide()*2)], r=1/4,
-                  teardropBottom=false,
-                  teardropTop=false, $fn=50);
+  ChamferedCylinder(r1=CR, r2=1/16, h=length, $fn=50,
+                    chamferBottom=chamferFront, chamferTop=chamferBack,
+                    teardropBottom=teardropFront, teardropTop=teardropBack);
 }
 
 module ReceiverSegment(length=1, chamferFront=false, chamferBack=false, highTop=true) {
@@ -303,6 +303,7 @@ module ReceiverSegment(length=1, chamferFront=false, chamferBack=false, highTop=
 // *****************
 module Receiver(receiverLength=ReceiverLength(), doRender=true, alpha=1, debug=false) {
   mlokSupportHeight=0.75;
+  CHAMFER_RADIUS = 1/16;
   
   color("Tan", alpha) RenderIf(doRender)
   DebugHalf(enabled=debug)
@@ -321,6 +322,14 @@ module Receiver(receiverLength=ReceiverLength(), doRender=true, alpha=1, debug=f
                      (Receiver_MlokSideY()*2),
                      mlokSupportHeight], r=1/16,
                      teardropFlip=[true,true,true]);
+      
+      
+      // Fillet M-LOK-to-frame joint
+      for (M = [0, 1]) mirror([0,M,0])
+      translate([-CHAMFER_RADIUS,ReceiverOR()-ManifoldGap(),Receiver_MlokSideZ()+(mlokSupportHeight/2)-ManifoldGap()])
+      rotate([90,0,0]) rotate([0,-90,0])
+      Fillet(h=UnitsMetric((32*2)+8)+1-(1/8), r=1/8, $fn=50);
+      
       
       children();
     }

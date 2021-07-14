@@ -103,13 +103,16 @@ function AnimationDebug(step, start=0, end=1, T=$t) = AnimationStepStart(step)
 // TODO: Add END support to subanimate, first stab:
 //function SubAnimate(step, start=0, end=1) = max(0, (Animate(step)-start))*(1/(1-start));
 
-echo("AnimationStep($t):", AnimationStep($t));
-echo("Animate(AnimationStep($t)):", Animate(AnimationStep($t)));
 //echo("AnimationStepStart(ANIMATION_STEP_CHARGE):", AnimationStepStart(ANIMATION_STEP_CHARGE));
 //echo("AnimationStepEnd(ANIMATION_STEP_CHARGE):", AnimationStepEnd(ANIMATION_STEP_CHARGE));
 //echo("SubAnimateStart(ANIMATION_STEP_CHARGE, start=0.25):", SubAnimateStart(ANIMATION_STEP_CHARGE, start=0.25));
 //echo("SubAnimateEnd(ANIMATION_STEP_CHARGE, end=0.75):", SubAnimateEnd(ANIMATION_STEP_CHARGE, end=0.75));
 //echo("SubAnimate(ANIMATION_STEP_CHARGE, start=0.25, end=0.75)",SubAnimate(ANIMATION_STEP_CHARGE, start=0.25, end=0.75));
+
+
+// General animation debug info
+//echo("AnimationStep($t):", AnimationStep($t));
+//echo("Animate(AnimationStep($t)):", Animate(AnimationStep($t)));
 
 // Debug-level logging, show the value of each animation step.
 *for (i = [0 : AnimationStepCount() -1])
