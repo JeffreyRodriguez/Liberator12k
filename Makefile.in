@@ -41,7 +41,7 @@ COLORSCHEME=Starnight
 %.html: %.md
 	$(MDBIN) $(basename $@).md | sed 's/.md/.html/' > $@
 
-*.stl:
+%.stl:
 	$(OSBIN) $(OSOPTS) -o $@ -o $(basename $@).png \
 	  --render -D _RENDER=\"`echo "$(notdir $@)" | sed 's/.stl$\$///'`\" \
 		--projection=p --autocenter --viewall \
