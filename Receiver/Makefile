@@ -13,4 +13,4 @@ Forend Lower Components: FORCE
 .SECONDEXPANSION:
 Receiver FCG Frame Stock: $$($$@_STL) $$@.html $$@.mp4 $$@.png
 
-all: index.html Receiver FCG Frame Stock Lower Forend
+all: README.html Receiver FCG Frame Stock Lower Forend
