@@ -10,58 +10,58 @@ TopBreak := ReceiverFront \
             BarrelCollar \
             Extractor
 Revolver := ReceiverFront \
-            FrameSpacer \
-            BarrelSupport \
-            Foregrip \
-            CylinderCore \
-            CylinderShell \
-            ForendSpindleToggleLinkage \
-            ForendSpindleToggleHandle
+						FrameSpacer \
+						BarrelSupport \
+						Foregrip \
+						CylinderCore \
+						CylinderShell \
+						ForendSpindleToggleLinkage \
+						ForendSpindleToggleHandle
 
-# Forend Models
-TopBreak_MODELS := CAFE12 CAFE12+ FP37 
-Revolver_MODELS := ZZR6x12
+# Forend Presets
+TopBreak_PRESETS := CAFE12 CAFE12+ FP37 
+Revolver_PRESETS := ZZR6x12
 
-MODELS := $(addprefix TopBreak_,$(TopBreak_MODELS)) $(addprefix Revolver_,$(Revolver_MODELS))
+PRESETS := $(addprefix TopBreak_,$(TopBreak_PRESETS)) $(addprefix Revolver_,$(Revolver_PRESETS))
 
-# All Part STLs for all forend models
-TopBreak_STLS := $(addprefix TopBreak_, $(foreach MODEL,$(TopBreak_MODELS),$(addsuffix .stl, $(addprefix $(addsuffix /, $(MODEL)),$(TopBreak)))))
-Revolver_STLS := $(addprefix Revolver_, $(foreach MODEL,$(Revolver_MODELS),$(addsuffix .stl, $(addprefix $(addsuffix /, $(MODEL)),$(Revolver)))))
+# All Part STLs for all forend presets
+TopBreak_STLS := $(addprefix TopBreak_, $(foreach PRESET,$(TopBreak_PRESETS),$(addsuffix .stl, $(addprefix $(addsuffix /, $(PRESET)),$(TopBreak)))))
+Revolver_STLS := $(addprefix Revolver_, $(foreach PRESET,$(Revolver_PRESETS),$(addsuffix .stl, $(addprefix $(addsuffix /, $(PRESET)),$(Revolver)))))
 
-MODEL_STLS := $(TopBreak_STLS) $(Revolver_STLS)
-MODEL_HTML := $(addsuffix .html,$(MODELS))
+PRESET_STLS := $(TopBreak_STLS) $(Revolver_STLS)
+PRESET_HTML := $(addsuffix .html,$(PRESETS))
 
 .SECONDEXPANSION:
+	
 # Forend Classes
 $(CLASSES): $$@.html $$@.mp4 $$@.png
-.PHONY: $(CLASSES)
 
-# Model dirs depends on their respective source
-$(MODELS): $$(addsuffix .scad,$$(firstword $$(subst _, ,$$@)))
+# Preset dirs depends on their respective source
+$(PRESETS): $$(addsuffix .scad,$$(firstword $$(subst _, ,$$@)))
 	mkdir -p $@
 	touch $@
 
-# Model STL depend on their respective source file
-$(MODEL_STLS):
-	$(eval CLASS_MODEL=$(firstword $(subst /, ,$@)))
-	$(eval CLASS=$(shell echo $(CLASS_MODEL) | awk -F _ '{ print $$1 }'))
-	$(eval MODEL=$(shell echo $(CLASS_MODEL) | awk -F _ '{ print $$2 }'))
+# Preset STL depend on their respective source file
+$(PRESET_STLS):
+	$(eval CLASS_PRESET=$(firstword $(subst /, ,$@)))
+	$(eval CLASS=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$1 }'))
+	$(eval PRESET=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$2 }'))
 	$(eval PART=$(basename $(notdir $@)))
 	@echo Target: $@
 	@echo Deps: $^
-	@echo Class_Model: $(CLASS_MODEL)
+	@echo Class_Preset: $(CLASS_PRESET)
 	@echo Class: $(CLASS)
-	@echo Model: $(MODEL)
+	@echo Preset: $(PRESET)
 	@echo Part: $(PART)
 	$(OSBIN) $(OSOPTS) --render -D _RENDER=\"$(CLASS)_$(PART)\" \
 	  --projection=p --autocenter --viewall \
-		-o $@ -o $(CLASS_MODEL)/$(PART).png \
-		-P $(MODEL) \
+		-o $@ -o $(CLASS_PRESET)/$(PART).png \
+		-P $(PRESET) \
 		$(CLASS).scad
-	$(THUMBNAILBIN) $(CLASS_MODEL)/$(PART).png $(CLASS_MODEL)/$(PART)_thumb.png
+	$(THUMBNAILBIN) $(CLASS_PRESET)/$(PART).png $(CLASS_PRESET)/$(PART)_thumb.png
 
-# HTML file for the model
-$(addsuffix .html,$(MODELS)): %.html : %.md
+# HTML file for the preset
+$(addsuffix .html,$(PRESETS)): %.html : %.md
 	$(MDBIN) $(basename $@).md | sed 's/\.md/\.html/' > $@
 
-all: README.html $(CLASSES) $(MODELS) $(MODEL_HTML) $(MODEL_STLS)
+all: README.html $(CLASSES) $(PRESETS) $(PRESET_HTML) $(PRESET_STLS)
