@@ -6,7 +6,7 @@ HTML := README.html About.html Printing.html Developers.html $(shell find Receiv
 DOCS := $(HTML) .manual $(shell find Receiver -name \*.png)
 
 RECEIVER_STL := Frame_Receiver.stl Components/Sightpost.stl \
-							Stock*.stl Lower/Lower_*.stl Lower/Trigger_*.stl \
+							Stock*.stl Lower/*.stl \
 							FCG*.stl
 dist:
 	mkdir -p $@
@@ -29,11 +29,13 @@ dist/Receiver: Receiver dist
 	cp $(addprefix Receiver/,$(RECEIVER_STL)) $@/
 
 FORENDS := TopBreak_CAFE12 TopBreak_CAFE12+ TopBreak_FP37 Revolver_ZZR6x12
-$(addprefix dist/Forend/,$(FORENDS)): Receiver
+FOREND_DIST := $(addprefix dist/Forend/,$(FORENDS))
+
+$(FOREND_DIST): Receiver
 	mkdir -p $@
 	cp -r $(addprefix Receiver/Forend/,$(FORENDS)) $@
 
-Liberator12k.zip: dist/changelog.txt dist/$(GIT_VERSION).version dist/docs dist/Receiver $(addprefix dist/Forend/,$(FORENDS))
+Liberator12k.zip: dist/changelog.txt dist/$(GIT_VERSION).version dist/docs dist/Receiver $(FOREND_DIST)
 	cd dist && zip ../Liberator12k.zip *
 
 Receiver: FORCE
