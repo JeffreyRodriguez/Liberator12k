@@ -22,3 +22,6 @@ artifacts:
   name: Liberator12k.zip
   discard-paths: no
   base-directory: .
+cache:
+  paths:
+    - Receiver/**/*
