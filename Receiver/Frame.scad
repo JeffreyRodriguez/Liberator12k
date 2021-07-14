@@ -214,11 +214,6 @@ module Receiver_LargeFrame(doRender=true, debug=false, alpha=1) {
   }
 }
 
-module Receiver_LargeFrame_print() {
-  rotate([0,90,0])
-  Receiver_LargeFrame();
-}
-
 // **************
 // * Assemblies *
 // **************
@@ -241,5 +236,6 @@ if ($preview) {
     ReceiverMlokBolts();
   }
 } else {
-  Receiver_LargeFrame_print();
+  rotate([0,90,0])
+  Receiver_LargeFrame(doRender=false);
 }
