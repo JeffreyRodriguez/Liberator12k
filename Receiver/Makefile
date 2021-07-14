@@ -11,6 +11,6 @@ Forend Lower Components: FORCE
 	$(MAKE) -C $@
 
 .SECONDEXPANSION:
-Receiver FCG Frame Stock: $$($$@_STL) $$@.html $$@.mp4 $$@.png
+Receiver FCG Frame Stock: $$($$@_STL) $$@.html
 
-all: README.html Receiver FCG Frame Stock Lower Forend
+all: README.html Receiver FCG Frame Stock Lower Forend Components
