@@ -29,7 +29,7 @@ dist/Receiver: Receiver dist
 	cp $(addprefix Receiver/,$(RECEIVER_STL)) $@/
 
 FORENDS := TopBreak_CAFE12 TopBreak_CAFE12+ TopBreak_FP37 Revolver_ZZR6x12
-$(addprefix dist/Forend/,$(FORENDS)):
+$(addprefix dist/Forend/,$(FORENDS)): Receiver
 	mkdir -p $@
 	cp -r $(addprefix Receiver/Forend/,$(FORENDS)) $@
 
