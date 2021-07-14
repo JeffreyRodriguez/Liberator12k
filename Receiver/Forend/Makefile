@@ -29,7 +29,7 @@ TopBreak_STLS := $(addprefix TopBreak_, $(foreach PRESET,$(TopBreak_PRESETS),$(a
 Revolver_STLS := $(addprefix Revolver_, $(foreach PRESET,$(Revolver_PRESETS),$(addsuffix .stl, $(addprefix $(addsuffix /, $(PRESET)),$(Revolver)))))
 
 PRESET_STLS := $(TopBreak_STLS) $(Revolver_STLS)
-PRESET_HTML := $(addsuffix .html,$(PRESETS))
+PRESET_HTML := $(addsuffix /README.html,$(PRESETS))
 
 .SECONDEXPANSION:
 	
@@ -61,7 +61,7 @@ $(PRESET_STLS):
 	$(THUMBNAILBIN) $(CLASS_PRESET)/$(PART).png $(CLASS_PRESET)/$(PART)_thumb.png
 
 # HTML file for the preset
-$(addsuffix .html,$(PRESETS)): %.html : %.md
-	$(MDBIN) $(basename $@).md | sed 's/\.md/\.html/' > $@
+$(PRESET_HTML): %/README.html : %.md
+	$(MDBIN) $(basename $^).md | sed 's/\.md/\.html/' > $@
 
 all: README.html $(CLASSES) $(PRESETS) $(PRESET_HTML) $(PRESET_STLS)
