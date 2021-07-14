@@ -24,7 +24,7 @@ dist/changelog.txt: dist
 dist/$(GIT_VERSION).version: dist
 	touch "dist/$(GIT_VERSION).version"
 
-dist/Receiver: Receiver dist $(addprefix Receiver/,$(RECEIVER_STL))
+dist/Receiver: Receiver dist
 	mkdir -p $@
 	cp $(addprefix Receiver/,$(RECEIVER_STL)) $@/
 
