@@ -39,10 +39,7 @@ COLORSCHEME=Starnight
 	$(THUMBNAILBIN) $@ $(basename $@)_thumb.png
 
 %.html: %.md
-	$(MDBIN) $(basename $@).md | sed 's/.md/.html/' | sed 's/README.html/index.html/' > $@
-		
-index.html: README.html
-		mv $^ $@
+	$(MDBIN) $(basename $@).md | sed 's/.md/.html/' > $@
 
 */%.stl %.stl:
 	mkdir -p $(dir $@)
