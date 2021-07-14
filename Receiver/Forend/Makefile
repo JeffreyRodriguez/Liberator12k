@@ -31,10 +31,12 @@ Revolver_STLS := $(addprefix Revolver_, $(foreach PRESET,$(Revolver_PRESETS),$(a
 PRESET_STLS := $(TopBreak_STLS) $(Revolver_STLS)
 PRESET_HTML := $(addsuffix /README.html,$(PRESETS))
 
+CLASS_HTML := $(addsuffix /README.html,$(CLASSES))
+
 .SECONDEXPANSION:
 	
 # Forend Classes
-$(CLASSES): $$@.html $$@.mp4 $$@.png
+$(CLASSES): $$@/README.html $$@/$$@.mp4 $$@/$$@.png
 
 # Preset dirs depends on their respective source
 $(PRESETS): $$(addsuffix .scad,$$(firstword $$(subst _, ,$$@)))
@@ -61,7 +63,7 @@ $(PRESET_STLS):
 	$(THUMBNAILBIN) $(CLASS_PRESET)/$(PART).png $(CLASS_PRESET)/$(PART)_thumb.png
 
 # HTML file for the preset
-$(PRESET_HTML): %/README.html : %.md
+$(CLASS_HTML) $(PRESET_HTML): %/README.html : %.md
 	$(MDBIN) $(basename $^).md | sed 's/\.md/\.html/' > $@
 
 all: README.html $(CLASSES) $(PRESETS) $(PRESET_HTML) $(PRESET_STLS)
