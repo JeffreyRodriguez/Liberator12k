@@ -1,39 +1,51 @@
-# [Liberator12k.com](https://Liberator12k.com)
+# \#Liberator12k Manual
 
-## [\#Liberator12k Manual](README.md)
+[Liberator12k.com](https://Liberator12k.com)
 
 [About the Project](About.md)
 
 [Printing Instructions](Printing.md)
 
-[Advanced Users / Developers](Developers.md)
+[Developer Docs](Developers.md)
 
-## \#Liberator12k Models
+## Universal Components
 
-| Model                                          | Class                                    |
-|------------------------------------------------|------------------------------------------|
-| [CAFE12](Receiver/Forend/TopBreak_CAFE12.md)   | [Top Break](Receiver/Forend/TopBreak.md) |
-| [FP37](Receiver/Forend/TopBreak_FP37.md)       | [Top Break](Receiver/Forend/TopBreak.md) |
-| [ZZR 6x12](Receiver/Forend/Revolver_ZZR612.md) | [Revolver](Receiver/Forend/Revolver.md)  |
-| [BARBB](Receiver/BARBB/BARBB.md)               | Exhibition                               |
+### Receiver
+* [The Big Receiver](Receiver/Frame.md)
+* [The Little Receiver](Receiver/Receiver.md)
 
-## Common Components
-
-* [Receiver](Receiver/Receiver.md)
-* [Frame Receiver](Receiver/Frame.md)
+### Everything Else
+* [Fire Control Group](Receiver/FCG.md)
 * [Trigger](Receiver/Lower/Trigger.md)
 * [Lower](Receiver/Lower/Lower.md)
 * [LowerMount](Receiver/Lower/LowerMount.md)
-* [Fire Control Group](Receiver/FCG.md)
 * [Stock](Receiver/Stock.md)
+
+## \#Liberator12k Models
+
+| Class                                    | Model                                                 |
+|------------------------------------------|-------------------------------------------------------|
+| [Top Break](Receiver/Forend/TopBreak.md) | [CAFE12](Receiver/Forend/TopBreak_CAFE12/README.md)   |
+| [Top Break](Receiver/Forend/TopBreak.md) | [FP37](Receiver/Forend/TopBreak_FP37/README.md)       |
+| [Revolver](Receiver/Forend/Revolver.md)  | [ZZR 6x12](Receiver/Forend/Revolver_ZZR612/README.md) |
+| Exhibition                               | [BARBB](Receiver/BARBB/BARBB.md)                      |
 
 ## Ammunition
 
+### DIY Propellants
+* [Black Powder](Ammo/Powder/README.md)
+* [Smokeless Powder](Ammo/Powder/README.md)
+
+### Printed Cartriges
 * [Printed Shotgun Shells](Ammo/README.md)
 
 ## Tooling
 
-* [ECM Rifling](Tooling/ECM/Rifling/README.md)
+### Electrochemical Machining (ECM)
+* [Milling](Tooling/ECM/Mill/README.md)
+* [Drilling](Tooling/ECM/Drill/README.md)
+* [Boring](Tooling/ECM/Bore/README.md)
+* [Rifling](Tooling/ECM/Rifling/README.md)
 
 ## Safety
 

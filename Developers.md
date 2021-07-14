@@ -1,7 +1,10 @@
 # [\#Liberator12k Manual](README.md)
-## Quick Start
+## Developers
 
 If you're running Linux/Mac and have `make` available, there's a Makefile to do it all. Otherwise, you'll have to render the individual STLs.
+
+This doc also explains how to customize the designs to fit the materials you
+have on hand or to change things like gauge or caliber completely.
 
 ### Download
 [OpenSCAD](http://www.openscad.org) is required to render printable STLs.
@@ -10,8 +13,8 @@ You will also need the complete source code ZIP for the project, if you're readi
 
 ### How to render STLs from OpenSCAD
 OpenSCAD has a "Customizer" pane which can be enabled from the View menu. Only
-advanced users and developers need to touch the source code - everything else
-can be done with the customizer panel:
+very advanced users and developers need to touch the source code - everything
+else can be done with the customizer panel:
 
 ![Customizer](.manual/customizer.png)
 

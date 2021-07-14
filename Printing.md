@@ -1,9 +1,9 @@
 # [\#Liberator12k Manual](README.md)
-## Print Guide
 
+## Print Guide
 General printing instructions that apply to \#Liberator12k designs.
 
-### Standard Print Settings
+### Print Settings
 Unless otherwise stated, these are the only vital slicer values to set.
 
   * 0.4-1.5mm nozzle
@@ -12,17 +12,21 @@ Unless otherwise stated, these are the only vital slicer values to set.
   * 4mm top and bottom
   * 20% infill
 
-0.1mm layers will take twice as long, but look 20% better.
+#### Layer Height
+0.2mm layers should work fine, but you'll get better quality printing at 0.1mm.
+0.1mm layers will take twice as long, so I recommend using a larger nozzle for
+the bigger prints.
 
-### Acceptable Materials
+### Materials
 PLA, PLA+, ABS, PETG, and Nylon should all work fine. The strength is in the steel.
 
-### A note on print time and nozzle diameter
-Some prints need a smaller (standard) size nozzle, like 0.4mm but generally:
-larger nozzles are recommended for time savings.
+### Nozzle
+Some prints need a standard size nozzle ~0.4mm, mostly the FCG parts.
+For everything else, larger nozzles are recommended for time savings.
+0.4mm will work just fine, but it'll take longer than it has to.
 
-If I was you: 0.8mm nozzle and 0.1mm layers. Print the FCG components first,
-then do the swap.
+Print the FCG components first with 0.4mm, then swap to a 0.8mm nozzle - it's 4x
+faster.
 
 ## Printing a \#Liberator12k Reciever
 Check the component page for extra printing details.
