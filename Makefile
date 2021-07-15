@@ -3,7 +3,7 @@ include Makefile.in
 GIT_VERSION := $(shell git describe --always)
 
 HTML := README.html About.html Printing.html Developers.html $(shell find Receiver -name \*.html) 
-DOCS := $(HTML) .manual $(shell find Receiver -name \*.png)
+DOCS := $(HTML) .manual $(shell find Receiver -name \*.png | grep -v .frames)  $(shell find Receiver -name \*.mp4)
 
 RECEIVER_STL := Frame_Receiver.stl Components/Sightpost.stl \
 							Stock*.stl Lower/*.stl \
