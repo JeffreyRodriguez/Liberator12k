@@ -22,7 +22,7 @@ COLORSCHEME=Starnight
 	mkdir -p $(FRAMES_DIR)
 	echo "rotate([0,0,360*\$$t]) import(\"../$(STL)\");" > $(FRAMES_DIR)/Spin.scad
 	for i in $(SLOW_FRAMES); do \
-	  echo openscad --imgsize=1920,1080 \
+	  echo openscad --imgsize=1920,1080 --quiet \
 		  -o `printf '$(FRAMES_DIR)/frame%05d.png' $$i` \
 		  -D \'\$$t=1/$(SLOW_FRAME_COUNT)*$$i\' \
 			--projection=p --camera=0,500,600,0,0,100 \
