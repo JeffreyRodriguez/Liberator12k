@@ -8,6 +8,9 @@
 
 [Developer Docs](Developers.md)
 
+## ALPHA!!
+This is Alpha-quality, the docs are the roughest point. Join the Matrix channel #liberator12k:matrix.org for more info.
+
 ## Universal Components
 
 ### Receiver
@@ -25,6 +28,7 @@
 
 | Class                                    | Model                                                 |
 |------------------------------------------|-------------------------------------------------------|
+| [Top Break](Receiver/Forend/TopBreak.md) | [CAFE12+](Receiver/Forend/TopBreak_CAFE12+/README.md) |
 | [Top Break](Receiver/Forend/TopBreak.md) | [CAFE12](Receiver/Forend/TopBreak_CAFE12/README.md)   |
 | [Top Break](Receiver/Forend/TopBreak.md) | [FP37](Receiver/Forend/TopBreak_FP37/README.md)       |
 | [Revolver](Receiver/Forend/Revolver.md)  | [ZZR 6x12](Receiver/Forend/Revolver_ZZR612/README.md) |

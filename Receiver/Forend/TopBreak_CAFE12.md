@@ -18,25 +18,58 @@ with \#Liberator12k platform components it features:
 
 <!-- blank line -->
 <figure class="video_container">
-  <video width="640" loop="true" preload="auto" controls="false" allowfullscreen="true" poster="Frame.png">
-    <source src="TopBreak.mp4" type="video/mp4">
+  <video width="640" loop="true" preload="auto" controls="false" allowfullscreen="true" poster="Assembly.png">
+    <source src="Assembly.mp4" type="video/mp4">
   </video>
 </figure>
 <!-- blank line -->
 
-## Bill of Materials
-
 ### Printed: CAFE12 Forend
-
 420g, 2d08h09m @ 0.4mm
+Print Settings: Standard
 
-| File                          | Part                   | Preset | Print Settings | Filament Used | Print Time @ 0.4mm |
-|-------------------------------|------------------------|--------|----------------|---------------|--------------------|
-| Receiver/Forend/TopBreak.scad | TopBreak_ReceiverFront | CAFE12 | Std. 3mm Shell | 57g           |   07h17m           |
-| Receiver/Forend/TopBreak.scad | TopBreak_Forend        | CAFE12 | Std. 3mm Shell | 189g          | 1d01h10m           |
-| Receiver/Forend/TopBreak.scad | TopBreak_BarrelCollar  | CAFE12 | Std. 3mm Shell | 114g          |   15h00m           |
-| Receiver/Forend/TopBreak.scad | TopBreak_Extractor     | CAFE12 | Std. 3mm Shell | 14g           |    1h55m           |
-| Receiver/Forend/TopBreak.scad | TopBreak_Latch         | CAFE12 | Std. 3mm Shell | 46g           |    6h47m           |
+| File                          | Part          | Filament Used | Print Time @ 0.4mm |
+|-------------------------------|---------------|---------------|--------------------|
+| Receiver/Forend/TopBreak.scad | ReceiverFront | 57g           |   07h17m           |
+| Receiver/Forend/TopBreak.scad | Forend        | 189g          | 1d01h10m           |
+| Receiver/Forend/TopBreak.scad | BarrelCollar  | 114g          |   15h00m           |
+| Receiver/Forend/TopBreak.scad | Extractor     | 14g           |    1h55m           |
+
+#### Receiver_Front
+<!-- blank line -->
+<figure class="video_container">
+  <video width="640" loop="true" preload="auto" controls="false" allowfullscreen="true" poster="ReceiverFront.stl.png">
+    <source src="ReceiverFront.stl.mp4" type="video/mp4">
+  </video>
+</figure>
+<!-- blank line -->
+
+#### Forend
+<!-- blank line -->
+<figure class="video_container">
+  <video width="640" loop="true" preload="auto" controls="false" allowfullscreen="true" poster="Forend.png">
+    <source src="Forend.stl.mp4" type="video/mp4">
+  </video>
+</figure>
+<!-- blank line -->
+
+#### BarrelCollar
+<!-- blank line -->
+<figure class="video_container">
+  <video width="640" loop="true" preload="auto" controls="false" allowfullscreen="true" poster="BarrelCollar.png">
+    <source src="BarrelCollar.stl.mp4" type="video/mp4">
+  </video>
+</figure>
+<!-- blank line -->
+
+#### Extractor
+<!-- blank line -->
+<figure class="video_container">
+  <video width="640" loop="true" preload="auto" controls="false" allowfullscreen="true" poster="Extractor.png">
+    <source src="Extractor.stl.mp4" type="video/mp4">
+  </video>
+</figure>
+<!-- blank line -->
 
 ### Hardware
 
@@ -44,17 +77,6 @@ with \#Liberator12k platform components it features:
 |--------------------------------------------|--------------------|--------|----------|------------|
 | 1" NPT Schedule 40 Galv. Pipe 8" Long      | None               | HWS    | 1        | $2         |
 | 3/4" NPT Schedule 40 Galv. Pipe 18.5" Long | None               | HWS    | 1        | $2         |
-
-### Required Components
-| Part                                 | Preview                                      | 
-|--------------------------------------|----------------------------------------------|
-| [Frame](../Frame.md)                 | ![Frame](../Frame_thumb.png)                 | 
-| [Stock](../Stock.md)                 | ![Stock](../Stock_thumb.png)                 | 
-| [Lower](../Lower/Lower.md)           | ![Lower](../Lower/Lower_thumb.png)           |
-| [LowerMount](../Lower/LowerMount.md) | ![LowerMount](../Lower/LowerMount_thumb.png) | 
-| [Trigger](../Lower/Trigger.md)       | ![Trigger](../Lower/Trigger_thumb.png)       | 
-| [FCG](../FCG.md)                     | ![FCG](../FCG_thumb.png)                     |
-
 
 
 ### Master Vitamin List
@@ -78,20 +100,15 @@ with \#Liberator12k platform components it features:
 | **_1/2-13_**                           | **_M12_**                      |          |                                                                  |
 | 1/2-13x10 Hex Bolt                     | DIN931/DIN933 M12x260/M12x250  | 2        |                                                                  |
 | 1/2-13 Hex Nut                         | DIN934 M12                     | 4        |                                                                  |
-| **_Music Wire_**                       |                                |          |                                                                  |
-| 3/32"x0.5" Music Wire                  | ?????????????????????????????? | 1+2      | Is this in openscad?                                             |
-| 3/32"x0.75" Music Wire                 | ?????????????????????????????? | 2+2      | Is this in openscad?                                             |
-| 3/32"x1" Music Wire                    | ?????????????????????????????? | 2        | Is this in openscad?                                             |
-| 3/32"x1.5" Music Wire                  | ?????????????????????????????? | 2        | Is this in openscad?                                             |
 | 0.22" OD x 2" Long Spring              | ?????????????????????????????? | 2        | Is this in openscad?                                             |
 | **_Springs_**                          |                                |          |                                                                  |
 | Spring 0.25"OD 0.02"WG 1.25"L          | ?????????????????????????????? | 1        |                                                                  |
 | Spring 0.22"OD 0.625"L                 | ?????????????????????????????? | 1        |                                                                  |
 | 0.625x3" ~6.3lbs/in Compression Spring |                                | 1        |                                                                  |
 | **_Miscellaneous_**                    |                                |          |                                                                  |
-| Universal Clevis Pin 1/4x2"            | M6x50? Clevis Pin              | 1        | Check if 50 is good enough? Check din for universal clevis pin   |
+| 1/4"x2" Round Rod                      | 6x55mm Round Rod               | 1        |                                                                  |
 | 1/4"x1.67" Steel Square Rod            | ?????????????????????????????? | 1        |                                                                  |
 | 6Dx2" Box Nail                         |                                | 1        |                                                                  |
-| 11/64" K&S Brass Tube                  |                                | 1        |                                                                  |
+| 9/32"x3.5" K&S Brass Tube              |                                | 1        |                                                                  |
 | Recoil Plate (2x2-3/8x3/8" Mild Steel) |                                | 1        |                                                                  |
 

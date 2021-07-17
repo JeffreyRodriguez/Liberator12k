@@ -3,7 +3,7 @@ include Makefile.in
 GIT_VERSION := $(shell git describe --always)
 
 HTML := README.html About.html Printing.html Developers.html $(shell find Receiver -name \*.html) 
-DOCS := $(HTML) .manual $(shell find Receiver -name \*.png | grep -v .frames)  $(shell find Receiver -name \*.mp4)
+DOCS := $(HTML) .manual $(shell find Receiver -name \*.jpg)  $(shell find Receiver -name \*.mp4)
 
 RECEIVER_STL := Frame_Receiver.stl Components/Sightpost.stl \
 							Stock*.stl Lower/*.stl \
@@ -33,10 +33,10 @@ FOREND_DIST := $(addprefix dist/Forend/,$(FORENDS))
 
 $(FOREND_DIST): Receiver
 	mkdir -p $@
-	cp -r $(addprefix Receiver/Forend/,$(FORENDS)) $@
-
+	cp -r Receiver/$(shell echo "$@" | sed 's/^dist\///')/*.stl "$@/"
+	
 Liberator12k.zip: dist/changelog.txt dist/$(GIT_VERSION).version dist/docs dist/Receiver $(FOREND_DIST)
-	cd dist && zip ../Liberator12k.zip *
+	cd dist && zip -r ../Liberator12k.zip *
 
 Receiver: FORCE
 		$(MAKE) -C $@

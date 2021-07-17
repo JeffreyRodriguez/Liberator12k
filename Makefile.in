@@ -4,7 +4,7 @@ SLOW_FRAME_COUNT=300
 SLOW_FRAMES=$(shell seq 0 $(SLOW_FRAME_COUNT))
 MDBIN=cmark-gfm -e table --unsafe
 OSBIN=nice openscad
-OSOPTS=--imgsize=1920,1080
+OSOPTS=
 OS_CAM_AUTO=--projection=p --autocenter --viewall
 ANIMATE_BIN=./bin/animate.sh
 THUMBNAILBIN=convert -thumbnail 200
@@ -14,29 +14,32 @@ COLORSCHEME=Starnight
 
 .PRECIOUS: .frames/%.mp4
 
-.frames/%.mp4: %.scad
-	mkdir -p $@
-	touch $@
-	
-	# for i in $(FRAMES); do \
-	#   echo $(OSBIN) $(OSOPTS) \
-	# 	  -o `printf '$@/frame%05d.png' $$i` \
-	# 	  -D \'\$$t=`echo "1/$(FRAME_COUNT)*$$i" | bc -l`\' \
-	# 		--projection=p --camera `echo "600*s(6.28*(1/$(FRAME_COUNT)*$$i))" | bc -l`,`echo "600*c(6.28*(1/$(FRAME_COUNT)*$$i))" | bc -l`,200,0,0,0 \
-	# 			$<; \
-  # done | parallel -v \
-	# && touch $@
-
-%.mp4: .frames/%.mp4
-	touch $@
-	#$(ANIMATE_BIN) .frames/$@/ $@
+%.stl.mp4:
+	$(eval PART=$(basename $(notdir $@)))
+	$(eval FRAMES_DIR=$(basename $@)_frames)
+	$(eval STL=$(notdir $(basename $@)))
+	echo Part: $(PART)
+	mkdir -p $(FRAMES_DIR)
+	echo "rotate([0,0,360*\$$t]) import(\"../$(STL)\");" > $(FRAMES_DIR)/Spin.scad
+	for i in $(SLOW_FRAMES); do \
+	  echo openscad --imgsize=1920,1080 \
+		  -o `printf '$(FRAMES_DIR)/frame%05d.png' $$i` \
+		  -D \'\$$t=1/$(SLOW_FRAME_COUNT)*$$i\' \
+			--projection=p --camera=0,500,600,0,0,100 \
+			$(FRAMES_DIR)/Spin.scad; \
+  done | nice parallel -v \
+	&& nice ffmpeg -y \
+		-i "$(FRAMES_DIR)/frame%05d.png" -framerate 10 \
+		-s:v 640:360 -c:v libx264 -crf 20 -pix_fmt yuv420p \
+		"$@" \
+	&& rm -rf $(FRAMES_DIR)
 	
 %.jpg %.png: %.scad
 	$(OSBIN) $(OSOPTS) -o $@ \
 	--projection=p --camera 200,1000,200,0,0,0 \
 	"$(basename $@).scad"
 	
-	$(THUMBNAILBIN) $@ $(basename $@)_thumb.png
+	$(THUMBNAILBIN) $@ $(basename $@)_thumb.jpg
 
 %.html: %.md
 	$(MDBIN) $(basename $@).md | sed 's/.md/.html/' > $@
@@ -47,10 +50,11 @@ COLORSCHEME=Starnight
 		--projection=p --autocenter --viewall \
 		`if [ '$(dir "$@")' != './' ]; then echo -P '$(dir $@)' | sed 's/\/$///'; fi` \
 	  `echo $(notdir $@) | sed 's/.stl//' | awk -F _ '{ print $$1 }'`.scad
-	$(THUMBNAILBIN) $(basename $@).png $(basename $@)_thumb.png
+	$(THUMBNAILBIN) $(basename $@).png $(basename $@)_thumb.jpg
 
 FORCE:
-clean: clean_ANIMATE clean_STL cleanGCODE cleanMP4 clean_HTML clean_PNG
+clean: clean_ANIMATE clean_STL cleanGCODE cleanMP4 clean_HTML clean_PNG clean_JPG
+	rm -rf dist/
 clean_ANIMATE:
 	rm -rf .frames
 cleanGCODE:
@@ -63,4 +67,6 @@ clean_HTML:
 	rm -f *.html
 clean_PNG:
 	rm -f *.png
+clean_JPG:
+	rm -f *.jpg
 	

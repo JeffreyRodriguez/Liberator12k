@@ -30,8 +30,11 @@ Revolver_STLS := $(addprefix Revolver_, $(foreach PRESET,$(Revolver_PRESETS),$(a
 
 PRESET_STLS := $(TopBreak_STLS) $(Revolver_STLS)
 PRESET_HTML := $(addsuffix /README.html,$(PRESETS))
+PRESET_STL_PREVIEWS := $(addsuffix .mp4, $(PRESET_STLS))
 
+CLASS_STLS := $(addsuffix .stl,$(CLASSES))
 CLASS_HTML := $(addsuffix /README.html,$(CLASSES))
+
 
 .SECONDEXPANSION:
 	
@@ -53,27 +56,16 @@ $(PRESET_STLS):
 	@echo Preset: $(PRESET)
 	@echo Part: $(PART)
 	$(OSBIN) $(OSOPTS) --render -D _RENDER=\"$(CLASS)_$(PART)\" \
-	  --projection=p --autocenter --viewall \
+		--projection=p --camera=0,400,400,0,100,100 \
 		-o $@ -o $(CLASS_PRESET)/$(PART).png \
 		-P $(PRESET) \
 		$(CLASS).scad
-	$(THUMBNAILBIN) $(CLASS_PRESET)/$(PART).png $(CLASS_PRESET)/$(PART)_thumb.png
-	
-$(addsuffix .stl,$(CLASSES)) $(addsuffix .png,$(CLASSES)): $$@.scad
-	$(eval CLASS_PRESET=$(firstword $(subst /, ,$@)))
-	$(eval CLASS=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$1 }'))
-	$(eval PRESET=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$2 }'))
-	$(eval PART=$(basename $(notdir $@)))
-	$(OSBIN) $(OSOPTS) --render -D _RENDER=\"$(CLASS)_$(PART)\" \
-		--projection=p --autocenter --viewall \
-		-o $@ -o $(CLASS_PRESET)/Assembly.png \
-		-P $(PRESET) \
-		$(CLASS).scad
-	convert $(CLASS_PRESET)/Assembly.png $(CLASS_PRESET)/Assembly.jpg
-	$(THUMBNAILBIN) $(CLASS_PRESET)/Assembly.png $(CLASS_PRESET)/Assembly_thumb.png
+	$(THUMBNAILBIN) $(CLASS_PRESET)/$(PART).png $(CLASS_PRESET)/$(PART)_thumb.jpg
 
 # HTML file for the preset
-$(CLASS_HTML) $(PRESET_HTML): %/README.html : % %.md
+$(PRESET_HTML): %/README.html : % %.md
+	$(MDBIN) $(basename $^).md | sed 's/\.md/\.html/' > $@
+$(CLASS_HTML): %/README.html : % %.md
 	$(MDBIN) $(basename $^).md | sed 's/\.md/\.html/' > $@
 
-all: README.html $(CLASSES) $(PRESETS) $(PRESET_HTML) $(PRESET_STLS)
+all: README.html $(CLASSES) $(CLASS_HTML) $(PRESETS) $(PRESET_HTML) $(PRESET_STLS) $(PRESET_STL_PREVIEWS)
