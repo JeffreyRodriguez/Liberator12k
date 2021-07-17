@@ -236,7 +236,7 @@ module FCG_DisconnectorSpring(debug=false, cutter=false, clearance=FCG_Disconnec
              FCG_DisconnectorPivotZ-0.125-0.125])
   ChamferedCylinder(r1=(FCG_Disconnector_SPRING_DIAMETER/2)+(cutter?clearance:0), r2=1/32, h=0.3125);
 }
-module FCG_HammerBolt(clearance=0.01, cutter=false, debug=false) {
+module FCG_HammerBolt(clearance=FCG_Hammer_BOLT_CLEARANCE, cutter=false, debug=false) {
   color("Silver") RenderIf(!cutter)
   translate([FCG_HammerCockedX+ManifoldGap(),0,0])
   rotate([0,90,0])
@@ -1023,7 +1023,7 @@ if ($preview) {
   
   if (_RENDER == "FCG_Hammer")
   rotate([0,90,0])
-  translate([FCG_HammerCockedX,0,0])
+  translate([-FCG_HammerCockedX,0,0])
   FCG_Hammer();
   
   if (_RENDER == "FCG_HammerTail")
