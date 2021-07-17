@@ -35,14 +35,14 @@ The printed parts are sandwiched and bolted together.
 
 | Part                                                                                | Settings             | Filament | Time   |
 |-------------------------------------------------------------------------------------|----------------------|----------|--------|
-| ![Lower_Left.stl](Lower_Left_thumb.png)<br>[Lower_Left.stl](Lower_Left.stl)         | 3mm Walls 50% Infill | 66g      | 5h52m  |
-| ![Lower_Middle.stl](Lower_Middle_thumb.png)<br>[Lower_Middle.stl](Lower_Middle.stl) | 3mm Walls 50% Infill | 68g      | 5h20m  |
-| ![Lower_Right.stl](Lower_Right_thumb.png)<br>[Lower_Right.stl](Lower_Right.stl)     | 3mm Walls 50% Infill | 66g      | 5h52m  |
+| ![Lower_Left.stl](Lower_Left_thumb.jpg)<br>[Lower_Left.stl](Lower_Left.stl)         | 3mm Walls 50% Infill | 66g      | 5h52m  |
+| ![Lower_Middle.stl](Lower_Middle_thumb.jpg)<br>[Lower_Middle.stl](Lower_Middle.stl) | 3mm Walls 50% Infill | 68g      | 5h20m  |
+| ![Lower_Right.stl](Lower_Right_thumb.jpg)<br>[Lower_Right.stl](Lower_Right.stl)     | 3mm Walls 50% Infill | 66g      | 5h52m  |
 
 ### Required Components
 
-* ![Trigger](Trigger_thumb.png)<br>[Trigger](Trigger.md)
-* ![LowerMount](LowerMount_thumb.png)<br>[LowerMount](LowerMount.md)
+* ![Trigger](Trigger_thumb.jpg)<br>[Trigger](Trigger.md)
+* ![LowerMount](LowerMount_thumb.jpg)<br>[LowerMount](LowerMount.md)
 
 ## Assembly
 

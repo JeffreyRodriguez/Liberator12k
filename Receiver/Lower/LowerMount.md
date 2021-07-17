@@ -25,8 +25,8 @@ has a longer T-lug than the front mount.
 
 | Part                                                                                                | Settings             | Filament | Time   |
 |-----------------------------------------------------------------------------------------------------|----------------------|----------|--------|
-| ![LowerMount_Front.stl](LowerMount_Front_thumb.png)<br>[LowerMount_Front.stl](LowerMount_Front.stl) | 3mm Walls 50% Infill | 22g      | 2h09m  |
-| ![LowerMount_Rear.stl](LowerMount_Rear_thumb.png)<br>[LowerMount_Rear.stl](LowerMount_Rear.stl)     | 3mm Walls 50% Infill | 23g      | 2h21m  |
+| ![LowerMount_Front.stl](LowerMount_Front_thumb.jpg)<br>[LowerMount_Front.stl](LowerMount_Front.stl) | 3mm Walls 50% Infill | 22g      | 2h09m  |
+| ![LowerMount_Rear.stl](LowerMount_Rear_thumb.jpg)<br>[LowerMount_Rear.stl](LowerMount_Rear.stl)     | 3mm Walls 50% Infill | 23g      | 2h21m  |
 
 ## Assembly
 

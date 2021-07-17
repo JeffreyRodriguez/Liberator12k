@@ -45,15 +45,15 @@ position, driving the trigger forward via the sear pin.
 
 | Part                                                                                        | Settings       | Filament | Time |
 |---------------------------------------------------------------------------------------------|----------------|----------|------|
-| ![Trigger_Middle.stl](Trigger_Middle_thumb.png)<br>[Trigger_Middle.stl](Trigger_Middle.stl) | Solid          | 6g       | 33m  |
-| ![Trigger_Left.stl](Trigger_Left_thumb.png)<br>[Trigger_Left.stl](Trigger_Left.stl)         | Solid          | 11g      | 56m  |
-| ![Trigger_Right.stl](Trigger_Right_thumb.png)<br>[Trigger_Right.stl](Trigger_Right.stl)     | Solid          | 8g       | 46m  |
+| ![Trigger_Middle.stl](Trigger_Middle_thumb.jpg)<br>[Trigger_Middle.stl](Trigger_Middle.stl) | Solid          | 6g       | 33m  |
+| ![Trigger_Left.stl](Trigger_Left_thumb.jpg)<br>[Trigger_Left.stl](Trigger_Left.stl)         | Solid          | 11g      | 56m  |
+| ![Trigger_Right.stl](Trigger_Right_thumb.jpg)<br>[Trigger_Right.stl](Trigger_Right.stl)     | Solid          | 8g       | 46m  |
 
 ## Instructions
 All three parts of the trigger should be printed 100% solid.
 
 ### Glue Trigger Sides
-![Trigger](Trigger_thumb.png)
+![Trigger](Trigger_thumb.jpg)
 
 The left and right trigger sides need to be permanently attached with super glue or epoxy
 
