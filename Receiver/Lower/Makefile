@@ -9,4 +9,4 @@ LowerMount_STL=LowerMount_Front.stl LowerMount_Rear.stl
 .SECONDEXPANSION:
 all: README.html Trigger Lower LowerMount
 
-Trigger Lower LowerMount: $$($$@_STL) $$@.html .frames/$$@.mp4 $$@.mp4 $$@.png
+Trigger Lower LowerMount: $$($$@_STL) $$@.html
