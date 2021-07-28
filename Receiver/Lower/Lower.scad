@@ -14,8 +14,6 @@ use <../../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 
 use <Lugs.scad>;
-use <Trigger.scad>;
-
 
 /* [Print] */
 
@@ -46,16 +44,26 @@ assert(LowerBolt(), "LowerBolt() is undefined. Unknown LOWER_BOLT?");
 function LowerWallFront() = 0.5;
 function LowerMaxX() = ReceiverLugFrontMaxX()
                      + LowerWallFront();
-function LowerGuardHeight() = TriggerFingerDiameter()
-                            + TriggerFingerWall()
-                            + GripCeiling();
 
-module TriggerFingerSlot(radius=TriggerFingerRadius(), length=0.6, $fn=Resolution(12, 60)) {
+function TriggerGuardDiameter() = 1;
+function TriggerGuardDiameter() = 1;
+function TriggerGuardRadius() = TriggerGuardDiameter()/2;
+
+function TriggerGuardOffsetZ() = GripCeilingZ();
+function TriggerGuardWall() = 0.3;
+
+function TriggerPocketHeight() = GripCeiling()
+                               + TriggerGuardDiameter();
+
+function LowerGuardHeight() = TriggerPocketHeight()
+                            + TriggerGuardWall();
+
+module TriggerGuardSlot(radius=TriggerGuardRadius(), length=0.6, $fn=Resolution(12, 60)) {
 
   union() {
 
     // Chamfered front edge
-    translate([0.65+length, 0, TriggerFingerOffsetZ()])
+    translate([0.65+length, 0, TriggerGuardOffsetZ()])
     translate([0,1.25/2,-radius])
     rotate([90,0,0])
     ChamferedCircularHole(r1=radius, r2=1/16,
@@ -63,19 +71,19 @@ module TriggerFingerSlot(radius=TriggerFingerRadius(), length=0.6, $fn=Resolutio
 
     // Chamfered rear edge
     intersection() {
-      translate([0.65, 0, TriggerFingerOffsetZ()])
+      translate([0.65, 0, TriggerGuardOffsetZ()])
       translate([0,GripWidth()/2,-radius])
       rotate([90,0,0])
       ChamferedCircularHole(r1=radius, r2=1/4,
                h=GripWidth(), $fn=$fn);
 
-      translate([0,-GripWidth(),TriggerFingerOffsetZ()])
+      translate([0,-GripWidth(),TriggerGuardOffsetZ()])
       mirror([0,0,1])
       cube([length+(radius*4), GripWidth()*2, radius*2]);
     }
 
     // Slot hull
-    translate([0.65, 0, TriggerFingerOffsetZ()])
+    translate([0.65, 0, TriggerGuardOffsetZ()])
     hull()
     for (i = [0,length])
     translate([i,0,-radius])
@@ -92,7 +100,7 @@ module GuardBolt(boltSpec=LowerBolt(), length=UnitsImperial(1.25),
   color("Silver")
   translate([ReceiverLugBoltX(ReceiverLugBoltsArray()[0]),
              -LowerMaxY(),
-             GripCeilingZ()-TriggerFingerDiameter()+0])
+             GripCeilingZ()-TriggerGuardDiameter()+0])
   rotate([90,0,0])
   rotate([0,0,90])
   NutAndBolt(bolt=boltSpec, boltLength=length, clearance=cutter?clearance:0,
@@ -226,7 +234,7 @@ module LowerReceiverSupports() {
                0])
     mirror([1,0,0])
     mirror([0,0,1])
-    cube([LowerWallFront()+TriggerFingerRadius(), 0.5, LowerGuardHeight()]);
+    cube([LowerWallFront()+TriggerGuardRadius(), 0.5, LowerGuardHeight()]);
   }
 
   // Rear receiver lug support
@@ -245,24 +253,19 @@ module LowerReceiverSupports() {
 module LowerTriggerPocket() {
   render()
   difference() {
-    union() {
-      translate([0,-(LowerCenterWidth()/2)-ManifoldGap(), ManifoldGap()])
-      mirror([0,0,1]) {
+    translate([0,-(LowerCenterWidth()/2)-ManifoldGap(), ManifoldGap()])
+    mirror([0,0,1]) {
 
-        // Tigger Body
-        translate([ReceiverLugRearMinX(),0,0])
-        cube([ReceiverLugFrontMinX()+abs(ReceiverLugRearMinX()),
-              LowerCenterWidth()+ManifoldGap(2),
-              TriggerHeight()]);
+      // Tigger Body
+      translate([ReceiverLugRearMinX(),0,0])
+      cube([ReceiverLugFrontMinX()+abs(ReceiverLugRearMinX()),
+            LowerCenterWidth()+ManifoldGap(2),
+            TriggerPocketHeight()]);
 
-        // Trigger Front Extension Cutout
-        cube([ReceiverLugFrontMaxX(),
-              LowerCenterWidth()+ManifoldGap(2),
-              TriggerHeight()-TriggerFingerRadius()]);
-      }
-
-      translate([0,ManifoldGap(),0])
-      SearSupportTab(cutter=false);
+      // Trigger Front Extension Cutout
+      cube([ReceiverLugFrontMaxX(),
+            LowerCenterWidth()+ManifoldGap(2),
+            TriggerPocketHeight()-TriggerGuardRadius()]);
     }
 
     ReceiverLugBolts(cutter=true);
@@ -270,9 +273,9 @@ module LowerTriggerPocket() {
 }
 
 module LowerCutouts(chamferLugs=true, boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT) {
-  ReceiverLugFront(width=TriggerWidth(),
+  ReceiverLugFront(width=LowerCenterWidth(),
                    cutter=true, chamferCutterHorizontal=chamferLugs);
-  ReceiverLugRear(width=TriggerWidth(), hole=false,
+  ReceiverLugRear(width=LowerCenterWidth(), hole=false,
                    cutter=true, chamferCutterHorizontal=chamferLugs);
 
   GuardBolt(length=1.25, boltSpec=boltSpec, head=head, nut=nut, cutter=true);
@@ -281,9 +284,7 @@ module LowerCutouts(chamferLugs=true, boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD
 
   ReceiverLugBolts(length=1.25, boltSpec=boltSpec, head=head, nut=nut, cutter=true);
 
-  TriggerFingerSlot();
-
-  Sear(cutter=true);
+  TriggerGuardSlot();
 }
 
 
@@ -340,8 +341,6 @@ module Lower_Middle(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_N
 
     LowerCutouts(chamferLugs=false, boltSpec=LowerBolt(), head=head, nut=nut);
 
-    SearSupportTab(cutter=true);
-
     // Trigger Pocket
     LowerTriggerPocket();
 
@@ -381,9 +380,7 @@ module LowerMatchplate2d() {
 
 module Lower(showReceiverLugs=false, showReceiverLugBolts=false,
             showGuardBolt=false, showHandleBolts=false,
-            showTrigger=false,
             showMiddle=true, showLeft=true, showRight=true,
-            searLength=1.25, triggerAnimationFactor=TriggerAnimationFactor(),
             boltSpec=LowerBolt(), boltHead=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT,
             alpha=1) {
       boltLength = 1.25;
@@ -392,15 +389,9 @@ module Lower(showReceiverLugs=false, showReceiverLugBolts=false,
   if (showMiddle)
   Lower_Middle();
 
-  // Trigger
-  if (showTrigger) {
-    TriggerGroup(searLength=searLength,
-                 animationFactor=triggerAnimationFactor);
-  }
-
   if (showReceiverLugs) {
-    ReceiverLugFront(width=TriggerWidth());
-    ReceiverLugRear(width=TriggerWidth());
+    ReceiverLugFront(width=LowerCenterWidth());
+    ReceiverLugRear(width=LowerCenterWidth());
   }
 
   if (showReceiverLugBolts)
@@ -418,13 +409,9 @@ module Lower(showReceiverLugs=false, showReceiverLugBolts=false,
 
 scale(25.4)
 if ($preview) {
-
-  AnimateSpin()
   Lower(showReceiverLugs=_SHOW_LOWER_LUGS, showReceiverLugBolts=true,
         showGuardBolt=true,
         showHandleBolts=true,
-        showTrigger=_SHOW_TRIGGER,
-        triggerAnimationFactor=sin(180*$t),
         showLeft=_SHOW_LOWER_LEFT,
         showMiddle=_SHOW_LOWER_MIDDLE,
         showRight=_SHOW_LOWER_RIGHT,

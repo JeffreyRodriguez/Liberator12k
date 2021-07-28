@@ -6,33 +6,44 @@
 
 A fire control group for fixed recoil plate designs.
 
-The FCG is designed to support slamfire via the optional disconnector.
+Trigger is based on [The Unknown Cat's](https://www.youtube.com/channel/UCNR0HGw5airGKkiPcquS0TA)
+design.
+
+The sear is a square rod (Silver) with a cross-pin (SteelBlue) near the bottom.
+An inclined slot in each side of the trigger (Olive) forces the cross-pin and
+sear downward when the trigger is pulled. A central support tab (Chocolate)
+keeps the sear and its return spring (not pictured) oriented vertically.
+
+A compression spring located below the sear pushes the sear into the upward
+position, driving the trigger forward via the sear pin.
 
 A linear hammer strikes the firing pin, which protrudes through the recoil plate.
 
-Works with the standard lower and trigger, receiver, and frame.
+The FCG is designed to support slamfire via the optional disconnector.
 
 ## Bill of Materials
 
 ### Printed: Fire Control Group
 
 XXXXg, 0h00m
+Trigger: 25g, 1h03m
 
-| File                | Part                | Print Settings   | Filament Used | Print Time |
-|---------------------|---------------------|------------------|---------------|------------|
-| Receiver/FCG.scad   | FCG_ChargingHandle  | Std. 3mm Shell   | -mm           | -h-m       |
-| Receiver/FCG.scad   | FCG_Disconnector    | Std. 3mm Shell   | -mm           | -h-m       |
-| Receiver/FCG.scad   | FCG_FiringPinCollar | Solid, Low, Slow | 1g            | 0h48m      |
-| Receiver/FCG.scad   | FCG_Housing         | Std. 3mm Shell   | -mm           | -h-m       |
-| Receiver/FCG.scad   | FCG_Hammer          | Solid            | -mm           | -h-m       |
-| Receiver/FCG.scad   | FCG_HammerTail      | Std. 3mm Shell   | -mm           | -h-m       |
+| Part                | Print Settings   | Filament Used | Print Time |
+|---------------------|------------------|---------------|------------|
+| FCG_ChargingHandle  | Std. 3mm Shell   | -mm           | -h-m       |
+| FCG_Disconnector    | Std. 3mm Shell   | -mm           | -h-m       |
+| FCG_FiringPinCollar | Solid, Low, Slow | 1g            | 0h48m      |
+| FCG_Housing         | Std. 3mm Shell   | -mm           | -h-m       |
+| FCG_Hammer          | Solid            | -mm           | -h-m       |
+| FCG_HammerTail      | Std. 3mm Shell   | -mm           | -h-m       |
+| FCG_TriggerMiddle   | Solid            |  6g           | 33m        |
+| FCG_TriggerLeft     | Solid            | 11g           | 56m        |
+| FCG_TriggerRight    | Solid            | 8g            | 46m        |
 
 ### Hardware
 
 | Purpose               | Part                                                 | Metric Alternative                                   | Quantity |
 |-----------------------|------------------------------------------------------|------------------------------------------------------|----------|
-| Stock Latch Pin       | 3/32"x0.5" Music Wire                                | None                                                 | 2        |
-| Stock Latch Pivot Pin | 3/32"x0.75" Music Wire                               | None                                                 | 2        |
 | Firing Pin            | 6Dx2" Box Nail                                       | 2.5x50mm Nail                                        | 1        |
 | Firing Pin Spring     | 0.22" OD 0.625" Long (0.02" wire)                    | 0.5mm Wire, 6mm OD, 20mm Length Spring (Cut to 16mm) | 1        |
 | Hammer                | 1/4-20x5" Flat Head Bolt                             | **DIN7991** M6x130 Countersunk Bolt                  | 1        |
@@ -43,14 +54,46 @@ XXXXg, 0h00m
 | Hammer Spring         | 0.625x3" ~6.3lbs/in Compression Spring (0.052" wire) | 1.4mm Wire, 16mm OD, 80mm Length Spring              | 1        |
 | Recoil Plate (L12k)   | #Liberator12k Official Alloy Recoil Plate            | None                                                 | 1 (alt)  |
 | Recoil Plate (DIY)    | 2x2-3/8x3/8" Mild Steel Plate                        | 10mm Thickness 50.80x60.325mm Mild Steel Plate       | 1 (alt)  |
+| Sear                  | 1/4"x1.67" Steel Square Rod                          | 6mm*42.42mm Steel Square Rod                         | 1        |
+| Sear Cross-Pin        | 3/32"x1/2" Music Wire                                | None                                                 | 1        |
+| Sear Return Spring    | 0.02" Wire, 0.25"x1.25"                              | 0.5mm Wire, 6.5mm OD, 35mm Length Spring             | 1        |
 
-## Assembly
+## Instructions
 
 The *FCG Housing*, *Firing Pin Subassembly*, and *Recoil Plate* are all installed in a specific forend's *Receiver
 Front*.
 
-#### Required Tools
+#### Sear
+ * 1/8" hole 5/16" from the bottom for the sear cross-pin
+ * This hole should be drilled under-size and reamed if possible.
+ * Filing any burrs is Good Enough
+ 
+ 
+#### Sear Cross-Pin
+ * 3/32" Music Wire
+ * 1/2" long
+ * Ends should be slightly rounded and smooth.
 
+### Trigger Subassembly
+The left and right trigger sides need to be permanently attached with super glue or epoxy
+
+1. Verify the sear cross-pin will slide smoothly in the individual slots.
+2. Apply glue to the raised portions of Trigger_Right
+3. Set the left side on top of the right side.
+4. Align the parts with straight edge (123 blocks).
+5. Apply pressure to the left side plate for a good bond.
+
+#### Assembly
+1. Insert the trigger middle portion into the glued sides. It should slide freely.
+2. Drop the sear return spring into the trigger middle.
+3. Insert the sear and and compress the return spring until the pin hole is visible through the side slot.
+4. Insert cross-pin through the inclined slot through the sear. It should lay flush or just below the surface of the trigger sides.
+5. Verify the trigger moves freely.
+6. Oil the cross-pin hole, both sides of the slot, front and rear of the sear.
+7. Squeezing the trigger should now feel silky smooth.
+
+
+#### Required Tools
 * 2.5mm Reamer or Drill Bit
 * Superglue
 
@@ -118,7 +161,6 @@ So I widened it to 2" to put the corners of the plate over the tension rods
 
 Yeah.. any decent steel will give exactly zero fucks
 
-
 10mm thick parameter The requirements for that job are pretty minimal.
 But it's the most important job in the whole gun
 
@@ -148,3 +190,9 @@ mechanical advantage of 1.5. Give or take, trigger pull is 10% of hammer spring.
 
 Plastic-on-plastic friction probably contributes much more to trigger pull than
 the hammer spring does.
+
+For improved performance:
+1.  polish and oil the sear surfaces and pin.
+2. Sand/polish the friction surfaces of the trigger sides.
+3. Use a needle file to clean up the inclined slot in the Trigger.
+4. Sand/polish slot smooth.
