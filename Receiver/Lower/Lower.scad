@@ -13,6 +13,8 @@ use <../../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 
+use <../Receiver.scad>;
+
 use <Lugs.scad>;
 
 /* [Print] */
@@ -36,6 +38,7 @@ LOWER_BOLT_HEAD = "flat"; // ["socket", "flat"]
 LOWER_BOLT_NUT = "heatset"; // ["hex", "heatset", "heatset-long"]
 
 function LowerCenterWidth() = 0.51;
+function LowerOffsetZ() = ReceiverBottomZ();
 
 function LowerBolt() = BoltSpec(LOWER_BOLT);
 assert(LowerBolt(), "LowerBolt() is undefined. Unknown LOWER_BOLT?");
@@ -385,26 +388,29 @@ module Lower(showReceiverLugs=false, showReceiverLugBolts=false,
             alpha=1) {
       boltLength = 1.25;
 
-  // Trigger Guard Center
-  if (showMiddle)
-  Lower_Middle();
+  translate([-LowerMaxX(),0, LowerOffsetZ()]) {
 
-  if (showReceiverLugs) {
-    ReceiverLugFront(width=LowerCenterWidth());
-    ReceiverLugRear(width=LowerCenterWidth());
+    // Trigger Guard Center
+    if (showMiddle)
+    Lower_Middle();
+
+    if (showReceiverLugs) {
+      ReceiverLugFront(width=LowerCenterWidth());
+      ReceiverLugRear(width=LowerCenterWidth());
+    }
+
+    if (showReceiverLugBolts)
+    ReceiverLugBolts(boltSpec=boltSpec, length=boltLength, head=boltHead, nut=nut);
+
+    if (showGuardBolt)
+    GuardBolt(boltSpec=boltSpec, length=boltLength, head=boltHead, nut=nut);
+
+    if (showHandleBolts)
+    HandleBolts(boltSpec=boltSpec, length=boltLength, head=boltHead, nut=nut);
+
+    LowerSidePlates(boltSpec=boltSpec, head=boltHead, nut=nut,
+                    showLeft=showLeft, showRight=showRight, alpha=alpha);
   }
-
-  if (showReceiverLugBolts)
-  ReceiverLugBolts(boltSpec=boltSpec, length=boltLength, head=boltHead, nut=nut);
-
-  if (showGuardBolt)
-  GuardBolt(boltSpec=boltSpec, length=boltLength, head=boltHead, nut=nut);
-
-  if (showHandleBolts)
-  HandleBolts(boltSpec=boltSpec, length=boltLength, head=boltHead, nut=nut);
-
-  LowerSidePlates(boltSpec=boltSpec, head=boltHead, nut=nut,
-                  showLeft=showLeft, showRight=showRight, alpha=alpha);
 }
 
 scale(25.4)

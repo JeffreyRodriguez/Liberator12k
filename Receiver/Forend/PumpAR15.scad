@@ -444,7 +444,7 @@ if ($preview) {
   StockAssembly();
   
   if (_SHOW_LOWER) {
-    translate([-LowerMaxX(),0,LowerOffsetZ()])
+    translate([-LowerMaxX(),0,ReceiverBottomZ()])
     Lower(showTrigger=true);
     LowerMount();
   }

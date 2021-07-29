@@ -72,7 +72,6 @@ module AR15_TrunnionAssembly() {
   AR15_TrunnionCap();
   ReceiverAssembly();
   
-  translate([-LowerMaxX(), 0, LowerOffsetZ()])
   Lower();
   LowerMount();
 }

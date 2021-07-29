@@ -266,7 +266,7 @@ module BreakActionReceiverFront(debug=false, alpha=1) {
       hull() {
 
         // Match the recoil plate
-        translate([0,-2.25/2,LowerOffsetZ()])
+        translate([0,-2.25/2,ReceiverBottomZ()])
         ChamferedCube([ReceiverFrontLength(),
                        2.25,
                        abs(LatchZ())+FrameBoltZ()], r=1/16);
@@ -812,7 +812,7 @@ if ($preview) {
     
     LowerMount();
     
-    translate([-LowerMaxX(),0,LowerOffsetZ()])
+    translate([-LowerMaxX(),0,ReceiverBottomZ()])
     Lower(showTrigger=true,
           showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true);
     

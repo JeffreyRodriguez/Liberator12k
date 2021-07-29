@@ -3,9 +3,10 @@ ANIMATE_BIN=../bin/animate.sh
 Receiver_STL=Receiver.stl Receiver_Back.stl
 Frame_STL=Frame_Receiver.stl
 Stock_STL=Stock.stl Stock_Buttpad.stl Stock_Backplate.stl
-FCG_STL=FCG_ChargingHandle.stl FCG_Disconnector.stl FCG_FiringPinCollar.stl \
-        FCG_Housing.stl FCG_Hammer.stl FCG_HammerTail.stl \
-				FCG_Trigger_Left.stl FCG_Trigger_Middle.stl FCG_Trigger_Right.stl
+FCG_STL=FCG_Housing.stl FCG_Disconnector.stl FCG_FiringPinCollar.stl \
+        FCG_ChargingHandle.stl \
+				FCG_Hammer.stl FCG_HammerTail.stl \
+				FCG_TriggerLeft.stl FCG_TriggerMiddle.stl FCG_TriggerRight.stl
 
 # Subdirs
 Forend Lower Components: FORCE

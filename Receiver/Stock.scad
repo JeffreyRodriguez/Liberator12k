@@ -14,7 +14,6 @@ use <../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 
 use <Lower/LowerMount.scad>;
 use <Lower/Lower.scad>;
-use <Lower/Trigger.scad>;
 
 use <Receiver.scad>;
 
@@ -180,7 +179,7 @@ module Stock_Backplate(length=Stock_BackplateLength(), clearance=0.008, debug=fa
       // Bottom Slot
       translate([StockMinX()+length,0,0])
       ReceiverBottomSlotInterface(length=length+0.5,
-                                  height=abs(LowerOffsetZ()),
+                                  height=abs(ReceiverBottomZ()),
                                   extension=0.875);
       
       // Back tab
@@ -317,10 +316,10 @@ if ($preview) {
   if (_SHOW_LOWER) {
     LowerMount();
 
-    translate([-LowerMaxX(),0,LowerOffsetZ()])
+    translate([-LowerMaxX(),0,ReceiverBottomZ()])
     Lower(showTrigger=true,
           showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
-          searLength=SearLength()+abs(LowerOffsetZ())+SearTravel()-(0.25/2));
+          searLength=SearLength()+abs(ReceiverBottomZ())+SearTravel()-(0.25/2));
   }
   
   StockAssembly();

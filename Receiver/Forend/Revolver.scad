@@ -10,7 +10,6 @@ use <../../Meta/MirrorIf.scad>;
 use <../../Meta/Math/Triangles.scad>;
 
 use <../Lower/Lower.scad>;
-use <../Lower/Trigger.scad>;
 use <../Lower/LowerMount.scad>;
 
 use <../../Shapes/Chamfer.scad>;
@@ -939,10 +938,9 @@ module RevolverAssembly(stock=true) {
     LowerMount();
 
     if (_SHOW_LOWER)
-    translate([-LowerMaxX(),0,LowerOffsetZ()])
+    translate([-LowerMaxX(),0,ReceiverBottomZ()])
     Lower(showTrigger=true,
-          showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
-          searLength=SearLength()+abs(LowerOffsetZ())+SearTravel()-(0.25/2));
+          showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true);
     
     if (_SHOW_RECEIVER) {
       

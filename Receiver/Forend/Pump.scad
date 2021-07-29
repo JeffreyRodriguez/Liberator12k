@@ -16,7 +16,6 @@ use <../../Vitamins/Square Tube.scad>;
 
 use <../Lower/Lower.scad>;
 use <../Lower/LowerMount.scad>;
-use <../Lower/Trigger.scad>;
 
 use <../../Ammo/Shell Slug.scad>;
 
@@ -218,10 +217,10 @@ module PumpShotgunAssembly(debug=false) {
     
     LowerMount();
     
-    translate([-LowerMaxX(),0,LowerOffsetZ()])
+    translate([-LowerMaxX(),0,ReceiverBottomZ()])
     Lower(showTrigger=true,
           showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
-          searLength=SearLength()+abs(LowerOffsetZ())+SearTravel()-(0.25/2));
+          searLength=SearLength()+abs(ReceiverBottomZ())+SearTravel()-(0.25/2));
     
   }
   

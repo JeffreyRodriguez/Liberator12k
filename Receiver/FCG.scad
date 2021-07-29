@@ -16,16 +16,16 @@ use <../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 
-use <Lower/Lower.scad>;
 use <Lower/LowerMount.scad>;
 use <Lower/Lugs.scad>;
 
 use <Receiver.scad>;
 
+
 /* [Print] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "FCG_Housing", "FCG_ChargingHandle", "FCG_Disconnector", "FCG_Hammer", "FCG_HammerTail", "FCG_FiringPinCollar", "FCG_Trigger_Left", "FCG_Trigger_Right", "FCG_Trigger_Middle", "FCG_RecoilPlate_Fixture", "FCG_RecoilPlate_GangFixture", "FCG_RecoilPlate_TapGuide", "FCG_RecoilPlate_Projection", "FCG_SearJig"]
+_RENDER = ""; // ["", "FCG_Housing", "FCG_ChargingHandle", "FCG_Disconnector", "FCG_Hammer", "FCG_HammerTail", "FCG_FiringPinCollar", "FCG_TriggerLeft", "FCG_TriggerRight", "FCG_TriggerMiddle", "FCG_RecoilPlate_Fixture", "FCG_RecoilPlate_GangFixture", "FCG_RecoilPlate_TapGuide", "FCG_RecoilPlate_Projection", "FCG_SearJig"]
 
 /* [Assembly] */
 _SHOW_TRIGGER_LEFT = true;
@@ -157,7 +157,7 @@ FCG_HammerTailMinX = -ReceiverLength();
 FCG_HammerTailMaxX = FCG_HammerTailMinX-FCG_HammerTailLength();
 
 FCG_HammerFiredX  = FiringPinMinX();
-FCG_HammerCockedX = -LowerMaxX()-0.125;
+FCG_HammerCockedX = -(1.6+0.5)-0.125;
 
 FCG_HammerTravelX = abs(FCG_HammerCockedX-FCG_HammerFiredX);
 FCG_HammerOvertravelX = 0.25;
@@ -1090,21 +1090,16 @@ module FCG_SearJig(width=0.75, height=1) {
   translate([0,0,SearPinOffsetZ()-SearBottomOffset()])
   difference() {
     translate([-SearRadius()-0.125,-width/2,0])
-    cube([height,width,SearLength()]);
+    ChamferedCube([height,width,SearLength()], r=1/16);
 
     // Sear Pin Hole
     translate([-1,0,SearBottomOffset()])
     rotate([0,90,0])
-    Rod(rod=SearPinRod(), cutter=true,
-         teardrop=true, teardropAngle=180,
-         length=3);
+    cylinder(r=SearPinRadius()+SEAR_PIN_CLEARANCE, h=3);
 
     // Sear Rod Hole
     translate([0,0,-ManifoldGap()])
-    Rod(rod=SearRod(),
-        //teardrop=true, teardropTruncated=false,
-        clearance=RodClearanceLoose(),
-        length=SearLength()*2);
+    cube([0.25+SEAR_CLEARANCE, 0.25+SEAR_CLEARANCE, SearLength()*2]);
 
     // Set screw hole
     translate([0,0,SearLength()-0.5])
@@ -1113,7 +1108,7 @@ module FCG_SearJig(width=0.75, height=1) {
             teardrop=true, teardropAngle=180,
             nutBackset=SearRadius(),
             nutHeightExtra=SearRadius(),
-    length=3);
+            boltLength=3);
   }
 }
 module FCG_RecoilPlate_TapGuide(xyz = [0.25,0.25,1.5], holeRadius=0.1770/2, spindleZ=-1, contoured=FCG_RECOIL_PLATE_CONTOURED) {
@@ -1223,14 +1218,16 @@ module FCG_RecoilPlate_GangFixture(xyz = [1,0.375,0.375], gang=[5,2], holeRadius
 //**************
 module TriggerGroup(animationFactor=TriggerAnimationFactor(),
                     searLength=SearLength()) {
-  translate([-LowerMaxX(),0,LowerOffsetZ()]) {
+  translate([FCG_HammerCockedX+0.125,0,ReceiverBottomZ()]) {
     Sear(animationFactor=animationFactor, length=searLength)
     SearPin();
     
+    if (_SHOW_TRIGGER_MIDDLE)
     SearSupportTab();
+    
     Trigger(animationFactor=animationFactor,
-            left=true, leftAlpha=1,
-            right=true, rightAlpha=1);
+            left=_SHOW_TRIGGER_LEFT, leftAlpha=1,
+            right=_SHOW_TRIGGER_RIGHT, rightAlpha=1);
   }
 }
 
@@ -1319,7 +1316,7 @@ if ($preview) {
     
     LowerMount();
     
-    translate([-LowerMaxX(),0,LowerOffsetZ()])
+    *translate([-LowerMaxX(),0,ReceiverBottomZ()])
     Lower(showLeft=_SHOW_LOWER_LEFT,
           showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true);
   }
@@ -1329,7 +1326,26 @@ if ($preview) {
   if (_SHOW_RECEIVER)
   ReceiverAssembly(debug=_CUTAWAY_RECEIVER);
 } else {
-  echo($vpt, $vpr, $vpd);
+  
+  if (_RENDER == "FCG_TriggerMiddle")
+  rotate(180)
+  translate([0,-TriggerHeight()/2,0.12])
+  rotate([90,0,00])
+  SearSupportTab(cutter=false);
+
+  if (_RENDER == "FCG_TriggerLeft")
+  rotate(180)
+  translate([0,-TriggerHeight()/2,0])
+  rotate([90,0,0])
+  translate([0,-SearRadius(SEAR_CLEARANCE),0])
+  Trigger(left=true, right=false);
+
+  if (_RENDER == "FCG_TriggerRight")
+  rotate(180)
+  translate([0,-TriggerHeight()/2,0])
+  rotate([90,0,0])
+  translate([0,TriggerWidth()/2,0])
+  Trigger(left=false, right=true);
   
   if (_RENDER == "FCG_Housing")
   FCG_Housing_print();
@@ -1359,7 +1375,7 @@ if ($preview) {
   FCG_FiringPinCollar();
   
   if (_RENDER == "FCG_SearJig")
-  SearJig();
+  FCG_SearJig();
   
   if (_RENDER == "FCG_RecoilPlate_Fixture")
   FCG_RecoilPlate_Fixture();

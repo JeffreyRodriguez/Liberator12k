@@ -382,7 +382,7 @@ if ($preview) {
     LowerMount();
 
     if (_SHOW_LOWER)
-    translate([-LowerMaxX(),0,LowerOffsetZ()])
+    translate([-LowerMaxX(),0,ReceiverBottomZ()])
     Lower(showTrigger=true,
           showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true);
     

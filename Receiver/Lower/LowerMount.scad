@@ -11,7 +11,7 @@ use <../Receiver.scad>;
 
 use <Lugs.scad>;
 use <Lower.scad>;
-use <Trigger.scad>;
+use <../FCG.scad>;
 
 /* [Print] */
 
@@ -26,10 +26,6 @@ _SHOW_LOWERMOUNT_REAR = true;
 _CUTAWAY_RECEIVER = true;
 _CUTAWAY_LOWERMOUNT_FRONT = false;
 _CUTAWAY_LOWERMOUNT_REAR = false;
-
-// Settings: Positions
-function LowerOffsetZ() = ReceiverBottomZ();
-
 
 //************
 //* Vitamins *
@@ -53,19 +49,19 @@ module LowerMount_TakedownPinRetainer(cutter=false, clearance=0.005) {
 //*****************
 //* Printed Parts *
 //*****************
-module LowerMount_Front(id=ReceiverID(), alpha=1, debug=false) {
+module LowerMount_Front(id=ReceiverID(), alpha=1, debug=false, doRender=true) {
   mountLength = 1.75-0.01;
   
   color("Chocolate")
-  render() DebugHalf(enabled=debug)
+  RenderIf(doRender) DebugHalf(enabled=debug)
   translate([-LowerMaxX(),0,0])
   difference() {
     union() {
-      translate([0,0,LowerOffsetZ()])
-      ReceiverLugFront(extraTop=-LowerOffsetZ());
+      translate([0,0,ReceiverBottomZ()])
+      ReceiverLugFront(extraTop=-ReceiverBottomZ());
       
       translate([ReceiverLugFrontMaxX(),0,0])
-      ReceiverBottomSlotInterface(length=mountLength, height=abs(LowerOffsetZ()));
+      ReceiverBottomSlotInterface(length=mountLength, height=abs(ReceiverBottomZ()));
     }
     
     difference() {
@@ -86,28 +82,28 @@ module LowerMount_Front(id=ReceiverID(), alpha=1, debug=false) {
       }
     }
     
-    translate([-0.01,0,LowerOffsetZ()])
-    Sear(length=SearLength()+abs(LowerOffsetZ()), cutter=true);
+    translate([-0.01,0,ReceiverBottomZ()])
+    Sear(length=SearLength()+abs(ReceiverBottomZ()), cutter=true);
   }
 }
 
-module LowerMount_Rear(id=ReceiverID(), alpha=1, debug=false) {
+module LowerMount_Rear(id=ReceiverID(), alpha=1, debug=false, doRender=true) {
   mountLength = ReceiverLength()
               - abs(ReceiverLugRearMaxX())
               - LowerMaxX()
               - ManifoldGap();
   
   color("Chocolate")
-  render() DebugHalf(enabled=debug)
+  RenderIf(doRender) DebugHalf(enabled=debug)
   translate([-LowerMaxX(),0,0])
   difference() {
     union() {
       
-      translate([0,0,LowerOffsetZ()])
-      ReceiverLugRear(extraTop=-LowerOffsetZ());
+      translate([0,0,ReceiverBottomZ()])
+      ReceiverLugRear(extraTop=-ReceiverBottomZ());
       
       translate([ReceiverLugRearMaxX(),0,-0.26])
-      ReceiverBottomSlotInterface(length=mountLength, height=abs(LowerOffsetZ())-0.26);
+      ReceiverBottomSlotInterface(length=mountLength, height=abs(ReceiverBottomZ())-0.26);
     }
       
     translate([LowerMaxX(),0,0])
@@ -160,11 +156,11 @@ module LowerMount(id=ReceiverID(), alpha=1, debug=false) {
 //*************
 
 
-echo("Sear length: ", SearLength()+abs(LowerOffsetZ()));
+echo("Sear length: ", SearLength()+abs(ReceiverBottomZ()));
 *!scale(25.4)
-translate([0.125,abs(LowerOffsetZ()),0.125])
+translate([0.125,abs(ReceiverBottomZ()),0.125])
 rotate([90,0,0])
-Sear(length=SearLength()+abs(LowerOffsetZ()));
+Sear(length=SearLength()+abs(ReceiverBottomZ()));
 
 scale(25.4)
 if ($preview) {
@@ -174,19 +170,19 @@ if ($preview) {
   LowerMount();
 
   if (_SHOW_LOWER)
-  translate([-LowerMaxX(),0,LowerOffsetZ()])
+  translate([-LowerMaxX(),0,ReceiverBottomZ()])
   Lower(showTrigger=true,
         showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
-        searLength=SearLength()+abs(LowerOffsetZ())+SearTravel()-(0.25/2));
+        searLength=SearLength()+abs(ReceiverBottomZ())+SearTravel()-(0.25/2));
 } else {
   if (_RENDER == "LowerMount_Front") {
     rotate([0,90,0])
-    translate([0.5,0,-LowerOffsetZ()])
+    translate([0.5,0,-ReceiverBottomZ()])
     LowerMount_Front();
     
   } else if (_RENDER == "LowerMount_Rear") {
     rotate([0,90,0])
-    translate([LowerMaxX()-ReceiverLugRearMaxX(),0,-LowerOffsetZ()])
+    translate([LowerMaxX()-ReceiverLugRearMaxX(),0,-ReceiverBottomZ()])
     LowerMount_Rear();
   }
 }
