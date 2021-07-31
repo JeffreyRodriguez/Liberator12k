@@ -1,0 +1,20 @@
+#HTMLDOC 1.9.7
+-t pdf13 -f "Manual.pdf" --book --toclevels 2 --no-numbered --toctitle "Table of Contents" --title --titleimage "Manual.png" --logoimage "Media/#Liberator12k compact.png" --linkcolor #166d9f --linkstyle underline --bodycolor fafafa --size Universal --left 0.50in --right 0.50in --top 0.50in --bottom 0.50in --header .t. --header1 ... --footer tc1 --nup 1 --tocheader .t. --tocfooter ..i --portrait --color --no-pscommands --no-xrxcomments --compression=9 --jpeg=0 --fontsize 12.0 --fontspacing 1.2 --headingfont Helvetica --bodyfont Times --headfootsize 12.0 --headfootfont Helvetica --charset iso-8859-1 --links --embedfonts --pagemode outline --pagelayout single --firstpage p1 --pageeffect none --pageduration 10 --effectduration 1.0 --no-encryption --permissions all  --owner-password ""  --user-password "" --browserwidth 680 --no-strict --overflow
+dist/docs/README.html
+dist/docs/Printing.html
+dist/docs/Receiver/README.html
+dist/docs/Receiver/Receiver.html
+dist/docs/Receiver/FCG.html
+dist/docs/Receiver/Lower/README.html
+dist/docs/Receiver/Lower/Lower.html
+dist/docs/Receiver/Lower/LowerMount.html
+dist/docs/Receiver/Forend/README.html
+dist/docs/Receiver/Forend/TopBreak/README.html
+dist/docs/Receiver/Forend/TopBreak_CAFE12/README.html
+dist/docs/Receiver/Forend/TopBreak_CAFE12+/README.html
+dist/docs/Receiver/Forend/Revolver_ZZR6x12/README.html
+dist/docs/Receiver/Forend/Revolver/README.html
+dist/docs/Receiver/Frame.html
+dist/docs/Receiver/Stock.html
+dist/docs/Developers.html
+dist/docs/About.html

@@ -1,62 +1,90 @@
 # \#Liberator12k Manual
 
-[Liberator12k.com](https://Liberator12k.com)
+Get the latest code and kits at [Liberator12k.com](https://Liberator12k.com).
 
-[About the Project](About.md)
+Self-defense is an individual imperative and weapons are the means of
+self-defense. The guns are real and unstoppable.
 
-[Printing Instructions](Printing.md)
+* Don't hurt people who've done you no harm.
+* Don't take or damage their stuff.
+* This is for self-defense, sport, and fun.
+* Be responsible when shooting.
 
-[Developer Docs](Developers.md)
+[Learn more about the Project](About.md)  and join the Matrix channel
+**\#liberator12k:matrix.org** on [Element](https://element.io).
 
-## ALPHA!!
-This is Alpha-quality, the docs are the roughest point. Join the Matrix channel #liberator12k:matrix.org for more info.
+### Alpha Warning!
+This is an Alpha release. That means it's *not done*. There *are definitely*
+bugs and rough edges.
+Weapons may be incomplete and **unsafe** for you or **bystanders**.
+Use extreme caution and two doses of common sense.
 
-## Universal Components
+## The [Liberator12k.com Store](https://liberator12k.com/store/index.html)
+The official store has complete hardware kits.
+This one-man operation cost tens of thousands of dollars and hours invested.
+I'm giving it away for free because I  want to support your ability to defend
+yourself. I think that makes me safer, and the world better - on average.
 
-### Receiver
-* [The Big Receiver](Receiver/Frame.md)
-* [The Little Receiver](Receiver/Receiver.md)
+I've made everything for the project easy to source yourself.
+My kit costs around the same price you'd pay to buy *one* if you sourced all of
+the parts yourself. I buy in bulk and the difference helps support the project.
+It would be trivial for someone to come along and sell the same hardware kit.
+I'm asking you - the community - to support the official project.
+I didn't start this to get rich, but it would be an awesome side-effect ;)
 
-### Everything Else
-* [Fire Control Group](Receiver/FCG.md)
-* [Trigger](Receiver/Lower/Trigger.md)
-* [Lower](Receiver/Lower/Lower.md)
-* [LowerMount](Receiver/Lower/LowerMount.md)
-* [Stock](Receiver/Stock.md)
+I don't need to be the guy selling kits. I'd much rather find trustworthy
+distributors who I can endorse for a cut of the sales.
+If you'd like to support the project as a vendor, get in touch.
+You have to kick in and be *great* to customers or I'll drop you.
 
-## \#Liberator12k Models
+## Build a \#Liberator12k
+Read the [Printing Guide](Printing.md) for slicer settings and material info.
 
-| Class                                    | Model                                                 |
-|------------------------------------------|-------------------------------------------------------|
-| [Top Break](Receiver/Forend/TopBreak.md) | [CAFE12+](Receiver/Forend/TopBreak_CAFE12+/README.md) |
-| [Top Break](Receiver/Forend/TopBreak.md) | [CAFE12](Receiver/Forend/TopBreak_CAFE12/README.md)   |
-| [Top Break](Receiver/Forend/TopBreak.md) | [FP37](Receiver/Forend/TopBreak_FP37/README.md)       |
-| [Revolver](Receiver/Forend/Revolver.md)  | [ZZR 6x12](Receiver/Forend/Revolver_ZZR612/README.md) |
-| Exhibition                               | [BARBB](Receiver/BARBB/BARBB.md)                      |
+[The Build Guide](ComeAndMakeIt.md) explains how to choose a model and build
+all the different components for your very own \#Liberator12k.
 
-## Ammunition
+## Print Your Own Ammo
+An empty gun needs a bayonet - Ancient Narwhal Proverb
 
-### DIY Propellants
-* [Black Powder](Ammo/Powder/README.md)
-* [Smokeless Powder](Ammo/Powder/README.md)
+[Printed Shotgun Shells](Ammo/README.md)
 
-### Printed Cartriges
-* [Printed Shotgun Shells](Ammo/README.md)
+* [Powder](Ammo/Powder/README.md)
+* [Primers](Ammo/Eprimer.md)
+* [Hulls](Ammo/README.md)
 
-## Tooling
-
-### Electrochemical Machining (ECM)
+## Electrochemical Machining (ECM) Tools
 * [Milling](Tooling/ECM/Mill/README.md)
 * [Drilling](Tooling/ECM/Drill/README.md)
 * [Boring](Tooling/ECM/Bore/README.md)
 * [Rifling](Tooling/ECM/Rifling/README.md)
 
-## Safety
+## DIY CNC Machines
+* [Boom Loom](Tooling/BoomLoom.md)
 
-DANGER - AT YOUR OWN RISK
+## How to Laugh at Danger
+From behind a solid barrier - don't be stupid.
 
-Safety precautions and procedures *are not fully documented here*. Before you shoot any DIY gun from your hands **test
-it first**.
+Everyone's a tough guy until they take a piece of shrapnel to the beanbag.
+
+### Make at Your Own Risk
+I have done my best to make sure the designs included here are safe to the user
+and bystanders. Designs that are in "Alpha" *may not be safe* to the user
+**or bystanders.**
+
+### Bystander Care
+The revolver will throw shot/wadding from the gap - at your range neighbors.
+Keep bystanders behind you and maintain a safe "180 degree" line or
+I'll shake *their* hand for kicking your ass, because you were warned.
+
+### Basic Firearms Safety
+ 1. All guns are always loaded. 
+ 2. Never point the gun at anything you are not willing to destroy 
+ 3. Keep your finger off the trigger until your sights are on target and you have made the decision to shoot.
+ 4. Be sure of your target and what is beyond it.
+
+### Basic DIY Gun Safety
+DIY guns require special precautions and procedures that
+*are not fully documented here*.
 
 * Use a secure test rig to hold the gun pointed in a **safe direction**.
 * Stand behind a bulletproof barrier, such as several feet of dirt, concrete blocks, or very large tree.
@@ -64,8 +92,13 @@ it first**.
 * A string long enough to pull the trigger from behind cover.
 * Test with at least 5 of the highest pressure cartridges you can find.
 
-## Unlicense
+## Developers and Advanced Users
+Want to customize a design to fit the materials you have on hand? Metric?
+Change gauge or caliber completely, or something even more extreme?
 
+The [Developer Docs](Developers.md) explain how to do all that and more.
+
+## Unlicense
 This is free and unencumbered software released into the public domain.
 
 Anyone is free to copy, modify, publish, use, compile, sell, or distribute this software, either in source code form or

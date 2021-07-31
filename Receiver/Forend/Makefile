@@ -8,7 +8,8 @@ CLASSES := TopBreak Revolver
 TopBreak := ReceiverFront \
             Forend \
             BarrelCollar \
-            Extractor
+            Extractor \
+						BarrelSleeveFixture
 Revolver := ReceiverFront \
 						FrameSpacer \
 						BarrelSupport \
@@ -29,6 +30,7 @@ TopBreak_STLS := $(addprefix TopBreak_, $(foreach PRESET,$(TopBreak_PRESETS),$(a
 Revolver_STLS := $(addprefix Revolver_, $(foreach PRESET,$(Revolver_PRESETS),$(addsuffix .stl, $(addprefix $(addsuffix /, $(PRESET)),$(Revolver)))))
 
 PRESET_STLS := $(TopBreak_STLS) $(Revolver_STLS)
+PRESET_ASSEMBLY_PNG := $(addsuffix /Assembly.png,$(PRESETS))
 PRESET_HTML := $(addsuffix /README.html,$(PRESETS))
 PRESET_STL_PREVIEWS := $(addsuffix .mp4, $(PRESET_STLS))
 
@@ -62,10 +64,33 @@ $(PRESET_STLS):
 		$(CLASS).scad
 	$(THUMBNAILBIN) $(CLASS_PRESET)/$(PART).png $(CLASS_PRESET)/$(PART)_thumb.jpg
 
+# Assembly.png - the source of truth
+$(addsuffix /Assembly.png,$(PRESETS)): %.png : $$(firstword $$(subst _, ,%)).scad
+	$(eval CLASS_PRESET=$(firstword $(subst /, ,$@)))
+	$(eval CLASS=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$1 }'))
+	$(eval PRESET=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$2 }'))
+	$(eval PART=$(basename $(notdir $@)))
+	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -P $(PRESET) -o $@ \
+		--projection=p --camera=400,1500,300,0,0,0 \
+		$(CLASS).scad
+		
+# Assembly.jpg - Downsampled
+$(addsuffix /Assembly.jpg,$(PRESETS)): %.jpg : %.png
+	convert $(basename $@).png -quality 90 $@
+	
+# Assembly_thumb.jpg - Downsampled 200px thumbnail
+$(addsuffix /Assembly_thumb.jpg,$(PRESETS)): %_thumb.jpg : %.png
+	$(THUMBNAILBIN) $< $@
+	
+# Assembly_htmldoc.jpg - Downsampled 800px
+$(addsuffix /Assembly_htmldoc.jpg,$(PRESETS)): %_htmldoc.jpg : %.png
+	#cp $< $@
+	convert -resize 1600x900^ $< -quality 90 $@
+
 # HTML file for the preset
-$(PRESET_HTML): %/README.html : % %.md
-	$(MDBIN) $(basename $^).md | sed 's/\.md/\.html/' > $@
-$(CLASS_HTML): %/README.html : % %.md
-	$(MDBIN) $(basename $^).md | sed 's/\.md/\.html/' > $@
+$(PRESET_HTML): %/README.html : %.md %/Assembly.jpg %/Assembly_thumb.jpg %/Assembly_htmldoc.jpg 
+	$(MDBIN) $< | sed 's/\.md/\.html/' > $@
+$(CLASS_HTML): %/README.html : %.md
+	$(MDBIN) $< | sed 's/\.md/\.html/' > $@
 
 all: README.html $(CLASSES) $(CLASS_HTML) $(PRESETS) $(PRESET_HTML) $(PRESET_STLS) $(PRESET_STL_PREVIEWS)

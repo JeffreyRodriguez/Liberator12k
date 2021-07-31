@@ -4,11 +4,10 @@ SLOW_FRAME_COUNT=300
 SLOW_FRAMES=$(shell seq 0 $(SLOW_FRAME_COUNT))
 MDBIN=cmark-gfm -e table --unsafe
 OSBIN=nice openscad
-OSOPTS=
+OSOPTS=--colorscheme=Nature
 OS_CAM_AUTO=--projection=p --autocenter --viewall
 ANIMATE_BIN=./bin/animate.sh
 THUMBNAILBIN=convert -thumbnail 200
-COLORSCHEME=Starnight
 
 .DEFAULT_GOAL := all
 
@@ -33,7 +32,7 @@ COLORSCHEME=Starnight
 		"$@"
 	rm -rf $(FRAMES_DIR)
 	
-%.jpg %.png: %.scad
+%.png: %.scad
 	$(OSBIN) $(OSOPTS) -o $@ \
 	--projection=p --camera 200,1000,200,0,0,0 \
 	"$(basename $@).scad"

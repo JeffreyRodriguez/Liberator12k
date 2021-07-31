@@ -1,39 +1,37 @@
-# [\#Liberator12k Manual](README.md)
+# Printing Guide
+Everything here should be taken as the default unless otherwise stated.
 
-## Print Guide
-General printing instructions that apply to \#Liberator12k designs.
+## Compatible Materials
+PLA, PLA+, ABS, PETG, Nylon, PC, POM - almost anything. 
+The strength is in the steel.
 
-### Print Settings
-Unless otherwise stated, these are the only vital slicer values to set.
-
+## Print Settings
+All models work well with Cura. These are the only vital slicer values to override.
   * 0.4-1.5mm nozzle
-  * 0.2mm layers
   * 3mm walls
   * 4mm top and bottom
   * 20% infill
 
-#### Layer Height
-0.2mm layers should work fine, but you'll get better quality printing at 0.1mm.
-0.1mm layers will take twice as long, so I recommend using a larger nozzle for
-the bigger prints.
+### Layer Height
+0.2mm layers are a good balance between speed and quality.
+0.1mm layers will look 50% better and take twice as long.
 
-### Materials
-PLA, PLA+, ABS, PETG, and Nylon should all work fine. The strength is in the steel.
+If it's a large part, you can probably print it with tall layers. Smaller parts
+usually have tighter tolerance requirements and taller layers may cause binding.
 
-### Nozzle
-Some prints need a standard size nozzle ~0.4mm, mostly the FCG parts.
-For everything else, larger nozzles are recommended for time savings.
-0.4mm will work just fine, but it'll take longer than it has to.
+## \#FatNozzleGang
+Everything can be printed with a 1.5mm nozzle, but 0.4mm works too.
+All print times are given for 0.4mm nozzles.
 
-Print the FCG components first with 0.4mm, then swap to a 0.8mm nozzle - it's 4x
-faster.
+| Diameter | Area     | Time Multiplier | Effective Time |
+|----------|----------|-----------------|----------------|
+| 0.2mm    | 0.04mm^2 | 4               | 4 days         |
+| 0.4mm    | 0.16mm^2 | 1               | 1 day          |
+| 0.8mm    | 0.64mm^2 | 1/4             | 6 hours        |
+| 1.6mm    | 2.56mm^2 | 1/16            | 1.5 hours      |
+<br/>
 
-## Printing a \#Liberator12k Reciever
-Check the component page for extra printing details.
-
-* [Frame Receiver](Receiver/Frame.md)
-* [Stock](Receiver/Stock.md)
-* [Lower](Receiver/Lower/Lower.md)
-* [Lower Mount](Receiver/Lower/LowerMount.md)
-* [Trigger](Receiver/Lower/Trigger.md)
-* [Fire Control Group](Receiver/FCG.md)
+#### IM FAST AS FUCK BOI
+Increasing nozzle diameter yields exponential speed gains. Since you gain so
+much speed from a larger nozzle, you can slow down your print speed and use
+lower layer heights for better print quality - and *still* be faster than stock.

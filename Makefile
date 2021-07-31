@@ -19,6 +19,10 @@ dist/docs: $(DOCS)
 	  cp -r $$file "$@/$$file"; \
   done
 
+dist/Manual.pdf: dist/docs $(shell find dist/docs) $(DOCS)
+	htmldoc --batch Manual.book -f dist/Manual.pdf \
+	  --browserwidth 1920
+
 dist/changelog.txt: dist
 	git log --oneline > dist/changelog.txt
 dist/$(GIT_VERSION).version: dist
@@ -35,7 +39,7 @@ $(FOREND_DIST): Receiver
 	mkdir -p $@
 	cp -r Receiver/$(shell echo "$@" | sed 's/^dist\///')/*.stl "$@/"
 	
-Liberator12k.zip: dist/changelog.txt dist/$(GIT_VERSION).version dist/docs dist/Receiver $(FOREND_DIST)
+Liberator12k.zip: dist/changelog.txt dist/$(GIT_VERSION).version dist/docs dist/Manual.pdf dist/Receiver $(FOREND_DIST)
 	cd dist && zip -r ../Liberator12k.zip *
 
 Receiver: FORCE

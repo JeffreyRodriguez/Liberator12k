@@ -1,36 +1,25 @@
-# [\#Liberator12k Manual](README.md)
-## About
+# History of the Project
 
-Self-defense is an individual imperative and weapons are the means of self-defense.
-The guns are real. They work. You can make them yourself.
-
-* Please do not hurt people who've done you no harm.
-* Please do not damage or take stuff from other people.
-* Please do be responsible when shooting.
-* Please do use for self-defense, sport, and fun.
-
-## Modular Weapons Platform
+## A Modular DIY Weapons Platform
 A driving force in \#Liberator12k weapon design is reuse of the same receiver.
 
 Similar to the AR15 modular lower/upper concept, the L12k is conceptually split into receiver/forend.
 
+### Built-in Customization
 The real "secret sauce" of this project, is the software library I developed
 during the design process of these guns. I tried a lot of different ideas,
 and what I came away with, is an OpenSCAD software library chock-full of
-useful *configurable* objects. **Gun Legos**
+useful *configurable* gun parts.
 
 If you browse through the code, you'll see the project has been grouped into
-major functional areas:
+major functional areas.
 
   * Ammo - Printable Ammunition
-  * Documentation - All sorts of docs; including barrel wall calculator.
-  * Meta - 3D modeling-specific code
-  * Receiver - Lower+Universal Receiver; interchangeable Forends
+  * Receiver - Lower+Universal Receiver
+  * Forends - Interchangeable forends for the receiver
   * Tooling - Printable tools for gun making
   * Vitamins - Store-bought parts, nut and bolts, collars, etc.
   * Toys - Things I've tried and thrown away (maybe)
-
-There are more directories than mentioned above, but this should give you a taste of what's in here.
 
 #### Simplicity and Availability
 Firearm operating mechanisms should be simple to understand and produce by
