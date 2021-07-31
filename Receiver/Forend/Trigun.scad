@@ -354,7 +354,7 @@ module Foregrip_print() {
 
 
 // Assemblies
-module BreakActionAssembly(receiverLength=12, pipeAlpha=1, receiverFrontAlpha=1, pivotFactor=0, extractFactor=0, chargeFactor=0, lockFactor=0, stock=true, tailcap=false, debug=false) {
+module TrigunForendAssembly(receiverLength=12, pipeAlpha=1, receiverFrontAlpha=1, pivotFactor=0, extractFactor=0, chargeFactor=0, lockFactor=0, stock=true, tailcap=false, debug=false) {
 
 
   if (_SHOW_FCG)
@@ -382,9 +382,7 @@ if ($preview) {
     LowerMount();
 
     if (_SHOW_LOWER)
-    translate([-LowerMaxX(),0,ReceiverBottomZ()])
-    Lower(showTrigger=true,
-          showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true);
+    Lower(showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true);
     
     if (_SHOW_RECEIVER) {
       TensionBolts();
@@ -399,7 +397,7 @@ if ($preview) {
     }
   }
   
-  BreakActionAssembly(pivotFactor=Animate(ANIMATION_STEP_UNLOAD)
+  TrigunForendAssembly(pivotFactor=Animate(ANIMATION_STEP_UNLOAD)
                                  -Animate(ANIMATION_STEP_LOAD),
                       chargeFactor=Animate(ANIMATION_STEP_CHARGE)
                                  -Animate(ANIMATION_STEP_CHARGER_RESET),

@@ -190,35 +190,38 @@ module PumpForend(alpha=1, debug=false) {
   }
 }
 
-ShellLoadingSupport();
+
+scale(25.4)
+if ($preview) {
+  ShellLoadingSupport();
+
+  color("Red") {
+    for (i = [1:3])
+    translate([-3-((i-1)*2.75),0,MagazineCenterZ()])
+    rotate([0,90,0])
+    ShellSlugBall(height=1.95);
+
+    // Mid-load
+    translate([0,0,MagazineCenterZ()])
+    rotate([0,90,0])
+    ShellSlugBall(height=2.0);
 
 
-color("Red") {
-  for (i = [1:3])
-  translate([-3-((i-1)*2.75),0,MagazineCenterZ()])
-  rotate([0,90,0])
-  ShellSlugBall(height=1.95);
+    // In position for load
+    rotate([0,90,0])
+    ShellSlugBall(height=2.0);
+  }
 
-  // Mid-load
-  translate([0,0,MagazineCenterZ()])
-  rotate([0,90,0])
-  ShellSlugBall(height=2.0);
+  translate([BarrelTravel()*(Animate(ANIMATION_STEP_UNLOAD)-Animate(ANIMATION_STEP_LOAD)),0,0]) {
+    Barrel();
+    //BarrelCollar();
+    *PumpForend(alpha=1, debug=true);
+  }
 
+  PumpUpper(alpha=0.75, debug=false);
 
-  // In position for load
-  rotate([0,90,0])
-  ShellSlugBall(height=2.0);
+  Receiver();
 }
-
-translate([BarrelTravel()*(Animate(ANIMATION_STEP_UNLOAD)-Animate(ANIMATION_STEP_LOAD)),0,0]) {
-  Barrel();
-  //BarrelCollar();
-  *PumpForend(alpha=1, debug=true);
-}
-
-PumpUpper(alpha=0.75, debug=false);
-
-Receiver();
 
 
 $t=0.75;

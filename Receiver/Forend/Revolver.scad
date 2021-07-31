@@ -938,9 +938,7 @@ module RevolverAssembly(stock=true) {
     LowerMount();
 
     if (_SHOW_LOWER)
-    translate([-LowerMaxX(),0,ReceiverBottomZ()])
-    Lower(showTrigger=true,
-          showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true);
+    Lower(showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true);
     
     if (_SHOW_RECEIVER) {
       

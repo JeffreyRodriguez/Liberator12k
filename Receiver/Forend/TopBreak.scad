@@ -36,7 +36,7 @@ use <../FCG.scad>;
 /* [Print] */
 
 // Select a part, Render it (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "TopBreak_ReceiverFront", "TopBreak_Forend", "TopBreak_BarrelCollar", "TopBreak_Extractor", "TopBreak_Latch", "TopBreak_Foregrip"]
+_RENDER = ""; // ["", "TopBreak_ReceiverFront", "TopBreak_Forend", "TopBreak_BarrelCollar", "TopBreak_Extractor", "TopBreak_Latch", "TopBreak_Foregrip", "TopBreak_BarrelSleeveFixture"]
 
 /* [Assembly] */
 _SHOW_BARREL = true;
@@ -427,30 +427,16 @@ module TopBreak_ReceiverFront(debug=false, alpha=1) {
                        RecoilPlateHeight()-0.5],
                       r=1/8, teardropFlip=[true,true,true]);
         
-        // Sling Support
-        translate([0,-(2)/2,0])
-        mirror([0,0,1])
-        ChamferedCube([TopBreak_ReceiverFrontLength(),
-                       2,
-                       2.5],
-                      r=1/8, teardropFlip=[true,true,true]);
-        
-        // Match the lower
-        translate([0,-(1.25/2),LowerOffsetZ()-LowerGuardHeight()])
-        ChamferedCube([1/4, 1.25, LowerGuardHeight()], r=1/16,
-                      teardropFlip=[true, true, true]);
+        // Round off the bottom
+        translate([0,0,-1])
+        rotate([0,90,0])
+        ChamferedCylinder(r1=0.625, r2=1/8, h=0.5);
         
       }
     }
     
     FrameBolts(cutter=true);
     
-    // Sling slot
-    for (M = [0,1]) mirror([0,M,0])
-    translate([0,-0.625-(3/16),LowerOffsetZ()-1.25])
-    rotate([11,0,0]) rotate([0,-90,0])
-    ChamferedSquareHole([1.25,3/32], 0.5, corners=false, chamferRadius=1/32, center=false);
-
     translate([-TopBreak_ReceiverFrontLength(),0,0]) {
       RecoilPlate(length=RECOIL_PLATE_LENGTH, cutter=true);
       RecoilPlateBolts(cutter=true);
@@ -749,6 +735,51 @@ module TopBreak_Foregrip(length=TopBreak_ForegripLength(), debug=false, alpha=1)
 }
 
 
+// Fixtures
+module TopBreak_BarrelSleeveFixture() {
+  wall = 0.1875;
+  guideExtra= 1-wall;
+  guideWidth = 0.5;
+  width = BarrelSleeveDiameter()+(wall*2);
+  holeDepth = (width/2)+guideExtra;
+  
+  
+  difference() {
+    
+    union() {
+      
+      // Tube body
+      translate([-(width/2), -(width/2),0])
+      ChamferedCube([width, width, BarrelSleeveLength()], r=1/16);
+      
+      // Drill/Tap guide
+      translate([0, -(guideWidth/2),0])
+      ChamferedCube([(width/2)+guideExtra, guideWidth, BarrelSleeveLength()], r=1/16);
+      
+      // Fillets
+      for (M = [0,1]) mirror([0,M,0])
+      translate([(width/2)-ManifoldGap(), (guideWidth/2)-ManifoldGap(), 0.25])
+      rotate(-90)
+      Fillet(r=1/8, h=BarrelSleeveLength()-0.5, $fn=30);
+    }
+    
+    ChamferedCircularHole(r1=BarrelSleeveRadius(BARREL_CLEARANCE),
+                          r2=1/16,
+                          h=BarrelSleeveLength());
+    
+    // Stand the barrel up
+    rotate([0,-90,0])
+    TopBreak_Barrel(cutter=true);
+    
+    // Holes
+    for (Z = [0.5:0.5:BarrelSleeveLength()-0.5])
+    translate([0,0,Z])
+    rotate([0,90,0])
+    cylinder(r=1/8/2, h=holeDepth);
+    
+  }
+}
+
 // Assemblies
 module TopBreak_ExtractorAssembly(debug=false, alpha=1, cutter=false) {
   TopBreak_ExtractorBit(cutter=cutter);
@@ -790,23 +821,8 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFron
 
     if (_SHOW_COLLAR)
     TopBreak_BarrelCollar(debug=_CUTAWAY_COLLAR, alpha=_ALPHA_COLLAR);
-
-    translate([ForendLength()+1,0,0]){
-      
-      translate([UnitsMetric(10)+0.25,0,-MlokForegripLength()-BarrelRadius()-0.5])
-      rotate(90) {
-        MlokForegripBolts();
-        MlokForegrip(alpha=0.5);
-      }
-      
-      rotate([0,90,0])
-      MlokCluster(radius=BarrelRadius(), alpha=0.5);
-    }
     
-    if (_SHOW_FOREGRIP)
-    translate([(0.5*lockFactor)-(ChargerTravel()*chargeFactor),0,0])
-    TopBreak_Foregrip();
-
+    children();
   }
   
   if (_SHOW_RECEIVER_FRONT)
@@ -815,6 +831,7 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFron
   if (_SHOW_FOREND)
   TopBreak_Forend(debug=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
 }
+
 
 
 scale(25.4)
@@ -849,7 +866,23 @@ if ($preview) {
                       lockFactor=Animate(ANIMATION_STEP_UNLOCK)
                                  -Animate(ANIMATION_STEP_LOCK),
                       extractFactor=Animate(ANIMATION_STEP_UNLOAD)
-                                 -SubAnimate(ANIMATION_STEP_LOAD, end=0.25));
+                                 -SubAnimate(ANIMATION_STEP_LOAD, end=0.25)) {
+  
+    translate([ForendLength()+1,0,0]){
+      
+      translate([UnitsMetric(10)+0.25,0,-MlokForegripLength()-BarrelRadius()-0.5])
+      rotate(90) {
+        MlokForegripBolts();
+        MlokForegrip(alpha=0.5);
+      }
+      
+      rotate([0,90,0])
+      MlokCluster(radius=BarrelRadius(), alpha=0.5);
+    }
+    
+    if (_SHOW_FOREGRIP)
+    TopBreak_Foregrip();
+  };
 } else {
 
   if (_RENDER == "TopBreak_BarrelCollar")
@@ -875,4 +908,7 @@ if ($preview) {
   if (_RENDER == "TopBreak_Extractor")
   translate([0,0,-TopBreak_ExtractorZ()])
   TopBreak_Extractor();
+  
+  if (_RENDER == "TopBreak_BarrelSleeveFixture")
+  TopBreak_BarrelSleeveFixture();
 }

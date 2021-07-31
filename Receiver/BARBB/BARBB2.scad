@@ -55,11 +55,7 @@ $fs = UnitsFs()*0.25;
 // Bullpup AR Barrel Bolt-action (BARBB)
 BARREL_PIPE = Spec_TubingZeroPointSevenFive();
 RECEIVER_PIPE = Spec_OnePointFiveSch40ABS();
-BOLT_ROD = Spec_RodOneHalfInch();
 BOLT = BoltSpec("1-2\"-13");;
-BOLT_GUIDE_ROD = Spec_RodOneQuarterInch();
-BOLT_SEAR_ROD = Spec_RodOneQuarterInch();
-EJECTOR_PIVOT_ROD = Spec_RodOneEighthInch();
 
 // Configured Values
 tubeWall = 0.25;
@@ -365,7 +361,7 @@ module BARBB_Assembly() {
   
   if (_SHOW_BUTTPAD)
   translate([magwellX-ReceiverLength(),0,0])
-  Buttpad();
+  Stock_Buttpad();
   
   if (_SHOW_MAGWELL)
   BARBB_Magwell(alpha=_ALPHA_MAGWELL, debug=_CUTAWAY_MAGWELL);

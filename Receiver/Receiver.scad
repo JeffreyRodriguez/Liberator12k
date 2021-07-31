@@ -285,7 +285,8 @@ module ReceiverSegment(length=1, chamferFront=false, chamferBack=false, highTop=
     
     // Top cover
     if (highTop)
-    ReceiverTopSegment(length=length);
+    ReceiverTopSegment(length=length,
+                       chamferFront=chamferFront, chamferBack=chamferBack);
   }
   
   // Flat bottom

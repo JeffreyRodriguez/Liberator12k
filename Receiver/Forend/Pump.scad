@@ -217,10 +217,7 @@ module PumpShotgunAssembly(debug=false) {
     
     LowerMount();
     
-    translate([-LowerMaxX(),0,ReceiverBottomZ()])
-    Lower(showTrigger=true,
-          showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
-          searLength=SearLength()+abs(ReceiverBottomZ())+SearTravel()-(0.25/2));
+    Lower(showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true);
     
   }
   

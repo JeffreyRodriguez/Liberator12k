@@ -277,7 +277,7 @@ module AR15Forend(debug=false, alpha=1) {
       mirror([1,0,0])
       ReceiverSegment(length=length);
       
-      *translate([MagazineMinX(),0,-0.5])
+      translate([MagazineMinX(),0,-0.5])
       AR15_Magwell(cut=false,
                    height=AR15_MagwellDepth()+0.125,
                    wallFront=0.125, wallBack=AR15_MagazineRearTabLength()+0.025,
@@ -391,16 +391,12 @@ module Handguard(debug=false, alpha=1) {
   }
 }
 
-scale(25.4)
-if ($preview) {
+module PumpAR15ForendAssembly(debug=undef) {
 
-  if (_SHOW_BARREL) {
+  if (debug == true || _SHOW_BARREL) {
     Barrel();
     BarrelCollar();
   }
-
-  if (_SHOW_FCG)
-  SimpleFireControlAssembly(recoilPlate=false);
 
   animate_unlock1 = SubAnimate(ANIMATION_STEP_UNLOCK, end=0.25)
                  - SubAnimate(ANIMATION_STEP_LOCK, start=0.75);
@@ -436,7 +432,17 @@ if ($preview) {
   
   if (_SHOW_HANDGUARD)
   Handguard(debug=_CUTAWAY_HANDGUARD, alpha=_ALPHA_HANDGUARD);
+}
 
+scale(25.4)
+if ($preview) {
+
+  if (_SHOW_FCG)
+  SimpleFireControlAssembly(recoilPlate=false);
+  
+  if (_SHOW_FOREND)
+  PumpAR15ForendAssembly();
+  
   if (_SHOW_RECEIVER)
   ReceiverAssembly(debug=_CUTAWAY_RECEIVER);
   
@@ -444,8 +450,7 @@ if ($preview) {
   StockAssembly();
   
   if (_SHOW_LOWER) {
-    translate([-LowerMaxX(),0,ReceiverBottomZ()])
-    Lower(showTrigger=true);
+    Lower();
     LowerMount();
   }
 

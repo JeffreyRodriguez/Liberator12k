@@ -17,7 +17,8 @@ use <../../Receiver/Magwells/AR15 Magwell.scad>;
 
 use <../Lower/Lugs.scad>;
 use <../Lower/Lower.scad>;
-
+use <../Receiver.scad>;
+use <../FCG.scad>;
 
 $fn=60;
 
@@ -965,10 +966,8 @@ translate([lowerX-0.5,0,0])
 translate([LowerMaxX()+5,0,0])
 BARBB_Foregrip();
 
-translate([lowerX,0,0])
-Lower(showReceiverLugBolts=true,showGuardBolt=true, showHandleBolts=true,
-        showTrigger=true, 
-        searLength=tubeCenterZ+abs(SearPinOffsetZ()) + SearTravel(), alpha=1);
+translate([LowerMaxX()+lowerX,0,-ReceiverBottomZ()])
+Lower(showReceiverLugBolts=true,showGuardBolt=true, showHandleBolts=true);
 
 translate([lowerX,0,0])
 color("Tan")
