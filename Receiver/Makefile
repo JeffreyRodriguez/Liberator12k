@@ -19,8 +19,13 @@ Stock_thumbnails=$(addsuffix .stl, $(Stock_Parts))
 FCG_thumbnails=$(addsuffix .stl, $(FCG_Parts))
 
 	
-Assembly_VIEWS=Minuteman FramedReceiver Stock Lower FCG
-	
+Assembly_VIEWS=CAFE12 Minuteman FramedReceiver Stock Lower FCG
+
+Assembly_CAFE12.png: Assembly.scad
+	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
+		--projection=p --camera=200,1500,200,0,0,0 \
+		-D _FOREND='"TopBreak"' \
+		$<
 Assembly_Minuteman.png: Assembly.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
 		--projection=p --camera=200,800,200,-100,0,0 \
@@ -61,10 +66,6 @@ Assembly_FCG.png: Assembly.scad
 		-D _SHOW_FOREND=false \
 		-D _SHOW_STOCK=false \
 		$<
-		
-README.html: $(addprefix Assembly_,$(addsuffix .jpg, $(Assembly_VIEWS)))
-	
-Stock.html: $(addsuffix _thumb.jpg, $(Stock_Parts))
 
 # Subdirs
 Forend Lower Components: FORCE
@@ -83,5 +84,5 @@ $(addsuffix .html,$(Components)): $$($$@_thumbnails)
 
 FCG Frame Stock: $$($$@_STL) $$@.html
 
-all: README.html FCG Frame Stock Lower Forend Components $(STL_PREVIEWS)
+all: README.html FCG Frame Stock Lower Forend Components $(STL_PREVIEWS) $(addprefix Assembly_,$(addsuffix .jpg, $(Assembly_VIEWS))) $(addsuffix _thumb.jpg, $(Stock_Parts))
  

@@ -20,8 +20,7 @@ dist/docs: $(DOCS)
   done
 
 dist/Manual.pdf: dist/docs $(shell find dist/docs) $(DOCS)
-	htmldoc --batch Manual.book -f dist/Manual.pdf \
-	  --browserwidth 1920
+	htmldoc --batch Manual.book
 
 dist/changelog.txt: dist
 	git log --oneline > dist/changelog.txt
