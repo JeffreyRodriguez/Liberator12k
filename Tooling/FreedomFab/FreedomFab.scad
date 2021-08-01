@@ -3,17 +3,11 @@ use <../../Vitamins/Printed/SCSxUU.scad>;
 use <../../Shapes/Dovetail.scad>;
 use <../../Shapes/Semicircle.scad>;
 use <../../Shapes/Teardrop.scad>;
-use <../../Shapes/Components/Set Screw.scad>;
-use <../../Vitamins/Rod.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Shapes/Chamfer.scad>;
 
 DEFAULT_BEARING_SPEC = Spec_SCS8LUU();
-
-dovetailLength = 15;
-dovetailWidth  = 30;
-dovetailHeight = 25;
 
 xRodLength = 200;
 yRodLength = 200;
@@ -22,18 +16,17 @@ xBearingSpec = Spec_SCS8LUU();
 yBearingSpec = Spec_SCS8LUU();
 rodRadius = 4;
 wall = 5;
+/*
 xRodOffsetY = (SCSxUU_BoltSpacing(spec=xBearingSpec)/2)
              - (SCSxUU_BoltDiameter(spec=xBearingSpec)/2)
              - rodRadius;
 
 xRodOffsetZ = SCSxUU_OrthagonalRodOffsetHeight(
-                spec=xBearingSpec,
-                rodRadius=rodRadius)
+                spec=xBearingSpec)
             + wall;
-
+*/
 xRodOffsetY = SCSxUU_OrthagonalRodOffsetLength(
-                spec=xBearingSpec,
-                rodRadius=rodRadius)+wall;
+                spec=xBearingSpec)+wall;
 xRodOffsetZ = rodRadius;
 
 
@@ -55,15 +48,12 @@ module FreedomFab_SlideY(spec=DEFAULT_BEARING_SPEC, xRodOffsetY=0, wall=5,
   rodOffsetZ = wall/2;
   
   
-  rodRadius = SCSxUU_InnerRadius(spec=spec);
-  
-  
   bearingHeight = 6;
   bearingOD = 12;
   bearingID = 4;
   
   
-  bearingOffsetZ  = SCSxUU_OrthagonalRodOffsetWidth(spec=spec, rodRadius=rodRadius)
+  bearingOffsetZ  = SCSxUU_OrthagonalRodOffsetWidth(spec=spec)
                   - SCSxUU_BoltOffset(spec);
   
   // Bearing block
@@ -143,7 +133,7 @@ module FreedomFab_SlideY(spec=DEFAULT_BEARING_SPEC, xRodOffsetY=0, wall=5,
 
 module FreedomFab_SlideX(spec=xBearingSpec, wall=5,  clearance=0.5, cutter=false) {
   
-  rodOffsetY = SCSxUU_OrthagonalRodOffsetWidth(spec=yBearingSpec, rodRadius=rodRadius);
+  rodOffsetY = SCSxUU_OrthagonalRodOffsetWidth(spec=yBearingSpec);
   
   if (!cutter)
   %rotate([90,0,90]) {
@@ -170,60 +160,9 @@ module FreedomFab_SlideX(spec=xBearingSpec, wall=5,  clearance=0.5, cutter=false
       rotate([0,-90,0])
       SCSxUU_Bolts(spec=spec, clearance=clearance, teardropAngle=-90);
     }
-    
-    // Dovetail
-    translate([0,0,-SCSxUU_Width(spec)/2])
-    linear_extrude(height=dovetailHeight)
-    translate([0,wall-ManifoldGap()])
-    Dovetail2d(length=dovetailLength,
-               width=dovetailWidth,
-               center=true,
-               clearance=clearance,
-               cutter=cutter);
   }
   
 }
-
-module FreedomFab_CarriageCutter(clearance=0.5) {
-    
-  // Dovetails    
-  for (i = [-1,1])
-  translate([0, xRodOffsetY*i, xRodOffsetZ])
-  rotate([0,0,90+(90*i)])
-  FreedomFab_SlideX(spec=xBearingSpec, wall=wall, cutter=true);
-}
-
-module FreedomFab_Carriage(spec=DEFAULT_BEARING_SPEC, wall=5, clearance=0.5) {
-  
-  length = (2*(xRodOffsetY - (SCSxUU_Height(xBearingSpec)/2) - wall)) - clearance;
-  width = dovetailWidth+(wall*2);//SCSxUU_Length(xBearingSpec);
-  height = SCSxUU_Width(spec);
-  
-  color("Green")
-  render()
-  difference() {
-    intersection() {
-      translate([-width/2,-length/2,xRodOffsetZ-(height/2)])
-      ChamferedCube(xyz=[width,length,height], r=1, $fn=30);
-      
-      // HAAAAAAACK: Cut off the tips to clear the bolt heads
-      hull() {
-        for (x = [1,-1])
-        for (y = [1,-1])
-        for (w = [-1,1])
-        translate([((width/2)+(wall*w)-wall)*x,
-                   ((length/2)-(wall*w)-wall)*y,
-                   xRodOffsetZ-(height/2)-ManifoldGap()])
-        cylinder(r=1, $fn=30, h=height+ManifoldGap(2));
-      }
-    }
-    
-    
-    FreedomFab_CarriageCutter();
-  }
-  
-}
-
 module FreedomFab_DriveWheel(id=5, od=15, height=35, clearance=0.625, dWidth=4) {
   setScrewOffsetZ = 5;
   
@@ -280,7 +219,7 @@ module FreedomFab_DriveWheel(id=5, od=15, height=35, clearance=0.625, dWidth=4) 
 
 // Motors
 for (m = [-1,1]) translate([xRodLength/2*m,-(yRodLength/2) - 30,0]) mirror([m,0,0])
-FreedomFab_DriveWheel();
+*FreedomFab_DriveWheel();
 
 // Y-Slide
 for (m = [-1,1]) translate([xRodLength/2*m,0,0]) mirror([m,0,0])
@@ -293,8 +232,4 @@ FreedomFab_SlideY(
 for (i = [-1,1])
 translate([0, xRodOffsetY*i, xRodOffsetZ])
 rotate([0,0,90+(90*i)])
-FreedomFab_SlideX(spec=xBearingSpec, dovetail=true, wall=wall);
-
-//!mirror([0,0,1])
-translate([0, 0, xRodOffsetZ + (SCSxUU_Height(yBearingSpec)/2) + ManifoldGap()])
-FreedomFab_Carriage(spec=xBearingSpec, dovetail=true, wall=wall);
+FreedomFab_SlideX(spec=xBearingSpec, wall=wall);
