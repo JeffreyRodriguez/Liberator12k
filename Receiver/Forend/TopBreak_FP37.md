@@ -1,4 +1,4 @@
-# Build 2c: FP37 Forend
+# Build Part 2c: FP37 Forend
 ![Forend Assembly](Assembly_htmldoc.jpg)
 
 "Flare Projector" 37mm - It's not a weapon.
@@ -9,7 +9,6 @@
  * Top-break action
 
 ## Prints
------------------
 XXXXg, 0h00m
 
 | Part                    | Print Settings | Filament Used | Print Time |

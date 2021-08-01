@@ -1,4 +1,4 @@
-# Build 2a: CAFE12+ Forend
+# Build Part 2a: CAFE12+ Forend
 ![Forend Assembly](Assembly_htmldoc.jpg)
 
 A 12ga [Top Break](TopBreak.md) variant based on the venerable pipe shotgun.

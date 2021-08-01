@@ -109,7 +109,7 @@ Complete kits available in the
 
 \* Pick one, these parts have alternates.
 
-## Minuteman Metric BOM
+## Metric BOM
 Full hardware list for the Minuteman receiver.
 
 | Purpose                   | Part                                                 | Quantity |

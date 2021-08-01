@@ -1,4 +1,4 @@
-# Build 2b: CAFE12 Forend
+# Build Part 2b: CAFE12 Forend
 ![Forend Assembly](Assembly_htmldoc.jpg)
 
 A 12ga [Top Break](TopBreak.md) variant based on the venerable pipe shotgun.
@@ -51,6 +51,12 @@ Since it's built with \#Liberator12k platform components it features:
 | 1" NPT Schedule 40 Galv. Pipe 8" Long      | 1        |
 | 3/4" NPT Schedule 40 Galv. Pipe 18.5" Long | 1        |
 <br/>
+
+### Buying Pipes
+These Schedule 40 galvanized pipes are common in every single hardware store in
+the United States. They'll be in the plumbing section, with a silvery finish.
+
+
 
 ### Metric BOM
 TODO
