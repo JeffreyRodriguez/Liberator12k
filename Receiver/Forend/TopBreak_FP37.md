@@ -1,28 +1,28 @@
-# [\#Liberator12k Manual](../../README.md)
-## Platform Configuration: FP37
-###  "Flare Projector" 37mm - It's not a weapon.
+# Build 2c: FP37 Forend
+![Forend Assembly](Assembly_htmldoc.jpg)
 
-\#Liberator12k - FP37
-================
+"Flare Projector" 37mm - It's not a weapon.
+
  * Manual Charging
  * Linear Hammer
  * Single shot
  * Top-break action
 
-Bill of Materials
+## Prints
 -----------------
-**Printed: FP37 Forend**: XXXXg, 0h00m
+XXXXg, 0h00m
 
-| File                          | Part                    | Preset | Print Settings | Filament Used | Print Time |
-|-------------------------------|-------------------------|--------|----------------|---------------|------------|
-| Receiver/Forend/TopBreak.scad | TopBreak_ReceiverFront  | FP37   | Standard       | -mm           | -h-m       |
-| Receiver/Forend/TopBreak.scad | TopBreak_Forend         | FP37   | Standard       | -mm           | -h-m       |
-| Receiver/Forend/TopBreak.scad | TopBreak_BarrelCollar   | FP37   | Standard       | -mm           | -h-m       |
-| Receiver/Forend/TopBreak.scad | TopBreak_Extractor      | FP37   | Standard       | -mm           | -h-m       |
-| Receiver/Forend/TopBreak.scad | TopBreak_Latch          | FP37   | Standard       | -mm           | -h-m       |
+| Part                    | Print Settings | Filament Used | Print Time |
+|-------------------------|----------------|---------------|------------|
+| TopBreak_ReceiverFront  |                | -mm           | -h-m       |
+| TopBreak_Forend         |                | -mm           | -h-m       |
+| TopBreak_BarrelCollar   |                | -mm           | -h-m       |
+| TopBreak_Extractor      |                | -mm           | -h-m       |
+| TopBreak_Latch          |                | -mm           | -h-m       |
+<br/>
 
-**Hardware**: 
-
-| Part                                      | Source             | Quantity | Print Time |
-|-------------------------------------------|--------------------|----------|------------|
-| TODO                                      | HWS                | 2pcs     | $2         |
+## Bill of Materials
+| Part                  | Quantity |
+|-----------------------|----------|
+| Galvanized Fence Post | 1        |
+<br/>
