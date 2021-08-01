@@ -32,7 +32,8 @@ The lower mount couples the lower to the receiver.
 Install the heatset nuts into Lower_Left.
 
 ### Pin Retainer
-Install 6D nail from the front to rear - the pointy end goes in the small hole.
+Locate the small hole in the LowerMount_Rear.
+Insert Lower Pin Retaining Pin, press it into the mount until flush.
 
 ### Subassembly
 Requires the trigger from the [Fire Control Group](../FCG.md).

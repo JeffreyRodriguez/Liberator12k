@@ -39,7 +39,6 @@ CLASS_HTML := $(addsuffix /README.html,$(CLASSES))
 
 
 .SECONDEXPANSION:
-	
 # Class/Preset dirs depend on their respective source
 $(CLASSES) $(PRESETS): $$(addsuffix .scad,$$(firstword $$(subst _, ,$$@)))
 	mkdir -p $@

@@ -1,12 +1,23 @@
 include ../Makefile.in
 ANIMATE_BIN=../bin/animate.sh
-Receiver_STL=Receiver.stl Receiver_Back.stl
-Frame_STL=Frame_Receiver.stl
-Stock_STL=Stock.stl Stock_Buttpad.stl Stock_Backplate.stl
-FCG_STL=FCG_Housing.stl FCG_Disconnector.stl FCG_FiringPinCollar.stl \
-        FCG_ChargingHandle.stl \
-				FCG_Hammer.stl FCG_HammerTail.stl \
-				FCG_TriggerLeft.stl FCG_TriggerMiddle.stl FCG_TriggerRight.stl
+Components=Frame Stock FCG
+Frame_Parts=Frame_Receiver
+Stock_Parts=Stock Stock_Buttpad Stock_Backplate
+FCG_Parts=FCG_Housing FCG_Disconnector FCG_FiringPinCollar \
+        FCG_ChargingHandle \
+				FCG_Hammer FCG_HammerTail \
+				FCG_TriggerLeft FCG_TriggerMiddle FCG_TriggerRight
+Parts=$(Frame_Parts) $(Stock_Parts) $(FCG_Parts)
+				
+Frame_STL=$(addsuffix .stl, $(Frame_Parts))
+Stock_STL=$(addsuffix .stl, $(Stock_Parts))
+FCG_STL=$(addsuffix .stl, $(FCG_Parts))
+STLS=$(Frame_STL) $(Stock_STL) $(FCG_STL)
+
+Frame_thumbnails=$(addsuffix .stl, $(Frame_Parts))
+Stock_thumbnails=$(addsuffix .stl, $(Stock_Parts))
+FCG_thumbnails=$(addsuffix .stl, $(FCG_Parts))
+
 	
 Assembly_VIEWS=Minuteman FramedReceiver Stock Lower FCG
 	
@@ -50,15 +61,27 @@ Assembly_FCG.png: Assembly.scad
 		-D _SHOW_FOREND=false \
 		-D _SHOW_STOCK=false \
 		$<
-
+		
 README.html: $(addprefix Assembly_,$(addsuffix .jpg, $(Assembly_VIEWS)))
+	
+Stock.html: $(addsuffix _thumb.jpg, $(Stock_Parts))
 
 # Subdirs
 Forend Lower Components: FORCE
 	$(MAKE) -C $@
 
-.SECONDEXPANSION:
-Receiver FCG Frame Stock: $$($$@_STL) $$@.html
 
-all: README.html Receiver FCG Frame Stock Lower Forend Components $(STL_PREVIEWS)
+.SECONDEXPANSION:
+$(addsuffix .html,$(Components)): $$($$@_thumbnails)
+# $(STLS): $$($$@_thumbnails)
+# 	$(eval SOURCE=$(shell echo $($@) | awk -F _ '{ print $$1 }'))
+# 	$(eval PART=$(basename $(notdir $@)))
+# 	$(OSBIN) $(OSOPTS) -o $@.stl -o $(basename $@).png \
+# 	--render -D _RENDER=\"$(PART)\" \
+# 	--projection=p --autocenter --viewall \
+# 	$(SOURCE).scad
+
+FCG Frame Stock: $$($$@_STL) $$@.html
+
+all: README.html FCG Frame Stock Lower Forend Components $(STL_PREVIEWS)
  

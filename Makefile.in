@@ -32,11 +32,6 @@ THUMBNAILBIN=convert -thumbnail 500
 		"$@"
 	rm -rf $(FRAMES_DIR)
 	
-%.png: %.scad
-	$(OSBIN) $(OSOPTS) -o $@ \
-	--projection=p --camera 200,1000,200,0,0,0 \
-	"$(basename $@).scad"
-	
 %_thumb.jpg: %.png
 	$(THUMBNAILBIN) $< $@
 
@@ -46,13 +41,21 @@ THUMBNAILBIN=convert -thumbnail 500
 %.html: %.md
 	$(MDBIN) $(basename $@).md | sed 's/.md/.html/' > $@
 
-%.stl:
-	$(OSBIN) $(OSOPTS) -o $@ -o $(basename $@).png \
-	  --render -D _RENDER=\"`echo "$(notdir $@)" | sed 's/.stl$\$///'`\" \
-		--projection=p --autocenter --viewall \
-		`if [ '$(dir "$@")' != './' ]; then echo -P '$(dir $@)' | sed 's/\/$///'; fi` \
-	  `echo $(notdir $@) | sed 's/.stl//' | awk -F _ '{ print $$1 }'`.scad
-	$(THUMBNAILBIN) $(basename $@).png $(basename $@)_thumb.jpg
+%.png %.stl: %.scad
+	$(eval PART=$(basename $(notdir $@)))
+	$(OSBIN) $(OSOPTS) -o $(basename $@).stl -o $(basename $@).png \
+	--render -D _RENDER=\"$(PART)\" \
+	--projection=p --autocenter --viewall \
+	$<
+
+%.png %.stl:
+	$(eval PART=$(basename $(notdir $@)))
+	$(eval SOURCE=$(shell echo $@ | awk -F _ '{ print $$1 }'))
+	$(OSBIN) $(OSOPTS) -o $(basename $@).stl -o $(basename $@).png \
+	--render -D _RENDER=\"$(PART)\" \
+	--projection=p --autocenter --viewall \
+	$(SOURCE).scad
+		
 
 FORCE:
 clean: clean_ANIMATE clean_STL cleanGCODE cleanMP4 clean_HTML clean_PNG clean_JPG
