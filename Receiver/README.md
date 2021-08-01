@@ -135,7 +135,7 @@ Full hardware list for the Minuteman receiver.
 | Hammer Cap Nut            | **DIN1587** M6 Domed Hex Cap Nut                     | 1        |
 | Hammer Spring             | 1.4mm Wire, 16mm OD, 80mm Length Spring              | 1        |
 | Recoil Plate (L12k)       | None                                                 | 1\*      |
-| Recoil Plate (DIY)        | 10mm Thickness 50.80x60.325mm Mild Steel Plate       | 1\*      |
+| Recoil Plate (DIY)        | 6mm Thickness 50.80x60.325mm AISI 4140 Steel Plate   | 1\*      |
 | Sear                      | 6mm*42.42mm Steel Square Rod                         | 1        |
 | Sear Cross-Pin            | None                                                 | 1        |
 | Sear Return Spring        | 0.5mm Wire, 6.5mm OD, 35mm Length Spring             | 1        |
