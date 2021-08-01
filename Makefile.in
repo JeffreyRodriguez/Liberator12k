@@ -7,7 +7,7 @@ OSBIN=nice openscad
 OSOPTS=--colorscheme=Nature
 OS_CAM_AUTO=--projection=p --autocenter --viewall
 ANIMATE_BIN=./bin/animate.sh
-THUMBNAILBIN=convert -thumbnail 200
+THUMBNAILBIN=convert -thumbnail 500
 
 .DEFAULT_GOAL := all
 
@@ -37,7 +37,11 @@ THUMBNAILBIN=convert -thumbnail 200
 	--projection=p --camera 200,1000,200,0,0,0 \
 	"$(basename $@).scad"
 	
-	$(THUMBNAILBIN) $@ $(basename $@)_thumb.jpg
+%_thumb.jpg: %.png
+	$(THUMBNAILBIN) $< $@
+
+%.jpg: %.png
+	convert $(basename $@).png -quality 90 $@
 
 %.html: %.md
 	$(MDBIN) $(basename $@).md | sed 's/.md/.html/' > $@

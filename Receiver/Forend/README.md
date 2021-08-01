@@ -1,4 +1,4 @@
-# Choose Your Weapon
+# Build Part 2: Choose Your Weapon
 
 Most of these forends can be mounted to the universal receiver without
 modification.

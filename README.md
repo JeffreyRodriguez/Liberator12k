@@ -10,16 +10,15 @@ self-defense. The guns are real and unstoppable.
 * This is for self-defense, sport, and fun.
 * Be responsible when shooting.
 
-[Learn more about the Project](About.md)  and join the Matrix channel
+[Learn more about the project](About.md)  and join the Matrix channel
 **\#liberator12k:matrix.org** on [Element](https://element.io).
 
-### Alpha Warning!
-This is an Alpha release. That means it's *not done*. There *are definitely*
-bugs and rough edges.
+### Warning: Alpha Release
+It's *not done*. There *are definitely* bugs and rough edges.
 Weapons may be incomplete and **unsafe** for you or **bystanders**.
 Use extreme caution and two doses of common sense.
 
-## The [Liberator12k.com Store](https://liberator12k.com/store/index.html)
+## The [Liberator12k.com](https://liberator12k.com/store/index.html) Store
 The official store has complete hardware kits.
 This one-man operation cost tens of thousands of dollars and hours invested.
 I'm giving it away for free because I  want to support your ability to defend
@@ -30,7 +29,7 @@ My kit costs around the same price you'd pay to buy *one* if you sourced all of
 the parts yourself. I buy in bulk and the difference helps support the project.
 It would be trivial for someone to come along and sell the same hardware kit.
 I'm asking you - the community - to support the official project.
-I didn't start this to get rich, but it would be an awesome side-effect ;)
+I didn't start this to get rich, but I wouldn't mind.
 
 I don't need to be the guy selling kits. I'd much rather find trustworthy
 distributors who I can endorse for a cut of the sales.

@@ -1,42 +1,79 @@
-# Build First: Universal Receiver
+# Build Part 1: Minuteman Receiver
 
-![Framed Universal Receiver](Assembly_FramedReceiver.jpg)
+![Minuteman](Assembly_Minuteman.jpg)
 
-A complete \#Liberator12k is built from several modular parts.
-The first part you need to build is a Universal Receiver.
-You'd be right to think of this like an AR15 lower.
-Most of the designs will work with this receiver.
+To get very technical, you're going to make a *Framed Receiver with a Stock*.
+That's a mouthful, so I call it the
+[Minuteman](https://en.wikipedia.org/wiki/Minutemen). It supports
+most of the designs in the project.
+This chonk has two big 1/2" bolts to support heavy forends.
+Steel rods reinforce the receiver and stock.
+A TPU buttpad reduces felt recoil.
 
-The starter receiver configuration includes a stock, but other configurations
-might be pistols or bullpups.
-To get very technical, you're going to make a *Frame Receiver with a Stock*.
-This chonky version has two big 1/2" bolts to support heavy Forends. The stock
-has threaded rods running its length for added reinforcement.
-There are other ways to configure the receiver, but save that for your second
-build.
+There are other ways to configure the receiver,
+but we'll save that for your second build.
 
-[Build Next: Choose Your Weapon](Forend/README.md) covers the different Forend designs
-in detail. But for now, you need a receiver.
+## Printing
 
-## The [Liberator12k.com Store](https://liberator12k.com/store/index.html)
-The official store has complete hardware kits to make your life easy.
+### Pick your colors
+Two-tone is canon - that means it's official.
 
-The goal is to be around the same price you'd pay to buy one if you sourced all
-the parts yourself. I buy in bulk and the difference helps support the project.
+#### Spool 1: Base Color
+We'll be using a full 1kg spool for the base color. Most of the "big" parts will
+be printed with this filament.
 
-This is a one-man operation and your support is greatly appreciated. I've made
-everything for the project easy to source yourself, and it would be trivial for
-someone to come 
+#### Spool 2: Accent Color
+The accent prints will take about 500kg of plastic, or half a typical spool.
+Accent parts are often smaller and bear some kind of load, so if you want to
+splurge - do it here.
 
-* [Receiver](Receiver.md)
-* [Frame](Frame.md)
-* [Stock](Stock.md)
-* [Lower](Lower/Lower.md)
-* [Fire Control Group](FCG.md)
+#### Spool 3: TPU For Your Buttpad
+The buttpad was designed to be TPU, it takes some of the sting out of the shot.
+
+You may not find TPU that matches your base color, keep that in mind when you
+choose your colors.
+You can print the buttpad in any filament, but it may be more punishing than
+necessary.
+
+### Complete Print List
+| Part                | Settings | Filament | Time    | Color   |
+|---------------------|----------|----------|---------|---------|
+| Frame_Receiver      |          |     272g | 1d3h59m | Base    |
+| FCG_Housing         |          |       -g | -h-m    | Base    |
+| FCG_Disconnector    |          |       -g | -h-m    | Accent  |
+| FCG_ChargingHandle  |          |       -g | -h-m    | Accent  |
+| FCG_HammerTail      |          |       -g | -h-m    | Accent  |
+| FCG_FiringPinCollar | Solid    |       1g | 0h48m   | Accent  |
+| FCG_Hammer          | Solid    |       -g | -h-m    | Accent  |
+| FCG_TriggerMiddle   | Solid    |       6g | 33m     | Accent  |
+| FCG_TriggerLeft     | Solid    |      11g | 56m     | Accent  |
+| FCG_TriggerRight    | Solid    |       8g | 46m     | Accent  |
+| Lower_Left          |          |      66g | 5h52m   | Base    |
+| Lower_Middle        |          |      68g | 5h20m   | Accent  |
+| Lower_Right         |          |      66g | 5h52m   | Base    |
+| LowerMount_Rear     |          |      23g | 2h21m   | Accent  |
+| LowerMount_Front    |          |      22g | 2h09m   | Accent  |
+| Stock               |          |       -g | -h-m    | Base    |
+| Stock_Backplate     |          |       -g | -h-m    | Accent  |
+| Stock_Buttpad       |          |       -g | -h-m    | Special |
+<br/>
+
+## Components
+Each component in the Minuteman has its own fabrication instructions.
+
+* [1.1 Framed Receiver](Frame.md)
+* [1.2 Fire Control Group](FCG.md)
+* [1.3 Lower](Lower/Lower.md)
+* [1.4 Stock](Stock.md)
+
+[Build Part 2: Choose Your Weapon](Forend/README.md) covers the different Forend
+designs in detail.
 
 ## Bill of Materials
+Full hardware list for the Minuteman receiver.
 
-### Inch BOM
+Complete kits available in the 
+[\#Liberator12k.com Store](https://liberator12k.com/store/).
 
 | Purpose                     | Part                                         | Quantity |
 |-----------------------------|----------------------------------------------|----------|
@@ -44,7 +81,8 @@ someone to come
 | Tension Bolt Nut            | #8-32 Heatset Nut (Long)                     | 4        |
 | Tension Bolt Washer         | #8-32 Washer                                 | 4        |
 | Tension Bolt Acorn Nut      | #8-32 Acorn Nut                              | 4        |
-| Lower Retention Pin         | Universal Clevis Pin 1/4x2"                  | 1        |
+| Lower Pin                   | Universal Clevis Pin 1/4x2"                  | 1        |
+| Lower Pin Retaining Pin     | 6Dx2" Box Nail                               | 1        |
 | Frame Bolt                  | 1/2-13x10 Hex Bolt                           | 2        |
 | Frame Nut                   | 1/2-13 Hex Nut                               | 4        |
 | Stock Pin                   | Universal Clevis Pin 1/4x2"                  | 1        |
@@ -71,14 +109,17 @@ someone to come
 
 \* Pick one, these parts have alternates.
 
-### mm BOM
+## Minuteman Metric BOM
+Full hardware list for the Minuteman receiver.
+
 | Purpose                   | Part                                                 | Quantity |
 |---------------------------|------------------------------------------------------|----------|
 | Tension Bolt              | **DIN795** M4x305 Threaded Rod                       | 4        |
 | Tension Bolt Nut          | M4 Heatset Nut (**M4xD7xL8**)                        | 4        |
 | Tension Bolt Washer       | **DIN125** M4 Washer                                 | 4        |
 | Tension Bolt Acorn Nut    | **DIN1587** M4 Domed Hex Cap Nut                     | 4        |
-| Lower Retention Pin       | None                                                 | 1        |
+| Lower Pin                 | None                                                 | 1        |
+| Lower Pin Retaining Pin   | 2.5x50mm Nail                                        | 1        |
 | Frame Bolt                | **DIN931** M12x260 Hex Head Bolt                     | 2        |
 | Frame Nut                 | **DIN934** M12 Hex Nut                               | 4        |
 | Stock Pin                 | None                                                 | 1        |

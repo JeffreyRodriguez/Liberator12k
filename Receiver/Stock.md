@@ -1,8 +1,6 @@
-# [\#Liberator12k Manual](../README.md)
+# Build Part 1.4: Stock
 
-## Platform Component: Stock
-
-![Stock](Stock.png)
+![Stock](Assembly_Stock.jpg)
 
 A stock and buttpad designed to fit the standard receiver.
 

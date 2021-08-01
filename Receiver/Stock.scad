@@ -299,13 +299,13 @@ module StockAssembly(debug=undef) {
   }
   
   if (_SHOW_STOCK_BACKPLATE)
-  Stock_Backplate(alpha=_ALPHA_STOCK_BACKPLATE, debug=_CUTAWAY_STOCK_BACKPLATE);
+  Stock_Backplate(alpha=_ALPHA_STOCK_BACKPLATE, debug=(debug == true || _CUTAWAY_STOCK_BACKPLATE));
   
   if (_SHOW_BUTTPAD)
-  Stock_Buttpad(alpha=_ALPHA_BUTTPAD, debug=_CUTAWAY_BUTTPAD);
+  Stock_Buttpad(alpha=_ALPHA_BUTTPAD, debug=(debug == true || _CUTAWAY_BUTTPAD));
   
   if (_SHOW_STOCK)
-  Stock(alpha=_ALPHA_STOCK, debug=_CUTAWAY_STOCK);
+  Stock(alpha=_ALPHA_STOCK, debug=(debug == true || _CUTAWAY_STOCK));
 }
 
 scale(25.4)
@@ -315,11 +315,7 @@ if ($preview) {
   
   if (_SHOW_LOWER) {
     LowerMount();
-
-    translate([-LowerMaxX(),0,ReceiverBottomZ()])
-    Lower(showTrigger=true,
-          showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
-          searLength=SearLength()+abs(ReceiverBottomZ())+SearTravel()-(0.25/2));
+    Lower(showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true);
   }
   
   StockAssembly();

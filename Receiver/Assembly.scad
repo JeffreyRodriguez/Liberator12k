@@ -35,19 +35,19 @@ use <Stock.scad>;
 
 /* [Assembly] */
 // Does your shoulder thing go up?
-_CONFIGURATION  = "Pistol"; // ["Pistol", "Stocked", "Bullpup"]
+_CONFIGURATION  = "Stocked"; // ["Pistol", "Stocked", "Bullpup"]
 
 // Choose your weapon
-_FOREND = "TopBreak"; // ["", "TopBreak", "Trigun", "Revolver", "Evolver", "AR15", "Pump"]
+_FOREND = ""; // ["", "TopBreak", "Trigun", "Revolver", "Evolver", "AR15", "Pump"]
 
 // The forend might disagree with your choice
-_RECEIVER_SIZE  = "Thicc"; // ["Thicc", "Thin"]
+_RECEIVER_SIZE  = "Framed"; // ["Framed", "Micro"]
 
 _SHOW_RECEIVER = true;
 _SHOW_LOWER = true;
 _SHOW_FOREND = true;
 _SHOW_STOCK = true;
-_SHOW_FCG = false;
+_SHOW_FCG = true;
 
 _CUTAWAY_RECEIVER = false;
 _CUTAWAY_LOWER = false;
@@ -87,7 +87,9 @@ if ($preview) {
   
   if (_SHOW_RECEIVER)
   translate([-0.5,0,0]) {
-    if (_RECEIVER_SIZE == "Thicc") {
+    TensionBolts(debug=_CUTAWAY_RECEIVER, headType="socket");
+    
+    if (_RECEIVER_SIZE == "Framed") {
       Receiver_LargeFrame(debug=_CUTAWAY_RECEIVER);
       FrameBolts(debug=_CUTAWAY_RECEIVER);
     } else {
@@ -96,14 +98,21 @@ if ($preview) {
   }
   
   if (_CONFIGURATION == "Stocked") translate([-0.5,0,0]) {
+    if (_SHOW_STOCK)
     StockAssembly(debug=_CUTAWAY_STOCK);
-    Lower(showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true);
-    LowerMount();
+    
+    if (_SHOW_LOWER) {
+      Lower(showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true);
+      LowerMount();
+    }
   } else if (_CONFIGURATION == "Bullpup") {
     BullpupAssembly();
   } else if (_CONFIGURATION == "Pistol") translate([-0.5,0,0]) {
     ReceiverBackSegment();
-    Lower(showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true);
-    LowerMount();
+    
+    if (_SHOW_LOWER) {
+      Lower(showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true);
+      LowerMount();
+    }
   }
 }
