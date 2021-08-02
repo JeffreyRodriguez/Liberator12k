@@ -5,10 +5,13 @@
 *.mp4
 *.html
 *.png
-frame*.png
+*.jpg
+Version.md
 animation.gif
 animation.mp4
-dist/
+changelog.txt
+Manual.pdf
 Liberator12k.zip
-Legal
-Media
+Legal/
+Media/
+PRIVATE/
