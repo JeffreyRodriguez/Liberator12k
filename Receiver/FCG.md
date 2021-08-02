@@ -20,11 +20,17 @@ The FCG is designed to support slamfire via the optional disconnector.
 
 <!-- NEW PAGE -->
 ## Prints
-||||
+|FCG_Housing|FCG_Disconnector|FCG_FiringPinCollar|
 |-|-|-|
-|![FCG_Housing](FCG_Housing_thumb.jpg)<br/>FCG_Housing|![FCG_Disconnector](FCG_Disconnector_thumb.jpg)<br/>FCG_Disconnector|![FCG_FiringPinCollar](FCG_FiringPinCollar_thumb.jpg)<br/>FCG_FiringPinCollar|
-|![FCG_Hammer](FCG_Hammer_thumb.jpg)<br/>FCG_Hammer|![FCG_HammerTail](FCG_HammerTail_thumb.jpg)<br/>FCG_HammerTail|![FCG_ChargingHandle](FCG_ChargingHandle_thumb.jpg)<br/>FCG_ChargingHandle|
-|![FCG_TriggerMiddle](FCG_TriggerMiddle_thumb.jpg)<br/>FCG_TriggerMiddle|![FCG_TriggerLeft](FCG_TriggerLeft_thumb.jpg)<br/>FCG_TriggerLeft|![FCG_TriggerRight](FCG_TriggerRight_thumb.jpg)<br/>FCG_TriggerRight|
+|![](FCG_Housing_thumb.jpg)|![](FCG_Disconnector_thumb.jpg)|![](FCG_FiringPinCollar_thumb.jpg)|
+---
+|FCG_Hammer|FCG_HammerTail|FCG_ChargingHandle|
+|-|-|-|
+|![](FCG_Hammer_thumb.jpg)|![](FCG_HammerTail_thumb.jpg)|![](FCG_ChargingHandle_thumb.jpg)|
+---
+|FCG_TriggerMiddle|FCG_TriggerLeft|FCG_TriggerRight|
+|-|-|-|
+|![](FCG_TriggerMiddle_thumb.jpg)|![](FCG_TriggerLeft_thumb.jpg)|![](FCG_TriggerRight_thumb.jpg)|
 
 <!-- NEW PAGE -->
 ## Post-Processing

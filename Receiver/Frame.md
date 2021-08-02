@@ -2,13 +2,12 @@
 
 ![Framed Receiver](Assembly_FramedReceiver.jpg)
 
-The universal receiver in its "large frame" configuration.
-
 ## Prints
+| Frame_Receiver |
+|-|
+|![Frame_Receiver](Frame_Receiver_thumb.jpg)|
 
-##### Frame_Receiver
-![Frame_Receiver](Frame_Receiver_thumb.jpg)
-
+<!-- NEW PAGE -->
 ## Post-Processing
 
 ### Install Tension Nuts

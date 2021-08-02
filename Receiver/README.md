@@ -13,7 +13,7 @@ A TPU buttpad reduces felt recoil.
 There are other ways to configure the receiver,
 but we'll save that for your second build.
 
-<!-- HALF PAGE -->
+<!-- NEW PAGE -->
 ## Printing
 
 ### Pick your colors
