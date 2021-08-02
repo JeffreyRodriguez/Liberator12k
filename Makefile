@@ -28,7 +28,7 @@ dist/changelog.txt: dist
 dist/$(GIT_VERSION).version: dist
 	touch "dist/$(GIT_VERSION).version"
 
-dist/docs/Version.md:
+dist/docs/Version.md: dist/docs
 	@echo "---" > $@ && \
 	echo "title: #Liberator12k Manual" >> $@ && \
 	echo "author: Jeff Rodriguez" >> $@ && \
