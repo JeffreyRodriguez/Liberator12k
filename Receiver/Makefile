@@ -1,5 +1,7 @@
 include ../Makefile.in
 ANIMATE_BIN=../bin/animate.sh
+.PHONY: $(Components)
+
 Components=Frame Stock FCG
 Frame_Parts=Frame_Receiver
 Stock_Parts=Stock Stock_Buttpad Stock_Backplate
@@ -14,11 +16,10 @@ Stock_STL=$(addsuffix .stl, $(Stock_Parts))
 FCG_STL=$(addsuffix .stl, $(FCG_Parts))
 STLS=$(Frame_STL) $(Stock_STL) $(FCG_STL)
 
-Frame_thumbnails=$(addsuffix .stl, $(Frame_Parts))
-Stock_thumbnails=$(addsuffix .stl, $(Stock_Parts))
-FCG_thumbnails=$(addsuffix .stl, $(FCG_Parts))
+Frame_thumbnails=$(addsuffix _thumb.jpg, $(Frame_Parts))
+Stock_thumbnails=$(addsuffix _thumb.jpg, $(Stock_Parts))
+FCG_thumbnails=$(addsuffix _thumb.jpg, $(FCG_Parts))
 
-	
 Assembly_VIEWS=CAFE12 Minuteman FramedReceiver Stock Lower FCG
 
 Assembly_CAFE12.png: Assembly.scad
@@ -82,7 +83,7 @@ $(addsuffix .html,$(Components)): $$($$@_thumbnails)
 # 	--projection=p --autocenter --viewall \
 # 	$(SOURCE).scad
 
-FCG Frame Stock: $$($$@_STL) $$@.html
+FCG Frame Stock: $$($$@_STL) $$($$@_thumbnails) $$@.html
 
 all: README.html FCG Frame Stock Lower Forend Components $(STL_PREVIEWS) $(addprefix Assembly_,$(addsuffix .jpg, $(Assembly_VIEWS))) $(addsuffix _thumb.jpg, $(Stock_Parts))
  

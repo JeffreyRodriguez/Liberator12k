@@ -1,4 +1,4 @@
-# Build Part 1.2: Fire Control Group
+# 1.2: Fire Control Group
 
 ![Fire Control Group](Assembly_FCG.jpg)
 
@@ -18,35 +18,15 @@ A linear hammer strikes the firing pin, which protrudes through the recoil plate
 
 The FCG is designed to support slamfire via the optional disconnector.
 
+<!-- NEW PAGE -->
 ## Prints
+||||
+|-|-|-|
+|![FCG_Housing](FCG_Housing_thumb.jpg)<br/>FCG_Housing|![FCG_Disconnector](FCG_Disconnector_thumb.jpg)<br/>FCG_Disconnector|![FCG_FiringPinCollar](FCG_FiringPinCollar_thumb.jpg)<br/>FCG_FiringPinCollar|
+|![FCG_Hammer](FCG_Hammer_thumb.jpg)<br/>FCG_Hammer|![FCG_HammerTail](FCG_HammerTail_thumb.jpg)<br/>FCG_HammerTail|![FCG_ChargingHandle](FCG_ChargingHandle_thumb.jpg)<br/>FCG_ChargingHandle|
+|![FCG_TriggerMiddle](FCG_TriggerMiddle_thumb.jpg)<br/>FCG_TriggerMiddle|![FCG_TriggerLeft](FCG_TriggerLeft_thumb.jpg)<br/>FCG_TriggerLeft|![FCG_TriggerRight](FCG_TriggerRight_thumb.jpg)<br/>FCG_TriggerRight|
 
-##### FCG_Housing
-![FCG_Housing](FCG_Housing_thumb.jpg)
-
-##### FCG_Disconnector
-![FCG_Disconnector](FCG_Disconnector_thumb.jpg)
-
-##### FCG_ChargingHandle
-![FCG_ChargingHandle](FCG_ChargingHandle_thumb.jpg)
-
-##### FCG_HammerTail
-![FCG_HammerTail](FCG_HammerTail_thumb.jpg)
-
-##### FCG_FiringPinCollar
-![FCG_FiringPinCollar](FCG_FiringPinCollar_thumb.jpg)
-
-##### FCG_Hammer
-![FCG_Hammer](FCG_Hammer_thumb.jpg)
-
-##### FCG_TriggerMiddle
-![FCG_TriggerMiddle](FCG_TriggerMiddle_thumb.jpg)
-
-##### FCG_TriggerLeft
-![FCG_TriggerLeft](FCG_TriggerLeft_thumb.jpg)
-
-##### FCG_TriggerRight
-![FCG_TriggerRight](FCG_TriggerRight_thumb.jpg)
-
+<!-- NEW PAGE -->
 ## Post-Processing
 
 ### Trigger Subassembly
@@ -125,6 +105,7 @@ The full How To is incomplete, but at a high level:
 2. Mark the holes with a punch and drill to specified size.
 3. Tap the holes for the tension rods and FCG Housing holes with #8-32.
 
+<!-- NEW PAGE -->
 ## Technical Notes and Alternatives
 
 ### Recoil Plate

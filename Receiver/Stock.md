@@ -1,4 +1,4 @@
-# Build Part 1.4: Stock
+# 1.4: Stock
 
 ![Stock](Assembly_Stock.jpg)
 
@@ -9,17 +9,13 @@ Four Tension Rods secure the stock to the Receiver.
 A Stock Pin keeps the Stock_Backplate on the stock - this secures the guts
 of the Receiver in place. Remove to field strip the gun.
 
+<!-- HALF PAGE -->
 ## Prints
+||||
+|-|-|-|
+|![Stock](Stock_thumb.jpg)<br/>Stock|![Stock_Backplate](Stock_Backplate_thumb.jpg)<br/>Stock_Backplate|![Stock_Buttpad](Stock_Buttpad_thumb.jpg)<br/>Stock_Buttpad|
 
-##### Stock
-![Stock](Stock_thumb.jpg)
-
-##### Stock_Backplate
-![Stock_Backplate](Stock_Backplate_thumb.jpg)
-
-##### Stock_Buttpad
-![Stock_Buttpad](Stock_Buttpad_thumb.jpg)
-
+<!-- NEW PAGE -->
 ## Post-Processing
 
 #### Stock Backplate

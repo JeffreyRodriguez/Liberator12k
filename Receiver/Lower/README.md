@@ -1,4 +1,4 @@
-# Build Part 1.3: Lower Receiver
+# 1.3: Lower Receiver
 
 ![Lower Receiver Assembly](../Assembly_Lower.jpg)
 
@@ -8,24 +8,14 @@ The mount is sandwiched in with the lower side plates.
 The T-lug tabs secure the mount into the lower.
 The lower mount couples the lower to the receiver.
 
-
+<!-- HALF PAGE -->
 ## Prints
+||||
+|-|-|-|
+|![Lower_Left](Lower_Left_thumb.jpg)<br/>Lower_Left|![Lower_Middle](Lower_Middle_thumb.jpg)<br/>Lower_Middle|![Lower_Right](Lower_Right_thumb.jpg)<br/>Lower_Right|
+|![LowerMount_Front](LowerMount_Front_thumb.jpg)<br/>LowerMount_Front|![LowerMount_Rear](LowerMount_Rear_thumb.jpg)<br/>LowerMount_Rear||
 
-##### Lower_Left
-![Lower_Left](Lower_Left_thumb.jpg)
-
-##### Lower_Middle
-![Lower_Middle](Lower_Middle_thumb.jpg)
-
-##### Lower_Right
-![Lower_Right](Lower_Right_thumb.jpg)
-
-##### LowerMount_Front
-![LowerMount_Front](LowerMount_Front_thumb.jpg)
-
-##### LowerMount_Rear
-![LowerMount_Rear](LowerMount_Rear_thumb.jpg)
-
+<!-- NEW PAGE -->
 ## Post-Processing
 
 ### Install Heatset Nuts

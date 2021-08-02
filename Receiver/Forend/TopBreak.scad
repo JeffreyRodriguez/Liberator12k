@@ -787,7 +787,7 @@ module TopBreak_ExtractorAssembly(debug=false, alpha=1, cutter=false) {
   TopBreak_Extractor(debug=debug, alpha=alpha, cutter=cutter);
 }
 
-module BreakActionAssembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontAlpha=1, pivotFactor=0, extractFactor=0, chargeFactor=0, lockFactor=0, stock=true, tailcap=false, debug=false) {
+module BreakActionAssembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontAlpha=1, pivotFactor=0, extractFactor=0, chargeFactor=0, lockFactor=0, stock=true, tailcap=false, debug=undef) {
 
 
   if (_SHOW_FCG)
@@ -799,7 +799,7 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFron
   BreakActionPivot(factor=pivotFactor) {
 
     if (_SHOW_BARREL)
-    TopBreak_Barrel(debug=_CUTAWAY_BARREL);
+    TopBreak_Barrel(debug=debug == true || _CUTAWAY_BARREL);
     
     translate([BarrelLength()-1,0,0])
     rotate([0,-90,0]) {
@@ -814,22 +814,22 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFron
               h=TopBreak_ExtractorSpringLength()+(TopBreak_ExtractorTravel()*extractFactor));
     
     translate([-TopBreak_ExtractorTravel()*extractFactor,0,0]) {
-      TopBreak_ExtractorAssembly(debug=_CUTAWAY_TOPBREAK_EXTRACTOR, alpha=_ALPHA_TOPBREAK_EXTRACTOR);
+      TopBreak_ExtractorAssembly(debug=debug == true || _CUTAWAY_TOPBREAK_EXTRACTOR, alpha=_ALPHA_TOPBREAK_EXTRACTOR);
     }
     
     TopBreak_MlokBolts();
 
     if (_SHOW_COLLAR)
-    TopBreak_BarrelCollar(debug=_CUTAWAY_COLLAR, alpha=_ALPHA_COLLAR);
+    TopBreak_BarrelCollar(debug=debug == true || _CUTAWAY_COLLAR, alpha=_ALPHA_COLLAR);
     
     children();
   }
   
   if (_SHOW_RECEIVER_FRONT)
-  TopBreak_ReceiverFront(debug=debug, alpha=_ALPHA_RECEIVER_FRONT);
+  TopBreak_ReceiverFront(debug=debug==true, alpha=_ALPHA_RECEIVER_FRONT);
 
   if (_SHOW_FOREND)
-  TopBreak_Forend(debug=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
+  TopBreak_Forend(debug=debug == true || _CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
 }
 
 

@@ -1,6 +1,6 @@
 # Developers
 Want to customize the designs to fit the materials you have on hand?
-Or to change gauge or caliber completely?
+Change gauge or caliber completely, or something even more extreme?
 
 ## Requirements
 If you're running Linux/Mac and have `make` available, there are Makefiles here.

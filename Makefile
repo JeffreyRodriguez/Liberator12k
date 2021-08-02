@@ -1,8 +1,9 @@
 include Makefile.in
 
 GIT_VERSION := $(shell git describe --always)
+DATE := $(shell date +'%Y-%m-%d')
 
-HTML := README.html About.html Printing.html Developers.html Ammo/README.html $(shell find Receiver -name \*.html) 
+HTML := README.html About.html Printing.html Developers.html Unlicense.html Ammo/README.html $(shell find Receiver -name \*.html) 
 DOCS := $(HTML) .manual $(shell find Receiver -name \*.jpg)  $(shell find Receiver -name \*.mp4)
 
 RECEIVER_STL := Frame_Receiver.stl Components/Sightpost.stl \
@@ -11,7 +12,7 @@ RECEIVER_STL := Frame_Receiver.stl Components/Sightpost.stl \
 dist:
 	mkdir -p $@
 
-dist/docs: $(DOCS)
+dist/docs: Receiver $(DOCS)
 	mkdir -p $@
 	cp *.html $@
 	for file in $?; do \
@@ -19,13 +20,23 @@ dist/docs: $(DOCS)
 	  cp -r $$file "$@/$$file"; \
   done
 
-dist/Manual.pdf: dist/docs $(shell find dist/docs) $(DOCS)
+dist/Manual.pdf: dist/docs $(shell find dist/docs) $(DOCS) dist/docs/Version.md
 	htmldoc --batch Manual.book
 
 dist/changelog.txt: dist
 	git log --oneline > dist/changelog.txt
 dist/$(GIT_VERSION).version: dist
 	touch "dist/$(GIT_VERSION).version"
+
+dist/docs/Version.md:
+	@echo "---" > $@ && \
+	echo "title: #Liberator12k Manual" >> $@ && \
+	echo "author: Jeff Rodriguez" >> $@ && \
+	echo "copyright: Unlicensed" >> $@ && \
+	echo "version: $(GIT_VERSION)" >> $@ && \
+	echo "language: en-US" >> $@ && \
+	echo "subject: How-To" >> $@ && \
+	echo "---" >> $@
 
 dist/Receiver: Receiver dist
 	mkdir -p $@

@@ -1,4 +1,4 @@
-# Build Part 1.1: Framed Receiver
+# 1.1: Framed Receiver
 
 ![Framed Receiver](Assembly_FramedReceiver.jpg)
 

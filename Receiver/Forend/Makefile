@@ -61,7 +61,6 @@ $(PRESET_STLS):
 		-o $@ -o $(CLASS_PRESET)/$(PART).png \
 		-P $(PRESET) \
 		$(CLASS).scad
-	$(THUMBNAILBIN) $(CLASS_PRESET)/$(PART).png $(CLASS_PRESET)/$(PART)_thumb.jpg
 
 # Assembly.png - the source of truth
 $(addsuffix /Assembly.png,$(PRESETS)): %.png : $$(firstword $$(subst _, ,%)).scad
@@ -72,14 +71,8 @@ $(addsuffix /Assembly.png,$(PRESETS)): %.png : $$(firstword $$(subst _, ,%)).sca
 	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -P $(PRESET) -o $@ \
 		--projection=p --camera=400,1500,300,0,0,0 \
 		$(CLASS).scad
-		
-# Assembly.jpg - Downsampled
 $(addsuffix /Assembly.jpg,$(PRESETS)): %.jpg : %.png
 	convert $(basename $@).png -quality 90 $@
-	
-# Assembly_thumb.jpg - Downsampled 200px thumbnail
-$(addsuffix /Assembly_thumb.jpg,$(PRESETS)): %_thumb.jpg : %.png
-	$(THUMBNAILBIN) $< $@
 	
 # Assembly_htmldoc.jpg - Downsampled 800px
 $(addsuffix /Assembly_htmldoc.jpg,$(PRESETS)): %_htmldoc.jpg : %.png

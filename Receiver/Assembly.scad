@@ -66,7 +66,8 @@ if ($preview) {
                         lockFactor=Animate(ANIMATION_STEP_UNLOCK)
                                    -Animate(ANIMATION_STEP_LOCK),
                         extractFactor=Animate(ANIMATION_STEP_UNLOAD)
-                                   -SubAnimate(ANIMATION_STEP_LOAD, end=0.25));
+                                   -SubAnimate(ANIMATION_STEP_LOAD, end=0.25),
+                        debug=_CUTAWAY_FOREND);
   } else if (_FOREND == "Revolver") {
     RevolverForendAssembly(debug=_CUTAWAY_FOREND);
   } else if (_FOREND == "Evolver") {

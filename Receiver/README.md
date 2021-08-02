@@ -1,4 +1,4 @@
-# Build Part 1: Minuteman Receiver
+# 1: Minuteman Receiver
 
 ![Minuteman](Assembly_Minuteman.jpg)
 
@@ -13,6 +13,7 @@ A TPU buttpad reduces felt recoil.
 There are other ways to configure the receiver,
 but we'll save that for your second build.
 
+<!-- HALF PAGE -->
 ## Printing
 
 ### Pick your colors
@@ -35,6 +36,18 @@ choose your colors.
 You can print the buttpad in any filament, but it may be more punishing than
 necessary.
 
+### Components
+Each component in the Minuteman has its own fabrication instructions.
+
+* [1.1 Framed Receiver](Frame.md)
+* [1.2 Fire Control Group](FCG.md)
+* [1.3 Lower](Lower/Lower.md)
+* [1.4 Stock](Stock.md)
+
+[2: Choose Your Weapon](Forend/README.md) covers the different Forend
+designs in detail.
+
+<!-- NEW PAGE -->
 ### Complete Print List
 | Part                | Settings | Filament | Time    | Color   |
 |---------------------|----------|----------|---------|---------|
@@ -58,17 +71,7 @@ necessary.
 | Stock_Buttpad       |          |       -g | -h-m    | Special |
 <br/>
 
-## Components
-Each component in the Minuteman has its own fabrication instructions.
-
-* [1.1 Framed Receiver](Frame.md)
-* [1.2 Fire Control Group](FCG.md)
-* [1.3 Lower](Lower/Lower.md)
-* [1.4 Stock](Stock.md)
-
-[Build Part 2: Choose Your Weapon](Forend/README.md) covers the different Forend
-designs in detail.
-
+<!-- NEW PAGE -->
 ## Bill of Materials
 Full hardware list for the Minuteman receiver.
 
@@ -109,6 +112,7 @@ Complete kits available in the
 
 \* Pick one, these parts have alternates.
 
+<!-- NEW PAGE -->
 ## Metric BOM
 Full hardware list for the Minuteman receiver.
 
