@@ -6,8 +6,8 @@ MDBIN=cmark-gfm -e table --unsafe
 OSBIN=nice openscad
 OSOPTS=--colorscheme=Nature
 OS_CAM_AUTO=--projection=p --autocenter --viewall
-ANIMATE_BIN=./bin/animate.sh
-THUMBNAILBIN=convert -thumbnail 500
+GIT_VERSION=$(shell git describe --always)
+DATE=$(shell date +'%Y-%m-%d')
 
 .DEFAULT_GOAL := all
 
@@ -33,7 +33,7 @@ THUMBNAILBIN=convert -thumbnail 500
 	rm -rf $(FRAMES_DIR)
 	
 %_thumb.jpg: %.png
-	$(THUMBNAILBIN) $< $@
+	convert -thumbnail 500 $< $@
 
 %.jpg: %.png
 	convert $(basename $@).png -quality 90 $@

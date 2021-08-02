@@ -1,19 +1,19 @@
 #HTMLDOC 1.9.7
--t pdf13 -f "dist/Manual.pdf" --book --toclevels 3 --no-numbered --toctitle "Table of Contents" --title --titleimage ".manual/Title.jpg" --linkcolor #166d9f --linkstyle underline --bodycolor fafafa --size Universal --left 0.50in --right 0.50in --top 0.50in --bottom 0.50in --header tc. --header1 t.. --footer hd1 --nup 1 --tocheader .t. --tocfooter ..i --portrait --color --no-pscommands --no-xrxcomments --compression=9 --jpeg=0 --fontsize 12.0 --fontspacing 1.2 --headingfont Helvetica --bodyfont Times --headfootsize 12.0 --headfootfont Helvetica --charset iso-8859-1 --links --embedfonts --pagemode outline --pagelayout single --firstpage p1 --pageeffect none --pageduration 10 --effectduration 1.0 --no-encryption --permissions all  --owner-password ""  --user-password "" --browserwidth 1920 --no-strict --overflow
-dist/docs/Version.md
-dist/docs/README.html
-dist/docs/Printing.html
-dist/docs/Receiver/README.html
-dist/docs/Receiver/Frame.html
-dist/docs/Receiver/FCG.html
-dist/docs/Receiver/Lower/README.html
-dist/docs/Receiver/Stock.html
-dist/docs/Receiver/Forend/README.html
-dist/docs/Receiver/Forend/TopBreak_CAFE12+/README.html
-dist/docs/Receiver/Forend/TopBreak_CAFE12/README.html
-dist/docs/Receiver/Forend/TopBreak_FP37/README.html
-dist/docs/Receiver/Forend/Revolver_ZZR6x12/README.html
-dist/docs/Ammo/README.html
-dist/docs/Developers.html
-dist/docs/About.html
-dist/docs/Unlicense.html
+-t pdf13 -f "Manual.pdf" --book --toclevels 3 --no-numbered --toctitle "Table of Contents" --title --titleimage ".manual/Title.jpg" --linkcolor #166d9f --linkstyle underline --bodycolor fafafa --size Universal --left 0.50in --right 0.50in --top 0.50in --bottom 0.50in --header tc. --header1 t.. --footer hd1 --nup 1 --tocheader .t. --tocfooter ..i --portrait --color --no-pscommands --no-xrxcomments --compression=9 --jpeg=0 --fontsize 12.0 --fontspacing 1.2 --headingfont Helvetica --bodyfont Times --headfootsize 12.0 --headfootfont Helvetica --charset iso-8859-1 --links --embedfonts --pagemode outline --pagelayout single --firstpage p1 --pageeffect none --pageduration 10 --effectduration 1.0 --no-encryption --permissions all  --owner-password ""  --user-password "" --browserwidth 1920 --no-strict --overflow
+Version.md
+README.html
+Printing.html
+Receiver/README.html
+Receiver/Frame.html
+Receiver/FCG.html
+Receiver/Lower/README.html
+Receiver/Stock.html
+Receiver/Forend/README.html
+Receiver/Forend/TopBreak_CAFE12+.html
+Receiver/Forend/TopBreak_CAFE12.html
+Receiver/Forend/TopBreak_FP37.html
+Receiver/Forend/Revolver_ZZR6x12.html
+Ammo/README.html
+Developers.html
+About.html
+Unlicense.html

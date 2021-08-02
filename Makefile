@@ -1,34 +1,32 @@
 include Makefile.in
 
-GIT_VERSION := $(shell git describe --always)
-DATE := $(shell date +'%Y-%m-%d')
+SUBDIRS := $(dir $(wildcard */Makefile))
 
-HTML := README.html About.html Printing.html Developers.html Unlicense.html Ammo/README.html $(shell find Receiver -name \*.html) 
-DOCS := $(HTML) .manual $(shell find Receiver -name \*.jpg)  $(shell find Receiver -name \*.mp4)
+$(SUBDIRS):
+	$(MAKE) -C $@
 
-RECEIVER_STL := Frame_Receiver.stl Components/Sightpost.stl \
-							Stock*.stl Lower/*.stl \
-							FCG*.stl
-dist:
-	mkdir -p $@
+MANUAL_IMAGES = $(wildcard .manual/*.jpg) $(shell find Receiver -name \*.jpg)
+MARKDOWN = $(wildcard *.md) $(shell find Receiver -name \*.md)
+MARKDOWN_HTML = $(addsuffix .html,$(basename $(MARKDOWN)))
+DOCS = $(MARKDOWN_HTML) $(MANUAL_IMAGES)
 
-dist/docs: Receiver $(DOCS)
-	mkdir -p $@
-	cp *.html $@
-	for file in $?; do \
-	  mkdir -p "$@/`dirname $$file`"; \
-	  cp -r $$file "$@/$$file"; \
-  done
+MINUTEMAN_STL = Receiver/Frame_Receiver.stl $(wildcard Receiver/Components/*.stl) \
+							$(wildcard Receiver/Stock*.stl) $(wildcard Receiver/Lower/*.stl) \
+							$(wildcard Receiver/FCG*.stl)
 
-dist/Manual.pdf: dist/docs $(shell find dist/docs) $(DOCS) dist/docs/Version.md
-	htmldoc --batch Manual.book
+FOREND_STL = $(wildcard Receiver/Forend/*_*/*.stl)
 
-dist/changelog.txt: dist
-	git log --oneline > dist/changelog.txt
-dist/$(GIT_VERSION).version: dist
-	touch "dist/$(GIT_VERSION).version"
+STL := $(MINUTEMAN_STL) $(FOREND_STL)
+DIST := changelog.txt Manual.pdf $(STL)
 
-dist/docs/Version.md: dist/docs
+STL: $(SUBDIRS)
+MARKDOWN_HTML: $(MARKDOWN_HTML)
+$(MARKDOWN_HTML): $(addsuffix .md, $(basename $@))
+
+changelog.txt:
+	git log --oneline > changelog.txt
+
+Version.md:
 	@echo "---" > $@ && \
 	echo "title: #Liberator12k Manual" >> $@ && \
 	echo "author: Jeff Rodriguez" >> $@ && \
@@ -37,22 +35,12 @@ dist/docs/Version.md: dist/docs
 	echo "language: en-US" >> $@ && \
 	echo "subject: How-To" >> $@ && \
 	echo "---" >> $@
-
-dist/Receiver: Receiver dist
-	mkdir -p $@
-	cp $(addprefix Receiver/,$(RECEIVER_STL)) $@/
-
-FORENDS := TopBreak_CAFE12 TopBreak_CAFE12+ TopBreak_FP37 Revolver_ZZR6x12
-FOREND_DIST := $(addprefix dist/Forend/,$(FORENDS))
-
-$(FOREND_DIST): Receiver
-	mkdir -p $@
-	cp -r Receiver/$(shell echo "$@" | sed 's/^dist\///')/*.stl "$@/"
 	
-Liberator12k.zip: dist/changelog.txt dist/$(GIT_VERSION).version dist/docs dist/Manual.pdf dist/Receiver $(FOREND_DIST)
-	cd dist && zip -r ../Liberator12k.zip *
+Manual.pdf: $(DOCS) Version.md FORCE
+	htmldoc --batch Manual.book
 
-Ammo Receiver: FORCE
-		$(MAKE) -C $@
+Liberator12k.zip: $(DIST) FORCE
+	zip -r Liberator12k.zip $(DIST)
 
-all: $(HTML) Receiver Liberator12k.zip
+all: $(SUBDIRS) Liberator12k.zip
+.PHONY: STL MARKDOWN_HTML $(SUBDIRS)

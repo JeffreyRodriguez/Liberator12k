@@ -483,7 +483,7 @@ module FCG_ChargingHandleBolt(bolt=FCG_ChargingHandleBolt(), boltLength=0.25, cu
         head="socket", nut="heatset",
         clearance=cutter?clearance:0);
   
-  color("Silver")
+  *color("Silver")
   RenderIf(!cutter)
   translate([-ReceiverLength()+(ReceiverBackLength()/2),
              1-0.25,
@@ -1082,7 +1082,6 @@ module Trigger(animationFactor=TriggerAnimationFactor(), left=true, leftAlpha=1,
 }
 ///
 
-
 //****************
 //* Printed Jigs *
 //****************
@@ -1305,7 +1304,6 @@ module SimpleFireControlAssembly(actionRod=_SHOW_ACTION_ROD, recoilPlate=_SHOW_R
   RecoilPlate(contoured=FCG_RECOIL_PLATE_CONTOURED, debug=_CUTAWAY_RECOIL_PLATE, alpha=_ALPHA_RECOIL_PLATE);
 }
 ///
-
 
 //*************
 //* Rendering *

@@ -1,7 +1,5 @@
 include ../../Makefile.in
 
-ANIMATE_BIN=../../bin/animate.sh
-
 Lower_Parts=Lower_Left Lower_Middle Lower_Right \
 						LowerMount_Front LowerMount_Rear
 Lower_Parts_STL=$(addsuffix .stl, $(Lower_Parts))

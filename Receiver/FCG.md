@@ -124,6 +124,10 @@ A bare minimum of, 40mm worth of nail to work with.
 The nail is intended to be glued into the collar, and the collar is indexed with
 wide flats, so it can't rotate - making it rimfire-friendly.
 
+#### Why won't my firing pin fit? It's a 6D, but it's got a 2.75mm shaft
+You've got "Common" nails. You need 6D "Box" nails - they're thinner. Sorry :)
+A 6D Box nail has a 2.4mm shaft.
+
 ### Hammer Spring
 There's some flexibility here. "If it fits, I sits." >5/16" ID and < 5/8" OD.
 

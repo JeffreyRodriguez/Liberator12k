@@ -1,5 +1,4 @@
 include ../../Makefile.in
-ANIMATE_BIN=../../bin/animate.sh
 
 # Forend Classes
 CLASSES := TopBreak Revolver
