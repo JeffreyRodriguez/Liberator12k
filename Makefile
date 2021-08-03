@@ -3,7 +3,6 @@ include Makefile.in
 MANUAL_IMAGES = $(wildcard .manual/*.jpg) $(shell find Receiver -name \*.jpg)
 MARKDOWN = $(wildcard *.md) $(shell find Receiver -name \*.md)
 MARKDOWN_HTML = $(addsuffix .html,$(basename $(MARKDOWN)))
-DOCS = $(MARKDOWN_HTML) $(MANUAL_IMAGES)
 
 MINUTEMAN_STL = Receiver/Frame_Receiver.stl $(wildcard Receiver/Components/*.stl) \
 							$(wildcard Receiver/Stock*.stl) $(wildcard Receiver/Lower/*.stl) \
@@ -13,7 +12,7 @@ FOREND_STL = $(wildcard Receiver/Forend/*_*/*.stl)
 
 STL := $(MINUTEMAN_STL) $(FOREND_STL)
 EXTRA_DOCS := changelog.txt Manual.pdf
-DIST := $(DOCS) $(EXTRA_DOCS) $(STL)
+DIST := $(STL) $(EXTRA_DOCS)
 
 MARKDOWN_HTML: $(MARKDOWN_HTML)
 $(MARKDOWN_HTML): $(addsuffix .md, $(basename $@))
@@ -31,7 +30,7 @@ Version.md:
 	echo "subject: How-To" >> $@ && \
 	echo "---" >> $@
 	
-Manual.pdf: $(DOCS) Version.md $(MARKDOWN_HTML) FORCE
+Manual.pdf: Version.md $(MARKDOWN_HTML) $(MANUAL_IMAGES) FORCE
 	htmldoc --batch Manual.book
 
 Liberator12k.zip: $(DIST) FORCE
