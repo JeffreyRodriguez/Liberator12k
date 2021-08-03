@@ -20,6 +20,15 @@ XXXXg, 0h00m
 | TopBreak_Latch          |                | -mm           | -h-m       |
 <br/>
 
+|ReceiverFront|Forend|
+|-|-|
+|![](ReceiverFront_thumb.jpg)|![](Forend_thumb.jpg)|
+
+|BarrelCollar|Extractor|
+|-|-|
+|![](BarrelCollar_thumb.jpg)|![](Extractor_thumb.jpg)|
+
+
 ## Bill of Materials
 | Part                  | Quantity |
 |-----------------------|----------|

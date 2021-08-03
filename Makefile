@@ -1,10 +1,5 @@
 include Makefile.in
 
-SUBDIRS := $(dir $(wildcard */Makefile))
-
-$(SUBDIRS):
-	$(MAKE) -C $@
-
 MANUAL_IMAGES = $(wildcard .manual/*.jpg) $(shell find Receiver -name \*.jpg)
 MARKDOWN = $(wildcard *.md) $(shell find Receiver -name \*.md)
 MARKDOWN_HTML = $(addsuffix .html,$(basename $(MARKDOWN)))
@@ -19,7 +14,6 @@ FOREND_STL = $(wildcard Receiver/Forend/*_*/*.stl)
 STL := $(MINUTEMAN_STL) $(FOREND_STL)
 DIST := changelog.txt Manual.pdf $(STL)
 
-STL: $(SUBDIRS)
 MARKDOWN_HTML: $(MARKDOWN_HTML)
 $(MARKDOWN_HTML): $(addsuffix .md, $(basename $@))
 
@@ -41,6 +35,9 @@ Manual.pdf: $(DOCS) Version.md FORCE
 
 Liberator12k.zip: $(DIST) FORCE
 	zip -r Liberator12k.zip $(DIST)
+	
+dist: $(SUBDIRS)
+	$(MAKE) Liberator12k.zip
 
-all: $(SUBDIRS) Liberator12k.zip
-.PHONY: STL MARKDOWN_HTML $(SUBDIRS)
+all: $(SUBDIRS) dist
+.PHONY: STL MARKDOWN_HTML dist

@@ -5,7 +5,7 @@
 ## Prints
 | Frame_Receiver |
 |-|
-|![Frame_Receiver](Frame_Receiver_thumb.jpg)|
+|![](Frame_Receiver_thumb.jpg)|
 
 <!-- NEW PAGE -->
 ## Post-Processing

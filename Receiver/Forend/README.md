@@ -14,20 +14,19 @@ Your support is greatly appreciated, thank you!
 #### CAFE12 Plus
 This upgraded kit uses 4130 tubing instead of Schedule 40 pipe.
 
-Jump to [2a: CAFE12+ Forend](Forend/TopBreak_CAFE12+.md)
+Jump to [2a: CAFE12+ Forend](TopBreak_CAFE12+/README.md)
 
 #### CAFE12 Base
 If you purchased a base kit you'll need to buy a pipe barrel.
-[2b: CAFE12 Forend](Forend/TopBreak_CAFE12.md) has the full details
+[2b: CAFE12 Forend](TopBreak_CAFE12/README.md) has the full details
 about what pipes you need to buy and tips for how to prepare them.
 
 #### FP37
 The FP37 was mostly "For Fun" and because it was an easy demonstration of how
 flexible the \#Liberator12k platform can be.
 
-[2c: FP37 Forend](Forend/TopBreak_FP37.md) will put a flare launcher
-in your hands. Then you'll want to check out [3](../Ammo/README.md)
-for printable flare rounds!
+[2c: FP37 Forend](TopBreak_FP37/README.md) will put a flare launcher
+in your hands.
 
 ## Complete Model List
 This list includes models that don't fit into the Universal Receiver system,
@@ -35,11 +34,11 @@ like BARBB.
 Most of these forends can be mounted to the universal receiver without
 modification.
 
-| Model                                  | Class               | Status    |
-|--------------------------------------- |-------------------- |-----------|
-| [CAFE12+](TopBreak_CAFE12+/README.md)  | Top Break           | Alpha     |
-| [CAFE12](TopBreak_CAFE12/README.md)    | Top Break           | Alpha     |
-| [FP37](TopBreak_FP37/README.md)        | Top Break           | Alpha     |
-| [ZZR 6x12](Revolver_ZZR6x12/README.md) | Zig Zag Revolver    | Prototype |
-| [BARBB](../BARBB/BARBB.md)             | Bolt-Action Bullpup | Prototype |
+| Model    | Class               | Status    |
+|----------|-------------------- |-----------|
+| CAFE12+  | Top Break           | Alpha     |
+| CAFE12   | Top Break           | Alpha     |
+| FP37     | Top Break           | Alpha     |
+| ZZR 6x12 | Zig Zag Revolver    | Prototype |
+| BARBB    | Bolt-Action Bullpup | Prototype |
 <br/>

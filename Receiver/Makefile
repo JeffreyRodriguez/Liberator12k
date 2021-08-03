@@ -2,6 +2,8 @@ include ../Makefile.in
 .PHONY: $(Components)
 
 Components=Frame Stock FCG
+Components_HTML=$(addsuffix .html, $(Components))
+
 Frame_Parts=Frame_Receiver
 Stock_Parts=Stock Stock_Buttpad Stock_Backplate
 FCG_Parts=FCG_Housing FCG_Disconnector FCG_FiringPinCollar \
@@ -13,6 +15,7 @@ Parts=$(Frame_Parts) $(Stock_Parts) $(FCG_Parts)
 Frame_STL=$(addsuffix .stl, $(Frame_Parts))
 Stock_STL=$(addsuffix .stl, $(Stock_Parts))
 FCG_STL=$(addsuffix .stl, $(FCG_Parts))
+
 STLS=$(Frame_STL) $(Stock_STL) $(FCG_STL)
 
 Frame_thumbnails=$(addsuffix _thumb.jpg, $(Frame_Parts))
@@ -20,6 +23,7 @@ Stock_thumbnails=$(addsuffix _thumb.jpg, $(Stock_Parts))
 FCG_thumbnails=$(addsuffix _thumb.jpg, $(FCG_Parts))
 
 Assembly_VIEWS=CAFE12 Minuteman FramedReceiver Stock Lower FCG
+ASSEMBLY_JPG=$(addprefix Assembly_,$(addsuffix .jpg, $(Assembly_VIEWS)))
 
 Assembly_CAFE12.png: Assembly.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
@@ -67,13 +71,8 @@ Assembly_FCG.png: Assembly.scad
 		-D _SHOW_STOCK=false \
 		$<
 
-# Subdirs
-Forend Lower Components: FORCE
-	$(MAKE) -C $@
-
-
 .SECONDEXPANSION:
-$(addsuffix .html,$(Components)): $$($$@_thumbnails)
+$(addsuffix .html,$(Components)): $$(addsuffix _thumb.jpg, $$($$@_Parts))
 # $(STLS): $$($$@_thumbnails)
 # 	$(eval SOURCE=$(shell echo $($@) | awk -F _ '{ print $$1 }'))
 # 	$(eval PART=$(basename $(notdir $@)))
@@ -84,5 +83,5 @@ $(addsuffix .html,$(Components)): $$($$@_thumbnails)
 
 FCG Frame Stock: $$($$@_STL) $$($$@_thumbnails) $$@.html
 
-all: README.html FCG Frame Stock Lower Forend Components $(STL_PREVIEWS) $(addprefix Assembly_,$(addsuffix .jpg, $(Assembly_VIEWS))) $(addsuffix _thumb.jpg, $(Stock_Parts))
+all: README.html $(ASSEMBLY_JPG) $(SUBDIRS) $(Components) $(STLS) $(STL_PREVIEWS)
  

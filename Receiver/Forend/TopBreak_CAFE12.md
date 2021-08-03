@@ -33,17 +33,13 @@ Since it's built with \#Liberator12k platform components it features:
 | Extractor     | 14g           |    1h55m           |
 <br/>
 
-#### Receiver_Front
-![Receiver_Front](Receiver_Front_thumb.jpg)
+|ReceiverFront|Forend|
+|-|-|
+|![](ReceiverFront_thumb.jpg)|![](Forend_thumb.jpg)|
 
-#### Forend
-![Forend](Forend_thumb.jpg)
-
-#### BarrelCollar
-![BarrelCollar](BarrelCollar_thumb.jpg)
-
-#### Extractor
-![Extractor](Extractor_thumb.jpg)
+|BarrelCollar|Extractor|
+|-|-|
+|![](BarrelCollar_thumb.jpg)|![](Extractor_thumb.jpg)|
 
 ## Bill of Materials
 | Part                                       | Quantity |
