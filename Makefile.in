@@ -11,7 +11,7 @@ DATE=$(shell date +'%Y-%m-%d')
 SUBDIRS := $(dir $(wildcard */Makefile))
 
 .DEFAULT_GOAL := all
-.PHONY: $(SUBDIRS) clean
+.PHONY: FORCE $(SUBDIRS) clean clean-dir
 .PRECIOUS: .frames/%.mp4
 	
 $(SUBDIRS): FORCE
@@ -59,23 +59,9 @@ $(SUBDIRS): FORCE
 	--render -D _RENDER=\"$(PART)\" \
 	--projection=p --autocenter --viewall --view scales \
 	$(SOURCE).scad
-		
 
-FORCE:
-clean: clean_ANIMATE clean_STL cleanGCODE cleanMP4 clean_HTML clean_PNG clean_JPG
-	rm -rf dist/
-clean_ANIMATE:
-	rm -rf .frames
-cleanGCODE:
-	rm -f *.gcode
-clean_STL:
-	rm -f *.stl
-cleanMP4:
-	rm -f *.mp4
-clean_HTML:
-	rm -f *.html
-clean_PNG:
-	rm -f *.png
-clean_JPG:
-	rm -f *.jpg
+clean: FORCE clean-dir
+	for DIR in $(SUBDIRS); do \
+	  $(MAKE) -C $$DIR clean; \
+	done
 	

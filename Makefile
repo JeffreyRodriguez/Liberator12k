@@ -12,7 +12,8 @@ MINUTEMAN_STL = Receiver/Frame_Receiver.stl $(wildcard Receiver/Components/*.stl
 FOREND_STL = $(wildcard Receiver/Forend/*_*/*.stl)
 
 STL := $(MINUTEMAN_STL) $(FOREND_STL)
-DIST := changelog.txt Manual.pdf $(STL)
+EXTRA_DOCS := changelog.txt Manual.pdf
+DIST := $(DOCS) $(EXTRA_DOCS) $(STL)
 
 MARKDOWN_HTML: $(MARKDOWN_HTML)
 $(MARKDOWN_HTML): $(addsuffix .md, $(basename $@))
@@ -30,7 +31,7 @@ Version.md:
 	echo "subject: How-To" >> $@ && \
 	echo "---" >> $@
 	
-Manual.pdf: $(DOCS) Version.md FORCE
+Manual.pdf: $(DOCS) Version.md $(MARKDOWN_HTML) FORCE
 	htmldoc --batch Manual.book
 
 Liberator12k.zip: $(DIST) FORCE
@@ -38,6 +39,9 @@ Liberator12k.zip: $(DIST) FORCE
 	
 dist: $(SUBDIRS)
 	$(MAKE) Liberator12k.zip
+
+clean-dir:
+	rm -rf $(DOCS) Liberator12k.zip
 
 all: $(SUBDIRS) dist
 .PHONY: STL MARKDOWN_HTML dist

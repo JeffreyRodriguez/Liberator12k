@@ -36,15 +36,7 @@ PRESET_STL_PREVIEWS := $(addsuffix .mp4, $(PRESET_STLS))
 CLASS_STLS := $(addsuffix .stl,$(CLASSES))
 CLASS_HTML := $(addsuffix /README.html,$(CLASSES))
 
-
-.SECONDEXPANSION:
-# Class/Preset dirs depend on their respective source
-$(CLASSES) $(PRESETS): $$(addsuffix .scad,$$(firstword $$(subst _, ,$$@)))
-	mkdir -p $@
-	touch $@
-
-# Preset STL depend on their respective source file
-$(PRESET_STLS):
+$(PRESET_STLS): $(PRESETS)
 	$(eval CLASS_PRESET=$(firstword $(subst /, ,$@)))
 	$(eval CLASS=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$1 }'))
 	$(eval PRESET=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$2 }'))
@@ -55,11 +47,18 @@ $(PRESET_STLS):
 	@echo Class: $(CLASS)
 	@echo Preset: $(PRESET)
 	@echo Part: $(PART)
+	@mkdir -p $(dir $@) && \
 	$(OSBIN) $(OSOPTS) --render -D _RENDER=\"$(CLASS)_$(PART)\" \
 		--projection=p --camera=0,400,400,0,100,100 \
 		-o $@ -o $(CLASS_PRESET)/$(PART).png \
 		-P $(PRESET) \
 		$(CLASS).scad
+
+.SECONDEXPANSION:
+# Class/Preset dirs depend on their respective source
+$(CLASSES) $(PRESETS): $$(addsuffix .scad,$$(firstword $$(subst _, ,$$@)))
+	mkdir -p $@
+	touch $@
 
 # Assembly.png - the source of truth
 $(addsuffix /Assembly.png,$(PRESETS)): %.png : $$(firstword $$(subst _, ,%)).scad
@@ -85,3 +84,4 @@ $(CLASS_HTML): %/README.html : %.md
 	$(MDBIN) $< | sed 's/\.md/\.html/' > $@
 
 all: README.html $(CLASSES) $(CLASS_HTML) $(PRESETS) $(PRESET_HTML) $(PRESET_STLS) $(PRESET_STL_PREVIEWS)
+	
