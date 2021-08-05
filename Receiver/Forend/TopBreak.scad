@@ -808,11 +808,13 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFron
     }
 
     // TopBreak_Extractor Spring
+    if (_SHOW_TOPBREAK_EXTRACTOR)
     %translate([PivotX()-PivotRadius()-WallPivot(),0,TopBreak_ExtractorZ()+TopBreak_ExtractorSpringRadius()])
     rotate([0,-90,0])
     cylinder(r=TopBreak_ExtractorSpringRadius(),
               h=TopBreak_ExtractorSpringLength()+(TopBreak_ExtractorTravel()*extractFactor));
     
+    if (_SHOW_TOPBREAK_EXTRACTOR)
     translate([-TopBreak_ExtractorTravel()*extractFactor,0,0]) {
       TopBreak_ExtractorAssembly(debug=debug == true || _CUTAWAY_TOPBREAK_EXTRACTOR, alpha=_ALPHA_TOPBREAK_EXTRACTOR);
     }
