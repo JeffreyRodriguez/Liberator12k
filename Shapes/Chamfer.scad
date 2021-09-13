@@ -44,29 +44,31 @@ module RoundedBoolean(edgeOffset=1, edgeSign=-1,
 
 }
 
-module Fillet(r=0.125, h=1, inset=false, taperEnds=true) {
-  effectiveHeight = h -(inset ? r*2 : 0);
-
-  translate([0,0,(inset ? r : 0)])
+module Fillet(r=0.125, r1=undef, r2=undef, h=1, inset=false, chamferTop=true, chamferBottom=true, teardropTop=true, teardropBottom=true) {
+  r1 = (r1 == undef ? r : r1);  // Default r1 to r
+  r2 = (r2 == undef ? r1*(sqrt(2)/2) : r2); // Default end chamfer radius to r
+  
   difference() {
-    linear_extrude(height=effectiveHeight)
+    linear_extrude(height=h)
     intersection() {
       RoundedBoolean(edgeOffset=0, r=r, teardrop=false);
 
+      if (!inset)
       rotate(90)
       square(r+ManifoldGap());
     }
-
-    if (taperEnds)
-    for (m = [0,1]) translate([0,0,m ? effectiveHeight : 0]) mirror([0,0,m])
+      
+    // Top
+    if (chamferTop)
+    translate([-r,r,h+ManifoldGap()])
+    mirror([0,0,1])
+    HoleChamfer(r1=r, r2=r2, teardrop=teardropTop);
+    
+    // Bottom
+    if(chamferBottom)
     translate([-r,r,-ManifoldGap()])
-    cylinder(r1=r*sqrt(2), r2=0, h=r*sqrt(2)*2);
+    HoleChamfer(r1=r, r2=r2, teardrop=teardropBottom);
   }
-}
-
-
-module VerticalFillet(r=0.125, h=1, inset=false, taperEnds=true) {
-  Fillet(r=r, h=h, inset=inset, taperEnds=taperEnds);
 }
 
 module HoleChamfer(r1=0.5, r2=0.125, teardrop=false, edgeSign=1) {
