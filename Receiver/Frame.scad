@@ -48,7 +48,6 @@ $fs = UnitsFs()*ResolutionFs();
 
 // Settings: Lengths
 function FrameBoltLength() = 10;
-function FrameBackLength() = 0.5;
 function FrameReceiverLength() = FRAME_RECEIVER_LENGTH;
 function LogoTextSize() = 11/32;
 function LogoTextDepth() = 1/32;
@@ -97,12 +96,12 @@ module FrameBolts(length=FrameBoltLength(), nut="hex", debug=false, cutter=false
 
   color("Silver", alpha) RenderIf(!cutter)
   DebugHalf(enabled=debug) {
-    translate([0.25-FrameReceiverLength()-FrameBackLength()-ManifoldGap(),0,0])
+    translate([-FrameReceiverLength()-ManifoldGap(),0,0])
     FrameBoltIterator()
     rotate([0,-90,0])
     rotate(-11)
     NutAndBolt(bolt=FrameBolt(), boltLength=length,
-         head="hex", capHeightExtra=(cutter?FrameBackLength()*2:0),
+         head="hex",
          nut=nut, clearance=clear,
          capOrientation=true);
   }
@@ -131,6 +130,40 @@ module FrameSupport(length=1, extraBottom=0, chamferFront=false, chamferBack=fal
                         chamferBottom=chamferFront, teardropBottom=teardropFront,
                         chamferTop=chamferBack,     teardropTop=teardropBack);
     }
+  }
+}
+
+module Frame_ReceiverSegment(length=1, highTop=false, chamferFront=true, chamferBack=true, teardropFront=true, teardropBack=true) {
+  union() {
+    
+    if (highTop)
+    hull() {
+      mirror([1,0,0])
+      ReceiverTopSegment(length=length, chamferFront=chamferFront);
+      
+      FrameSupport(length=length,
+                   chamferFront=chamferFront, teardropFront=teardropFront,
+                   chamferBack=chamferBack, teardropBack=teardropBack);
+    }
+    
+    FrameSupport(length=length,
+                 chamferFront=chamferFront, teardropFront=teardropFront,
+                 chamferBack=chamferBack, teardropBack=teardropBack);
+    
+    mirror([1,0,0])
+    ReceiverSegment(length=length, highTop=highTop,
+                    chamferFront=chamferFront,
+                    chamferBack=chamferBack);
+    
+    // Fillet receiver-to-frame joint
+    for (M = [0, 1]) mirror([0,M,0])
+    translate([length,ReceiverOR(),FrameBottomZ()])
+    rotate([0,-90,0])
+    Fillet(h=length,
+           r=FrameBottomZ(), r2=CHAMFER_RADIUS,
+           chamferBottom=chamferBack, chamferTop=chamferFront,
+           teardropBottom=teardropBack, teardropTop=teardropFront,
+           inset=true);
   }
 }
 
@@ -169,42 +202,35 @@ module Receiver_LargeFrame(doRender=true, debug=false, alpha=1) {
   RenderIf(doRender) DebugHalf(enabled=debug)
   difference() {
     Receiver(doRender=false) {
+      
+      mirror([1,0,0])
+      Frame_ReceiverSegment(FrameReceiverLength(), teardropFront=true);
+      
       hull() {
-        
         mirror([1,0,0])
-        FrameSupport(length=FrameReceiverLength()+FrameBackLength(),
-                     chamferFront=true, teardropFront=true,
-                     chamferBack=true);
+        FrameSupport(FrameReceiverLength(),
+        chamferBack=true, chamferFront=true);
 
         ReceiverTopSegment(length=FrameReceiverLength());
       }
       
-      // Backfill in receiver-to-frame join
-      translate([0,-ReceiverOR(),-ReceiverOR()])
-      mirror([1,0,0])
-      ChamferedCube([FrameReceiverLength()+FrameBackLength(), ReceiverOD(), ReceiverOD()],
-                    r=CHAMFER_RADIUS, teardropFlip=[true,true,true]);
-      
-      // Fillet receiver-to-frame joint
-      for (M = [0, 1]) mirror([0,M,0])
-      translate([-CHAMFER_RADIUS,ReceiverOR()-ManifoldGap(),FrameBottomZ()+ManifoldGap()])
-      rotate([0,-90,0])
-      Fillet(h=FrameReceiverLength()+FrameBackLength()-CHAMFER_RADIUS, r=1/4, $fn=50);
-      
       // Bolt head support
       hull() {
-        translate([-FrameReceiverLength()-0.1875,0,0])
+        translate([-FrameReceiverLength(),0,0])
         FrameBoltIterator()
         rotate([0,-90,0])
-        ChamferedCylinder(r1=0.5+(1/32), r2=CHAMFER_RADIUS,
-                          h=0.3125, $fn=50,
+        ChamferedCylinder(r1=0.5+(1/16), r2=CHAMFER_RADIUS,
+                          h=0.3125,
                           teardropBottom=false);
     
-        translate([-FrameReceiverLength()+0.125,0,0])
+        translate([-FrameReceiverLength(),0,0])
+        FrameSupport(length=0.1875,
+                     chamferFront=false, 
+                     chamferBack=false);
+        
+        translate([-FrameReceiverLength()-0.3125,0,0])
         mirror([1,0,0])
-        FrameSupport(length=FrameBackLength()+0.125,
-                     chamferFront=true, 
-                     chamferBack=true);
+        ReceiverTopSegment(length=0.5);
       }
   }
     
