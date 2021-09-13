@@ -74,6 +74,9 @@ FCG_Disconnector_SPRING_CLEARANCE = 0.005;
 HAMMER_BOLT_SLEEVE_DIAMETER = 0.28125;
 HAMMER_BOLT_SLEEVE_CLEARANCE = 0.01;
 
+HAMMER_BOLT_HEAD = "flat"; // ["flat", "hex", "socket"]
+HAMMER_BOLT_NUT = "heatset"; // ["heatset", "none"]
+
 // Firing pin head thickness
 FIRING_PIN_HEAD_THICKNESS = 0.025; // 6D Box Nail
 
@@ -291,12 +294,20 @@ module FCG_DisconnectorSpring(debug=false, cutter=false, clearance=FCG_Disconnec
              FCG_DisconnectorPivotZ-0.125-0.125])
   ChamferedCylinder(r1=(FCG_Disconnector_SPRING_DIAMETER/2)+(cutter?clearance:0), r2=1/32, h=0.3125);
 }
-module FCG_HammerBolt(clearance=FCG_Hammer_BOLT_CLEARANCE, cutter=false, debug=false) {
+module FCG_HammerBolt(clearance=FCG_Hammer_BOLT_CLEARANCE, head=HAMMER_BOLT_HEAD, nut=HAMMER_BOLT_NUT, cutter=false, debug=false) {
+  boltHeadAdjustment = head == "hex"    ? BoltHexHeight(FCG_HammerBolt())
+                     : head == "socket" ? BoltSocketCapHeight(FCG_HammerBolt())
+                     : 0;
+  
   color("Silver") RenderIf(!cutter)
-  translate([FCG_HammerCockedX+ManifoldGap(),0,0])
+  translate([FCG_HammerCockedX+ManifoldGap()
+             -boltHeadAdjustment,0,0])
   rotate([0,90,0])
+  rotate(30)
   NutAndBolt(bolt=FCG_HammerBolt(), boltLength=4.5+ManifoldGap(2),
-             head="flat", nut="heatset", nutBackset=3.25, nutHeightExtra=(cutter?1:0),
+             head=head, nut=nut,
+             nutBackset=3.25+boltHeadAdjustment,
+             nutHeightExtra=(cutter?1:0),
              capOrientation=true,
              clearance=(cutter?clearance:0));
 }
