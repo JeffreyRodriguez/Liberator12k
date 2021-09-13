@@ -78,7 +78,7 @@ Full hardware list for the Minuteman receiver.
 Complete kits available in the 
 [\#Liberator12k.com Store](https://liberator12k.com/store/).
 
-| Purpose                     | Part                                         | Quantity |
+| Purpose                     | Part                                         | Quantity | 
 |-----------------------------|----------------------------------------------|----------|
 | Tension Bolt                | #8-32x12 Threaded Rod                        | 4        |
 | Tension Bolt Nut            | #8-32 Heatset Nut (Long)                     | 4        |
@@ -89,10 +89,10 @@ Complete kits available in the
 | Frame Bolt                  | 1/2-13x10 Hex Bolt                           | 2        |
 | Frame Nut                   | 1/2-13 Hex Nut                               | 4        |
 | Stock Pin                   | Universal Clevis Pin 1/4x2"                  | 1        |
-| Stock Pin Retaining Pin     | 6Dx2" Box Nail                               | 1        |
+| Stock Pin Retaining Pin     | 6Dx2" **Box** Nail                           | 1        |
 | Stock Backplate Nut         | 1/4-20 Heatset Nut (Short)                   | 2        |
 | Stock Buttpad Bolt          | 1/4-20x3-1/2" Flat Head Screw                | 2        |
-| Firing Pin                  | 6Dx2" Box Nail                               | 1        |
+| Firing Pin                  | 6Dx2" Box Nail, cut flush to 1.54" OAL       | 1        |
 | Firing Pin Spring           | 0.22" OD 0.625" Long (0.02" wire)            | 1        |
 | Hammer                      | 1/4-20x5" Flat Head Bolt                     | 1        |
 | Hammer Bolt                 | 1/4-20x5" Flat Head Bolt                     | 1        |
@@ -130,7 +130,7 @@ Full hardware list for the Minuteman receiver.
 | Stock Pin Retaining Pin   | 2.5x50mm Nail                                        | 1        |
 | Stock Backplate Nut       | M6 Heatset Nut (**M6xD9.5xL6**)                      | 2        |
 | Stock Buttpad Bolt        | **DIN7991** M6x90 Countersunk Bolt                   | 2        |
-| Firing Pin                | 2.5x50mm Nail                                        | 1        |
+| Firing Pin                | 2.5x50mm Nail, , cut flush to 40mm OAL               | 1        |
 | Firing Pin Spring         | 0.5mm Wire, 6mm OD, 20mm Length Spring (Cut to 16mm) | 1        |
 | Hammer                    | **DIN7991** M6x130 Countersunk Bolt                  | 1        |
 | Hammer Bolt               | **DIN7991** M6x130 Countersunk Bolt                  | 1        |

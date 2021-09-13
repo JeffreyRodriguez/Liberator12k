@@ -10,10 +10,13 @@ PLA, PLA+, ABS, PETG, Nylon, PC, POM - almost anything.
 The strength is in the steel.
 
 ### Print Settings
- These are the only vital Cura settings to override.
-  * 3mm walls
-  * 4mm top and bottom
-  * 20% infill
+These are the only vital Cura settings to override.
+
+* **Shell**
+  * Wall Thickness: 3mm
+  * Top/Bottom Thickness: 4mm
+  * Z Seam Alignment: Sharpest Corner
+  
 
 #### Layer Height
 0.2mm layers are a good balance between speed and quality.

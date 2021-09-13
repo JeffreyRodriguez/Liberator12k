@@ -43,7 +43,9 @@ $(SUBDIRS): FORCE
 	convert $(basename $@).png -quality 90 $@
 
 %.html: %.md
-	$(MDBIN) $(basename $@).md | sed 's/.md/.html/' > $@
+	$(MDBIN) $(basename $@).md \
+	  | sed 's/<table>/<table border="1">/g' \
+	  | sed 's/.md/.html/' > $@
 
 %.png %.stl: %.scad
 	$(eval PART=$(basename $(notdir $@)))

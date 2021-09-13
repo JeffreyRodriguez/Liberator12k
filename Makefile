@@ -34,13 +34,13 @@ Manual.pdf: Version.md $(MARKDOWN_HTML) $(MANUAL_IMAGES) FORCE
 	htmldoc --batch Manual.book
 
 Liberator12k.zip: $(DIST) FORCE
-	zip -r Liberator12k.zip $(DIST)
+	zip Liberator12k.zip $(DIST)
 	
-dist: $(SUBDIRS)
+dist: FORCE $(SUBDIRS)
 	$(MAKE) Liberator12k.zip
 
 clean-dir:
-	rm -rf $(DOCS) Liberator12k.zip
+	rm -rf $(MARKDOWN_HTML) Liberator12k.zip Version.md changelog.txt
 
 all: $(SUBDIRS) dist
 .PHONY: STL MARKDOWN_HTML dist

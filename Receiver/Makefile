@@ -25,6 +25,8 @@ FCG_thumbnails=$(addsuffix _thumb.jpg, $(FCG_Parts))
 Assembly_VIEWS=CAFE12 Minuteman FramedReceiver Stock Lower FCG
 ASSEMBLY_JPG=$(addprefix Assembly_,$(addsuffix .jpg, $(Assembly_VIEWS)))
 
+TARGETS = README.html $(ASSEMBLY_JPG) $(STLS) $(STL_PREVIEWS)
+
 Assembly_CAFE12.png: Assembly.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
 		--projection=p --camera=200,1500,200,0,0,0 \
@@ -83,5 +85,8 @@ $(addsuffix .html,$(Components)): $$(addsuffix _thumb.jpg, $$($$@_Parts))
 
 FCG Frame Stock: $$($$@_STL) $$($$@_thumbnails) $$@.html
 
-all: README.html $(ASSEMBLY_JPG) $(SUBDIRS) $(Components) $(STLS) $(STL_PREVIEWS)
+clean-dir:
+	rm -rf $(TARGETS)
+
+all: $(SUBDIRS) $(Components) $(TARGETS)
  
