@@ -1,5 +1,6 @@
 use <../../Meta/Debug.scad>;
 use <../../Meta/Manifold.scad>;
+use <../../Meta/Units.scad>;
 use <../../Meta/Resolution.scad>;
 use <../../Meta/RenderIf.scad>;
 
