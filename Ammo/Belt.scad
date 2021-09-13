@@ -1,8 +1,13 @@
 use <../Meta/Manifold.scad>;
+use <../Meta/RenderIf.scad>;
+use <../Meta/Units.scad>;
+use <../Meta/Resolution.scad>;
 use <../Shapes/Chamfer.scad>;
 use <../Shapes/Semicircle.scad>;
 use <../Shapes/Teardrop.scad>;
 use <../Shapes/ZigZag.scad>;
+
+_RENDER = ""; // ["", "BeltLink", "Belt_Link3", "BeltPetal"]
 
 barrelDiameter = 1;
 barrelRadius = barrelDiameter/2;
@@ -10,7 +15,7 @@ barrelClearance = 0.01;
 shellRadius=0.8/2;
 shellRimRadius = 0.88/2;
 shellRimWidth = 0.065;
-shellLength = 3;
+shellLength = 2.75;
 
 rimOffset = 0.0625;
 rimBlockHeight = 0.5;
@@ -18,7 +23,7 @@ wall=0.0625;
 height=1.5;
 chamferRadius=1/32;
 pinSupportRadius=0.1875;
-pinRadius = 0.05/2;
+pinRadius = 3/32/2;
 pinClearance = 0.005;
 pinLength = 0.75;
 clearance=0.01;
@@ -26,20 +31,28 @@ slotLength = 0.5;
 slotWidth = 0.1875;
 slotRadius = slotWidth/2;
 slotOffset = rimBlockHeight+0.5;
-tabHeight = 0.25;
+tabHeight = 0.375;
 
 petalGap = (barrelRadius-shellRadius);
 spineExtension = petalGap+0.0625;//0.125;
-spineHeight = petalGap + spineExtension;
-pinOffset = shellRadius
-          + spineHeight
-          + petalGap
-          + wall
+
+spineHeight = petalGap
+            + spineExtension;
+
+vertexOffset = shellRadius
+             + spineHeight
+             + petalGap
+             + wall;
+             
+function BeltOffsetVertex() = vertexOffset
           + pinSupportRadius
-          + clearance;// barrelRadius + wall + pinSupportRadius;
+          + clearance;
 pivotAngle = -120;
 
-module Cartridge($fn=30) {
+$fs = UnitsFs()*ResolutionFs();
+
+
+module Cartridge() {
   CR=1/32;
   
   translate([0,0,rimOffset]) {
@@ -57,7 +70,6 @@ module Cartridge($fn=30) {
 
 module BeltLinkBand() {
   color("DimGrey") render()
-  translate([0,0,0.125])
   linear_extrude(height=rimBlockHeight/2, center=false)
   difference() {
     offset(r=1/32)
@@ -73,11 +85,13 @@ module BeltLinkBand() {
   }
 }
 
-module CarrierPetal(cutter=false, clearance=0.008, alternate=false, $fn=60) {
+module CarrierPetal(cutter=false, clearance=0.008, alternate=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
-  color((alternate?"Olive":"Tan")) render()
+  blockWidth = (shellRadius*2)*0.8;
+  
+  color((alternate?"Olive":"Tan")) RenderIf(!cutter)
   difference() {
     union() {
       
@@ -93,21 +107,20 @@ module CarrierPetal(cutter=false, clearance=0.008, alternate=false, $fn=60) {
       translate([0,0,height+rimBlockHeight+clearance])
       difference() {
         hull() {
-          linear_extrude(height=rimBlockHeight)
-          intersection() {
-            semicircle(od=barrelDiameter, angle=120, center=true);
-            
-            circle(r=barrelRadius);
-            
-            translate([cos(35)*shellRadius, -shellRadius*0.8])
-            square([barrelRadius, shellRadius*2*0.8]);
-          }
+          
+          translate([cos(35)*shellRadius, -(blockWidth/2),0])
+          ChamferedCube([0.125,
+                blockWidth,
+                rimBlockHeight],
+                r=1/32,
+                teardropTopXYZ=[0,0,0],
+                teardropXYZ=[0,0,0]);
       
           // Hull to meet the spine
-          translate([shellRadius+spineHeight,-(barrelRadius*sqrt(2)/4),0])
+          translate([shellRadius+spineHeight,-(slotWidth/2),0])
           mirror([1,0,0])
           ChamferedCube([0.25,
-                barrelRadius*sqrt(2)/2,
+                slotWidth,
                 (rimBlockHeight*1.8)],
                 r=1/16, teardropFlip=[true,true,true]);
         }
@@ -123,35 +136,27 @@ module CarrierPetal(cutter=false, clearance=0.008, alternate=false, $fn=60) {
                                teardropTop=true);
       }
       
-      // Rim Block
       if (!cutter)
       difference() {
+        
+      // Rim Block
         hull() {
-          linear_extrude(height=rimBlockHeight)
-          intersection() {
-            semicircle(od=barrelDiameter, angle=120, center=true);
-            
-            circle(r=barrelRadius);
-            
-            translate([cos(35)*shellRadius, -shellRadius*0.8])
-            square([barrelRadius, shellRadius*2*0.8]);
-          }
+          translate([cos(35)*shellRadius, -(blockWidth/2),0])
+          ChamferedCube([0.125,
+                blockWidth,
+                rimBlockHeight-clearance],
+                r=1/32,
+                teardropTopXYZ=[0,0,0],
+                teardropXYZ=[0,0,0]);
       
           // Hull to meet the spine
-          translate([shellRadius+spineHeight,-(barrelRadius*sqrt(2)/4),0])
+          translate([shellRadius+spineHeight,-(slotWidth/2),0])
           mirror([1,0,0])
           ChamferedCube([barrelRadius-shellRadius+0.125,
-                barrelRadius*sqrt(2)/2,
+                slotWidth,
                 rimBlockHeight],
                 r=1/16, teardropFlip=[true,true,true]);
         }
-        
-        // Chamfered shell hole
-        translate([0,0,0])
-        ChamferedCircularHole(r1=shellRadius, r2=shellRadius/4,
-                               h=rimBlockHeight, 
-                               chamferBottom=false,
-                               teardropTop=true);
         
         // Chamfered barrel hole
         translate([-(barrelRadius-shellRadius),0,0])
@@ -161,6 +166,11 @@ module CarrierPetal(cutter=false, clearance=0.008, alternate=false, $fn=60) {
                                teardropTop=true);
       }
     }
+    
+    // Chamfered base
+    ChamferedCircularHole(r1=shellRadius, r2=1/16,
+                           h=rimBlockHeight,
+                           chamferTop=false);
     
     Cartridge();
   }
@@ -189,21 +199,30 @@ module CarrierHole() {
   }
 }
 
-module BeltLinkBase($fn=60) {
+module BeltLinkBase() {
+  //!render()
   difference() {
     union() {
       
       hull() {
         
         // Round body
-        ChamferedCylinder(r1=barrelRadius+barrelClearance+wall, r2=chamferRadius, h=height);
+        ChamferedCylinder(r1=barrelRadius+barrelClearance+wall,
+                          r2=chamferRadius,
+                           h=height);
         
-        // Spine support
+        // Vertex
         for (R = [0,120, 240]) rotate(90+R)
-        translate([shellRadius,-(slotWidth/2)-wall,0])
-        ChamferedCube([spineHeight+petalGap+wall,
+        translate([0,-(slotWidth/2)-wall,0])
+        ChamferedCube([vertexOffset,
                        slotWidth+(wall*2),
                        height], r=1/32);
+        
+        // Wide flats
+        hull()
+        for (R = [0:120:360]) rotate(60+90+R)
+        translate([0,-1/2,0])
+        ChamferedCube([barrelRadius+barrelClearance+wall, 1, height], r=1/16);
       }
       
       children();
@@ -217,24 +236,39 @@ module BeltLinkBase($fn=60) {
 // * Prints *
 // **********
 
-module BeltLink(alternate=false, $fn=30) {
+module BeltLink(alternate=false) {
   color((alternate?"Tan":"Olive")) render()
   difference() {
     translate([0,0,rimBlockHeight])
     union() {
       BeltLinkBase() {
-      
-        // Pivot supports
-        for (Z = [0:tabHeight*2:height-tabHeight]) translate([0,0,Z])
-        for (COPY = [0, 1]) rotate(COPY ? pivotAngle :120) translate([0,0,tabHeight*COPY])
+          
+        // Pivot Forks
+        for (Z = [0,height-tabHeight]) translate([0,0,Z])
+        rotate(120)
         hull() {
           
-          ChamferedCylinder(r1=pinSupportRadius*2, r2=chamferRadius,
-                            h=tabHeight-clearance);
+          ChamferedCylinder(r1=pinSupportRadius*2,
+                            r2=chamferRadius,
+                            h=tabHeight);
           
-          translate([0,pinOffset,0])
+          translate([0,BeltOffsetVertex(),0])
           ChamferedCylinder(r1=pinSupportRadius, r2=chamferRadius,
-                            h=tabHeight-clearance);
+                            h=tabHeight);
+        }
+      
+        // Pivot Tab
+        rotate(pivotAngle) translate([0,0,tabHeight+clearance])
+        hull() {
+          height = height-((tabHeight+clearance)*2);
+          
+          ChamferedCylinder(r1=pinSupportRadius*2,
+                            r2=chamferRadius,
+                            h=height);
+          
+          translate([0,BeltOffsetVertex(),0])
+          ChamferedCylinder(r1=pinSupportRadius, r2=chamferRadius,
+                            h=height);
         }
       }
     }
@@ -246,18 +280,20 @@ module BeltLink(alternate=false, $fn=30) {
                             r2=wall/2, h=height);
     
       // Pivot pin hole
-      for (R = [120,-pivotAngle]) rotate(R)
-      translate([0,pinOffset,0])
-      cylinder(r=pinRadius+pinClearance, h=height, $fn=20);
+      for (R = [120,pivotAngle]) rotate(R)
+      translate([0,BeltOffsetVertex(),0])
+      cylinder(r=pinRadius+pinClearance, h=height);
+      
+      
     }
   }
 }
 
-module ReversePumpCylinder(shots=5, $fn=80) {
+module ReversePumpCylinder(shots=5) {
   render()
   translate([0,0,rimBlockHeight])
   difference() {
-    ChamferedCylinder(r1=3.5/2, r2=1/16, h=2.5);
+    ChamferedCylinder(r1=3.5/2, r2=1/16, h=1.5);
     
     for (R = [0:360/5:360]) rotate(R)
     translate([0,-1,0])
@@ -266,7 +302,7 @@ module ReversePumpCylinder(shots=5, $fn=80) {
     // ZigZag track
     //rotate(trackAngle)
     //rotate(360/positions)
-    ZigZag(radius=3.5/2, depth=3/16, width=0.25,
+    *ZigZag(radius=3.5/2, depth=3/16, width=0.25,
            positions=shots,
            extraTop=0, extraBottom=0,
            supportsTop=false, supportsBottom=false);
@@ -280,6 +316,8 @@ module ReversePumpCylinder(shots=5, $fn=80) {
     CarrierPetals(alternate=true);
   }
 }
+
+*!ReversePumpCylinder();
 
 module Stick(rounds=5) {
   
@@ -297,18 +335,24 @@ module Stick(rounds=5) {
   }
 }
 
-module Belt() {
-  for (X = [0,1])
-  translate([abs(pinOffset*2)*sin(120)*X,0,0]) {
+module Belt(rounds=3, offset=0) {
+  translate([-abs(BeltOffsetVertex()*2)*sin(120)*offset,0,0])
+  for (X = [0:rounds-1])
+  translate([abs(BeltOffsetVertex()*2)*sin(120)*X,0,0]) {
     alternate = (X%2!=0);
     
     // Pivot pin
     color("Silver") render()
     for (R = [120,pivotAngle]) rotate(R)
-    translate([0,pinOffset, rimBlockHeight])
-    cylinder(r=pinRadius, h=height, $fn=20);
+    translate([0,BeltOffsetVertex(), rimBlockHeight])
+    cylinder(r=pinRadius, h=height);
     
+    translate([0,0,2])
     BeltLinkBand();
+    
+    translate([0,0,0.25])
+    BeltLinkBand();
+    
     Cartridge();
     CarrierPetals(alternate=true);
     BeltLink(alternate=true);
@@ -319,8 +363,16 @@ scale(25.4)
 if ($preview) {
   Belt();
 } else {
+  if (_RENDER == "BeltLink")
   BeltLink();
   
-  *rotate([0,90,0])
+  if (_RENDER == "Belt_Link3")
+  for (R = [0:120:360]) rotate(R)
+  translate([0,1.02,0])
+  BeltLink();
+  
+  if (_RENDER == "BeltPetal")
+  translate([0,0,vertexOffset-spineExtension])
+  rotate([0,90,0])
   CarrierPetal();
 }

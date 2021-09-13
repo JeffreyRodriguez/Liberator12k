@@ -42,14 +42,16 @@ _RENDER = ""; // ["", "Prints/Receiver_LargeFrame", "Prints/Evolver_ReceiverFron
 
 _FOREGRIP = "Standard"; // ["Standard", "Vertical"]
 
+_SHOW_BELT = true;
 _SHOW_RECEIVER = true;
 _SHOW_LOWER_LUGS = true;
 _SHOW_LOWER = true;
-_SHOW_FCG = true;
+_SHOW_FCG = false;
 _SHOW_STOCK = true;
 _SHOW_RECEIVER_FRONT = true;
 _SHOW_RECOIL_PLATE = true;
-_SHOW_ACTION_ROD = true;
+_SHOW_ACTION_ROD = false;
+_SHOW_FOREND_SPACER = true;
 _SHOW_BARREL_SUPPORT = true;
 _SHOW_CYLINDER = true;
 _SHOW_FOREGRIP = true;
@@ -57,9 +59,9 @@ _SHOW_FRAME_SPACER = true;
 _SHOW_BARREL = true;
 
 _ALPHA_BARREL_SUPPORT = 1;     // [0:0.1:1]
-_ALPHA_FOREND = 1;             // [0:0.1:1]
+_ALPHA_FOREND_SPACER = 1;      // [0:0.1:1]
 _ALPHA_FOREGRIP = 1;           // [0:0.1:1]
-_ALPHA_RECEIVER_TUBE = 1;      // [0:0.1:1]
+_ALPHA_SPINDLE = 1;            // [0:0.1:1]
 _ALPHA_RECEIVER_COUPLING = 1;  // [0:0.1:1]
 _ALPHA_RECEIVER_FRONT = 1;     // [0:0.1:1]
 _ALPHA_RECOIL_PLATE_HOUSING=1; // [0:0.1:1]
@@ -67,10 +69,11 @@ _ALPHA_FCG = 1;                // [0:0.1:1]
 _ALPHA_STOCK = 1;              // [0:0.1:1]
 
 _CUTAWAY_RECOIL_PLATE = false;
+_CUTAWAY_BARREL = false;
 _CUTAWAY_BARREL_SUPPORT = false;
 _CUTAWAY_RECEIVER = false;
 _CUTAWAY_RECEIVER_FRONT = false;
-_CUTAWAY_FOREND = false;
+_CUTAWAY_FOREND_SPACER = false;
 _CUTAWAY_FOREGRIP = false;
 _CUTAWAY_FCG = false;
 _CUTAWAY_DISCONNECTOR = false;
@@ -101,7 +104,7 @@ CHAMBER_ID = 0.8101;
 /* [Branding] */
 BRANDING_MODEL_NAME = "E-VOLver";
 
-$fs = UnitsFs()*0.25;
+$fs = UnitsFs()*ResolutionFs();
 
 // Settings: Lengths
 function SpindleRadius() = SPINDLE_DIAMETER/2;
@@ -127,6 +130,9 @@ function RecoilSpreaderThickness() = 0.5;
 function BarrelSetScrew() = BoltSpec(GP_BOLT);
 assert(BarrelSetScrew(), "BarrelSetScrew() is undefined. Unknown GP_BOLT?");
 
+function ForendBolt() = BoltSpec(GP_BOLT);
+assert(ForendBolt(), "ForendBolt() is undefined. Unknown GP_BOLT?");
+
 function ForegripBolt() = BoltSpec(FOREGRIP_BOLT);
 assert(ForegripBolt(), "ForegripBolt() is undefined. Unknown FOREGRIP_BOLT?");
 
@@ -143,25 +149,56 @@ function BarrelDiameter(clearance=0)
 // Calculated: Lengths
 function ForendLength() = FrameExtension(length=FRAME_BOLT_LENGTH)
                         - ReceiverFrontLength();
+function SpindleLength() = 3.125;
+function SpindleSplineLength() = 0.5;
+function SpindleDriveLength() = 1.5;
+function SpindleInterlockLength() = 0.25;
+function SpindleInterlockRadius() = 0.75;
+function SpindleToothPitch() = 0.125;
+function SpindleSplineTeeth() = 21;
+function SpindlePitchRadius() = pitch_radius(
+                                  SpindleToothPitch(),
+                                  SpindleSplineTeeth());
+
+function SpindleGearRadius(clearance=0) = outer_radius(
+                                 SpindleToothPitch(),
+                                 SpindleSplineTeeth(), clearance);
+
+function SpindleGearRootRadius(clearance=0) = root_radius(
+                                 SpindleToothPitch(),
+                                 SpindleSplineTeeth(), clearance);
+                                 
 
 // Calculated: Positions
 function BarrelMinX() = ShellRimLength();
-function ForendMinX() = 0;
 function ForendMaxX() = ForendLength();
 function ForegripMinX() = ForendMaxX()+ForegripGap()+ActionRodTravel()+1.5;
+function SpindleMaxX() = SpindleLength()+SpindleInterlockLength();                        
+function ForendBoltZ() = TensionRodBottomZ()-0.375;
+function ForendBoltY() = 1;
 
-function Evolver_BarrelSupportLength() = ForendMaxX()-ForendMinX();
+function ExtractorLength() = 0.25;
+function ExtractorWidth() = 0.75;
+
+function ForendSpacerLength() = SpindleLength();
+function Evolver_BarrelSupportLength() = SpindleInterlockLength()+SpindleSplineLength()+0.25;
 echo("Barrel Support Length: ", Evolver_BarrelSupportLength());
+
+
+pawlPivotY = -0.625;
+pawlPivotZ = -0.375;
+pawlPivotAngle = -15;
+pawlPinRadius = UnitsMetric(2.5)/2;
 
 //************
 //* Vitamins *
 //************
-module Evolver_Barrel(barrelLength=BarrelLength(), clearance=BARREL_CLEARANCE, cutter=false, alpha=1, cutaway=false) {
+module Evolver_Barrel(barrelLength=BarrelLength(), clearance=BARREL_CLEARANCE, cutter=false, alpha=1, debug=false) {
 
   clear = (cutter ? clearance : 0);
   clear2 = clear*2;
 
-  color("Silver", alpha) Cutaway(cutaway) RenderIf(!cutter)
+  color("Silver", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
   translate([(cutter?0:BarrelMinX()),0,0])
   rotate([0,90,0])
   difference() {
@@ -171,8 +208,7 @@ module Evolver_Barrel(barrelLength=BarrelLength(), clearance=BARREL_CLEARANCE, c
 
     if (!cutter)
     cylinder(r=CHAMBER_ID/2,
-             h=barrelLength,
-             $fn=Resolution(20,50));
+             h=barrelLength);
   }
 }
 
@@ -183,14 +219,51 @@ module Evolver_ForegripBolts(template=false, bolt=ForegripBolt(), cutter=false) 
   Bolt(bolt=bolt, capOrientation=true, head="socket",
        length=(cutter?ActionRodZ()+0.375:5/8), teardrop=cutter, teardropTruncated=cutter);
 }
+module Evolver_SpindlePins(cutter=false, clearance=0.003) {
+  clear = cutter? clearance : 0;
+  clear2 = clear*2;
+  
+  color("Silver")
+  RenderIf(!cutter)
+  translate([SpindleLength(),0,SpindleZ()])
+  rotate([0,90,0])
+  for (R = [0:120:360]) rotate(R)
+  translate([0.25, 0, -clear])
+  cylinder(r=(UnitsMetric(2.5)/2)+clear, h=3/4+(cutter?1:0)+clear2);
+}
+
+
+module Evolver_SpindlePawlPin(cutter=false, clearance=0.003) {
+  clear = cutter? clearance : 0;
+  clear2 = clear*2;
+  
+  color("Silver")
+  RenderIf(!cutter)
+  translate([SpindleLength()-clear,pawlPivotY,pawlPivotZ])
+  rotate([0,90,0])
+  cylinder(r=pawlPinRadius+clear, h=3/4+clear2+(cutter?5:0));
+}
+
+
+
+//**********
+//* Motion *
+//**********
+module Evolver_SpindleRatchetPawlPivot(factor=0, angle=pawlPivotAngle) {
+  translate([0,pawlPivotY,pawlPivotZ])
+  rotate([factor*angle,0,0])
+  translate([0,-pawlPivotY,-pawlPivotZ])
+  children();
+}
+
 //*****************
 //* Printed Parts *
 //*****************
-module Evolver_ReceiverFront(contoured=true, cutaway=_CUTAWAY_RECEIVER_FRONT, alpha=_ALPHA_RECEIVER_FRONT) {
+module Evolver_ReceiverFront(contoured=true, debug=_CUTAWAY_RECEIVER_FRONT, alpha=_ALPHA_RECEIVER_FRONT) {
   length = abs(RecoilSpreaderThickness());
 
   color("Chocolate", alpha)
-  render() Cutaway(cutaway)
+  render() DebugHalf(enabled=debug)
   difference() {
     union() {
       hull() {
@@ -232,7 +305,24 @@ module Evolver_ReceiverFront(contoured=true, cutaway=_CUTAWAY_RECEIVER_FRONT, al
   }
 }
 
-module Evolver_BarrelSupport(doRender=true, cutaway=false, alpha=_ALPHA_FOREND, $fn=Resolution(30,100)) {
+module Evolver_ForendSpacer(length=ForendSpacerLength(), doRender=true, debug=false, alpha=1) {
+  
+  color("Tan", alpha)
+  RenderIf(doRender) DebugHalf(enabled=debug)
+  difference() {
+    
+    FrameSupport(length=length, chamferRadius=1/16, chamferFront=true, teardropFront=true);
+    
+    // Belt clearance
+    translate([-ManifoldGap(),0,SpindleZ()])
+    rotate([0,90,0])
+    cylinder(r=3.6875/2, h=3.125+ManifoldGap());
+    
+    FrameBolts(cutter=true);
+  }
+}
+
+module Evolver_BarrelSupport(length=Evolver_BarrelSupportLength(), doRender=true, debug=false, alpha=_ALPHA_FOREND_SPACER) {
   extraBottom=0;
 
   // Branding text
@@ -256,7 +346,7 @@ module Evolver_BarrelSupport(doRender=true, cutaway=false, alpha=_ALPHA_FOREND, 
   }
 
   color("Tan", alpha)
-  RenderIf(doRender) Cutaway(cutaway)
+  RenderIf(doRender) DebugHalf(enabled=debug)
   difference() {
     union() {
 
@@ -295,8 +385,6 @@ module Evolver_BarrelSupport(doRender=true, cutaway=false, alpha=_ALPHA_FOREND, 
 
     FrameBolts(cutter=true);
 
-    ActionRod(cutter=true);
-
     Evolver_Barrel(cutter=true);
   }
 }
@@ -331,15 +419,26 @@ module Evolver_VerticalForegrip(length=2, cutaway=true, alpha=1) {
     Evolver_Barrel(cutter=true);
     Evolver_ForegripBolts(cutter=true);
   }
+  
+  // Spindle hole
+  if (!cutter)
+  translate([SpindleLength()+SpindleInterlockLength(),0,SpindleZ()])
+  rotate([0,90,0])
+  ChamferedCircularHole(r1=(0.3125/2)+0.007, r2=1/32,
+                        h=length);
 }
 
-module Evolver_Foregrip(length=PumpGripLength(), cutaway=false, alpha=1) {
-  color("Tan", alpha) render() Cutaway(cutaway)
+module Evolver_SpindleExtractor(length=0.5, cutter=false, clearance=0.01, debug=false, alpha=1) {
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
+  
+  color("Silver", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
 
     // Body around the barrel
     union() {
-      translate([ForegripMinX(),0,0])
+    
+      translate([0,0,SpindleZ()])
       rotate([0,90,0])
       PumpGrip(length=length);
 
@@ -360,6 +459,101 @@ module Evolver_Foregrip(length=PumpGripLength(), cutaway=false, alpha=1) {
   }
 }
 
+
+module Evolver_SpindleRatchetPawlSpacer(length=0.25, cutter=false, clearance=0.01, debug=false, alpha=1) {
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
+  CR = 1/16;
+  clearCR = cutter ? CR : 0;
+  
+  length = length+clear2;
+  offsetX = SpindleLength()+SpindleInterlockLength()-clear;
+  
+  color("Olive", alpha)
+  RenderIf(!cutter) DebugHalf(enabled=debug)
+  difference() {
+    // Pivot
+    translate([offsetX,pawlPivotY,pawlPivotZ])
+    rotate([0,90,0])
+    ChamferedCylinder(r1=0.1875+clear,
+                      r2=1/32,
+                      h=length,
+                      teardropTop=true);
+    
+    // Pawl pivot pin
+    if (!cutter)
+    Evolver_SpindlePawlPin(cutter=true);
+  }
+}
+module Evolver_SpindleZigZag(cutter=false, clearance=0.01, debug=false, alpha=1) {
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
+  
+  color("Chocolate", alpha)
+  RenderIf(!cutter) DebugHalf(enabled=debug)
+  difference() {
+    translate([SpindleMaxX(),0,SpindleZ()])
+    rotate([0,90,0])
+    ChamferedCylinder(r1=SpindleGearRadius()+clear,
+                      r2=1/16,
+                      h=1+clear2,
+                      teardropTop=true);
+    if (!cutter)
+    Evolver_SpindlePins(cutter=true);
+    
+    if (!cutter)
+    translate([SpindleMaxX(),0,SpindleZ()])
+    rotate([0,90,0])
+    rotate(60)
+    ZigZag(radius=SpindleGearRadius(), mirrored=true,
+           depth=0.125, width=0.125, positions=3,
+           extraTop=0, extraBottom=0,
+           supportsTop=false, supportsBottom=false);
+  }
+}
+module Evolver_SpindleDrive(cutter=false, clearance=0.007, debug=false, alpha=1) {
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
+  
+  color("Olive", alpha) render() DebugHalf(enabled=debug)
+  translate([0,0,SpindleZ()])
+  for (R = [110, -110]) rotate([R,0,0])
+  translate([SpindleLength()+SpindleInterlockLength(),0,-SpindlePitchRadius()*2])
+  rotate([0,90,0])
+  union() {
+    translate([0,0,SpindleSplineLength()])
+    difference() {
+      ChamferedCylinder(
+          r1=SpindleGearRadius()+clear,
+          r2=1/16,
+          h=SpindleDriveLength()+clear2,
+          chamferBottom=false);
+      
+      if (!cutter)
+      rotate(360/SpindleSplineTeeth())
+      rotate(-R)
+      ZigZag(radius=SpindleGearRadius(),
+             depth=0.125, width=0.125, positions=3,
+             extraTop=1, extraBottom=0.5,
+             supportsTop=false, supportsBottom=false);
+    }
+    
+    // Gear
+    translate([0,0,SpindleSplineLength()/2])
+    intersection() {
+      ChamferedCylinder(
+          r1=SpindleGearRadius()+clear,
+          r2=1/16,
+          center=true,
+          h=SpindleSplineLength()+clear2,
+          chamferTop=false);
+      
+      if (!cutter)
+      rotate(360/SpindleSplineTeeth())
+      gear(SpindleToothPitch(),SpindleSplineTeeth(),SpindleSplineLength(),0,0);
+    }
+  }
+}
 module Evolver_ActionRodJig() {
   height=0.75;
   width=0.75;
@@ -424,7 +618,7 @@ if ($preview) {
 
       Receiver_LargeFrameAssembly(
         length=FRAME_BOLT_LENGTH,
-        cutaway=_CUTAWAY_RECEIVER);
+        debug=_CUTAWAY_RECEIVER);
     }
 
     if (_SHOW_FCG)
@@ -459,8 +653,12 @@ if ($preview) {
       StockAssembly();
     }
   }
+  
+  *translate([0,0,0])
+  rotate([0,90,0]) rotate(90)
+  Belt(rounds=1,offset=0);
 
-  EvolverForendAssembly(cutaway=false);
+  EvolverForendAssembly(debug=false);
 } else {
 
   if (_RENDER == "Prints/Evolver_ReceiverFront")
