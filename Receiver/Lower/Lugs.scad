@@ -1,5 +1,6 @@
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
+use <../../Meta/Resolution.scad>;
 
 use <../../Shapes/Components/T Lug.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;
