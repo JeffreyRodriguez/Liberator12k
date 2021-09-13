@@ -29,7 +29,7 @@ module ZigZag(supportsTop=true, supportsBottom=true,
            width=DEFAULT_ZIGZAG_WIDTH,
            positions=DEFAULT_ZIGZAG_POSITIONS,
            extraTop=0, extraBottom=0,
-           twistRate=0.8,
+           twistRate=0.8, mirrored=false,
            $fn=Resolution(30,120)) {
              
   zigZagCircumference = (radius+depth)*2*PI;
@@ -45,6 +45,7 @@ module ZigZag(supportsTop=true, supportsBottom=true,
          + (width/2*sqrt(2));
   
 
+  mirror([0,(mirrored?1:0),0])
   difference() {
     union() {
       for (i=[0:positions-1]){
