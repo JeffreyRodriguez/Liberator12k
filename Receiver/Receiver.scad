@@ -165,14 +165,14 @@ module ReceiverRoundSlot(length=ReceiverLength(), clearance=ReceiverSlotClearanc
   
   // ID cutout
   rotate([0,-90,0])
-  cylinder(r=ReceiverIR()+clearance, h=length, $fn=Resolution(40,80));
+  cylinder(r=ReceiverIR()+clearance, h=length);
   
   rotate([0,-90,0])
-  HoleChamfer(r1=ReceiverIR(), r2=3/32, teardrop=true, $fn=80);
+  HoleChamfer(r1=ReceiverIR(), r2=3/32, teardrop=true);
   
   translate([-length,0,0])
   rotate([0,90,0])
-  HoleChamfer(r1=ReceiverIR(), r2=3/32, teardrop=true, $fn=80);
+  HoleChamfer(r1=ReceiverIR(), r2=3/32, teardrop=true);
 }
 module ReceiverBottomSlot(length=ReceiverLength(), clearance=ReceiverSlotClearance(), chamferBottom=true) {
   
@@ -204,7 +204,7 @@ module ReceiverBottomSlot(length=ReceiverLength(), clearance=ReceiverSlotClearan
   for (M = [0,1]) mirror([0,M])
   translate([0,(ReceiverBottomSlotWidth()/2)-0.125+clearance])
   rotate(-90)
-  RoundedBoolean(r=1/16, edgeOffset=0, $fn=20);
+  RoundedBoolean(r=1/16, edgeOffset=0);
   
   // Top edge curves
   translate([0,0,ReceiverBottomZ()+0.25-clearance])
@@ -212,7 +212,7 @@ module ReceiverBottomSlot(length=ReceiverLength(), clearance=ReceiverSlotClearan
   linear_extrude(length)
   for (M = [0,1]) mirror([0,M])
   translate([0,(ReceiverBottomSlotWidth()/2)-0.125+clearance])
-  RoundedBoolean(r=1/32, edgeOffset=0, $fn=20);
+  RoundedBoolean(r=1/32, edgeOffset=0);
 }
 
 module ReceiverTopSlot(length=ReceiverLength(), width=ReceiverTopSlotWidth(), height=ReceiverTopSlotHeight(), clearance=ReceiverSlotClearance()) {
@@ -267,7 +267,7 @@ module ReceiverTopSegment(length=ReceiverLength(), chamferFront=true, chamferBac
   for (Y = [1,-1]) 
   translate([0, Y*(TensionRodTopOffsetSide()-CR), ReceiverTopZ()-CR])
   rotate([0,-90,0])
-  ChamferedCylinder(r1=CR, r2=1/16, h=length, $fn=50,
+  ChamferedCylinder(r1=CR, r2=1/16, h=length,
                     chamferBottom=chamferFront, chamferTop=chamferBack,
                     teardropBottom=teardropFront, teardropTop=teardropBack);
 }
@@ -279,13 +279,13 @@ module ReceiverSegment(length=1, chamferFront=false, chamferBack=false, highTop=
     rotate([0,-90,0])
     ChamferedCylinder(r1=ReceiverOR(), r2=1/16,h=length,
                       chamferBottom=chamferFront, chamferTop=chamferBack,
-                      $fn=Resolution(50,120));
+                      teardropTop=true);
     
     // Tension bolt supports
     TensionBoltIterator()
     ChamferedCylinder(r1=WallTensionRod(), r2=1/16, h=length,
                       chamferBottom=chamferFront, chamferTop=chamferBack,
-                      teardropTop=true, $fn=Resolution(20,40));
+                      teardropTop=true);
     
     // Top cover
     if (highTop)
@@ -333,7 +333,7 @@ module Receiver(receiverLength=ReceiverLength(), doRender=true, alpha=1, debug=f
       for (M = [0, 1]) mirror([0,M,0])
       translate([-CHAMFER_RADIUS,ReceiverOR()-ManifoldGap(),Receiver_MlokSideZ()+(mlokSupportHeight/2)-ManifoldGap()])
       rotate([90,0,0]) rotate([0,-90,0])
-      Fillet(h=UnitsMetric((32*2)+8)+1-(1/8), r=1/8, $fn=50);
+      Fillet(h=UnitsMetric((32*2)+8)+1-(1/8), r=1/8);
       
       
       children();
