@@ -231,7 +231,7 @@ function FCG_RecoilPlateHoles(spindleZ=-1) = [
 //$t= AnimationDebug(ANIMATION_STEP_CHARGE);
 //$t= AnimationDebug(ANIMATION_STEP_CHARGER_RESET, start=0.85);
 
-$fs = UnitsFs()*0.25;
+$fs = UnitsFs()*ResolutionFs();
 
 //**********
 //* Shapes *

@@ -27,6 +27,8 @@ _CUTAWAY_RECEIVER = true;
 _CUTAWAY_LOWERMOUNT_FRONT = false;
 _CUTAWAY_LOWERMOUNT_REAR = false;
 
+$fs = UnitsFs()*ResolutionFs();
+
 //************
 //* Vitamins *
 //************

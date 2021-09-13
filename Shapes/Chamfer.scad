@@ -3,7 +3,7 @@ use <../Meta/Resolution.scad>;
 use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
 
-$fs = UnitsFs()*0.25;
+$fs = UnitsFs()*ResolutionFs();
 
 
 module TangentBoolean(edgeOffset=1, edgeSign=-1,

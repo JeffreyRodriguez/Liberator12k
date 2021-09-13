@@ -1,7 +1,7 @@
 use <../Meta/Resolution.scad>;
 use <../Meta/Units.scad>;
 
-$fs = UnitsFs()*0.25;
+$fs = UnitsFs()*ResolutionFs();
 
 module Teardrop(r=1, rotation=0, enabled=true, truncated=false) {
   side = r*sqrt(2)/2;

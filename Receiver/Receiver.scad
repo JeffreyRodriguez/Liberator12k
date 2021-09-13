@@ -41,6 +41,8 @@ TENSION_BOLT_LENGTH    = 12;
 // Picatinny rail mounts on top of receiver w/ M-LOK
 MLOK_BOLT           = "#8-32";   // ["M4", "#8-32", "#10-24", "1/4\"-20"]
 
+$fs = UnitsFs()*ResolutionFs();
+
 // Settings: Vitamins
 function TensionBolt() = BoltSpec(TENSION_BOLT);
 assert(TensionBolt(), "TensionBolt() is undefined. Unknown TENSION_BOLT?");

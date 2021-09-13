@@ -50,7 +50,7 @@ Stock_Backplate_CLEARANCE = 0.015;
 
 /* [Fine Tuning] */
 
-$fs = UnitsFs()*0.25;
+$fs = UnitsFs()*ResolutionFs();
 
 
 function ButtpadBolt() = BoltSpec(BUTTPAD_BOLT);

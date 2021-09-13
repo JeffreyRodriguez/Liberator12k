@@ -38,6 +38,8 @@ LOWER_BOLT_HEAD = "flat"; // ["socket", "flat"]
 LOWER_BOLT_NUT = "heatset"; // ["hex", "heatset", "heatset-long"]
 
 function LowerCenterWidth() = 0.51;
+$fs = UnitsFs()*ResolutionFs();
+
 function LowerOffsetZ() = ReceiverBottomZ();
 
 function LowerBolt() = BoltSpec(LOWER_BOLT);

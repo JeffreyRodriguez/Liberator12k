@@ -17,6 +17,7 @@ function GripCeilingZ() = -GripCeiling();
 
 function LowerMaxWidth() = GripWidth()+0.25;
 function LowerMaxY() = (GripWidth()/2)+0.125;
+$fs = UnitsFs()*ResolutionFs();
 
 function ReceiverLugWidth() = 1;
 

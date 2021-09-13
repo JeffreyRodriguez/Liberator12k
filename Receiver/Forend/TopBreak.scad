@@ -96,7 +96,7 @@ WALL_BARREL = 0.1875;
 /* [Branding] */
 BRANDING_MODEL_NAME = "CAFE12";
 
-$fs = UnitsFs()*0.5;
+$fs = UnitsFs()*ResolutionFs();
 
 // Settings: Vitamins
 function BarrelSetScrew() = BoltSpec(BARREL_SET_SCREW);
