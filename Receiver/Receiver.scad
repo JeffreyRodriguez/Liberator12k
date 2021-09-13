@@ -98,6 +98,8 @@ function ReceiverTopZ() = TensionRodTopZ()+WallTensionRod()+0.625;
 function Receiver_MlokSideY() = 1.25;
 function Receiver_MlokSideZ() = ReceiverBottomZ()+0.5;
 
+function SpindleZ() = -1;
+
 // ************
 // * Vitamins *
 // ************
