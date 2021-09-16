@@ -1,0 +1,23 @@
+{
+    "parameterSets": {
+        "design default values": {
+            "BORE_DIAMETER": "0.729",
+            "CHAMBER_DIAMETER": "0.81",
+            "CHAMBER_LENGTH": "2.75",
+            "INTERNAL_TAPER_LENGTH": "0.375",
+            "RIM_DIAMETER": "0.87",
+            "RIM_HEIGHT": "0.0576",
+            "RIM_TAPER_HEIGHT": "0.02"
+        },
+        "12ga 4130": {
+            "BORE_DIAMETER": "0.729",
+            "CHAMBER_DIAMETER": "0.81",
+            "CHAMBER_LENGTH": "2.75",
+            "INTERNAL_TAPER_LENGTH": "0.375",
+            "RIM_DIAMETER": "0.87",
+            "RIM_HEIGHT": "0.0576",
+            "RIM_TAPER_HEIGHT": "0.02"
+        }
+    },
+    "fileFormatVersion": "1"
+}
