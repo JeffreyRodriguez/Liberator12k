@@ -6,6 +6,9 @@ use <../Meta/Units.scad>;
 use <../Shapes/Semicircle.scad>;
 use <../Shapes/Teardrop.scad>;
 
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
+
 RADIUS=2; // "2"
 DEPTH=0.1875; // "0.1875"
 WIDTH=0.25; // "0.25"
@@ -17,6 +20,7 @@ module HelixSegment(radius=RADIUS, depth=DEPTH, width=WIDTH,
                     topExtra=0.125, bottomExtra=0.125,
                     teardropTop=false, teardropTopTruncated=true,
                     teardropBottom=false, teardropBottomTruncated=true,
+                    slices=Resolution(30,50),
                     verbose=false) {
 
   //twist_angle = 90*(2-twist_rate);
@@ -54,7 +58,7 @@ module HelixSegment(radius=RADIUS, depth=DEPTH, width=WIDTH,
     union() {
       translate([0,0,-width/2])
       linear_extrude(height=height,
-                     slices=Resolution(30, 50),
+                     slices=slices,
                      twist = angle+twistAngleExtra)
       translate([radius-(depth*2),-width/2])
       square([depth*4, twistedWidth]);
@@ -93,8 +97,7 @@ module HelixSegment(radius=RADIUS, depth=DEPTH, width=WIDTH,
     union() {
       semidonut(major=(radius+depth)*2,
                 minor=(radius-depth)*2,
-                angle=angle,
-                $fn=200);
+                angle=angle);
       
       // This is a little hacky, but I'm done fucking with it for now.
       for (R = [0,-angle]) rotate(R)
@@ -107,7 +110,7 @@ module HelixSegment(radius=RADIUS, depth=DEPTH, width=WIDTH,
 // Sample Cases
 render()
 difference() {
-  cylinder(r=RADIUS, h=(RADIUS/TWIST_RATE)+2, $fn=50);
+  cylinder(r=RADIUS, h=(RADIUS/TWIST_RATE)+2);
   
   HelixSegment(topExtra=0, bottomExtra=0,
                teardropTop=false, teardropBottom=false);

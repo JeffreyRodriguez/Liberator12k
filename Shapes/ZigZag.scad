@@ -1,10 +1,14 @@
 include<../Meta/Animation.scad>;
 
 use <../Meta/Resolution.scad>;
+use <../Meta/Units.scad>;
 use <../Meta/Manifold.scad>;
 
 use <../Shapes/Semicircle.scad>;
 use <../Shapes/Helix.scad>;
+
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
 
 DEFAULT_ZIGZAG_DIAMETER  = 3.6252;
 DEFAULT_ZIGZAG_POSITIONS = 6;
@@ -29,8 +33,7 @@ module ZigZag(supportsTop=true, supportsBottom=true,
            width=DEFAULT_ZIGZAG_WIDTH,
            positions=DEFAULT_ZIGZAG_POSITIONS,
            extraTop=0, extraBottom=0,
-           twistRate=0.8, mirrored=false,
-           $fn=Resolution(30,120)) {
+           twistRate=0.8, mirrored=false) {
              
   zigZagCircumference = (radius+depth)*2*PI;
   slotAngle = (width/zigZagCircumference)*360;

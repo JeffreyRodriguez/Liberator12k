@@ -3,6 +3,7 @@ use <../Meta/Resolution.scad>;
 use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
 
+$fa = ResolutionFa();
 $fs = UnitsFs()*ResolutionFs();
 
 
@@ -244,6 +245,7 @@ module ChamferedCylinder(r1=0.5, r2=0.25, h=1,
                          chamferBottom=true, chamferTop=true,
                          teardropBottom=true, teardropTop=false,
                          center=false) {
+  hull()
   translate([0,0,(center ? -h/2 : 0)])
   difference() {
     cylinder(r=r1, h=h);

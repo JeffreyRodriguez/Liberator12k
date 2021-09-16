@@ -2,3 +2,4 @@
 RESOLUTION = 1;
 function Resolution(low, high) = RESOLUTION == 0 ? low : high;
 function ResolutionFs() = Resolution(1, 0.25);
+function ResolutionFa() = Resolution(10, 4);
