@@ -7,7 +7,6 @@ use <../../Meta/Resolution.scad>;
 use <../../Meta/RenderIf.scad>;
 
 use <../../Shapes/Chamfer.scad>;
-use <../../Shapes/Bearing Surface.scad>;
 use <../../Shapes/MLOK.scad>;
 use <../../Shapes/Teardrop.scad>;
 use <../../Shapes/TeardropTorus.scad>;
@@ -50,7 +49,6 @@ _SHOW_RECEIVER_FRONT = true;
 _SHOW_FCG = true;
 _SHOW_STOCK = true;
 _SHOW_LOWER = true;
-_SHOW_LOWER_MOUNT = true;
 _SHOW_TOPBREAK_LATCH = true;
 
 _ALPHA_FOREND = 1;  // [0:0.1:1]
@@ -61,6 +59,7 @@ _ALPHA_TOPBREAK_EXTRACTOR = 1; // [0:0.1:1]
 _ALPHA_RECEIVER_FRONT=1; // [0:0.1:1]
 
 _CUTAWAY_RECEIVER = false;
+_CUTAWAY_LOWER = false;
 _CUTAWAY_BARREL = false;
 _CUTAWAY_FOREND = false;
 _CUTAWAY_COLLAR = false;
@@ -780,15 +779,8 @@ module TopBreak_BarrelSleeveFixture() {
   }
 }
 
-// Assemblies
-module TopBreak_ExtractorAssembly(debug=false, alpha=1, cutter=false) {
-  TopBreak_ExtractorBit(cutter=cutter);
-  TopBreak_ExtractorRetainer(cutter=cutter);
-  TopBreak_Extractor(debug=debug, alpha=alpha, cutter=cutter);
-}
-
-module BreakActionAssembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontAlpha=1, pivotFactor=0, extractFactor=0, chargeFactor=0, lockFactor=0, stock=true, tailcap=false, debug=undef) {
-
+// Assembly
+module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontAlpha=1, pivotFactor=0, extractFactor=0, chargeFactor=0, lockFactor=0, stock=true, tailcap=false, debug=undef) {
 
   if (_SHOW_FCG)
   translate([-TopBreak_ReceiverFrontLength(),0,0]) {
@@ -816,7 +808,10 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFron
     
     if (_SHOW_TOPBREAK_EXTRACTOR)
     translate([-TopBreak_ExtractorTravel()*extractFactor,0,0]) {
-      TopBreak_ExtractorAssembly(debug=debug == true || _CUTAWAY_TOPBREAK_EXTRACTOR, alpha=_ALPHA_TOPBREAK_EXTRACTOR);
+      TopBreak_ExtractorBit();
+      TopBreak_ExtractorRetainer();
+      TopBreak_Extractor(debug=debug == true || _CUTAWAY_TOPBREAK_EXTRACTOR,
+                         alpha=_ALPHA_TOPBREAK_EXTRACTOR);
     }
     
     TopBreak_MlokBolts();
@@ -835,19 +830,19 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFron
 }
 
 
-
 scale(25.4)
 if ($preview) {
   
   translate([-TopBreak_ReceiverFrontLength(),0,0]) {
     
-    if (_SHOW_LOWER_MOUNT)
-    LowerMount();
 
-    if (_SHOW_LOWER)
-    Lower(showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true);
+    if (_SHOW_LOWER) {
+      Lower(showLeft=!_CUTAWAY_LOWER);
+      LowerMount(debug=_CUTAWAY_LOWER);
+    }
     
     if (_SHOW_RECEIVER) {
+      if (_SHOW_FRAME)
       TensionBolts();
       
       Receiver_LargeFrameAssembly(
@@ -861,7 +856,7 @@ if ($preview) {
     }
   }
   
-  BreakActionAssembly(pivotFactor=Animate(ANIMATION_STEP_UNLOAD)
+  TopBreak_Assembly(pivotFactor=Animate(ANIMATION_STEP_UNLOAD)
                                  -Animate(ANIMATION_STEP_LOAD),
                       chargeFactor=Animate(ANIMATION_STEP_CHARGE)
                                  -Animate(ANIMATION_STEP_CHARGER_RESET),
@@ -870,6 +865,7 @@ if ($preview) {
                       extractFactor=Animate(ANIMATION_STEP_UNLOAD)
                                  -SubAnimate(ANIMATION_STEP_LOAD, end=0.25)) {
   
+    if (_SHOW_FOREGRIP)
     translate([ForendLength()+1,0,0]){
       
       translate([UnitsMetric(10)+0.25,0,-MlokForegripLength()-BarrelRadius()-0.5])
