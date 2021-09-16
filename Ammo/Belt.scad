@@ -52,23 +52,23 @@ pivotAngle = -120;
 $fs = UnitsFs()*ResolutionFs();
 
 
-module Cartridge() {
+module Cartridge(cutter=false) {
   CR=1/32;
   
   translate([0,0,rimOffset]) {
     // Rim
-    color("Gold")
+    color("Gold") RenderIf(!cutter)
     cylinder(r=shellRimRadius, h=shellRimWidth);
     
     // Body
-    color("Red")
+    color("Red") RenderIf(!cutter)
     translate([0,0,ManifoldGap(2)])
     cylinder(r=shellRadius, h=shellLength);
   }
 }
 
 
-module BeltLinkBand() {
+module BeltLinkBand(AF=0) {
   color("DimGrey") render()
   linear_extrude(height=rimBlockHeight/2, center=false)
   difference() {
@@ -76,22 +76,22 @@ module BeltLinkBand() {
     hull()
     projection(cut=true)
     translate([0,0,-0.125])
-    CarrierPetals();
+    CarrierPetals(doRender=false, AF=AF);
     
     hull()
     projection(cut=true)
     translate([0,0,-0.125])
-    CarrierPetals();
+    CarrierPetals(doRender=false, AF=AF);
   }
 }
 
-module CarrierPetal(cutter=false, clearance=0.008, alternate=false) {
+module CarrierPetal(doRender=true, cutter=false, clearance=0.008) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
   blockWidth = (shellRadius*2)*0.8;
   
-  color((alternate?"Olive":"Tan")) RenderIf(!cutter)
+  color("Olive") RenderIf(doRender && !cutter)
   difference() {
     union() {
       
@@ -172,15 +172,15 @@ module CarrierPetal(cutter=false, clearance=0.008, alternate=false) {
                            h=rimBlockHeight,
                            chamferTop=false);
     
-    Cartridge();
+    Cartridge(cutter=true);
   }
 }
 
-module CarrierPetals(cutter=false, alternate=false, AF=0) {
+module CarrierPetals(doRender=true, cutter=false, AF=0) {
   
   for (R = [0,120, 240]) rotate(90+R)
   translate([AF*(barrelRadius-shellRadius),0,0])
-  CarrierPetal(cutter=cutter, alternate=alternate);
+  CarrierPetal(doRender=doRender, cutter=cutter);
 }
 
 
@@ -236,8 +236,8 @@ module BeltLinkBase() {
 // * Prints *
 // **********
 
-module BeltLink(alternate=false) {
-  color((alternate?"Tan":"Olive")) render()
+module BeltLink() {
+  color(("Tan")) render()
   difference() {
     translate([0,0,rimBlockHeight])
     union() {
@@ -313,7 +313,7 @@ module ReversePumpCylinder(shots=5) {
     for (Z = [0,rimBlockHeight+height]) translate([0,0,Z])
     BeltLinkBand();
     Cartridge();
-    CarrierPetals(alternate=true);
+    CarrierPetals();
   }
 }
 
@@ -335,11 +335,12 @@ module Stick(rounds=5) {
   }
 }
 
-module Belt(rounds=3, offset=0) {
+module Belt(rounds=3, offset=0, expand=0) {
   translate([-abs(BeltOffsetVertex()*2)*sin(120)*offset,0,0])
   for (X = [0:rounds-1])
   translate([abs(BeltOffsetVertex()*2)*sin(120)*X,0,0]) {
-    alternate = (X%2!=0);
+    
+    AF = (X == 0 ? expand : 0);
     
     // Pivot pin
     color("Silver") render()
@@ -348,14 +349,14 @@ module Belt(rounds=3, offset=0) {
     cylinder(r=pinRadius, h=height);
     
     translate([0,0,2])
-    BeltLinkBand();
+    BeltLinkBand(AF=AF);
     
     translate([0,0,0.25])
-    BeltLinkBand();
+    BeltLinkBand(AF=AF);
     
     Cartridge();
-    CarrierPetals(alternate=true);
-    BeltLink(alternate=true);
+    CarrierPetals(AF=AF);
+    BeltLink();
   }
 }
 
