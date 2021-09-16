@@ -72,7 +72,7 @@ module ButtpadBolt(debug=false, head="flat", nut="heatset", cutter=false, teardr
   clear = cutter ? clearance : 0;
 
   color("Silver") RenderIf(!cutter) DebugHalf(enabled=debug)
-  for (Z = [0.5,-1.5])
+  for (Z = [0,-1.5])
   translate([StockMinX()-2, 0, Z])
   rotate([0,-90,0])
   NutAndBolt(bolt=ButtpadBolt(),
