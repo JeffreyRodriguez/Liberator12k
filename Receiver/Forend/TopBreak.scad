@@ -684,7 +684,7 @@ module TopBreak_Extractor(cutter=false, clearance=0.015, chamferRadius=1/16, deb
       rotate([90,0,0])
       linear_extrude(height=TopBreak_ExtractorWidth()+ManifoldGap(2), center=true)
       mirror([1,0])
-      RoundedBoolean(edgeOffset=0, r=1/2, teardrop=true, $fn=50);
+      RoundedBoolean(edgeOffset=0, r=0.5, teardrop=true);
     }
   }
 }
