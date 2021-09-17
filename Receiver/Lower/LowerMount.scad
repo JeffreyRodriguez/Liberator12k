@@ -28,6 +28,10 @@ _CUTAWAY_RECEIVER = true;
 _CUTAWAY_LOWERMOUNT_FRONT = false;
 _CUTAWAY_LOWERMOUNT_REAR = false;
 
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
 $fs = UnitsFs()*ResolutionFs();
 
 //************
@@ -40,12 +44,12 @@ module LowerMount_TakedownPinRetainer(cutter=false, clearance=0.005) {
   color("Silver") RenderIf(!cutter)
   translate([-LowerMaxX()+ReceiverLugRearMaxX(), 0, ReceiverTakedownPinZ()-0.125])
   rotate([0,-90,0])
-  cylinder(r=(3/32/2)+clear, h=ReceiverLugRearMaxX()-ReceiverTakedownPinX()-LowerMaxX()+0.125, $fn=20);
+  cylinder(r=(3/32/2)+clear, h=ReceiverLugRearMaxX()-ReceiverTakedownPinX()-LowerMaxX()+0.125);
   
   if (cutter)
   translate([-LowerMaxX()+ReceiverLugRearMinX(), 0, ReceiverTakedownPinZ()-0.125])
   rotate([0,-90,0])
-  cylinder(r=0.125, h=2, $fn=20);
+  cylinder(r=0.125, h=2);
   
 }
 
@@ -72,7 +76,7 @@ module LowerMount_Front(id=ReceiverID(), alpha=1, debug=false, doRender=true) {
       // Receiver ID
       translate([ReceiverLugFrontMaxX(),0,0])
       rotate([0,-90,0])
-      ChamferedCircularHole(r1=id/2, r2=1/8, h=mountLength, $fn=80,
+      ChamferedCircularHole(r1=id/2, r2=1/8, h=mountLength,
                             teardropBottom=true,
                             teardropTop=true);
       // Sear support
@@ -120,7 +124,7 @@ module LowerMount_Rear(id=ReceiverID(), alpha=1, debug=false, doRender=true) {
       // Receiver ID
       translate([ReceiverLugRearMaxX(),0,0])
       rotate([0,-90,0])
-      ChamferedCircularHole(r1=id/2, r2=1/8, h=mountLength, $fn=80,
+      ChamferedCircularHole(r1=id/2, r2=1/8, h=mountLength,
                             teardropBottom=true,
                             teardropTop=true);
       

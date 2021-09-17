@@ -50,8 +50,6 @@ Stock_Backplate_CLEARANCE = 0.015;
 
 /* [Fine Tuning] */
 
-$fs = UnitsFs()*ResolutionFs();
-
 
 function ButtpadBolt() = BoltSpec(BUTTPAD_BOLT);
 assert(ButtpadBolt(), "ButtpadBolt() is undefined. Unknown BUTTPAD_BOLT?");
@@ -64,6 +62,12 @@ function StockLength() = TensionBoltLength()-ReceiverLength()-0.125;
 function StockMinX() = -(ReceiverLength()+StockLength());
 function ButtpadX() = StockMinX()-0.5;
 function Stock_TakedownPinX() = StockMinX()+0.75;
+
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
 
 // ************
 // * Vitamins *

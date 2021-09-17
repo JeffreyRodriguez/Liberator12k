@@ -1,6 +1,10 @@
 use <../Meta/Resolution.scad>;
 use <../Meta/Units.scad>;
 
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
 $fs = UnitsFs()*ResolutionFs();
 
 module Teardrop(r=1, rotation=0, enabled=true, truncated=false) {

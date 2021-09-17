@@ -10,4 +10,4 @@ module TeardropTorus(majorRadius=3/8, minorRadius=1/16) {
 }
 
 
-TeardropTorus(majorRadius=3/8, minorRadius=1/16, $fn=30);
+TeardropTorus(majorRadius=3/8, minorRadius=1/16);

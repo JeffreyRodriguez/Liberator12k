@@ -38,13 +38,15 @@ CYLINDER_DIAMETER     = 3.375;
 CYLINDER_EXTRA_BOTTOM = 0.125;
 CYLINDER_EXTRA_TOP    = 0.125;
 
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
 
 // *************
 // * Functions *
 // *************
-
-
-$fs = UnitsFs()*0.25;
 
 function ChamberBolt() = BoltSpec(CHAMBER_BOLT);
 assert(ChamberBolt(), "ChamberBolt() is undefined. Unknown CHAMBER_BOLT?");
@@ -131,7 +133,7 @@ module OffsetZigZagRevolver(diameter=4, height=2.75,
     // Body
     ChamferedCylinder(r1=radius+radialClear, r2=1/16,
                       h=(cutter?chamberLength+linearClear:height),
-                      chamferTop=true, teardropTop=true, chamferBottom=!cutter, $fn=Resolution(80,200));
+                      chamferTop=true, teardropTop=true, chamferBottom=!cutter);
 
     if (!cutter) {
       
@@ -146,7 +148,7 @@ module OffsetZigZagRevolver(diameter=4, height=2.75,
       translate([0,0,-ManifoldGap()])
       RevolverChamberIterator(centerOffset=centerOffset, positions=positions)
       cylinder(r=chamberRadius+chamberClearance,
-               h=chamberLength+linearClearance, $fn=Resolution(30,60));
+               h=chamberLength+linearClearance);
 
       // Chamber ID
       translate([0,0,-ManifoldGap()])

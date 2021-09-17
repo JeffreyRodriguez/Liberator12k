@@ -100,6 +100,12 @@ SEAR_CLEARANCE = 0.005;
 SEAR_PIN_DIAMETER = 0.09375;
 SEAR_PIN_CLEARANCE = 0.01;
 
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
+
 // Measured: Vitamins
 function RecoilPlateLength() = 1/4;
 function RecoilPlateWidth() = 2;
@@ -234,12 +240,10 @@ function FCG_RecoilPlateHoles(spindleZ=-1) = [
 //$t= AnimationDebug(ANIMATION_STEP_CHARGE);
 //$t= AnimationDebug(ANIMATION_STEP_CHARGER_RESET, start=0.85);
 
-$fs = UnitsFs()*ResolutionFs();
-
 //**********
 //* Shapes *
 //**********
-module TriggerSearPinTrack($fn=12) {
+module TriggerSearPinTrack() {
   translate([0,SearPinOffsetZ()])
   hull() {
     circle(r=SearPinRadius(SEAR_PIN_CLEARANCE));
@@ -284,7 +288,7 @@ module FCG_DisconnectorPivotPin(debug=false, cutter=false, teardrop=false, clear
   translate([FCG_DisconnectorPivotX, 0, FCG_DisconnectorPivotZ])
   rotate([90,0,0])
   linear_extrude(height=cutter?ReceiverID():ReceiverTopSlotWidth(), center=true)
-  Teardrop(r=(3/32/2)+clear, enabled=teardrop, $fn=20);
+  Teardrop(r=(3/32/2)+clear, enabled=teardrop);
 }
 module FCG_DisconnectorSpring(debug=false, cutter=false, clearance=FCG_Disconnector_SPRING_CLEARANCE) {
   color("SteelBlue")
@@ -328,7 +332,7 @@ module Sear(animationFactor=0, length=SearLength(), cutter=false, clearance=SEAR
     children();
   }
 }
-module SearPin(cutter=false, clearance=SEAR_PIN_CLEARANCE, $fn=12) {
+module SearPin(cutter=false, clearance=SEAR_PIN_CLEARANCE) {
   clear = cutter ? clearance : 0;
   
   translate([0,0,SearPinOffsetZ()])
@@ -471,7 +475,7 @@ module RecoilPlate(length=RecoilPlateLength(), spindleZ=-1, contoured=true, cutt
       for (Hole = TemplateHoles)
       translate([0.5-length-clear,Hole.y,Hole.z])
       rotate([0,90,0])
-      cylinder(r=templateHoleDiameter/2, h=length, $fn=8);
+      cylinder(r=templateHoleDiameter/2, h=length);
       
     } else if (!cutter) {
       FiringPin(cutter=true);
@@ -604,7 +608,7 @@ module FCG_ChargingHandle(clearance=0.005) {
       translate([fingerHoleX,0,bottomZ+clear])
       ChamferedCylinder(r1=rearExtension/2,
                         r2=1/32,
-                        h=fingerHoleHeight-clear2, $fn=50);
+                        h=fingerHoleHeight-clear2);
     }
     
     *hull() for (Z = [0,0.25])
@@ -619,7 +623,7 @@ module FCG_ChargingHandle(clearance=0.005) {
     
     translate([fingerHoleX,0,bottomZ+clear])
     ChamferedCircularHole(r1=fingerHoleRadius, r2=1/16,
-                          h=fingerHoleHeight-clear2, $fn=50);
+                          h=fingerHoleHeight-clear2);
     
     FCG_ChargingHandleSpring(cutter=true);
     
@@ -686,7 +690,7 @@ module FCG_Hammer(cutter=false, clearance=UnitsImperial(0.01), debug=false, alph
       rotate([0,-90,0])
       ChamferedCylinder(r1=ReceiverIR()-clearance, r2=1/8,
                          h=FCG_HammerLength,
-                       teardropTop=true, teardropBottom=true, $fn=80);
+                       teardropTop=true, teardropBottom=true);
       
       // Charging Tip
       hull()
@@ -718,7 +722,7 @@ module FCG_Hammer(cutter=false, clearance=UnitsImperial(0.01), debug=false, alph
     translate([FCG_HammerCockedX-FCG_HammerLength,0,0])
     rotate([0,90,0])
     ChamferedCircularHole(r1=0.65/2, r2=1/16, chamferTop=false,
-                          h=11/16, $fn=40);
+                          h=11/16);
     
     // Disconnector chamfered hole
     translate([FCG_HammerCockedX,0,FCG_DisconnectorPivotZ])
@@ -749,7 +753,7 @@ module FCG_HammerTail(clearance=UnitsImperial(0.01), debug=false, alpha=1) {
         rotate([0,90,0])
         ChamferedCylinder(r1=ReceiverIR()-clearance, r2=1/8,
                            h=FCG_HammerTailLength(),
-                          teardropTop=true, teardropBottom=true, $fn=80);
+                          teardropTop=true, teardropBottom=true);
     
         // Only the top half
         translate([FCG_HammerTailMinX,-(ReceiverIR()), 0])
@@ -780,13 +784,13 @@ module FCG_HammerTail(clearance=UnitsImperial(0.01), debug=false, alpha=1) {
     rotate([0,90,0])
     ChamferedCircularHole(
       r1=(HAMMER_BOLT_SLEEVE_DIAMETER/2)+HAMMER_BOLT_SLEEVE_CLEARANCE,
-      r2=1/32, $fn=40, h=FCG_HammerTailLength());
+      r2=1/32, h=FCG_HammerTailLength());
     
     // Main Spring Hole
     translate([FCG_HammerTailMinX+FCG_HammerTailLength(),0,0])
     rotate([0,-90,0])
     ChamferedCircularHole(r1=0.65/2, r2=1/16, chamferTop=false,
-                          h=0.125, $fn=40);
+                          h=0.125);
   }
 }
 module FCG_Disconnector(pivotFactor=0, cutter=false, clearance=0.005, alpha=1, debug=false) {

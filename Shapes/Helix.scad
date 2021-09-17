@@ -1,19 +1,21 @@
 include<../Meta/Animation.scad>;
 
+use <../Meta/Units.scad>;
 use <../Meta/Resolution.scad>;
 use <../Meta/Manifold.scad>;
-use <../Meta/Units.scad>;
 use <../Shapes/Semicircle.scad>;
-use <../Shapes/Teardrop.scad>;
-
-$fa = ResolutionFa();
-$fs = UnitsFs()*ResolutionFs();
 
 RADIUS=2; // "2"
 DEPTH=0.1875; // "0.1875"
 WIDTH=0.25; // "0.25"
 TWIST_RATE=1; // [0.1:0.1:2]
 ANGLE=22.5; // [0:0.5:360]
+
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
 
 module HelixSegment(radius=RADIUS, depth=DEPTH, width=WIDTH,
                     angle=ANGLE, twist_rate=TWIST_RATE,

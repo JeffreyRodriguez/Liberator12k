@@ -27,6 +27,12 @@ SIGHTPOST_CLEARANCE = 0.005;
 SIGHTPOST_BOLT = "#8-32";   // ["M4", "#8-32"]
 SIGHTPOST_BOLT_CLEARANCE = 0.005;
 
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
+
 function SightpostBolt() = BoltSpec(SIGHTPOST_BOLT);
 assert(SightpostBolt(), "SightpostBolt() is undefined. Unknown SIGHTPOST_BOLT?");
 

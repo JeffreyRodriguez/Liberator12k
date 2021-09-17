@@ -12,13 +12,18 @@ use <../../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 RECEIVER_LUG_BOLTS = "M4"; // ["#8-32", "M4"]
 RECEIVER_LUG_BOLTS_CLEARANCE = 0.005;
 
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
+
 function GripWidth() = 1;
 function GripCeiling() = 0.75;
 function GripCeilingZ() = -GripCeiling();
 
 function LowerMaxWidth() = GripWidth()+0.25;
 function LowerMaxY() = (GripWidth()/2)+0.125;
-$fs = UnitsFs()*ResolutionFs();
 
 function ReceiverLugWidth() = 1;
 
@@ -56,7 +61,7 @@ module ReceiverLugBolts(boltSpec=BoltSpec(RECEIVER_LUG_BOLTS),
                             cutter=false,
                             clearance=RECEIVER_LUG_BOLTS_CLEARANCE,
                             teardrop=false,
-                            teardropAngle=90, $fn=8) {
+                            teardropAngle=90) {
 
   color("Silver")
   for (bolt = ReceiverLugBoltsArray())

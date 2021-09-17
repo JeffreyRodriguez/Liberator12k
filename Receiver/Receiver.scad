@@ -41,6 +41,10 @@ TENSION_BOLT_LENGTH    = 12;
 // Picatinny rail mounts on top of receiver w/ M-LOK
 MLOK_BOLT           = "#8-32";   // ["M4", "#8-32", "#10-24", "1/4\"-20"]
 
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
 $fs = UnitsFs()*ResolutionFs();
 
 // Settings: Vitamins

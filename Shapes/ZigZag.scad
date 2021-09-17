@@ -7,15 +7,18 @@ use <../Meta/Manifold.scad>;
 use <../Shapes/Semicircle.scad>;
 use <../Shapes/Helix.scad>;
 
-$fa = ResolutionFa();
-$fs = UnitsFs()*ResolutionFs();
-
 DEFAULT_ZIGZAG_DIAMETER  = 3.6252;
 DEFAULT_ZIGZAG_POSITIONS = 6;
 DEFAULT_ZIGZAG_DEPTH     = 0.1875;
 DEFAULT_ZIGZAG_WIDTH     = 0.2500;
 EXTRA_BOTTOM = 0.0000;
 EXTRA_TOP = 0.0000;
+
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
 
 module ZigZagSupport(radius,depth, width) {
   translate([radius - (depth*2),-(width/2)-(0.07/2),0])

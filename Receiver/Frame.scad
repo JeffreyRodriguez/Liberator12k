@@ -44,6 +44,10 @@ CHAMFER_RADIUS = 0.0625;
 /* [Branding] */
 FRAME_BRANDING_TEXT = "#Liberator12k";
 
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
 $fs = UnitsFs()*ResolutionFs();
 
 // Settings: Lengths

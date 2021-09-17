@@ -1,4 +1,5 @@
 use <../Meta/Units.scad>;
+use <../Meta/Resolution.scad>;
 use <../Meta/Manifold.scad>;
 use <../Meta/slookup.scad>;
 use <../Shapes/Teardrop.scad>;
@@ -21,6 +22,12 @@ NUT = "heatset"; // ["", "hex", "heatset"]
 NUT_HEIGHT_EXTRA = 1;
 
 TEARDROP = false;
+
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
 
 BOLTS = [
   ["Template", Spec_BoltTemplate()],
@@ -45,8 +52,6 @@ BOLTS = [
 ];
 
 function BoltSpec(bolt) = slookup(bolt, BOLTS);
-
-$fs = UnitsFs()*0.25;
 
 
 /**

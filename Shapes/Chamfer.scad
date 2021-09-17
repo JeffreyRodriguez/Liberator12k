@@ -3,9 +3,11 @@ use <../Meta/Resolution.scad>;
 use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
 
+// *********
+// * Setup *
+// *********
 $fa = ResolutionFa();
 $fs = UnitsFs()*ResolutionFs();
-
 
 module TangentBoolean(edgeOffset=1, edgeSign=-1,
                       r=0.25, angle=0) {

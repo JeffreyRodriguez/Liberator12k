@@ -95,6 +95,10 @@ WALL_BARREL = 0.1875;
 /* [Branding] */
 BRANDING_MODEL_NAME = "CAFE12";
 
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
 $fs = UnitsFs()*ResolutionFs();
 
 // Settings: Vitamins
@@ -206,8 +210,7 @@ module PivotClearanceCut(cut=true, width=PivotWidth(), depth=2,
     linear_extrude(height=width, center=true)
     rotate(180) mirror([0,1])
     semidonut(minor=(PivotX()-clearance)*2, major=PivotX()*3,
-              angle=90,
-              $fn=Resolution(100,200));
+              angle=90);
     
   }
 }
@@ -224,7 +227,7 @@ module PivotOuterBearing(intersect=true, cutter=false, clearance=0.008) {
     ChamferedCylinder(r1=PivotOuterRadius()+clear,
                       r2=PivotWidth()/2,
                       teardropTop=true, teardropBottom=true,
-                      h=PivotWidth()+clear2, $fn=Resolution(20,80));
+                      h=PivotWidth()+clear2);
   
     // Square off front and bottom edges
     if (intersect)
@@ -245,8 +248,7 @@ module PivotInnerBearing(cutter=false, clearance=0.008, widthClearance=0.008) {
   ChamferedCircularHole(r1=PivotRadius()+clear,
                         r2=1/8,
                         h=PivotWidth()+(widthClearance*2),
-                        teardropTop=false, teardropBottom=false,
-                        $fn=Resolution(20,50));
+                        teardropTop=false, teardropBottom=false);
 }
 
 module BreakActionPivot(factor=0) {
@@ -348,11 +350,11 @@ module TopBreak_Barrel(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, le
     
       // Barrel
       rotate([0,90,0])
-      cylinder(r=(od/2)+clear, h=BarrelLength(), $fn=60);
+      cylinder(r=(od/2)+clear, h=BarrelLength());
       
       // Barrel Sleeve
       rotate([0,90,0])
-      cylinder(r=BarrelSleeveRadius()+clear, h=BarrelSleeveLength(), $fn=60);
+      cylinder(r=BarrelSleeveRadius()+clear, h=BarrelSleeveLength());
     }
     
     if (!cutter) {
@@ -521,7 +523,7 @@ module TopBreak_Forend(clearance=0.005, doRender=true, debug=false, alpha=1) {
         rotate([0,90,0])
         ChamferedCylinder(r1=BarrelRadius()+clearance,
                           h=PivotX()+1,
-                          r2=1/16, $fn=100);
+                          r2=1/16);
         
         PivotInnerBearing(cutter=true);
       }
@@ -532,7 +534,7 @@ module TopBreak_Forend(clearance=0.005, doRender=true, debug=false, alpha=1) {
       translate([PivotX(),0,0])
       rotate([0,90,0])
       cylinder(r=BarrelSleeveRadius()+BARREL_CLEARANCE,
-               h=ForendLength()-PivotX(), $fn=80);
+               h=ForendLength()-PivotX());
       
       // Cut a path through the full range of motion (Collar)
       for (A = [0, PivotAngle()])
@@ -543,7 +545,7 @@ module TopBreak_Forend(clearance=0.005, doRender=true, debug=false, alpha=1) {
       translate([ForendLength(),0,BarrelZ()])
       rotate([0,-90,0])
       HoleChamfer(r1=BarrelSleeveRadius(BARREL_CLEARANCE), r2=1/16,
-                  teardrop=true, $fn=60);
+                  teardrop=true);
 
       FrameBolts(cutter=true);
        
@@ -571,7 +573,7 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, debu
         rotate([0,90,0])
         ChamferedCylinder(r1=BarrelSleeveRadius()+WallBarrel()+clear,
                           h=PivotX()-RIM_WIDTH+clear,
-                          r2=1/16, $fn=100);
+                          r2=1/16);
         
         // Extractor support
         translate([RIM_WIDTH-rearExtension-clear,-(TopBreak_ExtractorHousingWidth()/2)-clear,TopBreak_BarrelCollarBottomZ()-clear])
@@ -670,7 +672,7 @@ module TopBreak_Extractor(cutter=false, clearance=0.015, chamferRadius=1/16, deb
       
       // Cartridge rim
       rotate([0,90,0])
-      cylinder(r=RIM_DIAMETER/2, h=RIM_WIDTH+clearance, $fn=80);
+      cylinder(r=RIM_DIAMETER/2, h=RIM_WIDTH+clearance);
       
       TopBreak_Barrel(cutter=true);
 
@@ -759,7 +761,7 @@ module TopBreak_BarrelSleeveFixture() {
       for (M = [0,1]) mirror([0,M,0])
       translate([(width/2)-ManifoldGap(), (guideWidth/2)-ManifoldGap(), 0.25])
       rotate(-90)
-      Fillet(r=1/8, h=BarrelSleeveLength()-0.5, $fn=30);
+      Fillet(r=1/8, h=BarrelSleeveLength()-0.5);
     }
     
     ChamferedCircularHole(r1=BarrelSleeveRadius(BARREL_CLEARANCE),

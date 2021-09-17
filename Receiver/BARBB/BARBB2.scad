@@ -50,7 +50,11 @@ _ALPHA_MAGWELL = 1; // [0:0.1:1]
 /* [Fine Tuning] */
 barrelLength=24;
 
-$fs = UnitsFs()*0.25;
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
 
 // Bullpup AR Barrel Bolt-action (BARBB)
 BARREL_PIPE = Spec_TubingZeroPointSevenFive();

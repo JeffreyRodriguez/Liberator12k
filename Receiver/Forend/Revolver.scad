@@ -119,7 +119,11 @@ CHAMBER_ID = 0.8101;
 /* [Branding] */
 BRANDING_MODEL_NAME = "ZZR 6x12ga";
 
-$fs = UnitsFs()*0.25;
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
 
 // Settings: Lengths
 function SpindleRadius() = SPINDLE_DIAMETER/2;
@@ -237,13 +241,11 @@ module Revolver_Barrel(barrelLength=BarrelLength(), clearance=BARREL_CLEARANCE, 
   rotate([0,90,0])
   difference() {
     cylinder(r=BarrelRadius()+clear,
-             h=barrelLength+(cutter?ChamberLength():0),
-             $fn=Resolution(20,50));
+             h=barrelLength+(cutter?ChamberLength():0));
     
     if (!cutter)
     cylinder(r=CHAMBER_ID/2,
-             h=barrelLength,
-             $fn=Resolution(20,50));
+             h=barrelLength);
   }
 }
 
@@ -349,8 +351,7 @@ module Revolver_BlastPlate(clearance=0.01, holeClearance=0.002, cutter=false, de
       intersection() {
         translate([BarrelMinX(),0,CylinderZ()])
         rotate([0,90,0])
-        cylinder(r=CylinderRadius()-0.125+clear, h=BlastPlateThickness(),
-                 $fn=100);
+        cylinder(r=CylinderRadius()-0.125+clear, h=BlastPlateThickness());
         
         translate([BarrelMinX(),
                    -CylinderRadius(),
@@ -362,8 +363,7 @@ module Revolver_BlastPlate(clearance=0.01, holeClearance=0.002, cutter=false, de
       
       translate([BarrelMinX(),0,CylinderZ()])
       rotate([0,90,0])
-      cylinder(r=SpindleRadius()+WallSpindle(), h=BlastPlateThickness(),
-               $fn=25);
+      cylinder(r=SpindleRadius()+WallSpindle(), h=BlastPlateThickness());
     }
 
     if (!cutter)
@@ -387,7 +387,7 @@ module Revolver_Shield(cutter=false, debug=false) {
   rotate([0,-90,0])
   linear_extrude(height=0.5)
   rotate(90)
-  semidonut(minor=CylinderDiameter()-0.25, major=CylinderDiameter(), angle=180, $fn=100);
+  semidonut(minor=CylinderDiameter()-0.25, major=CylinderDiameter(), angle=180);
   
   color("LightSteelBlue")
   RenderIf(!cutter) DebugHalf(enabled=debug)
@@ -418,7 +418,7 @@ module Revolver_ReceiverFront(contoured=true, debug=_CUTAWAY_RECEIVER_FRONT, alp
       translate([0,0,CylinderZ()])
       rotate([0,90,0])
       ChamferedCylinder(r1=CylinderRadius(), r2=CR(),
-                        h=length-ManifoldGap(), $fn=Resolution(80, 200));
+                        h=length-ManifoldGap());
     }
     
     FrameBolts(cutter=true);
@@ -442,7 +442,7 @@ module Revolver_ReceiverFront_print() {
   Revolver_ReceiverFront();
 }
 
-module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND, $fn=Resolution(30,100)) {
+module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND) {
   extraBottom=0;
   
   // Branding text
@@ -618,7 +618,7 @@ module Revolver_FrameSpacer(length=ForendMinX(), debug=false, alpha=_ALPHA_FOREN
     // Cylinder Cutout
     translate([0,0,CylinderZ()])
     rotate([0,90,0])
-    cylinder(r=CylinderRadius()+CYLINDER_CLEARANCE, h=length, $fn=120);
+    cylinder(r=CylinderRadius()+CYLINDER_CLEARANCE, h=length);
   }
 }
 
@@ -762,7 +762,7 @@ module Revolver_CylinderCore_print() {
     rotate([0,180,0])
     Revolver_Cylinder(chambers=false, render_cylinder=false);
     
-    cylinder(r=CYLINDER_OFFSET-(BARREL_DIAMETER*0.33), h=0.5, $fn=100);
+    cylinder(r=CYLINDER_OFFSET-(BARREL_DIAMETER*0.33), h=0.5);
   }
 }
 
@@ -774,7 +774,7 @@ module Revolver_CylinderShell_print() {
     rotate([0,180,0])
     Revolver_Cylinder(render_cylinder=false, chambers=false);
     
-    cylinder(r=CYLINDER_OFFSET+0.0625, h=CYLINDER_LENGTH+ManifoldGap(), $fn=100);
+    cylinder(r=CYLINDER_OFFSET+0.0625, h=CYLINDER_LENGTH+ManifoldGap());
   }
 }
 
@@ -785,7 +785,7 @@ module Revolver_VerticalForegrip(length=2, debug=true, alpha=1) {
       translate([ForegripMinX(),0,0])
       rotate([0,90,0])
       ChamferedCylinder(r1=BarrelRadius()+WallBarrel(),
-                        r2=1/16, h=length, $fn=Resolution(40,80));
+                        r2=1/16, h=length);
       
       // Grip block
       translate([ForegripMinX(),-1/2,0])
@@ -868,7 +868,7 @@ module Revolver_ActionRodJig() {
     // ZigZag Actuator
     for (X = [0,ChargerTravel()+(ChargerTowerLength()/2)])
     translate([(ChargerTowerLength()/2)+X,0,-ManifoldGap()])
-    cylinder(r=3/32/2, h=height, $fn=8);
+    cylinder(r=3/32/2, h=height);
   }
 }
 

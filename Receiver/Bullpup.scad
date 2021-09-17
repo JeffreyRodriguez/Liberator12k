@@ -62,7 +62,12 @@ BULLPUP_BOLT_CLEARANCE = 0.015;
 
 /* [Fine Tuning] */
 
-$fs = UnitsFs()*0.25;
+
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
 
 
 function BullpupBolt() = BoltSpec(BULLPUP_BOLT);
@@ -103,12 +108,12 @@ module Bullpup_TakedownPinRetainer(cutter=false, clearance=0.005) {
   color("Silver") RenderIf(!cutter)
   translate([Bullpup_BoltX(), 0, ReceiverTakedownPinZ()-0.125])
   rotate([0,90,0])
-  cylinder(r=(3/32/2)+clear, h=2, $fn=20);
+  cylinder(r=(3/32/2)+clear, h=2);
   
   if (cutter)
   translate([Bullpup_BoltX(), 0, ReceiverTakedownPinZ()-0.125])
   rotate([0,90,0])
-  cylinder(r=0.125, h=2, $fn=20);
+  cylinder(r=0.125, h=2);
   
 }
 ///
@@ -167,7 +172,7 @@ module Bullpup_Rear(length=ReceiverLength()+Bullpup_BackplateLength(), debug=fal
         // Receiver ID
         translate([Bullpup_BoltX(),0,0])
         rotate([0,90,0])
-        ChamferedCircularHole(r1=ReceiverIR(), r2=1/8, h=length, $fn=80,
+        ChamferedCircularHole(r1=ReceiverIR(), r2=1/8, h=length,
                               teardropBottom=true,
                               teardropTop=true);
         
@@ -189,7 +194,7 @@ module Bullpup_Rear(length=ReceiverLength()+Bullpup_BackplateLength(), debug=fal
         translate([Bullpup_BoltX()+ManifoldGap(),0,0])
         mirror([1,0,0])
         TensionBoltIterator() {
-          ChamferedCircularHole(r1=WallTensionRod(), r2=1/16, h=0.5, $fn=30);
+          ChamferedCircularHole(r1=WallTensionRod(), r2=1/16, h=0.5);
           
           
           for (xyz = [[0,-WallTensionRod(),0],
@@ -197,7 +202,7 @@ module Bullpup_Rear(length=ReceiverLength()+Bullpup_BackplateLength(), debug=fal
           translate(xyz)
           ChamferedSquareHole([WallTensionRod()*2,WallTensionRod()*2], 
                               length=0.5, chamferRadius=1/16,
-                              corners=false, center=false, $fn=30);
+                              corners=false, center=false);
         }
       }
       //

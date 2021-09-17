@@ -37,8 +37,13 @@ LOWER_BOLT_CLEARANCE = 0.015;
 LOWER_BOLT_HEAD = "flat"; // ["socket", "flat"]
 LOWER_BOLT_NUT = "heatset"; // ["hex", "heatset", "heatset-long"]
 
-function LowerCenterWidth() = 0.51;
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
 $fs = UnitsFs()*ResolutionFs();
+
+function LowerCenterWidth() = 0.51;
 
 function LowerOffsetZ() = ReceiverBottomZ();
 
@@ -173,7 +178,7 @@ module TriggerGuard() {
       rotate([90,0,180])
       linear_extrude(height=0.05, center=true) {
         difference() {
-          circle(r=0.43, $fn=50);
+          circle(r=0.43);
         
         text("A", font="Arial Black", size=0.5,
              halign = "center", valign="center"); // Anarchism A
@@ -186,7 +191,7 @@ module TriggerGuard() {
       rotate([90,0,0])
       linear_extrude(height=0.05, center=true) {
         difference() {
-          circle(r=0.43, $fn=50);
+          circle(r=0.43);
 
           text("V", font="Arial Black", size=0.5,
               halign = "center", valign="center"); // Voluntaryism V

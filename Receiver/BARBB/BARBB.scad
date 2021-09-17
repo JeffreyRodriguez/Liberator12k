@@ -1,5 +1,7 @@
 use <../../Meta/Debug.scad>;
 use <../../Meta/Manifold.scad>;
+use <../../Meta/Units.scad>;
+use <../../Meta/Resolution.scad>;
 use <../../Shapes/Semicircle.scad>;
 use <../../Shapes/Teardrop.scad>;
 use <../../Shapes/Components/T Lug.scad>;
@@ -19,8 +21,6 @@ use <../Lower/Lugs.scad>;
 use <../Lower/Lower.scad>;
 use <../Receiver.scad>;
 use <../FCG.scad>;
-
-$fn=60;
 
 // Bullpup AR Barrel Bolt-action (BARBB)
 
@@ -120,6 +120,12 @@ barbbBoltLength = stockLength
                 + barrelExtensionLandingHeight;
 handleLength=abs(hammerMinX-hammerMaxX)+firingPinExtension-hammerOvertravel;
 handleMinX = stockMinX;//+stockWall;
+
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
 
 module PicRailBolts() {
   translate([ReceiverLugRearMinX()+(ReceiverLugRearLength()/2),0,
