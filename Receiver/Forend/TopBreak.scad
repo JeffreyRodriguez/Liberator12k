@@ -880,7 +880,7 @@ if ($preview) {
       MlokCluster(radius=BarrelRadius(), alpha=0.5);
     }
     
-    if (_SHOW_FOREGRIP)
+    *if (_SHOW_FOREGRIP)
     TopBreak_Foregrip();
   };
 } else {
