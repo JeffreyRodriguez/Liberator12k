@@ -65,6 +65,7 @@ _SHOW_SPINDLE_ACTUATOR = true;
 _SHOW_SPINDLE_GEAR = false;
 _SHOW_SPINDLE_DRIVE = false;
 
+/* [Transparency] */
 _ALPHA_BARREL_SUPPORT = 1;     // [0:0.1:1]
 _ALPHA_FOREND_SPACER = 1;      // [0:0.1:1]
 _ALPHA_SPINDLE = 1;            // [0:0.1:1]
@@ -73,6 +74,7 @@ _ALPHA_RECEIVER_FRONT = 1;     // [0:0.1:1]
 _ALPHA_FCG = 1;                // [0:0.1:1]
 _ALPHA_STOCK = 1;              // [0:0.1:1]
 
+/* [Cutaways] */
 _CUTAWAY_BARREL = false;
 _CUTAWAY_BARREL_SUPPORT = false;
 _CUTAWAY_RECEIVER = false;
@@ -99,7 +101,7 @@ CHAMBER_LENGTH = 3.5;
 CHAMBER_ID = 0.8101;
 
 /* [Branding] */
-BRANDING_MODEL_NAME = "BFG-12ga";
+BRANDING_MODEL_NAME = "EVOLver";
 
 $fa = ResolutionFa();
 $fs = UnitsFs()*ResolutionFs();
@@ -1040,23 +1042,23 @@ if ($preview) {
   
   if (_RENDER == "Evolver_Spindle")
   rotate([0,90,0])
-  translate([-3.25,0,1])
-  Evolver_Spindle();
+  translate([-3.375,0,1])
+  Evolver_Spindle(alpha=_ALPHA_SPINDLE);
   
   if (_RENDER == "Evolver_SpindleZigZag")
   rotate([0,-90,0])
   translate([-(SpindleMaxX()+0.125),0,-SpindleZ()])
-  Evolver_SpindleZigZag();
+  Evolver_SpindleZigZag(alpha=_ALPHA_SPINDLE);
   
   if (_RENDER == "Evolver_SpindleGear")
   rotate([0,-90,0])
   translate([-(SpindleMaxX()),0,-SpindleZ()])
-  Evolver_SpindleGear();
+  Evolver_SpindleGear(alpha=_ALPHA_SPINDLE);
   
   if (_RENDER == "Evolver_SpindleSpacer")
   rotate([0,-90,0])
   translate([-SpindleMaxX()-0.5,0,-SpindleZ()])
-  Evolver_SpindleSpacer();
+  Evolver_SpindleSpacer(alpha=_ALPHA_SPINDLE);
   
   if (_RENDER == "Evolver_SpindleRatchet")
   rotate([0,-90,0])
