@@ -499,29 +499,18 @@ module Evolver_Spindle(cutter=false, clearance=0.007, debug=false, alpha=1) {
           translate([0,-1/2,0])
           ChamferedCube([0.5-0.0625-0.01, 1, SpindleLength()+SpindleInterlockLength()], r=1/16);
         }
-        
-       // Rear position stops
-       for (R = [0:120:360]) rotate(R)
-       hull() {
-          translate([BeltOffsetVertex()-0.25,0,0])
-          ChamferedCylinder(r1=0.125, r2=1/16, h=0.625-0.01);
-          
-          translate([0.66,0,0])
-          ChamferedCylinder(r1=0.0625, r2=1/16, h=0.625-0.01);
-        }
-      
-        // Front position stops
-        for (R = [0:120:360]) rotate(R)
-        translate([0,0,2.125])
-        hull() {
-          translate([BeltOffsetVertex()-0.25+0.01,0,0])
-          ChamferedCylinder(r1=0.125, r2=1/16, h=0.25);
-          
-          translate([0.66,0,0])
-          ChamferedCylinder(r1=0.0625, r2=1/16, h=1);
-        }
       }
     }
+    
+    // Belt Drive Tooth
+    translate([0.5+0.125,0,SpindleZ()])
+    rotate([0,90,0])
+    for (R = [0:120:360]) rotate(60+R)
+    translate([BarrelRadius()-(1/16),0,-clearance])
+    ChamferedCylinder(r1=BeltDriveToothRadius()+0.002,
+                      r2=BeltDriveToothRadius(),
+                       h=1.5+(clearance*2),
+                       teardropTop=true);
     
     if (!cutter)
     Evolver_SpindlePins(cutter=true);

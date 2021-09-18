@@ -43,12 +43,14 @@ vertexOffset = shellRadius
              + spineHeight
              + petalGap
              + wall;
-             
+
+function BeltDriveToothRadius() = (1/8);
 function BeltOffsetVertex() = vertexOffset
           + pinSupportRadius
           + clearance;
 pivotAngle = -120;
 
+$fa = ResolutionFa();
 $fs = UnitsFs()*ResolutionFs();
 
 
@@ -237,11 +239,18 @@ module BeltLinkBase() {
 // **********
 
 module BeltLink() {
-  color(("Tan")) render()
+  color("Tan") render()
   difference() {
     translate([0,0,rimBlockHeight])
     union() {
       BeltLinkBase() {
+        
+        // Belt Drive Tooth
+        translate([0,-barrelRadius-wall,0])
+        ChamferedCylinder(r1=BeltDriveToothRadius(),
+                          r2=BeltDriveToothRadius(),
+                           h=height,
+                 teardropTop=true);
           
         // Pivot Forks
         for (Z = [0,height-tabHeight]) translate([0,0,Z])
