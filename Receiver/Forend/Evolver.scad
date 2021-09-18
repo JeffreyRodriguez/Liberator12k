@@ -500,8 +500,8 @@ module Evolver_Spindle(cutter=false, clearance=0.007, debug=false, alpha=1) {
           ChamferedCube([0.5-0.0625-0.01, 1, SpindleLength()+SpindleInterlockLength()], r=1/16);
         }
         
-        // Rear position stops
-        for (R = [0:120:360]) rotate(R)
+       // Rear position stops
+       for (R = [0:120:360]) rotate(R)
        hull() {
           translate([BeltOffsetVertex()-0.25,0,0])
           ChamferedCylinder(r1=0.125, r2=1/16, h=0.625-0.01);
