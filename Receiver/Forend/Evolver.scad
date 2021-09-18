@@ -531,7 +531,7 @@ module Evolver_Spindle(cutter=false, clearance=0.007, debug=false, alpha=1) {
     translate([0,0,SpindleZ()])
     rotate([0,90,0])
     ChamferedCircularHole(r1=(0.3125/2)+0.007, r2=1/32,
-                          h=SpindleLength()+SpindleInterlockLength()+SpindleSplineLength());
+                          h=SpindleLength()+SpindleInterlockLength());
   }
 }
 module Evolver_SpindleSpacer(length=0.125, cutter=false, clearance=0.01, debug=false, alpha=1) {
