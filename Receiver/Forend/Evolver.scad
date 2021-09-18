@@ -10,9 +10,7 @@ use <../../Meta/MirrorIf.scad>;
 use <../../Meta/Math/Triangles.scad>;
 
 use <../../Shapes/Chamfer.scad>;
-use <../../Shapes/Helix.scad>;
 use <../../Shapes/Bearing Surface.scad>;
-use <../../Shapes/Gear.scad>;
 use <../../Shapes/Teardrop.scad>;
 use <../../Shapes/TeardropTorus.scad>;
 use <../../Shapes/Semicircle.scad>;
@@ -40,7 +38,7 @@ use <../Stock.scad>;
 /* [Print] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Receiver_LargeFrame", "Evolver_ReceiverFront", "Evolver_Spindle", "Evolver_SpindleSpacer", "Evolver_SpindleZigZag", "Evolver_SpindleGear", "Evolver_SpindleRatchet", "Evolver_SpindleRatchetPawl", "Evolver_SpindleActuator", "Evolver_SpindleActuatorBlock", "Evolver_BarrelSupport", "Evolver_ForendSpacer"]
+_RENDER = ""; // ["", "Receiver_LargeFrame", "Evolver_ReceiverFront", "Evolver_Spindle", "Evolver_SpindleSpacer", "Evolver_SpindleZigZag","Evolver_SpindleRatchet", "Evolver_SpindleRatchetPawl", "Evolver_SpindleActuator", "Evolver_SpindleActuatorBlock", "Evolver_BarrelSupport", "Evolver_ForendSpacer"]
 
 /* [Assembly] */
 _SHOW_BELT = true;
@@ -62,14 +60,11 @@ _SHOW_SPINDLE_RATCHET = true;
 _SHOW_SPINDLE_RATCHET_PAWL = true;
 _SHOW_SPINDLE_ZIGZAG = true;
 _SHOW_SPINDLE_ACTUATOR = true;
-_SHOW_SPINDLE_GEAR = false;
-_SHOW_SPINDLE_DRIVE = false;
 
 /* [Transparency] */
 _ALPHA_BARREL_SUPPORT = 1;     // [0:0.1:1]
 _ALPHA_FOREND_SPACER = 1;      // [0:0.1:1]
 _ALPHA_SPINDLE = 1;            // [0:0.1:1]
-_ALPHA_RECEIVER_COUPLING = 1;  // [0:0.1:1]
 _ALPHA_RECEIVER_FRONT = 1;     // [0:0.1:1]
 _ALPHA_FCG = 1;                // [0:0.1:1]
 _ALPHA_STOCK = 1;              // [0:0.1:1]
@@ -81,9 +76,7 @@ _CUTAWAY_RECEIVER = false;
 _CUTAWAY_RECEIVER_FRONT = false;
 _CUTAWAY_FOREND_SPACER = false;
 _CUTAWAY_FCG = false;
-_CUTAWAY_DISCONNECTOR = false;
-_CUTAWAY_HAMMER = false;
-_CUTAWAY_STOCK = false;
+_CUTAWAY_SPINDLE = false;
 
 /* [Vitamins] */
 SPINDLE_DIAMETER = 0.31251;
@@ -143,24 +136,9 @@ function BarrelDiameter(clearance=0)
 function ForendLength() = FrameExtension(length=FRAME_BOLT_LENGTH)
                         - ReceiverFrontLength();
 function SpindleLength() = 3.125;
-function SpindleSplineLength() = 0.5;
-function SpindleDriveLength() = 1.5;
+
 function SpindleInterlockLength() = 0.25;
 function SpindleInterlockRadius() = 0.75;
-function SpindleToothPitch() = 0.125;
-function SpindleSplineTeeth() = 21;
-function SpindlePitchRadius() = pitch_radius(
-                                  SpindleToothPitch(),
-                                  SpindleSplineTeeth());
-
-function SpindleGearRadius(clearance=0) = outer_radius(
-                                 SpindleToothPitch(),
-                                 SpindleSplineTeeth(), clearance);
-
-function SpindleGearRootRadius(clearance=0) = root_radius(
-                                 SpindleToothPitch(),
-                                 SpindleSplineTeeth(), clearance);
-                                 
 
 // Calculated: Positions
 function BarrelMinX() = ShellRimLength();
@@ -332,19 +310,19 @@ module Evolver_BarrelSupport(length=Evolver_BarrelSupportLength(), doRender=true
   offsetX = SpindleLength();
   
   // Branding text
-  *color("DimGrey", alpha) 
+  color("DimGrey", alpha) 
   RenderIf(doRender) DebugHalf(enabled=debug) {
      
     fontSize = 0.375;
     
     // Right-side text
-    translate([ForendMaxX()-0.125,-FrameWidth()/2,FrameBoltZ()-(fontSize/2)])
+    translate([ForendMaxX()-0.125-0.5,-FrameWidth()/2,FrameBoltZ()-(fontSize/2)])
     rotate([90,0,0])
     linear_extrude(height=LogoTextDepth(), center=true)
     text(BRANDING_MODEL_NAME, size=fontSize, font="Impact", halign="right");
 
     // Left-side text
-    translate([ForendMaxX()-0.125,FrameWidth()/2,FrameBoltZ()-(fontSize/2)])
+    translate([ForendMaxX()-0.125-0.5,FrameWidth()/2,FrameBoltZ()-(fontSize/2)])
     rotate([90,0,0])
     linear_extrude(height=LogoTextDepth(), center=true)
     mirror([1,0])
@@ -549,37 +527,6 @@ module Evolver_SpindleSpacer(length=0.125, cutter=false, clearance=0.01, debug=f
   }
 }
 
-module Evolver_SpindleGear(length=SpindleSplineLength(), cutter=false, clearance=0.01, debug=false, alpha=1) {
-  clear = cutter ? clearance : 0;
-  clear2 = clear*2;
-  
-  color("Chocolate", alpha)
-  RenderIf(!cutter) DebugHalf(enabled=debug)
-  difference() {
-    translate([SpindleMaxX()+length,0,SpindleZ()])
-    rotate([0,90,0])
-    intersection() {
-      ChamferedCylinder(r1=SpindleGearRadius()+clear,
-                        r2=1/16,
-                        h=length+clear2,
-                        teardropTop=true);
-      
-      if (!cutter)
-      translate([0,0,length/2])
-      gear(SpindleToothPitch(),SpindleSplineTeeth(),length,0,0);
-    }
-    
-    if (!cutter)
-    Evolver_SpindlePins(cutter=true);
-  
-    // Spindle hole
-    if (!cutter)
-    translate([SpindleMaxX()+length,0,SpindleZ()])
-    rotate([0,90,0])
-    ChamferedCircularHole(r1=(0.3125/2)+0.007, r2=1/32,
-                          h=length);
-  }
-}
 module Evolver_SpindleExtractor(length=0.5, cutter=false, clearance=0.01, debug=false, alpha=1) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
@@ -805,7 +752,7 @@ module Evolver_SpindleActuatorBlock(debug=false, alpha=1) {
   CR = 1/16;
   
   length = 0.5;
-  width = 2;
+  width = BarrelDiameter()+(WallBarrel()*2);
   offsetX = ForendSpacerLength()+Evolver_BarrelSupportLength();
   
   color("Olive", alpha)
@@ -830,62 +777,6 @@ module Evolver_SpindleActuatorBlock(debug=false, alpha=1) {
 
 
 
-module Evolver_SpindleDrive(length=0.5, cutter=false, clearance=0.007, debug=false, alpha=1) {
-  clear = cutter ? clearance : 0;
-  clear2 = clear*2;
-  
-  teeth = SpindleSplineTeeth();
-  pitchRadius = pitch_radius(
-                  SpindleToothPitch(),
-                  teeth);
-
-  outerRadius = outer_radius(
-                 SpindleToothPitch(),
-                 teeth, clearance);
-    
-  
-  color("Olive", alpha) render() DebugHalf(enabled=debug)
-  translate([0,0,SpindleZ()])
-  for (R = [110, -110]) rotate([R,0,0])
-  translate([SpindleMaxX()+0.5,0,-(SpindlePitchRadius()+pitchRadius)])
-  rotate([0,90,0])
-  union() {
-    translate([0,0,length])
-    difference() {
-      ChamferedCylinder(
-          r1=SpindleGearRadius()+clear,
-          r2=1/16,
-          h=SpindleDriveLength()+clear2,
-          chamferBottom=false);
-      
-      if (!cutter)
-      rotate(360/SpindleSplineTeeth())
-      rotate(-R)
-      ZigZag(radius=SpindleGearRadius(),
-             depth=0.125, width=0.125, positions=3,
-             extraTop=1, extraBottom=0.5,
-             supportsTop=false, supportsBottom=false);
-    }
-    
-    // Gear
-    translate([0,0,length/2])
-    intersection() {
-      ChamferedCylinder(
-          r1=outerRadius+clear,
-          r2=1/16,
-          center=true,
-          h=length+clear2,
-          chamferTop=false);
-      
-      if (!cutter)
-      rotate(360/SpindleSplineTeeth())
-      gear(SpindleToothPitch(),
-           teeth,
-           SpindleSplineLength(),0,0);
-    }
-  }
-}
-
 //**************
 //* Assemblies *
 //**************
@@ -900,13 +791,13 @@ module EvolverForendAssembly(pipeAlpha=1, debug=false) {
     
     if (_SHOW_BELT)
     translate([0.125,0,SpindleZ()])
-    for (R = [0:120:360]) rotate([R,0,0])
+    //for (R = [0:120:360]) rotate([R,0,0])
     translate([0,0,1])
     rotate([0,90,0]) rotate(90)
     Belt(rounds=1,offset=0);
     
     if (_SHOW_SPINDLE)
-    Evolver_Spindle(alpha=_ALPHA_SPINDLE);
+    Evolver_Spindle(debug=_CUTAWAY_SPINDLE, alpha=_ALPHA_SPINDLE);
     
     if (_SHOW_SPINDLE_ACTUATOR) {
       for (M = [0,1]) mirror([0,M,0]) {
@@ -918,21 +809,18 @@ module EvolverForendAssembly(pipeAlpha=1, debug=false) {
     }
     
     if (_SHOW_SPINDLE_SPACER)
-    Evolver_SpindleSpacer();
-    
-    if (_SHOW_SPINDLE_GEAR)
-    Evolver_SpindleGear(alpha=_ALPHA_SPINDLE);
+    Evolver_SpindleSpacer(debug=_CUTAWAY_SPINDLE, alpha=_ALPHA_SPINDLE);
     
     if (_SHOW_SPINDLE_RATCHET)
-    Evolver_SpindleRatchet(alpha=_ALPHA_SPINDLE);
+    Evolver_SpindleRatchet(debug=_CUTAWAY_SPINDLE, alpha=_ALPHA_SPINDLE);
     
     if (_SHOW_SPINDLE_ZIGZAG)
     translate([0.5,0,0])
-    Evolver_SpindleZigZag(alpha=_ALPHA_SPINDLE);
+    Evolver_SpindleZigZag(debug=_CUTAWAY_SPINDLE, alpha=_ALPHA_SPINDLE);
     
     *mirror([0,1,0])
     translate([0.25,0,0]) {
-      Evolver_SpindleRatchet(teeth=3, angle=-360/12);
+      Evolver_SpindleRatchet(teeth=3, angle=-360/12, debug=_CUTAWAY_SPINDLE, alpha=_ALPHA_SPINDLE);
     }
   }
   
@@ -949,9 +837,6 @@ module EvolverForendAssembly(pipeAlpha=1, debug=false) {
     Evolver_SpindleRatchetPawlPivot(factor=0)
     Evolver_SpindleRatchetPawl(alpha=_ALPHA_SPINDLE);
   }
-  
-  if (_SHOW_SPINDLE_DRIVE)
-  Evolver_SpindleDrive();
   
   if (_SHOW_BARREL) {
     barrelTravel = SpindleMaxX();
@@ -995,27 +880,22 @@ if ($preview) {
 
   translate([-ReceiverFrontLength(),0,0]) {
     
-    if (_SHOW_LOWER_LUGS)
-    LowerMount();
-
-    if (_SHOW_LOWER)
-    Lower();
-    
     if (_SHOW_RECEIVER) {
+    Lower();
       
       Receiver_TensionBolts(debug=_CUTAWAY_RECEIVER);
       
       Receiver_LargeFrameAssembly(
         length=FRAME_BOLT_LENGTH,
         debug=_CUTAWAY_RECEIVER);
+
+      if (_SHOW_STOCK) {
+        StockAssembly();
+      }
     }
 
     if (_SHOW_FCG)
     SimpleFireControlAssembly(recoilPlate=_SHOW_RECOIL_PLATE);
-
-    if (_SHOW_STOCK) {
-      StockAssembly();
-    }
   }
   
   *translate([0,0,0])
@@ -1032,22 +912,17 @@ if ($preview) {
   if (_RENDER == "Evolver_Spindle")
   rotate([0,90,0])
   translate([-3.375,0,1])
-  Evolver_Spindle(alpha=_ALPHA_SPINDLE);
+  Evolver_Spindle();
   
   if (_RENDER == "Evolver_SpindleZigZag")
   rotate([0,-90,0])
   translate([-(SpindleMaxX()+0.125),0,-SpindleZ()])
-  Evolver_SpindleZigZag(alpha=_ALPHA_SPINDLE);
-  
-  if (_RENDER == "Evolver_SpindleGear")
-  rotate([0,-90,0])
-  translate([-(SpindleMaxX()),0,-SpindleZ()])
-  Evolver_SpindleGear(alpha=_ALPHA_SPINDLE);
+  Evolver_SpindleZigZag();
   
   if (_RENDER == "Evolver_SpindleSpacer")
   rotate([0,-90,0])
   translate([-SpindleMaxX()-0.5,0,-SpindleZ()])
-  Evolver_SpindleSpacer(alpha=_ALPHA_SPINDLE);
+  Evolver_SpindleSpacer();
   
   if (_RENDER == "Evolver_SpindleRatchet")
   rotate([0,-90,0])
@@ -1069,11 +944,6 @@ if ($preview) {
   rotate([-60,0,0])
   translate([0,0, -SpindleZ()])
   Evolver_SpindleActuator();
-  
-  if (_RENDER == "Evolver_SpindleDrive")
-  rotate([0,90,0])
-  translate([-3.25,0,1])
-  Evolver_SpindleDrive();
   
   if (_RENDER == "Evolver_BarrelSupport")
   rotate([0,90,0])
