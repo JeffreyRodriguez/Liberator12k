@@ -7,7 +7,7 @@ use <../Shapes/Semicircle.scad>;
 use <../Shapes/Teardrop.scad>;
 use <../Shapes/ZigZag.scad>;
 
-_RENDER = ""; // ["", "BeltLink", "Belt_Link3", "BeltPetal"]
+_RENDER = ""; // ["", "BeltLink", "BeltLink3", "BeltPetal"]
 
 barrelDiameter = 1;
 barrelRadius = barrelDiameter/2;
@@ -376,7 +376,7 @@ if ($preview) {
   if (_RENDER == "BeltLink")
   BeltLink();
   
-  if (_RENDER == "Belt_Link3")
+  if (_RENDER == "BeltLink3")
   for (R = [0:120:360]) rotate(R)
   translate([0,1.02,0])
   BeltLink();
