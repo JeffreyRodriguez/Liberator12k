@@ -41,19 +41,15 @@ use <../Stock.scad>;
 _RENDER = ""; // ["", "Receiver_LargeFrame", "Evolver_ReceiverFront", "Evolver_Spindle", "Evolver_SpindleSpacer", "Evolver_SpindleZigZag","Evolver_SpindleRatchet", "Evolver_SpindleRatchetPawl", "Evolver_Actuator", "Evolver_ActuatorBlock", "Evolver_BarrelSupport", "Evolver_ForendSpacer"]
 
 /* [Assembly] */
-_SHOW_BELT = true;
 _SHOW_RECEIVER = true;
-_SHOW_STOCK = true;
-_SHOW_LOWER_LUGS = true;
-_SHOW_LOWER = true;
 _SHOW_FCG = false;
 _SHOW_RECOIL_PLATE = true;
 _SHOW_RECEIVER_FRONT = true;
-_SHOW_ACTION_ROD = false;
+_SHOW_BARREL = true;
+_SHOW_BELT = true;
+_SHOW_EXTRACTOR = true;
 _SHOW_FOREND_SPACER = true;
 _SHOW_BARREL_SUPPORT = true;
-_SHOW_FRAME_SPACER = true;
-_SHOW_BARREL = true;
 _SHOW_SPINDLE = true;
 _SHOW_SPINDLE_SPACER = true;
 _SHOW_SPINDLE_RATCHET = true;
@@ -238,7 +234,7 @@ module Evolver_SpindleRatchetPawlPivot(factor=0, angle=pawlPivotAngle) {
 module Evolver_ReceiverFront(contoured=true, debug=_CUTAWAY_RECEIVER_FRONT, alpha=_ALPHA_RECEIVER_FRONT) {
   length = abs(RecoilSpreaderThickness());
   
-  color("Chocolate", alpha)
+  color("Tan", alpha)
   render() DebugHalf(enabled=debug)
   difference() {
     union() {
@@ -435,7 +431,7 @@ module Evolver_Spindle(cutter=false, clearance=0.007, debug=false, alpha=1) {
   CR = 1/16;
   clearCR = cutter ? CR : 0;
   
-  color("Chocolate", alpha)
+  color("Olive", alpha)
   RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
     union() {
@@ -505,7 +501,7 @@ module Evolver_SpindleSpacer(length=0.125, cutter=false, clearance=0.01, debug=f
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
-  color("Chocolate", alpha)
+  color("Olive", alpha)
   RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
     translate([SpindleMaxX()+0.5,0,SpindleZ()])
@@ -546,7 +542,7 @@ module Evolver_SpindleExtractor(length=0.5, cutter=false, clearance=0.01, debug=
                           h=length);
   }
   
-  color("Chocolate", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("Olive", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
     union() {
     
@@ -575,7 +571,7 @@ module Evolver_SpindleRatchet(teeth = 3*7, length=0.5, angle=0, cutter=false, cl
   
   offsetX = SpindleMaxX();
   
-  color("Chocolate", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("Olive", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
     translate([offsetX-clear,0,SpindleZ()])
     rotate([0,90,0])
@@ -693,7 +689,7 @@ module Evolver_SpindleZigZag(length=1.25, cutter=false, clearance=0.01, debug=fa
   clear2 = clear*2;
   offsetX = SpindleMaxX()+0.125;
   
-  color("Chocolate", alpha)
+  color("Olive", alpha)
   RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
     union() {
@@ -850,12 +846,6 @@ module EvolverForendAssembly(pipeAlpha=1, debug=false) {
     translate([(barrelTravel2*animateBarrel2),0,0])
     translate([(barrelTravel*animateBarrel),0,0]) {
       Evolver_Barrel(debug=_CUTAWAY_BARREL);
-      
-      // Actuator Nubbin
-      translate([0.75,0.5,0])
-      rotate([-90,0,0])
-      render()
-      cylinder(r=0.125, h=0.25);
     }
       
       
@@ -867,6 +857,9 @@ module EvolverForendAssembly(pipeAlpha=1, debug=false) {
   if (_SHOW_BARREL_SUPPORT)
   Evolver_BarrelSupport(debug=_CUTAWAY_BARREL_SUPPORT, alpha=_ALPHA_BARREL_SUPPORT);
   
+  if (_SHOW_EXTRACTOR)
+  Evolver_SpindleExtractor();
+  
   if (_SHOW_RECEIVER_FRONT)
   translate([-0.5,0,0])
   Evolver_ReceiverFront();
@@ -875,8 +868,6 @@ module EvolverForendAssembly(pipeAlpha=1, debug=false) {
 
 scale(25.4)
 if ($preview) {
-  
-  *Evolver_SpindleExtractor();
 
   translate([-ReceiverFrontLength(),0,0]) {
     
@@ -889,18 +880,12 @@ if ($preview) {
         length=FRAME_BOLT_LENGTH,
         debug=_CUTAWAY_RECEIVER);
 
-      if (_SHOW_STOCK) {
-        StockAssembly();
-      }
+      StockAssembly();
     }
 
     if (_SHOW_FCG)
     SimpleFireControlAssembly(recoilPlate=_SHOW_RECOIL_PLATE);
   }
-  
-  *translate([0,0,0])
-  rotate([0,90,0]) rotate(90)
-  Belt(rounds=1,offset=0);
 
   EvolverForendAssembly(debug=false);
 } else {
