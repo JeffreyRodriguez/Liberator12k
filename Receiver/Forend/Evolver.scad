@@ -38,7 +38,7 @@ use <../Stock.scad>;
 /* [Print] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Receiver_LargeFrame", "Evolver_ReceiverFront", "Evolver_Spindle", "Evolver_SpindleSpacer", "Evolver_SpindleZigZag","Evolver_SpindleRatchet", "Evolver_SpindleRatchetPawl", "Evolver_SpindleActuator", "Evolver_SpindleActuatorBlock", "Evolver_BarrelSupport", "Evolver_ForendSpacer"]
+_RENDER = ""; // ["", "Receiver_LargeFrame", "Evolver_ReceiverFront", "Evolver_Spindle", "Evolver_SpindleSpacer", "Evolver_SpindleZigZag","Evolver_SpindleRatchet", "Evolver_SpindleRatchetPawl", "Evolver_Actuator", "Evolver_ActuatorBlock", "Evolver_BarrelSupport", "Evolver_ForendSpacer"]
 
 /* [Assembly] */
 _SHOW_BELT = true;
@@ -208,7 +208,7 @@ module Evolver_SpindlePawlPin(cutter=false, clearance=0.003) {
   cylinder(r=pawlPinRadius+clear, h=1+clear2);
 }
 
-module Evolver_SpindleActuatorPin(cutter=false, clearance=0.003, debug=false, alpha=1) {
+module Evolver_ActuatorPin(cutter=false, clearance=0.003, debug=false, alpha=1) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   CR = 1/16;
@@ -424,7 +424,7 @@ module Evolver_BarrelSupport(length=Evolver_BarrelSupportLength(), doRender=true
     Evolver_Barrel(cutter=true);
     
     for (M = [0,1]) mirror([0,M,0])
-    Evolver_SpindleActuator(cutter=true);
+    Evolver_Actuator(cutter=true);
   }
 }
 
@@ -724,7 +724,7 @@ module Evolver_SpindleZigZag(length=1.25, cutter=false, clearance=0.01, debug=fa
                           h=length);
   }
 }
-module Evolver_SpindleActuator(cutter=false, clearance=0.007, debug=false, alpha=1) {
+module Evolver_Actuator(cutter=false, clearance=0.007, debug=false, alpha=1) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   CR = 1/16;
@@ -744,11 +744,11 @@ module Evolver_SpindleActuator(cutter=false, clearance=0.007, debug=false, alpha
     ChamferedCube([length+clearInstall+clearCR+clear, width+clear2, height+clear2], r=1/16);
     
     if (!cutter)
-    Evolver_SpindleActuatorPin(cutter=true);
+    Evolver_ActuatorPin(cutter=true);
   }
 }
 
-module Evolver_SpindleActuatorBlock(debug=false, alpha=1) {
+module Evolver_ActuatorBlock(debug=false, alpha=1) {
   CR = 1/16;
   
   length = 0.5;
@@ -769,7 +769,7 @@ module Evolver_SpindleActuatorBlock(debug=false, alpha=1) {
     }
     
     for (M = [0,1]) mirror([0,M,0])
-    Evolver_SpindleActuator(cutter=true, clearance=0.002);
+    Evolver_Actuator(cutter=true, clearance=0.002);
     
     Evolver_Barrel(cutter=true);
   }
@@ -801,11 +801,11 @@ module EvolverForendAssembly(pipeAlpha=1, debug=false) {
     
     if (_SHOW_SPINDLE_ACTUATOR) {
       for (M = [0,1]) mirror([0,M,0]) {
-        Evolver_SpindleActuator();
-        Evolver_SpindleActuatorPin();
+        Evolver_Actuator();
+        Evolver_ActuatorPin();
       }
       
-      Evolver_SpindleActuatorBlock();
+      Evolver_ActuatorBlock();
     }
     
     if (_SHOW_SPINDLE_SPACER)
@@ -909,6 +909,15 @@ if ($preview) {
   rotate([0,-90,0])
   Evolver_ReceiverFront();
   
+  if (_RENDER == "Evolver_BarrelSupport")
+  rotate([0,90,0])
+  translate([-ForendSpacerLength()-Evolver_BarrelSupportLength(),0,0])
+  Evolver_BarrelSupport();
+  
+  if (_RENDER == "Evolver_ForendSpacer")
+  rotate([0,-90,0])
+  Evolver_ForendSpacer();
+  
   if (_RENDER == "Evolver_Spindle")
   rotate([0,90,0])
   translate([-3.375,0,1])
@@ -934,23 +943,14 @@ if ($preview) {
   translate([-(SpindleLength()+SpindleInterlockLength()),-pawlPivotY,-pawlPivotZ])
   Evolver_SpindleRatchetPawl();
   
-  if (_RENDER == "Evolver_SpindleActuatorBlock")
+  if (_RENDER == "Evolver_ActuatorBlock")
   rotate([0,-90,0])
   translate([-(ForendSpacerLength()+Evolver_BarrelSupportLength()),0,0])
-  Evolver_SpindleActuatorBlock();
+  Evolver_ActuatorBlock();
   
-  if (_RENDER == "Evolver_SpindleActuator")
+  if (_RENDER == "Evolver_Actuator")
   translate([-SpindleMaxX(),0, -0.5])
   rotate([-60,0,0])
   translate([0,0, -SpindleZ()])
-  Evolver_SpindleActuator();
-  
-  if (_RENDER == "Evolver_BarrelSupport")
-  rotate([0,90,0])
-  translate([-ForendSpacerLength()-Evolver_BarrelSupportLength(),0,0])
-  Evolver_BarrelSupport();
-  
-  if (_RENDER == "Evolver_ForendSpacer")
-  rotate([0,-90,0])
-  Evolver_ForendSpacer();
+  Evolver_Actuator();
 }
