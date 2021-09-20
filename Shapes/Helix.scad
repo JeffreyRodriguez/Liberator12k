@@ -18,11 +18,10 @@ ANGLE=22.5; // [0:0.5:360]
 $fa = ResolutionFa();
 $fs = UnitsFs()*ResolutionFs();
 
+function HelixHeight(radius,angle,width,twistRate) = (((PI * (radius*2))*(angle/360))+width)/twistRate;
+
 module HelixSegment(radius=RADIUS, depth=DEPTH, width=WIDTH,
                     angle=ANGLE, twist_rate=TWIST_RATE,
-                    topExtra=0.125, bottomExtra=0.125,
-                    teardropTop=false, teardropTopTruncated=true,
-                    teardropBottom=false, teardropBottomTruncated=true,
                     slices=Resolution(30,50),
                     verbose=false) {
 
@@ -30,7 +29,7 @@ module HelixSegment(radius=RADIUS, depth=DEPTH, width=WIDTH,
   diameter     = radius*2;
   circumf      = PI * diameter;
   segment      = circumf*(angle/360);
-  height       = (segment+width)/twist_rate;//(radius/twist_rate);
+  height       = HelixHeight(radius,angle,width,twist_rate);
   width_angle  = (width/circumf)*360;
 
   // HACK: The max(width*sqrt(2), ...) will cause the track to be
@@ -59,7 +58,6 @@ module HelixSegment(radius=RADIUS, depth=DEPTH, width=WIDTH,
   translate([0,0,width+bottomExtra])
   intersection() {
     union() {
-      translate([0,0,-width/2])
       linear_extrude(height=height,
                      slices=slices,
                      twist = angle+twistAngleExtra)

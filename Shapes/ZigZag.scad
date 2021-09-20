@@ -7,12 +7,12 @@ use <../Meta/Manifold.scad>;
 use <../Shapes/Semicircle.scad>;
 use <../Shapes/Helix.scad>;
 
-DEFAULT_ZIGZAG_DIAMETER  = 3.6252;
-DEFAULT_ZIGZAG_POSITIONS = 6;
-DEFAULT_ZIGZAG_DEPTH     = 0.1875;
-DEFAULT_ZIGZAG_WIDTH     = 0.2500;
-EXTRA_BOTTOM = 0.0000;
-EXTRA_TOP = 0.0000;
+DEFAULT_ZIGZAG_DIAMETER  = 1;
+DEFAULT_ZIGZAG_POSITIONS = 3;
+DEFAULT_ZIGZAG_DEPTH     = 0.125;
+DEFAULT_ZIGZAG_WIDTH     = 0.1;
+EXTRA_BOTTOM = 0.1000;
+EXTRA_TOP = 0.1000;
 
 // *********
 // * Setup *
@@ -40,7 +40,6 @@ module ZigZag(supportsTop=true, supportsBottom=true,
 
   zigZagCircumference = (radius+depth)*2*PI;
   slotAngle = (width/zigZagCircumference)*360;
-  overTwist = slotAngle/2;
 
   positionAngle=360/positions;
   top_slot_height = (width/2)+extraTop;
@@ -108,7 +107,7 @@ module ZigZag(supportsTop=true, supportsBottom=true,
     if (supportsBottom)
     translate([0,0,bottom_slot_height+width])
     for (i=[0:positions-1])
-    rotate([0,0,(positionAngle*i)+overTwist])
+    rotate([0,0,(positionAngle*i)])
     ZigZagSupport(radius, depth, width);
   }
 }
@@ -118,6 +117,6 @@ module ZigZag(supportsTop=true, supportsBottom=true,
 rotate([0,90,0])
 %cylinder(r=DEFAULT_ZIGZAG_WIDTH/2, h=DEFAULT_ZIGZAG_DEPTH*3, $fn=10);
 
-//render()
+render()
 ZigZag(extraBottom=EXTRA_BOTTOM, extraTop=EXTRA_TOP,
        supportsTop=false, supportsBottom=false);
