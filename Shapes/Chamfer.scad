@@ -51,6 +51,7 @@ module Fillet(r=0.125, r1=undef, r2=undef, h=1, inset=false, chamferTop=true, ch
   r1 = (r1 == undef ? r : r1);  // Default r1 to r
   r2 = (r2 == undef ? r1*(sqrt(2)/2) : r2); // Default end chamfer radius to r
   
+  if (ResolutionIsHigh())
   difference() {
     linear_extrude(height=h)
     intersection() {
@@ -75,6 +76,7 @@ module Fillet(r=0.125, r1=undef, r2=undef, h=1, inset=false, chamferTop=true, ch
 }
 
 module HoleChamfer(r1=0.5, r2=0.125, teardrop=false, edgeSign=1) {
+  if (ResolutionIsHigh())
   rotate_extrude()
   RoundedBoolean(r=r2,
                  edgeOffset=r1,
@@ -133,10 +135,12 @@ module ChamferedSquareHole(sides=[1,1], length=1, center=true,
     }
 
     // Chamfer the bottom
+    if (ResolutionIsHigh())
     if (chamferBottom)
     SquareHoleEndChamfer(xy=sides, r=chamferRadius, center=center, teardrop=teardropTop);
 
     // Chamfer the tube front
+    if (ResolutionIsHigh())
     if (chamferTop)
     translate([0,0,length])
     mirror([0,0,1])
@@ -191,6 +195,9 @@ module ChamferedCube(xyz=[1,2,3], r=0.25, center=false,
   translate([center ? -xyz[0]/2 : 0,
               center ? -xyz[1]/2 : 0,
               center ? -xyz[2]/2 : 0])
+  if (ResolutionIsLow()) {
+    cube(xyz);
+  } else
   intersection() {
 
     // X
@@ -247,8 +254,12 @@ module ChamferedCylinder(r1=0.5, r2=0.25, h=1,
                          chamferBottom=true, chamferTop=true,
                          teardropBottom=true, teardropTop=false,
                          center=false) {
-  hull()
+        
   translate([0,0,(center ? -h/2 : 0)])
+  if (ResolutionIsLow()) {
+    cylinder(r=r1, h=h);
+  } else
+  hull()
   difference() {
     cylinder(r=r1, h=h);
     CylinderChamferEnds(r1=r1, r2=r2, h=h,
@@ -265,6 +276,9 @@ module ChamferedCylinder(r1=0.5, r2=0.25, h=1,
 module ChamferedCircularHole(r1=1, r2=0.1, h=1,
                              chamferTop=true, chamferBottom=true,
                              teardropBottom=true, teardropTop=true) {
+   if (ResolutionIsLow()) {
+     cylinder(r=r1, h=h);
+   } else
   union() {
 
     // Bottom Chamfer
