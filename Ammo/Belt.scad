@@ -239,7 +239,7 @@ module BeltLinkBase() {
 // **********
 
 module BeltLink() {
-  color("Tan") render()
+  color("Tan")
   difference() {
     translate([0,0,rimBlockHeight])
     union() {
@@ -365,6 +365,8 @@ module Belt(rounds=3, offset=0, expand=0) {
     
     Cartridge();
     CarrierPetals(AF=AF);
+    
+    render()
     BeltLink();
   }
 }
@@ -378,7 +380,7 @@ if ($preview) {
   
   if (_RENDER == "BeltLink3")
   for (R = [0:120:360]) rotate(R)
-  translate([0,1.02,0])
+  translate([0,1.02,-rimBlockHeight])
   BeltLink();
   
   if (_RENDER == "BeltPetal")
