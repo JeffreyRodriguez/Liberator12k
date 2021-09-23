@@ -24,7 +24,7 @@ We'll be using a full 1kg spool for the base color. Most of the "big" parts will
 be printed with this filament.
 
 #### Spool 2: Accent Color
-The accent prints will take about 500kg of plastic, or half a typical spool.
+The accent prints will take about 500g of plastic, or half a typical spool.
 Accent parts are often smaller and bear some kind of load, so if you want to
 splurge - do it here.
 
