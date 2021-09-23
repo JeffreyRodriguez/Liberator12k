@@ -38,20 +38,21 @@ use <Forend/Pump Reversed Mag.scad>;
 _RENDER = ""; // ["", "Stock", "Stock_Backplate", "Stock_Buttpad"]
 
 /* [Assembly] */
-_FOREND = "TopBreak"; // ["TopBreak", "Trigun", "Revolver", "Evolver", "AR15", "Pump"]
+_FOREND = ""; // ["", "TopBreak", "Trigun", "Revolver", "Evolver", "AR15", "Pump"]
 _RECEIVER_TYPE  = "Standard"; // ["Standard", "Frame"]
 _SHOW_RECEIVER = true;
 _SHOW_LOWER = true;
+_SHOW_FCG = true;
 _SHOW_STOCK_BACKPLATE = true;
 _SHOW_FOREND = true;
 _SHOW_BUTTPAD = true;
 _SHOW_BULLPUP_BOLT = true;
 
-_ALPHA_STOCK = 1; // [0:0.1:1]
+_ALPHA_BULLPUP = 1; // [0:0.1:1]
 _ALPHA_BUTTPAD = 1; // [0:0.1:1]
 
 
-_CUTAWAY_STOCK = false;
+_CUTAWAY_BULLPUP = false;
 _CUTAWAY_BUTTPAD = false;
 _CUTAWAY_RECEIVER = false;
 
@@ -74,17 +75,24 @@ function BullpupBolt() = BoltSpec(BULLPUP_BOLT);
 assert(BullpupBolt(), "BullpupBolt() is undefined. Unknown BULLPUP_BOLT?");
 
 function Bullpup_BackplateLength() = 0.5;
+function Bullpup_RearLength() = ReceiverLength();
+function Bullpup_MinX() = - ReceiverFrontLength()
+                          - Bullpup_RearLength();
 
-function Bullpup_BoltX() = -ReceiverLength()-ReceiverFrontLength()-Bullpup_BackplateLength();
+function Bullpup_BoltX() = Bullpup_MinX();
 function Bullpup_BoltY() = 0.625;
 function Bullpup_BoltZ() = -2;
 function Bullpup_BoltWall() = 0.3125;
+function Bullpup_BoltLength() = 12;
 
+function Bullpup_BottomZ() = Bullpup_BoltZ()-Bullpup_BoltWall();
+
+function Bullpup_FrontLength() = Bullpup_BoltLength() - Bullpup_RearLength();
 
 function Bullpup_LowerX() = 5.5;
 function Bullpup_LowerZ() = (Bullpup_BoltZ() - Bullpup_BoltWall())
                           - ReceiverBottomZ();
-
+echo("Bullpup_BoltLength", Bullpup_BoltLength());
 // ************
 // * Vitamins *
 // ************
@@ -96,7 +104,7 @@ module Bullpup_Bolts(debug=false, head="hex", nut="heatset", cutter=false, teard
   translate([Bullpup_BoltX(), Bullpup_BoltY(), Bullpup_BoltZ()])
   rotate([0,90,0])
   NutAndBolt(bolt=BullpupBolt(),
-             boltLength=ReceiverLength()+FrameExtension(), capOrientation=false,
+             boltLength=Bullpup_BoltLength(), capOrientation=false,
              head=head, capHeightExtra=(cutter?ButtpadLength():0),
              nut=nut, nutHeightExtra=(cutter?1:0),
              clearance=clear, teardrop=cutter&&teardrop);
@@ -106,12 +114,12 @@ module Bullpup_TakedownPinRetainer(cutter=false, clearance=0.005) {
   clear2 = clear*2;
   
   color("Silver") RenderIf(!cutter)
-  translate([Bullpup_BoltX(), 0, ReceiverTakedownPinZ()-0.125])
+  translate([Bullpup_MinX(), 0, ReceiverTakedownPinZ()-0.125])
   rotate([0,90,0])
   cylinder(r=(3/32/2)+clear, h=2);
   
   if (cutter)
-  translate([Bullpup_BoltX(), 0, ReceiverTakedownPinZ()-0.125])
+  translate([Bullpup_MinX(), 0, ReceiverTakedownPinZ()-0.125])
   rotate([0,90,0])
   cylinder(r=0.125, h=2);
   
@@ -121,78 +129,75 @@ module Bullpup_TakedownPinRetainer(cutter=false, clearance=0.005) {
 // *****************
 // * Printed Parts *
 // *****************
-module Bullpup_Base(length=1, mirrored=false, debug=false, alpha=1) {
+module Bullpup_Front(length=Bullpup_FrontLength(), debug=false, alpha=1) {
   color("Chocolate", alpha) render() DebugHalf(enabled=debug)
   difference() {
-      
     union() {
       
-      // Bullpup Supports
-      hull() {
-        
-        // Bullpup bolt supports
-        mirror([mirrored?1:0,0,0])
-        hull()
-        for (M = [0,1]) mirror([0,M,0])
-        translate([0, Bullpup_BoltY(), Bullpup_BoltZ()])
-        rotate([0,90,0])
-        ChamferedCylinder(r1=Bullpup_BoltWall(), r2=1/16, h=length);
-      }
-      //
+      // Bullpup bolt supports
+      hull()
+      for (Y = [1,-1])
+      translate([-0.5, Y*Bullpup_BoltY(), Bullpup_BoltZ()])
+      rotate([0,90,0])
+      ChamferedCylinder(r1=Bullpup_BoltWall(), r2=1/16, h=length);
       
-      children();
+      translate([Bullpup_LowerX(),0,Bullpup_LowerZ()])
+      translate([-LowerMaxX(),0,ReceiverBottomZ()]) {
+        ReceiverLugFront(extraTop=0.25);
+        ReceiverLugRear(extraTop=0.25);
+      }
     }
     
-    Bullpup_Bolts(cutter=true, teardrop=false);
+    Bullpup_TriggerBar(cutter=true);
+    
+    Bullpup_Bolts(cutter=true);
   }
-}
-module Bullpup_Front() {
-  Bullpup_Base(length=Bullpup_LowerX());
 }
 module Bullpup_Rear(length=ReceiverLength()+Bullpup_BackplateLength(), debug=false, alpha=1) {
   color("Chocolate", alpha) render() DebugHalf(enabled=debug)
   difference() {
     
-    
-    Bullpup_Base(mirrored=true, length=length) {
+    union() {
         
+      // Bullpup bolt supports
+      hull()
+      for (Y = [1,-1])
+      translate([Bullpup_MinX(), Y*Bullpup_BoltY(), Bullpup_BoltZ()])
+      rotate([0,90,0])
+      ChamferedCylinder(r1=Bullpup_BoltWall(), r2=1/16, h=length);
+        
+      // Hammer Guide
+      translate([Bullpup_MinX(),-0.3125/2,-ReceiverIR()-0.375])
+      ChamferedCube([1, 0.3125, ReceiverIR()], r=1/16, teardropFlip=[true,true,true]);
+      
       // Receiver Bottom Body
-      mirror([1,0,0])
-      translate([0, -(1.25/2), -2.125])
-      ChamferedCube([length, 1.25, 2+ReceiverBottomZ()+0.125],
+      translate([Bullpup_MinX(), -(1.25/2), -2.125])
+      ChamferedCube([length-0.5, 1.25, 2+ReceiverBottomZ()+0.125],
                     r=1/16, teardropFlip=[true, true, true]);
       
       // Bottom Slot Section
       difference() {
         
-        translate([-Bullpup_BackplateLength()-0.5,0,-0.26])
-        ReceiverBottomSlotInterface(length=length-0.5,
-                                    height=abs(ReceiverBottomZ())-0.26+0.1);
+        translate([-1,0,0])
+        ReceiverBottomSlotInterface(length=ReceiverLength()-0.5);
         
         // Receiver ID
-        translate([Bullpup_BoltX(),0,0])
+        translate([Bullpup_MinX(),0,0])
         rotate([0,90,0])
-        ChamferedCircularHole(r1=ReceiverIR(), r2=1/8, h=length,
+        ChamferedCircularHole(r1=ReceiverIR(), r2=1/8, h=ReceiverLength()-0.5,
                               teardropBottom=true,
                               teardropTop=true);
-        
-        // Hammer Guide
-        translate([Bullpup_BoltX(),-0.3125/2,-ReceiverIR()-0.375])
-        mirror([1,0,0])
-        ChamferedCube([length, 0.3125, ReceiverIR()], r=1/16, teardropFlip=[true,true,true]);
       }
       //
       
       // Backplate
-      difference() {
-        translate([Bullpup_BoltX(),0,0])
-        mirror([1,0,0])
+      *difference() {
+        translate([Bullpup_MinX(),0,0])
         ReceiverSegment(length=0.5, highTop=false,
                         chamferFront=true, chamferBack=true);
     
         // Clearance for the tension bolts
-        translate([Bullpup_BoltX()+ManifoldGap(),0,0])
-        mirror([1,0,0])
+        translate([Bullpup_MinX()+ManifoldGap(),0,0])
         TensionBoltIterator() {
           ChamferedCircularHole(r1=WallTensionRod(), r2=1/16, h=0.5);
           
@@ -206,27 +211,13 @@ module Bullpup_Rear(length=ReceiverLength()+Bullpup_BackplateLength(), debug=fal
         }
       }
       //
-      
-      // Sear support
-      translate([-LowerMaxX(),0,0])
-      hull() {
-        translate([0.125,-0.3125/2,-ReceiverIR()-0.3125])
-        ChamferedCube([0.25, 0.3125, ReceiverIR()], r=1/16, teardropFlip=[true,true,true]);
-        
-        translate([LowerMaxX()-1.25,-0.3125/2,-ReceiverIR()-0.25])
-        ChamferedCube([0.25, 0.3125, 0.25], r=1/16, teardropFlip=[true,true,true]);
-      }
-      //
     }
     
-    translate([-LowerMaxX(),0,0])
+    translate([-LowerMaxX()-0.5,0,0])
     translate([-0.01,0,ReceiverBottomZ()])
     Sear(length=SearLength()+abs(ReceiverBottomZ()), cutter=true);
     
-    // Trigger bar hole
-    translate([-LowerMaxX()-0.125-TriggerTravel(), -(0.51/2), -2])
-    cube([LowerMaxX()+1.5,0.51,0.26]);
-    
+    Bullpup_TriggerBar(cutter=true);
     
     translate([-ReceiverFrontLength(),0,0])
     ReceiverTakedownPin(cutter=true);
@@ -237,6 +228,15 @@ module Bullpup_Rear(length=ReceiverLength()+Bullpup_BackplateLength(), debug=fal
   }
 }
 
+module Bullpup_TriggerBar(cutter=false, debug=false, alpha=1) {
+  color("Olive", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
+  
+  //translate([Bullpup_LowerX(),0,Bullpup_LowerZ()])
+  //translate([-LowerMaxX(),0,ReceiverBottomZ()]) 
+  
+  translate([-LowerMaxX()-0.125-TriggerTravel(), -(0.51/2), -2])
+  cube([LowerMaxX()+1.5,0.51,1.26]);
+}
 ///
 
 // **************
@@ -244,28 +244,37 @@ module Bullpup_Rear(length=ReceiverLength()+Bullpup_BackplateLength(), debug=fal
 // **************
 module BullpupAssembly() {
   
-  Bullpup_Bolts();
   Bullpup_TakedownPinRetainer();
   
-  translate([StockLength()-0.5,0,0]) {
-    
-    if (_SHOW_BULLPUP_BOLT)
-    ButtpadBolt();
+  if (_SHOW_BULLPUP_BOLT)
+  Bullpup_Bolts();
+  
+  if (_SHOW_FCG)
+  translate([-LowerMaxX()-0.5,0,LowerOffsetZ()]){
+    Sear(length=SearLength()+abs(ReceiverBottomZ()));
+    SearPin();
+  }
+  
+  Bullpup_TriggerBar(debug=_CUTAWAY_BULLPUP, alpha=_ALPHA_BULLPUP);
+  
+  translate([StockLength()-0.5-1,0,0]) {
     
     if (_SHOW_STOCK_BACKPLATE)
     Stock_Backplate();
     
-    if (_SHOW_BUTTPAD)
-    Stock_Buttpad(alpha=_ALPHA_BUTTPAD, debug=_CUTAWAY_BUTTPAD);
+    if (_SHOW_BUTTPAD) {
+      ButtpadBolt();
+      Stock_Buttpad(alpha=_ALPHA_BUTTPAD, debug=_CUTAWAY_BUTTPAD);
+    }
   }
     
 
   if (_SHOW_LOWER)
   translate([Bullpup_LowerX(),0,Bullpup_LowerZ()])
-  Lower(showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true);
+  Lower();
   
-  Bullpup_Rear();
-  Bullpup_Front();
+  Bullpup_Rear(debug=_CUTAWAY_BULLPUP, alpha=_ALPHA_BULLPUP);
+  Bullpup_Front(debug=_CUTAWAY_BULLPUP, alpha=_ALPHA_BULLPUP);
 }
 
 scale(25.4)
@@ -273,7 +282,8 @@ if ($preview) {
   
   if (_SHOW_FOREND)
   if (_FOREND == "TopBreak") {
-    BreakActionAssembly(pivotFactor=Animate(ANIMATION_STEP_UNLOAD)
+    _RECEIVER_TYPE = "Frame";
+    TopBreak_Assembly(pivotFactor=Animate(ANIMATION_STEP_UNLOAD)
                                    -Animate(ANIMATION_STEP_LOAD),
                         chargeFactor=Animate(ANIMATION_STEP_CHARGE)
                                    -Animate(ANIMATION_STEP_CHARGER_RESET),
@@ -282,12 +292,15 @@ if ($preview) {
                         extractFactor=Animate(ANIMATION_STEP_UNLOAD)
                                    -SubAnimate(ANIMATION_STEP_LOAD, end=0.25));
   } else if (_FOREND == "Revolver") {
+    _RECEIVER_TYPE = "Frame";
     RevolverForendAssembly();
   } else if (_FOREND == "Evolver") {
+    _RECEIVER_TYPE = "Frame";
     EvolverForendAssembly();
   } else if (_FOREND == "AR15") {
     PumpAR15ForendAssembly();
   } else if (_FOREND == "Trigun") {
+    _RECEIVER_TYPE = "Frame";
     TrigunForendAssembly();
   } else if (_FOREND == "Pump") {
     PumpForend();
