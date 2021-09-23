@@ -59,7 +59,7 @@ if ($preview) {
   
   if (_SHOW_FOREND)
   if (_FOREND == "TopBreak") {
-    BreakActionAssembly(pivotFactor=Animate(ANIMATION_STEP_UNLOAD)
+    TopBreak_Assembly(pivotFactor=Animate(ANIMATION_STEP_UNLOAD)
                                    -Animate(ANIMATION_STEP_LOAD),
                         chargeFactor=Animate(ANIMATION_STEP_CHARGE)
                                    -Animate(ANIMATION_STEP_CHARGER_RESET),
