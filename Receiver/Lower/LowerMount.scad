@@ -171,16 +171,14 @@ Sear(length=SearLength()+abs(ReceiverBottomZ()));
 
 scale(25.4)
 if ($preview) {
-  if (_SHOW_RECEIVER)
-  ReceiverAssembly(debug=_CUTAWAY_RECEIVER);
   
   LowerMount();
 
   if (_SHOW_LOWER)
-  translate([-LowerMaxX(),0,ReceiverBottomZ()])
-  Lower(showTrigger=true,
-        showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true,
-        searLength=SearLength()+abs(ReceiverBottomZ())+SearTravel()-(0.25/2));
+  Lower();
+  
+  if (_SHOW_RECEIVER)
+  ReceiverAssembly(debug=_CUTAWAY_RECEIVER);
 } else {
   if (_RENDER == "LowerMount_Front") {
     rotate([0,90,0])
