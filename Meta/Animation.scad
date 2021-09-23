@@ -111,8 +111,8 @@ function AnimationDebug(step, start=0, end=1, T=$t) = AnimationStepStart(step)
 
 
 // General animation debug info
-//echo("AnimationStep($t):", AnimationStep($t));
-//echo("Animate(AnimationStep($t)):", Animate(AnimationStep($t)));
+echo("AnimationStep($t):", AnimationStep($t));
+echo("Animate(AnimationStep($t)):", Animate(AnimationStep($t)));
 
 // Debug-level logging, show the value of each animation step.
 *for (i = [0 : AnimationStepCount() -1])
