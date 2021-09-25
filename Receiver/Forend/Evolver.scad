@@ -1,5 +1,6 @@
 include <../../Meta/Animation.scad>;
 //$t = AnimationDebug(ANIMATION_STEP_EXTRACT, start=0.25, end=0.375);
+//$t = AnimationDebug(ANIMATION_STEP_EXTRACT, start=1);
 //$t = 0;
 $t = 0.5+(0.5*$t);
 
@@ -41,10 +42,12 @@ use <../Stock.scad>;
 /* [Print] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Receiver_LargeFrame", "Evolver_ReceiverFront", "Evolver_Spindle", "Evolver_SpindleZigZag", "Evolver_Ratchet", "Evolver_RatchetPawl","Evolver_Actuator", "Evolver_ActuatorBlock", "Evolver_BarrelSupport", "Evolver_ForendSpacer"]
+_RENDER = ""; // ["", "Receiver_LargeFrame", "Evolver_ReceiverFront", "Evolver_Spindle", "Evolver_SpindleZigZag", "Evolver_Ratchet", "Evolver_RatchetPawl","Evolver_Actuator", "Evolver_BarrelSupport", "Evolver_ForendSpacer"]
 
 /* [Assembly] */
 _SHOW_RECEIVER = false;
+_SHOW_FCG = false;
+_SHOW_LOWER = false;
 _SHOW_RECEIVER_FRONT = false;
 _SHOW_BARREL = true;
 _SHOW_BARREL_SUPPORT = true;
@@ -55,7 +58,7 @@ _SHOW_EXTRACTOR = true;
 _SHOW_FOREND_SPACER = true;
 _SHOW_RATCHET_PAWL = true;
 _SHOW_SPINDLE = true;
-_SHOW_SPINDLE_ACTUATOR = true;
+_SHOW_ACTUATOR = true;
 
 /* [Transparency] */
 _ALPHA_BARREL_SUPPORT = 1;     // [0:0.1:1]
@@ -103,10 +106,10 @@ function BarrelLength() = BARREL_LENGTH;
 function CylinderZ() = -(CYLINDER_OFFSET + ManifoldGap());
 function WallBarrel() = 0.375; //0.4375;
 function WallSpindle() = 0.1875;
-function ActionRodTravel() = 2;
 function ReceiverFrontLength() = 0.5;
 function TemplateHoleRadius() = 1/16;
 function ForendSpacerLength() = 3.25;
+function ActionRodZ() = 0.875;
 
 function ChamferRadius() = 1/16;
 function CR() = 1/16;
@@ -117,8 +120,13 @@ function RecoilPlateWidth() = 2;
 function RecoilSpreaderThickness() = 0.5;
 function BarrelCollarDiameter() = 1.625;
 function BarrelCollarLength() = 0.625;
+function ActuatorPinDiameter() = UnitsMetric(2.5);
+function ActuatorPinRadius() = ActuatorPinDiameter()/2;
 
 // Settings: Vitamins
+function ActionRodBolt() = BoltSpec(GP_BOLT);
+assert(ActionRodBolt(), "ActionRodBolt() is undefined. Unknown GP_BOLT?");
+
 function BarrelSetScrew() = BoltSpec(GP_BOLT);
 assert(BarrelSetScrew(), "BarrelSetScrew() is undefined. Unknown GP_BOLT?");
 
@@ -139,7 +147,7 @@ function BarrelCollarRadius() = BarrelCollarDiameter()/2;
 // Calculated: Lengths
 function ForendLength() = FrameExtension(length=FRAME_BOLT_LENGTH)
                         - ReceiverFrontLength();
-function SpindleLength() = 3.25;
+function SpindleLength() = 2.75;//3.25;
 function Evolver_ZigZagLength() = 1.375;
 function Evolver_RatchetLength() = 0.5;
 
@@ -151,18 +159,20 @@ function SpindleMaxX() = ExtractorLength()+SpindleLength();
 function ForendBoltZ() = TensionRodBottomZ()-0.375;
 function ForendBoltY() = 1;
 
-
+function Evolver_BarrelTravel() = ForendSpacerLength();
+function Evolver_ActuatorTravel() = Evolver_ZigZagLength()-ActuatorPinDiameter();
 function Evolver_BarrelSupportLength() = ForendLength()-ForendSpacerLength();
-function Evolver_ActuatorBlockLength() = 0.25;
 
+beltOffsetX = 0.0625;
 ratchetRadius = 0.375;
 pawlRadius = (1/64)+(1/128);
-pawlPivotZ = TensionRodBottomZ();
-pawlPivotY = TensionRodBottomOffsetSide();
+pawlPivotZ = -1.75;
+pawlPivotY = 0;
 pawlPivotAngle = -15;
 pawlPinRadius = UnitsMetric(2.5)/2;
-actuatorPinRadius = UnitsMetric(2.5)/2;
+actuatorPinRadius = ActuatorPinRadius();
 actuatorPinDepth = 0.125;
+actuatorPinX = ForendSpacerLength()+ActuatorPinRadius();
 
 //************
 //* Vitamins *
@@ -172,10 +182,9 @@ module Evolver_Barrel(barrelLength=BarrelLength(), clearance=BARREL_CLEARANCE, c
   clear = (cutter ? clearance : 0);
   clear2 = clear*2;
   
-  
   color("Gold", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
   translate([ForendLength(),0,0])
-  rotate([0,-90,0])
+  rotate([0,90,0])
   difference() {
     cylinder(r=(BarrelCollarDiameter()/2)+clear, h=BarrelCollarLength());
     
@@ -197,6 +206,18 @@ module Evolver_Barrel(barrelLength=BarrelLength(), clearance=BARREL_CLEARANCE, c
   }
 }
 
+module Evolver_SpindleRod(cutter=false, clearance=0.003) {
+  clear = cutter? clearance : 0;
+  clear2 = clear*2;
+  
+  color("Silver")
+  RenderIf(!cutter)
+  translate([SpindleLength()-0.25,0,SpindleZ()])
+  rotate([0,90,0])
+  for (R = [0:120:360]) rotate(R)
+  translate([0.25, 0, -clear])
+  cylinder(r=(UnitsMetric(2.5)/2)+clear, h=3/4+(cutter?2:0)+clear2);
+}
 module Evolver_SpindlePins(cutter=false, clearance=0.003) {
   clear = cutter? clearance : 0;
   clear2 = clear*2;
@@ -218,7 +239,7 @@ module Evolver_RatchetPawlPin(cutter=false, clearance=0.003) {
   
   color("Silver")
   RenderIf(!cutter)
-  translate([SpindleLength()-clear,0,pawlPivotZ])
+  translate([ForendSpacerLength()-Evolver_RatchetLength()-clear,0,pawlPivotZ])
   rotate([0,90,0])
   cylinder(r=pawlPinRadius+clear, h=1+clear2);
 }
@@ -229,12 +250,12 @@ module Evolver_ActuatorPin(cutter=false, clearance=0.003, debug=false, alpha=1) 
   CR = 1/16;
   
   height = 0.5;
-  offsetX = ForendSpacerLength()+Evolver_RatchetLength();
+  offsetX = actuatorPinX;
   
   color("Silver")
   RenderIf(!cutter)
   for (M = [0,1]) mirror([0,M,0])
-  translate([actuatorPinRadius,0, SpindleZ()])
+  translate([0,0, SpindleZ()])
   rotate([60,0,0])
   translate([offsetX,0, 0.5-actuatorPinDepth])
   cylinder(r=actuatorPinRadius+clear, h=height+ManifoldGap());
@@ -289,6 +310,7 @@ module Evolver_ReceiverFront(contoured=true, debug=_CUTAWAY_RECEIVER_FRONT, alph
     RecoilPlateBolts(cutter=true);
     Receiver_TensionBolts(cutter=true);
     
+    translate([0,0,0.125])
     ActionRod(cutter=true);
   }
 }
@@ -386,46 +408,17 @@ module Evolver_BarrelSupport(length=Evolver_BarrelSupportLength(), doRender=true
     
     
     Evolver_RatchetPawlPin(cutter=true);
-    
-    // Spindle ratchet pawl clearance
-    hull() {
-      
-      // Pivot
-      translate([SpindleMaxX(),0,pawlPivotZ])
-      rotate([0,90,0])
-      ChamferedCylinder(r1=0.1875+0.005,
-                        r2=1/32,
-                        h=0.51,
-                        teardropTop=true);
-      
-      translate([SpindleMaxX(),-(1/2), SpindleZ()-0.5])
-      ChamferedCube([0.51, 1, 0.5], r=1/16);
-      
-      // Spindle
-      translate([0,0,SpindleZ()-pawlPivotZ])
-      translate([SpindleMaxX(),0,pawlPivotZ])
-      rotate([0,90,0])
-      ChamferedCylinder(r1=0.5,
-                        r2=1/32,
-                        h=0.51,
-                        teardropTop=true);
-    }
-
-    
-    *for (F = [0,1]) Evolver_RatchetPawlPivot(factor=F)
-    Evolver_RatchetPawl(cutter=true);
-    *Evolver_Spindle(cutter=true);
-    
     Evolver_SpindleZigZag(cutter=true);
     
-    // Vertical clearance cut for rotating elements
-    *translate([0,-0.875/2, SpindleZ()])
-    cube([SpindleMaxX()-length-0.375, 0.875, 1]);
+    Evolver_PumpRod(cutter=true);
+    
+    translate([0,0,0.125])
+    ActionRod(cutter=true);
     
     // Spindle hole
-    *translate([SpindleMaxX()-length,0,SpindleZ()])
-    rotate([0,-90,0])
-    ChamferedCircularHole(r1=(0.3125/2)+0.007, r2=1/32, h=0.375);
+    translate([ForendSpacerLength(),0,SpindleZ()])
+    rotate([0,90,0])
+    ChamferedCylinder(r1=(0.3125/2)+0.007, r2=1/32, h=Evolver_ZigZagLength()+0.5);
     
     FrameBolts(cutter=true);
 
@@ -525,7 +518,7 @@ module Evolver_Ratchet(teeth = 3*7, length=Evolver_RatchetLength(), angle=0, cut
   CR = 1/16;
   clearCR = cutter ? CR : 0;
   
-  offsetX = ForendSpacerLength();
+  offsetX = ForendSpacerLength()-length;
   
   color("Olive", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
@@ -571,7 +564,7 @@ clear = cutter ? clearance : 0;
   clearCR = cutter ? CR : 0;
   
   length = length+clear2;
-  offsetX = ForendSpacerLength()-clear;
+  offsetX = ForendSpacerLength()-length-clear;
   
   color("Pink", alpha)
   RenderIf(!cutter) DebugHalf(enabled=debug)
@@ -671,7 +664,7 @@ module Evolver_Spindle(cutter=false, clearance=0.007, debug=false, alpha=1) {
     }
     
     // Belt Drive Tooth
-    translate([0.5+0.125,0,SpindleZ()])
+    translate([0.5+beltOffsetX,0,SpindleZ()])
     rotate([0,90,0])
     for (R = [0:120:360]) rotate(60+R)
     translate([BarrelRadius()-(1/16),0,-clearance])
@@ -697,7 +690,7 @@ module Evolver_Spindle(cutter=false, clearance=0.007, debug=false, alpha=1) {
 module Evolver_SpindleZigZag(length=Evolver_ZigZagLength(), cutter=false, clearance=0.01, debug=false, alpha=1) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
-  offsetX = ForendSpacerLength()+Evolver_RatchetLength();
+  offsetX = ForendSpacerLength();
   
   color("Olive", alpha)
   RenderIf(!cutter) DebugHalf(enabled=debug)
@@ -715,11 +708,11 @@ module Evolver_SpindleZigZag(length=Evolver_ZigZagLength(), cutter=false, cleara
     Evolver_SpindlePins(cutter=true);
     
     if (!cutter)
-    translate([offsetX-0.0625,0,SpindleZ()])
+    translate([offsetX,0,SpindleZ()])
     rotate([0,90,0])
     ZigZag(radius=0.5, mirrored=false,
            depth=0.125, width=(actuatorPinRadius+0.002)*2, positions=3,
-           extraTop=1, extraBottom=0.3125,
+           extraTop=0.1875+0.01, extraBottom=0.1875+0.01,
            supportsTop=false, supportsBottom=false);
   
     // Spindle hole
@@ -736,52 +729,54 @@ module Evolver_Actuator(cutter=false, clearance=0.007, debug=false, alpha=1) {
   CR = 1/16;
   clearCR = cutter ? CR : 0;
   
-  width = 0.3125;
+  legLength = 0.5;
+  width = 0.5;
   height = 0.375;
   wall = 0.125;
-  offsetX = ForendSpacerLength()+Evolver_RatchetLength()-wall;
-  length = Evolver_ZigZagLength()+Evolver_ActuatorBlockLength()+wall;
+  offsetX = actuatorPinX-(legLength/2);
+  length = Evolver_BarrelSupportLength();
   
-  color("Magenta", alpha)
+  color("Chocolate", alpha)
   RenderIf(!cutter) DebugHalf(enabled=debug)
-  for (M = [0,1]) mirror([0,M,0])
   difference() {
-    translate([0,0, SpindleZ()])
-    rotate([60,0,0])
-    translate([offsetX-clearCR-clear,-(width/2)-clear, 0.5-clear])
-    ChamferedCube([length+clearCR+clear, width+clear2, height+clear2], r=1/16);
+    union() {
+
+      translate([offsetX,0,0])
+      rotate([0,90,0])
+      ChamferedCylinder(r1=BarrelCollarRadius()+clear,r2=CR,
+                         h=length+(cutter?Evolver_ActuatorTravel():0));
+      
+      
+      legCutterLength = (cutter?Evolver_ActuatorTravel():0);
+      
+      // Actuator legs
+      for (M = [0,1]) mirror([0,M,0])
+      translate([actuatorPinX,0, SpindleZ()])
+      rotate([60,0,0])
+      translate([-(legLength/2)-clearCR-clear,-(width/2)-clear, 0.5-clear])
+      ChamferedCube([legLength+legCutterLength+clearCR+clear, width+clear2, height+clear2], r=1/16);
+    }
+    
+    // Spindle clearance
+    *difference() {
+      translate([offsetX-ManifoldGap(),0,SpindleZ()])
+      rotate([0,90,0])
+      cylinder(r=0.5-(cutter?0.01:0), h=length+ManifoldGap(2));
+      
+      *translate([offsetX+length+ManifoldGap(),0,SpindleZ()])
+      rotate([0,-90,0])
+      cylinder(r=BarrelCollarRadius()-(cutter?0.01:0), h=length-Evolver_ZigZagLength()+ManifoldGap(2));
+      
+    }
+    
+    for(X = [0,-Evolver_ActuatorTravel()]) translate([X,0,0])
+    Evolver_SpindleZigZag(cutter=true);
     
     if (!cutter)
     Evolver_ActuatorPin(cutter=true);
-  }
-}
-
-module Evolver_ActuatorBlock(length=Evolver_ActuatorBlockLength(), debug=false, alpha=1) {
-  CR = 1/16;
-  
-  width = BarrelDiameter()+(WallBarrel()*2);
-  //offsetX = ForendSpacerLength()+Evolver_BarrelSupportLength();
-  offsetX = ForendSpacerLength()+Evolver_RatchetLength()+Evolver_ZigZagLength();
-  
-  color("Purple", alpha)
-  render() DebugHalf(enabled=debug)
-  difference() {
-    hull() {
-      translate([offsetX,0,0])
-      rotate([0,90,0])
-      ChamferedCylinder(r1=BarrelRadius()+0.125,r2=CR,h=length);
-      
-      translate([offsetX,-(width/2), 0])
-      mirror([0,0,1])
-      ChamferedCube([length, width, width/2], r=CR);
-    }
     
-    for (M = [0,1]) mirror([0,M,0])
-    Evolver_Actuator(cutter=true, clearance=0.002);
-    
+    if (!cutter)
     Evolver_Barrel(cutter=true);
-    
-    Evolver_SpindleZigZag(cutter=true);
   }
 }
 
@@ -791,34 +786,92 @@ module Evolver_PumpRod(cutter=false, clearance=0.007, debug=false, alpha=1) {
   CR = 1/16;
   clearCR = cutter ? CR : 0;
   
-  length = ForendLength()+1;
-  width = 0.3125;
-  height = 0.375;
+  length = ForendLength();
+  width = 0.25;
+  height = 0.25;
+      
+  *color("Olive", alpha)
+  RenderIf(!cutter) DebugHalf(enabled=debug)
+  difference() {
+    
+    translate([ForendMaxX(),0,0])
+    rotate([0,90,0])
+    ChamferedCylinder(r1=BarrelRadius()+0.25,r2=CR,h=0.5);
+    
+    if (!cutter) {
+      Evolver_Barrel(cutter=true);
+      Evolver_PumpActuator(cutter=true);
+    }
+  }
   
+  // Action Bolt
+  color("Silver", alpha)
+  RenderIf(!cutter)
+  translate([2.5-clearCR-clear,0-clear, 1-clear])
+  rotate([-90,0,0])
+  translate([0,0,0.125])
+  Bolt(bolt=ActionRodBolt(), length=0.25, head="socket", capOrientation=true);
+  
+  // Pump rods
   color("Chocolate", alpha)
   RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
     union() {
       
-      translate([ForendMaxX(),0,0])
+      for (M = [0,1]) mirror([0,M,0]) {
+
+        rotate([-60,0,0]) 
+        translate([1.625-clearCR-clear,-(width/2)-clear, -clear]) {
+          
+          // Long
+          translate([0,0,BarrelCollarRadius()])
+          ChamferedCube([length+clearCR+clear2, width+clear2, height+clear2], r=1/16);
+          
+          cutterLength = Evolver_BarrelTravel()
+                       + Evolver_ActuatorTravel();
+          
+          // Short
+          translate([0,0, BarrelCollarRadius()-0.25])
+          ChamferedCube([0.25+(cutter?cutterLength:0)+clearCR+clear2, width+clear2, height+0.25+clear2], r=1/16);
+        }
+        
+      }
+    }
+    
+    *if (!cutter)
+    Evolver_ActuatorPin(cutter=true);
+    
+    if (!cutter)
+    Evolver_Barrel(cutter=true);
+  }
+}
+module Evolver_PumpActuator(cutter=false, clearance=0.007, debug=false, alpha=1) {
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
+  CR = 1/16;
+  clearCR = cutter ? CR : 0;
+  
+  width = 2;
+  height = 1;
+  
+  *color("Maroon", alpha)
+  RenderIf(!cutter) DebugHalf(enabled=debug)
+  difference() {
+    union() {
+      
+      *translate([ForendMaxX(),0,0])
       rotate([0,90,0])
       ChamferedCylinder(r1=BarrelRadius()+0.25,r2=CR,h=4);
       
-      // Long
-      for (R = [1,-1]) rotate([R*45,0,0])
-      translate([0-clearCR-clear,-(width/2)-clear, 0.5-clear])
-      ChamferedCube([length+clearCR+clear, width+clear2, height+clear2], r=1/16);
-      
       // Short
-      translate([ForendSpacerLength()-clearCR-clear,-(width)-clear, 0.25-clear])
-      ChamferedCube([0.25+clearCR+clear, width*2+clear2, height+clear2], r=1/16);
+      translate([ForendSpacerLength()+Evolver_RatchetLength()-clearCR-clear,-(width/2)-clear, 0.25-clear])
+      ChamferedCube([0.25+clearCR+clear, width+clear2, height+clear2], r=1/16);
     }
     
     *if (!cutter)
     Evolver_ActuatorPin(cutter=true);
   }
 }
-
 //**************
 //* Assemblies *
 //**************
@@ -826,11 +879,11 @@ module EvolverForendAssembly(pipeAlpha=1, debug=false) {
   animateSpindle = (SubAnimate(ANIMATION_STEP_EXTRACT, start=0.19, end=0.46)
                    + SubAnimate(ANIMATION_STEP_EXTRACT, start=0.63, end=0.9))/2;
   
-  barrelTravel = ForendSpacerLength();
+  
   animateBarrel = Animate(ANIMATION_STEP_UNLOAD)
                 - Animate(ANIMATION_STEP_LOAD);
   
-  barrelTravel2 = Evolver_ZigZagLength()-0.125;
+  
   animateBarrel2 = SubAnimate(ANIMATION_STEP_EXTRACT, end=0.5)
                  - SubAnimate(ANIMATION_STEP_EXTRACT, start=0.5);
   
@@ -846,11 +899,20 @@ module EvolverForendAssembly(pipeAlpha=1, debug=false) {
   translate([0,0,1]) {
     
     if (_SHOW_BELT)
-    translate([0.125,0,SpindleZ()])
-    for (R = [0,120]) rotate([R,0,0])
-    translate([0,0,1])
-    rotate([0,90,0]) rotate(90)
-    Belt(rounds=1,offset=0);
+    translate([beltOffsetX,0,SpindleZ()]) {
+      
+      // First round
+      rotate([0,0,0])
+      translate([0,0,1])
+      rotate([0,90,0]) rotate(90)
+      Belt(rounds=1,offset=0, expand=1-SubAnimate(ANIMATION_STEP_UNLOAD, start=0.73, end=0.88));
+      
+      // Second round
+      rotate([-120,0,0])
+      translate([0,0,1])
+      rotate([0,90,0]) rotate(90)
+      Belt(rounds=1,offset=0, expand=SubAnimate(ANIMATION_STEP_LOAD, start=0.1, end=0.2));
+    }
     
     if (_SHOW_SPINDLE) {
       Evolver_SpindlePins();
@@ -860,26 +922,32 @@ module EvolverForendAssembly(pipeAlpha=1, debug=false) {
     }
   }
   
-  if (_SHOW_SPINDLE_ACTUATOR)
-  translate([barrelTravel2*animateBarrel2,0,0]) {
+  if (_SHOW_PUMP || _SHOW_ACTUATOR)
+  Evolver_PumpActuator();
+  
+  
+  if (_SHOW_ACTUATOR)
+  translate([Evolver_ActuatorTravel()*animateBarrel2,0,0]) {
     Evolver_ActuatorPin();
     Evolver_Actuator(debug=_CUTAWAY_ACTUATOR, alpha=_ALPHA_ACTUATOR);
-    
-    Evolver_ActuatorBlock(debug=_CUTAWAY_ACTUATOR, alpha=_ALPHA_ACTUATOR);
   }
   
   if (_SHOW_PUMP)
-  translate([(barrelTravel2*animateBarrel2),0,0])
-  translate([(barrelTravel*animateBarrel),0,0])
-  Evolver_PumpRod();
+  translate([(Evolver_ActuatorTravel()*animateBarrel2),0,0])
+  translate([(Evolver_BarrelTravel()*animateBarrel),0,0]) {
+    Evolver_PumpRod();
+      
+    translate([-3,0,0.125])
+    ActionRod();
+  }
   
   if (_SHOW_BARREL_STOP)
   Evolver_BarrelStop();
   
   if (_SHOW_BARREL) {
     
-    //translate([(barrelTravel2*animateBarrel2),0,0])
-    translate([(barrelTravel*animateBarrel),0,0]) {
+    translate([(Evolver_ActuatorTravel()*animateBarrel2),0,0])
+    translate([(Evolver_BarrelTravel()*animateBarrel),0,0]) {
       Evolver_Barrel(debug=_CUTAWAY_BARREL);
     }
       
@@ -905,6 +973,8 @@ scale(25.4)
 if ($preview) {
 
   translate([-ReceiverFrontLength(),0,0]) {
+    if (_SHOW_FCG)
+      SimpleFireControlAssembly(actionRod=false);
     
     if (_SHOW_RECEIVER) {
       SimpleFireControlAssembly();
@@ -947,11 +1017,6 @@ if ($preview) {
   rotate([0,-90,0])
   translate([-(SpindleMaxX()+0.125),0,-SpindleZ()])
   Evolver_SpindleZigZag();
-  
-  if (_RENDER == "Evolver_ActuatorBlock")
-  rotate([0,-90,0])
-  translate([-(ForendSpacerLength()+Evolver_BarrelSupportLength()),0,0])
-  Evolver_ActuatorBlock();
   
   if (_RENDER == "Evolver_Actuator")
   translate([-SpindleMaxX(),0, -0.5])
