@@ -701,7 +701,8 @@ module Evolver_SpindleZigZag(length=Evolver_ZigZagLength(), cutter=false, cleara
       ChamferedCylinder(r1=0.5+clear,
                         r2=1/16,
                         h=length+clear2,
-                        teardropTop=true);
+                        teardropTop=true,
+                        chamferBottom=!cutter);
     }
     
     if (!cutter)
