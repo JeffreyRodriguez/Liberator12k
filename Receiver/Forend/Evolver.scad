@@ -36,26 +36,34 @@ use <../Lower.scad>;
 use <../Receiver.scad>;
 use <../Stock.scad>;
 
-/* [Print] */
+use <../FCG.scad>;
+
+
+/* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Receiver_LargeFrame", "Evolver_ReceiverFront", "Evolver_Spindle", "Evolver_ZigZag", "Evolver_Ratchet", "Evolver_RatchetPawl","Evolver_Actuator", "Evolver_ActuatorToggle", "Evolver_BarrelSupport", "Evolver_ForendSpacer", "Evolver_PumpRod", "Evolver_PumpCollar"]
+_RENDER = ""; // ["", "Evolver_ReceiverFront", "Evolver_Spindle", "Evolver_ZigZag", "Evolver_Ratchet", "Evolver_RatchetPawl","Evolver_Actuator", "Evolver_ActuatorToggle", "Evolver_BarrelSupport", "Evolver_ForendSpacer", "Evolver_PumpRod", "Evolver_PumpCollar"]
+
+// Reorient the part for printing?
+_RENDER_PRINT = true;
 
 /* [Assembly] */
 _SHOW_RECEIVER = false;
+_SHOW_STOCK = false;
 _SHOW_FCG = false;
 _SHOW_LOWER = false;
 _SHOW_RECEIVER_FRONT = false;
-_SHOW_BARREL = true;
-_SHOW_BARREL_SUPPORT = true;
-_SHOW_BELT = true;
-_SHOW_PUMP = true;
-_SHOW_EXTRACTOR = true;
 _SHOW_FOREND_SPACER = true;
-_SHOW_RATCHET_PAWL = true;
-_SHOW_SPINDLE = true;
+_SHOW_BARREL_SUPPORT = true;
+_SHOW_BARREL = true;
+_SHOW_PUMP_COLLAR = true;
+_SHOW_PUMP_RODS = true;
 _SHOW_ACTUATOR = true;
 _SHOW_ACTUATOR_TOGGLE = true;
+_SHOW_RATCHET_PAWL = true;
+_SHOW_SPINDLE = true;
+_SHOW_EXTRACTOR = true;
+_SHOW_BELT = true;
 
 /* [Transparency] */
 _ALPHA_BARREL_SUPPORT = 1;     // [0:0.1:1]
@@ -106,12 +114,12 @@ $fs = UnitsFs()*ResolutionFs();
 $t = 0.5+(0.5*$t);
 
 // Settings: Lengths
-function SpindleRodLength() = 5;
+function SpindleRodLength() = 6;
 function SpindleRadius() = SPINDLE_DIAMETER/2;
 function ShellRimLength() = 0.06;
 function BarrelLength() = BARREL_LENGTH;
 function CylinderZ() = -(CYLINDER_OFFSET + ManifoldGap());
-function WallBarrel() = 0.375; //0.4375;
+function WallBarrel() = 0.3575; //0.4375;
 function WallSpindle() = 0.1875;
 function ReceiverFrontLength() = 0.5;
 function TemplateHoleRadius() = 1/16;
@@ -147,6 +155,7 @@ function BarrelDiameter(clearance=0)
 function ExtractorLength() = 0.5;
 function ExtractorWidth() = 0.75;
 function BarrelCollarRadius() = BarrelCollarDiameter()/2;
+function BarrelCollarOffset() = 0.5;
 
 // Calculated: Lengths
 function ForendLength() = FrameExtension(length=FRAME_BOLT_LENGTH)
@@ -183,9 +192,6 @@ actuatorPinDepth = 0.125;
 actuatorPinX = ForendSpacerLength()+ActuatorPinRadius();
 pumpPinX = 2;
 
-
-
-
 //************
 //* Vitamins *
 //************
@@ -194,11 +200,11 @@ module Evolver_Barrel(barrelLength=BarrelLength(), clearance=BARREL_CLEARANCE, c
   clear = (cutter ? clearance : 0);
   clear2 = clear*2;
   
-  color("Gold", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
-  translate([ForendLength()+0.25,0,0])
+  color("DimGrey", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
+  translate([ForendLength()+BarrelCollarOffset()-clear,0,0])
   rotate([0,90,0])
   difference() {
-    cylinder(r=(BarrelCollarDiameter()/2)+clear, h=BarrelCollarLength());
+    cylinder(r=(BarrelCollarDiameter()/2)+clear, h=BarrelCollarLength()+clear2);
     
     if (!cutter)
     cylinder(r=BarrelRadius()+clearance,
@@ -218,13 +224,30 @@ module Evolver_Barrel(barrelLength=BarrelLength(), clearance=BARREL_CLEARANCE, c
   }
 }
 
+module Evolver_BarrelCollar(clearance=BARREL_CLEARANCE, cutter=false, alpha=1, debug=false) {
+  clear = (cutter ? clearance : 0);
+  clear2 = clear*2;
+  
+  color("DimGrey", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
+  translate([ForendLength()+BarrelCollarOffset()-clear,0,0])
+  rotate([0,90,0])
+  difference() {
+    cylinder(r=(BarrelCollarDiameter()/2)+clear, h=BarrelCollarLength()+clear2);
+    
+    if (!cutter)
+    cylinder(r=BarrelRadius()+clearance,
+             h=barrelLength);
+  }
+}
+
+
 module Evolver_SpindleRod(cutter=false, clearance=0.003) {
   clear = cutter? clearance : 0;
   clear2 = clear*2;
   
   color("Silver")
   RenderIf(!cutter)
-  translate([0,0,SpindleZ()])
+  translate([-0.5,0,SpindleZ()])
   rotate([0,90,0])
   cylinder(r=SpindleRadius()+clear, h=SpindleRodLength());
 }
@@ -270,6 +293,24 @@ module Evolver_ActuatorPin(cutter=false, clearance=0.003, debug=false, alpha=1) 
   translate([offsetX,0, 0.5-actuatorPinDepth])
   cylinder(r=actuatorPinRadius+clear, h=height+ManifoldGap());
 }
+module Evolver_PumpCollarBolts(cutter=false, clearance=0.003, debug=false, alpha=1) {
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
+  CR = 1/16;
+  
+  height = 0.5;
+  offsetX = actuatorPinX;
+  
+  color("Silver")
+  RenderIf(!cutter)
+  for (M = [0,1]) mirror([0,M,0])
+  rotate([60,0,0])
+  translate([ForendLength()+0.25+(BarrelCollarLength()/2),
+             0,
+             BarrelCollarRadius()-0.25-clear])
+  cylinder(r=actuatorPinRadius+clear, h=0.5+clear2);
+}
+
 //**********
 //* Motion *
 //**********
@@ -327,7 +368,7 @@ module Evolver_ReceiverFront(contoured=true, debug=_CUTAWAY_RECEIVER_FRONT, alph
     
     FiringPinSpring(cutter=true);
     
-    translate([0,0,0.125])
+    translate([0,0,0.25])
     ActionRod(cutter=true);
     
     // Spindle Rod
@@ -362,10 +403,8 @@ module Evolver_ForendSpacer(length=ForendSpacerLength(), doRender=true, debug=fa
     rotate([0,90,0])
     cylinder(r=(3.6875/2), h=length+ManifoldGap());
     
-    // Belt clearance (wider guide)
-    *translate([-ManifoldGap(),0,SpindleZ()-0.825])
-    rotate([0,90,0])
-    cylinder(r=5/2, h=3.125+ManifoldGap());
+    translate([0,0,0.25])
+    ActionRod(cutter=true);
     
     FrameBolts(cutter=true);
   }
@@ -383,13 +422,13 @@ module Evolver_BarrelSupport(length=Evolver_BarrelSupportLength(), doRender=true
     fontSize = 0.375;
     
     // Right-side text
-    translate([ForendMaxX()-0.125,-FrameWidth()/2,FrameBoltZ()-(fontSize/2)])
+    translate([ForendMaxX()-0.25,-FrameWidth()/2,FrameBoltZ()-(fontSize/2)])
     rotate([90,0,0])
     linear_extrude(height=LogoTextDepth(), center=true)
     text(BRANDING_MODEL_NAME, size=fontSize, font="Impact", halign="right");
 
     // Left-side text
-    translate([ForendMaxX()-0.125,FrameWidth()/2,FrameBoltZ()-(fontSize/2)])
+    translate([ForendMaxX()-0.25,FrameWidth()/2,FrameBoltZ()-(fontSize/2)])
     rotate([90,0,0])
     linear_extrude(height=LogoTextDepth(), center=true)
     mirror([1,0])
@@ -402,7 +441,7 @@ module Evolver_BarrelSupport(length=Evolver_BarrelSupportLength(), doRender=true
     union() {
       translate([offsetX,0,0])
       Frame_ReceiverSegment(length=length,
-                            highTop=true, chamferFront=tfalse
+                            highTop=true, chamferFront=false);
       
       // Spindle and interlock support
       hull() {
@@ -440,7 +479,7 @@ module Evolver_BarrelSupport(length=Evolver_BarrelSupportLength(), doRender=true
     
     Evolver_PumpRods(cutter=true, innerCut=true);
     
-    translate([0,0,0.125])
+    translate([0,0,0.25])
     ActionRod(cutter=true);
     
     // Spindle hole
@@ -451,13 +490,12 @@ module Evolver_BarrelSupport(length=Evolver_BarrelSupportLength(), doRender=true
     FrameBolts(cutter=true);
 
     Evolver_Barrel(cutter=true);
+    Evolver_BarrelCollar(cutter=true);
     
     Evolver_Actuator(cutter=true);
     Evolver_ActuatorToggle(cutter=true);
   }
 }
-
-
 module Evolver_Extractor(length=0.5, cutter=false, clearance=0.002, debug=false, alpha=1) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
@@ -476,7 +514,6 @@ module Evolver_Extractor(length=0.5, cutter=false, clearance=0.002, debug=false,
     cube([(1/16)+clear2, 0.25, 0.625]);
   }
 }
-
 module Evolver_Ratchet(teeth = 3*7, length=Evolver_RatchetLength(), angle=0, cutter=false, clearance=0.01, debug=false, alpha=1) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
@@ -734,8 +771,10 @@ module Evolver_Actuator(cutter=false, clearance=0.01, debug=false, alpha=1) {
     if (!cutter)
     Evolver_ActuatorToggle(stopTab=false, cutter=true);
     
-    if (!cutter)
-    Evolver_Barrel(cutter=true);
+    if (!cutter) {
+      Evolver_Barrel(cutter=true);
+      Evolver_BarrelCollar(cutter=true);
+    }
   }
 }
 
@@ -766,36 +805,34 @@ module Evolver_ActuatorToggle(AF=0, stopTab=true, cutter=false, clearance=0.01, 
   rotate([angle*AF,0,0])
   difference() {
     union() {
-      
-      // Stop tab
-      if (stopTab)
-      translate([(cutter?0:tabOffsetX)-clear,0,0])
-      rotate([-60-angle,0,0])
-      translate([0,-(width/2), 0])
-      cube([tabLength+(cutter?tabOffsetX:0), width, BarrelCollarRadius()+Evolver_PumpRodToggleExtension()+clear]);
-      
-      // Stop tab
-      *if (stopTab)
-      translate([(cutter?0:tabOffsetX)-clear,0,0])
-      rotate([-60-angle2+(cutter?angle:0),0,0])
-      rotate([0,90,0])
-      mirror([1,0])
-      linear_extrude(tabLength+(cutter?tabOffsetX:0)+clear2)
-      semicircle(od=(BarrelCollarRadius()+height+clear)*2,
-                angle=abs(angle+(cutter?angle:0))-1);
-      
-      // Front cam
+      // Cam
       difference() {
+        union() {
         
-        // Body
-        translate([tabOffsetX-clear,0,0])
-        rotate([-70+angle+(cutter?angle:0),0,0])
-        rotate([0,90,0])
-        mirror([1,0])
-        linear_extrude(2.25+clear2)
-        semidonut(major=(BarrelCollarRadius()+clear)*2,
-                  minor=(innerRadius-clear)*2,
-                  angle=bodyAngle+(cutter?abs(angle):0));
+          // Body
+          translate([tabOffsetX-clear,0,0])
+          rotate([-70+angle+(cutter?angle:0),0,0])
+          rotate([0,90,0])
+          mirror([1,0])
+          linear_extrude(2.25+clear2)
+          semidonut(major=(BarrelCollarRadius()+clear)*2,
+                    minor=(innerRadius-clear)*2,
+                    angle=bodyAngle+(cutter?abs(angle):0));
+        
+          // Stop tab
+          if (stopTab)
+          intersection()  {
+            translate([(cutter?0:tabOffsetX)-clear,0,0])
+            rotate([-60-angle,0,0])
+            translate([0,-(width/2)+(cutter?clearance*2:clearance), 0])
+            cube([tabLength+(cutter?tabOffsetX:0), width+(cutter?clearance*2:-(clearance*2)), BarrelCollarRadius()+Evolver_PumpRodToggleExtension()+clear]);
+            
+            translate([(cutter?0:tabOffsetX)-clear,0,0])
+            rotate([0,90,0])
+            cylinder(r=BarrelCollarRadius()+0.1875, h=length);
+          }
+          
+        }
     
         // Helix
         if (!cutter)
@@ -810,7 +847,22 @@ module Evolver_ActuatorToggle(AF=0, stopTab=true, cutter=false, clearance=0.01, 
                        angle=abs(angle),
                        verbose=false);
           
-          cylinder(r=BarrelCollarRadius()-Evolver_PumpRodToggleExtension()-clearance, h=length);
+          cylinder(r=BarrelCollarRadius()-Evolver_PumpRodToggleExtension(), h=length);
+        }
+        
+        // Pump rod slot
+        if (!cutter)
+        translate([Evolver_ActuatorMinX()-clear,0,0])
+        difference() {
+          rotate([-60,0,0])
+          translate([0,-(width/2), 0])
+          cube([length+1-0.0625,
+                width,
+                BarrelCollarRadius()+Evolver_PumpRodToggleExtension()+clear]);
+          
+          rotate([0,90,0])
+          cylinder(r=BarrelCollarRadius()-Evolver_PumpRodToggleExtension(),
+                   h=length+1);
         }
       }
       
@@ -819,27 +871,35 @@ module Evolver_ActuatorToggle(AF=0, stopTab=true, cutter=false, clearance=0.01, 
       rotate([-60+(angle*3)+(cutter?angle:0),0,0])
       rotate([0,90,0])
       mirror([1,0])
-      linear_extrude(2.25+clear2)
-      semicircle(od=extensionRadius*2,
-                angle=extensionAngle+(cutter?abs(angle):0));
+      intersection() {
+        linear_extrude(2.25+clear2)
+        semicircle(od=extensionRadius*2,
+                  angle=extensionAngle+(cutter?abs(angle):0));
+        
+        
+      }
+      
     }
     
-    if (!cutter)
-    Evolver_Barrel(cutter=true);
+    if (!cutter) {
+      Evolver_Barrel(cutter=true);
+      Evolver_BarrelCollar(cutter=true);
+    }
         
-    if (!cutter)
+    *if (!cutter)
     translate([-0.5,0,0])
     Evolver_PumpRods(cutter=true);
   }
 }
 
 
-module Evolver_PumpRods(AF=0, doMirror=true, cutter=false, innerCut=false, clearance=0.01, debug=false, alpha=1) {
+module Evolver_PumpRods(doMirror=true, cutter=false, innerCut=false, clearance=0.01, debug=false, alpha=1) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   CR = 1/16;
+  clearCR = cutter ? CR : 0;
   
-  length = 6;
+  length = 4+actuatorPinRadius;
   width = 0.25;
   height = 0.25;
   toggleHeight = Evolver_PumpRodToggleExtension();
@@ -847,37 +907,86 @@ module Evolver_PumpRods(AF=0, doMirror=true, cutter=false, innerCut=false, clear
   extend=1;
   
   // Pump rods
-  color("Silver", alpha)
+  color("Olive", alpha)
   RenderIf(!cutter) DebugHalf(enabled=debug)
   for (M = (doMirror?[0,1]:[0])) mirror([0,M,0])
   rotate([angle,0,0])
-  union() {
-    translate([pumpPinX-width-clear,-(width/2)-clear, (innerCut?0:BarrelCollarRadius())-clear])
-    ChamferedCube([length+width+clear2, width+clear2, (innerCut?+BarrelCollarRadius():0)+height+clear2],
-                  r=1/16, teardropFlip=[true,true,true]);
+  difference() {
+    union() {
+      
+      // Long rod
+      translate([pumpPinX-width-clear,-(width/2)-clear, (innerCut?0:BarrelCollarRadius())-clear])
+      ChamferedCube([length+width+CR*2+clear2, width+clear2, (innerCut?+BarrelCollarRadius():0)+height+clear2],
+                    r=1/16, teardropFlip=[true,true,true]);
+      
+      // Actuator tab
+      translate([pumpPinX-clear,
+                 -(width/2)-clear,
+                 BarrelCollarRadius()-toggleHeight-clear])
+      translate([-extend,0,0])
+      ChamferedCube([extend+(cutter?Evolver_BarrelTravel():0)+clear2,
+                     width+clear2,
+                     height+toggleHeight+clear2],
+                    r=1/16, teardropFlip=[true,true,true]);
+      
+      // Barrel Collar Stop
+      translate([pumpPinX+length-ManifoldGap(), -(width/2)-clear, 0])
+      ChamferedCube([BarrelCollarOffset()+BarrelCollarLength()+0.5,
+                     width+clear2,
+                     BarrelCollarRadius()+height+clear],
+                    r=1/16, teardropFlip=[true,true,true]);
+    }
     
-    translate([pumpPinX-clear,
-               -(width/2)-clear,
-               BarrelCollarRadius()-toggleHeight-clear])
-    //rotate((cutter?0:5*AF))
-    translate([-extend,0,0])
-    ChamferedCube([extend+(cutter?Evolver_BarrelTravel():0)+clear2,
-                   width+clear2,
-                   height+toggleHeight+clear2],
-                  r=1/16, teardropFlip=[true,true,true]);
+    if (!cutter)
+    Evolver_BarrelCollar(cutter=true);
+    
+    Evolver_Barrel(cutter=true);
   }
 }
 
 module Evolver_PumpCollar() {
+  length = 0.5+BarrelCollarLength();
+  width = 0.5;
+  offsetX = ForendLength()+BarrelCollarOffset();
+  
   color("Chocolate") render()
   difference() {
-    translate([ForendLength()+BarrelCollarLength()+0.25,0,0])
-    rotate([0,90,0])
-    ChamferedCylinder(r1=BarrelCollarRadius()+0.25,r2=1/16,
-                       h=0.75);
+    union() {
+      hull() {
+        
+        // Around the collar
+        translate([offsetX,0,0])
+        rotate([0,90,0])
+        ChamferedCylinder(r1=BarrelCollarRadius()+0.125,r2=1/16,
+                           h=BarrelCollarLength()+0.125);
+        
+        // Around the barrel
+        translate([offsetX,0,0])
+        rotate([0,90,0])
+        ChamferedCylinder(r1=BarrelRadius()+0.125,r2=1/16,
+                           h=length+0.5);
+      }
+      
+      for (R = [60,-60]) rotate([R,0,0])
+      hull()
+      translate([offsetX,0,0])
+      translate([0,-width/2,0]) {
+        ChamferedCube([BarrelCollarLength(),
+                       width,
+                       BarrelCollarRadius()+0.25+0.125],
+                      r=1/16);
+        
+        ChamferedCube([length,
+                       width,
+                       BarrelRadius()+0.125],
+                      r=1/16);
+      }
+    }
     
     Evolver_Barrel(cutter=true);
-    Evolver_PumpRods(cutter=true, clearance=0.003);
+    Evolver_BarrelCollar(cutter=true);
+    Evolver_PumpRods(cutter=true, clearance=0.005);
+    Evolver_PumpCollarBolts(cutter=true);
   }
 }
 
@@ -896,6 +1005,8 @@ module EvolverForendAssembly(pipeAlpha=1, debug=false) {
   
   animateActuatorLatch = SubAnimate(ANIMATION_STEP_EXTRACT, end=0.05)
                        - SubAnimate(ANIMATION_STEP_LOAD, end=0.05);
+  
+  Evolver_SpindleRod();
   
   if (_SHOW_RATCHET_PAWL) {
     Evolver_RatchetPawlPin();
@@ -936,14 +1047,14 @@ module EvolverForendAssembly(pipeAlpha=1, debug=false) {
   }
   
   
-  if (_SHOW_BARREL) {
+  translate([(Evolver_ActuatorTravel()*animateBarrel2),0,0])
+  translate([(Evolver_BarrelTravel()*animateBarrel),0,0]) {
     
-    translate([(Evolver_ActuatorTravel()*animateBarrel2),0,0])
-    translate([(Evolver_BarrelTravel()*animateBarrel),0,0]) {
-      Evolver_Barrel(debug=_CUTAWAY_BARREL);
-      
-      Evolver_PumpCollar();
-    } 
+    if (_SHOW_BARREL)
+    Evolver_Barrel(debug=_CUTAWAY_BARREL);
+    
+    if (_SHOW_PUMP_COLLAR)
+    Evolver_PumpCollar();
   }
   
   translate([Evolver_ActuatorTravel()*animateBarrel2,0,0]) {
@@ -958,12 +1069,16 @@ module EvolverForendAssembly(pipeAlpha=1, debug=false) {
     Evolver_Actuator(debug=_CUTAWAY_ACTUATOR, alpha=_ALPHA_ACTUATOR);
   }
   
-  if (_SHOW_PUMP)
   translate([(Evolver_ActuatorTravel()*animateBarrel2),0,0])
   translate([(Evolver_BarrelTravel()*animateBarrel),0,0]) {
-    Evolver_PumpRods(AF=animateActuatorLatch, alpha=_ALPHA_PUMP);
+    
+    if (_SHOW_PUMP_RODS)
+    Evolver_PumpCollarBolts();
+    
+    if (_SHOW_PUMP_RODS)
+    Evolver_PumpRods(alpha=_ALPHA_PUMP);
       
-    translate([-3,0,0.125])
+    *translate([-3,0,0.125])
     ActionRod();
   }
   
@@ -977,7 +1092,7 @@ module EvolverForendAssembly(pipeAlpha=1, debug=false) {
   translate([-0.5,0,0])
   Evolver_ReceiverFront();
 }
-
+//
 
 scale(25.4)
 if ($preview) {
@@ -986,72 +1101,98 @@ if ($preview) {
     if (_SHOW_FCG)
       SimpleFireControlAssembly(actionRod=false);
     
-    if (_SHOW_RECEIVER) {
-      SimpleFireControlAssembly();
-      
-      Receiver_TensionBolts(debug=_CUTAWAY_RECEIVER);
-      
-      Lower();
-      
-      Receiver_LargeFrameAssembly(
-        length=FRAME_BOLT_LENGTH,
-        debug=_CUTAWAY_RECEIVER);
-
-      StockAssembly(debug=_CUTAWAY_RECEIVER);
-    }
-
+    if (_SHOW_LOWER)
+    Lower();
+    
+    if (_SHOW_RECEIVER)
+    Receiver_LargeFrameAssembly(
+      length=FRAME_BOLT_LENGTH,
+      debug=_CUTAWAY_RECEIVER);
+    
+    if (_SHOW_STOCK)
+    StockAssembly();
   }
 
   EvolverForendAssembly(debug=false);
 } else {
 
   if (_RENDER == "Evolver_ReceiverFront")
-  rotate([0,-90,0])
-  Evolver_ReceiverFront();
+    if (!_RENDER_PRINT)
+      Evolver_ReceiverFront();
+    else
+      rotate([0,-90,0])
+      Evolver_ReceiverFront();
   
   if (_RENDER == "Evolver_BarrelSupport")
-  rotate([0,90,0])
-  translate([-ForendSpacerLength()-Evolver_BarrelSupportLength(),0,0])
-  Evolver_BarrelSupport();
+    if (!_RENDER_PRINT)
+      Evolver_BarrelSupport();
+    else
+      rotate([0,90,0])
+      translate([-ForendSpacerLength()-Evolver_BarrelSupportLength(),0,0])
+      Evolver_BarrelSupport();
   
   if (_RENDER == "Evolver_ForendSpacer")
-  rotate([0,-90,0])
-  Evolver_ForendSpacer();
+    if (!_RENDER_PRINT)
+      Evolver_ForendSpacer();
+    else
+      rotate([0,-90,0])
+      Evolver_ForendSpacer();
   
   if (_RENDER == "Evolver_Spindle")
-  rotate([0,90,0])
-  translate([-2.75,0,1])
-  Evolver_Spindle();
+    if (!_RENDER_PRINT)
+      Evolver_Spindle();
+    else
+      rotate([0,90,0])
+      translate([-2.75,0,1])
+      Evolver_Spindle();
   
   if (_RENDER == "Evolver_Ratchet")
-  rotate([0,90,0])
-  translate([-3.25,0,1])
-  Evolver_Ratchet();
+    if (!_RENDER_PRINT)
+      Evolver_Ratchet();
+    else
+      rotate([0,90,0])
+      translate([-3.25,0,1])
+      Evolver_Ratchet();
   
   if (_RENDER == "Evolver_ZigZag")
-  rotate([0,-90,0])
-  translate([-(SpindleMaxX()+0.125),0,-SpindleZ()])
-  Evolver_ZigZag();
+    if (!_RENDER_PRINT)
+      Evolver_ZigZag();
+    else
+      rotate([0,-90,0])
+      translate([-(SpindleMaxX()+0.125),0,-SpindleZ()])
+      Evolver_ZigZag();
   
   if (_RENDER == "Evolver_Actuator")
-  rotate([0,-90,0])
-  translate([-SpindleMaxX(),0, -0.5])
-  translate([0,0, -SpindleZ()])
-  Evolver_Actuator();
+    if (!_RENDER_PRINT)
+      Evolver_Actuator();
+    else
+      rotate([0,-90,0])
+      translate([-SpindleMaxX(),0, -0.5])
+      translate([0,0, -SpindleZ()])
+      Evolver_Actuator();
   
   if (_RENDER == "Evolver_ActuatorToggle")
-  rotate([0,-90,0])
-  rotate([-60+15,0,0])
-  translate([-(ForendSpacerLength()+0.25),0,0])
-  Evolver_ActuatorToggle(AF=1);
+    if (!_RENDER_PRINT)
+      Evolver_ActuatorToggle();
+    else
+      rotate([0,-90,0])
+      rotate([-60+15,0,0])
+      translate([-(ForendSpacerLength()+0.25),0,0])
+      Evolver_ActuatorToggle(AF=1);
   
   if (_RENDER == "Evolver_PumpRod")
-  translate([-pumpPinX,-BarrelCollarRadius(),0.1235])
-  rotate([-30,0,0])
-  Evolver_PumpRods(doMirror=false);
+    if (!_RENDER_PRINT)
+      Evolver_PumpRod();
+    else
+      translate([-pumpPinX,-BarrelCollarRadius(),0.1235])
+      rotate([-30,0,0])
+      Evolver_PumpRods(doMirror=false);
   
   if (_RENDER == "Evolver_PumpCollar")
-  rotate([0,-90,0])
-  translate([-(ForendLength()+BarrelCollarLength()+0.25),0,0])
-  Evolver_PumpCollar();
+    if (!_RENDER_PRINT)
+      Evolver_PumpCollar();
+    else
+      rotate([0,90,0])
+      translate([-(ForendLength()+BarrelCollarLength()+0.25),0,0])
+      Evolver_PumpCollar();
 }
