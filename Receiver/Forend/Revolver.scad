@@ -40,7 +40,7 @@ use <../FCG.scad>;
 /* [Print] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Frame_Receiver", "Revolver_ReceiverFront", "Revolver_Frame_Spacer", "Revolver_Foregrip", "Revolver_VerticalForegrip", "Revolver_CylinderCore", "Revolver_CylinderShell", "Revolver_BarrelSupport", "Revolver_ForendSpindleToggleLinkage", "Revolver_ForendSpindleToggleHandle", "Revolver_Projection_Cylinder", "Revolver_Projection_CylinderCore", "Revolver_Projection_BlastPlate", "Revolver_Projection_RecoilPlate"]
+_RENDER = ""; // ["", "Frame_Receiver", "Revolver_ReceiverFront", "Revolver_FrameSpacer", "Revolver_Foregrip", "Revolver_VerticalForegrip", "Revolver_CylinderCore", "Revolver_CylinderShell", "Revolver_BarrelSupport", "Revolver_ForendSpindleToggleLinkage", "Revolver_ForendSpindleToggleHandle", "Revolver_Projection_Cylinder", "Revolver_Projection_CylinderCore", "Revolver_Projection_BlastPlate", "Revolver_Projection_RecoilPlate"]
 
 /* [Assembly] */
 
@@ -593,7 +593,7 @@ module Revolver_BarrelSupport_print() {
   Revolver_BarrelSupport(doRender=false);
 }
 
-module Revolver_Frame_Spacer(length=ForendMinX(), debug=false, alpha=_ALPHA_FOREND) {
+module Revolver_FrameSpacer(length=ForendMinX(), debug=false, alpha=_ALPHA_FOREND) {
   extraBottom=0;
   
   color("Tan", alpha)
@@ -622,10 +622,10 @@ module Revolver_Frame_Spacer(length=ForendMinX(), debug=false, alpha=_ALPHA_FORE
   }
 }
 
-module Revolver_Frame_Spacer_print() {
+module Revolver_FrameSpacer_print() {
   rotate([0,-90,0])
   translate([0,0,-FrameBoltZ()])
-  Revolver_Frame_Spacer();
+  Revolver_FrameSpacer();
 }
 
 
@@ -898,7 +898,7 @@ module RevolverForendAssembly(pipeAlpha=1, debug=false) {
   Revolver_Shield(debug=_CUTAWAY_SHIELD);
 
   if (_SHOW_FRAME_SPACER)
-  Revolver_Frame_Spacer(debug=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
+  Revolver_FrameSpacer(debug=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
   
   if (_SHOW_BARREL_SUPPORT)
   Revolver_BarrelSupport(debug=_CUTAWAY_BARREL_SUPPORT, alpha=_ALPHA_FOREND);
@@ -1002,8 +1002,8 @@ if ($preview) {
   if (_RENDER == "Revolver_ForendSpindleToggleHandle")
   Revolver_ForendSpindleToggleHandle_print();
   
-  if (_RENDER == "Revolver_Frame_Spacer")
-  Revolver_Frame_Spacer_print();
+  if (_RENDER == "Revolver_FrameSpacer")
+  Revolver_FrameSpacer_print();
   
   if (_RENDER == "Revolver_Foregrip")
   Revolver_Foregrip_print();
