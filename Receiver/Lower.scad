@@ -120,7 +120,6 @@ function TriggerPocketHeight() = GripCeiling()
 
 function LowerGuardHeight() = TriggerPocketHeight()
                             + TriggerGuardWall();
-                            
 
 //************
 //* Vitamins *
@@ -146,7 +145,7 @@ module ReceiverLugBolts(boltSpec=BoltSpec(RECEIVER_LUG_BOLTS),
              nutHeightExtra=cutter ? 1 : 0);
 }
 
-module Lower_Mount_TakedownPinRetainer(cutter=false, clearance=0.005) {
+module Lower_MountTakedownPinRetainer(cutter=false, clearance=0.005) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
@@ -509,7 +508,7 @@ module Lower_MountRear(id=ReceiverID(), alpha=1, debug=false, doRender=true) {
     Receiver_TakedownPin(cutter=true);
     
     translate([LowerMaxX(),0,0])
-    Lower_Mount_TakedownPinRetainer(cutter=true);
+    Lower_MountTakedownPinRetainer(cutter=true);
     
     difference() {
       
@@ -538,7 +537,7 @@ module Lower_MountRear(id=ReceiverID(), alpha=1, debug=false, doRender=true) {
 //* Assemblies *
 //**************
 module LowerMount(id=ReceiverID(), alpha=1, debug=false) {
-  Lower_Mount_TakedownPinRetainer();
+  Lower_MountTakedownPinRetainer();
   
   Receiver_TakedownPin();
   
@@ -692,6 +691,11 @@ if ($preview) {
       rotate([0,90,0])
       translate([LowerMaxX()-ReceiverLugRearMaxX(),0,-ReceiverBottomZ()])
       Lower_MountRear();
+  
+  /*
+  ReceiverLugRear(cutter=false);
+  ReceiverLugFront();
+  */
     
   // ************
   // * Hardware *
@@ -702,16 +706,7 @@ if ($preview) {
     HandleBolts();
   }
   
-  if (_RENDER == "Lower_Mount_TakedownPinRetainer")
-  Lower_Mount_TakedownPinRetainer();
-  
-  /*
-  
-  ReceiverLugRear(cutter=false);
-
-  ReceiverLugFront();
-
-  ReceiverLugBolts();
-  */
+  if (_RENDER == "Lower_MountTakedownPinRetainer")
+  Lower_MountTakedownPinRetainer();
 
 }

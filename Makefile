@@ -5,7 +5,7 @@ MARKDOWN = $(wildcard *.md) $(shell find Receiver -name \*.md)
 MARKDOWN_HTML = $(addsuffix .html,$(basename $(MARKDOWN)))
 
 MINUTEMAN_STL = Receiver/Frame_Receiver.stl $(wildcard Receiver/Components/*.stl) \
-							$(wildcard Receiver/Stock*.stl) $(wildcard Receiver/Lower/*.stl) \
+							$(wildcard Receiver/Stock*.stl) $(wildcard Receiver/Lower*.stl) \
 							$(wildcard Receiver/FCG*.stl)
 
 FOREND_STL = $(wildcard Receiver/Forend/*_*/*.stl)
