@@ -72,13 +72,13 @@ $(addsuffix /Assembly.png,$(PRESETS)): %.png : $$(firstword $$(subst _, ,%)).sca
 $(addsuffix /Assembly.jpg,$(PRESETS)): %.jpg : %.png
 	convert $(basename $@).png -quality 90 $@
 	
-# Assembly_htmldoc.jpg - Downsampled 800px
-$(addsuffix /Assembly_htmldoc.jpg,$(PRESETS)): %_htmldoc.jpg : %.png
+# Preview_htmldoc.jpg - Downsampled 800px
+$(addsuffix /Preview_htmldoc.jpg,$(PRESETS)): %_htmldoc.jpg : %.png
 	#cp $< $@
 	convert -resize 1600x900^ $< -quality 90 $@
 
 # HTML file for the preset
-$(PRESET_HTML): %/README.html : %.md %/Assembly.jpg %/Assembly_thumb.jpg %/Assembly_htmldoc.jpg 
+$(PRESET_HTML): %/README.html : %.md %/Assembly.jpg %/Preview_thumb.jpg %/Preview_htmldoc.jpg 
 	$(MDBIN) $< | sed 's/\.md/\.html/' > $@
 $(CLASS_HTML): %/README.html : %.md
 	$(MDBIN) $< | sed 's/\.md/\.html/' > $@

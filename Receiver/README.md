@@ -1,6 +1,6 @@
 # 1: Minuteman Receiver
 
-![Minuteman](Assembly_Minuteman.jpg)
+![Minuteman](Preview_Minuteman.jpg)
 
 To get very technical, you're going to make a *Framed Receiver with a Stock*.
 That's a mouthful, so I call it the

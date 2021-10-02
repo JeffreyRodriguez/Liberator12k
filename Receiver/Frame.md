@@ -1,6 +1,6 @@
 # 1.1: Framed Receiver
 
-![Framed Receiver](Assembly_Frame_Receiver.jpg)
+![Framed Receiver](Preview_Frame_Receiver.jpg)
 
 ## Prints
 | Frame_Receiver |

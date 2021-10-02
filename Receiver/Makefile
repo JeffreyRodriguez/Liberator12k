@@ -33,22 +33,25 @@ FCG_STL=$(addsuffix .stl, $(FCG_Parts))
 
 Parts=$(Receiver_Parts) $(Frame_Parts) $(Stock_Parts) $(FCG_Parts) $(Lower_Parts)
 Parts_STL=$(addsuffix .stl, $(Parts))
+Parts_STL_png=$(addsuffix .png, $(Parts))
 Parts_STL_thumb=$(addsuffix _thumb.jpg, $(Parts))
 
 Hardware=$(Receiver_Hardware) $(Frame_Hardware) $(Stock_Hardware) $(FCG_Hardware) $(Lower_Hardware)
 Hardware_STL= $(addsuffix .stl, $(Hardware))
 
 Assembly_STL=$(addprefix Assembly/, $(Parts_STL) $(Hardware_STL));
-Assembly_VIEWS=CAFE12 Minuteman Frame Stock Lower FCG
-ASSEMBLY_JPG=$(addprefix Assembly_,$(addsuffix .jpg, $(Assembly_VIEWS)))
 
-TARGETS = README.html $(ASSEMBLY_JPG) $(Components_HTML) $(Parts_STL) $(Parts_STL_thumb) $(Assembly_STL)
+Preview=CAFE12 Minuteman Frame Stock Lower FCG
+Preview_PNG=$(addprefix Preview_,$(addsuffix .jpg, $(VIEWS)))
+Preview_JPG=$(addprefix Preview_,$(addsuffix .jpg, $(VIEWS)))
 
-Assembly_Minuteman.png: Assembly.scad
+TARGETS = README.html $(Preview_PNG) $(Preview_JPG) $(Components_HTML) $(Parts_STL) $(Parts_STL_png) $(Parts_STL_thumb) $(Preview_STL)
+
+Preview_Minuteman.png: Assembly.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
 		--projection=p --camera=200,800,200,-100,0,0 \
 		$<
-Assembly_Frame.png: Assembly.scad
+Preview_Frame.png: Assembly.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
 		--projection=p --camera=200,800,200,-100,0,0 \
 		-D _SHOW_RECEIVER=true \
@@ -57,7 +60,7 @@ Assembly_Frame.png: Assembly.scad
 		-D _SHOW_FOREND=false \
 		-D _SHOW_STOCK=false \
 		$<
-Assembly_Stock.png: Assembly.scad
+Preview_Stock.png: Assembly.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
 		--projection=p --camera=200,800,200,-100,0,0 \
 		-D _SHOW_RECEIVER=false \
@@ -66,7 +69,7 @@ Assembly_Stock.png: Assembly.scad
 		-D _SHOW_FOREND=false \
 		-D _SHOW_STOCK=true \
 		$<
-Assembly_Lower.png: Assembly.scad
+Preview_Lower.png: Assembly.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
 		--projection=p --camera=200,800,200,-100,0,0 \
 		-D _SHOW_RECEIVER=false \
@@ -75,7 +78,7 @@ Assembly_Lower.png: Assembly.scad
 		-D _SHOW_FOREND=false \
 		-D _SHOW_STOCK=false \
 		$<
-Assembly_FCG.png: Assembly.scad
+Preview_FCG.png: Assembly.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
 		--projection=p --camera=200,800,200,-100,0,0 \
 		-D _SHOW_RECEIVER=false \
@@ -84,7 +87,7 @@ Assembly_FCG.png: Assembly.scad
 		-D _SHOW_FOREND=false \
 		-D _SHOW_STOCK=false \
 		$<
-Assembly_CAFE12.png: Assembly.scad
+Preview_CAFE12.png: Assembly.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
 		--projection=p --camera=200,1500,200,0,0,0 \
 		-D _FOREND='"TopBreak"' \
