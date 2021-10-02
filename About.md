@@ -61,7 +61,8 @@ A "Plus" tech level describes the 'better than minimal' tools for that level.
 | One Plus   | Lab power supply                                                |
 
 # Why
-Is for you to understand and decide for yourself. Some thoughts that have influenced me:
+I do not trust your government and they don't trust either of us.
+The power to create weapons is now in your hands, use it responsibly.
 
 > A man's natural rights are his own, against the whole world; and any infringement of them is equally a crime; whether committed by one man, or by millions; whether committed by one man, calling himself a robber, or by millions calling themselves a government.
 
