@@ -16,10 +16,13 @@ use <../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 
 use <Receiver.scad>;
 
-/* [Print] */
+/* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = "Frame_Receiver"; // ["Frame_Receiver"]
+_RENDER = ""; // ["", "Frame_Receiver"]
+
+// Reorient the part for printing?
+_RENDER_PRINT = true;
 
 /* [Assembly] */
 _SHOW_RECEIVER = true;
@@ -268,6 +271,20 @@ if ($preview) {
     Receiver_MlokBolts();
   }
 } else {
-  rotate([0,90,0])
-  Frame_Receiver(doRender=false);
+
+  // *****************
+  // * Printed Parts *
+  // *****************
+  if (_RENDER == "Frame_Receiver")
+    if (!_RENDER_PRINT)
+      Frame_Receiver();
+    else
+      rotate([0,90,0])
+      Frame_Receiver(doRender=false);
+      
+  // ************
+  // * Hardware *
+  // ************
+  if (_RENDER == "Frame_Bolts")
+  Frame_Bolts();
 }
