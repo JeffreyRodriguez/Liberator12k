@@ -75,7 +75,7 @@ module Fillet(r=0.125, r1=undef, r2=undef, h=1, inset=false, chamferTop=true, ch
   }
 }
 
-module HoleChamfer(r1=0.5, r2=0.125, teardrop=false, edgeSign=1) {
+module HoleChamfer(r1=0.5, r2=0.125, teardrop=true, edgeSign=1) {
   if (ResolutionIsHigh())
   rotate_extrude()
   RoundedBoolean(r=r2,
