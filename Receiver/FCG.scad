@@ -40,7 +40,6 @@ _SHOW_RECOIL_PLATE = true;
 _SHOW_RECOIL_PLATE_BOLTS = true;
 _SHOW_RECEIVER      = true;
 _SHOW_LOWER         = true;
-_SHOW_LOWER_LEFT    = false;
 
 _ALPHA_FIRING_PIN_HOUSING = 1; // [0:0.1:1]
 _ALPHA_RECOIL_PLATE = 1; // [0:0.1:1]
@@ -93,7 +92,6 @@ FIRING_PIN_BODY_DIAMETER = 0.3125;
 FIRING_PIN_BODY_LENGTH = 1;
 
 FCG_RECOIL_PLATE_CONTOURED = true;
-
 
 SEAR_WIDTH = 0.2501; // TODO: Allow picking metric version? 0.23622in or 6mm?
 SEAR_CLEARANCE = 0.005;
@@ -218,7 +216,7 @@ function TriggerHeight() = GripCeiling()+TriggerFingerDiameter();
 function TriggerWidth() = 0.50;
 function SearTravel() = 0.25;
 function TriggerTravel() = SearTravel()*1.5;
-function SearLength() = abs(SearPinOffsetZ()) + SearTravel();
+function SearLength() = 1.67188;// abs(SearPinOffsetZ()) + SearTravel();
 
 function TriggerAnimationFactor() = SubAnimate(ANIMATION_STEP_TRIGGER)-SubAnimate(ANIMATION_STEP_CHARGER_RESET, end=0.1);
 
@@ -373,6 +371,7 @@ module Sear(animationFactor=0, length=SearLength(), cutter=false, clearance=SEAR
     
     color("Silver") RenderIf(!cutter)
     difference() {
+      translate([-LowerMaxX(),0, LowerOffsetZ()])
       translate([-SearRadius(clear),-SearRadius(clear),SearPinOffsetZ()-SearBottomOffset()-(cutter?SearTravel()+SearSpringCompressed():0)])
       cube([SearDiameter(clear), SearDiameter(clear), length]);
       
@@ -386,6 +385,7 @@ module Sear(animationFactor=0, length=SearLength(), cutter=false, clearance=SEAR
 module SearPin(cutter=false, clearance=SEAR_PIN_CLEARANCE) {
   clear = cutter ? clearance : 0;
   
+  translate([-LowerMaxX(),0, LowerOffsetZ()])
   translate([0,0,SearPinOffsetZ()])
   rotate([90,0,0])
   color("SteelBlue") RenderIf(!cutter)
@@ -980,6 +980,7 @@ module SearSupportTab(cutter=false, clearance=0.015) {
   color("Chocolate")
   render(convexity=4)
   difference() {
+    translate([-LowerMaxX(),0, LowerOffsetZ()])
     union() {
       rotate([90,0,0])
       linear_extrude(height=SearDiameter()-0.01, center=true) {
@@ -1048,6 +1049,7 @@ module Trigger(animationFactor=TriggerAnimationFactor(), left=true, leftAlpha=1,
   sideplateWidth = (TriggerWidth()/2)
                  - SearRadius();
 
+  translate([-LowerMaxX(),0, LowerOffsetZ()])
   translate([-(TriggerTravel()*animationFactor),0,0]) {
 
     if (right)
@@ -1234,17 +1236,16 @@ module FCG_RecoilPlate_GangFixture(xyz = [1,0.375,0.375], gang=[5,2], holeRadius
 //**************
 module TriggerGroup(animationFactor=TriggerAnimationFactor(),
                     searLength=SearLength()) {
-  translate([FCG_HammerCockedX+0.125,0,ReceiverBottomZ()]) {
-    Sear(animationFactor=animationFactor, length=searLength)
-    SearPin();
+  
+  Sear(animationFactor=animationFactor, length=searLength)
+  SearPin();
     
-    if (_SHOW_TRIGGER_MIDDLE)
-    SearSupportTab();
-    
-    Trigger(animationFactor=animationFactor,
-            left=_SHOW_TRIGGER_LEFT, leftAlpha=1,
-            right=_SHOW_TRIGGER_RIGHT, rightAlpha=1);
-  }
+  if (_SHOW_TRIGGER_MIDDLE)
+  SearSupportTab();
+  
+  Trigger(animationFactor=animationFactor,
+          left=_SHOW_TRIGGER_LEFT, leftAlpha=1,
+          right=_SHOW_TRIGGER_RIGHT, rightAlpha=1);
 }
 
 module SimpleFireControlAssembly(actionRod=_SHOW_ACTION_ROD, recoilPlate=_SHOW_RECOIL_PLATE, debug=false) {
@@ -1327,16 +1328,13 @@ module SimpleFireControlAssembly(actionRod=_SHOW_ACTION_ROD, recoilPlate=_SHOW_R
 //*************
 scale(25.4)
 if ($preview) {
-  if (_SHOW_LOWER) {
-    
-    LowerMount();
-    
-    *translate([-LowerMaxX(),0,ReceiverBottomZ()])
-    Lower(showLeft=_SHOW_LOWER_LEFT,
-          showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true);
-  }
   
   SimpleFireControlAssembly();
+  
+  if (_SHOW_LOWER) {
+    LowerMount();
+    Lower();
+  }
   
   if (_SHOW_RECEIVER)
   ReceiverAssembly(debug=_CUTAWAY_RECEIVER);

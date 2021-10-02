@@ -27,20 +27,26 @@ _RENDER = ""; // ["", "Lower_Left", "Lower_Right", "Lower_Middle", "Lower_MountF
 _RENDER_PRINT = true;
 
 /* [Assembly] */
+_SHOW_RECEIVER = true;
+_SHOW_FCG = true;
 _SHOW_LOWER_LEFT = true;
 _SHOW_LOWER_RIGHT = true;
 _SHOW_LOWER_MIDDLE = true;
-_SHOW_TRIGGER = true;
-_SHOW_LOWER_LUGS = true;
-_SHOW_LOWERMOUNT_FRONT = true;
-_SHOW_LOWERMOUNT_REAR = true;
+_SHOW_LOWER_MOUNT_FRONT = true;
+_SHOW_LOWER_MOUNT_REAR = true;
+_SHOW_LOWER_BOLTS = true;
+_SHOW_TAKEDOWN_PIN = true;
+_SHOW_TAKEDOWN_PIN_RETAINER = true;
 
 /* [Transparency] */
-_ALPHA_LOWER = 1;  // [0:0.1:1]
+_ALPHA_LOWER = 1;    // [0:0.1:1]
+_ALPHA_RECEIVER = 1; // [0:0.1:1]
 
 /* [Cutaway] */
+_CUTAWAY_LOWER = true;
 _CUTAWAY_LOWERMOUNT_FRONT = false;
 _CUTAWAY_LOWERMOUNT_REAR = false;
+_CUTAWAY_RECEIVER = false;
 
 /* [Vitamins] */
 LOWER_BOLT = "#8-32"; // ["M4", "#8-32"]
@@ -79,13 +85,11 @@ function ReceiverLugRearMaxX() = ReceiverLugRearMinX()+ReceiverLugRearLength();
 function ReceiverLugRearZ() = -1;
 
 
-function ReceiverLugBoltRadius() = 0.0775;
-
-function ReceiverLugBoltX(bolt) = bolt[0];
-function ReceiverLugBoltZ(bolt) = bolt[1];
+function Lower_BoltX(bolt) = bolt[0];
+function Lower_BoltZ(bolt) = bolt[1];
 
 // XYZ
-function ReceiverLugBoltsArray() = [
+function Lower_BoltsArray() = [
 
    // Front-Top
    [ReceiverLugFrontMaxX()+0.25,
@@ -93,7 +97,17 @@ function ReceiverLugBoltsArray() = [
 
    // Back-Top
    [ReceiverLugRearMinX()+(ReceiverLugRearLength()/2),
-    -0.375]
+    -0.375],
+    
+   // Front-Bottom
+   [ReceiverLugFrontMaxX()+0.25,
+    GripCeilingZ()-TriggerGuardDiameter()],
+
+   // Handle Bottom-Rear
+   [-2.0,GripCeilingZ()-2.9],
+
+   // Handle Bottom-Front
+   [-1.375,GripCeilingZ()-1.375]
 ];
 
 function LowerCenterWidth() = 0.51;
@@ -120,21 +134,23 @@ function TriggerPocketHeight() = GripCeiling()
 
 function LowerGuardHeight() = TriggerPocketHeight()
                             + TriggerGuardWall();
+                            
 
 //************
 //* Vitamins *
 //************
-module ReceiverLugBolts(boltSpec=BoltSpec(RECEIVER_LUG_BOLTS),
-                            length=UnitsMetric(30),
-                            head="socket", nut="hex",
-                            cutter=false,
-                            clearance=RECEIVER_LUG_BOLTS_CLEARANCE,
-                            teardrop=false,
-                            teardropAngle=90) {
+module Lower_Bolts(boltSpec=LowerBolt(),
+                  length=UnitsMetric(30),
+                  head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT,
+                  cutter=false,
+                  clearance=RECEIVER_LUG_BOLTS_CLEARANCE,
+                  teardrop=false,
+                  teardropAngle=90) {
 
+  // Receiver lug bolt
   color("Silver")
-  for (bolt = ReceiverLugBoltsArray())
-  translate([ReceiverLugBoltX(bolt), -length/2, ReceiverLugBoltZ(bolt)])
+  for (bolt = Lower_BoltsArray())
+  translate([Lower_BoltX(bolt), -length/2, Lower_BoltZ(bolt)])
   rotate([90,0,0])
   rotate(90)
   NutAndBolt(bolt=boltSpec, boltLength=length,
@@ -160,59 +176,10 @@ module Lower_MountTakedownPinRetainer(cutter=false, clearance=0.005) {
   cylinder(r=0.125, h=2);
 }
 
-module GuardBolt(boltSpec=LowerBolt(), length=UnitsImperial(1.25),
-                 head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT,
-                 cutter=false, clearance=0.005) {
-
-  color("Silver")
-  translate([ReceiverLugBoltX(ReceiverLugBoltsArray()[0]),
-             -LowerMaxY(),
-             GripCeilingZ()-TriggerGuardDiameter()+0])
-  rotate([90,0,0])
-  rotate([0,0,90])
-  NutAndBolt(bolt=boltSpec, boltLength=length, clearance=cutter?clearance:0,
-             capOrientation=true, head=head, nut=nut,
-             capHeightExtra=cutter?1:0, nutHeightExtra=cutter?1:0);
-}
-
-module HandleBolts(boltSpec=LowerBolt(), length=UnitsMetric(30),
-                   head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT,
-                   cutter=false, clearance=0.005) {
-  boltsXZ = [
-
-     // Handle Bottom-Rear
-     [-2.0,GripCeilingZ()-2.9],
-
-     // Handle Bottom-Front
-     [-1.375,GripCeilingZ()-1.375]
-  ];
-
-  color("Silver")
-  for (xz = boltsXZ)
-  translate([xz[0],-length/2,xz[1]])
-  rotate([90,0,0])
-  NutAndBolt(bolt=boltSpec, boltLength=length, clearance=cutter?clearance:0,
-              capOrientation=true, head=head, nut=nut,
-              capHeightExtra=cutter?1:0,
-              nutHeightExtra=cutter?1:0);
-}
 
 //**********
 //* Shapes *
 //**********
-module LowerMatchplate2d() {
-  union() {
-    intersection() {
-      projection(cut=true)
-      translate([0,0,0.001])
-      TriggerGuard();
-
-      translate([ReceiverLugRearMaxX()-1.375,-1])
-      square([LowerMaxX()-ReceiverLugRearMaxX()+1.375,2]);
-    }
-  }
-}
-
 module TriggerGuardSlot(radius=TriggerGuardRadius(), length=0.6, $fn=Resolution(12, 60)) {
 
   union() {
@@ -358,11 +325,11 @@ module LowerReceiverSupports() {
   // Rear receiver lug support
   hull() {
 
-    translate([ReceiverLugBoltX(ReceiverLugBoltsArray()[1])-0.4,-(GripWidth()/2)+ManifoldGap(),0])
+    translate([Lower_BoltX(Lower_BoltsArray()[1])-0.4,-(GripWidth()/2)+ManifoldGap(),0])
     mirror([0,0,1])
     ChamferedCube([1, GripWidth(), 0.74], r=1/16);
 
-    translate([ReceiverLugBoltX(ReceiverLugBoltsArray()[1]),0,ReceiverLugBoltZ(ReceiverLugBoltsArray()[1])])
+    translate([Lower_BoltX(Lower_BoltsArray()[1]),0,Lower_BoltZ(Lower_BoltsArray()[1])])
     rotate([90,0,0])
     cylinder(r=0.225, h=1.25, center=true, $fn=Resolution(12,24));
   }
@@ -386,21 +353,17 @@ module LowerTriggerPocket() {
             TriggerPocketHeight()-TriggerGuardRadius()]);
     }
 
-    ReceiverLugBolts(cutter=true);
+    Lower_Bolts(cutter=true);
   }
 }
 
-module LowerCutouts(chamferLugs=true, boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT) {
+module LowerCutouts(chamferLugs=true) {
   ReceiverLugFront(width=LowerCenterWidth(),
                    cutter=true, chamferCutterHorizontal=chamferLugs);
   ReceiverLugRear(width=LowerCenterWidth(), hole=false,
                    cutter=true, chamferCutterHorizontal=chamferLugs);
 
-  GuardBolt(length=1.25, boltSpec=boltSpec, head=head, nut=nut, cutter=true);
-
-  HandleBolts(length=1.25, boltSpec=boltSpec, head=head, nut=nut, cutter=true);
-
-  ReceiverLugBolts(length=1.25, boltSpec=boltSpec, head=head, nut=nut, cutter=true);
+  Lower_Bolts(cutter=true);
 
   TriggerGuardSlot();
 }
@@ -426,7 +389,7 @@ module ReceiverLugRear(width=UnitsImperial(0.5), extraTop=ManifoldGap(),
 
     // Grip Bolt Hole
     if (hole)
-    ReceiverLugBolts(teardrop=teardrop, teardropAngle=teardropAngle,
+    Lower_Bolts(teardrop=teardrop, teardropAngle=teardropAngle,
                          cutter=true);
   }
 }
@@ -447,6 +410,36 @@ module ReceiverLugFront(width=UnitsImperial(0.5), extraTop=ManifoldGap(),
 //*****************
 //* Printed Parts *
 //*****************
+module Lower_Middle() {
+  color("Chocolate")
+  render()
+  difference() {
+    intersection() {
+      TriggerGuard();
+
+      // Just the middle
+      GripSplitter(clearance=0);
+    }
+
+    LowerCutouts(chamferLugs=false);
+
+    // Trigger Pocket
+    LowerTriggerPocket();
+
+    // #L12K easter egg
+    if (Resolution(false, true))
+    translate([-1.5, 0.2, -3.75])
+    rotate([0,45,0])
+    rotate([0,0,180])
+    rotate([90,0,0])
+    linear_extrude(height=0.25) {
+      text("#", font="Arial", size=0.35);
+
+      translate([0.45, 0.08])
+      text("L12K", font="Arial", size=0.3);
+    }
+  }
+}
 module Lower_MountFront(id=ReceiverID(), alpha=1, debug=false, doRender=true) {
   mountLength = 1.75-0.01;
   
@@ -465,9 +458,9 @@ module Lower_MountFront(id=ReceiverID(), alpha=1, debug=false, doRender=true) {
     difference() {
       
       // Receiver ID
-      translate([ReceiverLugFrontMaxX(),0,0])
+      translate([ReceiverLugFrontMaxX()+ManifoldGap(),0,0])
       rotate([0,-90,0])
-      ChamferedCircularHole(r1=id/2, r2=1/8, h=mountLength,
+      ChamferedCircularHole(r1=id/2, r2=1/8, h=mountLength+ManifoldGap(2),
                             teardropBottom=true,
                             teardropTop=true);
       // Sear support
@@ -536,19 +529,21 @@ module Lower_MountRear(id=ReceiverID(), alpha=1, debug=false, doRender=true) {
 //**************
 //* Assemblies *
 //**************
-module LowerMount(id=ReceiverID(), alpha=1, debug=false) {
+module LowerMount(alpha=1, debug=false) {
+  if (_SHOW_TAKEDOWN_PIN_RETAINER)
   Lower_MountTakedownPinRetainer();
   
+  if (_SHOW_TAKEDOWN_PIN)
   Receiver_TakedownPin();
   
-  if (_SHOW_LOWERMOUNT_FRONT)
-  Lower_MountFront(debug=_CUTAWAY_LOWERMOUNT_FRONT);
+  if (_SHOW_LOWER_MOUNT_FRONT)
+  Lower_MountFront();
   
-  if (_SHOW_LOWERMOUNT_REAR)
-  Lower_MountRear(debug=_CUTAWAY_LOWERMOUNT_REAR);
+  if (_SHOW_LOWER_MOUNT_REAR)
+  Lower_MountRear();
 }
 
-module LowerSidePlates(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT, showLeft=true, showRight=true, alpha=1) {
+module LowerSidePlates(showLeft=true, showRight=true, alpha=1) {
 
   // Trigger Guard Sides
   color("Tan", alpha)
@@ -559,7 +554,7 @@ module LowerSidePlates(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOL
 
     GripSplitter(clearance=0.001);
 
-    LowerCutouts(boltSpec=boltSpec, head=head, nut=nut);
+    LowerCutouts();
 
     if (showLeft == false)
     translate([-10,0,-10])
@@ -572,42 +567,9 @@ module LowerSidePlates(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOL
 
 }
 
-module Lower_Middle(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT) {
-  color("Chocolate")
-  render()
-  difference() {
-    intersection() {
-      TriggerGuard();
-
-      // Just the middle
-      GripSplitter(clearance=0);
-    }
-
-    LowerCutouts(chamferLugs=false, boltSpec=LowerBolt(), head=head, nut=nut);
-
-    // Trigger Pocket
-    LowerTriggerPocket();
-
-    // #L12K easter egg
-    if (Resolution(false, true))
-    translate([-1.5, 0.2, -3.75])
-    rotate([0,45,0])
-    rotate([0,0,180])
-    rotate([90,0,0])
-    linear_extrude(height=0.25) {
-      text("#", font="Arial", size=0.35);
-
-      translate([0.45, 0.08])
-      text("L12K", font="Arial", size=0.3);
-    }
-  }
-}
-
-module Lower(showReceiverLugs=false, showReceiverLugBolts=false,
-            showGuardBolt=false, showHandleBolts=false,
+module Lower(bolts=true,
             showMiddle=true, showLeft=true, showRight=true,
-            boltSpec=LowerBolt(), boltHead=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT,
-            alpha=1) {
+            debug=false, alpha=1) {
       boltLength = 1.25;
 
   translate([-LowerMaxX(),0, LowerOffsetZ()]) {
@@ -616,34 +578,27 @@ module Lower(showReceiverLugs=false, showReceiverLugBolts=false,
     if (showMiddle)
     Lower_Middle();
 
-    if (showReceiverLugs) {
-      ReceiverLugFront(width=LowerCenterWidth());
-      ReceiverLugRear(width=LowerCenterWidth());
-    }
+    if (_SHOW_LOWER_BOLTS)
+    Lower_Bolts();
 
-    if (showReceiverLugBolts)
-    ReceiverLugBolts(boltSpec=boltSpec, length=boltLength, head=boltHead, nut=nut);
-
-    if (showGuardBolt)
-    GuardBolt(boltSpec=boltSpec, length=boltLength, head=boltHead, nut=nut);
-
-    if (showHandleBolts)
-    HandleBolts(boltSpec=boltSpec, length=boltLength, head=boltHead, nut=nut);
-
-    LowerSidePlates(boltSpec=boltSpec, head=boltHead, nut=nut,
-                    showLeft=showLeft, showRight=showRight, alpha=alpha);
+    LowerSidePlates(showLeft=showLeft, showRight=showRight, alpha=alpha);
   }
 }
 
 scale(25.4)
 if ($preview) {
-  Lower(showReceiverLugs=_SHOW_LOWER_LUGS, showReceiverLugBolts=true,
-        showGuardBolt=true,
-        showHandleBolts=true,
-        showLeft=_SHOW_LOWER_LEFT,
-        showMiddle=_SHOW_LOWER_MIDDLE,
-        showRight=_SHOW_LOWER_RIGHT,
-        alpha=_ALPHA_LOWER);
+  LowerMount();
+  
+  Lower(bolts=_SHOW_LOWER_BOLTS,
+         showLeft=_SHOW_LOWER_LEFT, showRight=_SHOW_LOWER_RIGHT,
+         showMiddle=_SHOW_LOWER_MIDDLE,
+         alpha=_ALPHA_LOWER);
+  
+  if (_SHOW_FCG)
+  SimpleFireControlAssembly();
+  
+  if (_SHOW_RECEIVER)
+  Receiver(debug=_CUTAWAY_RECEIVER, alpha=_ALPHA_RECEIVER);
 } else {
 
   // *****************
@@ -651,6 +606,7 @@ if ($preview) {
   // *****************
   if (_RENDER == "Lower_Left")
     if (!_RENDER_PRINT)
+      translate([-LowerMaxX(),0, LowerOffsetZ()])
       LowerSidePlates(showLeft=true, showRight=false);
     else
       rotate(180)
@@ -660,6 +616,7 @@ if ($preview) {
 
   if (_RENDER == "Lower_Right")
     if (!_RENDER_PRINT)
+      translate([-LowerMaxX(),0, LowerOffsetZ()])
       LowerSidePlates(showLeft=false, showRight=true);
     else
       rotate([-90,0,0])
@@ -668,7 +625,7 @@ if ($preview) {
 
   if (_RENDER == "Lower_Middle")
     if (!_RENDER_PRINT)
-      translate([0,0.25,2.125])
+      translate([-LowerMaxX(),0, LowerOffsetZ()])
       Lower_Middle();
     else
       rotate(180)
@@ -700,11 +657,8 @@ if ($preview) {
   // ************
   // * Hardware *
   // ************
-  if (_RENDER == "Lower_Bolts") {
-    ReceiverLugBolts();
-    GuardBolt();
-    HandleBolts();
-  }
+  if (_RENDER == "Lower_Bolts")
+  Lower_Bolts();
   
   if (_RENDER == "Lower_MountTakedownPinRetainer")
   Lower_MountTakedownPinRetainer();
