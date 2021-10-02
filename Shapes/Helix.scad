@@ -4,6 +4,7 @@ use <../Meta/Units.scad>;
 use <../Meta/Resolution.scad>;
 use <../Meta/Manifold.scad>;
 use <../Shapes/Semicircle.scad>;
+use <../Shapes/Teardrop.scad>;
 
 RADIUS=2; // "2"
 DEPTH=0.1875; // "0.1875"
