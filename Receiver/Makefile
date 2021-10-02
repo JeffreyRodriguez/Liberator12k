@@ -1,7 +1,11 @@
 include ../Makefile.in
 
-Components=Receiver Frame Stock FCG
+Components=Receiver Frame Stock FCG Lower
 Components_HTML=$(addsuffix .html, $(Components))
+
+Lower_Parts=Lower_Left Lower_Middle Lower_Right \
+						Lower_MountFront Lower_MountRear
+Lower_Hardware=Lower_Bolts Lower_MountTakedownPinRetainer
 
 Receiver_Parts=Receiver Receiver_Back
 Receiver_Hardware=Receiver_MlokBolts Receiver_TakedownPin Receiver_TensionBolts
@@ -27,11 +31,11 @@ Frame_STL=$(addsuffix .stl, $(Frame_Parts))
 Stock_STL=$(addsuffix .stl, $(Stock_Parts))
 FCG_STL=$(addsuffix .stl, $(FCG_Parts))
 
-Parts=$(Receiver_Parts) $(Frame_Parts) $(Stock_Parts) $(FCG_Parts)
+Parts=$(Receiver_Parts) $(Frame_Parts) $(Stock_Parts) $(FCG_Parts) $(Lower_Parts)
 Parts_STL=$(addsuffix .stl, $(Parts))
 Parts_STL_thumbs=$(addsuffix _thumb.jpg, $(Parts))
 
-Hardware=$(Receiver_Hardware) $(Frame_Hardware) $(Stock_Hardware) $(FCG_Hardware)
+Hardware=$(Receiver_Hardware) $(Frame_Hardware) $(Stock_Hardware) $(FCG_Hardware) $(Lower_Hardware)
 Hardware_STL= $(addsuffix .stl, $(Hardware))
 
 Assembly_STL=$(addprefix Assembly/, $(Parts_STL) $(Hardware_STL));
