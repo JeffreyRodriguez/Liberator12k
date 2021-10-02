@@ -60,19 +60,17 @@ A "Plus" tech level describes the 'better than minimal' tools for that level.
 | One        | 12v power supply (battery, charger, 3D printer, or lab supply)  |
 | One Plus   | Lab power supply                                                |
 
-## Why
-Is for you to understand and decide for yourself.
-
-A few significant voices:
+# Why
+Is for you to understand and decide for yourself. Some thoughts that have influenced me:
 
 > A man's natural rights are his own, against the whole world; and any infringement of them is equally a crime; whether committed by one man, or by millions; whether committed by one man, calling himself a robber, or by millions calling themselves a government.
 
-― Lysander Spooner, No Treason: The Constitution of No Authority
+Lysander Spooner, No Treason: The Constitution of No Authority
 
-> My political opinions lean more and more to Anarchy (philosophically understood, meaning abolition of control not whiskered men with bombs) – or to ‘unconstitutional’ Monarchy. I would arrest anybody who uses the word State (in any sense other than the inanimate realm of England and its inhabitants, a thing that has neither power, rights nor mind); and after a chance of recantation, execute them if they remained obstinate! If we could get back to personal names, it would do a lot of good. Government is an abstract noun meaning the art and process of governing and it should be an offence to write it with a capital G or so as to refer to people. If people were in the habit of referring to ‘King George’s council, Winston and his gang’, it would go a long way to clearing thought, and reducing the frightful landslide into Theyocracy.
+> My political opinions lean more and more to Anarchy (philosophically understood, meaning abolition of control not whiskered men with bombs) - or to 'unconstitutional' Monarchy. I would arrest anybody who uses the word State (in any sense other than the inanimate realm of England and its inhabitants, a thing that has neither power, rights nor mind); and after a chance of recantation, execute them if they remained obstinate! If we could get back to personal names, it would do a lot of good. Government is an abstract noun meaning the art and process of governing and it should be an offence to write it with a capital G or so as to refer to people. If people were in the habit of referring to 'King George's council, Winston and his gang', it would go a long way to clearing thought, and reducing the frightful landslide into Theyocracy.
 
 The Letters of J.R.R. Tolkien, pg. 74, Letter 52.
 
-> And how we burned in the camps later, thinking: What would things have been like if every Security operative, when he went out at night to make an arrest, had been uncertain whether he would return alive and had to say good-bye to his family? Or if, during periods of mass arrests, as for example in Leningrad, when they arrested a quarter of the entire city, people had not simply sat there in their lairs, paling with terror at every bang of the downstairs door and at every step on the staircase, but had understood they had nothing left to lose and had boldly set up in the downstairs hall an ambush of half a dozen people with axes, hammers, pokers, or whatever else was at hand?... The Organs would very quickly have suffered a shortage of officers and transport and, notwithstanding all of Stalin's thirst, the cursed machine would have ground to a halt! If...if...We didn't love freedom enough. And even more – we had no awareness of the real situation.... We purely and simply deserved everything that happened afterward.
+> And how we burned in the camps later, thinking: What would things have been like if every Security operative, when he went out at night to make an arrest, had been uncertain whether he would return alive and had to say good-bye to his family? Or if, during periods of mass arrests, as for example in Leningrad, when they arrested a quarter of the entire city, people had not simply sat there in their lairs, paling with terror at every bang of the downstairs door and at every step on the staircase, but had understood they had nothing left to lose and had boldly set up in the downstairs hall an ambush of half a dozen people with axes, hammers, pokers, or whatever else was at hand?... The Organs would very quickly have suffered a shortage of officers and transport and, notwithstanding all of Stalin's thirst, the cursed machine would have ground to a halt! If...if...We didn't love freedom enough. And even more - we had no awareness of the real situation.... We purely and simply deserved everything that happened afterward.
 
-― Aleksandr I. Solzhenitsyn , The Gulag Archipelago 1918–1956
+Aleksandr I. Solzhenitsyn , The Gulag Archipelago 1918-1956
