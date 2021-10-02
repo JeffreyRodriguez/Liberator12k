@@ -22,10 +22,13 @@ use <Lower/Lugs.scad>;
 use <Receiver.scad>;
 
 
-/* [Print] */
+/* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
 _RENDER = ""; // ["", "FCG_Housing", "FCG_ChargingHandle", "FCG_Disconnector", "FCG_Hammer", "FCG_HammerTail", "FCG_FiringPinCollar", "FCG_TriggerLeft", "FCG_TriggerRight", "FCG_TriggerMiddle", "FCG_RecoilPlate_Fixture", "FCG_RecoilPlate_GangFixture", "FCG_RecoilPlate_TapGuide", "FCG_RecoilPlate_Projection", "FCG_SearJig"]
+
+// Reorient the part for printing?
+_RENDER_PRINT = true;
 
 /* [Assembly] */
 _SHOW_TRIGGER_LEFT = true;
@@ -149,6 +152,9 @@ function FiringPinHousingLength() = 1;
 function FiringPinHousingBack() = 0.25;
 function FiringPinHousingWidth() = 0.75;
 
+function FiringPinSpringDiameter() = 0.22;
+function FiringPinSpringRadius() = FiringPinSpringDiameter()/2;
+
 function FiringPinLength() = FiringPinHousingLength()+0.5
                            + FiringPinStickout();
 
@@ -252,6 +258,54 @@ module TriggerSearPinTrack() {
     circle(r=SearPinRadius(SEAR_PIN_CLEARANCE));
   }
 }
+
+module TriggerSideCutter(clearance=0) {
+  translate([ReceiverLugRearMinX(),ManifoldGap()])
+  mirror([0,1])
+  square([ReceiverLugFrontMaxX()+abs(ReceiverLugRearMinX()),
+          TriggerHeight()+ManifoldGap(2)]);
+}
+//
+
+module Trigger2d() {
+  triggerFront = 0.5;
+  triggerBack = abs(ReceiverLugRearMinX())-TriggerTravel()-0.01;
+  triggerLength = TriggerTravel()+SearDiameter()+triggerFront+triggerBack;
+  triggerHeight = TriggerHeight()-0.01;
+
+  render()
+  difference() {
+
+    // Trigger Body
+    translate([-triggerBack,0])
+    mirror([0,1])
+    square([triggerLength,triggerHeight-0.01]);
+
+    TriggerSearPinTrack();
+
+    // Finger curve
+    translate([TriggerFingerRadius()+TriggerTravel()+SearDiameter()+triggerFront-0.15,
+             -GripCeiling()-TriggerFingerRadius()])
+    circle(r=TriggerFingerRadius(), $fn=Resolution(16,30));
+
+
+    // Retainer cutout
+    translate([-triggerBack,ReceiverLugRearZ()-0.375])
+    square([ReceiverLugRearLength(),
+            abs(ReceiverLugRearZ())+0.375]);
+
+    // Clearance for the receiver lugs
+    projection(cut=true)
+    rotate([-90,0,0]) {
+      ReceiverLugFront(cutter=true);
+
+      for (x=[0, TriggerTravel()])
+      translate([x,0,0])
+      ReceiverLugRear(cutter=true, hole=false);
+    }
+  }
+}
+//
 
 //************
 //* Vitamins *
@@ -379,7 +433,7 @@ module FiringPinSpring(cutter=false, clearance=0.005, debug=false) {
   DebugHalf(enabled=debug)
   translate([-0.25,0,0])
   rotate([0,90,0])
-  cylinder(r=(0.22/2)+clear,
+  cylinder(r=FiringPinSpringRadius()+clear,
            h=0.5);
   
   if (cutter)
@@ -402,11 +456,14 @@ module RecoilPlateCenterBolts(bolt=RecoilPlateBolt(), boltLength=1.5, template=f
   color("Silver")
   RenderIf(!cutter)
   for (M = [0,1]) mirror([0,M,0])
-  translate([0.5+ManifoldGap(),RecoilPlateBoltOffsetY(),0])
-  rotate([0,-90,0])
-  Bolt(bolt=bolt, length=boltLength+ManifoldGap(2),
-        head=boltHead, capHeightExtra=(cutter?1:0),
-        clearance=cutter?clearance:0);
+  translate([0.5+ManifoldGap(),RecoilPlateBoltOffsetY(),0]) {
+    rotate([0,-90,0])
+    Bolt(bolt=bolt, length=boltLength+ManifoldGap(2),
+          head=boltHead, capHeightExtra=(cutter?1:0),
+          clearance=cutter?clearance:0);
+          
+    children();
+  }
 }
 
 module RecoilPlateSideBolts(bolt=RecoilPlateBolt(), boltLength=1.5, template=false, cutter=false, clearance=RECOIL_PLATE_BOLT_CLEARANCE) {
@@ -455,7 +512,7 @@ module RecoilPlate(length=RecoilPlateLength(), spindleZ=-1, contoured=true, cutt
       hull() {
         projection()
         rotate([0,-90,0])
-        ReceiverSegment(highTop=false);
+        Receiver_Segment(highTop=false);
       
         // 12ga cylinder spindle support
         translate([1,0])
@@ -703,12 +760,12 @@ module FCG_Hammer(cutter=false, clearance=UnitsImperial(0.01), debug=false, alph
       
       // Wings
       translate([FCG_HammerCockedX,
-                 -(ReceiverIR()+ReceiverSideSlotDepth()-clearance),
-                 -(ReceiverSideSlotHeight()/2)+clearance])
+                 -(ReceiverIR()+Receiver_SideSlotDepth()-clearance),
+                 -(Receiver_SideSlotHeight()/2)+clearance])
       mirror([1,0,0])
       ChamferedCube([FCG_HammerLength,
-                     (ReceiverIR()+ReceiverSideSlotDepth()-clearance)*2,
-                     ReceiverSideSlotHeight()-(clearance*2)],
+                     (ReceiverIR()+Receiver_SideSlotDepth()-clearance)*2,
+                     Receiver_SideSlotHeight()-(clearance*2)],
                     r=1/16,teardropFlip=[true, true, true]);
     }
     
@@ -771,11 +828,11 @@ module FCG_HammerTail(clearance=UnitsImperial(0.01), debug=false, alpha=1) {
       
       // Wings
       translate([FCG_HammerTailMinX,
-                 -(ReceiverIR()+ReceiverSideSlotDepth()-clearance),
-                 -(ReceiverSideSlotHeight()/2)+clearance])
+                 -(ReceiverIR()+Receiver_SideSlotDepth()-clearance),
+                 -(Receiver_SideSlotHeight()/2)+clearance])
       ChamferedCube([FCG_HammerTailLength(),
-                     (ReceiverIR()+ReceiverSideSlotDepth()-clearance)*2,
-                     ReceiverSideSlotHeight()-(clearance*2)],
+                     (ReceiverIR()+Receiver_SideSlotDepth()-clearance)*2,
+                     Receiver_SideSlotHeight()-(clearance*2)],
                     r=1/16,teardropFlip=[true, true, true]);
     }
     
@@ -881,12 +938,12 @@ module FCG_Housing(clearance=0.01, debug=false, alpha=1) {
       // Wings
       hull()
       translate([0,
-                 -(ReceiverIR()+ReceiverSideSlotDepth()-0.01),
-                 -(ReceiverSideSlotHeight()/2)+0.01])
+                 -(ReceiverIR()+Receiver_SideSlotDepth()-0.01),
+                 -(Receiver_SideSlotHeight()/2)+0.01])
       mirror([1,0,0])
       ChamferedCube([FiringPinHousingLength(),
-                     (ReceiverIR()+ReceiverSideSlotDepth()-0.01)*2,
-                     ReceiverSideSlotHeight()-(0.01*2)],
+                     (ReceiverIR()+Receiver_SideSlotDepth()-0.01)*2,
+                     Receiver_SideSlotHeight()-(0.01*2)],
                     r=1/16,
                     teardropXYZ=[false, true, true],
                     teardropTopXYZ=[false, true, true],
@@ -919,12 +976,6 @@ module FCG_Housing(clearance=0.01, debug=false, alpha=1) {
     
     RecoilPlateBolts(cutter=true);
   }
-}
-
-module FCG_Housing_print() {
-  rotate([0,-90,0])
-  translate([FiringPinHousingLength(),0,0])
-  FCG_Housing(debug=false);
 }
 
 module SearSupportTab(cutter=false, clearance=0.015) {
@@ -960,52 +1011,6 @@ module SearSupportTab(cutter=false, clearance=0.015) {
 
     ReceiverLugRear(cutter=true, clearance=clearance, hole=false);
 
-  }
-}
-
-module TriggerSideCutter(clearance=0) {
-  translate([ReceiverLugRearMinX(),ManifoldGap()])
-  mirror([0,1])
-  square([ReceiverLugFrontMaxX()+abs(ReceiverLugRearMinX()),
-          TriggerHeight()+ManifoldGap(2)]);
-}
-
-module Trigger2d() {
-  triggerFront = 0.5;
-  triggerBack = abs(ReceiverLugRearMinX())-TriggerTravel()-0.01;
-  triggerLength = TriggerTravel()+SearDiameter()+triggerFront+triggerBack;
-  triggerHeight = TriggerHeight()-0.01;
-
-  render()
-  difference() {
-
-    // Trigger Body
-    translate([-triggerBack,0])
-    mirror([0,1])
-    square([triggerLength,triggerHeight-0.01]);
-
-    TriggerSearPinTrack();
-
-    // Finger curve
-    translate([TriggerFingerRadius()+TriggerTravel()+SearDiameter()+triggerFront-0.15,
-             -GripCeiling()-TriggerFingerRadius()])
-    circle(r=TriggerFingerRadius(), $fn=Resolution(16,30));
-
-
-    // Retainer cutout
-    translate([-triggerBack,ReceiverLugRearZ()-0.375])
-    square([ReceiverLugRearLength(),
-            abs(ReceiverLugRearZ())+0.375]);
-
-    // Clearance for the receiver lugs
-    projection(cut=true)
-    rotate([-90,0,0]) {
-      ReceiverLugFront(cutter=true);
-
-      for (x=[0, TriggerTravel()])
-      translate([x,0,0])
-      ReceiverLugRear(cutter=true, hole=false);
-    }
   }
 }
 
@@ -1097,9 +1102,9 @@ module Trigger(animationFactor=TriggerAnimationFactor(), left=true, leftAlpha=1,
 }
 ///
 
-//****************
-//* Printed Jigs *
-//****************
+//*********************
+//* Fixtures and Jigs *
+//*********************
 module FCG_SearJig(width=0.75, height=1) {
   translate([0,0,SearPinOffsetZ()-SearBottomOffset()])
   difference() {
@@ -1340,53 +1345,88 @@ if ($preview) {
   ReceiverAssembly(debug=_CUTAWAY_RECEIVER);
 } else {
   
+  // *****************
+  // * Printed Parts *
+  // *****************
   if (_RENDER == "FCG_TriggerMiddle")
-  rotate(180)
-  translate([0,-TriggerHeight()/2,0.12])
-  rotate([90,0,00])
-  SearSupportTab(cutter=false);
+    if (!_RENDER_PRINT)
+      SearSupportTab();
+    else
+      rotate(180)
+      translate([0,-TriggerHeight()/2,0.12])
+      rotate([90,0,00])
+      SearSupportTab();
 
   if (_RENDER == "FCG_TriggerLeft")
-  rotate(180)
-  translate([0,-TriggerHeight()/2,0])
-  rotate([90,0,0])
-  translate([0,-SearRadius(SEAR_CLEARANCE),0])
-  Trigger(left=true, right=false);
+    if (!_RENDER_PRINT)
+      Trigger(left=true, right=false);
+    else
+      rotate(180)
+      translate([0,-TriggerHeight()/2,0])
+      rotate([90,0,0])
+      translate([0,-SearRadius(SEAR_CLEARANCE),0])
+      Trigger(left=true, right=false);
 
   if (_RENDER == "FCG_TriggerRight")
-  rotate(180)
-  translate([0,-TriggerHeight()/2,0])
-  rotate([90,0,0])
-  translate([0,TriggerWidth()/2,0])
-  Trigger(left=false, right=true);
+    if (!_RENDER_PRINT)
+      Trigger(left=false, right=true);
+    else
+      rotate(180)
+      translate([0,-TriggerHeight()/2,0])
+      rotate([90,0,0])
+      translate([0,TriggerWidth()/2,0])
+      Trigger(left=false, right=true);
   
   if (_RENDER == "FCG_Housing")
-  FCG_Housing_print();
+    if (!_RENDER_PRINT)
+      FCG_Housing();
+    else
+      rotate([0,-90,0])
+      translate([FiringPinHousingLength(),0,0])
+      FCG_Housing();
   
   if (_RENDER == "FCG_Hammer")
-  rotate([0,90,0])
-  translate([-FCG_HammerCockedX,0,0])
-  FCG_Hammer();
+    if (!_RENDER_PRINT)
+      FCG_Hammer();
+    else
+      rotate([0,90,0])
+      translate([-FCG_HammerCockedX,0,0])
+      FCG_Hammer();
   
   if (_RENDER == "FCG_HammerTail")
-  rotate([0,-90,0])
-  translate([-FCG_HammerTailMinX,0,0])
-  FCG_HammerTail();
+    if (!_RENDER_PRINT)
+      FCG_HammerTail();
+    else
+      rotate([0,-90,0])
+      translate([-FCG_HammerTailMinX,0,0])
+      FCG_HammerTail();
   
   if (_RENDER == "FCG_ChargingHandle")
-  translate([ReceiverLength(),0,-ReceiverTopSlotHeight()+ReceiverTopSlotHorizontalHeight()])
-  FCG_ChargingHandle();
+    if (!_RENDER_PRINT)
+      FCG_ChargingHandle();
+    else
+      translate([ReceiverLength(),0,-ReceiverTopSlotHeight()+ReceiverTopSlotHorizontalHeight()])
+      FCG_ChargingHandle();
   
   if (_RENDER == "FCG_Disconnector")
-  rotate([90,0,0])
-  translate([-FCG_DisconnectorPivotX,-FCG_DisconnectorOffsetY,-FCG_DisconnectorPivotZ])
-  FCG_Disconnector();
+    if (!_RENDER_PRINT)
+      FCG_Disconnector();
+    else
+      rotate([90,0,0])
+      translate([-FCG_DisconnectorPivotX,-FCG_DisconnectorOffsetY,-FCG_DisconnectorPivotZ])
+      FCG_Disconnector();
   
   if (_RENDER == "FCG_FiringPinCollar")
-  rotate([0,90,0])
-  translate([FiringPinTravel(),0,0])
-  FCG_FiringPinCollar();
-  
+    if (!_RENDER_PRINT)
+      FCG_FiringPinCollar();
+    else
+      rotate([0,90,0])
+      translate([FiringPinTravel(),0,0])
+      FCG_FiringPinCollar();
+
+  // *********************
+  // * Fixtures and Jigs *
+  // *********************
   if (_RENDER == "FCG_SearJig")
   FCG_SearJig();
   
@@ -1402,4 +1442,49 @@ if ($preview) {
   if (_RENDER == "FCG_RecoilPlate_Projection")
   projection() rotate([0,90,0])
   RecoilPlate(template=true, contoured=FCG_RECOIL_PLATE_CONTOURED);
+  
+  // ************
+  // * Hardware *
+  // ************
+  if (_RENDER == "FCG_DisconnectorTripBolt")
+  FCG_DisconnectorTripBolt();
+  
+  if (_RENDER == "FCG_DisconnectorPivotPin")
+  FCG_DisconnectorPivotPin();
+  
+  if (_RENDER == "FCG_DisconnectorSpring")
+  FCG_DisconnectorSpring();
+  
+  if (_RENDER == "FCG_HammerBolt")
+  FCG_HammerBolt();
+  
+  if (_RENDER == "FCG_ActionRod")
+  ActionRod();
+  
+  if (_RENDER == "FCG_Sear")
+  Sear();
+  
+  if (_RENDER == "FCG_SearPin")
+  SearPin();
+  
+  if (_RENDER == "FCG_FiringPin")
+  FiringPin();
+  
+  if (_RENDER == "FCG_FiringPinSpring")
+  FiringPinSpring();
+  
+  if (_RENDER == "FCG_RecoilPlateCenterBolts")
+  RecoilPlateCenterBolts();
+  
+  if (_RENDER == "FCG_RecoilPlateSideBolts")
+  RecoilPlateSideBolts();
+  
+  if (_RENDER == "FCG_RecoilPlate")
+  RecoilPlate();
+  
+  if (_RENDER == "FCG_ChargingHandleBolt")
+  FCG_ChargingHandleBolt();
+  
+  if (_RENDER == "FCG_ChargingHandleSpring")
+  FCG_ChargingHandleSpring();
 }

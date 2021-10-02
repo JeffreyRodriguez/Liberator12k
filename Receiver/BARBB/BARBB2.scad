@@ -23,10 +23,13 @@ use <../Magwells/AR15 Magwell.scad>;
 use <../Receiver.scad>;
 use <../Stock.scad>;
 
-/* [Print] */
+/* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
 _RENDER = ""; // ["", "BARBB_Forend", "BARBB_BoltCarrier"]
+
+// Reorient the part for printing?
+_RENDER_PRINT = true;
 
 /* [Assembly] */
 _SHOW_RECEIVER = true;
@@ -188,7 +191,7 @@ module BARBB_Forend(clearance=0.01, debug=false, alpha=1) {
   DebugHalf(enabled=debug)
   difference() {
     translate([AR15_TrunnionLength(),0,0])
-    ReceiverSegment(length=forendLength);
+    Receiver_Segment(length=forendLength);
     
     // Barrel center axis
     translate([forendMinX,0,0]) {
@@ -382,19 +385,30 @@ module BARBB_Assembly() {
 
 if ($preview) {
   BARBB_Assembly();
-  
-
-  if (_RENDER == "BARBB_Forend")
-  rotate([0,-90,0])
-  BARBB_Forend();
 } else scale(25.4) {
+
+  // *****************
+  // * Printed Parts *
+  // *****************
+  if (_RENDER == "BARBB_Forend")
+    if (!_RENDER_PRINT)
+      BARBB_Forend();
+    else
+      rotate([0,-90,0])
+      BARBB_Forend();
   
   if (_RENDER == "BARBB_UpperReceiver")
-  rotate([0,-90,0])
-  BARBB_UpperReceiver();
+    if (!_RENDER_PRINT)
+      BARBB_UpperReceiver();
+    else
+      rotate([0,-90,0])
+      BARBB_UpperReceiver();
 
   if (_RENDER == "BARBB_BoltCarrier")
-  rotate([0,-90,0])
-  BARBB_BoltCarrier();
+    if (!_RENDER_PRINT)
+      BARBB_BoltCarrier();
+    else
+      rotate([0,-90,0])
+      BARBB_BoltCarrier();
   
 }

@@ -22,6 +22,27 @@ use <../Lower/Lower.scad>;
 use <../Receiver.scad>;
 use <../FCG.scad>;
 
+/* [Export] */
+
+// Select a part, Render (F6), then Export to STL (F7)
+_RENDER = ""; // ["", "BARBB_HammerSpringTrunnion", "BARBB_HammerGuide", "BARBB_Bolt", "BARBB_LowerReceiver", "BARBB_UpperReceiver", "BARBB_Stock", "BARBB_Buttpad", "BARBB_Foregrip", "BARBB_RailMount", "BARBB_RailMount1", "BARBB_Bipod"]
+
+// Reorient the part for printing?
+_RENDER_PRINT = true;
+
+/* [Assembly] */
+_SHOW_RECEIVER = true;
+
+/* [Transparency] */
+_ALPHA_RECEIVER = 1; // [0:0.1:1])
+
+/* [Cutaway] */
+_CUTAWAY_RECEIVER = false;
+
+/* [Vitamins] */
+
+/* [Fine Tuning] */
+
 // Bullpup AR Barrel Bolt-action (BARBB)
 
 // Configured Values
@@ -410,6 +431,7 @@ module BARBB_Bolt(clearance=0.01) {
       // Cam Pin Shelf
       // This keeps the bolt forward while we rotate across several lug positions
       // while also allowing a longer opening for ejection.
+      if (camPinShelfLength > clearance)
       rotate(90+camPinAngle+camPinAngleExtra)
       translate([0,-camPinSquareWidth/2,
                  barbbBoltLength
@@ -938,124 +960,191 @@ module AR15_Barrel(pinRadius=0.125/2, pinHeight=0.09, pinDepth=0.162, clearance=
 
 
 
-translate([0,0,barrelZ])
-rotate([0,90,0])
-AR15_Barrel();
+scale(25.4)
+if ($preview) {
+  translate([0,0,barrelZ])
+  rotate([0,90,0])
+  AR15_Barrel();
 
-BARBB_Bipod();
+  BARBB_Bipod();
 
-color("Olive")
-translate([lowerX,0,0])
-translate([ReceiverLugRearMinX()-0.25+12-3.5,0,0])
-BARBB_RailMount();
-
-translate([lowerX,0,0]) {
-  color("Black")
-  translate([ReceiverLugRearMinX()-0.25,0,0]) 
-  translate([-1,-0.75/2,barrelZ+1.5])
-  cube([12, 0.75, 0.375]);
-  
   color("Olive")
-  translate([ReceiverLugRearMinX()-0.25,0,0]) 
-  BARBB_RailMount(id=1);
+  translate([lowerX,0,0])
+  translate([ReceiverLugRearMinX()-0.25+12-3.5,0,0])
+  BARBB_RailMount();
+
+  translate([lowerX,0,0]) {
+    color("Black")
+    translate([ReceiverLugRearMinX()-0.25,0,0]) 
+    translate([-1,-0.75/2,barrelZ+1.5])
+    cube([12, 0.75, 0.375]);
+    
+    color("Olive")
+    translate([ReceiverLugRearMinX()-0.25,0,0]) 
+    BARBB_RailMount(id=1);
+  }
+
+  // Receiver/Lower/Front-end
+  translate([lowerX,0,0])
+  BARBB_Hammer();
+
+  translate([lowerX,0,0])  
+  BARBB_HammerGuide();
+
+  color("Tan")
+  translate([lowerX-0.5,0,0])  
+  translate([LowerMaxX()+5,0,0])
+  BARBB_Foregrip();
+
+  translate([LowerMaxX()+lowerX,0,-ReceiverBottomZ()])
+  Lower(showReceiverLugBolts=true,showGuardBolt=true, showHandleBolts=true);
+
+  translate([lowerX,0,0])
+  color("Tan")
+  //render() DebugHalf()
+  BARBB_LowerReceiver();
+
+  color("Black")
+  translate([boltLockedMaxX,0,barrelZ])
+  rotate([0,-90,0])
+  AR15_Bolt(teardrop=false, firingPinRetainer=false, extraFiringPin=0);
+
+  BARBB_HammerSpringTrunnion();
+
+  color("Olive")
+  //render() DebugHalf()
+  BARBB_Bolt();
+
+  color("Tan")
+  //render() DebugHalf()
+  BARBB_UpperReceiver(magwell=false);
+
+  color("Olive")
+  BARBB_Buttpad();
+
+  color("Tan")
+  //render() DebugHalf()
+  BARBB_Stock();
+
+  // Square Tube
+  color("Silver")
+  translate([hammerMaxX, ManifoldGap(), tubeCenterZ])
+  //render() DebugHalf()
+  rotate([0,90,0])
+  linear_extrude(height=26)
+  difference() {
+    square(tube_width, center=true);
+    square(tube_width-0.125, center=true);
+  };
+} else {
+
+  // *****************
+  // * Printed Parts *
+  // *****************
+  if (_RENDER == "BARBB_HammerSpringTrunnion")
+    if (!_RENDER_PRINT)
+      BARBB_HammerSpringTrunnion();
+    else
+      rotate([0,90,0])
+      BARBB_HammerSpringTrunnion();
+    
+  if (_RENDER == "BARBB_HammerGuide")
+    if (!_RENDER_PRINT)
+      BARBB_HammerGuide();
+    else
+      rotate([0,-90,0])
+      BARBB_HammerGuide();
+    
+  if (_RENDER == "BARBB_Bolt")
+    if (!_RENDER_PRINT)
+      BARBB_Bolt();
+    else
+      rotate([0,-90,0])
+      BARBB_Bolt();
+      
+  if (_RENDER == "BARBB_LowerReceiver")
+    if (!_RENDER_PRINT)
+      BARBB_LowerReceiver();
+    else
+      rotate([0,90,0])
+      BARBB_LowerReceiver(extraFront=0);
+      
+  if (_RENDER == "BARBB_UpperReceiver")
+    if (!_RENDER_PRINT)
+      BARBB_UpperReceiver();
+    else
+      rotate([0,90,0])
+      BARBB_UpperReceiver();
+      
+  if (_RENDER == "BARBB_Stock")
+    if (!_RENDER_PRINT)
+      BARBB_Stock();
+    else
+      rotate([0,90,0])
+      BARBB_Stock();
+      
+  if (_RENDER == "BARBB_Buttpad")
+    if (!_RENDER_PRINT)
+      BARBB_Buttpad();
+    else
+      rotate([0,90,0])
+      BARBB_Buttpad();
+      
+  if (_RENDER == "BARBB_Foregrip")
+    if (!_RENDER_PRINT)
+      BARBB_Foregrip();
+    else
+      rotate([0,-90,0])
+      BARBB_Foregrip();
+      
+  if (_RENDER == "BARBB_RailMount")
+    if (!_RENDER_PRINT)
+      BARBB_RailMount();
+    else
+      rotate([0,90,0])
+      BARBB_RailMount();
+      
+  if (_RENDER == "BARBB_RailMount1")
+    if (!_RENDER_PRINT)
+      BARBB_RailMount(id=1);
+    else
+    rotate([0,90,0])
+    BARBB_RailMount(id=1);
+    
+  if (_RENDER == "BARBB_Bipod")
+    if (!_RENDER_PRINT)
+      BARBB_Bipod();
+    else
+      rotate([0,90,0])
+      translate([-26,0,0])
+      BARBB_Bipod();
+  
+  // ************
+  // * Hardware *
+  // ************
+  if (_RENDER == "BARBB_AR15_Barrel")
+  translate([0,0,barrelZ])
+  rotate([0,90,0])
+  AR15_Barrel();
+  
+  if (_RENDER == "BARBB_AR15_Bolt")
+  color("Black")
+  translate([boltLockedMaxX,0,barrelZ])
+  rotate([0,-90,0])
+  AR15_Bolt(teardrop=false, firingPinRetainer=false, extraFiringPin=0);
+  
+  if (_RENDER == "BARBB_Tube")
+  color("Silver")
+  translate([hammerMaxX, ManifoldGap(), tubeCenterZ])
+  rotate([0,90,0])
+  linear_extrude(height=26)
+  difference() {
+    square(tube_width, center=true);
+    square(tube_width-0.125, center=true);
+  };
+  
+  if (_RENDER == "BARBB_Hammer")
+  translate([lowerX,0,0])
+  BARBB_Hammer();
 }
 
-// Receiver/Lower/Front-end
-translate([lowerX,0,0])
-BARBB_Hammer();
-
-translate([lowerX,0,0])  
-BARBB_HammerGuide();
-
-color("Tan")
-translate([lowerX-0.5,0,0])  
-translate([LowerMaxX()+5,0,0])
-BARBB_Foregrip();
-
-translate([LowerMaxX()+lowerX,0,-ReceiverBottomZ()])
-Lower(showReceiverLugBolts=true,showGuardBolt=true, showHandleBolts=true);
-
-translate([lowerX,0,0])
-color("Tan")
-//render() DebugHalf()
-BARBB_LowerReceiver();
-
-color("Black")
-translate([boltLockedMaxX,0,barrelZ])
-rotate([0,-90,0])
-AR15_Bolt(teardrop=false, firingPinRetainer=false, extraFiringPin=0);
-
-BARBB_HammerSpringTrunnion();
-
-color("Olive")
-//render() DebugHalf()
-BARBB_Bolt();
-
-color("Tan")
-//render() DebugHalf()
-BARBB_UpperReceiver(magwell=false);
-
-color("Olive")
-BARBB_Buttpad();
-
-color("Tan")
-//render() DebugHalf()
-BARBB_Stock();
-
-// Square Tube
-color("Silver")
-translate([hammerMaxX, ManifoldGap(), tubeCenterZ])
-//render() DebugHalf()
-rotate([0,90,0])
-linear_extrude(height=26)
-difference() {
-  square(tube_width, center=true);
-  square(tube_width-0.125, center=true);
-};
-
-
-
-*!scale(25.4)
-rotate([0,90,0])
-BARBB_HammerSpringTrunnion();
-
-*!scale(25.4)
-rotate([0,-90,0])
-BARBB_HammerGuide();
-
-*!scale(25.4)
-rotate([0,-90,0])
-BARBB_Bolt();
-
-*!scale(25.4)
-rotate([0,90,0])
-BARBB_LowerReceiver(extraFront=0);
-
-*!scale(25.4)
-rotate([0,-90,0])
-BARBB_UpperReceiver(extraRear=0);
-
-*!scale(25.4)
-rotate([0,-90,0])
-BARBB_Stock();
-
-*!scale(25.4)
-rotate([0,-90,0])
-BARBB_Buttpad();
-
-*!scale(25.4)
-rotate([0,-90,0])
-BARBB_Foregrip();
-
-*!scale(25.4)
-rotate([0,90,0])
-BARBB_RailMount();
-
-*!scale(25.4)
-rotate([0,90,0])
-BARBB_RailMount(id=1);
-
-*!scale(25.4)
-rotate([0,90,0])
-translate([-26,0,0])
-BARBB_Bipod();

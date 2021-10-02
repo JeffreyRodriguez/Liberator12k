@@ -40,7 +40,7 @@ use <../FCG.scad>;
 /* [Print] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Receiver_LargeFrame", "Revolver_ReceiverFront", "Revolver_FrameSpacer", "Revolver_Foregrip", "Revolver_VerticalForegrip", "Revolver_CylinderCore", "Revolver_CylinderShell", "Revolver_BarrelSupport", "Revolver_ForendSpindleToggleLinkage", "Revolver_ForendSpindleToggleHandle", "Revolver_Projection_Cylinder", "Revolver_Projection_CylinderCore", "Revolver_Projection_BlastPlate", "Revolver_Projection_RecoilPlate"]
+_RENDER = ""; // ["", "Frame_Receiver", "Revolver_ReceiverFront", "Revolver_Frame_Spacer", "Revolver_Foregrip", "Revolver_VerticalForegrip", "Revolver_CylinderCore", "Revolver_CylinderShell", "Revolver_BarrelSupport", "Revolver_ForendSpindleToggleLinkage", "Revolver_ForendSpindleToggleHandle", "Revolver_Projection_Cylinder", "Revolver_Projection_CylinderCore", "Revolver_Projection_BlastPlate", "Revolver_Projection_RecoilPlate"]
 
 /* [Assembly] */
 
@@ -407,7 +407,7 @@ module Revolver_ReceiverFront(contoured=true, debug=_CUTAWAY_RECEIVER_FRONT, alp
   difference() {
     union() {
       hull() {
-        FrameSupport(length=length, extraBottom=FrameBottomZ()+abs(CylinderZ()),
+        Frame_Support(length=length, extraBottom=FrameBottomZ()+abs(CylinderZ()),
                      chamferFront=true, teardropFront=true);
         
         mirror([1,0,0])
@@ -421,14 +421,14 @@ module Revolver_ReceiverFront(contoured=true, debug=_CUTAWAY_RECEIVER_FRONT, alp
                         h=length-ManifoldGap());
     }
     
-    FrameBolts(cutter=true);
+    Frame_Bolts(cutter=true);
 
     RecoilPlate(contoured=contoured, spindleZ=CylinderZ(), cutter=true);
     
     FiringPin(cutter=true);
     
     RecoilPlateBolts(cutter=true);
-    TensionBolts(cutter=true);
+    Receiver_TensionBolts(cutter=true);
     
     ActionRod(cutter=true);
 
@@ -473,7 +473,7 @@ module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND) {
       // Frame support
       hull() {
         translate([ForendMinX(),0,0])
-        FrameSupport(length=Revolver_BarrelSupportLength(),
+        Frame_Support(length=Revolver_BarrelSupportLength(),
                      extraBottom=extraBottom,
                      chamferBack=true, teardropBack=true);
         
@@ -559,7 +559,7 @@ module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND) {
                             + Revolver_ForendSpindleLinkagePinClearance()))*2,
                angle=25);
     
-    FrameBolts(cutter=true);
+    Frame_Bolts(cutter=true);
 
     ActionRod(cutter=true);
     
@@ -593,7 +593,7 @@ module Revolver_BarrelSupport_print() {
   Revolver_BarrelSupport(doRender=false);
 }
 
-module Revolver_FrameSpacer(length=ForendMinX(), debug=false, alpha=_ALPHA_FOREND) {
+module Revolver_Frame_Spacer(length=ForendMinX(), debug=false, alpha=_ALPHA_FOREND) {
   extraBottom=0;
   
   color("Tan", alpha)
@@ -602,16 +602,16 @@ module Revolver_FrameSpacer(length=ForendMinX(), debug=false, alpha=_ALPHA_FOREN
     hull() {
       
       // Main support
-      FrameSupport(length=length);
+      Frame_Support(length=length);
       
       // Rear ears
-      FrameSupport(length=ManifoldGap(), extraBottom=0.5);
+      Frame_Support(length=ManifoldGap(), extraBottom=0.5);
     
       mirror([1,0,0])
       ReceiverTopSegment(length=length, chamferFront=false, chamferBack=false);
     }
 
-    FrameBolts(cutter=true);
+    Frame_Bolts(cutter=true);
     
     ActionRod(cutter=true);
     
@@ -622,10 +622,10 @@ module Revolver_FrameSpacer(length=ForendMinX(), debug=false, alpha=_ALPHA_FOREN
   }
 }
 
-module Revolver_FrameSpacer_print() {
+module Revolver_Frame_Spacer_print() {
   rotate([0,-90,0])
   translate([0,0,-FrameBoltZ()])
-  Revolver_FrameSpacer();
+  Revolver_Frame_Spacer();
 }
 
 
@@ -898,7 +898,7 @@ module RevolverForendAssembly(pipeAlpha=1, debug=false) {
   Revolver_Shield(debug=_CUTAWAY_SHIELD);
 
   if (_SHOW_FRAME_SPACER)
-  Revolver_FrameSpacer(debug=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
+  Revolver_Frame_Spacer(debug=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
   
   if (_SHOW_BARREL_SUPPORT)
   Revolver_BarrelSupport(debug=_CUTAWAY_BARREL_SUPPORT, alpha=_ALPHA_FOREND);
@@ -942,9 +942,9 @@ module RevolverAssembly(stock=true) {
     
     if (_SHOW_RECEIVER) {
       
-      TensionBolts(debug=_CUTAWAY_RECEIVER);
+      Receiver_TensionBolts(debug=_CUTAWAY_RECEIVER);
       
-      Receiver_LargeFrameAssembly(
+      Frame_ReceiverAssembly(
         length=FRAME_BOLT_LENGTH,
         debug=_CUTAWAY_RECEIVER);
     }
@@ -989,10 +989,6 @@ scale(25.4)
 if ($preview) {
   RevolverAssembly();
 } else {
-  
-  if (_RENDER == "Receiver_LargeFrame")      
-  rotate([0,90,0])
-  Receiver_LargeFrame();
 
   if (_RENDER == "Revolver_ReceiverFront")
   Revolver_ReceiverFront_print();
@@ -1006,8 +1002,8 @@ if ($preview) {
   if (_RENDER == "Revolver_ForendSpindleToggleHandle")
   Revolver_ForendSpindleToggleHandle_print();
   
-  if (_RENDER == "Revolver_FrameSpacer")
-  Revolver_FrameSpacer_print();
+  if (_RENDER == "Revolver_Frame_Spacer")
+  Revolver_Frame_Spacer_print();
   
   if (_RENDER == "Revolver_Foregrip")
   Revolver_Foregrip_print();

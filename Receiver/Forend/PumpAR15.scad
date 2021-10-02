@@ -197,13 +197,13 @@ module BoltCarrier(cutter=false, clearance=0.01, chamferRadius=1/16, debug=false
       intersection() {
         translate([boltCarrierMinX,0,0])
         mirror([1,0,0])
-        ReceiverSideSlot(length=boltCarrierLength,
+        Receiver_SideSlot(length=boltCarrierLength,
                          clearance=(cutter?clear:-clearance));
         
         hull() for (X = [0, boltCarrierLength-ReceiverID()-0.0625])
         translate([boltCarrierMinX+X, 0, 0])
         linear_extrude(ReceiverIR(), center=true)
-        Teardrop(r=ReceiverIR()+ReceiverSideSlotDepth()+clear,
+        Teardrop(r=ReceiverIR()+Receiver_SideSlotDepth()+clear,
                  truncated=true,
                  $fn=40);
       }
@@ -275,7 +275,7 @@ module AR15Forend(debug=false, alpha=1) {
     union() {
       translate([ForendMinX(),0,0])
       mirror([1,0,0])
-      ReceiverSegment(length=length);
+      Receiver_Segment(length=length);
       
       translate([MagazineMinX(),0,-0.5])
       AR15_Magwell(cut=false,
@@ -294,7 +294,7 @@ module AR15Forend(debug=false, alpha=1) {
                        extraTop=0.5);
     
     mirror([1,0,0])
-    TensionBolts(cutter=true, nutType="none", length=12);
+    Receiver_TensionBolts(cutter=true, nutType="none", length=12);
     
     translate([0,0,ActionRodZ()])
     ActionRod(cutter=true);
@@ -386,7 +386,7 @@ module Handguard(debug=false, alpha=1) {
     union() {
       translate([ForendMinX()+ForendLength(),0,0])
       mirror([1,0,0])
-      ReceiverSegment(length=length);
+      Receiver_Segment(length=length);
     }
   }
 }

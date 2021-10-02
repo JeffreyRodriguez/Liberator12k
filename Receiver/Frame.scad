@@ -89,19 +89,19 @@ function FrameExtension(length=FrameBoltLength()) = length
 // ************
 // * Vitamins *
 // ************
-module FrameBoltIterator() {
+module Frame_BoltIterator() {
     for (M = [0,1]) mirror([0,M,0])
     translate([0, FrameBoltY(), FrameBoltZ()])
     children();
 }
 
-module FrameBolts(length=FrameBoltLength(), nut="hex", debug=false, cutter=false, clearance=0.01, alpha=1) {
+module Frame_Bolts(length=FrameBoltLength(), nut="hex", debug=false, cutter=false, clearance=0.01, alpha=1) {
   clear = cutter ? clearance : 0;
 
   color("Silver", alpha) RenderIf(!cutter)
   DebugHalf(enabled=debug) {
     translate([-FrameReceiverLength()-ManifoldGap(),0,0])
-    FrameBoltIterator()
+    Frame_BoltIterator()
     rotate([0,-90,0])
     rotate(-11)
     NutAndBolt(bolt=FrameBolt(), boltLength=length,
@@ -114,7 +114,7 @@ module FrameBolts(length=FrameBoltLength(), nut="hex", debug=false, cutter=false
 // **********
 // * Shapes *
 // **********
-module FrameSupport(length=1, extraBottom=0, chamferFront=false, chamferBack=false, chamferRadius=CHAMFER_RADIUS, , teardropFront=false, teardropBack=false) {
+module Frame_Support(length=1, extraBottom=0, chamferFront=false, chamferBack=false, chamferRadius=CHAMFER_RADIUS, , teardropFront=false, teardropBack=false) {
   cr = 1/4;
   height = (FrameBoltRadius()+WallFrameBolt())*2;
   width=(FrameBoltY()+FrameBoltRadius()+WallFrameBolt())*2;
@@ -137,7 +137,7 @@ module FrameSupport(length=1, extraBottom=0, chamferFront=false, chamferBack=fal
   }
 }
 
-module Frame_ReceiverSegment(length=1, highTop=false, chamferFront=true, chamferBack=true, teardropFront=true, teardropBack=true) {
+module Frame_Receiver_Segment(length=1, highTop=false, chamferFront=true, chamferBack=true, teardropFront=true, teardropBack=true) {
   union() {
     
     if (highTop)
@@ -145,17 +145,17 @@ module Frame_ReceiverSegment(length=1, highTop=false, chamferFront=true, chamfer
       mirror([1,0,0])
       ReceiverTopSegment(length=length, chamferFront=chamferFront);
       
-      FrameSupport(length=length,
+      Frame_Support(length=length,
                    chamferFront=chamferFront, teardropFront=teardropFront,
                    chamferBack=chamferBack, teardropBack=teardropBack);
     }
     
-    FrameSupport(length=length,
+    Frame_Support(length=length,
                  chamferFront=chamferFront, teardropFront=teardropFront,
                  chamferBack=chamferBack, teardropBack=teardropBack);
     
     mirror([1,0,0])
-    ReceiverSegment(length=length, highTop=highTop,
+    Receiver_Segment(length=length, highTop=highTop,
                     chamferFront=chamferFront,
                     chamferBack=chamferBack);
     
@@ -174,23 +174,23 @@ module Frame_ReceiverSegment(length=1, highTop=false, chamferFront=true, chamfer
 // ****************
 // * Printed Parts*
 // ****************
-module FrameSpacer(length=FRAME_SPACER_LENGTH, debug=false, alpha=1) {
+module Frame_Spacer(length=FRAME_SPACER_LENGTH, debug=false, alpha=1) {
   color("Tan", alpha)
   DebugHalf(enabled=debug) render()
   difference() {
     hull()
-    FrameSupport(length=length);
+    Frame_Support(length=length);
 
-    FrameBolts(cutter=true);
+    Frame_Bolts(cutter=true);
   }
 }
 
-module FrameSpacer_print() {
+module Frame_Spacer_print() {
   rotate([0,-90,0]) translate([0,0,-FrameBoltZ()])
-  FrameSpacer();
+  Frame_Spacer();
 }
 
-module Receiver_LargeFrame(doRender=true, debug=false, alpha=1) {
+module Frame_Receiver(doRender=true, debug=false, alpha=1) {
   
   topCoverHeight = 1;
   
@@ -208,11 +208,11 @@ module Receiver_LargeFrame(doRender=true, debug=false, alpha=1) {
     Receiver(doRender=false) {
       
       mirror([1,0,0])
-      Frame_ReceiverSegment(FrameReceiverLength(), teardropFront=true);
+      Frame_Receiver_Segment(FrameReceiverLength(), teardropFront=true);
       
       hull() {
         mirror([1,0,0])
-        FrameSupport(FrameReceiverLength(),
+        Frame_Support(FrameReceiverLength(),
         chamferBack=true, chamferFront=true);
 
         ReceiverTopSegment(length=FrameReceiverLength());
@@ -221,14 +221,14 @@ module Receiver_LargeFrame(doRender=true, debug=false, alpha=1) {
       // Bolt head support
       hull() {
         translate([-FrameReceiverLength(),0,0])
-        FrameBoltIterator()
+        Frame_BoltIterator()
         rotate([0,-90,0])
         ChamferedCylinder(r1=0.5+(1/16), r2=CHAMFER_RADIUS,
                           h=0.3125,
                           teardropBottom=false);
     
         translate([-FrameReceiverLength(),0,0])
-        FrameSupport(length=0.1875,
+        Frame_Support(length=0.1875,
                      chamferFront=false, 
                      chamferBack=false);
         
@@ -239,35 +239,35 @@ module Receiver_LargeFrame(doRender=true, debug=false, alpha=1) {
   }
     
     ReceiverMlokSlot();
-    ReceiverMlokBolts(cutter=true, teardrop=true);
+    Receiver_MlokBolts(cutter=true, teardrop=true);
     ReceiverTopSlot(length=ReceiverLength());
     
-    FrameBolts(cutter=true);
+    Frame_Bolts(cutter=true);
   }
 }
 
 // **************
 // * Assemblies *
 // **************
-module Receiver_LargeFrameAssembly(length=FrameBoltLength(), frameBolts=true, debug=_CUTAWAY_RECEIVER, alpha=1) {
+module Frame_ReceiverAssembly(length=FrameBoltLength(), frameBolts=true, debug=_CUTAWAY_RECEIVER, alpha=1) {
   
   if (frameBolts)
-  FrameBolts(length=length, debug=debug, alpha=alpha);
+  Frame_Bolts(length=length, debug=debug, alpha=alpha);
   
-  Receiver_LargeFrame(debug=debug, alpha=_ALPHA_FRAME);
+  Frame_Receiver(debug=debug, alpha=_ALPHA_FRAME);
 }
 
 scale(25.4)
 if ($preview) {
   
   if (_SHOW_RECEIVER_RODS)
-  TensionBolts();
+  Receiver_TensionBolts();
 
   if (_SHOW_RECEIVER) {
-    Receiver_LargeFrameAssembly();
-    ReceiverMlokBolts();
+    Frame_ReceiverAssembly();
+    Receiver_MlokBolts();
   }
 } else {
   rotate([0,90,0])
-  Receiver_LargeFrame(doRender=false);
+  Frame_Receiver(doRender=false);
 }

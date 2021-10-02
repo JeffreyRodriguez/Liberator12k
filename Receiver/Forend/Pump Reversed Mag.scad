@@ -92,7 +92,7 @@ module PumpUpper(cutter=false, clearance=0.002, alpha=1, debug=false) {
     union() {
       translate([-clear,0,0])
       mirror([1,0,0])
-      ReceiverSegment(length=UpperLength());
+      Receiver_Segment(length=UpperLength());
 
       PumpRails(cutter=cutter);
     }
@@ -137,7 +137,7 @@ module PumpForend(alpha=1, debug=false) {
   difference() {
     union() {
       hull() {
-        translate([ForendLength,0,0])ReceiverSegment(length=ForendLengthExtra);
+        translate([ForendLength,0,0])Receiver_Segment(length=ForendLengthExtra);
 
 
         *translate([+6.75,0,0])

@@ -32,10 +32,13 @@ use <../Frame.scad>;
 use <../Receiver.scad>;
 use <../FCG.scad>;
 
-/* [Print] */
+/* [Export] */
 
 // Select a part, Render it (F6), then Export to STL (F7)
 _RENDER = ""; // ["", "TopBreak_ReceiverFront", "TopBreak_Forend", "TopBreak_BarrelCollar", "TopBreak_Extractor", "TopBreak_Latch", "TopBreak_Foregrip", "TopBreak_BarrelSleeveFixture"]
+
+// Reorient the part for printing?
+_RENDER_PRINT = true;
 
 /* [Assembly] */
 _SHOW_BARREL = true;
@@ -51,6 +54,7 @@ _SHOW_STOCK = true;
 _SHOW_LOWER = true;
 _SHOW_TOPBREAK_LATCH = true;
 
+/* [Transparency] */
 _ALPHA_FOREND = 1;  // [0:0.1:1]
 _ALPHA_TopBreak_Latch = 1; // [0:0.1:1]
 _ALPHA_COLLAR = 1; // [0:0.1:1]
@@ -58,6 +62,7 @@ _ALPHA_RECEIVER_TUBE = 1; // [0:0.1:1]
 _ALPHA_TOPBREAK_EXTRACTOR = 1; // [0:0.1:1]
 _ALPHA_RECEIVER_FRONT=1; // [0:0.1:1]
 
+/* [Cutaway] */
 _CUTAWAY_RECEIVER = false;
 _CUTAWAY_LOWER = false;
 _CUTAWAY_BARREL = false;
@@ -100,6 +105,8 @@ BRANDING_MODEL_NAME = "CAFE12";
 // *********
 $fa = ResolutionFa();
 $fs = UnitsFs()*ResolutionFs();
+//$t = AnimationDebug(ANIMATION_STEP_EXTRACT, start=0.5);
+
 
 // Settings: Vitamins
 function BarrelSetScrew() = BoltSpec(BARREL_SET_SCREW);
@@ -300,7 +307,6 @@ module TopBreak_ExtractorRetainer(debug=false, cutter=false, teardrop=false, cle
        nut="heatset-long", teardrop=teardrop);
 }
 
-
 module TopBreak_LatchRetainer(cutter=false, clearance=0.005) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
@@ -414,7 +420,7 @@ module TopBreak_ReceiverFront(debug=false, alpha=1) {
         mirror([1,0,0])
         ReceiverTopSegment(length=1/8);
         
-        FrameSupport(length=TopBreak_ReceiverFrontLength(),
+        Frame_Support(length=TopBreak_ReceiverFrontLength(),
                      chamferFront=true, teardropFront=true);
       }
 
@@ -436,7 +442,7 @@ module TopBreak_ReceiverFront(debug=false, alpha=1) {
       }
     }
     
-    FrameBolts(cutter=true);
+    Frame_Bolts(cutter=true);
     
     translate([-TopBreak_ReceiverFrontLength(),0,0]) {
       RecoilPlate(length=RECOIL_PLATE_LENGTH, cutter=true);
@@ -474,7 +480,7 @@ module TopBreak_Forend(clearance=0.005, doRender=true, debug=false, alpha=1) {
     RenderIf(doRender) DebugHalf(enabled=debug)
     difference() {
       union() {
-        FrameSupport(length=ForendLength(),
+        Frame_Support(length=ForendLength(),
                      chamferBack=true, teardropBack=true);
         
         hull() {
@@ -486,13 +492,13 @@ module TopBreak_Forend(clearance=0.005, doRender=true, debug=false, alpha=1) {
           // Front face
           translate([ForendLength(), 0,0])
           mirror([1,0,0])
-          FrameSupport(length=1/8,
+          Frame_Support(length=1/8,
                        extraBottom=FrameBottomZ()+abs(PivotZ()),
                        chamferFront=true, teardropFront=true);
           
           translate([ForendLength(), 0,0])
           mirror([1,0,0])
-          FrameSupport(length=PivotRadius()+(ForendLength()-PivotX())+abs(PivotZ())+FrameTopZ(),
+          Frame_Support(length=PivotRadius()+(ForendLength()-PivotX())+abs(PivotZ())+FrameTopZ(),
                        chamferFront=true, teardropFront=true);
         }
       }
@@ -547,7 +553,7 @@ module TopBreak_Forend(clearance=0.005, doRender=true, debug=false, alpha=1) {
       HoleChamfer(r1=BarrelSleeveRadius(BARREL_CLEARANCE), r2=1/16,
                   teardrop=true);
 
-      FrameBolts(cutter=true);
+      Frame_Bolts(cutter=true);
        
       TopBreak_Extractor(cutter=true);
 
@@ -845,9 +851,9 @@ if ($preview) {
     
     if (_SHOW_RECEIVER) {
       if (_SHOW_FRAME)
-      TensionBolts();
+      Receiver_TensionBolts();
       
-      Receiver_LargeFrameAssembly(
+      Frame_ReceiverAssembly(
         frameBolts=_SHOW_FRAME,
         length=FRAME_BOLT_LENGTH,
         debug=_CUTAWAY_RECEIVER);
@@ -884,31 +890,70 @@ if ($preview) {
     TopBreak_Foregrip();
   };
 } else {
-
+  
+  // *****************
+  // * Printed Parts *
+  // *****************
   if (_RENDER == "TopBreak_BarrelCollar")
-  rotate([0,-90,0])
-  TopBreak_BarrelCollar();
+    if (!_RENDER_PRINT)
+      TopBreak_BarrelCollar();
+    else
+      rotate([0,-90,0])
+      TopBreak_BarrelCollar();
 
   if (_RENDER == "TopBreak_ReceiverFront")
-  rotate([0,-90,0])
-  translate([--TopBreak_ReceiverFrontLength(),0,0])
-  TopBreak_ReceiverFront();
+    if (!_RENDER_PRINT)
+      TopBreak_ReceiverFront();
+    else
+      rotate([0,-90,0])
+      translate([--TopBreak_ReceiverFrontLength(),0,0])
+      TopBreak_ReceiverFront();
 
   if (_RENDER == "TopBreak_Forend")
-  rotate([0,90,0])
-  translate([-ForendLength(),0,0])
-  TopBreak_Forend();
+    if (!_RENDER_PRINT)
+      TopBreak_Forend();
+    else
+      rotate([0,90,0])
+      translate([-ForendLength(),0,0])
+      TopBreak_Forend();
 
   if (_RENDER == "TopBreak_Foregrip")
-  rotate([0,90,0])
-  translate([-TopBreak_ForegripLength(),0,0])
-  translate([-(TopBreak_ForegripOffsetX()+ChargerTravel()),0,0])
-  TopBreak_Foregrip();
+    if (!_RENDER_PRINT)
+      TopBreak_Foregrip();
+    else
+      rotate([0,90,0])
+      translate([-TopBreak_ForegripLength(),0,0])
+      translate([-(TopBreak_ForegripOffsetX()+ChargerTravel()),0,0])
+      TopBreak_Foregrip();
 
   if (_RENDER == "TopBreak_Extractor")
-  translate([0,0,-TopBreak_ExtractorZ()])
-  TopBreak_Extractor();
+    if (!_RENDER_PRINT)
+      TopBreak_Extractor();
+    else
+      translate([0,0,-TopBreak_ExtractorZ()])
+      TopBreak_Extractor();
   
+  // ********************
+  // * Fixures and Jigs *
+  // ********************
   if (_RENDER == "TopBreak_BarrelSleeveFixture")
-  TopBreak_BarrelSleeveFixture();
+    if (!_RENDER_PRINT)
+      TopBreak_BarrelSleeveFixture();
+    else
+      TopBreak_BarrelSleeveFixture();
+  
+  // ************
+  // * Hardware *
+  // ************
+  if (_RENDER == "TopBreak_Barrel")
+  TopBreak_Barrel();
+  
+  if (_RENDER == "TopBreak_ExtractorBit")
+  TopBreak_ExtractorBit();
+  
+  if (_RENDER == "TopBreak_ExtractorRetainer")
+  TopBreak_ExtractorRetainer();
+  
+  if (_RENDER == "TopBreak_MlokBolts")
+  TopBreak_MlokBolts();
 }

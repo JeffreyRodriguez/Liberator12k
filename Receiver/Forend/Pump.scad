@@ -166,9 +166,9 @@ module ShellLoadingSupport() {
 // *****************
 module ReceiverFront(alpha=1, debug=false) {
   difference() {
-    ReceiverSegment(length=ReceiverFrontLength());
+    Receiver_Segment(length=ReceiverFrontLength());
     
-    TensionBolts(cutter=true);
+    Receiver_TensionBolts(cutter=true);
   }
 }
 
@@ -179,7 +179,7 @@ module PumpForend(alpha=1, debug=false) {
   color("Green", alpha) DebugHalf(enabled=debug)
   difference() {
     mirror([1,0,0])
-    ReceiverSegment(length=ForendLength);
+    Receiver_Segment(length=ForendLength);
 
     translate([0,-(SquareTubeOuter(MagazineSquareTube(),SquareTubeClearanceLoose())/2)-0.1875,0])
     cube([UpperLength(),
@@ -211,7 +211,7 @@ module PumpShotgunAssembly(debug=false) {
 
   translate([-ReceiverFrontLength(),0,0]) {
     Receiver(debug=debug);
-    *Receiver_LargeFrame(debug=debug);
+    *Frame_Receiver(debug=debug);
     
     StockAssembly();
     

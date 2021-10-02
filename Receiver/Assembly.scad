@@ -88,11 +88,11 @@ if ($preview) {
   
   if (_SHOW_RECEIVER)
   translate([-0.5,0,0]) {
-    TensionBolts(debug=_CUTAWAY_RECEIVER, headType="socket");
+    Receiver_TensionBolts(debug=_CUTAWAY_RECEIVER, headType="socket");
     
     if (_RECEIVER_SIZE == "Framed") {
-      Receiver_LargeFrame(debug=_CUTAWAY_RECEIVER);
-      FrameBolts(debug=_CUTAWAY_RECEIVER);
+      Frame_Receiver(debug=_CUTAWAY_RECEIVER);
+      Frame_Bolts(debug=_CUTAWAY_RECEIVER);
     } else {
       Receiver(debug=_CUTAWAY_RECEIVER);
     }

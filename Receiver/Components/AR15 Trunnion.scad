@@ -33,14 +33,14 @@ module AR15_Trunnion(doRender=true) {
   RenderIf(doRender)
   translate([length,0,0])
   difference() {
-    ReceiverSegment(length=length);
+    Receiver_Segment(length=length);
     
     translate([-length,0,0])
     rotate([0,90,0])
     rotate(180)
     AR15_Barrel(cutter=true);
     
-    TensionBolts(cutter=true, nutType="none");
+    Receiver_TensionBolts(cutter=true, nutType="none");
   }
 }
 
@@ -51,14 +51,14 @@ module AR15_TrunnionCap(doRender=true) {
   RenderIf(doRender)
   translate([AR15_TrunnionLength()+length,0,0])
   difference() {
-    ReceiverSegment(length=length);
+    Receiver_Segment(length=length);
     
     translate([-length,0,0])
     rotate([0,90,0])
     rotate(180)
     AR15_Barrel(cutter=true);
     
-    TensionBolts(cutter=true, nutType="none");
+    Receiver_TensionBolts(cutter=true, nutType="none");
   }
 }
 

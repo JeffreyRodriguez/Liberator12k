@@ -19,6 +19,9 @@ use <../FCG.scad>;
 // Select a part, Render (F6), then Export to STL (F7)
 _RENDER = ""; // ["", "LowerMount_Front", "LowerMount_Rear"]
 
+// Reorient the part for printing?
+_RENDER_PRINT = true;
+
 /* [Assembly] */
 _SHOW_RECEIVER = true;
 _SHOW_LOWER = true;
@@ -42,12 +45,12 @@ module LowerMount_TakedownPinRetainer(cutter=false, clearance=0.005) {
   clear2 = clear*2;
   
   color("Silver") RenderIf(!cutter)
-  translate([-LowerMaxX()+ReceiverLugRearMaxX(), 0, ReceiverTakedownPinZ()-0.125])
+  translate([-LowerMaxX()+ReceiverLugRearMaxX(), 0, Receiver_TakedownPinZ()-0.125])
   rotate([0,-90,0])
-  cylinder(r=(3/32/2)+clear, h=ReceiverLugRearMaxX()-ReceiverTakedownPinX()-LowerMaxX()+0.125);
+  cylinder(r=(3/32/2)+clear, h=ReceiverLugRearMaxX()-Receiver_TakedownPinX()-LowerMaxX()+0.125);
   
   if (cutter)
-  translate([-LowerMaxX()+ReceiverLugRearMinX(), 0, ReceiverTakedownPinZ()-0.125])
+  translate([-LowerMaxX()+ReceiverLugRearMinX(), 0, Receiver_TakedownPinZ()-0.125])
   rotate([0,-90,0])
   cylinder(r=0.125, h=2);
   
@@ -114,7 +117,7 @@ module LowerMount_Rear(id=ReceiverID(), alpha=1, debug=false, doRender=true) {
     }
       
     translate([LowerMaxX(),0,0])
-    ReceiverTakedownPin(cutter=true);
+    Receiver_TakedownPin(cutter=true);
     
     translate([LowerMaxX(),0,0])
     LowerMount_TakedownPinRetainer(cutter=true);
@@ -148,7 +151,7 @@ module LowerMount_Rear(id=ReceiverID(), alpha=1, debug=false, doRender=true) {
 module LowerMount(id=ReceiverID(), alpha=1, debug=false) {
   LowerMount_TakedownPinRetainer();
   
-  ReceiverTakedownPin();
+  Receiver_TakedownPin();
   
   if (_SHOW_LOWERMOUNT_FRONT)
   LowerMount_Front(debug=_CUTAWAY_LOWERMOUNT_FRONT);
@@ -161,7 +164,6 @@ module LowerMount(id=ReceiverID(), alpha=1, debug=false) {
 //*************
 //* Rendering *
 //*************
-
 
 echo("Sear length: ", SearLength()+abs(ReceiverBottomZ()));
 *!scale(25.4)
@@ -180,14 +182,29 @@ if ($preview) {
   if (_SHOW_RECEIVER)
   ReceiverAssembly(debug=_CUTAWAY_RECEIVER);
 } else {
-  if (_RENDER == "LowerMount_Front") {
+  
+  // *****************
+  // * Printed Parts *
+  // *****************
+  if (_RENDER == "LowerMount_Front")
+    if (!_RENDER_PRINT)
+      LowerMount_Front();
+    else
     rotate([0,90,0])
     translate([0.5,0,-ReceiverBottomZ()])
     LowerMount_Front();
     
-  } else if (_RENDER == "LowerMount_Rear") {
-    rotate([0,90,0])
-    translate([LowerMaxX()-ReceiverLugRearMaxX(),0,-ReceiverBottomZ()])
-    LowerMount_Rear();
-  }
+  if (_RENDER == "LowerMount_Rear")
+    if (!_RENDER_PRINT)
+      LowerMount_Rear();
+    else
+      rotate([0,90,0])
+      translate([LowerMaxX()-ReceiverLugRearMaxX(),0,-ReceiverBottomZ()])
+      LowerMount_Rear();
+  
+  // ************
+  // * Hardware *
+  // ************
+  if (_RENDER == "LowerMount_TakedownPinRetainer")
+  LowerMount_TakedownPinRetainer();
 }

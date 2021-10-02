@@ -230,7 +230,7 @@ module Evolver_ReceiverFront(contoured=true, debug=_CUTAWAY_RECEIVER_FRONT, alph
     FiringPin(cutter=true);
     
     RecoilPlateBolts(cutter=true);
-    TensionBolts(cutter=true);
+    Receiver_TensionBolts(cutter=true);
     
     ActionRod(cutter=true);
   }
@@ -424,7 +424,7 @@ if ($preview) {
     
     if (_SHOW_RECEIVER) {
       
-      TensionBolts(debug=_CUTAWAY_RECEIVER);
+      Receiver_TensionBolts(debug=_CUTAWAY_RECEIVER);
       
       Receiver_LargeFrameAssembly(
         length=FRAME_BOLT_LENGTH,

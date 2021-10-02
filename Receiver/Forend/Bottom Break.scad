@@ -261,7 +261,7 @@ module BreakActionReceiverFront(debug=false, alpha=1) {
   difference() {
     translate([-ReceiverFrontLength(),0,0])
     union() {
-      FrameSupport(length=ReceiverFrontLength());
+      Frame_Support(length=ReceiverFrontLength());
       
       hull() {
 
@@ -394,7 +394,7 @@ module BreakActionForend(debug=false, alpha=1) {
       #ChamferedCube([0.51,0.25,FrameBoltZ()], r=1/16
       );
 
-      FrameSpacer(length=ForendFrontLength()
+      Frame_Spacer(length=ForendFrontLength()
                         +FrameForendExtension());
 
       // Pivot support
@@ -402,7 +402,7 @@ module BreakActionForend(debug=false, alpha=1) {
 
         translate([ForendMaxX(), 0, 0])
         mirror([1,0,0])
-        FrameSupport(length=ForendFrontLength());
+        Frame_Support(length=ForendFrontLength());
 
         translate([PivotX(), 0, PivotZ()])
         rotate([90,0,0])
@@ -444,7 +444,7 @@ module BreakActionForend(debug=false, alpha=1) {
               minor=(PivotX()-LatchCollarLength()-0.01)*2,
               angle=90, $fn=Resolution(20,50));
 
-    FrameBolts(cutter=true);
+    Frame_Bolts(cutter=true);
 
     *translate([0,0,ActionRodZ()])
     ActionRod(length=ActionRodLength(), cutter=true);
@@ -807,7 +807,7 @@ if ($preview) {
                               - Animate(ANIMATION_STEP_CHARGE),
                    travel=-1);
 
-    Receiver_LargeFrameAssembly();
+    Frame_ReceiverAssembly();
     StockAssembly();
     
     LowerMount();

@@ -170,7 +170,7 @@ module ReceiverFront(debug=false, alpha=1) {
         mirror([1,0,0])
         ReceiverTopSegment(length=1/16);
         
-        FrameSupport(length=ReceiverFrontLength());
+        Frame_Support(length=ReceiverFrontLength());
       }
 
       // Recoil plate backing
@@ -182,7 +182,7 @@ module ReceiverFront(debug=false, alpha=1) {
                     r=1/16);
     }
     
-    FrameBolts(cutter=true);
+    Frame_Bolts(cutter=true);
 
     translate([-ReceiverFrontLength(),0,0]) {
       RecoilPlate(cutter=true);
@@ -223,18 +223,18 @@ module ReceiverForend(clearance=0.005, debug=false, alpha=1) {
   render() DebugHalf(enabled=debug)
   difference() {
     union() {
-      FrameSupport(length=ForendLength());
+      Frame_Support(length=ForendLength());
       
       hull() {
         // Front face
         translate([ForendLength(), 0,0])
         mirror([1,0,0])
-        FrameSupport(length=ManifoldGap(),
+        Frame_Support(length=ManifoldGap(),
                      extraBottom=0);
         
         translate([ForendLength(), 0,0])
         mirror([1,0,0])
-        FrameSupport(length=(ForendLength())+FrameTopZ());
+        Frame_Support(length=(ForendLength())+FrameTopZ());
       }
     }
     
@@ -244,7 +244,7 @@ module ReceiverForend(clearance=0.005, debug=false, alpha=1) {
     HoleChamfer(r1=BarrelRadius(BARREL_CLEARANCE), r2=1/4,
                 teardrop=true, $fn=60);
 
-    FrameBolts(cutter=true);
+    Frame_Bolts(cutter=true);
 
     *translate([-ReceiverFrontLength(),0,0])
     ActionRod(length=ActionRodLength(), cutter=true);
@@ -385,9 +385,9 @@ if ($preview) {
     Lower(showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true);
     
     if (_SHOW_RECEIVER) {
-      TensionBolts();
+      Receiver_TensionBolts();
       
-      Receiver_LargeFrameAssembly(
+      Frame_ReceiverAssembly(
         length=FRAME_BOLT_LENGTH,
         debug=_CUTAWAY_RECEIVER);
     }

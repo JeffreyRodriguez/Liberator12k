@@ -17,10 +17,13 @@ use <../Receiver.scad>;
 
 use <Lugs.scad>;
 
-/* [Print] */
+/* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
 _RENDER = ""; // ["", "Lower_Left", "Lower_Right", "Lower_Middle"]
+
+// Reorient the part for printing?
+_RENDER_PRINT = true;
 
 /* [Assembly] */
 _SHOW_LOWER_LEFT = true;
@@ -327,17 +330,6 @@ module LowerSidePlates(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOL
 
 }
 
-module Lower_Left_print(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT)
-rotate(180)
-rotate([90,0,0])
-translate([0,-0.25,2.125])
-LowerSidePlates(boltSpec=LowerBolt(), head=head, nut=nut, showLeft=true, showRight=false);
-
-module Lower_Right_print(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT)
-rotate([-90,0,0])
-translate([0,0.25,2.125])
-LowerSidePlates(boltSpec=LowerBolt(), head=head, nut=nut, showLeft=false, showRight=true);
-
 module Lower_Middle(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT) {
   color("Chocolate")
   render()
@@ -368,12 +360,6 @@ module Lower_Middle(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_N
     }
   }
 }
-
-module Lower_Middle_print(boltSpec=LowerBolt(), head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT)
-rotate(180)
-rotate([90,0,0])
-translate([0,0.25,2.125])
-Lower_Middle(boltSpec=LowerBolt(), head=head, nut=nut);
 
 module LowerMatchplate2d() {
   union() {
@@ -430,12 +416,45 @@ if ($preview) {
         showRight=_SHOW_LOWER_RIGHT,
         alpha=_ALPHA_LOWER);
 } else {
+
+  // *****************
+  // * Printed Parts *
+  // *****************
   if (_RENDER == "Lower_Left")
-    Lower_Left_print();
+    if (!_RENDER_PRINT)
+      LowerSidePlates(showLeft=true, showRight=false);
+    else
+      rotate(180)
+      rotate([90,0,0])
+      translate([0,-0.25,2.125])
+      LowerSidePlates(showLeft=true, showRight=false);
 
   if (_RENDER == "Lower_Right")
-    Lower_Right_print();
+    if (!_RENDER_PRINT)
+      LowerSidePlates(showLeft=false, showRight=true);
+    else
+      rotate([-90,0,0])
+      translate([0,0.25,2.125])
+      LowerSidePlates(showLeft=false, showRight=true);
+
 
   if (_RENDER == "Lower_Middle")
-    Lower_Middle_print();
+    if (!_RENDER_PRINT)
+      translate([0,0.25,2.125])
+      Lower_Middle();
+    else
+      rotate(180)
+      rotate([90,0,0])
+      translate([0,0.25,2.125])
+      Lower_Middle();
+  
+  // ************
+  // * Hardware *
+  // ************
+  if (_RENDER == "Lower_Bolts") {
+    ReceiverLugBolts();
+    GuardBolt();
+    HandleBolts();
+  }
+
 }

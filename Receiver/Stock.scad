@@ -17,10 +17,13 @@ use <Lower/Lower.scad>;
 
 use <Receiver.scad>;
 
-/* [Print] */
+/* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
 _RENDER = ""; // ["", "Stock", "Stock_Backplate", "Stock_Buttpad"]
+
+// Reorient the part for printing?
+_RENDER_PRINT = true;
 
 /* [Assembly] */
 _SHOW_RECEIVER = true;
@@ -51,8 +54,8 @@ Stock_Backplate_CLEARANCE = 0.015;
 /* [Fine Tuning] */
 
 
-function ButtpadBolt() = BoltSpec(BUTTPAD_BOLT);
-assert(ButtpadBolt(), "ButtpadBolt() is undefined. Unknown BUTTPAD_BOLT?");
+function Stock_ButtpadBolt() = BoltSpec(BUTTPAD_BOLT);
+assert(Stock_ButtpadBolt(), "Stock_ButtpadBolt() is undefined. Unknown BUTTPAD_BOLT?");
 
 function ButtpadLength() = 3;
 function ButtpadWall() = 0.1875;
@@ -72,14 +75,14 @@ $fs = UnitsFs()*ResolutionFs();
 // ************
 // * Vitamins *
 // ************
-module ButtpadBolt(debug=false, head="flat", nut="heatset", cutter=false, teardrop=false, clearance=0.01, teardropAngle=0) {
+module Stock_ButtpadBolt(debug=false, head="flat", nut="heatset", cutter=false, teardrop=false, clearance=0.01, teardropAngle=0) {
   clear = cutter ? clearance : 0;
 
   color("Silver") RenderIf(!cutter) DebugHalf(enabled=debug)
   for (Z = [0,-1.5])
   translate([StockMinX()-2, 0, Z])
   rotate([0,-90,0])
-  NutAndBolt(bolt=ButtpadBolt(),
+  NutAndBolt(bolt=Stock_ButtpadBolt(),
              boltLength=3.5, capOrientation=true,
              head=head, capHeightExtra=(cutter?ButtpadLength():0),
              nut=nut, nutHeightExtra=(cutter?1:0),
@@ -92,7 +95,7 @@ module Stock_TakedownPin(cutter=false, clearance=0.005, alpha=1, debug=false) {
   color("Silver") RenderIf(!cutter) DebugHalf(enabled=debug)
   translate([Stock_TakedownPinX(),
              0,
-             ReceiverTakedownPinZ()])
+             Receiver_TakedownPinZ()])
   rotate([90,0,0])
   linear_extrude(ReceiverOD(), center=true)
   Teardrop(r=0.125+clear, enabled=cutter);
@@ -103,12 +106,12 @@ module Stock_TakedownPinRetainer(cutter=false, clearance=0.005) {
   clear2 = clear*2;
   
   color("Silver") RenderIf(!cutter)
-  translate([ButtpadX(), 0, ReceiverTakedownPinZ()-0.125])
+  translate([ButtpadX(), 0, Receiver_TakedownPinZ()-0.125])
   rotate([0,90,0])
   cylinder(r=(3/32/2)+clear, h=2, $fn=20);
   
   if (cutter)
-  translate([StockMinX(), 0, ReceiverTakedownPinZ()-0.125])
+  translate([StockMinX(), 0, Receiver_TakedownPinZ()-0.125])
   rotate([0,90,0])
   cylinder(r=0.125, h=2, $fn=20);
   
@@ -126,14 +129,14 @@ module Stock(length=StockLength(), doRender=true, debug=false, alpha=1) {
     
     // Main body
     translate([-ReceiverLength(),0,0])
-    ReceiverSegment(length=length, highTop=false, chamferBack=true);
+    Receiver_Segment(length=length, highTop=false, chamferBack=true);
     
-    TensionBolts(nutType="none", headType="none", cutter=true);
+    Receiver_TensionBolts(nutType="none", headType="none", cutter=true);
     
     translate([-ReceiverLength(),0,0]) {
       ReceiverBottomSlot(length=length);
-      ReceiverRoundSlot(length=length);
-      ReceiverSideSlot(length=length);
+      Receiver_RoundSlot(length=length);
+      Receiver_SideSlot(length=length);
     }
     
     Stock_TakedownPin(cutter=true);
@@ -148,7 +151,7 @@ module Stock_Backplate(length=Stock_BackplateLength(), clearance=0.008, debug=fa
       // Backplate
       difference() {
         translate([StockMinX(),0,0])
-        ReceiverSegment(length=0.5, highTop=false,
+        Receiver_Segment(length=0.5, highTop=false,
                         chamferFront=true, chamferBack=true);
     
         // Clearance for the tension bolts
@@ -173,11 +176,11 @@ module Stock_Backplate(length=Stock_BackplateLength(), clearance=0.008, debug=fa
       
       // Insert wings
       translate([StockMinX()-0.5,
-                 -(ReceiverIR()+ReceiverSideSlotDepth()-clearance),
-                 -(ReceiverSideSlotHeight()/2)+clearance])
+                 -(ReceiverIR()+Receiver_SideSlotDepth()-clearance),
+                 -(Receiver_SideSlotHeight()/2)+clearance])
       ChamferedCube([length+0.5,
-                     (ReceiverIR()+ReceiverSideSlotDepth()-clearance)*2,
-                     ReceiverSideSlotHeight()-(clearance*2)],
+                     (ReceiverIR()+Receiver_SideSlotDepth()-clearance)*2,
+                     Receiver_SideSlotHeight()-(clearance*2)],
                     r=1/16, teardropFlip=[true, true, true]);
       
       // Bottom Slot
@@ -221,7 +224,7 @@ module Stock_Backplate(length=Stock_BackplateLength(), clearance=0.008, debug=fa
     
     Stock_TakedownPin(cutter=true);
     Stock_TakedownPinRetainer(cutter=true);
-    ButtpadBolt(cutter=true, teardrop=false);
+    Stock_ButtpadBolt(cutter=true, teardrop=false);
       
     // M-LOK Side slots
     for (M = [0,1]) mirror([0,M,0])
@@ -262,7 +265,7 @@ module Stock_Buttpad(doRender=true, debug=false, alpha=1) {
                            $fn=Resolution(20,50));
         
         // Merge to receiver
-        ReceiverSegment(length=0.5, highTop=false, chamferFront=true);
+        Receiver_Segment(length=0.5, highTop=false, chamferFront=true);
         
         
         // Meet lower tab
@@ -285,7 +288,7 @@ module Stock_Buttpad(doRender=true, debug=false, alpha=1) {
                -ManifoldGap()])
     cylinder(r1=baseRadius/2, r2=0, h=base);
     
-    ButtpadBolt(cutter=true);
+    Stock_ButtpadBolt(cutter=true);
   }
 }
 ///
@@ -295,7 +298,7 @@ module Stock_Buttpad(doRender=true, debug=false, alpha=1) {
 // **************
 module StockAssembly(debug=undef) {
   if (_SHOW_BUTTPAD_BOLT)
-  ButtpadBolt();
+  Stock_ButtpadBolt();
   
   if (_SHOW_STOCK_TAKEDOWN_PIN) {
     Stock_TakedownPin();
@@ -325,18 +328,42 @@ if ($preview) {
   StockAssembly();
 } else {
 
+  // *****************
+  // * Printed Parts *
+  // *****************
   if (_RENDER == "Stock")
-  rotate([0,-90,0])
-  translate([ReceiverLength()+StockLength(),0,0])
-  Stock();
+    if (!_RENDER_PRINT)
+      Stock();
+    else
+      rotate([0,-90,0])
+      translate([ReceiverLength()+StockLength(),0,0])
+      Stock();
   
   if (_RENDER == "Stock_Buttpad")
-  rotate([0,-90,0])
-  translate([StockLength()+ReceiverLength()+ButtpadLength(),0,0])
-  Stock_Buttpad();
+    if (!_RENDER_PRINT)
+      Stock_Buttpad();
+    else
+      rotate([0,-90,0])
+      translate([StockLength()+ReceiverLength()+ButtpadLength(),0,0])
+      Stock_Buttpad();
   
   if (_RENDER == "Stock_Backplate")
-  rotate([0,-90,0])
-  translate([-ButtpadX(),0,0])
-  Stock_Backplate();
+    if (!_RENDER_PRINT)
+      Stock_Backplate();
+    else
+      rotate([0,-90,0])
+      translate([-ButtpadX(),0,0])
+      Stock_Backplate();
+  
+  // ************
+  // * Hardware *
+  // ************
+  if (_RENDER == "Stock_ButtpadBolt")
+  Stock_ButtpadBolt();
+  
+  if (_RENDER == "Stock_TakedownPin")
+  Stock_TakedownPin();
+  
+  if (_RENDER == "Stock_TakedownPinRetainer")
+  Stock_TakedownPinRetainer();
 }
