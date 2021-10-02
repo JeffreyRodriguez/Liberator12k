@@ -15,9 +15,6 @@ use <../Shapes/MLOK.scad>;
 use <../Vitamins/Nuts And Bolts.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 
-use <Lower/LowerMount.scad>;
-use <Lower/Lower.scad>;
-use <Lower/Lugs.scad>;
 
 use <Forend/Evolver.scad>;
 use <Forend/PumpAR15.scad>;
@@ -28,6 +25,7 @@ use <Forend/Pump.scad>;
 use <Forend/Pump Reversed Mag.scad>;
 
 use <Bullpup.scad>;
+use <Lower.scad>;
 use <FCG.scad>;
 use <Frame.scad>;
 use <Receiver.scad>

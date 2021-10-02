@@ -14,12 +14,10 @@ use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/Pipe.scad>;
 use <../../Vitamins/Square Tube.scad>;
 
-use <../Lower/LowerMount.scad>;
-use <../Lower/Lower.scad>;
-
 use <../../Ammo/Shell Slug.scad>;
 
 use <../Frame.scad>;
+use <../Lower.scad>;
 use <../Receiver.scad>;
 
 

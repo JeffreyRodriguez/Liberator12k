@@ -12,9 +12,8 @@ use <../../Shapes/Chamfer.scad>;
 
 use <../../Vitamins/AR15/Barrel.scad>;
 
+use <../Lower.scad>;
 use <../Receiver.scad>;
-use <../Lower/Lower.scad>;
-use <../Lower/Lugs.scad>;
 
 /* [What to Render] */
 

@@ -20,13 +20,11 @@ use <../../Shapes/Components/Pump Grip.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/Pipe.scad>;
 
-use <../Lower/Lower.scad>;
-use <../Lower/LowerMount.scad>;
-
 use <../FCG.scad>;
-use <../Stock.scad>;
 use <../Frame.scad>;
+use <../Lower.scad>;
 use <../Receiver.scad>;
+use <../Stock.scad>;
 
 use <Bipod.scad>;
 

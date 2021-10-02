@@ -13,11 +13,9 @@ use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/AR15/Barrel.scad>;
 use <../../Vitamins/AR15/Bolt.scad>;
 
-use <../../Receiver/Lower/Lower.scad>;
-use <../../Receiver/Lower/Lugs.scad>;
-use <../../Receiver/Lower/LowerMount.scad>;
-use <../../Receiver/Receiver.scad>;
 use <../../Receiver/Frame.scad>;
+use <../../Receiver/Lower.scad>;
+use <../../Receiver/Receiver.scad>;
 use <../../Receiver/Stock.scad>;
 
 use <../../Receiver/Components/AR15 Trunnion.scad>;

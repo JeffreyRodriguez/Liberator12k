@@ -1,8 +1,8 @@
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
 use <../../Meta/Debug.scad>;
-use <Lower/Lower.scad>;
 use <../../Shapes/Chamfer.scad>;
+use <Lower.scad>;
 
 function MagazineAngle() = 8;
 function MagazineOffsetX(height=0) = (sin(MagazineAngle())*height);

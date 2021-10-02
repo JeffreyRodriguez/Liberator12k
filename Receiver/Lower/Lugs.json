@@ -1,9 +1,0 @@
-{
-    "parameterSets": {
-        "metric": {
-            "RECEIVER_LUG_BOLTS": "M4",
-            "RECEIVER_LUG_BOLTS_CLEARANCE": "0.005"
-        }
-    },
-    "fileFormatVersion": "1"
-}

@@ -14,9 +14,18 @@ The lower mount couples the lower to the receiver.
 |-|-|-|
 |![](Lower_Left_thumb.jpg)|![](Lower_Middle_thumb.jpg)|![](Lower_Right_thumb.jpg)|
 ---
-|LowerMount_Front|LowerMount_Rear|
+|Lower_MountFront|Lower_MountRear|
 |-|-|
-|![](LowerMount_Front_thumb.jpg)|![](LowerMount_Rear_thumb.jpg)|
+|![](Lower_MountFront_thumb.jpg)|![](Lower_MountRear_thumb.jpg)|
+
+
+45g, 4h30m
+
+| Part                                                                                                | Settings             | Filament | Time   |
+|-----------------------------------------------------------------------------------------------------|----------------------|----------|--------|
+| ![Lower_MountFront.stl](Lower_MountFront_thumb.jpg)<br>[Lower_MountFront.stl](Lower_MountFront.stl) | 3mm Walls 50% Infill | 22g      | 2h09m  |
+| ![Lower_MountRear.stl](Lower_MountRear_thumb.jpg)<br>[Lower_MountRear.stl](Lower_MountRear.stl)     | 3mm Walls 50% Infill | 23g      | 2h21m  |
+
 
 <!-- NEW PAGE -->
 ## Post-Processing
@@ -25,15 +34,15 @@ The lower mount couples the lower to the receiver.
 Install the heatset nuts into Lower_Left.
 
 ### Pin Retainer
-Locate the small hole in the LowerMount_Rear.
+Locate the small hole in the Lower_MountRear.
 Insert Lower Pin Retaining Pin, press it into the mount until flush.
 
 ### Subassembly
 Requires the trigger from the [Fire Control Group](../FCG.md).
 
 1. Lay Lower_Left flat-side up.
-2. Install LowerMount_Front - the extended portion points left.
-3. Install LowerMount_Rear - the extended portion points left.
+2. Install Lower_MountFront - the extended portion points left.
+3. Install Lower_MountRear - the extended portion points left.
 4. Tuck the trigger up between the two LowerMounts.
 5. Add Lower_Middle to the stack.
 6. Add Lower_Right, it should seat on the LowerMount tabs.

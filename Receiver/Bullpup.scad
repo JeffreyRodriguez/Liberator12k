@@ -15,15 +15,6 @@ use <../Shapes/MLOK.scad>;
 use <../Vitamins/Nuts And Bolts.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 
-use <Lower/LowerMount.scad>;
-use <Lower/Lower.scad>;
-use <Lower/Lugs.scad>;
-
-use <Receiver.scad>;
-use <Frame.scad>;
-use <Stock.scad>;
-use <FCG.scad>;
-
 use <Forend/Evolver.scad>;
 use <Forend/PumpAR15.scad>;
 use <Forend/Revolver.scad>;
@@ -31,6 +22,12 @@ use <Forend/TopBreak.scad>;
 use <Forend/Trigun.scad>;
 use <Forend/Pump.scad>;
 use <Forend/Pump Reversed Mag.scad>;
+
+use <FCG.scad>;
+use <Frame.scad>;
+use <Lower.scad>;
+use <Receiver.scad>;
+use <Stock.scad>;
 
 /* [Print] */
 

@@ -9,9 +9,6 @@ use <../../Meta/MirrorIf.scad>;
 
 use <../../Meta/Math/Triangles.scad>;
 
-use <../Lower/Lower.scad>;
-use <../Lower/LowerMount.scad>;
-
 use <../../Shapes/Chamfer.scad>;
 use <../../Shapes/Helix.scad>;
 use <../../Shapes/Bearing Surface.scad>;
@@ -30,12 +27,11 @@ use <../../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 
-use <../Receiver.scad>;
-use <../Frame.scad>;
-use <../Stock.scad>;
-
 use <../FCG.scad>;
-
+use <../Frame.scad>;
+use <../Lower.scad>;
+use <../Receiver.scad>;
+use <../Stock.scad>;
 
 /* [Print] */
 

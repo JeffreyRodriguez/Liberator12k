@@ -16,11 +16,8 @@ use <../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 
-use <Lower/LowerMount.scad>;
-use <Lower/Lugs.scad>;
-
+use <Lower.scad>;
 use <Receiver.scad>;
-
 
 /* [Export] */
 

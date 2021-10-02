@@ -24,13 +24,11 @@ use <../../Vitamins/Pipe.scad>;
 
 use <../Components/Sightpost.scad>;
 
-use <../Lower/Lower.scad>;
-use <../Lower/LowerMount.scad>;
-
-use <../Stock.scad>;
-use <../Frame.scad>;
-use <../Receiver.scad>;
 use <../FCG.scad>;
+use <../Frame.scad>;
+use <../Lower.scad>;
+use <../Receiver.scad>;
+use <../Stock.scad>;
 
 /* [Export] */
 

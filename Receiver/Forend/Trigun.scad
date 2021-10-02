@@ -24,13 +24,11 @@ use <../../Ammo/Shell Slug.scad>;
 use <../../Ammo/Cartridges/Cartridge.scad>;
 use <../../Ammo/Cartridges/Cartridge_12GA.scad>;
 
-use <../Lower/Lower.scad>;
-
-use <../Stock.scad>;
-use <../Lower/LowerMount.scad>;
-use <../Frame.scad>;
-use <../Receiver.scad>;
 use <../FCG.scad>;
+use <../Frame.scad>;
+use <../Lower.scad>;
+use <../Receiver.scad>;
+use <../Stock.scad>;
 
 /* [Print] */
 

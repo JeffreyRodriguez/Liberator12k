@@ -64,8 +64,8 @@ designs in detail.
 | Lower_Left          |          |      66g | 5h52m   | Base    |
 | Lower_Middle        |          |      68g | 5h20m   | Accent  |
 | Lower_Right         |          |      66g | 5h52m   | Base    |
-| LowerMount_Rear     |          |      23g | 2h21m   | Accent  |
-| LowerMount_Front    |          |      22g | 2h09m   | Accent  |
+| Lower_MountRear     |          |      23g | 2h21m   | Accent  |
+| Lower_MountFront    |          |      22g | 2h09m   | Accent  |
 | Stock               |          |       -g | -h-m    | Base    |
 | Stock_Backplate     |          |       -g | -h-m    | Accent  |
 | Stock_Buttpad       |          |       -g | -h-m    | Special |
