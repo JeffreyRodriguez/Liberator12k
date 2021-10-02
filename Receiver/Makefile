@@ -39,11 +39,6 @@ ASSEMBLY_JPG=$(addprefix Assembly_,$(addsuffix .jpg, $(Assembly_VIEWS)))
 
 TARGETS = README.html $(ASSEMBLY_JPG) $(Components_HTML) $(STLS) $(THUMBNAILS) $(Assembly_STL)
 
-Assembly_CAFE12.png: Assembly.scad
-	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
-		--projection=p --camera=200,1500,200,0,0,0 \
-		-D _FOREND='"TopBreak"' \
-		$<
 Assembly_Minuteman.png: Assembly.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
 		--projection=p --camera=200,800,200,-100,0,0 \
@@ -84,7 +79,12 @@ Assembly_FCG.png: Assembly.scad
 		-D _SHOW_FOREND=false \
 		-D _SHOW_STOCK=false \
 		$<
-
+Assembly_CAFE12.png: Assembly.scad
+	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
+		--projection=p --camera=200,1500,200,0,0,0 \
+		-D _FOREND='"TopBreak"' \
+		$<
+		
 .SECONDEXPANSION:
 $(addsuffix .html,$(Components)): $$(addsuffix _thumb.jpg, $$($$@_Parts))
 # $(STLS): $$($$@_thumbnails)
