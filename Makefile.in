@@ -62,6 +62,24 @@ $(SUBDIRS): FORCE
 	--projection=p --autocenter --viewall --view scales \
 	$(SOURCE).scad
 
+Assembly/:
+	mkdir -p Assembly
+
+Assembly/%.stl: Assembly/%.scad Assembly/
+	$(eval PART=$(basename $(notdir $@)))
+	$(OSBIN) $(OSOPTS) -o $@ \
+	--render -D _RENDER=\"$(PART)\"  -D _RENDER_PRINT=false \
+	--projection=p --autocenter --viewall --view scales \
+	$(basename $(notdir $<)).scad
+
+Assembly/%.stl:  Assembly/
+	$(eval PART=$(basename $(notdir $@)))
+	$(eval SOURCE=$(shell echo $(notdir $(basename $@)) | awk -F _ '{ print $$1 }'))
+	$(OSBIN) $(OSOPTS) -o $@ \
+	--render -D _RENDER=\"$(PART)\" -D _RENDER_PRINT=false \
+	--projection=p --autocenter --viewall --view scales \
+	$(SOURCE).scad
+
 clean: FORCE clean-dir
 	for DIR in $(SUBDIRS); do \
 	  $(MAKE) -C $$DIR clean; \
