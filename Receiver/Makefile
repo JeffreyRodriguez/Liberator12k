@@ -1,22 +1,35 @@
 include ../Makefile.in
 .PHONY: $(Components)
 
-Components=Frame Stock FCG
+Components=Receiver Frame Stock FCG
 Components_HTML=$(addsuffix .html, $(Components))
 
+Receiver_Parts=Receiver Receiver_Back
+Receiver_Hardware=Receiver_MlokBolts Receiver_TakedownPin Receiver_TensionBolts
+
 Frame_Parts=Frame_Receiver
+Frame_Hardware=Frame_Bolts
+
 Stock_Parts=Stock Stock_Buttpad Stock_Backplate
+Stock_Hardware=Stock_ButtpadBolt Stock_TakedownPin Stock_TakedownPinRetainer
+
 FCG_Parts=FCG_Housing FCG_Disconnector FCG_FiringPinCollar \
-        FCG_ChargingHandle \
-				FCG_Hammer FCG_HammerTail \
-				FCG_TriggerLeft FCG_TriggerMiddle FCG_TriggerRight
-Parts=$(Frame_Parts) $(Stock_Parts) $(FCG_Parts)
-				
+          FCG_ChargingHandle \
+				  FCG_Hammer FCG_HammerTail \
+				  FCG_TriggerLeft FCG_TriggerMiddle FCG_TriggerRight
+FCG_Hardware=FCG_ActionRod FCG_RecoilPlate \
+             FCG_DisconnectorTripBolt FCG_DisconnectorPivotPin \
+						 FCG_HammerBolt FCG_Sear FCG_FiringPin FCG_FiringPinSpring \
+						 FCG_RecoilPlateCenterBolts FCG_RecoilPlateSideBolts \
+						 FCG_ChargingHandleBolt FCG_ChargingHandleSpring
+
+Receiver_STL=$(addsuffix .stl, $(Receiver_Parts))
 Frame_STL=$(addsuffix .stl, $(Frame_Parts))
 Stock_STL=$(addsuffix .stl, $(Stock_Parts))
 FCG_STL=$(addsuffix .stl, $(FCG_Parts))
 
-STLS=$(Frame_STL) $(Stock_STL) $(FCG_STL)
+Parts=$(Receiver_Parts) $(Frame_Parts) $(Stock_Parts) $(FCG_Parts)
+Hardware=$(Receiver_Hardware) $(Frame_Hardware) $(Stock_Hardware) $(FCG_Hardware)
 
 Frame_thumbnails=$(addsuffix _thumb.jpg, $(Frame_Parts))
 Stock_thumbnails=$(addsuffix _thumb.jpg, $(Stock_Parts))
