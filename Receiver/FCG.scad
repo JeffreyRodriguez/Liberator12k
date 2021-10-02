@@ -1348,7 +1348,7 @@ if ($preview) {
       SearSupportTab();
     else
       rotate(180)
-      translate([0,-TriggerHeight()/2,0.12])
+      translate([LowerMaxX(),-TriggerHeight()/2,0.12])
       rotate([90,0,00])
       SearSupportTab();
 
@@ -1359,7 +1359,7 @@ if ($preview) {
       rotate(180)
       translate([0,-TriggerHeight()/2,0])
       rotate([90,0,0])
-      translate([0,-SearRadius(SEAR_CLEARANCE),0])
+      translate([LowerMaxX(),-SearRadius(SEAR_CLEARANCE),0])
       Trigger(left=true, right=false);
 
   if (_RENDER == "FCG_TriggerRight")
@@ -1369,7 +1369,7 @@ if ($preview) {
       rotate(180)
       translate([0,-TriggerHeight()/2,0])
       rotate([90,0,0])
-      translate([0,TriggerWidth()/2,0])
+      translate([LowerMaxX(),TriggerWidth()/2,0])
       Trigger(left=false, right=true);
   
   if (_RENDER == "FCG_Housing")
