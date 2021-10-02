@@ -1,19 +1,19 @@
-use <../../../Meta/Manifold.scad>;
-use <../../../Meta/Units.scad>;
-use <../../../Meta/Resolution.scad>;
+use <../Meta/Manifold.scad>;
+use <../Meta/Units.scad>;
+use <../Meta/Resolution.scad>;
 
-use <../../../Vitamins/Nuts And Bolts.scad>;
+use <../Vitamins/Nuts And Bolts.scad>;
 
-use <../../../Shapes/Components/AR15/Mating Pins.scad>;
-use <../../../Shapes/Components/AR15/Trigger Pocket.scad>;
-use <../../../Shapes/Components/AR15/Trigger.scad>;
-use <../../../Shapes/Components/AR15/Fire Control.scad>;
+use <../Shapes/Components/AR15/Mating Pins.scad>;
+use <../Shapes/Components/AR15/Trigger Pocket.scad>;
+use <../Shapes/Components/AR15/Trigger.scad>;
+use <../Shapes/Components/AR15/Fire Control.scad>;
 
-use <../../../Shapes/Components/Grip Handle.scad>;
-use <../../../Shapes/Components/T Lug.scad>;
-use <../../../Shapes/Components/Trigger Finger Slot.scad>;
+use <../Shapes/Components/Grip Handle.scad>;
+use <../Shapes/Components/T Lug.scad>;
+use <../Shapes/Components/Trigger Finger Slot.scad>;
 
-use <../../../Receiver/Magwells/AR15 Magwell.scad>;
+use <../Receiver/Magwells/AR15 Magwell.scad>;
 
 function BufferLugHeight() = 0.75;
 

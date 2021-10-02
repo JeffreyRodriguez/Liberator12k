@@ -17,10 +17,10 @@ use <../../Vitamins/AR15/Barrel.scad>;
 
 use <../../Receiver/Magwells/AR15 Magwell.scad>;
 
-use <../Lower/Lugs.scad>;
-use <../Lower/Lower.scad>;
-use <../Receiver.scad>;
-use <../FCG.scad>;
+use <../../Receiver/Lower/Lugs.scad>;
+use <../../Receiver/Lower/Lower.scad>;
+use <../../Receiver/Receiver.scad>;
+use <../../Receiver/FCG.scad>;
 
 /* [Export] */
 

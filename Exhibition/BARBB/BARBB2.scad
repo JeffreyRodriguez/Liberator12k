@@ -13,15 +13,15 @@ use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/AR15/Barrel.scad>;
 use <../../Vitamins/AR15/Bolt.scad>;
 
-use <../Lower/Lower.scad>;
-use <../Lower/Lugs.scad>;
-use <../Lower/LowerMount.scad>;
+use <../../Receiver/Lower/Lower.scad>;
+use <../../Receiver/Lower/Lugs.scad>;
+use <../../Receiver/Lower/LowerMount.scad>;
+use <../../Receiver/Receiver.scad>;
+use <../../Receiver/Frame.scad>;
+use <../../Receiver/Stock.scad>;
 
-use <../Components/AR15 Trunnion.scad>;
-use <../Magwells/AR15 Magwell.scad>;
-
-use <../Receiver.scad>;
-use <../Stock.scad>;
+use <../../Receiver/Components/AR15 Trunnion.scad>;
+use <../../Receiver/Magwells/AR15 Magwell.scad>;
 
 /* [Export] */
 
@@ -272,6 +272,7 @@ module BARBB_BoltCarrier(clearance=0.01) {
       // Cam Pin Shelf
       // This keeps the bolt forward while we rotate across several lug positions
       // while also allowing a longer opening for ejection.
+      if (AR15_CamPinShelfLength()+clearance > clearance)
       rotate(90+AR15_CamPinAngle()+AR15_CamPinAngleExtra())
       translate([0,-AR15_CamPinSquareWidth()/2,
                  boltCarrierLength
@@ -367,7 +368,7 @@ module BARBB_Assembly() {
   Receiver(debug=_CUTAWAY_RECEIVER, doRender=true);
   
   if (_SHOW_BUTTPAD)
-  translate([magwellX-ReceiverLength(),0,0])
+  translate([magwellX-ReceiverLength()+StockLength(),0,0])
   Stock_Buttpad();
   
   if (_SHOW_MAGWELL)
