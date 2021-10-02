@@ -28,16 +28,17 @@ Stock_STL=$(addsuffix .stl, $(Stock_Parts))
 FCG_STL=$(addsuffix .stl, $(FCG_Parts))
 
 Parts=$(Receiver_Parts) $(Frame_Parts) $(Stock_Parts) $(FCG_Parts)
+Parts_STL=$(addsuffix .stl, $(Parts))
+Parts_STL_thumbs=$(addsuffix _thumb.jpg, $(Parts))
+
 Hardware=$(Receiver_Hardware) $(Frame_Hardware) $(Stock_Hardware) $(FCG_Hardware)
+Hardware_STL= $(addsuffix .stl, $(Hardware))
 
-STLS=$(addsuffix .stl, $(Parts)) $(addsuffix .stl, $(Hardware))
-THUMBNAILS=$(addsuffix _thumb.jpg, $(Frame_Parts) $(Stock_Parts) $(FCG_Parts))
-
-Assembly_STL=$(addprefix Assembly/, $(STLS));
+Assembly_STL=$(addprefix Assembly/, $(Parts_STL) $(Hardware_STL));
 Assembly_VIEWS=CAFE12 Minuteman Frame Stock Lower FCG
 ASSEMBLY_JPG=$(addprefix Assembly_,$(addsuffix .jpg, $(Assembly_VIEWS)))
 
-TARGETS = README.html $(ASSEMBLY_JPG) $(Components_HTML) $(STLS) $(THUMBNAILS) $(Assembly_STL)
+TARGETS = README.html $(ASSEMBLY_JPG) $(Components_HTML) $(Parts_STL) $(THUMBNAILS) $(Assembly_STL)
 
 Assembly_Minuteman.png: Assembly.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
