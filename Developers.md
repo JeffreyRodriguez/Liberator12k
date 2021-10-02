@@ -24,8 +24,8 @@ Some of the designs have other presets, like the break-action:
 
 ![Customizer Preset](.manual/customizer_preset.png)
 
-#### Print
-![Customizer Print Section](.manual/customizer_print.png)
+#### Export STL for Printing
+![Customizer Print Section](.manual/customizer_export.png)
 
 1. Choose the part you want and push F6 to render it, or from the *Design* menu, select *Render*.
 2. Once you've rendered a part for printing, you need to export the STL.
