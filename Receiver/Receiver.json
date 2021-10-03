@@ -5,13 +5,7 @@
             "TENSION_BOLT": "M4",
             "TENSION_BOLT_CLEARANCE": "0.01",
             "TENSION_BOLT_LENGTH": "12",
-            "TENSION_NUT_TYPE": "heatset-long",
-            "_ALPHA_RECEIVER": "1",
-            "_CUTAWAY_RECEIVER": "false",
-            "_RENDER": "",
-            "_SHOW_RECEIVER": "true",
-            "_SHOW_RECEIVER_BACK": "true",
-            "_SHOW_RECEIVER_RODS": "true"
+            "TENSION_NUT_TYPE": "heatset-long"
         }
     },
     "fileFormatVersion": "1"

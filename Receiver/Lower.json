@@ -4,14 +4,7 @@
             "LOWER_BOLT": "M4",
             "LOWER_BOLT_CLEARANCE": "0.015",
             "LOWER_BOLT_HEAD": "flat",
-            "LOWER_BOLT_NUT": "heatset-long",
-            "_ALPHA_LOWER": "1",
-            "_RENDER": "",
-            "_SHOW_LOWER_LEFT": "true",
-            "_SHOW_LOWER_LUGS": "true",
-            "_SHOW_LOWER_MIDDLE": "true",
-            "_SHOW_LOWER_RIGHT": "true",
-            "_SHOW_TRIGGER": "true"
+            "LOWER_BOLT_NUT": "heatset-long"
         }
     },
     "fileFormatVersion": "1"

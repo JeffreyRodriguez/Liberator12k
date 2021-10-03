@@ -9,7 +9,7 @@ phases:
     commands:
       - add-apt-repository -y ppa:openscad/releases
       - apt-get update
-      - apt install -y xvfb openscad cmark-gfm imagemagick ffmpeg bc parallel jq htmldoc
+      - apt install -y xvfb openscad cmark-gfm imagemagick ffmpeg bc parallel jq htmldoc moreutils
   build:
     on-failure: ABORT
     commands:

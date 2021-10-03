@@ -7,12 +7,7 @@
             "FRAME_BRANDING_TEXT": "#Liberator12k",
             "FRAME_RECEIVER_LENGTH": "3",
             "FRAME_SPACER_LENGTH": "4.5",
-            "FRAME_WALL": "0.18751",
-            "_ALPHA_FRAME": "1",
-            "_CUTAWAY_RECEIVER": "false",
-            "_RENDER": "Frame_Receiver",
-            "_SHOW_RECEIVER": "true",
-            "_SHOW_RECEIVER_RODS": "true"
+            "FRAME_WALL": "0.18751"
         }
     },
     "fileFormatVersion": "1"
