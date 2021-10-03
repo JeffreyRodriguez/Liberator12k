@@ -331,7 +331,7 @@ module Evolver_ReceiverFront(contoured=true, debug=_CUTAWAY_RECEIVER_FRONT, alph
   render() DebugHalf(enabled=debug)
   difference() {
     union() {
-        Frame_ReceiverSegment(length=length,
+        Frame_Receiver_Segment(length=length,
                               highTop=true);
 
       hull() {
@@ -357,7 +357,7 @@ module Evolver_ReceiverFront(contoured=true, debug=_CUTAWAY_RECEIVER_FRONT, alph
     
     RecoilPlate(contoured=contoured, spindleZ=CylinderZ(), cutter=true);
     FiringPin(cutter=true);
-    FrameBolts(cutter=true);
+    Frame_Bolts(cutter=true);
     
     RecoilPlateBolts(cutter=true);
     Receiver_TensionBolts(cutter=true);
@@ -388,7 +388,7 @@ module Evolver_ForendSpacer(length=ForendSpacerLength(), doRender=true, debug=fa
     
     hull() {
 
-      FrameSupport(length=length,
+      Frame_Support(length=length,
                    chamferRadius=1/16, chamferFront=true, teardropFront=true);
       
       mirror([1,0,0])
@@ -406,7 +406,7 @@ module Evolver_ForendSpacer(length=ForendSpacerLength(), doRender=true, debug=fa
     translate([0,0,0.25])
     ActionRod(cutter=true);
     
-    FrameBolts(cutter=true);
+    Frame_Bolts(cutter=true);
   }
 }
 
@@ -440,7 +440,7 @@ module Evolver_BarrelSupport(length=Evolver_BarrelSupportLength(), doRender=true
   difference() {
     union() {
       translate([offsetX,0,0])
-      Frame_ReceiverSegment(length=length,
+      Frame_Receiver_Segment(length=length,
                             highTop=true, chamferFront=false);
       
       // Spindle and interlock support
@@ -487,7 +487,7 @@ module Evolver_BarrelSupport(length=Evolver_BarrelSupportLength(), doRender=true
     rotate([0,90,0])
     ChamferedCylinder(r1=(0.3125/2)+0.007, r2=1/32, h=Evolver_ZigZagLength()+0.5);
     
-    FrameBolts(cutter=true);
+    Frame_Bolts(cutter=true);
 
     Evolver_Barrel(cutter=true);
     Evolver_BarrelCollar(cutter=true);
@@ -799,7 +799,7 @@ module Evolver_ActuatorToggle(AF=0, stopTab=true, cutter=false, clearance=0.01, 
   extensionAngle = bodyAngle+abs(angle*3);
   helixOffsetX = tabOffsetX+tabLength;
   
-  color("Olive", alpha)
+  color("CornflowerBlue", alpha)
   RenderIf(!cutter) DebugHalf(enabled=debug)
   for (M = [0,1]) mirror([0,M,0])
   rotate([angle*AF,0,0])
