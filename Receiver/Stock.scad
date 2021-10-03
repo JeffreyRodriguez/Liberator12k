@@ -320,7 +320,7 @@ if ($preview) {
   
   if (_SHOW_LOWER) {
     LowerMount();
-    Lower(showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true);
+    Lower();
   }
   
   StockAssembly();

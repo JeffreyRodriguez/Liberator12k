@@ -812,7 +812,7 @@ if ($preview) {
     
     translate([-LowerMaxX(),0,ReceiverBottomZ()])
     Lower(showTrigger=true,
-          showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true);
+          );
     
   }
 } else {

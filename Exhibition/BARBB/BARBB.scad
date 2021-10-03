@@ -996,7 +996,7 @@ if ($preview) {
   BARBB_Foregrip();
 
   translate([LowerMaxX()+lowerX,0,-ReceiverBottomZ()])
-  Lower(showReceiverLugBolts=true,showGuardBolt=true, showHandleBolts=true);
+  Lower();
 
   translate([lowerX,0,0])
   color("Tan")

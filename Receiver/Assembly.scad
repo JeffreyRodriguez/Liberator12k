@@ -101,7 +101,7 @@ if ($preview) {
     StockAssembly(debug=_CUTAWAY_STOCK);
     
     if (_SHOW_LOWER) {
-      Lower(showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true);
+      Lower();
       LowerMount();
     }
   } else if (_CONFIGURATION == "Bullpup") {
@@ -110,7 +110,7 @@ if ($preview) {
     ReceiverBackSegment();
     
     if (_SHOW_LOWER) {
-      Lower(showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true);
+      Lower();
       LowerMount();
     }
   }

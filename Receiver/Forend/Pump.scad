@@ -216,7 +216,7 @@ module PumpShotgunAssembly(debug=false) {
     
     LowerMount();
     
-    Lower(showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true);
+    Lower();
     
   }
   

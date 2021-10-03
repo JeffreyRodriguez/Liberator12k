@@ -416,7 +416,7 @@ if ($preview) {
     LowerMount();
 
     if (_SHOW_LOWER)
-    Lower(showReceiverLugBolts=true, showGuardBolt=true, showHandleBolts=true);
+    Lower();
     
     if (_SHOW_RECEIVER) {
       
