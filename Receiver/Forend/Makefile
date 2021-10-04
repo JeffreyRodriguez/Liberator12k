@@ -52,7 +52,7 @@ Assembly: $(Assembly_STL)
 PRESET_STLS := $(TopBreak_STLS) $(Revolver_STLS)
 PRESET_ASSEMBLY_PNG := $(addsuffix /Assembly.png,$(PRESETS))
 PRESET_HTML := $(addsuffix /README.html,$(PRESETS))
-PRESET_STL_PREVIEWS := $(addsuffix .mp4, $(PRESET_STLS))
+PRESET_MP4 := $(addsuffix .mp4, $(PRESET_STLS))
 
 #CLASS_STLS := $(addsuffix .stl,$(CLASSES))
 CLASS_HTML := $(addsuffix /README.html,$(CLASSES))
@@ -114,7 +114,7 @@ $(PRESET_HTML): %/README.html : %.md %/Assembly.jpg %/Preview_thumb.jpg %/Previe
 $(CLASS_HTML): %/README.html : %.md
 	$(MDBIN) $< | sed 's/\.md/\.html/' > $@
 
-TARGETS = README.html $(CLASSES) $(CLASS_HTML) $(PRESETS) $(PRESET_HTML) $(PRESET_STLS) $(PRESET_STL_PREVIEWS) $(Assembly_STL)
+TARGETS = README.html $(CLASSES) $(CLASS_HTML) $(PRESETS) $(PRESET_HTML) $(PRESET_STLS) $(Assembly_STL) #$(PRESET_MP4) 
 
 clean-dir:
 	rm -rf $(TARGETS)
