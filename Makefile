@@ -42,7 +42,7 @@ Liberator12k.zip: $(DIST) FORCE
 	zip $@ $(DIST) $(Assembly)
 
 Liberator12k-assembly.zip: Receiver/Assembly Receiver/Forend/Assembly
-	zip $@ $<
+	zip -r $@ $<
 	
 dist: FORCE $(SUBDIRS)
 	$(MAKE) Liberator12k.zip
