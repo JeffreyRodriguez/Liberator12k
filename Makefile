@@ -4,6 +4,8 @@ MANUAL_IMAGES = $(wildcard .manual/*.jpg) $(shell find Receiver -name \*.jpg)
 MARKDOWN = $(wildcard *.md) $(shell find Receiver -name \*.md)
 MARKDOWN_HTML = $(addsuffix .html,$(basename $(MARKDOWN)))
 
+Assembly = Receiver/Assembly Receiver/Forend/Assembly
+
 MINUTEMAN_STL = Receiver/Frame_Receiver.stl $(wildcard Receiver/Components/*.stl) \
 							$(wildcard Receiver/Stock*.stl) $(wildcard Receiver/Lower*.stl) \
 							$(wildcard Receiver/FCG*.stl)
@@ -32,9 +34,15 @@ Version.md:
 	
 Manual.pdf: Version.md $(MARKDOWN_HTML) $(MANUAL_IMAGES) FORCE
 	htmldoc --batch Manual.book
+	
+Liberator12k-src.zip:
+	git archive -o $@ --format=zip HEAD .
 
 Liberator12k.zip: $(DIST) FORCE
-	zip Liberator12k.zip $(DIST)
+	zip $@ $(DIST) $(Assembly)
+
+Liberator12k-assembly.zip: Receiver/Assembly Receiver/Forend/Assembly
+	zip $@ $<
 	
 dist: FORCE $(SUBDIRS)
 	$(MAKE) Liberator12k.zip
@@ -43,4 +51,4 @@ clean-dir:
 	rm -rf $(MARKDOWN_HTML) Liberator12k.zip Version.md changelog.txt
 
 all: $(SUBDIRS) dist
-.PHONY: STL MARKDOWN_HTML dist
+.PHONY: STL MARKDOWN_HTML dist Assembly

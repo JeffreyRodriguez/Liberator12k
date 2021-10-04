@@ -33,10 +33,10 @@ use <../Lower.scad>;
 use <../Receiver.scad>;
 use <../Stock.scad>;
 
-/* [Print] */
+/* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Frame_Receiver", "Revolver_ReceiverFront", "Revolver_FrameSpacer", "Revolver_Foregrip", "Revolver_VerticalForegrip", "Revolver_CylinderCore", "Revolver_CylinderShell", "Revolver_BarrelSupport", "Revolver_ForendSpindleToggleLinkage", "Revolver_ForendSpindleToggleHandle", "Revolver_Projection_Cylinder", "Revolver_Projection_CylinderCore", "Revolver_Projection_BlastPlate", "Revolver_Projection_RecoilPlate"]
+_RENDER = ""; // ["", "ReceiverFront", "FrameSpacer", "Foregrip", "VerticalForegrip", "CylinderCore", "CylinderShell", "BarrelSupport", "ForendSpindleToggleLinkage", "ForendSpindleToggleHandle", "Projection_Cylinder", "Projection_CylinderCore", "Projection_BlastPlate", "Projection_RecoilPlate"]
 
 /* [Assembly] */
 
@@ -986,38 +986,38 @@ if ($preview) {
   RevolverAssembly();
 } else {
 
-  if (_RENDER == "Revolver_ReceiverFront")
+  if (_RENDER == "ReceiverFront")
   Revolver_ReceiverFront_print();
   
-  if (_RENDER == "Revolver_BarrelSupport")
+  if (_RENDER == "BarrelSupport")
   Revolver_BarrelSupport_print();
 
-  if (_RENDER == "Revolver_ForendSpindleToggleLinkage")
+  if (_RENDER == "ForendSpindleToggleLinkage")
   Revolver_ForendSpindleToggleLinkage_print();
 
-  if (_RENDER == "Revolver_ForendSpindleToggleHandle")
+  if (_RENDER == "ForendSpindleToggleHandle")
   Revolver_ForendSpindleToggleHandle_print();
   
-  if (_RENDER == "Revolver_FrameSpacer")
+  if (_RENDER == "FrameSpacer")
   Revolver_FrameSpacer_print();
   
-  if (_RENDER == "Revolver_Foregrip")
+  if (_RENDER == "Foregrip")
   Revolver_Foregrip_print();
   
-  if (_RENDER == "Revolver_CylinderCore")
+  if (_RENDER == "CylinderCore")
   Revolver_CylinderCore_print();
   
-  if (_RENDER == "Revolver_CylinderShell")
+  if (_RENDER == "CylinderShell")
   Revolver_CylinderShell_print();
   
-  if (_RENDER == "Revolver_Projection_Cylinder")
+  if (_RENDER == "Projection_Cylinder")
   projection()
   Revolver_Cylinder(chambers=false);
   
-  if (_RENDER == "Revolver_Projection_CylinderCore")
+  if (_RENDER == "Projection_CylinderCore")
   projection(cut=true)
   Revolver_CylinderCore_print();
   
-  if (_RENDER == "Revolver_Projection_BlastPlate")
+  if (_RENDER == "Projection_BlastPlate")
   Revolver_BlastPlate_Projection();
 }

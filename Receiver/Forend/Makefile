@@ -4,37 +4,67 @@ include ../../Makefile.in
 CLASSES := TopBreak Revolver
 
 # Forend Class Parts
-TopBreak := ReceiverFront \
-            Forend \
-            BarrelCollar \
-            Extractor \
-						BarrelSleeveFixture
-Revolver := ReceiverFront \
-						FrameSpacer \
-						BarrelSupport \
-						Foregrip \
-						CylinderCore \
-						CylinderShell \
-						ForendSpindleToggleLinkage \
-						ForendSpindleToggleHandle
+TopBreak_Parts := ReceiverFront \
+		              Forend \
+                  BarrelCollar \
+                  Extractor \
+						      BarrelSleeveFixture
+TopBreak_Hardware := Barrel \
+                     ExtractorBit \
+										 ExtractorRetainer \
+										 MlokBolts
+
+Revolver_Parts := ReceiverFront \
+						      FrameSpacer \
+						      BarrelSupport \
+						      Foregrip \
+						      CylinderCore \
+						      CylinderShell \
+						      ForendSpindleToggleLinkage \
+						      ForendSpindleToggleHandle
+Revolver_Hardware := Barrel \
+                     CylinderSpindle \
+										 ForendSpindle \
+										 ForendSpindlePin \
+										 ForendSpindleLinkagePin \
+										 ForendSpindleTogglePin \
+										 PumpLockRod \
+										 BlastPlateBolts \
+										 BlatePlate \
+										 Shield
 
 # Forend Presets
-TopBreak_PRESETS := CAFE12 CAFE12+ FP37 
+TopBreak_PRESETS := CAFE12 CAFE12+ FP37
 Revolver_PRESETS := ZZR6x12
 
 PRESETS := $(addprefix TopBreak_,$(TopBreak_PRESETS)) $(addprefix Revolver_,$(Revolver_PRESETS))
 
-# All Part STLs for all forend presets
-TopBreak_STLS := $(addprefix TopBreak_, $(foreach PRESET,$(TopBreak_PRESETS),$(addsuffix .stl, $(addprefix $(addsuffix /, $(PRESET)),$(TopBreak)))))
-Revolver_STLS := $(addprefix Revolver_, $(foreach PRESET,$(Revolver_PRESETS),$(addsuffix .stl, $(addprefix $(addsuffix /, $(PRESET)),$(Revolver)))))
+# All Part STLs for all forend presets Class_Preset/Part.stl
+TopBreak_STLS := $(addprefix TopBreak_, $(foreach PRESET,$(TopBreak_PRESETS),$(addsuffix .stl, $(addprefix $(addsuffix /, $(PRESET)),$(TopBreak_Parts)))))
+Revolver_STLS := $(addprefix Revolver_, $(foreach PRESET,$(Revolver_PRESETS),$(addsuffix .stl, $(addprefix $(addsuffix /, $(PRESET)),$(Revolver_Parts)))))
+
+TopBreak_Hardware_STL := $(addprefix TopBreak_, $(foreach PRESET,$(TopBreak_PRESETS),$(addsuffix .stl, $(addprefix $(addsuffix /, $(PRESET)),$(TopBreak_Hardware)))))
+
+Assembly_STL=$(addprefix Assembly/, $(TopBreak_STLS) $(Revolver_STLS));
+
+Assembly: $(Assembly_STL)
 
 PRESET_STLS := $(TopBreak_STLS) $(Revolver_STLS)
 PRESET_ASSEMBLY_PNG := $(addsuffix /Assembly.png,$(PRESETS))
 PRESET_HTML := $(addsuffix /README.html,$(PRESETS))
 PRESET_STL_PREVIEWS := $(addsuffix .mp4, $(PRESET_STLS))
 
-CLASS_STLS := $(addsuffix .stl,$(CLASSES))
+#CLASS_STLS := $(addsuffix .stl,$(CLASSES))
 CLASS_HTML := $(addsuffix /README.html,$(CLASSES))
+
+Assembly/%_*: %.scad Assembly/
+	$(eval CLASS_PRESET=$(firstword $(subst /, , $(subst Assembly/,, $@))))
+	$(eval CLASS=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$1 }'))
+	$(eval PRESET=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$2 }'))
+	$(eval PART=$(basename $(notdir $@)))
+	$(OSBIN) $(OSOPTS) -o $@ --render \
+	  -D _RENDER=\"$(PART)\"  -D _RENDER_PRINT=false \
+	  $(CLASS).scad
 
 $(PRESET_STLS): $(PRESETS)
 	$(eval CLASS_PRESET=$(firstword $(subst /, ,$@)))
@@ -48,7 +78,8 @@ $(PRESET_STLS): $(PRESETS)
 	@echo Preset: $(PRESET)
 	@echo Part: $(PART)
 	@mkdir -p $(dir $@) && \
-	$(OSBIN) $(OSOPTS) --render -D _RENDER=\"$(CLASS)_$(PART)\" \
+	$(OSBIN) $(OSOPTS) --render \
+	  -D _RENDER=\"$(PART)\" -D _RENDER_PRINT=false \
 		--projection=p --camera=0,400,400,0,100,100 \
 		-o $@ -o $(CLASS_PRESET)/$(PART).png \
 		-P $(PRESET) \
@@ -83,5 +114,9 @@ $(PRESET_HTML): %/README.html : %.md %/Assembly.jpg %/Preview_thumb.jpg %/Previe
 $(CLASS_HTML): %/README.html : %.md
 	$(MDBIN) $< | sed 's/\.md/\.html/' > $@
 
-all: README.html $(CLASSES) $(CLASS_HTML) $(PRESETS) $(PRESET_HTML) $(PRESET_STLS) $(PRESET_STL_PREVIEWS)
-	
+TARGETS = README.html $(CLASSES) $(CLASS_HTML) $(PRESETS) $(PRESET_HTML) $(PRESET_STLS) $(PRESET_STL_PREVIEWS) $(Assembly_STL)
+
+clean-dir:
+	rm -rf $(TARGETS)
+
+all: $(SUBDIRS) $(TARGETS)

@@ -18,8 +18,57 @@ $(SUBDIRS): FORCE
 	$(MAKE) -C $@
 
 define list_parts
- $(shell grep -oP 'if \(_RENDER == "([\w_]+)"\)' $(1) | cut -d\" -f 2)
+	$(shell grep -oP 'if \(_RENDER == "([\w_]+)"\)' $(1) | cut -d\" -f 2)
 endef
+
+define render
+	$(eval NAME=$(subst Assembly/, ,$(basename $@)))
+	$(eval CLASS_PRESET=$(firstword $(subst /, ,$(NAME))))
+	$(eval CLASS=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$1 }'))
+	$(eval PRESET=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$2 }'))
+	$(eval PART=$(basename $(notdir $@)))
+	@echo Target: $@
+	@echo Target Dir: $(dir $@)
+	@echo Deps: $^
+	@echo Name: $(NAME)
+	@echo Class_Preset: $(CLASS_PRESET)
+	@echo Class: $(CLASS)
+	@echo Preset: $(PRESET)
+	@echo Part: $(PART)
+	mkdir -p $(dir $@) && \
+	$(OSBIN) $(OSOPTS) -o $@ -o $(basename $@).png \
+		--render --projection=p --autocenter --viewall --view scales \
+		$(if $(PRESET),-p $(CLASS).json -P $(PRESET),) \
+		-D _RENDER=\"$(PART)\" \
+		-D _RENDER_PRINT=$(if $(findstring Assembly/,$@),false,true) \
+		$(CLASS).scad
+endef
+
+Assembly/:
+	mkdir -p Assembly
+
+#Assembly/*.stl:
+%.png %.stl:
+	$(eval NAME=$(subst Assembly/, ,$(basename $@)))
+	$(eval CLASS_PRESET=$(firstword $(subst /, ,$(NAME))))
+	$(eval CLASS=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$1 }'))
+	$(eval PRESET=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$2 }'))
+	$(eval PART=$(basename $(notdir $@)))
+	@echo Target: $@
+	@echo Target Dir: $(dir $@)
+	@echo Deps: $^
+	@echo Name: $(NAME)
+	@echo Class_Preset: $(CLASS_PRESET)
+	@echo Class: $(CLASS)
+	@echo Preset: $(PRESET)
+	@echo Part: $(PART)
+	mkdir -p $(dir $@) && \
+	$(OSBIN) $(OSOPTS) -o $@ -o $(basename $@).png \
+		--render --projection=p --autocenter --viewall --view scales \
+		$(if $(PRESET),-p $(CLASS).json -P $(PRESET),) \
+		-D _RENDER=\"$(PART)\" \
+		-D _RENDER_PRINT=$(if $(findstring Assembly/,$@),false,true) \
+		$(CLASS).scad
 
 %.stl.mp4:
 	$(eval PART=$(basename $(notdir $@)))
@@ -50,39 +99,6 @@ endef
 	$(MDBIN) $(basename $@).md \
 	  | sed 's/<table>/<table border="1">/g' \
 	  | sed 's/.md/.html/' > $@
-
-%.png %.stl: %.scad
-	$(eval PART=$(basename $(notdir $@)))
-	$(OSBIN) $(OSOPTS) -o $(basename $@).stl -o $(basename $@).png \
-	--render -D _RENDER=\"$(PART)\" \
-	--projection=p --autocenter --viewall --view scales \
-	$<
-
-%.png %.stl:
-	$(eval PART=$(basename $(notdir $@)))
-	$(eval SOURCE=$(shell echo $@ | awk -F _ '{ print $$1 }'))
-	$(OSBIN) $(OSOPTS) -o $(basename $@).stl -o $(basename $@).png \
-	--render -D _RENDER=\"$(PART)\" \
-	--projection=p --autocenter --viewall --view scales \
-	$(SOURCE).scad
-
-Assembly/:
-	mkdir -p Assembly
-
-Assembly/%.stl: Assembly/%.scad Assembly/
-	$(eval PART=$(basename $(notdir $@)))
-	$(OSBIN) $(OSOPTS) -o $@ \
-	--render -D _RENDER=\"$(PART)\"  -D _RENDER_PRINT=false \
-	--projection=p --autocenter --viewall --view scales \
-	$(basename $(notdir $<)).scad
-
-Assembly/%.stl:  Assembly/
-	$(eval PART=$(basename $(notdir $@)))
-	$(eval SOURCE=$(shell echo $(notdir $(basename $@)) | awk -F _ '{ print $$1 }'))
-	$(OSBIN) $(OSOPTS) -o $@ \
-	--render -D _RENDER=\"$(PART)\" -D _RENDER_PRINT=false \
-	--projection=p --autocenter --viewall --view scales \
-	$(SOURCE).scad
 
 clean: FORCE clean-dir
 	for DIR in $(SUBDIRS); do \

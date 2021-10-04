@@ -39,13 +39,14 @@ Parts_STL_thumb=$(addsuffix _thumb.jpg, $(Parts))
 Hardware=$(Receiver_Hardware) $(Frame_Hardware) $(Stock_Hardware) $(FCG_Hardware) $(Lower_Hardware)
 Hardware_STL= $(addsuffix .stl, $(Hardware))
 
-Assembly_STL=$(addprefix Assembly/, $(Parts_STL) $(Hardware_STL));
+Assembly_STL=$(addprefix Assembly/, $(Parts_STL) $(Hardware_STL))
+Assembly: $(Assembly_STL)
 
 Preview=CAFE12 Minuteman Frame Stock Lower FCG
 Preview_PNG=$(addprefix Preview_,$(addsuffix .jpg, $(VIEWS)))
 Preview_JPG=$(addprefix Preview_,$(addsuffix .jpg, $(VIEWS)))
 
-TARGETS = README.html $(Preview_PNG) $(Preview_JPG) $(Components_HTML) $(Parts_STL) $(Parts_STL_png) $(Parts_STL_thumb) $(Preview_STL)
+TARGETS = README.html $(Preview_PNG) $(Preview_JPG) $(Components_HTML) $(Parts_STL) $(Parts_STL_png) $(Parts_STL_thumb) $(Preview_STL) $(Assembly_STL)
 
 Preview_Minuteman.png: Assembly.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \

@@ -33,7 +33,7 @@ use <../Stock.scad>;
 /* [Export] */
 
 // Select a part, Render it (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "TopBreak_ReceiverFront", "TopBreak_Forend", "TopBreak_BarrelCollar", "TopBreak_Extractor", "TopBreak_Latch", "TopBreak_Foregrip", "TopBreak_BarrelSleeveFixture"]
+_RENDER = ""; // ["", "ReceiverFront", "Forend", "BarrelCollar", "Extractor", "Latch", "Foregrip", "BarrelSleeveFixture"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;
@@ -889,17 +889,20 @@ if ($preview) {
   };
 } else {
   
+  echo("Part: ", _RENDER);
+  echo("Orientation: ", (_RENDER_PRINT ? "Print" : "Assembly"));
+  
   // *****************
   // * Printed Parts *
   // *****************
-  if (_RENDER == "TopBreak_BarrelCollar")
+  if (_RENDER == "BarrelCollar")
     if (!_RENDER_PRINT)
       TopBreak_BarrelCollar();
     else
       rotate([0,-90,0])
       TopBreak_BarrelCollar();
 
-  if (_RENDER == "TopBreak_ReceiverFront")
+  if (_RENDER == "ReceiverFront")
     if (!_RENDER_PRINT)
       TopBreak_ReceiverFront();
     else
@@ -907,7 +910,7 @@ if ($preview) {
       translate([--TopBreak_ReceiverFrontLength(),0,0])
       TopBreak_ReceiverFront();
 
-  if (_RENDER == "TopBreak_Forend")
+  if (_RENDER == "Forend")
     if (!_RENDER_PRINT)
       TopBreak_Forend();
     else
@@ -915,7 +918,7 @@ if ($preview) {
       translate([-ForendLength(),0,0])
       TopBreak_Forend();
 
-  if (_RENDER == "TopBreak_Foregrip")
+  if (_RENDER == "Foregrip")
     if (!_RENDER_PRINT)
       TopBreak_Foregrip();
     else
@@ -924,7 +927,7 @@ if ($preview) {
       translate([-(TopBreak_ForegripOffsetX()+ChargerTravel()),0,0])
       TopBreak_Foregrip();
 
-  if (_RENDER == "TopBreak_Extractor")
+  if (_RENDER == "Extractor")
     if (!_RENDER_PRINT)
       TopBreak_Extractor();
     else
@@ -934,7 +937,7 @@ if ($preview) {
   // ********************
   // * Fixures and Jigs *
   // ********************
-  if (_RENDER == "TopBreak_BarrelSleeveFixture")
+  if (_RENDER == "BarrelSleeveFixture")
     if (!_RENDER_PRINT)
       TopBreak_BarrelSleeveFixture();
     else
@@ -943,15 +946,15 @@ if ($preview) {
   // ************
   // * Hardware *
   // ************
-  if (_RENDER == "TopBreak_Barrel")
+  if (_RENDER == "Barrel")
   TopBreak_Barrel();
   
-  if (_RENDER == "TopBreak_ExtractorBit")
+  if (_RENDER == "ExtractorBit")
   TopBreak_ExtractorBit();
   
-  if (_RENDER == "TopBreak_ExtractorRetainer")
+  if (_RENDER == "ExtractorRetainer")
   TopBreak_ExtractorRetainer();
   
-  if (_RENDER == "TopBreak_MlokBolts")
+  if (_RENDER == "MlokBolts")
   TopBreak_MlokBolts();
 }
