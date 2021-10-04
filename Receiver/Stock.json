@@ -1,0 +1,11 @@
+{
+    "parameterSets": {
+        "design default values": {
+            "BUTTPAD_BOLT": "1/4\"-20",
+            "BUTTPAD_BOLT_CLEARANCE": "0.015",
+            "Stock_Backplate_BOLT": "#8-32",
+            "Stock_Backplate_CLEARANCE": "0.015"
+        }
+    },
+    "fileFormatVersion": "1"
+}
