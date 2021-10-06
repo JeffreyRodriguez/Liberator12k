@@ -22,16 +22,17 @@ Revolver_Parts := ReceiverFront \
 						      CylinderShell \
 						      ForendSpindleToggleLinkage \
 						      ForendSpindleToggleHandle
-Revolver_Hardware := Barrel \
-                     CylinderSpindle \
-										 ForendSpindle \
-										 ForendSpindlePin \
-										 ForendSpindleLinkagePin \
-										 ForendSpindleTogglePin \
-										 PumpLockRod \
-										 BlastPlateBolts \
-										 BlatePlate \
-										 Shield
+
+# Revolver_Hardware := Barrel \
+#                      CylinderSpindle \
+# 										 ForendSpindle \
+# 										 ForendSpindlePin \
+# 										 ForendSpindleLinkagePin \
+# 										 ForendSpindleTogglePin \
+# 										 PumpLockRod \
+# 										 BlastPlateBolts \
+# 										 BlatePlate \
+# 										 Shield
 
 # Forend Presets
 TopBreak_PRESETS := CAFE12 CAFE12+ FP37
@@ -44,8 +45,9 @@ TopBreak_STLS := $(addprefix TopBreak_, $(foreach PRESET,$(TopBreak_PRESETS),$(a
 Revolver_STLS := $(addprefix Revolver_, $(foreach PRESET,$(Revolver_PRESETS),$(addsuffix .stl, $(addprefix $(addsuffix /, $(PRESET)),$(Revolver_Parts)))))
 
 TopBreak_Hardware_STL := $(addprefix TopBreak_, $(foreach PRESET,$(TopBreak_PRESETS),$(addsuffix .stl, $(addprefix $(addsuffix /, $(PRESET)),$(TopBreak_Hardware)))))
+Revolver_Hardware_STL := $(addprefix Revolver_, $(foreach PRESET,$(Revolver_PRESETS),$(addsuffix .stl, $(addprefix $(addsuffix /, $(PRESET)),$(Revolver_Hardware)))))
 
-Assembly_STL=$(addprefix Assembly/, $(TopBreak_STLS) $(Revolver_STLS));
+Assembly_STL=$(addprefix Assembly/, $(TopBreak_STLS) $(TopBreak_Hardware_STL) $(Revolver_STLS) $(Revolver_Hardware_STL));
 
 Assembly: $(Assembly_STL)
 

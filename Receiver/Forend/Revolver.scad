@@ -370,12 +370,6 @@ module Revolver_BlastPlate(clearance=0.01, holeClearance=0.002, cutter=false, de
   }
 }
 
-module Revolver_BlastPlate_Projection() {
-  projection()
-  rotate([0,-90,0])
-  translate([-BarrelMinX(),0,-CylinderZ()])
-  Revolver_BlastPlate();
-}
 module Revolver_Shield(cutter=false, debug=false) {
   color("LightSteelBlue")
   RenderIf(!cutter) DebugHalf(enabled=debug)
@@ -431,11 +425,6 @@ module Revolver_ReceiverFront(contoured=true, debug=_CUTAWAY_RECEIVER_FRONT, alp
     Revolver_ForendSpindle(cutter=true);
     Revolver_CylinderSpindle(cutter=true);
   }
-}
-
-module Revolver_ReceiverFront_print() {
-  rotate([0,-90,0])
-  Revolver_ReceiverFront();
 }
 
 module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND) {
@@ -583,12 +572,6 @@ module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND) {
   }
 }
 
-module Revolver_BarrelSupport_print() {
-  rotate([0,90,0]) translate([-ForendMaxX(),0,0])
-  render()
-  Revolver_BarrelSupport(doRender=false);
-}
-
 module Revolver_FrameSpacer(length=ForendMinX(), debug=false, alpha=_ALPHA_FOREND) {
   extraBottom=0;
   
@@ -618,16 +601,6 @@ module Revolver_FrameSpacer(length=ForendMinX(), debug=false, alpha=_ALPHA_FOREN
   }
 }
 
-module Revolver_FrameSpacer_print() {
-  rotate([0,-90,0])
-  translate([0,0,-FrameBoltZ()])
-  Revolver_FrameSpacer();
-}
-
-
-
-
-        
 module Revolver_ForendSpindleToggleLinkage(pivot=0, cutter=false, clearance=0.01) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
@@ -667,11 +640,6 @@ module Revolver_ForendSpindleToggleLinkage(pivot=0, cutter=false, clearance=0.01
     
     children();
   }
-}
-module Revolver_ForendSpindleToggleLinkage_print() {
-  rotate([-90,0,0])
-  translate([-SpindleLinkagePinX(),-0.5,-CylinderZ()])
-  Revolver_ForendSpindleToggleLinkage();
 }
 module Revolver_ForendSpindleToggleHandle(pivot=0, cutter=false, clearance=0.01, teardrop=false) {
   clear = cutter ? clearance : 0;
@@ -726,12 +694,6 @@ module Revolver_ForendSpindleToggleHandle(pivot=0, cutter=false, clearance=0.01,
     children();
   }
 }
-module Revolver_ForendSpindleToggleHandle_print() {
-  rotate([90,0,0])
-  translate([-SpindlePinMinX(),(5/16/2),-CylinderZ()])
-  Revolver_ForendSpindleToggleHandle();
-}
-
 module Revolver_Cylinder(chambers=true, supports=true, chamberBolts=false, debug=_CUTAWAY_CYLINDER, alpha=_ALPHA_CYLINDER, render_cylinder=true) {
   OffsetZigZagRevolver(
       diameter=CYLINDER_DIAMETER,
@@ -748,30 +710,6 @@ module Revolver_Cylinder(chambers=true, supports=true, chamberBolts=false, debug
       chambers=chambers, chamberLength=ChamberLength(),
       debug=debug, alpha=alpha,
       render_cylinder=render_cylinder);
-}
-
-module Revolver_CylinderCore_print() {
-  render()
-  intersection() {
-  
-    translate([0,0, CYLINDER_LENGTH])
-    rotate([0,180,0])
-    Revolver_Cylinder(chambers=false, render_cylinder=false);
-    
-    cylinder(r=CYLINDER_OFFSET-(BARREL_DIAMETER*0.33), h=0.5);
-  }
-}
-
-module Revolver_CylinderShell_print() {
-  render()
-  difference() {
-  
-    translate([0,0, CYLINDER_LENGTH])
-    rotate([0,180,0])
-    Revolver_Cylinder(render_cylinder=false, chambers=false);
-    
-    cylinder(r=CYLINDER_OFFSET+0.0625, h=CYLINDER_LENGTH+ManifoldGap());
-  }
 }
 
 module Revolver_VerticalForegrip(length=2, debug=true, alpha=1) {
@@ -987,37 +925,66 @@ if ($preview) {
 } else {
 
   if (_RENDER == "ReceiverFront")
-  Revolver_ReceiverFront_print();
-  
-  if (_RENDER == "BarrelSupport")
-  Revolver_BarrelSupport_print();
-
-  if (_RENDER == "ForendSpindleToggleLinkage")
-  Revolver_ForendSpindleToggleLinkage_print();
-
-  if (_RENDER == "ForendSpindleToggleHandle")
-  Revolver_ForendSpindleToggleHandle_print();
+  rotate([0,-90,0])
+  Revolver_ReceiverFront();
   
   if (_RENDER == "FrameSpacer")
-  Revolver_FrameSpacer_print();
+  rotate([0,-90,0])
+  translate([0,0,-FrameBoltZ()])
+  Revolver_FrameSpacer();
+  
+  if (_RENDER == "BarrelSupport")
+  rotate([0,90,0]) translate([-ForendMaxX(),0,0])
+  Revolver_BarrelSupport();
+  
+  if (_RENDER == "CylinderShell")
+  difference() {
+    translate([0,0, CYLINDER_LENGTH])
+    rotate([0,180,0])
+    Revolver_Cylinder(render_cylinder=false, chambers=false);
+    
+    cylinder(r=CYLINDER_OFFSET+0.0625, h=CYLINDER_LENGTH+ManifoldGap());
+  }
+  
+  if (_RENDER == "CylinderCore")
+  intersection() {
+    translate([0,0, CYLINDER_LENGTH])
+    rotate([0,180,0])
+    Revolver_Cylinder(chambers=false, render_cylinder=false);
+    
+    cylinder(r=CYLINDER_OFFSET-(BARREL_DIAMETER*0.33), h=0.5);
+  }
+
+  if (_RENDER == "ForendSpindleToggleLinkage")
+  rotate([-90,0,0])
+  translate([-SpindleLinkagePinX(),-0.5,-CylinderZ()])
+  Revolver_ForendSpindleToggleLinkage();
+
+  if (_RENDER == "ForendSpindleToggleHandle")
+  rotate([90,0,0])
+  translate([-SpindlePinMinX(),(5/16/2),-CylinderZ()])
+  Revolver_ForendSpindleToggleHandle();
+  
+  if (_RENDER == "Cylinder_Projection")
+  projection()
+  Revolver_Cylinder(chambers=false);
   
   if (_RENDER == "Foregrip")
   Revolver_Foregrip_print();
   
-  if (_RENDER == "CylinderCore")
-  Revolver_CylinderCore_print();
-  
-  if (_RENDER == "CylinderShell")
-  Revolver_CylinderShell_print();
-  
-  if (_RENDER == "Projection_Cylinder")
-  projection()
-  Revolver_Cylinder(chambers=false);
-  
   if (_RENDER == "Projection_CylinderCore")
   projection(cut=true)
-  Revolver_CylinderCore_print();
+  intersection() {
+    translate([0,0, CYLINDER_LENGTH])
+    rotate([0,180,0])
+    Revolver_Cylinder(chambers=false, render_cylinder=false);
+    
+    cylinder(r=CYLINDER_OFFSET-(BARREL_DIAMETER*0.33), h=0.5);
+  }
   
   if (_RENDER == "Projection_BlastPlate")
-  Revolver_BlastPlate_Projection();
+  projection()
+  rotate([0,-90,0])
+  translate([-BarrelMinX(),0,-CylinderZ()])
+  Revolver_BlastPlate();
 }
