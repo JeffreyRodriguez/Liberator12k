@@ -225,14 +225,14 @@ function TopBreak_LatchY() = (TopBreak_ExtractorHousingWidth()/2)
                            + (TopBreak_LatchWidth()/2);
 
 // Pivot modules
-module PivotClearanceCut(cut=true, width=PivotWidth(), depth=2,
+module PivotClearanceCut(offsetX=0, cut=true, width=PivotWidth(),
                          clearance=0.005) {
   difference() {
     children();
   
     // Trim off anything that won't clear the pivot
     if (cut)
-    translate([PivotX(), 0, PivotZ()])
+    translate([PivotX()+offsetX, 0, PivotZ()])
     rotate([90,0,0])
     linear_extrude(height=width, center=true)
     rotate(180) mirror([0,1])
@@ -746,7 +746,7 @@ module TopBreak_LatchTab(debug=false, cutter=false, clearance=0.01, alpha=1) {
     union() {
       
       // Latch Tab Body
-      PivotClearanceCut(cut=true)
+      PivotClearanceCut(offsetX=-TopBreak_LatchTravel(), cut=true)
       translate([0,
                  -(BarrelSleeveRadius()+WallBarrel()),
                  TopBreak_LatchZ()-TopBreak_LatchWall()-TopBreak_LatchTabHeight()-clearance])
