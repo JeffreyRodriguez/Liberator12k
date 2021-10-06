@@ -348,7 +348,7 @@ module TopBreak_LatchScrews(head="flat", doMirror=true, debug=false, cutter=fals
   translate([0.75,TopBreak_LatchY(),TopBreak_LatchZ()-TopBreak_LatchWall()-0.51])
   rotate([0,180,0])
   Bolt(bolt=GPBolt(),
-       length=1+ManifoldGap(), clearance=clear,
+       length=0.875+ManifoldGap(), clearance=clear,
        head=head, capHeightExtra=(cutter?1:0), capOrientation=true);
 
 }
