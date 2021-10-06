@@ -34,6 +34,8 @@ _SHOW_TRIGGER_MIDDLE = true;
 _SHOW_FIRE_CONTROL_HOUSING = true;
 _SHOW_FCG_Disconnector = true;
 _SHOW_FCG_Hammer = true;
+_SHOW_CHARGING_HANDLE = true;
+_SHOW_HAMMER_TAIL = true;
 _SHOW_ACTION_ROD = true;
 _SHOW_FIRING_PIN = true;
 _SHOW_RECOIL_PLATE = true;
@@ -352,7 +354,6 @@ module FCG_HammerBolt(clearance=FCG_Hammer_BOLT_CLEARANCE, head=HAMMER_BOLT_HEAD
                      : head == "socket" ? BoltSocketCapHeight(FCG_HammerBolt())
                      : 0;
   
-  color("Silver") RenderIf(!cutter)
   translate([FCG_HammerCockedX+ManifoldGap()
              -boltHeadAdjustment,0,0])
   rotate([0,90,0])
@@ -362,7 +363,8 @@ module FCG_HammerBolt(clearance=FCG_Hammer_BOLT_CLEARANCE, head=HAMMER_BOLT_HEAD
              nutBackset=3.25+boltHeadAdjustment,
              nutHeightExtra=(cutter?1:0),
              capOrientation=true,
-             clearance=(cutter?clearance:0));
+             clearance=(cutter?clearance:0),
+             doRender=!cutter);
 }
 module Sear(animationFactor=0, length=SearLength(), cutter=false, clearance=SEAR_CLEARANCE) {
   clear = cutter ? clearance : 0;
@@ -544,22 +546,12 @@ module RecoilPlate(length=RecoilPlateLength(), spindleZ=-1, contoured=true, cutt
 }
 
 module FCG_ChargingHandleBolt(bolt=FCG_ChargingHandleBolt(), boltLength=0.25, cutter=false, clearance=CHARGING_HANDLE_BOLT_CLEARANCE) {
-  color("Silver")
-  RenderIf(!cutter)
   translate([-0.75,-0.25,ReceiverTopSlotHeight()])
   mirror([0,0,1])
   NutAndBolt(bolt=bolt, boltLength=boltLength+ManifoldGap(2),
         head="socket", nut="heatset",
-        clearance=cutter?clearance:0);
-  
-  *color("Silver")
-  RenderIf(!cutter)
-  translate([-ReceiverLength()+(ReceiverBackLength()/2),
-             1-0.25,
-             ReceiverTopSlotHeight()-ReceiverTopSlotHorizontalHeight()])
-  NutAndBolt(bolt=bolt, boltLength=boltLength+ManifoldGap(2),
-        head="socket", nut="heatset",
-        clearance=cutter?clearance:0);
+        clearance=cutter?clearance:0,
+        doRender=!cutter);
 }
 
 
@@ -1266,6 +1258,7 @@ module SimpleFireControlAssembly(actionRod=_SHOW_ACTION_ROD, recoilPlate=_SHOW_R
 
   *FCG_ChargingHandleSpring();
 
+  if (_SHOW_CHARGING_HANDLE)
   translate([SubAnimate(ANIMATION_STEP_CHARGE, start=FCG_HammerChargeStart)*-(FCG_HammerTravelX+FCG_HammerOvertravelX),0,0])
   translate([SubAnimate(ANIMATION_STEP_CHARGER_RESET)*(FCG_HammerTravelX+FCG_HammerOvertravelX),0,0]) {
     FCG_ChargingHandle();
@@ -1310,6 +1303,7 @@ module SimpleFireControlAssembly(actionRod=_SHOW_ACTION_ROD, recoilPlate=_SHOW_R
   
   TriggerGroup(searLength=1.67188);
   
+  if(_SHOW_HAMMER_TAIL)
   FCG_HammerTail(debug=_CUTAWAY_FCG_Hammer, alpha=_ALPHA_FCG_Hammer);
   
   if (_SHOW_RECOIL_PLATE_BOLTS)

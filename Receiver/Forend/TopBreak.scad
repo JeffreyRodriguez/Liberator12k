@@ -295,14 +295,14 @@ module TopBreak_ExtractorRetainer(debug=false, cutter=false, teardrop=false, cle
   clear2 = clear*2;
 
   // Secure the TopBreak_Latch block to the TopBreak_Latch rod
-  color("Silver") RenderIf(!cutter)
   translate([TopBreak_ExtractorWidth()+TopBreak_ExtractorTravel()+0.5-clear,
              0,
              TopBreak_ExtractorZ()+TopBreak_ExtractorHeight()])
   NutAndBolt(bolt=GPBolt(),
        boltLength=TopBreak_ExtractorHeight()+ManifoldGap(), clearance=clear,
        head="socket", capHeightExtra=(cutter?abs(TopBreak_ExtractorZ())+FrameBoltZ():0), capOrientation=true,
-       nut="heatset-long", teardrop=teardrop);
+       nut="heatset-long", teardrop=teardrop,
+       doRender=!cutter);
 }
 
 module TopBreak_LatchRetainer(cutter=false, clearance=0.005) {

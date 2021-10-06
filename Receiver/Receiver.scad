@@ -121,22 +121,20 @@ module TensionBoltIterator() {
   children();
 }
 module Receiver_TensionBolts(bolt=TensionBolt(), headType=TENSION_HEAD_TYPE, nutType=TENSION_NUT_TYPE, length=12, cutter=false, clearance=TENSION_BOLT_CLEARANCE, teardrop=false, debug=false) {
-
-  color("Silver") RenderIf(!cutter) DebugHalf(enabled=debug)
   TensionBoltIterator()
   NutAndBolt(bolt=bolt,
              boltLength=length+ManifoldGap(2),
              head=headType, capHeightExtra=(cutter?0.375:0),
              nut=nutType,
              teardrop=cutter&&teardrop,
-             clearance=cutter?clearance:0);
+             clearance=cutter?clearance:0,
+             doRender=!cutter);
 }
 
 
 module Receiver_MlokBolts(headType="flat", nutType="heatset-long", length=0.5, cutter=false, clearance=0.005, teardrop=false, teardropAngle=180) {
   
   // Top Bolts
-  color("Silver") RenderIf(!cutter)
   for (X = [0,UnitsMetric(60)])
   translate([-0.75-X,0,ReceiverTopSlotHeight()+ReceiverSlotClearance()])
   NutAndBolt(bolt=MlokBolt(),
@@ -144,7 +142,8 @@ module Receiver_MlokBolts(headType="flat", nutType="heatset-long", length=0.5, c
              head=headType,
              nut=nutType, nutHeightExtra=(cutter?1:0),
              teardrop=cutter&&teardrop, teardropAngle=teardropAngle,
-             clearance=cutter?clearance:0);
+             clearance=cutter?clearance:0,
+             doRender=!cutter);
 }
 module Receiver_TakedownPin(cutter=false, clearance=0.005, alpha=1, debug=false) {
   clear = cutter ? clearance : 0;

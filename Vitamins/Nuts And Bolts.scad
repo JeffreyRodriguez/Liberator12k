@@ -1,6 +1,7 @@
 use <../Meta/Units.scad>;
 use <../Meta/Resolution.scad>;
 use <../Meta/Manifold.scad>;
+use <../Meta/RenderIf.scad>;
 use <../Meta/slookup.scad>;
 use <../Shapes/Teardrop.scad>;
 use <../Shapes/Teardrop Taper.scad>;
@@ -75,11 +76,12 @@ module Bolt(bolt=Spec_BoltTemplate(), length=1,
             clearance=0, threaded=false,
             teardrop=false, teardropTruncated=false, teardropAngle=0,
             capHeightExtra=0, $fn=undef,
-            capOrientation=false) {
+            capOrientation=false, doRender=true) {
 
   zOrientation = capOrientation ? -length : 0;
 
   translate([0,0,zOrientation])
+  color("Silver") RenderIf(doRender)
   union() {
     linear_extrude(height=length)
     Bolt2d(bolt=bolt, clearance=clearance,
@@ -107,9 +109,10 @@ module Bolt(bolt=Spec_BoltTemplate(), length=1,
       BoltHeadHex(bolt=bolt, clearance=clearance,
                   capHeightExtra=capHeightExtra);
     }
-
-    children();
   }
+  
+  translate([0,0,zOrientation])
+  children();
 }
 
 module BoltFlatHead(bolt, clearance=0, capHeightExtra=0, teardrop=false, teardropAngle=0) {
@@ -238,77 +241,34 @@ module NutAndBolt(bolt=Spec_BoltTemplate(), boltLength=1, boltLengthExtra=0,
                   nutSideExtra=0,
                   nutSideAngle=0,
                   clearance=0, teardrop=false, teardropAngle=0,
-                  capOrientation=false) {
+                  capOrientation=false, doRender=false) {
   zOrientation = capOrientation ? -boltLength : 0;
 
   translate([0,0,zOrientation])
-  union() {
 
-    // Bolt Body
-    translate([0,0,-boltLengthExtra])
-    Bolt(bolt=bolt, length=boltLength+boltLengthExtra,
-         head=head,
-         capHeightExtra=capHeightExtra,
-         clearance=clearance, teardrop=teardrop, teardropAngle=teardropAngle)
+  // Bolt Body
+  translate([0,0,-boltLengthExtra])
+  Bolt(bolt=bolt, length=boltLength+boltLengthExtra,
+       head=head,
+       capHeightExtra=capHeightExtra,
+       clearance=clearance, teardrop=teardrop, teardropAngle=teardropAngle,
+       doRender=doRender) {
 
+    // Nut
     translate([0,0,nutBackset])
     if (nut == "hex") {
+      
+      color("DimGrey") RenderIf(doRender)
       NutHex(bolt, nutHeightExtra=nutHeightExtra, clearance=clearance);
     } else if (nut == "heatset") {
+      
+      color("Gold") RenderIf(doRender)
       NutHeatset(bolt, teardrop=teardrop, teardropAngle=teardropAngle, extraLength=nutHeightExtra);
+      
     } else if (nut == "heatset-long") {
+      
+      color("Gold") RenderIf(doRender)
       NutHeatsetLong(bolt, teardrop=teardrop, teardropAngle=teardropAngle, extraLength=nutHeightExtra);
-    }
-  }
-}
-
-
-
-// M5x10 FIXME
-module FlatHeadBolt(diameter=UnitsImperial(0.193),
-                headDiameter=UnitsImperial(0.353),
-                   extraHead=UnitsImperial(1),
-                      length=UnitsImperial(0.3955),
-                        sink=UnitsImperial(0.01),
-                   clearance=UnitsImperial(0.01),
-                    teardrop=true,
-                      cutter=false) {
-  radius = diameter/2;
-  headRadius = headDiameter/2;
-
-  render()
-  translate([0,0,sink])
-  union() {
-
-    if (teardrop) {
-      linear_extrude(height=length)
-      Teardrop(r=radius+(cutter?clearance:0));
-    } else {
-      cylinder(r=radius+(cutter?clearance:0), h=length);
-    }
-
-    hull() {
-
-      // Taper
-      cylinder(r1=headRadius+(cutter?clearance:0), r2=0,
-                h=headRadius+(cutter?clearance:0));
-
-      // Taper teardrop hack
-      linear_extrude(height=ManifoldGap())
-      if (teardrop) {
-        Teardrop(r=headRadius+(cutter?clearance:0));
-      } else {
-        circle(r=headRadius+(cutter?clearance:0));
-      }
-    }
-
-    if (cutter)
-    translate([0,0,-extraHead])
-    linear_extrude(height=extraHead+ManifoldGap())
-    if (teardrop) {
-      Teardrop(r=headRadius+(cutter?clearance:0));
-    } else {
-      circle(r=headRadius+(cutter?clearance:0));
     }
   }
 }

@@ -147,6 +147,56 @@ handleMinX = stockMinX;//+stockWall;
 $fa = ResolutionFa();
 $fs = UnitsFs()*ResolutionFs();
 
+
+// M5x10 FIXME
+module FlatHeadBolt(diameter=UnitsImperial(0.193),
+                headDiameter=UnitsImperial(0.353),
+                   extraHead=UnitsImperial(1),
+                      length=UnitsImperial(0.3955),
+                        sink=UnitsImperial(0.01),
+                   clearance=UnitsImperial(0.01),
+                    teardrop=true,
+                      cutter=false) {
+  radius = diameter/2;
+  headRadius = headDiameter/2;
+
+  render()
+  translate([0,0,sink])
+  union() {
+
+    if (teardrop) {
+      linear_extrude(height=length)
+      Teardrop(r=radius+(cutter?clearance:0));
+    } else {
+      cylinder(r=radius+(cutter?clearance:0), h=length);
+    }
+
+    hull() {
+
+      // Taper
+      cylinder(r1=headRadius+(cutter?clearance:0), r2=0,
+                h=headRadius+(cutter?clearance:0));
+
+      // Taper teardrop hack
+      linear_extrude(height=ManifoldGap())
+      if (teardrop) {
+        Teardrop(r=headRadius+(cutter?clearance:0));
+      } else {
+        circle(r=headRadius+(cutter?clearance:0));
+      }
+    }
+
+    if (cutter)
+    translate([0,0,-extraHead])
+    linear_extrude(height=extraHead+ManifoldGap())
+    if (teardrop) {
+      Teardrop(r=headRadius+(cutter?clearance:0));
+    } else {
+      circle(r=headRadius+(cutter?clearance:0));
+    }
+  }
+}
+
 module PicRailBolts() {
   translate([ReceiverLugRearMinX()+(ReceiverLugRearLength()/2),0,
              barrelZ+0.5])

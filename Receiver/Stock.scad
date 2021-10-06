@@ -76,7 +76,6 @@ $fs = UnitsFs()*ResolutionFs();
 module Stock_ButtpadBolt(debug=false, head="flat", nut="heatset", cutter=false, teardrop=false, clearance=0.01, teardropAngle=0) {
   clear = cutter ? clearance : 0;
 
-  color("Silver") RenderIf(!cutter) DebugHalf(enabled=debug)
   for (Z = [0,-1.5])
   translate([StockMinX()-2, 0, Z])
   rotate([0,-90,0])
@@ -84,7 +83,8 @@ module Stock_ButtpadBolt(debug=false, head="flat", nut="heatset", cutter=false, 
              boltLength=3.5, capOrientation=true,
              head=head, capHeightExtra=(cutter?ButtpadLength():0),
              nut=nut, nutHeightExtra=(cutter?1:0),
-             clearance=clear, teardrop=cutter&&teardrop);
+             clearance=clear, teardrop=cutter&&teardrop,
+             doRender=!cutter);
 }
 module Stock_TakedownPin(cutter=false, clearance=0.005, alpha=1, debug=false) {
   clear = cutter ? clearance : 0;

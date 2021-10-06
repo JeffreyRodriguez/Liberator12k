@@ -148,7 +148,6 @@ module Lower_Bolts(boltSpec=LowerBolt(),
                   teardropAngle=90) {
 
   // Receiver lug bolt
-  color("Silver")
   for (bolt = Lower_BoltsArray())
   translate([Lower_BoltX(bolt), -length/2, Lower_BoltZ(bolt)])
   rotate([90,0,0])
@@ -158,7 +157,8 @@ module Lower_Bolts(boltSpec=LowerBolt(),
              teardrop=teardrop, teardropAngle=teardropAngle,
              clearance=(cutter?clearance:0), capOrientation=true,
              capHeightExtra=cutter ? 1 : 0,
-             nutHeightExtra=cutter ? 1 : 0);
+             nutHeightExtra=cutter ? 1 : 0,
+             doRender=!cutter);
 }
 
 module Lower_MountTakedownPinRetainer(cutter=false, clearance=0.005) {

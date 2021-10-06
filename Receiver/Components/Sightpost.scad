@@ -41,7 +41,6 @@ function SightZ() = ReceiverTopZ()+0.5;
 module SightpostBolts(height=SightZ(), radius=SIGHTPOST_DIAMETER/2, length=2, cutter=false, clearance=SIGHTPOST_BOLT_CLEARANCE) {
   
   // Bead
-  color("Silver") RenderIf(!cutter)
   translate([radius,0,0.1875])
   rotate([0,90,0])
   NutAndBolt(bolt=SightpostBolt(),
@@ -49,10 +48,10 @@ module SightpostBolts(height=SightZ(), radius=SIGHTPOST_DIAMETER/2, length=2, cu
              head="socket",
              nut="heatset-long",  nutBackset=0.5, nutHeightExtra=(cutter?radius+0.5:0),
              teardrop=cutter, teardropAngle=180,
-             clearance=cutter?-clearance:0);
+             clearance=cutter?-clearance:0,
+             doRender=!cutter);
   
   // Set Screw
-  color("Silver") RenderIf(!cutter)
   translate([radius,0,length-0.5])
   rotate([0,90,0])
   NutAndBolt(bolt=SightpostBolt(),
@@ -60,7 +59,8 @@ module SightpostBolts(height=SightZ(), radius=SIGHTPOST_DIAMETER/2, length=2, cu
              head="none",
              nut="heatset", nutHeightExtra=(cutter?radius:0),
              teardrop=cutter, teardropAngle=180,
-             clearance=cutter?clearance:0);
+             clearance=cutter?clearance:0,
+             doRender=!cutter);
 }
 
 module Sightpost(height=SightZ(), length=2, radius=SIGHTPOST_DIAMETER/2, wall=0.125, clearance=SIGHTPOST_CLEARANCE, doRender=true) {
