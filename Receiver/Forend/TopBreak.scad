@@ -338,17 +338,17 @@ module TopBreak_LatchSpring(length=TopBreak_LatchSpringLength(), compress=0, doM
            h=length-compress);
 }
 
-module TopBreak_LatchScrews(head="socket", doMirror=true, debug=false, cutter=false, clearance=0.008) {
+module TopBreak_LatchScrews(head="flat", doMirror=true, debug=false, cutter=false, clearance=0.008) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
 
   // Secure the TopBreak_Latch block to the TopBreak_Latch rod
   color("Silver") RenderIf(!cutter)
   MirrorIf(doMirror, [0,1,0], both=true)
-  translate([0.75,TopBreak_LatchY(),TopBreak_LatchZ()-TopBreak_LatchWall()-0.25])
+  translate([0.75,TopBreak_LatchY(),TopBreak_LatchZ()-TopBreak_LatchWall()-0.51])
   rotate([0,180,0])
   Bolt(bolt=GPBolt(),
-       length=5/8+ManifoldGap(), clearance=clear,
+       length=1+ManifoldGap(), clearance=clear,
        head=head, capHeightExtra=(cutter?1:0), capOrientation=true);
 
 }
@@ -721,7 +721,7 @@ module TopBreak_Latch(doMirror=true, debug=false, cutter=false, clearance=0.01, 
   clear2 = clear*2;
 
   // Latch
-  color("Olive", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("Silver", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
   MirrorIf(doMirror, [0,1,0], true)
   difference() {
     
@@ -729,9 +729,9 @@ module TopBreak_Latch(doMirror=true, debug=false, cutter=false, clearance=0.01, 
     translate([-0.25-(cutter?0.5:0)-clear,
                TopBreak_LatchY()-(TopBreak_LatchWidth()/2)-clear,
                TopBreak_LatchZ()-clear])
-    ChamferedCube([TopBreak_LatchLength()+(cutter?TopBreak_LatchTravel()+0.5+clear:0),
-                   TopBreak_LatchWidth()+clear2,
-                   TopBreak_LatchHeight()+clear2], r=1/16, teardropFlip=[false,true,true]);
+    cube([TopBreak_LatchLength()+(cutter?TopBreak_LatchTravel()+0.5+clear:0),
+          TopBreak_LatchWidth()+clear2,
+          TopBreak_LatchHeight()+clear2]);
 
     if (!cutter)
     TopBreak_LatchScrews(cutter=false);
@@ -754,14 +754,14 @@ module TopBreak_LatchTab(debug=false, cutter=false, clearance=0.01, alpha=1) {
                      (BarrelSleeveRadius()+WallBarrel())*2,
                      TopBreak_LatchTabHeight()], r=1/16, teardropFlip=[false,true,true]);
       
-      // Latch Tabs
+      // Latch Tab Towers
       for (M = [0,1]) mirror([0,M,0])
       translate([0.5-clear,
                  TopBreak_LatchY()-(TopBreak_LatchWidth()/2)-clear,
                  TopBreak_LatchZ()-(TopBreak_LatchWall()+TopBreak_LatchTabHeight())-clear])
       ChamferedCube([0.5+(cutter?TopBreak_LatchTravel():0),
                      TopBreak_LatchWidth()+clear2,
-                     (TopBreak_LatchWall()+TopBreak_LatchHeight()+TopBreak_LatchTabHeight())+clear2],
+                     (TopBreak_LatchWall()+TopBreak_LatchTabHeight()+0.01)+clear2],
                      r=1/16, teardropFlip=[false,true,true]);
     }
 
