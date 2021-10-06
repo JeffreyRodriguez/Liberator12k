@@ -42,7 +42,7 @@ use <../FCG.scad>;
 /* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Evolver_ReceiverFront", "Evolver_Spindle", "Evolver_ZigZag", "Evolver_Ratchet", "Evolver_RatchetPawl","Evolver_Actuator", "Evolver_ActuatorToggle", "Evolver_BarrelSupport", "Evolver_ForendSpacer", "Evolver_PumpRod", "Evolver_PumpCollar"]
+_RENDER = ""; // ["", "ReceiverFront", "Spindle", "ZigZag", "Ratchet", "RatchetPawl","Actuator", "ActuatorToggle", "BarrelSupport", "ForendSpacer", "PumpRod", "PumpCollar"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;
@@ -1116,14 +1116,17 @@ if ($preview) {
   EvolverForendAssembly(debug=false);
 } else {
 
-  if (_RENDER == "Evolver_ReceiverFront")
+  // **********
+  // * Prints *
+  // **********
+  if (_RENDER == "ReceiverFront")
     if (!_RENDER_PRINT)
       Evolver_ReceiverFront();
     else
       rotate([0,-90,0])
       Evolver_ReceiverFront();
   
-  if (_RENDER == "Evolver_BarrelSupport")
+  if (_RENDER == "BarrelSupport")
     if (!_RENDER_PRINT)
       Evolver_BarrelSupport();
     else
@@ -1131,14 +1134,14 @@ if ($preview) {
       translate([-ForendSpacerLength()-Evolver_BarrelSupportLength(),0,0])
       Evolver_BarrelSupport();
   
-  if (_RENDER == "Evolver_ForendSpacer")
+  if (_RENDER == "ForendSpacer")
     if (!_RENDER_PRINT)
       Evolver_ForendSpacer();
     else
       rotate([0,-90,0])
       Evolver_ForendSpacer();
   
-  if (_RENDER == "Evolver_Spindle")
+  if (_RENDER == "Spindle")
     if (!_RENDER_PRINT)
       Evolver_Spindle();
     else
@@ -1146,7 +1149,7 @@ if ($preview) {
       translate([-2.75,0,1])
       Evolver_Spindle();
   
-  if (_RENDER == "Evolver_Ratchet")
+  if (_RENDER == "Ratchet")
     if (!_RENDER_PRINT)
       Evolver_Ratchet();
     else
@@ -1154,7 +1157,7 @@ if ($preview) {
       translate([-3.25,0,1])
       Evolver_Ratchet();
   
-  if (_RENDER == "Evolver_ZigZag")
+  if (_RENDER == "ZigZag")
     if (!_RENDER_PRINT)
       Evolver_ZigZag();
     else
@@ -1162,7 +1165,7 @@ if ($preview) {
       translate([-(SpindleMaxX()+0.125),0,-SpindleZ()])
       Evolver_ZigZag();
   
-  if (_RENDER == "Evolver_Actuator")
+  if (_RENDER == "Actuator")
     if (!_RENDER_PRINT)
       Evolver_Actuator();
     else
@@ -1171,7 +1174,7 @@ if ($preview) {
       translate([0,0, -SpindleZ()])
       Evolver_Actuator();
   
-  if (_RENDER == "Evolver_ActuatorToggle")
+  if (_RENDER == "ActuatorToggle")
     if (!_RENDER_PRINT)
       Evolver_ActuatorToggle();
     else
@@ -1180,7 +1183,7 @@ if ($preview) {
       translate([-(ForendSpacerLength()+0.25),0,0])
       Evolver_ActuatorToggle(AF=1);
   
-  if (_RENDER == "Evolver_PumpRod")
+  if (_RENDER == "PumpRod")
     if (!_RENDER_PRINT)
       Evolver_PumpRod();
     else
@@ -1188,11 +1191,28 @@ if ($preview) {
       rotate([-30,0,0])
       Evolver_PumpRods(doMirror=false);
   
-  if (_RENDER == "Evolver_PumpCollar")
+  if (_RENDER == "PumpCollar")
     if (!_RENDER_PRINT)
       Evolver_PumpCollar();
     else
       rotate([0,90,0])
       translate([-(ForendLength()+BarrelCollarLength()+0.25),0,0])
       Evolver_PumpCollar();
+
+  // ************
+  // * Vitamins *
+  // ************
+  if (_RENDER == "Barrel")
+  Evolver_Barrel();
+  if (_RENDER == "BarrelCollar")
+  Evolver_BarrelCollar();
+  if (_RENDER == "SpindleRod")
+  Evolver_SpindleRod();
+  if (_RENDER == "SpindlePins")
+  Evolver_SpindlePins();
+  if (_RENDER == "RatchetPawlPin")
+  Evolver_RatchetPawlPin();
+  if (_RENDER == "PumpCollarBolts")
+  Evolver_PumpCollarBolts();
+  
 }
