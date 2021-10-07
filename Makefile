@@ -35,14 +35,16 @@ Version.md:
 Manual.pdf: Version.md $(MARKDOWN_HTML) $(MANUAL_IMAGES) FORCE
 	htmldoc --batch Manual.book
 	
-Liberator12k-src.zip:
-	git archive -o $@ --format=zip HEAD .
+Liberator12k-src/:
+	rm -rf $@ && \
+	git init $@ && \
+	cd $@ && \
+	git pull ../ --depth=1 && \
+	git remote add origin https://github.com/JeffreyRodriguez/Liberator12k.git
 
-Liberator12k.zip: $(DIST) FORCE
-	zip $@ $(DIST) $(Assembly)
-
-Liberator12k-assembly.zip: Receiver/Assembly Receiver/Forend/Assembly
-	zip -r $@ $<
+Liberator12k.zip: $(DIST) $(Assembly) Liberator12k-src/ FORCE
+	zip $@ $(DIST)
+	zip -r $@ $(Assembly) Liberator12k-src/
 	
 dist: FORCE $(SUBDIRS)
 	$(MAKE) Liberator12k.zip
