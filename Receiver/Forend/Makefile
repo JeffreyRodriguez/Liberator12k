@@ -6,13 +6,18 @@ CLASSES := TopBreak Revolver
 # Forend Class Parts
 TopBreak_Parts := ReceiverFront \
 		              Forend \
+									Cluster\
+									VerticalForegrip \
                   BarrelCollar \
                   Extractor \
+									LatchTab \
 						      BarrelSleeveFixture
 TopBreak_Hardware := Barrel \
                      ExtractorBit \
 										 ExtractorRetainer \
-										 MlokBolts
+										 Latch \
+										 MlokBolts \
+										 ClusterBolts
 
 Revolver_Parts := ReceiverFront \
 						      FrameSpacer \
