@@ -106,12 +106,12 @@ module Stock_TakedownPinRetainer(cutter=false, clearance=0.005) {
   color("Silver") RenderIf(!cutter)
   translate([ButtpadX(), 0, Receiver_TakedownPinZ()-0.125])
   rotate([0,90,0])
-  cylinder(r=(3/32/2)+clear, h=2, $fn=20);
+  cylinder(r=(3/32/2)+clear, h=2);
   
   if (cutter)
   translate([StockMinX(), 0, Receiver_TakedownPinZ()-0.125])
   rotate([0,90,0])
-  cylinder(r=0.125, h=2, $fn=20);
+  cylinder(r=0.125, h=2);
   
 }
 
@@ -147,30 +147,21 @@ module Stock_Backplate(length=Stock_BackplateLength(), clearance=0.008, debug=fa
     union() {
       
       // Backplate
-      difference() {
-        translate([StockMinX(),0,0])
-        Receiver_Segment(length=0.5, highTop=false,
-                        chamferFront=true, chamferBack=true);
-    
-        // Clearance for the tension bolts
-        translate([StockMinX()+ManifoldGap(),0,0])
-        TensionBoltIterator() {
-          ChamferedCircularHole(r1=WallTensionRod(), r2=1/16, h=0.5, $fn=30);
-          
-          for (xyz = [[0,-WallTensionRod(),0],
-                      [-WallTensionRod(),0,0]])
-          translate(xyz)
-          ChamferedSquareHole([WallTensionRod()*2,WallTensionRod()*2], 
-                              length=0.5, chamferRadius=1/16,
-                              corners=false, center=false, $fn=30);
-        }
-      }
+      translate([StockMinX(),0,0])
+      Receiver_Segment(length=0.5, highTop=false,
+                      chamferFront=true, chamferBack=true);
+        
+      // Tension nut cover
+      translate([StockMinX()+ManifoldGap(),0,0])
+      TensionBoltIterator()
+      ChamferedCylinder(r1=WallTensionRod()+0.0625, r2=1/16,
+                        h=0.5, teardropTop=true);
       
       // Central insert body
       translate([StockMinX()-0.5,0,0])
       rotate([0,90,0])
       ChamferedCylinder(r1=ReceiverIR()-clearance, h=length+0.5,
-                        r2=1/16, teardropTop=true, $fn=60);
+                        r2=1/16, teardropTop=true);
       
       // Insert wings
       translate([StockMinX()-0.5,
@@ -191,6 +182,18 @@ module Stock_Backplate(length=Stock_BackplateLength(), clearance=0.008, debug=fa
       translate([StockMinX()-0.5,-(1/2),0])
       mirror([0,0,1])
       ChamferedCube([0.5, 1, 2],
+                    r=1/16, teardropFlip=[true, true, true]);
+                    
+                    
+        
+      // Wide rear section
+      translate([StockMinX()-0.5,
+                 -(ReceiverBottomSlotWidth()/2)-0.125,
+                 0])
+      mirror([0,0,1])
+      ChamferedCube([0.5,
+                     ReceiverBottomSlotWidth()+0.25,
+                     abs(ReceiverBottomZ())+1-clearance],
                     r=1/16, teardropFlip=[true, true, true]);
       
       
@@ -219,6 +222,11 @@ module Stock_Backplate(length=Stock_BackplateLength(), clearance=0.008, debug=fa
       }
     }
     ///
+    
+    // Clearance for the tension bolts
+    translate([StockMinX()+ManifoldGap(),0,0])
+    TensionBoltIterator()
+    ChamferedCircularHole(r1=(0.35/2), r2=1/16, h=0.5+ManifoldGap(2));
     
     Stock_TakedownPin(cutter=true);
     Stock_TakedownPinRetainer(cutter=true);
@@ -259,8 +267,7 @@ module Stock_Buttpad(doRender=true, debug=false, alpha=1) {
         rotate([0,90,0])
         for (L = [0,1]) translate([(length*L)-(outsideRadius/2),0,0])
         ChamferedCylinder(r1=baseRadius, r2=chamferRadius,
-                           h=base,
-                           $fn=Resolution(20,50));
+                           h=base);
         
         // Merge to receiver
         Receiver_Segment(length=0.5, highTop=false, chamferFront=true);
