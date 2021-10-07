@@ -16,8 +16,6 @@ use <../../Shapes/ZigZag.scad>;
 
 use <../../Shapes/Components/Pivot.scad>;
 use <../../Shapes/Components/Pump Grip.scad>;
-use <../../Shapes/Components/MlokCluster.scad>;
-use <../../Shapes/Components/MlokForegrip.scad>;
 
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec.scad>;
@@ -34,7 +32,7 @@ use <../Stock.scad>;
 /* [Export] */
 
 // Select a part, Render it (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "ReceiverFront", "Forend", "BarrelCollar", "Extractor", "Latch", "LatchTab", "Foregrip", "BarrelSleeveFixture"]
+_RENDER = ""; // ["", "ReceiverFront", "Forend", "Cluster", "BarrelCollar", "Extractor", "Latch", "LatchTab", "VerticalForegrip", "BarrelSleeveFixture"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;
@@ -55,12 +53,15 @@ _SHOW_EXTRACTOR_HARDWARE = true;
 _SHOW_LATCH = true;
 _SHOW_LATCH_HARDWARE = true;
 _SHOW_BARREL = true;
+_SHOW_CLUSTER = true;
 _SHOW_FOREGRIP = true;
+_SHOW_FOREGRIP_BOLTS = true;
 
 /* [Transparency] */
 _ALPHA_RECEIVER_FRONT=1; // [0:0.1:1]
 _ALPHA_FOREND = 1;  // [0:0.1:1]
 _ALPHA_COLLAR = 1; // [0:0.1:1]
+_ALPHA_CLUSTER = 1; // [0:0.1:1]
 _ALPHA_EXTRACTOR = 1; // [0:0.1:1]
 _ALPHA_LATCH = 1; // [0:0.1:1]
 
@@ -70,6 +71,7 @@ _CUTAWAY_LOWER = false;
 _CUTAWAY_BARREL = false;
 _CUTAWAY_FOREND = false;
 _CUTAWAY_COLLAR = false;
+_CUTAWAY_CLUSTER = false;
 _CUTAWAY_EXTRACTOR = false;
 _CUTAWAY_LATCH = false;
 
@@ -79,6 +81,12 @@ GP_BOLT_CLEARANCE = 0.015;
 
 BARREL_SET_SCREW = "#8-32"; // ["M4", "#8-32"]
 BARREL_SET_SCREW_CLEARANCE = -0.05;
+
+GRIP_BOLT = "1/4\"-20"; // ["M6", "1/4\"-20"]
+GRIP_BOLT_CLEARANCE = -0.05;
+
+LATCH_WIDTH = 0.25;
+LATCH_CLEARANCE = 0.003;
 
 BARREL_SLEEVE_DIAMETER = 1.2501;
 BARREL_OUTSIDE_DIAMETER = 1.0001;
@@ -113,6 +121,9 @@ $fs = UnitsFs()*ResolutionFs();
 // Settings: Vitamins
 function BarrelSetScrew() = BoltSpec(BARREL_SET_SCREW);
 assert(BarrelSetScrew(), "BarrelSetScrew() is undefined. Unknown BARREL_SET_SCERW?");
+
+function GripBolt() = BoltSpec(GRIP_BOLT);
+assert(GripBolt(), "GripBolt() is undefined. Unknown GRIP_BOLT?");
 
 function GPBolt() = BoltSpec(GP_BOLT);
 assert(GPBolt(), "GPBolt() is undefined. Unknown GP_BOLT?");
@@ -209,10 +220,10 @@ function TopBreak_BarrelCollarBottomZ() = TopBreak_ExtractorZ()
 function TopBreak_LatchTravel() = 0.5;
 function TopBreak_LatchWall() = 0.125;
 
-function TopBreak_LatchLength() = 2.5;
-function TopBreak_LatchWidth() = 0.25;
-function TopBreak_LatchHeight() = 0.25;
-function TopBreak_LatchTabHeight() = 0.5;
+function TopBreak_LatchLength() = 3;
+function TopBreak_LatchWidth() = LATCH_WIDTH;
+function TopBreak_LatchHeight() = LATCH_WIDTH;
+function TopBreak_LatchTabHeight() = 0.375;
 
 
 function TopBreak_LatchExtension() = 0.25;
@@ -323,7 +334,7 @@ module TopBreak_ExtractorRetainer(debug=false, cutter=false, teardrop=false, cle
   NutAndBolt(bolt=GPBolt(),
        boltLength=TopBreak_ExtractorHeight()+ManifoldGap(), clearance=clear,
        head="socket", capHeightExtra=(cutter?abs(TopBreak_ExtractorZ())+FrameBoltZ():0), capOrientation=true,
-       nut="heatset-long", teardrop=teardrop,
+       nut="heatset-long", teardrop=false, teardropAngle=180,
        doRender=!cutter);
 }
 
@@ -345,10 +356,10 @@ module TopBreak_LatchScrews(head="flat", doMirror=true, debug=false, cutter=fals
   // Secure the TopBreak_Latch block to the TopBreak_Latch rod
   color("Silver") RenderIf(!cutter)
   MirrorIf(doMirror, [0,1,0], both=true)
-  translate([0.75,TopBreak_LatchY(),TopBreak_LatchZ()-TopBreak_LatchWall()-0.51])
+  translate([0.75,TopBreak_LatchY(),TopBreak_LatchZ()-TopBreak_LatchWall()-TopBreak_LatchTabHeight()-0.01])
   rotate([0,180,0])
   Bolt(bolt=GPBolt(),
-       length=0.875+ManifoldGap(), clearance=clear,
+       length=0.75+ManifoldGap(), clearance=clear,
        head=head, capHeightExtra=(cutter?1:0), capOrientation=true);
 
 }
@@ -369,7 +380,7 @@ module TopBreak_Barrel(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, le
       
       // Barrel Sleeve
       rotate([0,90,0])
-      cylinder(r=BarrelSleeveRadius()+clear, h=BarrelSleeveLength());
+      cylinder(r=BarrelSleeveRadius()+clear, h=BarrelSleeveLength()+clear);
     }
     
     if (!cutter) {
@@ -399,8 +410,33 @@ module TopBreak_MlokBolts(headType="flat", nutType="heatset", length=0.5, cutter
              boltLength=length+ManifoldGap(2),
              head="socket", capHeightExtra=(cutter?1:0),
              nut="none",
-             teardrop=cutter,
+             teardrop=false, teardropAngle=180,
              clearance=cutter?clearance:0);
+}
+
+module TopBreak_ClusterBolts(headType="flat", nutType="none", length=0.5, cutter=false, clearance=0.005, teardrop=false) {
+  color("Silver") RenderIf(!cutter)
+  for (X = [-0.5,-1.5])
+  translate([BarrelSleeveLength()+X,0,BarrelRadius()])
+  NutAndBolt(bolt=MlokBolt(),
+             boltLength=length+ManifoldGap(2),
+             head=headType, capHeightExtra=(cutter?1:0),
+             nut=nutType,
+             teardrop=cutter, teardropAngle=180,
+             clearance=cutter?clearance:0,
+             doRender=!cutter);
+}
+
+module TopBreak_GripBolt(bolt=GripBolt(), headType="flat", nutType="heatset", length=3.5, cutter=false, clearance=0.005, teardrop=true) {
+  translate([BarrelSleeveLength()+0.25,0,-BarrelRadius()-length])
+  mirror([0,0,1])
+  NutAndBolt(bolt=bolt, boltLength=length+ManifoldGap(2),
+             capOrientation=true,
+             head=headType, capHeightExtra=(cutter?1:0),
+             nut=nutType, nutHeightExtra=(cutter?0.5:0),
+             teardrop=cutter && teardrop, teardropAngle=180,
+             clearance=cutter?clearance:0,
+             doRender=!cutter);
 }
 
 
@@ -716,7 +752,7 @@ module TopBreak_Extractor(cutter=false, clearance=0.015, chamferRadius=1/16, deb
   }
 }
 
-module TopBreak_Latch(doMirror=true, debug=false, cutter=false, clearance=0.01, alpha=1) { 
+module TopBreak_Latch(doMirror=true, debug=false, cutter=false, clearance=LATCH_CLEARANCE, alpha=1) { 
   clear = cutter?clearance:0;
   clear2 = clear*2;
 
@@ -737,9 +773,11 @@ module TopBreak_Latch(doMirror=true, debug=false, cutter=false, clearance=0.01, 
     TopBreak_LatchScrews(cutter=false);
   }
 }
-module TopBreak_LatchTab(debug=false, cutter=false, clearance=0.01, alpha=1) { 
+module TopBreak_LatchTab(debug=false, cutter=false, clearance=0.01, alpha=1) {
+  CR = 1/16;
   clear = cutter?clearance:0;
   clear2 = clear*2;
+  clearCR = cutter?CR:0;
 
   color("Olive", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
@@ -747,7 +785,7 @@ module TopBreak_LatchTab(debug=false, cutter=false, clearance=0.01, alpha=1) {
       
       // Latch Tab Body
       PivotClearanceCut(offsetX=-TopBreak_LatchTravel(), cut=true)
-      translate([0,
+      translate([-0.25,
                  -(BarrelSleeveRadius()+WallBarrel()),
                  TopBreak_LatchZ()-TopBreak_LatchWall()-TopBreak_LatchTabHeight()-clearance])
       ChamferedCube([1+TopBreak_LatchTravel(),
@@ -770,6 +808,67 @@ module TopBreak_LatchTab(debug=false, cutter=false, clearance=0.01, alpha=1) {
   }
 }
 
+module TopBreak_VerticalForegrip(debug=false, alpha=1) {
+  color("Tan", alpha) render()
+  difference() {  
+    translate([BarrelSleeveLength()+0.25,0,-BarrelRadius()-3.5])
+    ChamferedCylinder(r1=0.5, r2=1/16, h=2.75);
+    
+    TopBreak_GripBolt(cutter=true, teardrop=false);
+  }
+}
+module TopBreak_Cluster(debug=false, alpha=1) {
+  topExtension = 0.5;
+  forwardExtension = 1.5;
+  rearExtension = 2;
+  lowerExtension = 0.75;
+  width = (7/16);
+  mlokOffset = (BarrelRadius()+0.5);
+  
+  color("Tan", alpha) render() DebugHalf(enabled=debug)
+  difference() {
+    hull() {
+      
+        // Forward Extension
+        translate([BarrelSleeveLength(),0,0])
+        rotate([0,90,0])
+        ChamferedCylinder(r1=BarrelRadius()+WallBarrel(), r2=1/16,
+                           h=forwardExtension);
+      
+        // Rear Extension
+        translate([BarrelSleeveLength(),0,0])
+        rotate([0,-90,0])
+        ChamferedCylinder(r1=BarrelSleeveRadius()+WallBarrel(), r2=1/16,
+                           h=rearExtension);
+        
+        // Bolt cap
+        translate([BarrelSleeveLength()-2,-(width/2),BarrelRadius()])
+        ChamferedCube([rearExtension, width, topExtension], r=1/16);
+      
+      
+        // Lower vertical extension
+        translate([BarrelSleeveLength()+0.25,0,-BarrelRadius()-lowerExtension])
+        ChamferedCylinder(r1=0.5, r2=1/16,
+                           h=lowerExtension);
+      
+        // MLOK slot support
+        translate([BarrelSleeveLength()-1,-mlokOffset,-0.375])
+        ChamferedCube([2, mlokOffset*2, 0.75], r=1/16);
+    }
+    
+    // MLOK slots
+    for (M = [0,1]) mirror([0,M,0])
+    translate([BarrelSleeveLength()-1+0.25, -(BarrelRadius()+0.5), 0])
+    rotate([90,0,0]) {
+      MlokSlot(1.5);
+      MlokSlotBack(1.5);
+    }
+    
+    TopBreak_Barrel(cutter=true);
+    TopBreak_ClusterBolts(cutter=true);
+    TopBreak_GripBolt(cutter=true, teardrop=true);
+  }
+}
 module TopBreak_Foregrip(length=TopBreak_ForegripLength(), debug=false, alpha=1) {
   color("Tan",alpha) render() DebugHalf(enabled=debug)
   difference() {
@@ -780,7 +879,6 @@ module TopBreak_Foregrip(length=TopBreak_ForegripLength(), debug=false, alpha=1)
     TopBreak_Barrel(cutter=true);
   }
 }
-
 
 // Fixtures
 module TopBreak_BarrelSleeveFixture() {
@@ -895,7 +993,20 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
     if (_SHOW_COLLAR)
     TopBreak_BarrelCollar(debug=debug == true || _CUTAWAY_COLLAR, alpha=_ALPHA_COLLAR);
     
+    if (_SHOW_FOREGRIP_BOLTS)
+    TopBreak_ClusterBolts();
+    
+    if (_SHOW_FOREGRIP_BOLTS)
+    TopBreak_GripBolt();
+    
+    if (_SHOW_FOREGRIP)
+    TopBreak_Cluster(debug=_CUTAWAY_CLUSTER, alpha=_ALPHA_CLUSTER);
+    
+    if (_SHOW_FOREGRIP)
+    TopBreak_VerticalForegrip();
+    
     children();
+    
   }
 }
 
@@ -932,22 +1043,6 @@ if ($preview) {
                                  -Animate(ANIMATION_STEP_LOCK),
                       extractFactor=Animate(ANIMATION_STEP_UNLOAD)
                                  -SubAnimate(ANIMATION_STEP_LOAD, end=0.25)) {
-  
-    if (_SHOW_FOREGRIP)
-    translate([ForendLength()+1,0,0]){
-      
-      translate([UnitsMetric(10)+0.25,0,-MlokForegripLength()-BarrelRadius()-0.5])
-      rotate(90) {
-        MlokForegripBolts();
-        MlokForegrip(alpha=0.5);
-      }
-      
-      rotate([0,90,0])
-      MlokCluster(radius=BarrelRadius(), alpha=0.5);
-    }
-    
-    *if (_SHOW_FOREGRIP)
-    TopBreak_Foregrip();
   };
 } else {
   
@@ -979,6 +1074,21 @@ if ($preview) {
       rotate([0,90,0])
       translate([-ForendLength(),0,0])
       TopBreak_Forend();
+
+  if (_RENDER == "Cluster")
+    if (!_RENDER_PRINT)
+      TopBreak_Cluster();
+    else
+      rotate([0,90,0])
+      translate([-BarrelSleeveLength()-1.5,0,0])
+      TopBreak_Cluster();
+
+  if (_RENDER == "VerticalForegrip")
+    if (!_RENDER_PRINT)
+      TopBreak_VerticalForegrip();
+    else
+      translate([-BarrelSleeveLength()-0.25,0,4])
+      TopBreak_VerticalForegrip();
 
   if (_RENDER == "Foregrip")
     if (!_RENDER_PRINT)
@@ -1035,4 +1145,7 @@ if ($preview) {
   
   if (_RENDER == "MlokBolts")
   TopBreak_MlokBolts();
+  
+  if (_RENDER == "ClusterBolts")
+  TopBreak_ClusterBolts();
 }
