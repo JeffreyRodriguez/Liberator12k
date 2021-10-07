@@ -22,8 +22,8 @@ assert(MlokBolt(), "MlokBolt() is undefined. Unknown MLOK_BOLT?");
 function MlokSlotLength() = UnitsMetric(32);
 function MlokSlotSpacing() = UnitsMetric(8);
 function MlokSlotDepth() = 0.125;
-function MlokBackWidth() = (0.45)+0.01;
-function MlokSlotWidth() = UnitsMetric(7)+0.01;
+function MlokBackWidth() = (0.45)+0.004;
+function MlokSlotWidth() = UnitsMetric(7)+0.004;
 
 
 module MlokSlot(length=MlokSlotLength(), extension=UnitsMetric(20), center=true, clearance=0.005) {  
