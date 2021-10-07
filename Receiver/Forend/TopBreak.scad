@@ -32,7 +32,7 @@ use <../Stock.scad>;
 /* [Export] */
 
 // Select a part, Render it (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "ReceiverFront", "Forend", "Cluster", "BarrelCollar", "Extractor", "Latch", "LatchTab", "VerticalForegrip", "BarrelSleeveFixture"]
+_RENDER = ""; // ["", "ReceiverFront", "Forend", "Cluster", "BarrelCollar", "Extractor", "Latch", "LatchTab", "VerticalForegrip", "Sightpost","BarrelSleeveFixture"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;
@@ -949,8 +949,8 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
     if (_SHOW_SIGHTPOST)
     translate([BarrelLength()-1,0,0])
     rotate([0,-90,0]) {
-      Sightpost(radius=1.06/2);
-      SightpostBolts(radius=1.06/2);
+      Sightpost(radius=BarrelRadius()+BARREL_CLEARANCE);
+      SightpostBolts(radius=BarrelRadius()+BARREL_CLEARANCE);
     }
 
     // TopBreak_Extractor Spring
@@ -1119,8 +1119,15 @@ if ($preview) {
     else
       translate([0,0,-TopBreak_LatchZ()])
       TopBreak_LatchTab();
-    
-    
+
+  if (_RENDER == "Sightpost")
+    if (!_RENDER_PRINT)
+      translate([BarrelLength()-1,0,0])
+      rotate([0,-90,0])
+      Sightpost(radius=BarrelRadius()+BARREL_CLEARANCE);
+    else
+      //translate([-BARREL_LENGTH+2,0,0])
+      Sightpost(radius=BarrelRadius()+BARREL_CLEARANCE);
   
   // ********************
   // * Fixures and Jigs *
@@ -1148,4 +1155,9 @@ if ($preview) {
   
   if (_RENDER == "ClusterBolts")
   TopBreak_ClusterBolts();
+  
+  if (_RENDER == "SightpostBolts")
+  translate([BarrelLength()-1,0,0])
+  rotate([0,-90,0])
+  SightpostBolts(radius=BarrelRadius());
 }

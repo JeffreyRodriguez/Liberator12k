@@ -17,7 +17,8 @@ TopBreak_Hardware := Barrel \
 										 ExtractorRetainer \
 										 Latch \
 										 MlokBolts \
-										 ClusterBolts
+										 ClusterBolts \
+										 SightpostBolts
 
 Revolver_Parts := ReceiverFront \
 						      FrameSpacer \
