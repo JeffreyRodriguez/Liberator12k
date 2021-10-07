@@ -41,7 +41,7 @@ Each component in the Minuteman has its own fabrication instructions.
 
 * [1.1 Framed Receiver](Frame.md)
 * [1.2 Fire Control Group](FCG.md)
-* [1.3 Lower](Lower/README.md)
+* [1.3 Lower](Lower.md)
 * [1.4 Stock](Stock.md)
 
 [2: Choose Your Weapon](Forend/README.md) covers the different Forend
