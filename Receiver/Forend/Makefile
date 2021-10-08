@@ -2,6 +2,7 @@ include ../../Makefile.in
 
 # Forend Classes
 CLASSES := TopBreak Revolver
+CLASS_HTML := $(addsuffix .html,$(CLASSES))
 
 # Forend Class Parts
 TopBreak_Parts := ReceiverFront \
@@ -11,14 +12,15 @@ TopBreak_Parts := ReceiverFront \
                   BarrelCollar \
                   Extractor \
 									LatchTab \
-						      BarrelSleeveFixture
-TopBreak_Hardware := Barrel \
-                     ExtractorBit \
-										 ExtractorRetainer \
-										 Latch \
-										 MlokBolts \
-										 ClusterBolts \
-										 SightpostBolts
+						      Sightpost \
+						      Fixture/BarrelSleeveFixture
+TopBreak_Hardware := Hardware/Barrel \
+                     Hardware/ExtractorBit \
+										 Hardware/ExtractorRetainer \
+										 Hardware/Latch \
+										 Hardware/MlokBolts \
+										 Hardware/ClusterBolts \
+										 Hardware/SightpostBolts
 
 Revolver_Parts := ReceiverFront \
 						      FrameSpacer \
@@ -53,26 +55,10 @@ Revolver_STLS := $(addprefix Revolver_, $(foreach PRESET,$(Revolver_PRESETS),$(a
 TopBreak_Hardware_STL := $(addprefix TopBreak_, $(foreach PRESET,$(TopBreak_PRESETS),$(addsuffix .stl, $(addprefix $(addsuffix /, $(PRESET)),$(TopBreak_Hardware)))))
 Revolver_Hardware_STL := $(addprefix Revolver_, $(foreach PRESET,$(Revolver_PRESETS),$(addsuffix .stl, $(addprefix $(addsuffix /, $(PRESET)),$(Revolver_Hardware)))))
 
-Assembly_STL=$(addprefix Assembly/, $(TopBreak_STLS) $(TopBreak_Hardware_STL) $(Revolver_STLS) $(Revolver_Hardware_STL));
-
-Assembly: $(Assembly_STL)
-
 PRESET_STLS := $(TopBreak_STLS) $(Revolver_STLS)
 PRESET_ASSEMBLY_PNG := $(addsuffix /Assembly.png,$(PRESETS))
 PRESET_HTML := $(addsuffix /README.html,$(PRESETS))
 PRESET_MP4 := $(addsuffix .mp4, $(PRESET_STLS))
-
-#CLASS_STLS := $(addsuffix .stl,$(CLASSES))
-CLASS_HTML := $(addsuffix /README.html,$(CLASSES))
-
-Assembly/%_*: %.scad Assembly/
-	$(eval CLASS_PRESET=$(firstword $(subst /, , $(subst Assembly/,, $@))))
-	$(eval CLASS=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$1 }'))
-	$(eval PRESET=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$2 }'))
-	$(eval PART=$(basename $(notdir $@)))
-	$(OSBIN) $(OSOPTS) -o $@ --render \
-	  -D _RENDER=\"$(PART)\"  -D _RENDER_PRINT=false \
-	  $(CLASS).scad
 
 $(PRESET_STLS): $(PRESETS)
 	$(eval CLASS_PRESET=$(firstword $(subst /, ,$@)))
@@ -93,6 +79,19 @@ $(PRESET_STLS): $(PRESETS)
 		-P $(PRESET) \
 		$(CLASS).scad
 
+Assembly_STL=$(addprefix Assembly/, $(TopBreak_STLS) $(TopBreak_Hardware_STL) $(Revolver_STLS) $(Revolver_Hardware_STL));
+
+Assembly: $(Assembly_STL)
+
+Assembly/%_*: %.scad Assembly/
+	$(eval CLASS_PRESET=$(firstword $(subst /, , $(subst Assembly/,, $@))))
+	$(eval CLASS=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$1 }'))
+	$(eval PRESET=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$2 }'))
+	$(eval PART=$(basename $(notdir $@)))
+	$(OSBIN) $(OSOPTS) -o $@ --render \
+	  -D _RENDER=\"$(PART)\"  -D _RENDER_PRINT=false \
+	  $(CLASS).scad
+		
 .SECONDEXPANSION:
 # Class/Preset dirs depend on their respective source
 $(CLASSES) $(PRESETS): $$(addsuffix .scad,$$(firstword $$(subst _, ,$$@)))
@@ -119,7 +118,7 @@ $(addsuffix /Preview_htmldoc.jpg,$(PRESETS)): %_htmldoc.jpg : %.png
 # HTML file for the preset
 $(PRESET_HTML): %/README.html : %.md %/Assembly.jpg %/Preview_thumb.jpg %/Preview_htmldoc.jpg 
 	$(MDBIN) $< | sed 's/\.md/\.html/' > $@
-$(CLASS_HTML): %/README.html : %.md
+$(CLASS_HTML): %.html : %.md
 	$(MDBIN) $< | sed 's/\.md/\.html/' > $@
 
 TARGETS = README.html $(CLASSES) $(CLASS_HTML) $(PRESETS) $(PRESET_HTML) $(PRESET_STLS) $(Assembly_STL) #$(PRESET_MP4) 
