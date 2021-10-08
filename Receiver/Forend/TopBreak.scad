@@ -883,7 +883,7 @@ module TopBreak_Foregrip(length=TopBreak_ForegripLength(), debug=false, alpha=1)
 }
 
 // Fixtures
-module TopBreak_BarrelSleeveFixture() {
+module TopBreak_Fixture_BarrelSleeve() {
   wall = 0.1875;
   guideExtra= 1-wall;
   guideWidth = 0.5;
@@ -1136,9 +1136,9 @@ if ($preview) {
   // ********************
   if (_RENDER == "BarrelSleeveFixture")
     if (!_RENDER_PRINT)
-      TopBreak_BarrelSleeveFixture();
+      TopBreak_Fixture_BarrelSleeve();
     else
-      TopBreak_BarrelSleeveFixture();
+      TopBreak_Fixture_BarrelSleeve();
   
   // ************
   // * Hardware *
