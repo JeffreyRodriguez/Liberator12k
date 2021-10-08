@@ -54,8 +54,9 @@ _SHOW_LATCH = true;
 _SHOW_LATCH_HARDWARE = true;
 _SHOW_BARREL = true;
 _SHOW_CLUSTER = true;
+_SHOW_CLUSTER_BOLTS = true;
 _SHOW_FOREGRIP = true;
-_SHOW_FOREGRIP_BOLTS = true;
+_SHOW_GRIP_BOLT=true;
 
 /* [Transparency] */
 _ALPHA_RECEIVER_FRONT=1; // [0:0.1:1]
@@ -993,13 +994,13 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
     if (_SHOW_COLLAR)
     TopBreak_BarrelCollar(debug=debug == true || _CUTAWAY_COLLAR, alpha=_ALPHA_COLLAR);
     
-    if (_SHOW_FOREGRIP_BOLTS)
+    if (_SHOW_CLUSTER_BOLTS)
     TopBreak_ClusterBolts();
     
-    if (_SHOW_FOREGRIP_BOLTS)
+    if (_SHOW_GRIP_BOLT)
     TopBreak_GripBolt();
     
-    if (_SHOW_FOREGRIP)
+    if (_SHOW_CLUSTER)
     TopBreak_Cluster(debug=_CUTAWAY_CLUSTER, alpha=_ALPHA_CLUSTER);
     
     if (_SHOW_FOREGRIP)
