@@ -42,7 +42,7 @@ Hardware_STL= $(addsuffix .stl, $(Hardware))
 Assembly_STL=$(addprefix Assembly/, $(Parts_STL) $(Hardware_STL))
 Assembly: $(Assembly_STL)
 
-Preview=CAFE12 Minuteman Frame Stock Lower FCG
+Preview=Minuteman Frame Stock Lower FCG CAFE12 FP37
 Preview_PNG=$(addprefix Preview_,$(addsuffix .jpg, $(VIEWS)))
 Preview_JPG=$(addprefix Preview_,$(addsuffix .jpg, $(VIEWS)))
 
