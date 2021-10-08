@@ -14,7 +14,7 @@ FOREND_STL = $(wildcard Receiver/Forend/*_*/*.stl)
 
 STL := $(MINUTEMAN_STL) $(FOREND_STL)
 EXTRA_DOCS := changelog.txt Manual.pdf
-DIST := $(STL) $(EXTRA_DOCS)
+TARGETS := $(STL) $(EXTRA_DOCS) $(Assembly) Source/
 
 MARKDOWN_HTML: $(MARKDOWN_HTML)
 $(MARKDOWN_HTML): $(addsuffix .md, $(basename $@))
@@ -42,15 +42,14 @@ Liberator12k-src/:
 	git pull ../ --depth=1 && \
 	git remote add origin https://github.com/JeffreyRodriguez/Liberator12k.git
 
-Liberator12k.zip: $(DIST) $(Assembly) Liberator12k-src/ FORCE
-	zip $@ $(DIST)
-	zip -r $@ $(Assembly) Liberator12k-src/
+Liberator12k.zip: $(TARGETS) FORCE
+	zip -r $@ $(TARGETS)
 	
 dist: FORCE $(SUBDIRS)
 	$(MAKE) Liberator12k.zip
 
 clean-dir:
-	rm -rf $(MARKDOWN_HTML) Liberator12k.zip Version.md changelog.txt
+	rm -rf $(MARKDOWN_HTML) $(TARGETS) Liberator12k.zip Version.md changelog.txt
 
 all: $(SUBDIRS) dist
 .PHONY: STL MARKDOWN_HTML dist Assembly
