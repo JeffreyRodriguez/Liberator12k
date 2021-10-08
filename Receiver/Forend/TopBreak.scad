@@ -835,7 +835,7 @@ module TopBreak_Cluster(debug=false, alpha=1) {
         translate([BarrelSleeveLength(),0,0])
         rotate([0,90,0])
         ChamferedCylinder(r1=BarrelRadius()+WallBarrel(), r2=1/16,
-                           h=forwardExtension);
+                           h=forwardExtension, teardropTop=true);
       
         // Rear Extension
         translate([BarrelSleeveLength(),0,0])
