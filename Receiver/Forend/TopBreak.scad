@@ -403,7 +403,7 @@ module TopBreak_Barrel(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, le
       
       // Barrel Sleeve
       rotate([0,90,0])
-      cylinder(r=BarrelSleeveRadius()+clear, h=BarrelSleeveLength()+clear);
+      cylinder(r=BarrelSleeveRadius()+clear, h=BarrelSleeveLength()+(1/16)+clear);
     }
     
     if (!cutter) {
