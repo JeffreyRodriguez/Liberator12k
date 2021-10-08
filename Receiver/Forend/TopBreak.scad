@@ -339,6 +339,28 @@ module TopBreak_ExtractorRetainer(debug=false, cutter=false, teardrop=false, cle
        doRender=!cutter);
 }
 
+module TopBreak_Latch(doMirror=true, debug=false, cutter=false, clearance=LATCH_CLEARANCE, alpha=1) { 
+  clear = cutter?clearance:0;
+  clear2 = clear*2;
+
+  // Latch
+  color("Silver", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
+  MirrorIf(doMirror, [0,1,0], true)
+  difference() {
+    
+    // Latch Body
+    translate([-0.25-(cutter?0.5:0)-clear,
+               TopBreak_LatchY()-(TopBreak_LatchWidth()/2)-clear,
+               TopBreak_LatchZ()-clear])
+    cube([TopBreak_LatchLength()+(cutter?TopBreak_LatchTravel()+0.5+clear:0),
+          TopBreak_LatchWidth()+clear2,
+          TopBreak_LatchHeight()+clear2]);
+
+    if (!cutter)
+    TopBreak_LatchScrews(cutter=false);
+  }
+}
+
 module TopBreak_LatchSpring(length=TopBreak_LatchSpringLength(), compress=0, doMirror=true, cutter=false, clearance=0.015, alpha=1) {
   clear = cutter?clearance:0;
 
@@ -753,27 +775,6 @@ module TopBreak_Extractor(cutter=false, clearance=0.015, chamferRadius=1/16, deb
   }
 }
 
-module TopBreak_Latch(doMirror=true, debug=false, cutter=false, clearance=LATCH_CLEARANCE, alpha=1) { 
-  clear = cutter?clearance:0;
-  clear2 = clear*2;
-
-  // Latch
-  color("Silver", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
-  MirrorIf(doMirror, [0,1,0], true)
-  difference() {
-    
-    // Latch Body
-    translate([-0.25-(cutter?0.5:0)-clear,
-               TopBreak_LatchY()-(TopBreak_LatchWidth()/2)-clear,
-               TopBreak_LatchZ()-clear])
-    cube([TopBreak_LatchLength()+(cutter?TopBreak_LatchTravel()+0.5+clear:0),
-          TopBreak_LatchWidth()+clear2,
-          TopBreak_LatchHeight()+clear2]);
-
-    if (!cutter)
-    TopBreak_LatchScrews(cutter=false);
-  }
-}
 module TopBreak_LatchTab(debug=false, cutter=false, clearance=0.01, alpha=1) {
   CR = 1/16;
   clear = cutter?clearance:0;
