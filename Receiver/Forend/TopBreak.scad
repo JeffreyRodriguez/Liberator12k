@@ -114,7 +114,7 @@ FRAME_BOLT_LENGTH = 10;
 WALL_BARREL = 0.1875;
 
 /* [Branding] */
-BRANDING_MODEL_NAME = "CAFE12";
+BRANDING_MODEL_NAME = "CAFE12+";
 
 // *********
 // * Setup *
@@ -1088,7 +1088,7 @@ if ($preview) {
       Receiver_TensionBolts();
       
       Frame_ReceiverAssembly(
-        length=FRAME_BOLT_LENGTH,
+        length=FRAME_BOLT_LENGTH-0.5,
         debug=_CUTAWAY_RECEIVER);
     }
 
