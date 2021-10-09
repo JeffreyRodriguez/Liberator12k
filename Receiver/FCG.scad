@@ -1012,7 +1012,8 @@ module SearSupportTab(cutter=false, clearance=0.015) {
                    LowerOffsetZ()+ReceiverLugRearZ()-backHeight])
       ChamferedCube([abs(ReceiverLugRearMinX()),
             width,
-            backHeight-clearance], r=1/16);
+            backHeight-clearance], r=1/16,
+            teardropFlip=[true,true,true]);
     }
     
     
