@@ -837,12 +837,15 @@ module TopBreak_Cluster(debug=false, alpha=1) {
   rearExtension = 2;
   lowerExtension = 0.75;
   width = (7/16);
-  mlokOffset = (BarrelRadius()+0.5);
+  mlokOffset = (BarrelSleeveRadius()+0.3125);
   
   color("Tan", alpha) render() DebugHalf(enabled=debug)
   difference() {
-    hull() {
+    union() {
       
+      // Extension
+      hull() {
+        
         // Forward Extension
         translate([BarrelSleeveLength(),0,0])
         rotate([0,90,0])
@@ -854,25 +857,73 @@ module TopBreak_Cluster(debug=false, alpha=1) {
         rotate([0,-90,0])
         ChamferedCylinder(r1=BarrelSleeveRadius()+WallBarrel(), r2=1/16,
                            h=rearExtension);
+      }
+      
+      // Bolt cap
+      hull() {
+        
+        // Forward Extension
+        translate([BarrelSleeveLength(),0,0])
+        rotate([0,90,0])
+        ChamferedCylinder(r1=BarrelRadius(), r2=1/16,
+                           h=forwardExtension, teardropTop=true);
+      
+        // Rear Extension
+        translate([BarrelSleeveLength(),0,0])
+        rotate([0,-90,0])
+        ChamferedCylinder(r1=BarrelSleeveRadius(), r2=1/16,
+                           h=rearExtension);
         
         // Bolt cap
         translate([BarrelSleeveLength()-2,-(width/2),BarrelRadius()])
         ChamferedCube([rearExtension, width, topExtension], r=1/16);
+      }
       
+      // MLOK Slots
+      hull() {
+        
+          // Forward Extension
+          translate([BarrelSleeveLength(),0,0])
+          rotate([0,90,0])
+          ChamferedCylinder(r1=BarrelRadius(), r2=1/16,
+                             h=forwardExtension, teardropTop=true);
+        
+          // Rear Extension
+          translate([BarrelSleeveLength(),0,0])
+          rotate([0,-90,0])
+          ChamferedCylinder(r1=BarrelSleeveRadius(), r2=1/16,
+                             h=rearExtension);
+        
+          // MLOK slot support
+          translate([BarrelSleeveLength()-1,-mlokOffset,-0.375])
+          ChamferedCube([2, mlokOffset*2, 0.75], r=1/16);
+      }
       
-        // Lower vertical extension
-        translate([BarrelSleeveLength()+0.25,0,-BarrelRadius()-lowerExtension])
-        ChamferedCylinder(r1=0.5, r2=1/16,
-                           h=lowerExtension);
-      
-        // MLOK slot support
-        translate([BarrelSleeveLength()-1,-mlokOffset,-0.375])
-        ChamferedCube([2, mlokOffset*2, 0.75], r=1/16);
+      // Grip Support
+      hull() {
+        
+          // Forward Extension
+          translate([BarrelSleeveLength(),0,0])
+          rotate([0,90,0])
+          ChamferedCylinder(r1=BarrelRadius(), r2=1/16,
+                             h=forwardExtension, teardropTop=true);
+        
+          // Rear Extension
+          translate([BarrelSleeveLength(),0,0])
+          rotate([0,-90,0])
+          ChamferedCylinder(r1=BarrelSleeveRadius(), r2=1/16,
+                             h=rearExtension);
+        
+          // Lower vertical extension
+          translate([BarrelSleeveLength()+0.25,0,-BarrelRadius()-lowerExtension])
+          ChamferedCylinder(r1=0.5, r2=1/16,
+                             h=lowerExtension);
+      }
     }
     
     // MLOK slots
     for (M = [0,1]) mirror([0,M,0])
-    translate([BarrelSleeveLength()-1+0.25, -(BarrelRadius()+0.5), 0])
+    translate([BarrelSleeveLength()-1+0.25, -mlokOffset, 0])
     rotate([90,0,0]) {
       MlokSlot(1.5);
       MlokSlotBack(1.5);
