@@ -1131,11 +1131,11 @@ if ($preview) {
 
   if (_RENDER == "Forend")
     if (!_RENDER_PRINT)
-      TopBreak_Forend();
+      TopBreak_Forend(doRender=false);
     else
       rotate([0,90,0])
       translate([-ForendLength(),0,0])
-      TopBreak_Forend();
+      TopBreak_Forend(doRender=false);
 
   if (_RENDER == "Cluster")
     if (!_RENDER_PRINT)
