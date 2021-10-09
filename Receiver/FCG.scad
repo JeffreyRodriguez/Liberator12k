@@ -292,6 +292,7 @@ module Trigger2d() {
             abs(ReceiverLugRearZ())+0.375]);
 
     // Clearance for the receiver lugs
+    translate([LowerMaxX(),-LowerOffsetZ()])
     projection(cut=true)
     rotate([-90,0,0]) {
       ReceiverLugFront(cutter=true);
@@ -968,38 +969,61 @@ module FCG_Housing(clearance=0.01, debug=false, alpha=1) {
 }
 
 module SearSupportTab(cutter=false, clearance=0.015) {
+  clearance2 = clearance*2;
+  width = 0.25-clearance*2;
+  
+  frontExtra = 0.375;
+  backHeight = 0.375;
 
   color("Chocolate")
   render(convexity=4)
   difference() {
-    translate([-LowerMaxX(),0, LowerOffsetZ()])
     union() {
-      rotate([90,0,0])
-      linear_extrude(height=SearDiameter()-0.01, center=true) {
-
-        // Sear Body
-        translate([ReceiverLugRearMaxX(),0])
-        mirror([0,1])
-        square([abs(ReceiverLugRearMaxX())+0.375, TriggerHeight()-clearance]);
-
-        // Front Corner
-        translate([0,GripCeilingZ()])
-        square([ReceiverLugFrontMinX()+TriggerTravel(), GripCeiling()-ManifoldGap()]);
-
-        // Back Corner
-        translate([ReceiverLugRearMinX()+0.01,ReceiverLugRearZ()+ManifoldGap()])
-        mirror([0,1])
-        square([abs(ReceiverLugRearMinX()), 0.375]);
-      }
+      
+      // Body
+      translate([-LowerMaxX()+ReceiverLugRearMaxX(),-(width/2), LowerOffsetZ()-TriggerHeight()+clearance])
+      ChamferedCube([ReceiverLugFrontMinX()-0.5-ReceiverLugRearMaxX(),
+            width,
+            TriggerHeight()-(clearance*2)], r=1/16,
+            teardropFlip=[true,true,true]);
+      
+      // Front Stop
+      translate([-LowerMaxX(),
+                  -(width/2),
+                   LowerOffsetZ()-GripCeiling()])
+      ChamferedCube([ReceiverLugFrontMinX(),
+            width,
+            GripCeiling()], r=1/16,
+            teardropFlip=[true,true,true]);
+      
+      // Front Leg
+      translate([-LowerMaxX(),
+                  -(width/2),
+                   LowerOffsetZ()-GripCeiling()])
+      ChamferedCube([ReceiverLugFrontMinX()+frontExtra,
+            width,
+            0.25], r=1/16,
+            teardropFlip=[true,true,true]);
+        
+      
+      // Back Leg
+      translate([ReceiverLugRearMinX()-LowerMaxX(),
+                  -(width/2),
+                   LowerOffsetZ()+ReceiverLugRearZ()-backHeight])
+      ChamferedCube([abs(ReceiverLugRearMinX()),
+            width,
+            backHeight-clearance], r=1/16);
     }
-
-    if (!cutter)
-    translate([0,0,-SearTravel()])
-    Sear(length=SearLength()+(SearTravel()*4), cutter=true);
-
-    ReceiverLugFront(cutter=true, clearance=clearance);
-
-    ReceiverLugRear(cutter=true, clearance=clearance, hole=false);
+    
+    
+    // Sear cutout
+    translate([-LowerMaxX()-SearRadius(),
+                (width/2)-clearance,
+                 -SearLength()-SearTravel()-SearSpringCompressed()-SearBottomOffset()])
+    rotate([90,0,0])
+    ChamferedSquareHole([width+clearance2, SearLength()], length=width+clearance2,
+                         corners=false, center=false,
+                         chamferRadius=1/16);
 
   }
 }

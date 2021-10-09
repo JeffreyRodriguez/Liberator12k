@@ -440,7 +440,7 @@ module Lower_MountFront(id=ReceiverID(), alpha=1, debug=false, doRender=true) {
                             teardropBottom=true,
                             teardropTop=true);
       // Sear support
-      translate([-LowerMaxX(),0,LowerOffsetZ()])
+      translate([-LowerMaxX(),0,0])
       hull() {
         translate([0.125,-0.3125/2,-(id/2)-0.3125])
         ChamferedCube([0.25, 0.3125, id/2], r=1/16, teardropFlip=[true,true,true]);
@@ -450,8 +450,7 @@ module Lower_MountFront(id=ReceiverID(), alpha=1, debug=false, doRender=true) {
       }
     }
     
-    translate([-LowerMaxX()-0.01,0,LowerOffsetZ()+ReceiverBottomZ()])
-    Sear(length=SearLength()+abs(ReceiverBottomZ()), cutter=true);
+    Sear(length=SearLength()+abs(ReceiverBottomZ()), cutter=true, clearance=0.015);
   }
 }
 
@@ -480,19 +479,19 @@ module Lower_MountRear(id=ReceiverID(), alpha=1, debug=false, doRender=true) {
     difference() {
       
       // Receiver ID
-      translate([ReceiverLugRearMaxX(),0,0])
+      translate([-LowerMaxX()+ReceiverLugRearMaxX(),0,0])
       rotate([0,-90,0])
       ChamferedCircularHole(r1=id/2, r2=1/8, h=mountLength,
                             teardropBottom=true,
                             teardropTop=true);
       
       // Hammer Guide
-      translate([ReceiverLugRearMaxX(),-0.3125/2,-(id/2)-0.375])
+      translate([-LowerMaxX()+ReceiverLugRearMaxX(),-0.3125/2,-(id/2)-0.375])
       mirror([1,0,0])
       ChamferedCube([mountLength, 0.3125, id/2], r=1/16, teardropFlip=[true,true,true]);
       
       // Bevel
-      translate([LowerMaxX()-ReceiverLength()+00.75,-ReceiverIR(),-ReceiverIR()])
+      translate([-ReceiverLength()+00.75,-ReceiverIR(),-ReceiverIR()])
       rotate([0,-90-45,0])
       cube([ReceiverID(), ReceiverID(), ReceiverID()]);
       
