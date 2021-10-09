@@ -60,24 +60,6 @@ PRESET_ASSEMBLY_PNG := $(addsuffix /Assembly.png,$(PRESETS))
 PRESET_HTML := $(addsuffix /README.html,$(PRESETS))
 PRESET_MP4 := $(addsuffix .mp4, $(PRESET_STLS))
 
-$(PRESET_STLS): $(PRESETS)
-	$(eval CLASS_PRESET=$(firstword $(subst /, ,$@)))
-	$(eval CLASS=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$1 }'))
-	$(eval PRESET=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$2 }'))
-	$(eval PART=$(basename $(notdir $@)))
-	@echo Target: $@
-	@echo Deps: $^
-	@echo Class_Preset: $(CLASS_PRESET)
-	@echo Class: $(CLASS)
-	@echo Preset: $(PRESET)
-	@echo Part: $(PART)
-	@mkdir -p $(dir $@) && \
-	$(OSBIN) $(OSOPTS) --render \
-	  -D _RENDER=\"$(PART)\" -D _RENDER_PRINT=false \
-		--projection=p --camera=0,400,400,0,100,100 \
-		-o $@ -o $(CLASS_PRESET)/$(PART).png \
-		-P $(PRESET) \
-		$(CLASS).scad
 
 Assembly_STL=$(addprefix Assembly/, $(TopBreak_STLS) $(TopBreak_Hardware_STL) $(Revolver_STLS) $(Revolver_Hardware_STL));
 
@@ -121,7 +103,7 @@ $(PRESET_HTML): %/README.html : %.md %/Assembly.jpg %/Preview_thumb.jpg %/Previe
 $(CLASS_HTML): %.html : %.md
 	$(MDBIN) $< | sed 's/\.md/\.html/' > $@
 
-TARGETS = README.html $(CLASSES) $(CLASS_HTML) $(PRESETS) $(PRESET_HTML) $(PRESET_STLS) $(Assembly_STL) #$(PRESET_MP4) 
+TARGETS = README.html $(Assembly_STL) $(PRESET_HTML) $(PRESET_STLS) #$(PRESET_MP4) 
 
 clean-dir:
 	rm -rf $(TARGETS)
