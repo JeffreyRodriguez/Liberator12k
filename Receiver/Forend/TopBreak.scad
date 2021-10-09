@@ -83,6 +83,11 @@ GP_BOLT_CLEARANCE = 0.015;
 BARREL_SET_SCREW = "#8-32"; // ["M4", "#8-32"]
 BARREL_SET_SCREW_CLEARANCE = -0.05;
 
+CLUSTER_BOLT = "#8-32"; // ["M4", "#8-32"]
+CLUSTER_BOLT_CLEARANCE = 0.015;
+CLUSTER_BOLT_HEAD = "flat"; // ["flat", "socket"]
+CLUSTER_BOLT_NUT = "none"; // ["none", "heatset"]
+
 GRIP_BOLT = "1/4\"-20"; // ["M6", "1/4\"-20"]
 GRIP_BOLT_CLEARANCE = -0.05;
 
@@ -128,6 +133,9 @@ assert(GripBolt(), "GripBolt() is undefined. Unknown GRIP_BOLT?");
 
 function GPBolt() = BoltSpec(GP_BOLT);
 assert(GPBolt(), "GPBolt() is undefined. Unknown GP_BOLT?");
+
+function ClusterBolt() = BoltSpec(CLUSTER_BOLT);
+assert(ClusterBolt(), "ClusterBolt() is undefined. Unknown CLUSTER_BOLT?");
 
 function BarrelSleeveRadius(clearance=0)
     = BarrelSleeveDiameter(clearance*2)/2;
@@ -437,14 +445,14 @@ module TopBreak_MlokBolts(headType="flat", nutType="heatset", length=0.5, cutter
              clearance=cutter?clearance:0);
 }
 
-module TopBreak_ClusterBolts(headType="flat", nutType="none", length=0.5, cutter=false, clearance=0.005, teardrop=false) {
+module TopBreak_ClusterBolts(bolt=ClusterBolt(), headType=CLUSTER_BOLT_HEAD, nutType=CLUSTER_BOLT_NUT, length=0.5, cutter=false, clearance=0.005, teardrop=false) {
   color("Silver") RenderIf(!cutter)
   for (X = [-0.5,-1.5])
   translate([BarrelSleeveLength()+X,0,BarrelRadius()])
-  NutAndBolt(bolt=MlokBolt(),
+  NutAndBolt(bolt=bolt,
              boltLength=length+ManifoldGap(2),
-             head=headType, capHeightExtra=(cutter?1:0),
-             nut=nutType,
+             head=headType, capHeightExtra=(cutter?BarrelRadius():0),
+             nut=nutType, nutHeightExtra=(cutter?BarrelRadius():0),
              teardrop=cutter, teardropAngle=180,
              clearance=cutter?clearance:0,
              doRender=!cutter);
@@ -813,8 +821,12 @@ module TopBreak_LatchTab(debug=false, cutter=false, clearance=0.01, alpha=1) {
 module TopBreak_VerticalForegrip(debug=false, alpha=1) {
   color("Tan", alpha) render()
   difference() {  
-    translate([BarrelSleeveLength()+0.25,0,-BarrelRadius()-3.5])
-    ChamferedCylinder(r1=0.5, r2=1/16, h=2.75);
+    hull() {
+      translate([BarrelSleeveLength()+0.25,0,-BarrelRadius()-3.5])
+      ChamferedCylinder(r1=0.5, r2=1/16, h=2.75);
+    }
+    
+    
     
     TopBreak_GripBolt(cutter=true, teardrop=false);
   }
