@@ -374,9 +374,13 @@ module ReceiverBackSegment(length=ReceiverBackLength()) {
   color("Chocolate") render()
   difference() {
     translate([-ReceiverLength(),0,0])
-    Receiver_Segment(highTop=false, length=length);
+    Receiver_Segment(highTop=false, length=length, chamferBack=true);
     
     Receiver_TensionBolts(nutType="none", headType="none", cutter=true);
+    
+    translate([-ReceiverLength(),0,0])
+    rotate([0,-90,0])
+    ChamferedCircularHole(r1=0.25, r2=1/16, h=length);
   }
 }
 
