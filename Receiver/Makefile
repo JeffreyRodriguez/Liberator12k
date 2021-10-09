@@ -43,7 +43,7 @@ Assembly_STL=$(addprefix Assembly/, $(Parts_STL) $(Hardware_STL))
 Assembly: $(Assembly_STL)
 
 Preview=Minuteman Frame Stock Lower FCG CAFE12 FP37
-Preview_PNG=$(addprefix Preview_,$(addsuffix .jpg, $(VIEWS)))
+Preview_PNG=$(addprefix Preview_,$(addsuffix .png, $(VIEWS)))
 Preview_JPG=$(addprefix Preview_,$(addsuffix .jpg, $(VIEWS)))
 
 TARGETS = README.html $(Preview_PNG) $(Preview_JPG) $(Components_HTML) $(Parts_STL) $(Parts_STL_png) $(Parts_STL_thumb) $(Preview_STL) $(Assembly_STL)
