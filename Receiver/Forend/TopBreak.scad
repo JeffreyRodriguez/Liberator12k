@@ -628,9 +628,6 @@ module TopBreak_Forend(clearance=0.005, doRender=true, debug=false, alpha=1) {
       Frame_Bolts(cutter=true);
        
       TopBreak_Extractor(cutter=true);
-
-      *translate([-TopBreak_ReceiverFrontLength(),0,0])
-      ActionRod(length=ActionRodLength(), cutter=true);
     }
   }
 }
