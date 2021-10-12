@@ -1,51 +1,65 @@
 # 2a: CAFE12+ Forend
 ![Forend Assembly](Preview_htmldoc.jpg)
 
-A 12ga [Top Break](TopBreak.md) variant based on the venerable pipe shotgun.
+A 12ga [Top Break](TopBreak.md) variant inspired by the venerable pipe shotgun.
 
-This **Plus** version uses 4130 tube instead of Schedule 40 pipe.
-The *BarrelCollar* is not compatible between the CAFE12 and CAFE12+.
-If you didn't buy a kit from the
-[\#Liberator12k store](https://liberator12k.com/store/)
-or are planning to build with Schedule 40 pipe, check out
-[Build 2b: CAFE12](TopBreak_CAFE12.md). 
-
-This is the gun I set out to make when I started the project;
-better than a slamfire in two big ways:
-It has an extractor and a trigger.
-Additionally, the barrel isn't a separate piece you need 3 hands to reload.
+The CAFE12 is the gun I set out to make when I started the project.
 Since it's built with \#Liberator12k platform components it features:
 
 * Optics-ready Picatinny Rail
 * QD Sling
-* MLOK
 * Modular components
 * Ambidextrous
+
+## CAFE12 or CAFE2+
+The **Plus** version uses 4130 tube instead of Schedule 40 pipe.
+3/4" Schedule 40 pipes and 4130 tube are different sizes, so the
+CAFE12 and CAFE12+ forends do not share parts.
+
+The CAFE12 will be slightly cheaper, and you can easily source the parts from
+your local hardware stores. *That said* tubing is much stronger than pipe.
+
+## The Easy Way
+You can buy a kit from the [\#Liberator12k store](https://liberator12k.com/store/)
+which includes everything you need, and uses the stronger 4130 tube.
 
 ## Prints
 420g, 2d08h09m
 
-| Part          | Filament Used | Print Time @ 0.4mm |
-|---------------|---------------|--------------------|
-| ReceiverFront | 57g           |   07h17m           |
-| Forend        | 189g          | 1d01h10m           |
-| BarrelCollar  | 114g          |   15h00m           |
-| Extractor     | 14g           |    1h55m           |
+| Part              | Filament Used | Print Time @ 0.4mm |
+|-------------------|---------------|--------------------|
+| ReceiverFront     | 57g           |   07h17m           |
+| Forend            | 189g          | 1d01h10m           |
+| BarrelCollar      | 114g          |   15h00m           |
+| Extractor         | 14g           |    1h55m           |
+| LatchBlock        | 114g          |   15h00m           |
+| Cluster           | ?g            |   ?h?m             |
+| Vertical Foregrip | ?g            |   ?h?m             |
 <br/>
 
-|ReceiverFront|Forend|
-|-|-|
-|![](ReceiverFront_thumb.jpg)|![](Forend_thumb.jpg)|
+|ReceiverFront|Forend|BarrelCollar|
+|-|-|-|
+|![](ReceiverFront_thumb.jpg)|![](Forend_thumb.jpg)|![](BarrelCollar_thumb.jpg)|
 
-|BarrelCollar|Extractor|
+|LatchTab|Extractor|
 |-|-|
-|![](BarrelCollar_thumb.jpg)|![](Extractor_thumb.jpg)|
+|![](LatchTab_thumb.jpg)|![](Extractor_thumb.jpg)|
 
-## Bill of Materials
-| Part                             | Quantity |
-|----------------------------------|----------|
-| 1.25"x0.125" 4130 Tubing 8" Long | 1        |
-| 1"x0.093" 4130 Tubing 18.5" Long | 1        |
+|Cluster|Vertical Foregrip|
+|-|-|
+|![](Cluster_thumb.jpg)|![](VerticalForegrip_thumb.jpg)|
+
+### Hardware
+| Purpose                | Part                             | Metric Alternative | Quantity |
+|------------------------|----------------------------------|--------------------|----------|
+| Extractor Bit          | #2 flat 1/4" Hex Bit             | TODO               | 1        |
+| Extractor Retainer     | #8-32x5/8" Socket Cap Screw      | TODO               | 1        |
+| Extractor Retainer Nut | #8-32 Heatset Nut (Long)         | TODO               | 1        |
+| Latch Bars             | 1/4"x3" Square Rod               | TODO               | 2        |
+| Latch Screws           | #8-32x3/4" Flat Head Screw       | TODO               | 2        |
+| Latch Springs          | (same as sear spring)            | TODO               | 2        |
+| Barrel Sleeve          | 1.25"x0.125" 4130 Tubing 8" Long | TODO               | 1        |
+| Barrel                 | 1"x0.093" 4130 Tubing 18.5" Long | TODO               | 1        |
 <br/>
 
 ### Metric BOM
