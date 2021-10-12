@@ -347,7 +347,7 @@ module TopBreak_ExtractorRetainer(debug=false, cutter=false, teardrop=false, cle
        doRender=!cutter);
 }
 
-module TopBreak_Latch(doMirror=true, debug=false, cutter=false, clearance=LATCH_CLEARANCE, alpha=1) { 
+module TopBreak_LatchBar(doMirror=true, debug=false, cutter=false, clearance=LATCH_CLEARANCE, alpha=1) { 
   clear = cutter?clearance:0;
   clear2 = clear*2;
 
@@ -514,7 +514,7 @@ module TopBreak_ReceiverFront(cutter=false, debug=false, alpha=1) {
     }
     
     Frame_Bolts(cutter=true);
-    TopBreak_Latch(cutter=true);
+    TopBreak_LatchBar(cutter=true);
     
     translate([-TopBreak_ReceiverFrontLength(),0,0]) {
       RecoilPlate(length=RECOIL_PLATE_LENGTH, cutter=true);
@@ -682,7 +682,7 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, debu
     
     if (!cutter) {
       
-      TopBreak_Latch(cutter=true);
+      TopBreak_LatchBar(cutter=true);
       TopBreak_LatchTab(cutter=true);
       TopBreak_LatchSpring(cutter=true);
       
@@ -1038,7 +1038,7 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
     translate([-TopBreak_ExtractorTravel()*extractFactor,0,0]) {
       
       if (_SHOW_LATCH) {
-        TopBreak_Latch();
+        TopBreak_LatchBar();
         TopBreak_LatchTab();
       }
       
@@ -1170,10 +1170,10 @@ if ($preview) {
 
   if (_RENDER == "Latch")
     if (!_RENDER_PRINT)
-      TopBreak_Latch();
+      TopBreak_LatchBar();
     else
       translate([0,0,-TopBreak_LatchZ()])
-      TopBreak_Latch(doMirror=false);
+      TopBreak_LatchBar(doMirror=false);
 
   if (_RENDER == "LatchTab")
     if (!_RENDER_PRINT)
