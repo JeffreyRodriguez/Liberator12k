@@ -4,7 +4,7 @@ include <../Meta/Animation.scad>;
 
 use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
-use <../Meta/Debug.scad>;
+use <../Meta/Cutaway.scad>;
 use <../Meta/Resolution.scad>;
 use <../Meta/Conditionals/RenderIf.scad>;
 
@@ -93,10 +93,10 @@ echo("Bullpup_BoltLength", Bullpup_BoltLength());
 // ************
 // * Vitamins *
 // ************
-module Bullpup_Bolts(debug=false, head="hex", nut="heatset", cutter=false, teardrop=false, clearance=0.01, teardropAngle=0) {
+module Bullpup_Bolts(cutaway=false, head="hex", nut="heatset", cutter=false, teardrop=false, clearance=0.01, teardropAngle=0) {
   clear = cutter ? clearance : 0;
 
-  color("Silver") RenderIf(!cutter) DebugHalf(debug)
+  color("Silver") RenderIf(!cutter) Cutaway(cutaway)
   for (M = [0,1]) mirror([0,M,0])
   translate([Bullpup_BoltX(), Bullpup_BoltY(), Bullpup_BoltZ()])
   rotate([0,90,0])
@@ -126,8 +126,8 @@ module Bullpup_TakedownPinRetainer(cutter=false, clearance=0.005) {
 // *****************
 // * Printed Parts *
 // *****************
-module Bullpup_Front(length=Bullpup_FrontLength(), debug=false, alpha=1) {
-  color("Chocolate", alpha) render() DebugHalf(debug)
+module Bullpup_Front(length=Bullpup_FrontLength(), cutaway=false, alpha=1) {
+  color("Chocolate", alpha) render() Cutaway(cutaway)
   difference() {
     union() {
       
@@ -150,8 +150,8 @@ module Bullpup_Front(length=Bullpup_FrontLength(), debug=false, alpha=1) {
     Bullpup_Bolts(cutter=true);
   }
 }
-module Bullpup_Rear(length=ReceiverLength()+Bullpup_BackplateLength(), debug=false, alpha=1) {
-  color("Chocolate", alpha) render() DebugHalf(debug)
+module Bullpup_Rear(length=ReceiverLength()+Bullpup_BackplateLength(), cutaway=false, alpha=1) {
+  color("Chocolate", alpha) render() Cutaway(cutaway)
   difference() {
     
     union() {
@@ -225,8 +225,8 @@ module Bullpup_Rear(length=ReceiverLength()+Bullpup_BackplateLength(), debug=fal
   }
 }
 
-module Bullpup_TriggerBar(cutter=false, debug=false, alpha=1) {
-  color("Olive", alpha) RenderIf(!cutter) DebugHalf(debug)
+module Bullpup_TriggerBar(cutter=false, cutaway=false, alpha=1) {
+  color("Olive", alpha) RenderIf(!cutter) Cutaway(cutaway)
   
   //translate([Bullpup_LowerX(),0,Bullpup_LowerZ()])
   //translate([-LowerMaxX(),0,ReceiverBottomZ()]) 
@@ -252,7 +252,7 @@ module BullpupAssembly() {
     SearPin();
   }
   
-  Bullpup_TriggerBar(debug=_CUTAWAY_BULLPUP, alpha=_ALPHA_BULLPUP);
+  Bullpup_TriggerBar(cutaway=_CUTAWAY_BULLPUP, alpha=_ALPHA_BULLPUP);
   
   translate([StockLength()-0.5-1,0,0]) {
     
@@ -261,7 +261,7 @@ module BullpupAssembly() {
     
     if (_SHOW_BUTTPAD) {
       Stock_ButtpadBolt();
-      Stock_Buttpad(alpha=_ALPHA_BUTTPAD, debug=_CUTAWAY_BUTTPAD);
+      Stock_Buttpad(alpha=_ALPHA_BUTTPAD, cutaway=_CUTAWAY_BUTTPAD);
     }
   }
     
@@ -270,8 +270,8 @@ module BullpupAssembly() {
   translate([Bullpup_LowerX(),0,Bullpup_LowerZ()])
   Lower();
   
-  Bullpup_Rear(debug=_CUTAWAY_BULLPUP, alpha=_ALPHA_BULLPUP);
-  Bullpup_Front(debug=_CUTAWAY_BULLPUP, alpha=_ALPHA_BULLPUP);
+  Bullpup_Rear(cutaway=_CUTAWAY_BULLPUP, alpha=_ALPHA_BULLPUP);
+  Bullpup_Front(cutaway=_CUTAWAY_BULLPUP, alpha=_ALPHA_BULLPUP);
 }
 
 scale(25.4)
@@ -306,10 +306,10 @@ if ($preview) {
   if (_SHOW_RECEIVER)
   translate([-0.5,0,0]) {
     if (_RECEIVER_TYPE == "Frame") {
-      Frame_Receiver(debug=_CUTAWAY_RECEIVER);
-      Frame_Bolts(debug=_CUTAWAY_RECEIVER);
+      Frame_Receiver(cutaway=_CUTAWAY_RECEIVER);
+      Frame_Bolts(cutaway=_CUTAWAY_RECEIVER);
     } else {
-      Receiver(debug=_CUTAWAY_RECEIVER);
+      Receiver(cutaway=_CUTAWAY_RECEIVER);
     }
   }
   

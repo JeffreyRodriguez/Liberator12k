@@ -1,4 +1,4 @@
-use <../../Meta/Debug.scad>;
+use <../../Meta/Cutaway.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Resolution.scad>;
 use <../Teardrop.scad>;

@@ -1,6 +1,6 @@
 
 //$t=0.6;
-use <../Meta/Debug.scad>;
+use <../Meta/Cutaway.scad>;
 use <../Meta/Manifold.scad>;
 use <../Meta/Resolution.scad>;
 use <../Meta/Conditionals/RenderIf.scad>;
@@ -418,11 +418,11 @@ module ReceiverLugFront(width=UnitsImperial(0.5), extraTop=ManifoldGap(),
 //*****************
 //* Printed Parts *
 //*****************
-module Lower_MountFront(id=ReceiverID(), alpha=1, debug=false, doRender=true) {
+module Lower_MountFront(id=ReceiverID(), alpha=1, cutaway=false, doRender=true) {
   mountLength = 1.75-0.01;
   
   color("Chocolate")
-  RenderIf(doRender) DebugHalf(debug)
+  RenderIf(doRender) Cutaway(cutaway)
   difference() {
     union() {
       ReceiverLugFront(doRender=false, extraTop=-ReceiverBottomZ());
@@ -454,14 +454,14 @@ module Lower_MountFront(id=ReceiverID(), alpha=1, debug=false, doRender=true) {
   }
 }
 
-module Lower_MountRear(id=ReceiverID(), alpha=1, debug=false, doRender=true) {
+module Lower_MountRear(id=ReceiverID(), alpha=1, cutaway=false, doRender=true) {
   mountLength = ReceiverLength()
               - abs(ReceiverLugRearMaxX())
               - LowerMaxX()
               - ManifoldGap();
   
   color("Chocolate")
-  RenderIf(doRender) DebugHalf(debug)
+  RenderIf(doRender) Cutaway(cutaway)
   difference() {
     union() {
       
@@ -556,7 +556,7 @@ module Lower_Middle() {
 //**************
 //* Assemblies *
 //**************
-module LowerMount(alpha=1, debug=false) {
+module LowerMount(alpha=1, cutaway=false) {
   if (_SHOW_TAKEDOWN_PIN_RETAINER)
   Lower_MountTakedownPinRetainer();
   
@@ -572,7 +572,7 @@ module LowerMount(alpha=1, debug=false) {
 
 module Lower(bolts=true,
             showMiddle=true, showLeft=true, showRight=true,
-            debug=false, alpha=1) {
+            cutaway=false, alpha=1) {
       boltLength = 1.25;
   // Trigger Guard Center
   if (showMiddle)
@@ -597,7 +597,7 @@ if ($preview) {
   SimpleFireControlAssembly();
   
   if (_SHOW_RECEIVER)
-  Receiver(debug=_CUTAWAY_RECEIVER, alpha=_ALPHA_RECEIVER);
+  Receiver(cutaway=_CUTAWAY_RECEIVER, alpha=_ALPHA_RECEIVER);
 } else {
 
   // *****************

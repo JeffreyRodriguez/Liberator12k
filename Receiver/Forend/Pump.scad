@@ -2,7 +2,7 @@ include <../../Meta/Animation.scad>;
 
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
-use <../../Meta/Debug.scad>;
+use <../../Meta/Cutaway.scad>;
 use <../../Meta/Resolution.scad>;
 
 use <../../Shapes/Chamfer.scad>;
@@ -82,13 +82,13 @@ function MagazineSquareTube() = Spec_SquareTubeOneInch();
 // ************
 // * Vitamins *
 // ************
-module PumpMagazine(height=10.875, hollow=false, clearance=undef, alpha=1, debug=false) {
+module PumpMagazine(height=10.875, hollow=false, clearance=undef, alpha=1, cutaway=false) {
 
   color("Silver", alpha)
   for (R = [90]) rotate([R,0,0])
   translate([0,MagazineOffset(),0])
   rotate([0,90,0])
-  DebugHalf(debug)
+  Cutaway(cutaway)
   linear_extrude(height=height)
   rotate(0)
   PumpMagazine2d(hollow=hollow);
@@ -101,11 +101,11 @@ module PumpMagazineShells() {
   rotate([0,90,0])
   ShellSlugBall(height=2.0);
 }
-module BarrelCollar(clearance=0.002, cutter=false, debug=false) {
+module BarrelCollar(clearance=0.002, cutter=false, cutaway=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
-  color("Silver") DebugHalf(debug)
+  color("Silver") Cutaway(cutaway)
   difference() {
     translate([8,0,0])
     rotate([0,90,0])
@@ -119,8 +119,8 @@ module BarrelCollar(clearance=0.002, cutter=false, debug=false) {
 
 module Barrel(barrel=BarrelPipe(), barrelLength=BarrelLength(),
               hollow=true, cutter=false,
-              clearance=undef, alpha=1, debug=false) {
-  color("SteelBlue", alpha) DebugHalf(debug)
+              clearance=undef, alpha=1, cutaway=false) {
+  color("SteelBlue", alpha) Cutaway(cutaway)
   translate([0,0,0])
   rotate([0,90,0])
   Pipe(pipe=barrel, clearance=clearance,
@@ -163,7 +163,7 @@ module ShellLoadingSupport() {
 // *****************
 // * Printed Parts *
 // *****************
-module ReceiverFront(alpha=1, debug=false) {
+module ReceiverFront(alpha=1, cutaway=false) {
   difference() {
     Receiver_Segment(length=ReceiverFrontLength());
     
@@ -171,11 +171,11 @@ module ReceiverFront(alpha=1, debug=false) {
   }
 }
 
-module PumpForend(alpha=1, debug=false) {
+module PumpForend(alpha=1, cutaway=false) {
   ForendWall=0.25;
   ForendLength=5;
 
-  color("Green", alpha) DebugHalf(debug)
+  color("Green", alpha) Cutaway(cutaway)
   difference() {
     mirror([1,0,0])
     Receiver_Segment(length=ForendLength);
@@ -204,13 +204,13 @@ module PumpForend(alpha=1, debug=false) {
 // **************
 // * Assemblies *
 // **************
-module PumpShotgunAssembly(debug=false) {
+module PumpShotgunAssembly(cutaway=false) {
 
   ShellLoadingSupport();
 
   translate([-ReceiverFrontLength(),0,0]) {
-    Receiver(debug=debug);
-    *Frame_Receiver(debug=debug);
+    Receiver(cutaway=cutaway);
+    *Frame_Receiver(cutaway=cutaway);
     
     StockAssembly();
     
@@ -231,17 +231,17 @@ module PumpShotgunAssembly(debug=false) {
   ShellSlugBall(height=2.0);
 
   translate([BarrelTravel()*(Animate(ANIMATION_STEP_UNLOAD)-Animate(ANIMATION_STEP_LOAD)),0,0]) {
-    Barrel(debug=debug, hollow=true);
-    BarrelCollar(debug=debug);
-    //PumpForend(alpha=1, debug=debug);
+    Barrel(cutaway=cutaway, hollow=true);
+    BarrelCollar(cutaway=cutaway);
+    //PumpForend(alpha=1, cutaway=cutaway);
   }
 
-  PumpMagazine(hollow=true, debug=false, alpha=0.5);
+  PumpMagazine(hollow=true, cutaway=false, alpha=0.5);
 }
 
 scale(25.4)
 if ($preview) {
-  PumpShotgunAssembly(debug=false);
+  PumpShotgunAssembly(cutaway=false);
 } else {
   if (_RENDER == "PumpForend")
   rotate([0,-90,0])

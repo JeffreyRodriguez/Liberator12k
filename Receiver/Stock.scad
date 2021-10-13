@@ -1,7 +1,7 @@
 //$t=0;
 use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
-use <../Meta/Debug.scad>;
+use <../Meta/Cutaway.scad>;
 use <../Meta/Resolution.scad>;
 use <../Meta/Conditionals/RenderIf.scad>;
 
@@ -73,7 +73,7 @@ $fs = UnitsFs()*ResolutionFs();
 // ************
 // * Vitamins *
 // ************
-module Stock_ButtpadBolt(debug=false, head="flat", nut="heatset", cutter=false, teardrop=false, clearance=0.01, teardropAngle=0) {
+module Stock_ButtpadBolt(cutaway=false, head="flat", nut="heatset", cutter=false, teardrop=false, clearance=0.01, teardropAngle=0) {
   clear = cutter ? clearance : 0;
 
   for (Z = [0,-1.5])
@@ -86,11 +86,11 @@ module Stock_ButtpadBolt(debug=false, head="flat", nut="heatset", cutter=false, 
              clearance=clear, teardrop=cutter&&teardrop,
              doRender=!cutter);
 }
-module Stock_TakedownPin(cutter=false, clearance=0.005, alpha=1, debug=false) {
+module Stock_TakedownPin(cutter=false, clearance=0.005, alpha=1, cutaway=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
-  color("Silver") RenderIf(!cutter) DebugHalf(debug)
+  color("Silver") RenderIf(!cutter) Cutaway(cutaway)
   translate([Stock_TakedownPinX(),
              0,
              Receiver_TakedownPinZ()])
@@ -120,9 +120,9 @@ module Stock_TakedownPinRetainer(cutter=false, clearance=0.005) {
 // *****************
 // * Printed Parts *
 // *****************
-module Stock(length=StockLength(), doRender=true, debug=false, alpha=1) {
+module Stock(length=StockLength(), doRender=true, cutaway=false, alpha=1) {
   color("Tan", alpha=alpha)
-  RenderIf(doRender) DebugHalf(debug)
+  RenderIf(doRender) Cutaway(cutaway)
   difference() {
     
     // Main body
@@ -141,8 +141,8 @@ module Stock(length=StockLength(), doRender=true, debug=false, alpha=1) {
   }
 }
 
-module Stock_Backplate(length=Stock_BackplateLength(), clearance=0.008, debug=false, alpha=1) {
-  color("Chocolate", alpha) render() DebugHalf(debug)
+module Stock_Backplate(length=Stock_BackplateLength(), clearance=0.008, cutaway=false, alpha=1) {
+  color("Chocolate", alpha) render() Cutaway(cutaway)
   difference() {
     union() {
       
@@ -242,7 +242,7 @@ module Stock_Backplate(length=Stock_BackplateLength(), clearance=0.008, debug=fa
   }
 }
 
-module Stock_Buttpad(doRender=true, debug=false, alpha=1) {
+module Stock_Buttpad(doRender=true, cutaway=false, alpha=1) {
   receiverRadius=ReceiverOR();
   outsideRadius = receiverRadius+ButtpadWall();
   chamferRadius = 1/16;
@@ -254,7 +254,7 @@ module Stock_Buttpad(doRender=true, debug=false, alpha=1) {
   ribDepth=0.1875;
   compressionRadius = 3/16;
 
-  color("Tan", alpha) RenderIf(doRender) DebugHalf(debug)
+  color("Tan", alpha) RenderIf(doRender) Cutaway(cutaway)
   difference() {
     union() {
       
@@ -301,7 +301,7 @@ module Stock_Buttpad(doRender=true, debug=false, alpha=1) {
 // **************
 // * Assemblies *
 // **************
-module StockAssembly(debug=undef) {
+module StockAssembly(cutaway=undef) {
   if (_SHOW_BUTTPAD_BOLT)
   Stock_ButtpadBolt();
   
@@ -311,19 +311,19 @@ module StockAssembly(debug=undef) {
   }
   
   if (_SHOW_STOCK_BACKPLATE)
-  Stock_Backplate(alpha=_ALPHA_STOCK_BACKPLATE, debug=(debug == true || _CUTAWAY_STOCK_BACKPLATE));
+  Stock_Backplate(alpha=_ALPHA_STOCK_BACKPLATE, cutaway=(cutaway == true || _CUTAWAY_STOCK_BACKPLATE));
   
   if (_SHOW_BUTTPAD)
-  Stock_Buttpad(alpha=_ALPHA_BUTTPAD, debug=(debug == true || _CUTAWAY_BUTTPAD));
+  Stock_Buttpad(alpha=_ALPHA_BUTTPAD, cutaway=(cutaway == true || _CUTAWAY_BUTTPAD));
   
   if (_SHOW_STOCK)
-  Stock(alpha=_ALPHA_STOCK, debug=(debug == true || _CUTAWAY_STOCK));
+  Stock(alpha=_ALPHA_STOCK, cutaway=(cutaway == true || _CUTAWAY_STOCK));
 }
 
 scale(25.4)
 if ($preview) {
   if (_SHOW_RECEIVER)
-  ReceiverAssembly(debug=_CUTAWAY_RECEIVER);
+  ReceiverAssembly(cutaway=_CUTAWAY_RECEIVER);
   
   if (_SHOW_LOWER) {
     LowerMount();

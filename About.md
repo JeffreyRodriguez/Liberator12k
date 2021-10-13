@@ -61,8 +61,26 @@ A "Plus" tech level describes the 'better than minimal' tools for that level.
 | One Plus   | Lab power supply                                                |
 
 # Why
+
+## The Self Defense Imperative
+It is the imperative of every living organism to defend itself.
+
+The skin of Golden Poison Dart Frog is coated in 1mg of a toxin so deadly it
+can kill over a dozen adults - but you have to touch or eat it to be affected.
+The frog is bright yellow in an environment where most other creatures are
+trying to hide to avoid being eaten. Meanwhile, the frog is a predator too.
+
+All of history has been an evolutionary arms race for every living creature.
+Other organisms are willing to harm or kill you. Do as thou wilt.
+
+## Personal Protection
+
+## Democide v. Wishcasting
+
 I do not trust your government and they don't trust either of us.
 The power to create weapons is now in your hands, use it responsibly.
+
+## Some other thoughts of others
 
 > A man's natural rights are his own, against the whole world; and any infringement of them is equally a crime; whether committed by one man, or by millions; whether committed by one man, calling himself a robber, or by millions calling themselves a government.
 

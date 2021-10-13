@@ -55,7 +55,7 @@ module P12G_Fins(count=2, chamber=p12g_chamber, fin_width=p12g_fin_width,
 
 module P12G_Base(chamber=p12g_chamber, primer=Primer12gCO2,
                  fin_width=p12g_fin_width+1, fin_twist=pg12_fin_reference_twist, fin_height=pg12_fin_reference_height,
-                 rimHeight=0.1, height=(cartridgeMouth+cartridgeNeck), debug=false) {
+                 rimHeight=0.1, height=(cartridgeMouth+cartridgeNeck), cutaway=false) {
   difference() {
     scale([25.4, 25.4, 25.4])
     ShellBase(chamber=PipeOneInch, primer=primer,
@@ -71,7 +71,7 @@ module P12G_Base(chamber=p12g_chamber, primer=Primer12gCO2,
     #P12G_Fins(clearance=100);
     
     // Debugging companion cube
-    if (debug)
+    if (cutaway)
     translate([-30,0,-0.1])
     cube([30,30,30]);
   }
@@ -98,7 +98,7 @@ module P12G_Body(chamber=p12g_chamber, primer=Primer12gCO2,  wall_factor=0.6,
   }
 }
 
-module P12G_Cap(chamber=p12g_chamber, debug=false) {
+module P12G_Cap(chamber=p12g_chamber, cutaway=false) {
   //mirror([0,0,1])
   difference() {
     

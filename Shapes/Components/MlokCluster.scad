@@ -1,4 +1,4 @@
-use <../../Meta/Debug.scad>;
+use <../../Meta/Cutaway.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
 use <../../Meta/Resolution.scad>;
@@ -62,7 +62,7 @@ module MlokCluster(boltSpec=BoltSpec(MLOK_BOLT),
                   wall=0.1875, extension=0.25,
                   length=MlokClusterLength(),
                   slots=[0,-90,90,180],
-                  debug=false,
+                  cutaway=false,
                   alpha=1, $fn=Resolution(20,100)) {
 
 assert(boltSpec, "boltSpec is undefined. Unknown MLOK_BOLT?");
@@ -95,8 +95,8 @@ assert(boltSpec, "boltSpec is undefined. Unknown MLOK_BOLT?");
 if ($preview) {
 
   if (_SHOW_CLUSTER)
-  MlokCluster(alpha=_ALPHA_CLUSTER, debug=_CUTAWAY_CLUSTER);
+  MlokCluster(alpha=_ALPHA_CLUSTER, cutaway=_CUTAWAY_CLUSTER);
 } else {
   
-  MlokCluster(debug=false);
+  MlokCluster(cutaway=false);
 }

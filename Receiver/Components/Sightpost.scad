@@ -4,7 +4,7 @@ use <../../Meta/Manifold.scad>;
 use <../../Meta/Math/Circles.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
-use <../../Meta/Debug.scad>;
+use <../../Meta/Cutaway.scad>;
 use <../../Meta/Resolution.scad>;
 use <../../Meta/Conditionals/RenderIf.scad>;
 
@@ -18,7 +18,7 @@ use <../Receiver.scad>;
 _RENDER = ""; // ["Sightpost"]
 
 // Cut assembly view in half
-_DEBUG_ASSEMBLY = false;
+_CUTAWAY_ASSEMBLY = false;
 
 SIGHTPOST_DIAMETER = 1.0001;
 SIGHTPOST_CLEARANCE = 0.005;

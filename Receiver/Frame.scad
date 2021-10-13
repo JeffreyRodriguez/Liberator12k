@@ -1,6 +1,6 @@
 use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
-use <../Meta/Debug.scad>;
+use <../Meta/Cutaway.scad>;
 use <../Meta/Resolution.scad>;
 use <../Meta/Conditionals/RenderIf.scad>;
 
@@ -98,11 +98,11 @@ module Frame_BoltIterator() {
     children();
 }
 
-module Frame_Bolts(length=FrameBoltLength(), nut="hex", debug=false, cutter=false, clearance=0.01, alpha=1) {
+module Frame_Bolts(length=FrameBoltLength(), nut="hex", cutaway=false, cutter=false, clearance=0.01, alpha=1) {
   clear = cutter ? clearance : 0;
 
   color("Silver", alpha) RenderIf(!cutter)
-  DebugHalf(debug) {
+  Cutaway(cutaway) {
     translate([-FrameReceiverLength()-ManifoldGap(),0,0])
     Frame_BoltIterator()
     rotate([0,-90,0])
@@ -177,9 +177,9 @@ module Frame_Receiver_Segment(length=1, highTop=false, chamferFront=true, chamfe
 // ****************
 // * Printed Parts*
 // ****************
-module Frame_Spacer(length=FRAME_SPACER_LENGTH, debug=false, alpha=1) {
+module Frame_Spacer(length=FRAME_SPACER_LENGTH, cutaway=false, alpha=1) {
   color("Tan", alpha)
-  DebugHalf(debug) render()
+  Cutaway(cutaway) render()
   difference() {
     hull()
     Frame_Support(length=length);
@@ -193,20 +193,20 @@ module Frame_Spacer_print() {
   Frame_Spacer();
 }
 
-module Frame_Receiver(doRender=true, debug=false, alpha=1) {
+module Frame_Receiver(doRender=true, cutaway=false, alpha=1) {
   
   topCoverHeight = 1;
   
   // Branding text
   color("DimGrey")
-  RenderIf(doRender) DebugHalf(debug)
+  RenderIf(doRender) Cutaway(cutaway)
   FlipMirror([-FrameReceiverLength()/2, (FrameWidth()/2), FrameBoltZ()])
   rotate([90,0,0])
   linear_extrude(height=LogoTextDepth(), center=true)
   text(FRAME_BRANDING_TEXT, size=LogoTextSize(), font="Impact", halign="center", valign="center");
   
   color("Tan", alpha)
-  RenderIf(doRender) DebugHalf(debug)
+  RenderIf(doRender) Cutaway(cutaway)
   difference() {
     Receiver(doRender=false) {
       
@@ -252,12 +252,12 @@ module Frame_Receiver(doRender=true, debug=false, alpha=1) {
 // **************
 // * Assemblies *
 // **************
-module Frame_ReceiverAssembly(length=FrameBoltLength(), frameBolts=true, debug=_CUTAWAY_RECEIVER, alpha=1) {
+module Frame_ReceiverAssembly(length=FrameBoltLength(), frameBolts=true, cutaway=_CUTAWAY_RECEIVER, alpha=1) {
   
   if (frameBolts)
-  Frame_Bolts(length=length, debug=debug, alpha=alpha);
+  Frame_Bolts(length=length, cutaway=cutaway, alpha=alpha);
   
-  Frame_Receiver(debug=debug, alpha=_ALPHA_FRAME);
+  Frame_Receiver(cutaway=cutaway, alpha=_ALPHA_FRAME);
 }
 
 scale(25.4)

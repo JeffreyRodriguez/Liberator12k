@@ -2,7 +2,7 @@ use <../Shell Base.scad>;
 use <../Shell Topper.scad>;
 use <../Primer.scad>;
 
-use <../../Meta/Debug.scad>;
+use <../../Meta/Cutaway.scad>;
 use <../../Vitamins/Pipe.scad>;
 
 DEFAULT_CHAMBER_DIAMETER = 1.08;
@@ -43,7 +43,7 @@ module BatonTop(chamberDiameter=DEFAULT_CHAMBER_DIAMETER, height=1.5, alpha=1, $
 }
 
 //!scale(25.4)
-DebugHalf()
+Cutaway()
 PATBase(alpha=1);
       
 // Primer
@@ -52,6 +52,6 @@ Primer(primer=Spec_Primer27PAT());
 
 color("Khaki")
 translate([0,0,1.29])
-DebugHalf()
+Cutaway()
 //*!scale(25.4)
 BatonTop();

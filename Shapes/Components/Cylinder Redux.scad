@@ -1,7 +1,7 @@
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Meta/Conditionals/RenderIf.scad>;
 use <../../Meta/Resolution.scad>;
-use <../../Meta/Debug.scad>;
+use <../../Meta/Cutaway.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
 use <../../Meta/Math/Circles.scad>;
@@ -87,7 +87,7 @@ module OffsetZigZagRevolver(diameter=4, height=2.75,
            chamberBolts=true, chambers=true, chamberLength=undef,
            supportsTop=false, supportsBottom=false,
            cutter=false, radialClearance=0.015, linearClearance=0.03,
-           debug=false, alpha=_CYLINDER_ALPHA,
+           cutaway=false, alpha=_CYLINDER_ALPHA,
            render_cylinder=false) {
   radialClear = cutter ? radialClearance : 0;
   linearClear = cutter ? linearClearance : 0;
@@ -115,7 +115,7 @@ module OffsetZigZagRevolver(diameter=4, height=2.75,
   // Chamber Inserts
   if (chambers && !cutter)
   color("Silver", alpha) render()
-  DebugHalf(debug)
+  Cutaway(cutaway)
   RevolverChamberIterator(centerOffset=centerOffset, positions=positions)
   linear_extrude(height=chamberLength)
   difference() {
@@ -127,7 +127,7 @@ module OffsetZigZagRevolver(diameter=4, height=2.75,
 
   // The Cylinder
   color("Tan", alpha) RenderIf(render_cylinder)
-  DebugHalf(debug)
+  Cutaway(cutaway)
   difference() {
 
     // Body

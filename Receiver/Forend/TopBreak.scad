@@ -2,7 +2,7 @@ include <../../Meta/Animation.scad>;
 
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
-use <../../Meta/Debug.scad>;
+use <../../Meta/Cutaway.scad>;
 use <../../Meta/Resolution.scad>;
 use <../../Meta/Conditionals/RenderIf.scad>;
 use <../../Meta/Conditionals/MirrorIf.scad>;
@@ -332,7 +332,7 @@ module TopBreak_ExtractorBit(cartridgeRimThickness=RIM_WIDTH, cutter=false, clea
   }
 }
 
-module TopBreak_ExtractorRetainer(debug=false, cutter=false, teardrop=false, clearance=0.008) {
+module TopBreak_ExtractorRetainer(cutaway=false, cutter=false, teardrop=false, clearance=0.008) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
 
@@ -347,12 +347,12 @@ module TopBreak_ExtractorRetainer(debug=false, cutter=false, teardrop=false, cle
        doRender=!cutter);
 }
 
-module TopBreak_LatchBar(doMirror=true, debug=false, cutter=false, clearance=LATCH_CLEARANCE, alpha=1) { 
+module TopBreak_LatchBar(doMirror=true, cutaway=false, cutter=false, clearance=LATCH_CLEARANCE, alpha=1) { 
   clear = cutter?clearance:0;
   clear2 = clear*2;
 
   // Latch
-  color("Silver", alpha) RenderIf(!cutter) DebugHalf(debug)
+  color("Silver", alpha) RenderIf(!cutter) Cutaway(cutaway)
   MirrorIf(doMirror, [0,1,0], true)
   difference() {
     
@@ -380,7 +380,7 @@ module TopBreak_LatchSpring(length=TopBreak_LatchSpringLength(), compress=0, doM
            h=length-compress);
 }
 
-module TopBreak_LatchScrews(head="flat", doMirror=true, debug=false, cutter=false, clearance=0.008) {
+module TopBreak_LatchScrews(head="flat", doMirror=true, cutaway=false, cutter=false, clearance=0.008) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
 
@@ -395,12 +395,12 @@ module TopBreak_LatchScrews(head="flat", doMirror=true, debug=false, cutter=fals
 
 }
 
-module TopBreak_Barrel(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, length=BarrelLength(), clearance=BARREL_CLEARANCE, cartridgeRimThickness=RIM_WIDTH, sleeve=true, cutter=false, alpha=1, debug=false) {
+module TopBreak_Barrel(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, length=BarrelLength(), clearance=BARREL_CLEARANCE, cartridgeRimThickness=RIM_WIDTH, sleeve=true, cutter=false, alpha=1, cutaway=false) {
 
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
-  color("Silver") RenderIf(!cutter) DebugHalf(debug)
+  color("Silver") RenderIf(!cutter) Cutaway(cutaway)
   translate([0,0,BarrelZ()])
   difference() {
     union() {
@@ -472,8 +472,8 @@ module TopBreak_GripBolt(bolt=GripBolt(), headType="flat", nutType="heatset", le
 
 
 // Printed Parts
-module TopBreak_ReceiverFront(cutter=false, debug=false, alpha=1) {
-  color("Tan", alpha) render() DebugHalf(debug)
+module TopBreak_ReceiverFront(cutter=false, cutaway=false, alpha=1) {
+  color("Tan", alpha) render() Cutaway(cutaway)
   difference() {
     
     translate([-TopBreak_ReceiverFrontLength(),0,0])
@@ -525,12 +525,12 @@ module TopBreak_ReceiverFront(cutter=false, debug=false, alpha=1) {
   }
 }
 
-module TopBreak_Forend(clearance=0.005, doRender=true, debug=false, alpha=1) {  
+module TopBreak_Forend(clearance=0.005, doRender=true, cutaway=false, alpha=1) {  
   union() {
     
     // Branding text
     color("DimGrey", alpha) 
-    RenderIf(doRender) DebugHalf(debug) {
+    RenderIf(doRender) Cutaway(cutaway) {
       
       fontSize = 0.375;
       
@@ -549,7 +549,7 @@ module TopBreak_Forend(clearance=0.005, doRender=true, debug=false, alpha=1) {
     }
     
     color("Tan", alpha)
-    RenderIf(doRender) DebugHalf(debug)
+    RenderIf(doRender) Cutaway(cutaway)
     difference() {
       union() {
         Frame_Support(length=ForendLength(),
@@ -631,12 +631,12 @@ module TopBreak_Forend(clearance=0.005, doRender=true, debug=false, alpha=1) {
     }
   }
 }
-module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, debug=false, alpha=1) {
+module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, cutaway=false, alpha=1) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
   clearRear = 1/16;
 
-  color("Chocolate", alpha) RenderIf(!cutter) DebugHalf(debug)
+  color("Chocolate", alpha) RenderIf(!cutter) Cutaway(cutaway)
   difference() {
     union() {
       PivotOuterBearing(cutter=cutter);
@@ -719,12 +719,12 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, debu
   }
 }
 
-module TopBreak_Extractor(cutter=false, clearance=0.015, chamferRadius=1/16, debug=false, alpha=1) {
+module TopBreak_Extractor(cutter=false, clearance=0.015, chamferRadius=1/16, cutaway=false, alpha=1) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
   color("Olive", alpha)
-  RenderIf(!cutter) DebugHalf(debug)
+  RenderIf(!cutter) Cutaway(cutaway)
   difference() {
     PivotClearanceCut(cut=!cutter, clearance=0)
     union() {
@@ -781,13 +781,13 @@ module TopBreak_Extractor(cutter=false, clearance=0.015, chamferRadius=1/16, deb
   }
 }
 
-module TopBreak_LatchTab(debug=false, cutter=false, clearance=0.01, alpha=1) {
+module TopBreak_LatchTab(cutaway=false, cutter=false, clearance=0.01, alpha=1) {
   CR = 1/16;
   clear = cutter?clearance:0;
   clear2 = clear*2;
   clearCR = cutter?CR:0;
 
-  color("Olive", alpha) RenderIf(!cutter) DebugHalf(debug)
+  color("Olive", alpha) RenderIf(!cutter) Cutaway(cutaway)
   difference() {
     union() {
       
@@ -816,7 +816,7 @@ module TopBreak_LatchTab(debug=false, cutter=false, clearance=0.01, alpha=1) {
   }
 }
 
-module TopBreak_VerticalForegrip(debug=false, alpha=1) {
+module TopBreak_VerticalForegrip(cutaway=false, alpha=1) {
   color("Tan", alpha) render()
   difference() {  
     hull() {
@@ -829,7 +829,7 @@ module TopBreak_VerticalForegrip(debug=false, alpha=1) {
     TopBreak_GripBolt(cutter=true, teardrop=false);
   }
 }
-module TopBreak_Cluster(debug=false, alpha=1) {
+module TopBreak_Cluster(cutaway=false, alpha=1) {
   topExtension = 0.5;
   forwardExtension = 1.5;
   rearExtension = 2;
@@ -837,7 +837,7 @@ module TopBreak_Cluster(debug=false, alpha=1) {
   width = (7/16);
   mlokOffset = (BarrelSleeveRadius()+0.3125);
   
-  color("Tan", alpha) render() DebugHalf(debug)
+  color("Tan", alpha) render() Cutaway(cutaway)
   difference() {
     union() {
       
@@ -932,8 +932,8 @@ module TopBreak_Cluster(debug=false, alpha=1) {
     TopBreak_GripBolt(cutter=true, teardrop=true);
   }
 }
-module TopBreak_Foregrip(length=TopBreak_ForegripLength(), debug=false, alpha=1) {
-  color("Tan",alpha) render() DebugHalf(debug)
+module TopBreak_Foregrip(length=TopBreak_ForegripLength(), cutaway=false, alpha=1) {
+  color("Tan",alpha) render() Cutaway(cutaway)
   difference() {
     translate([TopBreak_ForegripOffsetX()+ChargerTravel(),0,0])
     rotate([0,90,0])
@@ -989,7 +989,7 @@ module TopBreak_Fixture_BarrelSleeve() {
 }
 
 // Assembly
-module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontAlpha=1, pivotFactor=0, extractFactor=0, chargeFactor=0, lockFactor=0, stock=true, tailcap=false, debug=undef) {
+module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontAlpha=1, pivotFactor=0, extractFactor=0, chargeFactor=0, lockFactor=0, stock=true, tailcap=false, cutaway=undef) {
 
   if (_SHOW_FCG)
   translate([-TopBreak_ReceiverFrontLength(),0,0]) {
@@ -997,17 +997,17 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
   }
   
   if (_SHOW_RECEIVER_FRONT)
-  TopBreak_ReceiverFront(debug=debug==true,
+  TopBreak_ReceiverFront(cutaway=cutaway==true,
                          alpha=_ALPHA_RECEIVER_FRONT);
   
   if (_SHOW_FOREND)
-  TopBreak_Forend(debug=debug == true || _CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
+  TopBreak_Forend(cutaway=cutaway == true || _CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
 
   // Pivoting barrel assembly
   BreakActionPivot(factor=pivotFactor) {
 
     if (_SHOW_BARREL)
-    TopBreak_Barrel(debug=debug == true || _CUTAWAY_BARREL);
+    TopBreak_Barrel(cutaway=cutaway == true || _CUTAWAY_BARREL);
     
     if (_SHOW_SIGHTPOST)
     translate([BarrelLength()-1,0,0])
@@ -1032,7 +1032,7 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
       TopBreak_ExtractorRetainer();
       
       if (_SHOW_EXTRACTOR)
-      TopBreak_Extractor(debug=debug == true || _CUTAWAY_EXTRACTOR,
+      TopBreak_Extractor(cutaway=cutaway == true || _CUTAWAY_EXTRACTOR,
                          alpha=_ALPHA_EXTRACTOR);
     }
     
@@ -1054,7 +1054,7 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
     TopBreak_MlokBolts();
 
     if (_SHOW_COLLAR)
-    TopBreak_BarrelCollar(debug=debug == true || _CUTAWAY_COLLAR, alpha=_ALPHA_COLLAR);
+    TopBreak_BarrelCollar(cutaway=cutaway == true || _CUTAWAY_COLLAR, alpha=_ALPHA_COLLAR);
     
     if (_SHOW_CLUSTER_BOLTS)
     TopBreak_ClusterBolts();
@@ -1063,7 +1063,7 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
     TopBreak_GripBolt();
     
     if (_SHOW_CLUSTER)
-    TopBreak_Cluster(debug=_CUTAWAY_CLUSTER, alpha=_ALPHA_CLUSTER);
+    TopBreak_Cluster(cutaway=_CUTAWAY_CLUSTER, alpha=_ALPHA_CLUSTER);
     
     if (_SHOW_FOREGRIP)
     TopBreak_VerticalForegrip();
@@ -1082,7 +1082,7 @@ if ($preview) {
 
     if (_SHOW_LOWER) {
       Lower(showLeft=!_CUTAWAY_LOWER);
-      LowerMount(debug=_CUTAWAY_LOWER);
+      LowerMount(cutaway=_CUTAWAY_LOWER);
     }
     
     if (_SHOW_RECEIVER) {
@@ -1090,7 +1090,7 @@ if ($preview) {
       
       Frame_ReceiverAssembly(
         length=FRAME_BOLT_LENGTH-0.5,
-        debug=_CUTAWAY_RECEIVER);
+        cutaway=_CUTAWAY_RECEIVER);
     }
 
     if (_SHOW_STOCK) {

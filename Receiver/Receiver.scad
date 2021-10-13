@@ -1,6 +1,6 @@
 use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
-use <../Meta/Debug.scad>;
+use <../Meta/Cutaway.scad>;
 use <../Meta/Conditionals/HullIf.scad>;
 use <../Meta/Resolution.scad>;
 use <../Meta/Conditionals/RenderIf.scad>;
@@ -120,7 +120,7 @@ module TensionBoltIterator() {
   rotate([0,-90,0])
   children();
 }
-module Receiver_TensionBolts(bolt=TensionBolt(), headType=TENSION_HEAD_TYPE, nutType=TENSION_NUT_TYPE, length=12, cutter=false, clearance=TENSION_BOLT_CLEARANCE, teardrop=false, debug=false) {
+module Receiver_TensionBolts(bolt=TensionBolt(), headType=TENSION_HEAD_TYPE, nutType=TENSION_NUT_TYPE, length=12, cutter=false, clearance=TENSION_BOLT_CLEARANCE, teardrop=false, cutaway=false) {
   TensionBoltIterator()
   NutAndBolt(bolt=bolt,
              boltLength=length+ManifoldGap(2),
@@ -145,11 +145,11 @@ module Receiver_MlokBolts(headType="flat", nutType="heatset-long", length=0.5, c
              clearance=cutter?clearance:0,
              doRender=!cutter);
 }
-module Receiver_TakedownPin(cutter=false, clearance=0.005, alpha=1, debug=false) {
+module Receiver_TakedownPin(cutter=false, clearance=0.005, alpha=1, cutaway=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
-  color("Silver") RenderIf(!cutter) DebugHalf(debug)
+  color("Silver") RenderIf(!cutter) Cutaway(cutaway)
   translate([Receiver_TakedownPinX(),
              0,
              Receiver_TakedownPinZ()])
@@ -313,12 +313,12 @@ module Receiver_Segment(length=1, chamferFront=false, chamferBack=false, highTop
 // *****************
 // * Printed Parts *
 // *****************
-module Receiver(receiverLength=ReceiverLength(), doRender=true, alpha=1, debug=false) {
+module Receiver(receiverLength=ReceiverLength(), doRender=true, alpha=1, cutaway=false) {
   mlokSupportHeight=0.75;
   CHAMFER_RADIUS = 1/16;
   
   color("Tan", alpha) RenderIf(doRender)
-  DebugHalf(debug)
+  Cutaway(cutaway)
   difference() {
     union() {
       Receiver_Segment(length=ReceiverLength(), highTop=false,
@@ -389,14 +389,14 @@ module ReceiverBackSegment(length=ReceiverBackLength()) {
 // **************
 // * Assemblies *
 // **************
-module ReceiverAssembly(debug=false) {
+module ReceiverAssembly(cutaway=false) {
   if (_SHOW_RECEIVER_RODS)
-  Receiver_TensionBolts(debug=debug);
+  Receiver_TensionBolts(cutaway=cutaway);
 
   if (_SHOW_RECEIVER) {
     Receiver_MlokBolts();
     
-    Receiver(alpha=_ALPHA_RECEIVER, debug=debug)
+    Receiver(alpha=_ALPHA_RECEIVER, cutaway=cutaway)
     children();
   }
 }
@@ -406,7 +406,7 @@ scale(25.4) if ($preview) {
   if (_SHOW_RECEIVER_BACK)
   ReceiverBackSegment();
   
-  ReceiverAssembly(debug=_CUTAWAY_RECEIVER);
+  ReceiverAssembly(cutaway=_CUTAWAY_RECEIVER);
 } else {
   
   // *****************

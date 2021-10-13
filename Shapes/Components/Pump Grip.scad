@@ -1,4 +1,4 @@
-use <../../Meta/Debug.scad>;
+use <../../Meta/Cutaway.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Resolution.scad>;
 use <../../Meta/Conditionals/RenderIf.scad>;
@@ -40,5 +40,5 @@ module PumpGrip(outerRadius=PumpGripRadius(),
   }
 }
 
-DebugHalf(enabled=false)
+Cutaway(enabled=false)
 PumpGrip(doRender=true);

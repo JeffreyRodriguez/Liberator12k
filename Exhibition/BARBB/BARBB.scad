@@ -1,4 +1,4 @@
-use <../../Meta/Debug.scad>;
+use <../../Meta/Cutaway.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
 use <../../Meta/Resolution.scad>;
@@ -1050,7 +1050,7 @@ if ($preview) {
 
   translate([lowerX,0,0])
   color("Tan")
-  //render() DebugHalf()
+  //render() Cutaway()
   BARBB_LowerReceiver();
 
   color("Black")
@@ -1061,24 +1061,24 @@ if ($preview) {
   BARBB_HammerSpringTrunnion();
 
   color("Olive")
-  //render() DebugHalf()
+  //render() Cutaway()
   BARBB_Bolt();
 
   color("Tan")
-  //render() DebugHalf()
+  //render() Cutaway()
   BARBB_UpperReceiver(magwell=false);
 
   color("Olive")
   BARBB_Buttpad();
 
   color("Tan")
-  //render() DebugHalf()
+  //render() Cutaway()
   BARBB_Stock();
 
   // Square Tube
   color("Silver")
   translate([hammerMaxX, ManifoldGap(), tubeCenterZ])
-  //render() DebugHalf()
+  //render() Cutaway()
   rotate([0,90,0])
   linear_extrude(height=26)
   difference() {

@@ -4,7 +4,7 @@ include <../Meta/Animation.scad>;
 
 use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
-use <../Meta/Debug.scad>;
+use <../Meta/Cutaway.scad>;
 use <../Meta/Resolution.scad>;
 use <../Meta/Conditionals/RenderIf.scad>;
 
@@ -65,18 +65,18 @@ if ($preview) {
                                    -Animate(ANIMATION_STEP_LOCK),
                         extractFactor=Animate(ANIMATION_STEP_UNLOAD)
                                    -SubAnimate(ANIMATION_STEP_LOAD, end=0.25),
-                        debug=_CUTAWAY_FOREND);
+                        cutaway=_CUTAWAY_FOREND);
   } else if (_FOREND == "Revolver") {
-    RevolverForendAssembly(debug=_CUTAWAY_FOREND);
+    RevolverForendAssembly(cutaway=_CUTAWAY_FOREND);
   } else if (_FOREND == "Evolver") {
-    EvolverForendAssembly(debug=_CUTAWAY_FOREND);
+    EvolverForendAssembly(cutaway=_CUTAWAY_FOREND);
   } else if (_FOREND == "AR15") {
     translate([-0.5,0,0])
-    PumpAR15ForendAssembly(debug=_CUTAWAY_FOREND);
+    PumpAR15ForendAssembly(cutaway=_CUTAWAY_FOREND);
   } else if (_FOREND == "Trigun") {
-    TrigunForendAssembly(debug=_CUTAWAY_FOREND);
+    TrigunForendAssembly(cutaway=_CUTAWAY_FOREND);
   } else if (_FOREND == "Pump") {
-    PumpForend(debug=_CUTAWAY_FOREND);
+    PumpForend(cutaway=_CUTAWAY_FOREND);
   }
   
   if (_SHOW_FCG)
@@ -86,19 +86,19 @@ if ($preview) {
   
   if (_SHOW_RECEIVER)
   translate([-0.5,0,0]) {
-    Receiver_TensionBolts(debug=_CUTAWAY_RECEIVER, headType="socket");
+    Receiver_TensionBolts(cutaway=_CUTAWAY_RECEIVER, headType="socket");
     
     if (_RECEIVER_SIZE == "Framed") {
-      Frame_Receiver(debug=_CUTAWAY_RECEIVER);
-      Frame_Bolts(debug=_CUTAWAY_RECEIVER);
+      Frame_Receiver(cutaway=_CUTAWAY_RECEIVER);
+      Frame_Bolts(cutaway=_CUTAWAY_RECEIVER);
     } else {
-      Receiver(debug=_CUTAWAY_RECEIVER);
+      Receiver(cutaway=_CUTAWAY_RECEIVER);
     }
   }
   
   if (_CONFIGURATION == "Stocked") translate([-0.5,0,0]) {
     if (_SHOW_STOCK)
-    StockAssembly(debug=_CUTAWAY_STOCK);
+    StockAssembly(cutaway=_CUTAWAY_STOCK);
     
     if (_SHOW_LOWER) {
       Lower();

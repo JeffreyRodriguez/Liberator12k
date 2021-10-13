@@ -1,6 +1,6 @@
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
-use <../../Meta/Debug.scad>;
+use <../../Meta/Cutaway.scad>;
 use <../../Shapes/Chamfer.scad>;
 use <Lower.scad>;
 
@@ -143,7 +143,7 @@ module PlateMagwell(left=true, right=true) {
   }
 }
 
-//render() DebugHalf()
+//render() Cutaway()
 translate([LowerMaxX(),0,0])
 Magwell();
 

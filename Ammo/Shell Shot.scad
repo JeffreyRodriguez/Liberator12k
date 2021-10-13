@@ -2,7 +2,7 @@ use <Shell Base.scad>;
 use <Shell Topper.scad>;
 use <Primer.scad>;
 use <../Vitamins/Pipe.scad>;
-use <../Meta/Debug.scad>;
+use <../Meta/Cutaway.scad>;
 use <../Meta/Manifold.scad>;
 use <../Shapes/Chamfer.scad>;
 
@@ -61,5 +61,5 @@ module ShellShot(primer=Spec_Primer209(),
 
 scale(25.4)
 //render()
-//DebugHalf()
+//Cutaway()
 ShellShot();

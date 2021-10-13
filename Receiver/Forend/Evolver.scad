@@ -2,7 +2,7 @@ include <../../Meta/Animation.scad>;
 
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
-use <../../Meta/Debug.scad>;
+use <../../Meta/Cutaway.scad>;
 use <../../Meta/Resolution.scad>;
 use <../../Meta/Conditionals/RenderIf.scad>;
 use <../../Meta/Conditionals/MirrorIf.scad>;
@@ -156,12 +156,12 @@ echo("Barrel Support Length: ", Evolver_BarrelSupportLength());
 //************
 //* Vitamins *
 //************
-module Evolver_Barrel(barrelLength=BarrelLength(), clearance=BARREL_CLEARANCE, cutter=false, alpha=1, debug=false) {
+module Evolver_Barrel(barrelLength=BarrelLength(), clearance=BARREL_CLEARANCE, cutter=false, alpha=1, cutaway=false) {
 
   clear = (cutter ? clearance : 0);
   clear2 = clear*2;
 
-  color("Silver", alpha) DebugHalf(debug) RenderIf(!cutter)
+  color("Silver", alpha) Cutaway(cutaway) RenderIf(!cutter)
   translate([(cutter?0:BarrelMinX()),0,0])
   rotate([0,90,0])
   difference() {
@@ -186,11 +186,11 @@ module Evolver_ForegripBolts(template=false, bolt=ForegripBolt(), cutter=false) 
 //*****************
 //* Printed Parts *
 //*****************
-module Evolver_ReceiverFront(contoured=true, debug=_CUTAWAY_RECEIVER_FRONT, alpha=_ALPHA_RECEIVER_FRONT) {
+module Evolver_ReceiverFront(contoured=true, cutaway=_CUTAWAY_RECEIVER_FRONT, alpha=_ALPHA_RECEIVER_FRONT) {
   length = abs(RecoilSpreaderThickness());
   
   color("Chocolate", alpha)
-  render() DebugHalf(debug)
+  render() Cutaway(cutaway)
   difference() {
     union() {
       hull() {
@@ -232,12 +232,12 @@ module Evolver_ReceiverFront(contoured=true, debug=_CUTAWAY_RECEIVER_FRONT, alph
   }
 }
 
-module Evolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND, $fn=Resolution(30,100)) {
+module Evolver_BarrelSupport(doRender=true, cutaway=false, alpha=_ALPHA_FOREND, $fn=Resolution(30,100)) {
   extraBottom=0;
   
   // Branding text
   color("DimGrey", alpha) 
-  RenderIf(doRender) DebugHalf(debug) {
+  RenderIf(doRender) Cutaway(cutaway) {
     
     fontSize = 0.375;
     
@@ -256,7 +256,7 @@ module Evolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND, $f
   }
   
   color("Tan", alpha)
-  RenderIf(doRender) DebugHalf(debug)
+  RenderIf(doRender) Cutaway(cutaway)
   difference() {
     union() {
       
@@ -301,8 +301,8 @@ module Evolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND, $f
   }
 }
 
-module Evolver_VerticalForegrip(length=2, debug=true, alpha=1) {
-  color("Tan", alpha) render() DebugHalf(debug) 
+module Evolver_VerticalForegrip(length=2, cutaway=true, alpha=1) {
+  color("Tan", alpha) render() Cutaway(cutaway) 
   difference() {
     union() {
       translate([ForegripMinX(),0,0])
@@ -333,8 +333,8 @@ module Evolver_VerticalForegrip(length=2, debug=true, alpha=1) {
   }
 }
 
-module Evolver_Foregrip(length=PumpGripLength(), debug=false, alpha=1) {
-  color("Tan", alpha) render() DebugHalf(debug)
+module Evolver_Foregrip(length=PumpGripLength(), cutaway=false, alpha=1) {
+  color("Tan", alpha) render() Cutaway(cutaway)
   difference() {
     
     // Body around the barrel
@@ -387,7 +387,7 @@ module Evolver_ActionRodJig() {
 //**************
 //* Assemblies *
 //**************
-module EvolverForendAssembly(pipeAlpha=1, debug=false) {
+module EvolverForendAssembly(pipeAlpha=1, cutaway=false) {
     
   animateBarrel = Animate(ANIMATION_STEP_CHARGE)
                 - Animate(ANIMATION_STEP_CHARGER_RESET);
@@ -396,10 +396,10 @@ module EvolverForendAssembly(pipeAlpha=1, debug=false) {
   
   if (_SHOW_BARREL)
   translate([(barrelTravel*animateBarrel),0,0])
-  Evolver_Barrel(debug=debug);
+  Evolver_Barrel(cutaway=cutaway);
   
   if (_SHOW_BARREL_SUPPORT)
-  Evolver_BarrelSupport(debug=_CUTAWAY_BARREL_SUPPORT, alpha=_ALPHA_FOREND);
+  Evolver_BarrelSupport(cutaway=_CUTAWAY_BARREL_SUPPORT, alpha=_ALPHA_FOREND);
   
   if (_SHOW_RECEIVER_FRONT)
   translate([-0.5,0,0])
@@ -420,11 +420,11 @@ if ($preview) {
     
     if (_SHOW_RECEIVER) {
       
-      Receiver_TensionBolts(debug=_CUTAWAY_RECEIVER);
+      Receiver_TensionBolts(cutaway=_CUTAWAY_RECEIVER);
       
       Receiver_LargeFrameAssembly(
         length=FRAME_BOLT_LENGTH,
-        debug=_CUTAWAY_RECEIVER);
+        cutaway=_CUTAWAY_RECEIVER);
     }
 
     if (_SHOW_FCG)
@@ -435,10 +435,10 @@ if ($preview) {
         Evolver_ForegripBolts();
         
         if (_FOREGRIP == "Standard") {
-          Evolver_Foregrip(debug=_CUTAWAY_FOREGRIP,
+          Evolver_Foregrip(cutaway=_CUTAWAY_FOREGRIP,
                             alpha=_ALPHA_FOREGRIP);
         } else {
-          Evolver_VerticalForegrip(debug=_CUTAWAY_FOREGRIP,
+          Evolver_VerticalForegrip(cutaway=_CUTAWAY_FOREGRIP,
                                     alpha=_ALPHA_FOREGRIP);
         }
       }
@@ -460,7 +460,7 @@ if ($preview) {
     }
   }
 
-  EvolverForendAssembly(debug=false);
+  EvolverForendAssembly(cutaway=false);
 } else {
 
   if (_RENDER == "Evolver_ReceiverFront")

@@ -2,7 +2,7 @@ include <../../Meta/Animation.scad>;
 
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
-use <../../Meta/Debug.scad>;
+use <../../Meta/Cutaway.scad>;
 use <../../Meta/Resolution.scad>;
 use <../../Meta/Conditionals/RenderIf.scad>;
 
@@ -121,12 +121,12 @@ function ForegripOffsetX() = 6+ChargerTravel();
 function ForegripLength() = 4.625;
 
 // Vitamins
-module Barrels(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, length=BarrelLength(), clearance=BARREL_CLEARANCE, cartridgeRimThickness=RIM_WIDTH, cutter=false, alpha=1, debug=false) {
+module Barrels(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, length=BarrelLength(), clearance=BARREL_CLEARANCE, cartridgeRimThickness=RIM_WIDTH, cutter=false, alpha=1, cutaway=false) {
 
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
-  color("Silver") RenderIf(!cutter) DebugHalf(debug)
+  color("Silver") RenderIf(!cutter) Cutaway(cutaway)
   translate([(cutter?0:cartridgeRimThickness),0,-BARREL_OFFSET])
   for (N = [0,1,2]) rotate([360/3*N,0,0])
   translate([0,0,BARREL_OFFSET])
@@ -158,8 +158,8 @@ module LatchGuides(cutter=false, clearance=0.01) {
 }
 
 // Printed Parts
-module ReceiverFront(debug=false, alpha=1) {
-  color("Tan", alpha) render() DebugHalf(debug)
+module ReceiverFront(cutaway=false, alpha=1) {
+  color("Tan", alpha) render() Cutaway(cutaway)
   difference() {
     
     translate([-ReceiverFrontLength(),0,0])
@@ -196,10 +196,10 @@ module ReceiverFront_print() {
   ReceiverFront();
 }
 
-module ReceiverForend(clearance=0.005, debug=false, alpha=1) {  
+module ReceiverForend(clearance=0.005, cutaway=false, alpha=1) {  
   // Branding text
   color("DimGrey", alpha) 
-  render() DebugHalf(debug) {
+  render() Cutaway(cutaway) {
     
     fontSize = 0.375;
     
@@ -218,7 +218,7 @@ module ReceiverForend(clearance=0.005, debug=false, alpha=1) {
   }
   
   color("Tan", alpha)
-  render() DebugHalf(debug)
+  render() Cutaway(cutaway)
   difference() {
     union() {
       Frame_Support(length=ForendLength());
@@ -255,11 +255,11 @@ module ReceiverForend_print() {
 }
 
 
-module BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, debug=false, alpha=1) {
+module BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, cutaway=false, alpha=1) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
                            
-  color("Chocolate", alpha) RenderIf(!cutter) DebugHalf(debug)
+  color("Chocolate", alpha) RenderIf(!cutter) Cutaway(cutaway)
   difference() {
     intersection() {
       union() {
@@ -332,8 +332,8 @@ module BarrelCollar_print() {
   BarrelCollar();
 }
 
-module Foregrip(length=ForegripLength(), debug=false, alpha=1) {
-  color("Tan",alpha) render() DebugHalf(debug)
+module Foregrip(length=ForegripLength(), cutaway=false, alpha=1) {
+  color("Tan",alpha) render() Cutaway(cutaway)
   difference() {
     translate([ForegripOffsetX()+ChargerTravel(),0,0])
     rotate([0,90,0])
@@ -352,7 +352,7 @@ module Foregrip_print() {
 
 
 // Assemblies
-module TrigunForendAssembly(receiverLength=12, pipeAlpha=1, receiverFrontAlpha=1, pivotFactor=0, extractFactor=0, chargeFactor=0, lockFactor=0, stock=true, tailcap=false, debug=false) {
+module TrigunForendAssembly(receiverLength=12, pipeAlpha=1, receiverFrontAlpha=1, pivotFactor=0, extractFactor=0, chargeFactor=0, lockFactor=0, stock=true, tailcap=false, cutaway=false) {
 
 
   if (_SHOW_FCG)
@@ -364,10 +364,10 @@ module TrigunForendAssembly(receiverLength=12, pipeAlpha=1, receiverFrontAlpha=1
   Barrels();
   
   if (_SHOW_RECEIVER_FRONT)
-  ReceiverFront(debug=debug, alpha=_ALPHA_RECOIL_PLATE_HOUSING);
+  ReceiverFront(cutaway=cutaway, alpha=_ALPHA_RECOIL_PLATE_HOUSING);
 
   if (_SHOW_FOREND)
-  ReceiverForend(debug=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
+  ReceiverForend(cutaway=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
 }
 
 
@@ -387,7 +387,7 @@ if ($preview) {
       
       Frame_ReceiverAssembly(
         length=FRAME_BOLT_LENGTH,
-        debug=_CUTAWAY_RECEIVER);
+        cutaway=_CUTAWAY_RECEIVER);
     }
 
     if (_SHOW_STOCK) {

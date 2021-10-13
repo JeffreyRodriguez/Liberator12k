@@ -1,6 +1,6 @@
 use <Primer.scad>;
 
-use <../Meta/Debug.scad>;
+use <../Meta/Cutaway.scad>;
 use <../Meta/Manifold.scad>;
 use <../Shapes/Chamfer.scad>;
 use <../Shapes/Teardrop.scad>;
@@ -70,5 +70,5 @@ module ShellSimple(primer=Spec_Primer209(), primerOffset=0,
 
 scale(25.4)
 render()
-DebugHalf(DEBUG)
+Cutaway(DEBUG)
 ShellSimple(cutters=!SNAPCAP);

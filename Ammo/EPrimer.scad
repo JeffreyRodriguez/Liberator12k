@@ -1,6 +1,6 @@
 use <Primer.scad>;
 
-use <../Meta/Debug.scad>;
+use <../Meta/Cutaway.scad>;
 use <../Meta/Manifold.scad>;
 use <../Meta/Conditionals/RenderIf.scad>;
 
@@ -18,8 +18,8 @@ _SHOW_PRIMER_INSERT = true;
 _SHOW_ELECTRODE = true;
 _SHOW_CARTRIDGE = true;
 
-_DEBUG_PRIMER_INSERT = true;
-_DEBUG_CARTRIDGE = true;
+_CUTAWAY_PRIMER_INSERT = true;
+_CUTAWAY_CARTRIDGE = true;
 
 CHAMBER_DIAMETER = 0.7801;
 SHELL_WALL = 0.0625;
@@ -30,8 +30,8 @@ function EPrimerElectrodeHeadDiameter() = 0.15;
 function EPrimerElectrodeDepth() = 0.01;
 function EPrimerInsertHeight() = 0.375+0.03125;
 
-module EPrimerElectrode(cutter=false, debug=false) {
-  color("Chocolate") RenderIf(!cutter) DebugHalf(debug)
+module EPrimerElectrode(cutter=false, cutaway=false) {
+  color("Chocolate") RenderIf(!cutter) Cutaway(cutaway)
   translate([0,0,EPrimerElectrodeDepth()]) {
     // Body
     cylinder(r=1/16/2, h=EPrimerElectrodeLength(), $fn=12);
@@ -46,8 +46,8 @@ module EPrimerElectrode(cutter=false, debug=false) {
   }
 }
 
-module EPrimerInsert(height=EPrimerInsertHeight(), brimHeight=0.0625, cutter=false, debug=false) {
-  color("Olive") RenderIf(!cutter) DebugHalf(debug)
+module EPrimerInsert(height=EPrimerInsertHeight(), brimHeight=0.0625, cutter=false, cutaway=false) {
+  color("Olive") RenderIf(!cutter) Cutaway(cutaway)
   difference() {
     union() {
       
@@ -80,7 +80,7 @@ module EPrimerInsert(height=EPrimerInsertHeight(), brimHeight=0.0625, cutter=fal
 module EPrimerCartridge(chamberDiameter=CHAMBER_DIAMETER, wall=SHELL_WALL,
                         baseHeight=EPrimerInsertHeight(),
                         rimDiameter=0.87, rimHeight=0.07,
-                        debug=false, $fn=60) {
+                        cutaway=false, $fn=60) {
 
   chamberRadius   = chamberDiameter/2;
   rimRadius       = rimDiameter/2;
@@ -88,7 +88,7 @@ module EPrimerCartridge(chamberDiameter=CHAMBER_DIAMETER, wall=SHELL_WALL,
   shellLength     = 2.75;
 
   color("Tan")  
-  render() DebugHalf(debug)
+  render() Cutaway(cutaway)
 
   // Base and rim, minus charge pocket and primer hole
   difference() {
@@ -125,17 +125,17 @@ if ($preview) {
   EPrimerElectrode();
 
   if (_SHOW_PRIMER_INSERT)
-  EPrimerInsert(debug=_DEBUG_PRIMER_INSERT);
+  EPrimerInsert(cutaway=_CUTAWAY_PRIMER_INSERT);
 
   if (_SHOW_CARTRIDGE)
-  EPrimerCartridge(debug=_DEBUG_CARTRIDGE);
+  EPrimerCartridge(cutaway=_CUTAWAY_CARTRIDGE);
 } else {
   
   if (_RENDER == "EPrimerInsert")
-  EPrimerInsert(debug=_DEBUG_PRIMER_INSERT);
+  EPrimerInsert(cutaway=_CUTAWAY_PRIMER_INSERT);
   
   if (_RENDER == "EPrimerCartridge")
-  EPrimerCartridge(debug=_DEBUG_CARTRIDGE);
+  EPrimerCartridge(cutaway=_CUTAWAY_CARTRIDGE);
 }
 
 

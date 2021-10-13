@@ -1,4 +1,4 @@
-use <../../Meta/Debug.scad>;
+use <../../Meta/Cutaway.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
 use <../../Meta/Resolution.scad>;
@@ -35,7 +35,7 @@ module MlokForegripBolts(boltSpec=BoltSpec(MLOK_BOLT), headType="flat", nutType=
 
 module MlokForegrip(boltSpec=BoltSpec(MLOK_BOLT),
                   length=MlokForegripLength(),
-                  debug=false,
+                  cutaway=false,
                   alpha=1, $fn=Resolution(20,100)) {
 
 assert(boltSpec, "boltSpec is undefined. Unknown MLOK_BOLT?");
@@ -60,8 +60,8 @@ scale(25.4)
 if ($preview) {
   MlokForegripBolts();
 
-  MlokForegrip(debug=false);
+  MlokForegrip(cutaway=false);
 } else {
   
-  MlokForegrip(debug=false);
+  MlokForegrip(cutaway=false);
 }

@@ -1,4 +1,4 @@
-use <../../Meta/Debug.scad>;
+use <../../Meta/Cutaway.scad>;
 use <../../Meta/Units.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Resolution.scad>;
@@ -184,9 +184,9 @@ module BARBB_HammerCutOut(extraX=0) {
 }
 
 
-module BARBB_Forend(clearance=0.01, debug=false, alpha=1) {
+module BARBB_Forend(clearance=0.01, cutaway=false, alpha=1) {
   color("Tan", alpha) render()
-  DebugHalf(debug)
+  Cutaway(cutaway)
   difference() {
     translate([AR15_TrunnionLength(),0,0])
     Receiver_Segment(length=forendLength);
@@ -232,9 +232,9 @@ module BARBB_Forend(clearance=0.01, debug=false, alpha=1) {
   }
 }
 
-module BARBB_Magwell(alpha=1, debug=false) {
+module BARBB_Magwell(alpha=1, cutaway=false) {
   color("Chocolate", alpha=alpha) render()
-  DebugHalf(debug)
+  Cutaway(cutaway)
   difference() {
     
     translate([magwellX,0,magwellZ])
@@ -359,18 +359,18 @@ module BARBB_Assembly() {
   BARBB_BoltCarrier();
   
   if (_SHOW_FOREND)
-  BARBB_Forend(debug=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
+  BARBB_Forend(cutaway=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
   
   if (_SHOW_RECEIVER)
   translate([forendMinX,0,0])
-  Receiver(debug=_CUTAWAY_RECEIVER, doRender=true);
+  Receiver(cutaway=_CUTAWAY_RECEIVER, doRender=true);
   
   if (_SHOW_BUTTPAD)
   translate([magwellX-ReceiverLength()+StockLength(),0,0])
   Stock_Buttpad();
   
   if (_SHOW_MAGWELL)
-  BARBB_Magwell(alpha=_ALPHA_MAGWELL, debug=_CUTAWAY_MAGWELL);
+  BARBB_Magwell(alpha=_ALPHA_MAGWELL, cutaway=_CUTAWAY_MAGWELL);
   
   *translate([AR15BarrelGasLength()+2,0,0]) {
     translate([-3,0,0]) {

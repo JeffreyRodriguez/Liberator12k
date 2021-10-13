@@ -1,4 +1,4 @@
-use <../Meta/Debug.scad>;
+use <../Meta/Cutaway.scad>;
 use <../Meta/Conditionals/RenderIf.scad>;
 use <../Shapes/Chamfer.scad>;
 use <../Shapes/Semicircle.scad>;
@@ -135,12 +135,12 @@ module SPAT37_SpinChamber(clearance=0.01) {
 // **********
 // * Prints *
 // **********
-module SPAT37_Base(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, spigotBaseLength=SPIGOT_BASE_LENGTH, primerOffset=0, clearance=CLEARANCE, debug=false, alpha=1, $fn=60) {
+module SPAT37_Base(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, spigotBaseLength=SPIGOT_BASE_LENGTH, primerOffset=0, clearance=CLEARANCE, cutaway=false, alpha=1, $fn=60) {
 
   baseTorusRadius = 2/16;
   
   color("Chocolate", alpha) render()
-  DebugHalf(debug)
+  Cutaway(cutaway)
   difference() {
     
     // Base and rim
@@ -197,10 +197,10 @@ module SPAT37_Base(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, spigotBaseLengt
   }
 }
 
-module SPAT37_Flare(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, spigotDiameterSPIGOT_LENGTH=SPIGOT_LENGTH, spigotBaseLength=SPIGOT_BASE_LENGTH, clearance=CLEARANCE, primerOffset=0, debug=false, alpha=1, $fn=60) {
+module SPAT37_Flare(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, spigotDiameterSPIGOT_LENGTH=SPIGOT_LENGTH, spigotBaseLength=SPIGOT_BASE_LENGTH, clearance=CLEARANCE, primerOffset=0, cutaway=false, alpha=1, $fn=60) {
 
   color("Olive", alpha) render()
-  DebugHalf(debug)
+  Cutaway(cutaway)
   difference() {
     union() {
       
@@ -240,9 +240,9 @@ module SPAT37_Flare(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, spigotDiameter
   }
 }
 
-module SPAT37_SmokeTail(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, SPIGOT_LENGTH=SPIGOT_LENGTH, spigotBaseLength=SPIGOT_BASE_LENGTH, clearance=CLEARANCE, primerOffset=0, debug=false, alpha=1, $fn=60) {
+module SPAT37_SmokeTail(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, SPIGOT_LENGTH=SPIGOT_LENGTH, spigotBaseLength=SPIGOT_BASE_LENGTH, clearance=CLEARANCE, primerOffset=0, cutaway=false, alpha=1, $fn=60) {
   color("Olive", alpha) render()
-  DebugHalf(debug)
+  Cutaway(cutaway)
   difference() {
     union() {
     
@@ -264,9 +264,9 @@ module SPAT37_SmokeTail(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, SPIGOT_LEN
     SPAT37_SpinChamber();
   }
 }
-module SPAT37_SmokeTip(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, SPIGOT_LENGTH=SPIGOT_LENGTH, spigotBaseLength=SPIGOT_BASE_LENGTH, clearance=CLEARANCE, primerOffset=0, debug=false, alpha=1, $fn=60) {
+module SPAT37_SmokeTip(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, SPIGOT_LENGTH=SPIGOT_LENGTH, spigotBaseLength=SPIGOT_BASE_LENGTH, clearance=CLEARANCE, primerOffset=0, cutaway=false, alpha=1, $fn=60) {
   color("Olive", alpha) render()
-  DebugHalf(debug)
+  Cutaway(cutaway)
   difference() {
     union() {
     
@@ -302,10 +302,10 @@ module SPAT37_SmokeTip(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, SPIGOT_LENG
 
 
 
-module SPAT37_Whistle(clearance=CLEARANCE, primerOffset=0, debug=false, alpha=1, $fn=60) {
+module SPAT37_Whistle(clearance=CLEARANCE, primerOffset=0, cutaway=false, alpha=1, $fn=60) {
 
   color("Olive", alpha) render()
-  DebugHalf(debug)
+  Cutaway(cutaway)
   difference() {
     union() {
       hull() {
@@ -371,18 +371,18 @@ if ($preview) {
   }
   
   if (_SHOW_BASE)
-  SPAT37_Base(debug=_CUTAWAY_BASE, alpha=_ALPHA_BASE);
+  SPAT37_Base(cutaway=_CUTAWAY_BASE, alpha=_ALPHA_BASE);
   
   if (_PROJECTILE_TYPE == "Flare")
-    SPAT37_Flare(debug=_CUTAWAY_PROJECTILE, alpha=_ALPHA_PROJECTILE);
+    SPAT37_Flare(cutaway=_CUTAWAY_PROJECTILE, alpha=_ALPHA_PROJECTILE);
   
   else if (_PROJECTILE_TYPE == "Whistle")
-    SPAT37_Whistle(debug=_CUTAWAY_PROJECTILE, alpha=_ALPHA_PROJECTILE);
+    SPAT37_Whistle(cutaway=_CUTAWAY_PROJECTILE, alpha=_ALPHA_PROJECTILE);
   
   else if (_PROJECTILE_TYPE == "Smoke") {
     SPAT37_SmokePyro();
-    SPAT37_SmokeTip(debug=_CUTAWAY_PROJECTILE, alpha=_ALPHA_PROJECTILE);
-    SPAT37_SmokeTail(debug=_CUTAWAY_PROJECTILE, alpha=_ALPHA_PROJECTILE);
+    SPAT37_SmokeTip(cutaway=_CUTAWAY_PROJECTILE, alpha=_ALPHA_PROJECTILE);
+    SPAT37_SmokeTail(cutaway=_CUTAWAY_PROJECTILE, alpha=_ALPHA_PROJECTILE);
   }
   
 } else {

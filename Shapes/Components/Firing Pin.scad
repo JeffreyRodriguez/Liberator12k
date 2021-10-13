@@ -2,7 +2,7 @@ include <../../Meta/Animation.scad>;
 
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
-use <../../Meta/Debug.scad>;
+use <../../Meta/Cutaway.scad>;
 use <../../Meta/Resolution.scad>;
 
 use <../Chamfer.scad>;
@@ -30,7 +30,7 @@ function FiringPinHousingWidth() = 0.75;
 function FiringPinRetainerOffset() = 0.375;
 
 
-module FiringPin(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT, template=false, cutter=false, debug=false) {
+module FiringPin(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT, template=false, cutter=false, cutaway=false) {
   clear = cutter ? 0.002 : 0;
   clear2 = clear*2;
   radius = template ? RodRadius(FiringPinTemplateRod()) : (3/32/2)+clear;
@@ -42,7 +42,7 @@ module FiringPin(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT, template=false, cutter=f
     union() {
       if (!template)
       color("Silver")
-      DebugHalf(debug)
+      Cutaway(cutaway)
       Rod(FiringPinRod(), clearance=cutter?RodClearanceLoose():undef,
           length=FiringPinBodyLength()+clear2);
       
@@ -61,7 +61,7 @@ module FiringPin(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT, template=false, cutter=f
   }
 }
 
-module FiringPinSpring(cutter=false, debug=false) {
+module FiringPinSpring(cutter=false, cutaway=false) {
   clear = cutter ? 0.01 : 0;
   clear2 = clear*2;
   
@@ -98,10 +98,10 @@ module FiringPinHousingBolts(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT,
        length=FiringPinHousingLength()+boltLength+ManifoldGap(2));
 }
 
-module FiringPinHousing(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT, cutter=false, alpha=0.5, debug=false) {
+module FiringPinHousing(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT, cutter=false, alpha=0.5, cutaway=false) {
   
   color("Grey")
-  DebugHalf(debug)
+  Cutaway(cutaway)
   difference() {
     rotate(-90)
     hull() {
@@ -129,30 +129,30 @@ module FiringPinHousing(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT, cutter=false, alp
 }
 module FiringPinAssembly(boltLength=DEFAULT_BOLT_LENGTH,
          retainerBolt=DEFAULT_FIRING_PIN_RETAINER_BOLT,
-         template=false, cutter=false, debug=false) {
+         template=false, cutter=false, cutaway=false) {
 
   rotate(-90) {
-    FiringPin(template=template, cutter=cutter, debug=debug);
+    FiringPin(template=template, cutter=cutter, cutaway=cutaway);
     FiringPinHousingBolts(template=template, bolt=retainerBolt, boltLength=boltLength, cutter=cutter);
     
     
     if (!template) {
-      FiringPinSpring(cutter=cutter, debug=debug);
+      FiringPinSpring(cutter=cutter, cutaway=cutaway);
       FiringPinRetainingPin(cutter=cutter);
-      FiringPinHousing(cutter=cutter, debug=debug, alpha=0.5);
+      FiringPinHousing(cutter=cutter, cutaway=cutaway, alpha=0.5);
     }
   }
 }
 
-FiringPinAssembly(cutter=false, debug=false);
+FiringPinAssembly(cutter=false, cutaway=false);
 
 translate([0,2,0])
-FiringPinAssembly(cutter=false, debug=true);
+FiringPinAssembly(cutter=false, cutaway=true);
 
 translate([0,-2,0])
 FiringPinAssembly(template=true);
 
 // Plated
 *!scale(25.4)
-FiringPinHousing(cutter=false, debug=false);
+FiringPinHousing(cutter=false, cutaway=false);
 

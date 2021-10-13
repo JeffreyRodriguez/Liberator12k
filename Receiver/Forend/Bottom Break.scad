@@ -2,7 +2,7 @@ include <../../Meta/Animation.scad>;
 
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
-use <../../Meta/Debug.scad>;
+use <../../Meta/Cutaway.scad>;
 use <../../Meta/Resolution.scad>;
 use <../../Meta/Conditionals/RenderIf.scad>;
 
@@ -35,7 +35,7 @@ use <Bipod.scad>;
 _RENDER = ""; // ["", "BarrelPivotCollar", "BarrelLatchCollar", "RecoilPlateHousing", "Forend", "Foregrip", "Extractor", "Latch", "LatchFront"]
 
 // Cut assembly view in half
-_DEBUG_ASSEMBLY = false;
+_CUTAWAY_ASSEMBLY = false;
 
 /* [Screws] */
 GP_BOLT = "#8-32"; // ["M4", "#8-32"]
@@ -231,7 +231,7 @@ module LatchSpring(length=LatchSpringLength(), compress=0,
            h=length-compress);
 }
 
-module LatchScrews(debug=false, cutter=false, clearance=0.008) {
+module LatchScrews(cutaway=false, cutter=false, clearance=0.008) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
 
@@ -254,8 +254,8 @@ module LatchScrews(debug=false, cutter=false, clearance=0.008) {
 }
 
 
-module BreakActionReceiverFront(debug=false, alpha=1) {
-  color("Tan", alpha) render() DebugHalf(debug)
+module BreakActionReceiverFront(cutaway=false, alpha=1) {
+  color("Tan", alpha) render() Cutaway(cutaway)
   difference() {
     translate([-ReceiverFrontLength(),0,0])
     union() {
@@ -297,9 +297,9 @@ module BreakActionReceiverFront_print() {
 
 module Barrel(barrel=BarrelPipe(), length=BarrelLength(),
               clearance=PipeClearanceSnug(),
-              cutter=false, alpha=1, debug=false) {
+              cutter=false, alpha=1, cutaway=false) {
 
-  color("Silver") RenderIf(!cutter) DebugHalf(debug)
+  color("Silver") RenderIf(!cutter) Cutaway(cutaway)
   translate([0,0,BarrelOffsetZ()])
   difference() {
     rotate([0,90,0])
@@ -380,10 +380,10 @@ module ExtractorAssembly(cutter=false) {
     Extractor(cutter=cutter);
   }
 }
-module BreakActionForend(debug=false, alpha=1) {
+module BreakActionForend(cutaway=false, alpha=1) {
 
   // Forward plate
-  color("Tan", alpha) render() DebugHalf(debug)
+  color("Tan", alpha) render() Cutaway(cutaway)
   difference() {
     union() {
 
@@ -485,7 +485,7 @@ module LatchTabs(length=LatchCollarLength(), cutter=false, clearance=0.01) {
 
 
 module LatchSupport(cutter=false, clearance=0.015,
-                    debug=false, alpha=1) {
+                    cutaway=false, alpha=1) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
 
@@ -497,12 +497,12 @@ module LatchSupport(cutter=false, clearance=0.015,
 }
 
 
-module Latch(debug=false, cutter=false, clearance=0.015, alpha=1) {
+module Latch(cutaway=false, cutter=false, clearance=0.015, alpha=1) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
 
   // Latch block
-  color("Tomato", alpha) RenderIf(!cutter) DebugHalf(debug)
+  color("Tomato", alpha) RenderIf(!cutter) Cutaway(cutaway)
   difference() {
     translate([LatchX(), 0, LatchZ()])
     rotate([0,90,0])
@@ -526,14 +526,14 @@ module Latch_print() {
   Latch();
 }
 
-module LatchFront(debug=false, cutter=false, clearance=0.015, alpha=1) {
+module LatchFront(cutaway=false, cutter=false, clearance=0.015, alpha=1) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
 
   width=LatchFlatWidth();
 
   // Latch block
-  color("Tomato", alpha) RenderIf(!cutter) DebugHalf(debug)
+  color("Tomato", alpha) RenderIf(!cutter) Cutaway(cutaway)
   difference() {
     union() {
       translate([LatchRodLength()-0.625-ReceiverFrontLength()+(cutter?0.51:0),
@@ -558,8 +558,8 @@ module LatchFront_print() {
 }
 
 
-module BarrelLatchCollar(debug=false, alpha=1, cutter=false) {
-  color("Chocolate", alpha) RenderIf(!cutter) DebugHalf(debug)
+module BarrelLatchCollar(cutaway=false, alpha=1, cutter=false) {
+  color("Chocolate", alpha) RenderIf(!cutter) Cutaway(cutaway)
   difference() {
     union() {
 
@@ -633,9 +633,9 @@ module BarrelLatchCollar_print() {
 }
 
 module BarrelPivotCollar(length=((PivotRadius()+WallPivot())*2),
-                         debug=false, alpha=1, cutter=false) {
+                         cutaway=false, alpha=1, cutter=false) {
 
-  color("Chocolate", alpha) RenderIf(!cutter) DebugHalf(debug)
+  color("Chocolate", alpha) RenderIf(!cutter) Cutaway(cutaway)
   difference() {
     union() {
 
@@ -706,8 +706,8 @@ module BarrelPivotCollar_print() {
   BarrelPivotCollar();
 }
 
-module Foregrip(length=ForegripLength(), debug=false, alpha=1) {
-  color("Tan",alpha) render() DebugHalf(debug)
+module Foregrip(length=ForegripLength(), cutaway=false, alpha=1) {
+  color("Tan",alpha) render() Cutaway(cutaway)
   difference() {
     translate([ForegripOffsetX()+ChargerTravel(),0,0])
     rotate([0,90,0])
@@ -730,14 +730,14 @@ module Foregrip_print() {
 module BreakActionAssembly(receiverLength=12, pipeAlpha=1,
                            pivotFactor=0, extractFactor=0, chargeFactor=0, lockFactor=0,
                            stock=true, tailcap=false,
-                           debug=false) {
+                           cutaway=false) {
 
   translate([-ReceiverFrontLength(),0,0]) {
     RecoilPlateBolts();
-    RecoilPlate(debug=debug);
+    RecoilPlate(cutaway=cutaway);
   }
   
-  BreakActionReceiverFront(debug=debug);
+  BreakActionReceiverFront(cutaway=cutaway);
 
   // Pivoting barrel assembly
   BreakActionPivot(factor=pivotFactor) {
@@ -754,8 +754,8 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1,
     translate([0.5*lockFactor,0,0]) {
       //LatchRod();
       //LatchScrews();
-      Latch(debug=debug);
-      LatchFront(debug=debug);
+      Latch(cutaway=cutaway);
+      LatchFront(cutaway=cutaway);
     }
     
     LatchSpring(compress=(ReceiverFrontLength()*lockFactor), alpha=0.25);
@@ -765,15 +765,15 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1,
     rotate([90,0,0])
     cylinder(r=5/16/2, h=3, center=true);
 
-    Barrel(debug=debug);
+    Barrel(cutaway=cutaway);
 
     translate([-ExtractorTravel()*extractFactor,0,0]) {
       ExtractorAssembly();
     }
 
-    BarrelPivotCollar(debug=debug);
+    BarrelPivotCollar(cutaway=cutaway);
 
-    BarrelLatchCollar(debug=debug);
+    BarrelLatchCollar(cutaway=cutaway);
 
     translate([(0.5*lockFactor)-(ChargerTravel()*chargeFactor),0,0])
     Foregrip();
@@ -782,12 +782,12 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1,
     Bipod();
   }
 
-  BreakActionForend(debug=debug);
+  BreakActionForend(cutaway=cutaway);
 }
 
 scale(25.4)
 if ($preview) {
-  BreakActionAssembly(debug=_DEBUG_ASSEMBLY,
+  BreakActionAssembly(cutaway=_CUTAWAY_ASSEMBLY,
                       pivotFactor=Animate(ANIMATION_STEP_UNLOAD)
                                  -Animate(ANIMATION_STEP_LOAD),
                       chargeFactor=Animate(ANIMATION_STEP_CHARGE)

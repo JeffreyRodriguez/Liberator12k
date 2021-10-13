@@ -2,7 +2,7 @@ include <../../Meta/Animation.scad>;
 
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
-use <../../Meta/Debug.scad>;
+use <../../Meta/Cutaway.scad>;
 use <../../Meta/Resolution.scad>;
 use <../../Meta/Conditionals/RenderIf.scad>;
 use <../../Meta/Conditionals/MirrorIf.scad>;
@@ -227,12 +227,12 @@ animateLock = (SubAnimate(ANIMATION_STEP_UNLOCK, start=0, end=1)
 //************
 //* Vitamins *
 //************
-module Revolver_Barrel(barrelLength=BarrelLength(), clearance=BARREL_CLEARANCE, cutter=false, alpha=1, debug=false) {
+module Revolver_Barrel(barrelLength=BarrelLength(), clearance=BARREL_CLEARANCE, cutter=false, alpha=1, cutaway=false) {
 
   clear = (cutter ? clearance : 0);
   clear2 = clear*2;
 
-  color("Silver", alpha) DebugHalf(debug) RenderIf(!cutter)
+  color("Silver", alpha) Cutaway(cutaway) RenderIf(!cutter)
   translate([(cutter?0:BarrelMinX()),0,0])
   rotate([0,90,0])
   difference() {
@@ -325,23 +325,23 @@ module Revolver_PumpLockRod(cutter=false, clearance=0.005) {
   cube([length, width+clear2, width+clear2]);
 }
 
-module Revolver_BlastPlateBolts(bolt=RecoilPlateBolt(), boltLength=Revolver_BarrelSupportLength(), template=false, cutter=false, clearance=0.01, debug=false) {
+module Revolver_BlastPlateBolts(bolt=RecoilPlateBolt(), boltLength=Revolver_BarrelSupportLength(), template=false, cutter=false, clearance=0.01, cutaway=false) {
   clear = cutter ? clearance : 0;
   
   color("Silver")
-  RenderIf(!cutter) DebugHalf(debug)
+  RenderIf(!cutter) Cutaway(cutaway)
   for (M = [0,1]) mirror([0,M,0])
   translate([ForendMaxX(),BarrelRadius()+0.375,0])
   rotate([0,90,0])
   Bolt(bolt=bolt, length=boltLength+ManifoldGap(), clearance=clear, head="hex", capOrientation=true);
 }
 
-module Revolver_BlastPlate(clearance=0.01, holeClearance=0.002, cutter=false, debug=false) {
+module Revolver_BlastPlate(clearance=0.01, holeClearance=0.002, cutter=false, cutaway=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
   color("LightSteelBlue")
-  RenderIf(!cutter) DebugHalf(debug)
+  RenderIf(!cutter) Cutaway(cutaway)
   difference() {
     union() {
       intersection() {
@@ -370,9 +370,9 @@ module Revolver_BlastPlate(clearance=0.01, holeClearance=0.002, cutter=false, de
   }
 }
 
-module Revolver_Shield(cutter=false, debug=false) {
+module Revolver_Shield(cutter=false, cutaway=false) {
   color("LightSteelBlue")
-  RenderIf(!cutter) DebugHalf(debug)
+  RenderIf(!cutter) Cutaway(cutaway)
   translate([BarrelMinX()+BlastPlateThickness(),0,CylinderZ()-0.01])
   rotate([0,-90,0])
   linear_extrude(height=0.5)
@@ -380,7 +380,7 @@ module Revolver_Shield(cutter=false, debug=false) {
   semidonut(minor=CylinderDiameter()-0.25, major=CylinderDiameter(), angle=180);
   
   color("LightSteelBlue")
-  RenderIf(!cutter) DebugHalf(debug)
+  RenderIf(!cutter) Cutaway(cutaway)
   for (M = [0,1]) mirror([0,M,0])
   translate([BarrelMinX()+BlastPlateThickness()-ShieldLength(),CylinderRadius()-ShieldWidth(),CylinderZ()-ShieldHeight()])
   cube([ShieldLength(), ShieldWidth(), ShieldHeight()]);
@@ -389,11 +389,11 @@ module Revolver_Shield(cutter=false, debug=false) {
 //*****************
 //* Printed Parts *
 //*****************
-module Revolver_ReceiverFront(contoured=true, debug=_CUTAWAY_RECEIVER_FRONT, alpha=_ALPHA_RECEIVER_FRONT) {
+module Revolver_ReceiverFront(contoured=true, cutaway=_CUTAWAY_RECEIVER_FRONT, alpha=_ALPHA_RECEIVER_FRONT) {
   length = abs(RecoilSpreaderThickness());
   
   color("Chocolate", alpha)
-  render() DebugHalf(debug)
+  render() Cutaway(cutaway)
   difference() {
     union() {
       hull() {
@@ -427,12 +427,12 @@ module Revolver_ReceiverFront(contoured=true, debug=_CUTAWAY_RECEIVER_FRONT, alp
   }
 }
 
-module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND) {
+module Revolver_BarrelSupport(doRender=true, cutaway=false, alpha=_ALPHA_FOREND) {
   extraBottom=0;
   
   // Branding text
   color("DimGrey", alpha) 
-  RenderIf(doRender) DebugHalf(debug) {
+  RenderIf(doRender) Cutaway(cutaway) {
     
     fontSize = 0.375;
     
@@ -451,7 +451,7 @@ module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND) {
   }
   
   color("Tan", alpha)
-  RenderIf(doRender) DebugHalf(debug)
+  RenderIf(doRender) Cutaway(cutaway)
   difference() {
     union() {
       
@@ -572,11 +572,11 @@ module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND) {
   }
 }
 
-module Revolver_FrameSpacer(length=ForendMinX(), debug=false, alpha=_ALPHA_FOREND) {
+module Revolver_FrameSpacer(length=ForendMinX(), cutaway=false, alpha=_ALPHA_FOREND) {
   extraBottom=0;
   
   color("Tan", alpha)
-  render() DebugHalf(debug)
+  render() Cutaway(cutaway)
   difference() {
     hull() {
       
@@ -694,7 +694,7 @@ module Revolver_ForendSpindleToggleHandle(pivot=0, cutter=false, clearance=0.01,
     children();
   }
 }
-module Revolver_Cylinder(chambers=true, supports=true, chamberBolts=false, debug=_CUTAWAY_CYLINDER, alpha=_ALPHA_CYLINDER, render_cylinder=true) {
+module Revolver_Cylinder(chambers=true, supports=true, chamberBolts=false, cutaway=_CUTAWAY_CYLINDER, alpha=_ALPHA_CYLINDER, render_cylinder=true) {
   OffsetZigZagRevolver(
       diameter=CYLINDER_DIAMETER,
       height=CYLINDER_LENGTH,
@@ -708,12 +708,12 @@ module Revolver_Cylinder(chambers=true, supports=true, chamberBolts=false, debug
       supportsBottom=false, supportsTop=supports,
       chamberBolts=chamberBolts,
       chambers=chambers, chamberLength=ChamberLength(),
-      debug=debug, alpha=alpha,
+      cutaway=cutaway, alpha=alpha,
       render_cylinder=render_cylinder);
 }
 
-module Revolver_VerticalForegrip(length=2, debug=true, alpha=1) {
-  color("Tan", alpha) render() DebugHalf(debug) 
+module Revolver_VerticalForegrip(length=2, cutaway=true, alpha=1) {
+  color("Tan", alpha) render() Cutaway(cutaway) 
   difference() {
     union() {
       translate([ForegripMinX(),0,0])
@@ -750,8 +750,8 @@ module Revolver_VerticalForegrip_print() {
   Revolver_VerticalForegrip();
 }
 
-module Revolver_Foregrip(length=PumpGripLength(), debug=false, alpha=1) {
-  color("Tan", alpha) render() DebugHalf(debug)
+module Revolver_Foregrip(length=PumpGripLength(), cutaway=false, alpha=1) {
+  color("Tan", alpha) render() Cutaway(cutaway)
   difference() {
     
     // Body around the barrel
@@ -810,7 +810,7 @@ module Revolver_ActionRodJig() {
 //**************
 //* Assemblies *
 //**************
-module RevolverForendAssembly(pipeAlpha=1, debug=false) {
+module RevolverForendAssembly(pipeAlpha=1, cutaway=false) {
     
   animateCylinderRotation = SubAnimate(ANIMATION_STEP_CHARGE, start=0.4, end=0.98)
                           + SubAnimate(ANIMATION_STEP_CHARGER_RESET, start=0.25, end=0.8);
@@ -821,21 +821,21 @@ module RevolverForendAssembly(pipeAlpha=1, debug=false) {
   *Revolver_PumpLockRod();
   
   if (_SHOW_BARREL)
-    Revolver_Barrel(debug=debug);
+    Revolver_Barrel(cutaway=cutaway);
   
   if (_SHOW_BLAST_PLATE)
-  Revolver_BlastPlate(debug=_CUTAWAY_SHIELD);
+  Revolver_BlastPlate(cutaway=_CUTAWAY_SHIELD);
   
-  Revolver_BlastPlateBolts(debug=_CUTAWAY_SHIELD);
+  Revolver_BlastPlateBolts(cutaway=_CUTAWAY_SHIELD);
   
   if (_SHOW_SHIELD)
-  Revolver_Shield(debug=_CUTAWAY_SHIELD);
+  Revolver_Shield(cutaway=_CUTAWAY_SHIELD);
 
   if (_SHOW_FRAME_SPACER)
-  Revolver_FrameSpacer(debug=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
+  Revolver_FrameSpacer(cutaway=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
   
   if (_SHOW_BARREL_SUPPORT)
-  Revolver_BarrelSupport(debug=_CUTAWAY_BARREL_SUPPORT, alpha=_ALPHA_FOREND);
+  Revolver_BarrelSupport(cutaway=_CUTAWAY_BARREL_SUPPORT, alpha=_ALPHA_FOREND);
   
   if (_SHOW_SPINDLE) {
     Revolver_ForendSpindleTogglePin();
@@ -876,11 +876,11 @@ module RevolverAssembly(stock=true) {
     
     if (_SHOW_RECEIVER) {
       
-      Receiver_TensionBolts(debug=_CUTAWAY_RECEIVER);
+      Receiver_TensionBolts(cutaway=_CUTAWAY_RECEIVER);
       
       Frame_ReceiverAssembly(
         length=FRAME_BOLT_LENGTH,
-        debug=_CUTAWAY_RECEIVER);
+        cutaway=_CUTAWAY_RECEIVER);
     }
 
     if (_SHOW_FCG)
@@ -891,10 +891,10 @@ module RevolverAssembly(stock=true) {
         Revolver_ForegripBolts();
         
         if (_FOREGRIP == "Standard") {
-          Revolver_Foregrip(debug=_CUTAWAY_FOREGRIP,
+          Revolver_Foregrip(cutaway=_CUTAWAY_FOREGRIP,
                             alpha=_ALPHA_FOREGRIP);
         } else {
-          Revolver_VerticalForegrip(debug=_CUTAWAY_FOREGRIP,
+          Revolver_VerticalForegrip(cutaway=_CUTAWAY_FOREGRIP,
                                     alpha=_ALPHA_FOREGRIP);
         }
       }
@@ -916,7 +916,7 @@ module RevolverAssembly(stock=true) {
     }
   }
 
-  RevolverForendAssembly(debug=false);
+  RevolverForendAssembly(cutaway=false);
 }
 
 scale(25.4)

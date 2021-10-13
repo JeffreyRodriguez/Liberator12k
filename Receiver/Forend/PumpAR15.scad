@@ -4,7 +4,7 @@ use <../../Meta/Manifold.scad>;
 use <../../Meta/Math/Circles.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
-use <../../Meta/Debug.scad>;
+use <../../Meta/Cutaway.scad>;
 use <../../Meta/Resolution.scad>;
 use <../../Meta/Conditionals/RenderIf.scad>;
 
@@ -57,7 +57,7 @@ _ALPHA_CAM_GUIDE = 1; // [0:0.1:1]
 _ALPHA_HANDGUARD = 1; // [0:0.1:1]
 
 // Cut assembly view in half
-_DEBUG_ASSEMBLY = false;
+_CUTAWAY_ASSEMBLY = false;
 
 /* [Vitamins] */
 
@@ -132,18 +132,18 @@ module ActionRod(width=0.25, length=12, cutter=false, clearance=0.005) {
   cube([length, width+clear2, width+clear2]);
 }
 
-module BarrelCollar(clearance=0.002, cutter=false, debug=false) {
+module BarrelCollar(clearance=0.002, cutter=false, cutaway=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
     
   // Gas block shaft collar
-  color("Silver") DebugHalf(debug)
+  color("Silver") Cutaway(cutaway)
   translate([BarrelMinX()+AR15BarrelGasLength(),0,0])
   rotate([0,90,0])
   cylinder(r=BarrelCollarRadius()+clear, h=BarrelCollarWidth(), $fn=40);
 }
 
-module Barrel(barrelLength=BarrelLength(), cutter=false, clearance=0.005, alpha=1, debug=false) {
+module Barrel(barrelLength=BarrelLength(), cutter=false, clearance=0.005, alpha=1, cutaway=false) {
   
   color("DimGrey") RenderIf(!cutter)
   translate([BarrelMinX(),0,0])
@@ -176,12 +176,12 @@ module MagazineFeedLips(length=boltCarrierLength, clearance=0, clearanceAngle=0)
 // *****************
 // * Printed Parts *
 // *****************
-module BoltCarrier(cutter=false, clearance=0.01, chamferRadius=1/16, debug=false, alpha=1) {
+module BoltCarrier(cutter=false, clearance=0.01, chamferRadius=1/16, cutaway=false, alpha=1) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
   color("Olive", alpha) RenderIf(!cutter)
-  DebugHalf(debug)
+  Cutaway(cutaway)
   difference() {
     union() {
       translate([boltCarrierMinX,0,0])
@@ -265,11 +265,11 @@ module BoltCarrier_print() {
 }
 
 
-module AR15Forend(debug=false, alpha=1) {
+module AR15Forend(cutaway=false, alpha=1) {
   length = ForendLength();
   
   color("Tan", alpha) render()
-  DebugHalf(debug)
+  Cutaway(cutaway)
   difference() {
     union() {
       translate([ForendMinX(),0,0])
@@ -349,9 +349,9 @@ module AR15Forend(debug=false, alpha=1) {
     }
   }
 }
-module CamGuide(length=BarrelMinX(), debug=false, alpha=1) {
+module CamGuide(length=BarrelMinX(), cutaway=false, alpha=1) {
   color("Chocolate", alpha) render()
-  DebugHalf(debug)
+  Cutaway(cutaway)
   difference() {
     translate([length,0,0])
     ReceiverTopSlot(length=length, clearance=-0.005);
@@ -376,11 +376,11 @@ module CamGuide(length=BarrelMinX(), debug=false, alpha=1) {
     
   }
 }
-module Handguard(debug=false, alpha=1) {
+module Handguard(cutaway=false, alpha=1) {
   length = 7.5;
   
   color("Tan", alpha) render()
-  DebugHalf(debug)
+  Cutaway(cutaway)
   difference() {
     union() {
       translate([ForendMinX()+ForendLength(),0,0])
@@ -390,9 +390,9 @@ module Handguard(debug=false, alpha=1) {
   }
 }
 
-module PumpAR15ForendAssembly(debug=undef) {
+module PumpAR15ForendAssembly(cutaway=undef) {
 
-  if (debug == true || _SHOW_BARREL) {
+  if (cutaway == true || _SHOW_BARREL) {
     Barrel();
     BarrelCollar();
   }
@@ -420,17 +420,17 @@ module PumpAR15ForendAssembly(debug=undef) {
     Bolt();
 
     if (_SHOW_BOLT_CARRIER)
-    BoltCarrier(debug=_CUTAWAY_BOLT_CARRIER, alpha=_ALPHA_BOLT_CARRIER);
+    BoltCarrier(cutaway=_CUTAWAY_BOLT_CARRIER, alpha=_ALPHA_BOLT_CARRIER);
   }
   
   if (_SHOW_CAM_GUIDE)
-  CamGuide(debug=_CUTAWAY_CAM_GUIDE, alpha=_ALPHA_CAM_GUIDE);
+  CamGuide(cutaway=_CUTAWAY_CAM_GUIDE, alpha=_ALPHA_CAM_GUIDE);
 
   if (_SHOW_FOREND)
-  AR15Forend(debug=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
+  AR15Forend(cutaway=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
   
   if (_SHOW_HANDGUARD)
-  Handguard(debug=_CUTAWAY_HANDGUARD, alpha=_ALPHA_HANDGUARD);
+  Handguard(cutaway=_CUTAWAY_HANDGUARD, alpha=_ALPHA_HANDGUARD);
 }
 
 scale(25.4)
@@ -443,7 +443,7 @@ if ($preview) {
   PumpAR15ForendAssembly();
   
   if (_SHOW_RECEIVER)
-  ReceiverAssembly(debug=_CUTAWAY_RECEIVER);
+  ReceiverAssembly(cutaway=_CUTAWAY_RECEIVER);
   
   if (_SHOW_STOCK)
   StockAssembly();

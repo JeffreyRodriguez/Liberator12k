@@ -2,7 +2,7 @@ include <../../Meta/Animation.scad>;
 
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
-use <../../Meta/Debug.scad>;
+use <../../Meta/Cutaway.scad>;
 use <../../Meta/Conditionals/RenderIf.scad>;
 use <../../Meta/Resolution.scad>;
 
@@ -35,12 +35,12 @@ function UpperLength() = 6.75;
 function MagazineCenterZ() = 1.5;
 
 // Vitamins
-module Barrel(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, length=BarrelLength(), clearance=BARREL_CLEARANCE, cartridgeRimThickness=RIM_WIDTH, cutter=false, alpha=1, debug=false) {
+module Barrel(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, length=BarrelLength(), clearance=BARREL_CLEARANCE, cartridgeRimThickness=RIM_WIDTH, cutter=false, alpha=1, cutaway=false) {
 
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
-  color("Silver") RenderIf(!cutter) DebugHalf(debug)
+  color("Silver") RenderIf(!cutter) Cutaway(cutaway)
   translate([(cutter?0:cartridgeRimThickness),0,0])
   difference() {
     
@@ -81,11 +81,11 @@ module PumpRails(length=UpperLength(), cutter=false, clearance=0.002, extraRadiu
 module ShellLoadingSupport() {
 }
 
-module PumpUpper(cutter=false, clearance=0.002, alpha=1, debug=false) {
+module PumpUpper(cutter=false, clearance=0.002, alpha=1, cutaway=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
-  color("Yellow", alpha) DebugHalf(debug)
+  color("Yellow", alpha) Cutaway(cutaway)
   difference() {
     union() {
       translate([-clear,0,0])
@@ -126,12 +126,12 @@ module PumpUpper(cutter=false, clearance=0.002, alpha=1, debug=false) {
   }
 }
 
-module PumpForend(alpha=1, debug=false) {
+module PumpForend(alpha=1, cutaway=false) {
   ForendWall=0.25;
   ForendLength=BarrelTravel();
   ForendLengthExtra=0;
 
-  color("Green", alpha) DebugHalf(debug)
+  color("Green", alpha) Cutaway(cutaway)
   difference() {
     union() {
       hull() {
@@ -213,10 +213,10 @@ if ($preview) {
   translate([BarrelTravel()*(Animate(ANIMATION_STEP_UNLOAD)-Animate(ANIMATION_STEP_LOAD)),0,0]) {
     Barrel();
     //BarrelCollar();
-    *PumpForend(alpha=1, debug=true);
+    *PumpForend(alpha=1, cutaway=true);
   }
 
-  PumpUpper(alpha=0.75, debug=false);
+  PumpUpper(alpha=0.75, cutaway=false);
 
   Receiver();
 }

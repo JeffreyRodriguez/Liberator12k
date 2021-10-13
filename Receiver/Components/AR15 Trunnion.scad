@@ -4,7 +4,7 @@ use <../../Meta/Manifold.scad>;
 use <../../Meta/Math/Circles.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
-use <../../Meta/Debug.scad>;
+use <../../Meta/Cutaway.scad>;
 use <../../Meta/Resolution.scad>;
 use <../../Meta/Conditionals/RenderIf.scad>;
 
@@ -21,7 +21,7 @@ use <../Receiver.scad>;
 _RENDER = "Assembly"; // ["Assembly", "AR15_Trunnion", "AR15_TrunnionCap"]
 
 // Cut assembly view in half
-_DEBUG_ASSEMBLY = false;
+_CUTAWAY_ASSEMBLY = false;
 
 function AR15_TrunnionLength() = AR15BarrelExtensionLength()+AR15BarrelExtensionLipLength();
 

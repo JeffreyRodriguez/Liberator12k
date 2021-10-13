@@ -1,6 +1,6 @@
 use <../Primer.scad>;
 
-use <../../Meta/Debug.scad>;
+use <../../Meta/Cutaway.scad>;
 use <../../Shapes/Chamfer.scad>;
 use <../../Shapes/Teardrop.scad>;
 use <../../Shapes/TeardropTorus.scad>;
@@ -78,7 +78,7 @@ module PATCartridge(primer=PRIMER,
   
 color("LightBlue")
   translate([0,0.001,0])
-DebugHalf()
+Cutaway()
 difference() {
   translate([0,0,0.5125])
   Pipe(INNER_PIPE, length=3, hollow=true);
@@ -86,7 +86,7 @@ difference() {
 }
 
 color("SteelBlue")
-DebugHalf()
+Cutaway()
 translate([0,0,0.1])
 Pipe(OUTER_PIPE, length=2, hollow=true);
 
