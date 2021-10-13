@@ -17,7 +17,7 @@ TopBreak_Parts := ReceiverFront \
 TopBreak_Hardware := Hardware/Barrel \
                      Hardware/ExtractorBit \
 										 Hardware/ExtractorRetainer \
-										 Hardware/LatchBar \
+										 Hardware/LatchBars \
 										 Hardware/MlokBolts \
 										 Hardware/ClusterBolts \
 										 Hardware/SightpostBolts
