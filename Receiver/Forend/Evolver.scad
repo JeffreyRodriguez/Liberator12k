@@ -2,10 +2,10 @@ include <../../Meta/Animation.scad>;
 
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
-use <../../Meta/Debug.scad>;
+use <../../Meta/Cutaway.scad>;
 use <../../Meta/Resolution.scad>;
-use <../../Meta/RenderIf.scad>;
-use <../../Meta/MirrorIf.scad>;
+use <../../Meta/Conditionals/RenderIf.scad>;
+use <../../Meta/Conditionals/MirrorIf.scad>;
 
 use <../../Meta/Math/Triangles.scad>;
 
@@ -195,12 +195,12 @@ pumpPinX = 2;
 //************
 //* Vitamins *
 //************
-module Evolver_Barrel(barrelLength=BarrelLength(), clearance=BARREL_CLEARANCE, cutter=false, alpha=1, debug=false) {
+module Evolver_Barrel(barrelLength=BarrelLength(), clearance=BARREL_CLEARANCE, cutter=false, alpha=1, cutaway=false) {
 
   clear = (cutter ? clearance : 0);
   clear2 = clear*2;
   
-  color("DimGrey", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("DimGrey", alpha) RenderIf(!cutter) Cutaway(cutaway)
   translate([ForendLength()+BarrelCollarOffset()-clear,0,0])
   rotate([0,90,0])
   difference() {
@@ -211,7 +211,7 @@ module Evolver_Barrel(barrelLength=BarrelLength(), clearance=BARREL_CLEARANCE, c
              h=barrelLength);
   }
 
-  color("Silver", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("Silver", alpha) RenderIf(!cutter) Cutaway(cutaway)
   translate([(cutter?0:BarrelMinX()),0,0])
   rotate([0,90,0])
   difference() {
@@ -224,11 +224,11 @@ module Evolver_Barrel(barrelLength=BarrelLength(), clearance=BARREL_CLEARANCE, c
   }
 }
 
-module Evolver_BarrelCollar(clearance=BARREL_CLEARANCE, cutter=false, alpha=1, debug=false) {
+module Evolver_BarrelCollar(clearance=BARREL_CLEARANCE, cutter=false, alpha=1, cutaway=false) {
   clear = (cutter ? clearance : 0);
   clear2 = clear*2;
   
-  color("DimGrey", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("DimGrey", alpha) RenderIf(!cutter) Cutaway(cutaway)
   translate([ForendLength()+BarrelCollarOffset()-clear,0,0])
   rotate([0,90,0])
   difference() {
@@ -277,7 +277,7 @@ module Evolver_RatchetPawlPin(cutter=false, clearance=0.003) {
   cylinder(r=pawlPinRadius+clear, h=1+clear2);
 }
 
-module Evolver_ActuatorPin(cutter=false, clearance=0.003, debug=false, alpha=1) {
+module Evolver_ActuatorPin(cutter=false, clearance=0.003, cutaway=false, alpha=1) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   CR = 1/16;
@@ -293,7 +293,7 @@ module Evolver_ActuatorPin(cutter=false, clearance=0.003, debug=false, alpha=1) 
   translate([offsetX,0, 0.5-actuatorPinDepth])
   cylinder(r=actuatorPinRadius+clear, h=height+ManifoldGap());
 }
-module Evolver_PumpCollarBolts(cutter=false, clearance=0.003, debug=false, alpha=1) {
+module Evolver_PumpCollarBolts(cutter=false, clearance=0.003, cutaway=false, alpha=1) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   CR = 1/16;
@@ -324,11 +324,11 @@ module Evolver_RatchetPawlPivot(factor=0, angle=pawlPivotAngle) {
 //*****************
 //* Printed Parts *
 //*****************
-module Evolver_ReceiverFront(contoured=true, debug=_CUTAWAY_RECEIVER_FRONT, alpha=_ALPHA_RECEIVER_FRONT) {
+module Evolver_ReceiverFront(contoured=true, cutaway=_CUTAWAY_RECEIVER_FRONT, alpha=_ALPHA_RECEIVER_FRONT) {
   length = abs(RecoilSpreaderThickness());
   
   color("Tan", alpha)
-  render() DebugHalf(enabled=debug)
+  render() Cutaway(cutaway)
   difference() {
     union() {
         Frame_Receiver_Segment(length=length,
@@ -380,10 +380,10 @@ module Evolver_ReceiverFront(contoured=true, debug=_CUTAWAY_RECEIVER_FRONT, alph
   }
 }
 
-module Evolver_ForendSpacer(length=ForendSpacerLength(), doRender=true, debug=false, alpha=1) {
+module Evolver_ForendSpacer(length=ForendSpacerLength(), doRender=true, cutaway=false, alpha=1) {
   
   color("Tan", alpha)
-  RenderIf(doRender) DebugHalf(enabled=debug)
+  RenderIf(doRender) Cutaway(cutaway)
   difference() {
     
     hull() {
@@ -410,14 +410,14 @@ module Evolver_ForendSpacer(length=ForendSpacerLength(), doRender=true, debug=fa
   }
 }
 
-module Evolver_BarrelSupport(length=Evolver_BarrelSupportLength(), doRender=true, debug=false, alpha=_ALPHA_FOREND_SPACER) {
+module Evolver_BarrelSupport(length=Evolver_BarrelSupportLength(), doRender=true, cutaway=false, alpha=_ALPHA_FOREND_SPACER) {
   extraBottom=0;
   
   offsetX = ForendSpacerLength();
   
   // Branding text
   color("DimGrey", alpha) 
-  RenderIf(doRender) DebugHalf(enabled=debug) {
+  RenderIf(doRender) Cutaway(cutaway) {
      
     fontSize = 0.375;
     
@@ -436,7 +436,7 @@ module Evolver_BarrelSupport(length=Evolver_BarrelSupportLength(), doRender=true
   }
   
   color("Tan", alpha)
-  RenderIf(doRender) DebugHalf(enabled=debug)
+  RenderIf(doRender) Cutaway(cutaway)
   difference() {
     union() {
       translate([offsetX,0,0])
@@ -496,11 +496,11 @@ module Evolver_BarrelSupport(length=Evolver_BarrelSupportLength(), doRender=true
     Evolver_ActuatorToggle(cutter=true);
   }
 }
-module Evolver_Extractor(length=0.5, cutter=false, clearance=0.002, debug=false, alpha=1) {
+module Evolver_Extractor(length=0.5, cutter=false, clearance=0.002, cutaway=false, alpha=1) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
-  color("Silver", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("Silver", alpha) RenderIf(!cutter) Cutaway(cutaway)
   difference() {
     
     translate([0,0,SpindleZ()])
@@ -514,7 +514,7 @@ module Evolver_Extractor(length=0.5, cutter=false, clearance=0.002, debug=false,
     cube([(1/16)+clear2, 0.25, 0.625]);
   }
 }
-module Evolver_Ratchet(teeth = 3*7, length=Evolver_RatchetLength(), angle=0, cutter=false, clearance=0.01, debug=false, alpha=1) {
+module Evolver_Ratchet(teeth = 3*7, length=Evolver_RatchetLength(), angle=0, cutter=false, clearance=0.01, cutaway=false, alpha=1) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   CR = 1/16;
@@ -522,7 +522,7 @@ module Evolver_Ratchet(teeth = 3*7, length=Evolver_RatchetLength(), angle=0, cut
   
   offsetX = ForendSpacerLength()-length;
   
-  color("Olive", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("Olive", alpha) RenderIf(!cutter) Cutaway(cutaway)
   difference() {
     translate([offsetX-clear,0,SpindleZ()])
     rotate([0,90,0])
@@ -562,7 +562,7 @@ module Evolver_Ratchet(teeth = 3*7, length=Evolver_RatchetLength(), angle=0, cut
   }
 }
 
-module Evolver_RatchetPawl(length=0.5, cutter=false, clearance=0.01, debug=false, alpha=1) {
+module Evolver_RatchetPawl(length=0.5, cutter=false, clearance=0.01, cutaway=false, alpha=1) {
 clear = cutter ? clearance : 0;
   clear2 = clear*2;
   CR = 1/16;
@@ -572,7 +572,7 @@ clear = cutter ? clearance : 0;
   offsetX = ForendSpacerLength()-length-clear;
   
   color("Pink", alpha)
-  RenderIf(!cutter) DebugHalf(enabled=debug)
+  RenderIf(!cutter) Cutaway(cutaway)
   difference() {
     union() {
       
@@ -636,14 +636,14 @@ clear = cutter ? clearance : 0;
                           h=SpindleLength());
   }
 }
-module Evolver_Spindle(cutter=false, clearance=0.007, debug=false, alpha=1) {
+module Evolver_Spindle(cutter=false, clearance=0.007, cutaway=false, alpha=1) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   CR = 1/16;
   clearCR = cutter ? CR : 0;
   
   color("Olive", alpha)
-  RenderIf(!cutter) DebugHalf(enabled=debug)
+  RenderIf(!cutter) Cutaway(cutaway)
   difference() {
     union() {
       
@@ -691,13 +691,13 @@ module Evolver_Spindle(cutter=false, clearance=0.007, debug=false, alpha=1) {
                           h=SpindleLength());
   }
 }
-module Evolver_ZigZag(length=Evolver_ZigZagLength(), cutter=false, clearance=0.01, debug=false, alpha=1) {
+module Evolver_ZigZag(length=Evolver_ZigZagLength(), cutter=false, clearance=0.01, cutaway=false, alpha=1) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   offsetX = ForendSpacerLength();
   
   color("Olive", alpha)
-  RenderIf(!cutter) DebugHalf(enabled=debug)
+  RenderIf(!cutter) Cutaway(cutaway)
   difference() {
     union() {
       translate([offsetX,0,SpindleZ()])
@@ -728,7 +728,7 @@ module Evolver_ZigZag(length=Evolver_ZigZagLength(), cutter=false, clearance=0.0
                           h=length);
   }
 }
-module Evolver_Actuator(cutter=false, clearance=0.01, debug=false, alpha=1) {
+module Evolver_Actuator(cutter=false, clearance=0.01, cutaway=false, alpha=1) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   CR = 1/16;
@@ -740,7 +740,7 @@ module Evolver_Actuator(cutter=false, clearance=0.01, debug=false, alpha=1) {
   legLength = 0.5;
   
   color("Chocolate", alpha)
-  RenderIf(!cutter) DebugHalf(enabled=debug)
+  RenderIf(!cutter) Cutaway(cutaway)
   difference() {
     union() {
       translate([Evolver_ActuatorMinX(),0,0])
@@ -778,7 +778,7 @@ module Evolver_Actuator(cutter=false, clearance=0.01, debug=false, alpha=1) {
   }
 }
 
-module Evolver_ActuatorToggle(AF=0, stopTab=true, cutter=false, clearance=0.01, debug=false, alpha=1) {
+module Evolver_ActuatorToggle(AF=0, stopTab=true, cutter=false, clearance=0.01, cutaway=false, alpha=1) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   CR = 1/16;
@@ -800,7 +800,7 @@ module Evolver_ActuatorToggle(AF=0, stopTab=true, cutter=false, clearance=0.01, 
   helixOffsetX = tabOffsetX+tabLength;
   
   color("CornflowerBlue", alpha)
-  RenderIf(!cutter) DebugHalf(enabled=debug)
+  RenderIf(!cutter) Cutaway(cutaway)
   for (M = [0,1]) mirror([0,M,0])
   rotate([angle*AF,0,0])
   difference() {
@@ -893,7 +893,7 @@ module Evolver_ActuatorToggle(AF=0, stopTab=true, cutter=false, clearance=0.01, 
 }
 
 
-module Evolver_PumpRods(doMirror=true, cutter=false, innerCut=false, clearance=0.01, debug=false, alpha=1) {
+module Evolver_PumpRods(doMirror=true, cutter=false, innerCut=false, clearance=0.01, cutaway=false, alpha=1) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   CR = 1/16;
@@ -908,7 +908,7 @@ module Evolver_PumpRods(doMirror=true, cutter=false, innerCut=false, clearance=0
   
   // Pump rods
   color("Olive", alpha)
-  RenderIf(!cutter) DebugHalf(enabled=debug)
+  RenderIf(!cutter) Cutaway(cutaway)
   for (M = (doMirror?[0,1]:[0])) mirror([0,M,0])
   rotate([angle,0,0])
   difference() {
@@ -993,7 +993,7 @@ module Evolver_PumpCollar() {
 //**************
 //* Assemblies *
 //**************
-module EvolverForendAssembly(pipeAlpha=1, debug=false) {
+module EvolverForendAssembly(pipeAlpha=1, cutaway=false) {
   animateSpindle = (SubAnimate(ANIMATION_STEP_EXTRACT, start=0.19, end=0.46)
                    + SubAnimate(ANIMATION_STEP_EXTRACT, start=0.63, end=0.9))/2;
   
@@ -1037,12 +1037,12 @@ module EvolverForendAssembly(pipeAlpha=1, debug=false) {
     
     if (_SHOW_SPINDLE) {
       if (_SHOW_EXTRACTOR)
-      Evolver_Extractor(debug=_CUTAWAY_SPINDLE);
+      Evolver_Extractor(cutaway=_CUTAWAY_SPINDLE);
       
       Evolver_SpindlePins();
-      Evolver_Spindle(debug=_CUTAWAY_SPINDLE, alpha=_ALPHA_SPINDLE);
-      Evolver_Ratchet(debug=_CUTAWAY_SPINDLE, alpha=_ALPHA_SPINDLE);
-      Evolver_ZigZag(debug=_CUTAWAY_SPINDLE, alpha=_ALPHA_SPINDLE);
+      Evolver_Spindle(cutaway=_CUTAWAY_SPINDLE, alpha=_ALPHA_SPINDLE);
+      Evolver_Ratchet(cutaway=_CUTAWAY_SPINDLE, alpha=_ALPHA_SPINDLE);
+      Evolver_ZigZag(cutaway=_CUTAWAY_SPINDLE, alpha=_ALPHA_SPINDLE);
     }
   }
   
@@ -1051,7 +1051,7 @@ module EvolverForendAssembly(pipeAlpha=1, debug=false) {
   translate([(Evolver_BarrelTravel()*animateBarrel),0,0]) {
     
     if (_SHOW_BARREL)
-    Evolver_Barrel(debug=_CUTAWAY_BARREL);
+    Evolver_Barrel(cutaway=_CUTAWAY_BARREL);
     
     if (_SHOW_PUMP_COLLAR)
     Evolver_PumpCollar();
@@ -1066,7 +1066,7 @@ module EvolverForendAssembly(pipeAlpha=1, debug=false) {
     Evolver_ActuatorPin();
     
     if (_SHOW_ACTUATOR)
-    Evolver_Actuator(debug=_CUTAWAY_ACTUATOR, alpha=_ALPHA_ACTUATOR);
+    Evolver_Actuator(cutaway=_CUTAWAY_ACTUATOR, alpha=_ALPHA_ACTUATOR);
   }
   
   translate([(Evolver_ActuatorTravel()*animateBarrel2),0,0])
@@ -1083,10 +1083,10 @@ module EvolverForendAssembly(pipeAlpha=1, debug=false) {
   }
   
   if (_SHOW_FOREND_SPACER)
-  Evolver_ForendSpacer(debug=_CUTAWAY_FOREND_SPACER, alpha=_ALPHA_FOREND_SPACER);
+  Evolver_ForendSpacer(cutaway=_CUTAWAY_FOREND_SPACER, alpha=_ALPHA_FOREND_SPACER);
   
   if (_SHOW_BARREL_SUPPORT)
-  Evolver_BarrelSupport(debug=_CUTAWAY_BARREL_SUPPORT, alpha=_ALPHA_BARREL_SUPPORT);
+  Evolver_BarrelSupport(cutaway=_CUTAWAY_BARREL_SUPPORT, alpha=_ALPHA_BARREL_SUPPORT);
   
   if (_SHOW_RECEIVER_FRONT)
   translate([-0.5,0,0])
@@ -1107,13 +1107,13 @@ if ($preview) {
     if (_SHOW_RECEIVER)
     Receiver_LargeFrameAssembly(
       length=FRAME_BOLT_LENGTH,
-      debug=_CUTAWAY_RECEIVER);
+      cutaway=_CUTAWAY_RECEIVER);
     
     if (_SHOW_STOCK)
     StockAssembly();
   }
 
-  EvolverForendAssembly(debug=false);
+  EvolverForendAssembly(cutaway=false);
 } else {
 
   // **********
