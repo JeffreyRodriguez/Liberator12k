@@ -1,5 +1,5 @@
 use <../Meta/Debug.scad>;
-use <../Meta/RenderIf.scad>;
+use <../Meta/Conditionals/RenderIf.scad>;
 use <../Shapes/Chamfer.scad>;
 use <../Shapes/Semicircle.scad>;
 use <../Shapes/Teardrop.scad>;

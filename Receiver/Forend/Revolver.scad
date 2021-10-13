@@ -4,8 +4,8 @@ use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
 use <../../Meta/Debug.scad>;
 use <../../Meta/Resolution.scad>;
-use <../../Meta/RenderIf.scad>;
-use <../../Meta/MirrorIf.scad>;
+use <../../Meta/Conditionals/RenderIf.scad>;
+use <../../Meta/Conditionals/MirrorIf.scad>;
 
 use <../../Meta/Math/Triangles.scad>;
 

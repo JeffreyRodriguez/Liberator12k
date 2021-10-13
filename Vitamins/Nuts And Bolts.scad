@@ -1,7 +1,7 @@
 use <../Meta/Units.scad>;
 use <../Meta/Resolution.scad>;
 use <../Meta/Manifold.scad>;
-use <../Meta/RenderIf.scad>;
+use <../Meta/Conditionals/RenderIf.scad>;
 use <../Meta/slookup.scad>;
 use <../Shapes/Teardrop.scad>;
 use <../Shapes/Teardrop Taper.scad>;

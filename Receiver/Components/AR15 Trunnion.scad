@@ -6,7 +6,7 @@ use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
 use <../../Meta/Debug.scad>;
 use <../../Meta/Resolution.scad>;
-use <../../Meta/RenderIf.scad>;
+use <../../Meta/Conditionals/RenderIf.scad>;
 
 use <../../Shapes/Chamfer.scad>;
 
