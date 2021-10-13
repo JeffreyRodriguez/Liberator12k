@@ -78,7 +78,7 @@ function Bullpup_MinX() = - ReceiverFrontLength()
 
 function Bullpup_BoltX() = Bullpup_MinX();
 function Bullpup_BoltY() = 0.625;
-function Bullpup_BoltZ() = -2;
+function Bullpup_BoltZ() = -2.5;
 function Bullpup_BoltWall() = 0.3125;
 function Bullpup_BoltLength() = 12;
 
@@ -86,7 +86,7 @@ function Bullpup_BottomZ() = Bullpup_BoltZ()-Bullpup_BoltWall();
 
 function Bullpup_FrontLength() = Bullpup_BoltLength() - Bullpup_RearLength();
 
-function Bullpup_LowerX() = 5.5;
+function Bullpup_LowerX() = 7;
 function Bullpup_LowerZ() = (Bullpup_BoltZ() - Bullpup_BoltWall())
                           - ReceiverBottomZ();
 echo("Bullpup_BoltLength", Bullpup_BoltLength());
@@ -168,7 +168,7 @@ module Bullpup_Rear(length=ReceiverLength()+Bullpup_BackplateLength(), debug=fal
       ChamferedCube([1, 0.3125, ReceiverIR()], r=1/16, teardropFlip=[true,true,true]);
       
       // Receiver Bottom Body
-      translate([Bullpup_MinX(), -(1.25/2), -2.125])
+      translate([Bullpup_MinX(), -(1.25/2), Bullpup_BoltZ()-0.125])
       ChamferedCube([length-0.5, 1.25, 2+ReceiverBottomZ()+0.125],
                     r=1/16, teardropFlip=[true, true, true]);
       
