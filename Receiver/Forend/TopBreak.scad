@@ -262,7 +262,7 @@ module PivotClearanceCut(offsetX=0, cut=true, width=PivotWidth(),
   }
 }
 
-module PivotOuterBearing(intersect=true, cutter=false, clearance=0.008) {
+module PivotOuterBearing(intersect=true, cutter=false, clearance=0.005) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
@@ -285,7 +285,7 @@ module PivotOuterBearing(intersect=true, cutter=false, clearance=0.008) {
                    r=1/16);
   }
 }
-module PivotInnerBearing(cutter=false, clearance=0.008, widthClearance=0.008) {
+module PivotInnerBearing(cutter=false, clearance=0.005, widthClearance=0.005) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
@@ -632,7 +632,7 @@ module TopBreak_Forend(clearance=0.005, doRender=true, cutaway=false, alpha=1) {
     }
   }
 }
-module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, cutaway=false, alpha=1) {
+module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.005, cutaway=false, alpha=1) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
   clearRear = 1/16;
@@ -680,7 +680,7 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, cuta
       }
     }
     
-    PivotInnerBearing(cutter=true, clearance=(cutter?0:0.01));
+    PivotInnerBearing(cutter=true, clearance=(cutter?0:clearance));
     
     if (!cutter) {
       
