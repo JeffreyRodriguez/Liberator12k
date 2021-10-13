@@ -634,6 +634,7 @@ module TopBreak_Forend(clearance=0.005, doRender=true, debug=false, alpha=1) {
 module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, debug=false, alpha=1) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
+  clearRear = 1/16;
 
   color("Chocolate", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
   difference() {
@@ -644,35 +645,35 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, debu
       union() {
         
         // Around the barrel
-        translate([RIM_WIDTH,0,BarrelZ()])
+        translate([clearRear,0,BarrelZ()])
         rotate([0,90,0])
         ChamferedCylinder(r1=BarrelSleeveRadius()+WallBarrel()+clear,
-                          h=PivotX()-RIM_WIDTH+clear,
+                          h=PivotX()-clearRear+clear,
                           r2=1/16);
         
         // Extractor support
-        translate([RIM_WIDTH-rearExtension-clear,-(TopBreak_ExtractorHousingWidth()/2)-clear,TopBreak_BarrelCollarBottomZ()-clear])
-        ChamferedCube([PivotX()-(sqrt(2)/2*PivotRadius())-RIM_WIDTH+rearExtension+clear2,
+        translate([clearRear-rearExtension-clear,-(TopBreak_ExtractorHousingWidth()/2)-clear,TopBreak_BarrelCollarBottomZ()-clear])
+        ChamferedCube([PivotX()-(sqrt(2)/2*PivotRadius())-clearRear+rearExtension+clear2,
                        TopBreak_ExtractorHousingWidth()+clear2,
                        abs(TopBreak_BarrelCollarBottomZ())+clear],
                        r=1/16, teardropFlip=[false,true,true]);
         
         // Latch support
-        translate([RIM_WIDTH-rearExtension-clear,
+        translate([clearRear-rearExtension-clear,
                    -((BarrelSleeveRadius()+WallBarrel()))-clear,
                    TopBreak_LatchZ()-TopBreak_LatchWall()-clear])
-        ChamferedCube([PivotX()-(sqrt(2)/2*PivotRadius())-RIM_WIDTH+rearExtension+clear2,
+        ChamferedCube([PivotX()-(sqrt(2)/2*PivotRadius())-clearRear+rearExtension+clear2,
                        (BarrelSleeveRadius()+WallBarrel())*2+clear2,
                        abs(TopBreak_LatchZ())+clear2], r=1/16, teardropFlip=[false,true,true]);
       }
       
       // Optics Rail Support
       hull() {
-        translate([RIM_WIDTH,-0.375,0])
+        translate([clearRear,-0.375,0])
         ChamferedCube([3,0.75, ReceiverTopZ()],
                        r=1/16,teardropFlip=[true,true,true]);
         
-        translate([RIM_WIDTH,-BarrelSleeveRadius(),0])
+        translate([clearRear,-BarrelSleeveRadius(),0])
         ChamferedCube([1,BarrelSleeveDiameter(), BarrelSleeveRadius()],
                        r=1/16,teardropFlip=[true,true,true]);
       }
