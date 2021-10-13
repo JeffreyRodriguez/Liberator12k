@@ -25,6 +25,7 @@ module PumpGrip(r=PumpGripRadius(),
                 h=PumpGripLength(),
                 CR=1/16,
                 rings=true, ringRadius=3/32,
+                channels=true, channelRadius=3/16, channelAngle=60,
                 doRender=false, alpha=1) {
 
   color("Tan", alpha)
@@ -41,13 +42,14 @@ module PumpGrip(r=PumpGripRadius(),
                   minorRadius=ringRadius);
 
     // Gripping cutout linear channels
-    for (R = [0:60:360]) rotate([0,0,R])
+    if (channels)
+    for (R = [0:channelAngle:360]) rotate([0,0,R])
     translate([r, 0, -ManifoldGap()])
-    linear_extrude(height=h+ManifoldGap(2))
-    for (R =[1,-1]) rotate(90*R)
-    Teardrop(r=ringRadius*2);
+    scale([0.8,1.2,1])
+    ChamferedCircularHole(r1=channelRadius, r2=CR, h=h+ManifoldGap(2));
   }
 }
 
+scale(25.4)
 Cutaway(enabled=false)
 PumpGrip(doRender=true);

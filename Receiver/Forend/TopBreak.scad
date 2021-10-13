@@ -818,13 +818,10 @@ module TopBreak_LatchTab(cutaway=false, cutter=false, clearance=0.01, alpha=1) {
 
 module TopBreak_VerticalForegrip(cutaway=false, alpha=1) {
   color("Tan", alpha) render()
-  difference() {  
-    hull() {
-      translate([BarrelSleeveLength()+0.25,0,-BarrelRadius()-3.5])
-      ChamferedCylinder(r1=0.5, r2=1/16, h=2.75);
-    }
-    
-    
+  difference() {
+    translate([BarrelSleeveLength()+0.25,0,-BarrelRadius()-0.75])
+    mirror([0,0,1])
+    PumpGrip(r=0.625, h=3, channelRadius=0.125);
     
     TopBreak_GripBolt(cutter=true, teardrop=false);
   }
@@ -1150,7 +1147,8 @@ if ($preview) {
     if (!_RENDER_PRINT)
       TopBreak_VerticalForegrip();
     else
-      translate([-BarrelSleeveLength()-0.25,0,4])
+      mirror([0,0,1])
+      translate([-(BarrelSleeveLength()+0.25),0,-(-BarrelRadius()-0.75)])
       TopBreak_VerticalForegrip();
 
   if (_RENDER == "Foregrip")
