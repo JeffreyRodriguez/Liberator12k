@@ -758,7 +758,7 @@ module Revolver_Foregrip(length=PumpGripLength(), cutaway=false, alpha=1) {
     union() {
       translate([ForegripMinX(),0,0])
       rotate([0,90,0])
-      PumpGrip(length=length);
+      PumpGrip(h=length);
       
       // Action Rod Support Block
       translate([ForegripMinX(),-0.75/2,0])
