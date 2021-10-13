@@ -32,7 +32,7 @@ use <../Stock.scad>;
 /* [Export] */
 
 // Select a part, Render it (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "ReceiverFront", "Forend", "Cluster", "BarrelCollar", "Extractor", "Latch", "LatchTab", "VerticalForegrip", "Sightpost","BarrelSleeveFixture"]
+_RENDER = ""; // ["", "ReceiverFront", "Forend", "Cluster", "BarrelCollar", "Extractor", "LatchTab", "VerticalForegrip", "Sightpost","BarrelSleeveFixture"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;
@@ -347,7 +347,7 @@ module TopBreak_ExtractorRetainer(cutaway=false, cutter=false, teardrop=false, c
        doRender=!cutter);
 }
 
-module TopBreak_LatchBar(doMirror=true, cutaway=false, cutter=false, clearance=LATCH_CLEARANCE, alpha=1) { 
+module TopBreak_LatchBars(doMirror=true, cutaway=false, cutter=false, clearance=LATCH_CLEARANCE, alpha=1) { 
   clear = cutter?clearance:0;
   clear2 = clear*2;
 
@@ -365,7 +365,8 @@ module TopBreak_LatchBar(doMirror=true, cutaway=false, cutter=false, clearance=L
           TopBreak_LatchHeight()+clear2]);
 
     if (!cutter)
-    TopBreak_LatchScrews(cutter=false);
+    translate([0,0,0.1])
+    TopBreak_LatchScrews(cutter=true, clearance=-0.02);
   }
 }
 
@@ -514,7 +515,7 @@ module TopBreak_ReceiverFront(cutter=false, cutaway=false, alpha=1) {
     }
     
     Frame_Bolts(cutter=true);
-    TopBreak_LatchBar(cutter=true);
+    TopBreak_LatchBars(cutter=true);
     
     translate([-TopBreak_ReceiverFrontLength(),0,0]) {
       RecoilPlate(length=RECOIL_PLATE_LENGTH, cutter=true);
@@ -683,7 +684,7 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, cuta
     
     if (!cutter) {
       
-      TopBreak_LatchBar(cutter=true);
+      TopBreak_LatchBars(cutter=true);
       TopBreak_LatchTab(cutter=true);
       TopBreak_LatchSpring(cutter=true);
       
@@ -1036,7 +1037,7 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
     translate([-TopBreak_ExtractorTravel()*extractFactor,0,0]) {
       
       if (_SHOW_LATCH) {
-        TopBreak_LatchBar();
+        TopBreak_LatchBars();
         TopBreak_LatchTab();
       }
       
@@ -1169,10 +1170,10 @@ if ($preview) {
 
   if (_RENDER == "Latch")
     if (!_RENDER_PRINT)
-      TopBreak_LatchBar();
+      TopBreak_LatchBars();
     else
       translate([0,0,-TopBreak_LatchZ()])
-      TopBreak_LatchBar(doMirror=false);
+      TopBreak_LatchBars(doMirror=false);
 
   if (_RENDER == "LatchTab")
     if (!_RENDER_PRINT)
@@ -1216,6 +1217,12 @@ if ($preview) {
   
   if (_RENDER == "ClusterBolts")
   TopBreak_ClusterBolts();
+  
+  if (_RENDER == "LatchBars")
+  TopBreak_LatchBars();
+  
+  if (_RENDER == "LatchScrews")
+  TopBreak_LatchScrews();
   
   if (_RENDER == "SightpostBolts")
   translate([BarrelLength()-1,0,0])
