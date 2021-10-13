@@ -1117,7 +1117,8 @@ if ($preview) {
     if (!_RENDER_PRINT)
       TopBreak_BarrelCollar();
     else
-      rotate([0,-90,0])
+      translate([0,0,PivotX()])
+      rotate([0,90,0])
       TopBreak_BarrelCollar();
 
   if (_RENDER == "ReceiverFront")
