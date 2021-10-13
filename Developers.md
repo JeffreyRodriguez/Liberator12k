@@ -2,6 +2,21 @@
 Want to customize the designs to fit the materials you have on hand?
 Change gauge or caliber completely, or something even more extreme?
 
+The real "secret sauce" of this project, is the software library I developed
+during the design process of these guns. I tried a lot of different ideas,
+and what I came away with, is an OpenSCAD software library chock-full of
+useful *configurable* gun parts.
+
+If you browse through the code, you'll see the project has been grouped into
+major functional areas.
+
+  * Ammo - Printable Ammunition
+  * Receiver - Lower+Universal Receiver
+  * Forends - Interchangeable forends for the receiver
+  * Tooling - Printable tools for gun making
+  * Vitamins - Store-bought parts, nut and bolts, collars, etc.
+  * Toys - Ideas I've tried and thrown away, or not.
+
 ## Requirements
 If you're running Linux/Mac and have `make` available, there are Makefiles here.
 

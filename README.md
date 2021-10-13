@@ -97,3 +97,6 @@ DIY guns require special precautions and procedures that
 * Ensure there is no direct path from the gun to anyone or anything of value.
 * A string long enough to pull the trigger from behind cover.
 * Test with at least 5 of the highest pressure cartridges you can find.
+
+### Gut Check
+The power to create weapons is now in your hands, use it responsibly.
