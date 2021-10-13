@@ -1,9 +1,17 @@
 use <../Meta/Cutaway.scad>;
 use <../Meta/Resolution.scad>;
 use <../Meta/Manifold.scad>;
+use <../Meta/Units.scad>;
 
 use <../Vitamins/Pipe.scad>;
 use <../Vitamins/Rod.scad>;
+
+
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
 
 function DoubleShaftCollarOD()     = 1.485;
 function DoubleShaftCollarOD()     = 1.875;
@@ -20,7 +28,7 @@ module DoubleShaftCollar2d(od=DoubleShaftCollarOD()+0.02,
   union() {
 
     // Shaft Collar
-    circle(r=outsideRadius, $fn=Resolution(12,40));
+    circle(r=outsideRadius);
 
     // Side cutout
     for (m=[0,1])

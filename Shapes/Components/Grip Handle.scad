@@ -1,5 +1,12 @@
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Resolution.scad>;
+use <../../Meta/Units.scad>;
+
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
 
 module GripHandle(angle=25, gripWidth=1, gripCeiling=0.75, length=1.3, height=5.5, showPalmSwell=true, showFingerSwell=true) {
   handleOffsetZ = 1.3825-gripCeiling;
@@ -41,7 +48,7 @@ module GripHandle(angle=25, gripWidth=1, gripCeiling=0.75, length=1.3, height=5.
       for (extraX = [0,length/2])
       translate([-length-0.25+extraX, 0, -gripCeiling-1])
       rotate([0,-5,0])
-      cylinder(r=gripWidth/2, h=1.1+gripCeiling, $fn=Resolution(20,60));
+      cylinder(r=gripWidth/2, h=1.1+gripCeiling);
     }
 
     // Flatten the bottom

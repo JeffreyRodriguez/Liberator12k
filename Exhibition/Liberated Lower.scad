@@ -15,6 +15,12 @@ use <../Shapes/Components/Trigger Finger Slot.scad>;
 
 use <../Receiver/Magwells/AR15 Magwell.scad>;
 
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
+
 function BufferLugHeight() = 0.75;
 
 
@@ -43,18 +49,15 @@ module AR15_BufferTube(cutter=true) {
              AR15_BufferCenterZ()-ManifoldGap()])
   rotate([0,90,0]) {
     cylinder(r=BufferHoleRadius(),
-             h=AR15_TowerLength()+1+ManifoldGap(2),
-           $fn=Resolution(20,50));
+             h=AR15_TowerLength()+1+ManifoldGap(2));
 
     translate([0,0,-1])
     cylinder(r=1.112/2,
-             h=1,
-           $fn=Resolution(20,50));
+             h=1);
 
     translate([0,0,-0.125])
     cylinder(r=BufferHoleRadius()+0.07,
-             h=0.125,
-           $fn=Resolution(20,50));
+             h=0.125);
   }
 }
 
@@ -62,8 +65,7 @@ module AR15_ForwardAssist(cutter=true) {
   translate([AR15_TowerMinX()+3.25,0,AR15_BufferCenterZ()])
   rotate([0,-90,22])
   cylinder(r=(0.61/2)+0.05,
-            h=3.75,
-          $fn=Resolution(20,50));
+            h=3.75);
 }
 
 module AR15_LowerBolts(boltSpec=Spec_BoltM4(),
@@ -156,8 +158,7 @@ module AR15_BufferTower(cutter=false) {
       translate([AR15_TowerMinX()-ManifoldGap(),0,AR15_InterfaceZ()-0.125])
       rotate([0,90,0])
       cylinder(r=0.9,
-               h=abs(AR15_TowerMinX()-AR15_RearPinX())-0.25+(cutter ? 0.005 : 0),
-             $fn=Resolution(20,60));
+               h=abs(AR15_TowerMinX()-AR15_RearPinX())-0.25+(cutter ? 0.005 : 0));
 
       AR15_BufferTowerTLug(cutter=cutter);
     }
@@ -174,7 +175,7 @@ module AR15_BufferTower(cutter=false) {
     // AR Interface Curve
     translate([AR15_InterfaceX(),0,AR15_InterfaceZ()])
     rotate([90,0,0])
-    cylinder(r=AR15_InterfaceRadius(), center=true, h=2, $fn=Resolution(30,100));
+    cylinder(r=AR15_InterfaceRadius(), center=true, h=2);
 
     // Flatten the front-face of the buffer ring
     translate([AR15_TowerMinX()+AR15_TowerLength(),
@@ -276,7 +277,7 @@ module AR15_LiberatedLowerSides(showLeft=true, showRight=true, alpha=1) {
           mirror([0,m,0])
           translate([AR15_TowerMinX()-0.125,
                      (LowerWidth()/2)-0.125,AR15_TowerMinZ()-0.125])
-          sphere(r=0.125, $fn=Resolution(12,20));
+          sphere(r=0.125);
 
           translate([AR15_TowerMinX()-0.75, -(LowerWidth()/2), 0])
           cube([0.75, LowerWidth(), abs(AR15_PinZ())]);

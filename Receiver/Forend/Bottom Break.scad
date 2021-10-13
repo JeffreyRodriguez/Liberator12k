@@ -47,8 +47,11 @@ BARREL_SET_SCREW_CLEARANCE = -0.05;
 //CHAMBER_OUTSIDE_DIAMETER = 1;
 //CHAMBER_INSIDE_DIAMETER = 0.813;
 
-
-$fs = UnitsFs()*0.5;
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
 
 // Settings: Vitamins
 function BarrelPipe() = Spec_PipeThreeQuarterInch();
@@ -407,8 +410,7 @@ module BreakActionForend(cutaway=false, alpha=1) {
         translate([0,0,-FrameBoltY()-FrameBoltRadius()-WallFrameBolt()])
         ChamferedCylinder(r1=0.5, r2=1/16,
                  h=(FrameBoltY()+FrameBoltRadius()+WallFrameBolt())*2,
-                 teardropBottom=false,
-                 $fn=Resolution(20,60));
+                 teardropBottom=false);
 
         // Front face is printed on the bottom layer, flatten it out
         translate([PivotX(), -(FrameBoltY()+FrameBoltRadius()+WallFrameBolt()), PivotZ()])
@@ -440,7 +442,7 @@ module BreakActionForend(cutaway=false, alpha=1) {
     linear_extrude(height=LatchSupportWidth(), center=true)
     semidonut(major=(PivotX()+0.125)*2,
               minor=(PivotX()-LatchCollarLength()-0.01)*2,
-              angle=90, $fn=Resolution(20,50));
+              angle=90);
 
     Frame_Bolts(cutter=true);
 
@@ -509,8 +511,7 @@ module Latch(cutaway=false, cutter=false, clearance=0.015, alpha=1) {
     ChamferedCylinder(r1=LatchSpringRadius()+clear,
                       r2=3/16,
                       h=LatchLength()+(cutter?LatchSpringLength():0),
-                      teardropTop=true,
-                      $fn=Resolution(15,40));
+                      teardropTop=true);
 
     if (!cutter) {
       LatchRod(cutter=true);

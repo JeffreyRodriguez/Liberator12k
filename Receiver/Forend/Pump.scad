@@ -55,6 +55,12 @@ _RENDER = ""; // ["", "PumpForend"]
 //_CUTAWAY_EXTRACTOR = false;
 //_CUTAWAY_LATCH = false;
 
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
+
 
 // Measured: Vitamins
 function BarrelCollarSteelDiameter() = 1.75;
@@ -149,8 +155,7 @@ module PumpRails(length=UpperLength(), cutter=false, clearance=0.002, extraRadiu
   rotate([0,90,0])
   rotate(180)
   linear_extrude(height=length+clear2)
-  Teardrop(r=WallFrameSide()+BoltRadius(CouplingBolt())+extraRadius+clear,
-           $fn=Resolution(20,30));
+  Teardrop(r=WallFrameSide()+BoltRadius(CouplingBolt())+extraRadius+clear);
 }
 
 module ShellLoadingSupport() {
@@ -190,8 +195,7 @@ module PumpForend(alpha=1, cutaway=false) {
     translate([1-ManifoldGap(),0,0])
     rotate([0,90,0])
     cylinder(r=PipeCapRadius(ReceiverPipe(), clearance=PipeClearanceLoose())+0.01,
-                      h=UpperLength()-1+ManifoldGap(2),
-                      $fn=Resolution(20,50));
+                      h=UpperLength()-1+ManifoldGap(2));
 
     translate([-ManifoldGap(),0,0])
     Barrel(hollow=false, cutter=true, clearance=PipeClearanceLoose());

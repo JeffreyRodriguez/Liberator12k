@@ -70,7 +70,7 @@ module Sightpost(height=SightZ(), length=2, radius=SIGHTPOST_DIAMETER/2, wall=0.
   difference() {
     union() {
       ChamferedCylinder(r1=radius+wall, r2=CR,
-                        h=length, $fn=Resolution(40,80));
+                        h=length);
       
       translate([0,-0.375/2,0])
       ChamferedCube([radius+0.5, 0.375, length], r=CR);
@@ -80,7 +80,7 @@ module Sightpost(height=SightZ(), length=2, radius=SIGHTPOST_DIAMETER/2, wall=0.
         ChamferedCube([height, 0.375, 0.375], r=CR);
         
         ChamferedCylinder(r1=0.375, r2=CR,
-                          h=length, $fn=Resolution(40,80));
+                          h=length);
       }
     }
     

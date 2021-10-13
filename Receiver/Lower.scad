@@ -242,7 +242,7 @@ module TriggerGuard() {
         hull()
         for (i = [-1, 1])
         translate([0,((GripWidth()/2)-0.09)*i])
-        circle(r=0.1, $fn=Resolution(12,24));
+        circle(r=0.1);
       }
     }
 
@@ -342,7 +342,7 @@ module LowerReceiverSupports() {
 
     translate([Lower_BoltX(Lower_BoltsArray()[1]),0,Lower_BoltZ(Lower_BoltsArray()[1])])
     rotate([90,0,0])
-    cylinder(r=0.225, h=1.25, center=true, $fn=Resolution(12,24));
+    cylinder(r=0.225, h=1.25, center=true);
   }
 }
 

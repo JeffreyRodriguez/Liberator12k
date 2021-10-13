@@ -283,7 +283,7 @@ module Trigger2d() {
     // Finger curve
     translate([TriggerFingerRadius()+TriggerTravel()+SearDiameter()+triggerFront-0.15,
              -GripCeiling()-TriggerFingerRadius()])
-    circle(r=TriggerFingerRadius(), $fn=Resolution(16,30));
+    circle(r=TriggerFingerRadius());
 
 
     // Retainer cutout
@@ -1046,7 +1046,7 @@ module TriggerBody() {
                -TriggerWidth()/2, -GripCeiling()-TriggerFingerRadius()])
     rotate([-90,0,0])
     ChamferedCircularHole(r1=TriggerFingerRadius(), r2=1/16,
-                          h=TriggerWidth(), $fn=Resolution(16,30));
+                          h=TriggerWidth());
 
     // Sear Slot (extended)
     translate([ReceiverLugRearMaxX(),-SearRadius(SEAR_CLEARANCE),ManifoldGap()])
@@ -1083,7 +1083,7 @@ module Trigger(animationFactor=TriggerAnimationFactor(), left=true, leftAlpha=1,
                  -TriggerWidth()/2, -GripCeiling()-TriggerFingerRadius()])
       rotate([-90,0,0])
       ChamferedCircularHole(r1=TriggerFingerRadius(), r2=1/16,
-                            h=TriggerWidth(), $fn=Resolution(16,30));
+                            h=TriggerWidth());
 
       // Sear Slot (extended)
       translate([ReceiverLugRearMaxX(),-SearRadius(SEAR_CLEARANCE),ManifoldGap()])
@@ -1112,7 +1112,7 @@ module Trigger(animationFactor=TriggerAnimationFactor(), left=true, leftAlpha=1,
                  -TriggerWidth()/2, -GripCeiling()-TriggerFingerRadius()])
       rotate([-90,0,0])
       ChamferedCircularHole(r1=TriggerFingerRadius(), r2=1/16,
-                            h=TriggerWidth(), $fn=Resolution(16,30));
+                            h=TriggerWidth());
     }
   }
 }

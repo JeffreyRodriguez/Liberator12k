@@ -1,5 +1,13 @@
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Resolution.scad>;
+use <../../Meta/Units.scad>;
+
+
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
 
 module ORing(innerDiameter=3/4, section=1/8, clearance=0.005, teardrop=true, sectionFn=Resolution(8,20)) {
 
@@ -19,4 +27,4 @@ module ORing(innerDiameter=3/4, section=1/8, clearance=0.005, teardrop=true, sec
 }
 
 
-ORing(innerDiameter=0.125, $fn=Resolution(20,40));
+ORing(innerDiameter=0.125);

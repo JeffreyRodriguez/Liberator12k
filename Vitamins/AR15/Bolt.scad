@@ -2,6 +2,7 @@ use <../../Meta/Cutaway.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Conditionals/RenderIf.scad>;
 use <../../Meta/Resolution.scad>;
+use <../../Meta/Units.scad>;
 use <../../Shapes/Chamfer.scad>;
 use <../../Shapes/Teardrop.scad>;
 use <../../Shapes/Semicircle.scad>;
@@ -9,6 +10,12 @@ use <../../Vitamins/Nuts And Bolts.scad>;
 
 // Configured Values
 chamferRadius = 0.1;
+
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
 
 function AR15_CamPinAngle()    = 22.5;
 function AR15_CamPinOffset()   = 1.262; // From the front of the lugs to the front of the pin
@@ -49,7 +56,7 @@ function AR15_FiringPin_Extension() = 0.55;      // From the back of the bolt
 function AR15_FiringPin_ExtensionRadius() = 0.156/2;
 function AR15_FiringPinRetainerOffset() = 0.35; // From the back of the bolt
 
-module AR15_FiringPin(cutter=false, clearance=0.007, extraShoulder=0, $fn=Resolution(20,60)) {
+module AR15_FiringPin(cutter=false, clearance=0.007, extraShoulder=0) {
   clear2 = clearance *2;
   
   color("Silver") RenderIf(!cutter)
@@ -101,8 +108,7 @@ module AR15_CamPin(cutter=false, clearance=0.007,
                    extraCamPinSquareHeight=0,
                    extraCamPinSquareLength=0,
                    rectangleTop=true,
-                   teardrop=true, teardropTruncate=true, teardropAngle=0,
-                   $fn=Resolution(20,60)) {
+                   teardrop=true, teardropTruncate=true, teardropAngle=0) {
                      
     color("Silver") RenderIf(!cutter)
     translate([0,0,AR15_CamPinOffset()+AR15_CamPinRadius()])
@@ -129,7 +135,7 @@ module AR15_CamPin(cutter=false, clearance=0.007,
 
 module AR15_Bolt(cutter=false, camPin=true, firingPinRetainer=false,
                  clearance=0.007,
-                 teardrop=false, $fn=Resolution(20,60)) {
+                 teardrop=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;;
 
@@ -169,8 +175,7 @@ module AR15_Bolt(cutter=false, camPin=true, firingPinRetainer=false,
 
 module AR15_BoltCamPinTrack(length=2,
                  clearance=0.007,
-                 extraFiringPin=0, // Ugly, but it'll do
-                 $fn=Resolution(20,60)) {
+               extraFiringPin=0 /* Ugly, but it'll do */ ) {
     camTrackRadius = (AR15_CamPinSquareOffset()
                       +AR15_CamPinSquareHeight()+0.05);
 

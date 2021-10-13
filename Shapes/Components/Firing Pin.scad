@@ -13,6 +13,12 @@ use <../../Vitamins/Nuts And Bolts.scad>;
 DEFAULT_FIRING_PIN_RETAINER_BOLT = Spec_BoltM4();
 DEFAULT_BOLT_LENGTH = 0.5;
 
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
+
 function FiringPinTemplateRod() = Spec_RodOneSixteenthInch();
 function FiringPinTemplateBolt() = Spec_BoltTemplate();
 function FiringPinRod() = Spec_RodFiveSixteenthInch();
@@ -49,8 +55,7 @@ module FiringPin(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT, template=false, cutter=f
       color("DarkGoldenrod")
       translate([0,0,-0.5-(cutter?0.5:0)])
       cylinder(r=radius,
-               h=FiringPinBodyLength()+(cutter?0.5:0),
-               $fn=Resolution(20,50));
+               h=FiringPinBodyLength()+(cutter?0.5:0));
     }
     
     if (!cutter)
@@ -68,7 +73,7 @@ module FiringPinSpring(cutter=false, cutaway=false) {
   mirror([0,0,1])
   color("Silver", 0.25)
   render()    
-  cylinder(r=(0.25/2)+clear, h=FiringPinSpringLength(), $fn=Resolution(10,20));
+  cylinder(r=(0.25/2)+clear, h=FiringPinSpringLength());
 }
 
 module FiringPinRetainingPin(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT, cutter=false) {
@@ -109,7 +114,7 @@ module FiringPinHousing(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT, cutter=false, alp
       for (Y = [1,-1])
       translate([0,Y*FiringPinBoltOffsetY(),0])
       ChamferedCylinder(r1=BoltRadius(bolt)+(1/8), r2=1/32,
-                          h=FiringPinHousingLength(), $fn=Resolution(30,50));
+                          h=FiringPinHousingLength());
       
       translate([-FiringPinHousingWidth()/2, -FiringPinHousingWidth()/2, 0])
       ChamferedCube([FiringPinHousingWidth(),FiringPinHousingWidth(), FiringPinHousingLength()], r=1/16);

@@ -36,6 +36,11 @@ BARREL_DIAMETER = 1.35;
 // Picatinny rail mounts on top of receiver w/ M-LOK
 MLOK_BOLT           = "#8-32";   // ["M4", "#8-32"]
 
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
 
 function BarrelRadius() = BARREL_DIAMETER/2;
 
@@ -63,7 +68,7 @@ module MlokCluster(boltSpec=BoltSpec(MLOK_BOLT),
                   length=MlokClusterLength(),
                   slots=[0,-90,90,180],
                   cutaway=false,
-                  alpha=1, $fn=Resolution(20,100)) {
+                  alpha=1) {
 
 assert(boltSpec, "boltSpec is undefined. Unknown MLOK_BOLT?");
 

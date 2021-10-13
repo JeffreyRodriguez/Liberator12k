@@ -1,15 +1,22 @@
 use <../../Meta/Cutaway.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Resolution.scad>;
+use <../../Meta/Units.scad>;
 use <../../Shapes/Teardrop.scad>;
 use <../../Shapes/Chamfer.scad>;
+
+
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
 
 BARREL_OD = 1.06;
 
 module Bipod(barrelRadius=BARREL_OD/2, bottomDiameter=1,
              length=1, extend=1, frontWall=0.25, bipodLegLength=6,
-             wall = 0.25,  chamferRadius = 0.1,
-             $fn=Resolution(20, 60)) {
+             wall = 0.25,  chamferRadius = 0.1) {
 
   bipodLegDiameter = 0.5;
   bipodLegRadius = bipodLegDiameter/2;

@@ -28,6 +28,12 @@ BARREL_LENGTH = 18;
 RIM_WIDTH = 0.0301;
 RIM_DIAMETER = 0.8875;
 
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
+
 function BarrelTravel() = 3;
 function BarrelLength() = 18;
 
@@ -74,8 +80,7 @@ module PumpRails(length=UpperLength(), cutter=false, clearance=0.002, extraRadiu
   rotate([0,90,0])
   rotate(180)
   linear_extrude(height=length+clear2)
-  Teardrop(r=WallFrameSide()+RodRadius(FrameRod())+extraRadius+clear,
-  $fn=Resolution(20,30));
+  Teardrop(r=WallFrameSide()+RodRadius(FrameRod())+extraRadius+clear);
 }
 
 module ShellLoadingSupport() {
@@ -105,8 +110,7 @@ module PumpUpper(cutter=false, clearance=0.002, alpha=1, cutaway=false) {
       translate([-ManifoldGap(),0,MagazineCenterZ()-Z])
       rotate([0,90,0])
       cylinder(r=0.813/2,
-               h=3+ManifoldGap(),
-               $fn=Resolution(12,30));
+               h=3+ManifoldGap());
     }
 
     if (!cutter)
@@ -152,8 +156,7 @@ module PumpForend(alpha=1, cutaway=false) {
 
           ChamferedCylinder(r1=PipeCapRadius(StockPipe())+ForendWall,
                             r2=0.0625,
-                            h=ForendLength+ForendLengthExtra,
-                            $fn=Resolution(20,50));
+                            h=ForendLength+ForendLengthExtra);
 
           translate([-ManifoldGap(),
                      -PipeCapRadius(StockPipe())-ForendWall-ManifoldGap(),
@@ -178,8 +181,7 @@ module PumpForend(alpha=1, cutaway=false) {
     translate([+1-ManifoldGap(),0,0])
     rotate([0,90,0])
     cylinder(r=PipeCapRadius(StockPipe(), clearance=PipeClearanceLoose())+0.01,
-                      h=1.5+ManifoldGap(2),
-                      $fn=Resolution(20,50));
+                      h=1.5+ManifoldGap(2));
 
     translate([-ManifoldGap(),0,0])
     Barrel(cutter=true, clearance=PipeClearanceLoose());
