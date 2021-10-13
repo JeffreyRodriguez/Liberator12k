@@ -315,7 +315,7 @@ module ActionRod(length=10, debug=false, cutter=false, clearance=0.01) {
   // Action Rod
   color("Silver")
   translate([-0.5,0,ActionRodZ()])
-  DebugHalf(enabled=debug)
+  DebugHalf(debug)
   translate([0,-(ActionRodWidth()/2)-clear,-(ActionRodWidth()/2)-clear])
   cube([length, ActionRodWidth()+clear2, ActionRodWidth()+clear2]);
 }
@@ -405,7 +405,7 @@ module FiringPin(radius=FiringPinRadius(), cutter=false, clearance=FIRING_PIN_CL
   if (!template) {
     color("Silver")
     RenderIf(!cutter)
-    DebugHalf(enabled=debug)
+    DebugHalf(debug)
     translate([-FiringPinHousingLength()-FiringPinTravel(),0,0])
     rotate([0,90,0])
     union() {
@@ -430,7 +430,7 @@ module FiringPinSpring(cutter=false, clearance=0.005, debug=false) {
   clear2 = clear*2;
   
   color("SteelBlue")
-  DebugHalf(enabled=debug)
+  DebugHalf(debug)
   translate([-0.25,0,0])
   rotate([0,90,0])
   cylinder(r=FiringPinSpringRadius()+clear,
@@ -500,7 +500,7 @@ module RecoilPlate(length=RecoilPlateLength(), spindleZ=-1, contoured=true, cutt
   
   
   color("LightSteelBlue", alpha)
-  RenderIf(!cutter) DebugHalf(enabled=debug)
+  RenderIf(!cutter) DebugHalf(debug)
   difference() {
     
     // Contoured or simplified (rectangular) plate
@@ -580,7 +580,7 @@ module FCG_FiringPinCollar(cutter=false, clearance=FIRING_PIN_CLEARANCE, templat
   
   color("Olive")
   RenderIf(!cutter)
-  DebugHalf(enabled=debug)
+  DebugHalf(debug)
   difference() {
     
     union() {
@@ -728,7 +728,7 @@ module FCG_Hammer(cutter=false, clearance=UnitsImperial(0.01), debug=false, alph
   
   // Head
   color("Olive", alpha)
-  RenderIf(!cutter) DebugHalf(enabled=debug)
+  RenderIf(!cutter) DebugHalf(debug)
   difference() {
     union() {
       
@@ -790,7 +790,7 @@ module FCG_Hammer(cutter=false, clearance=UnitsImperial(0.01), debug=false, alph
 
 module FCG_HammerTail(clearance=UnitsImperial(0.01), debug=false, alpha=1) {
   color("Chocolate", alpha)
-  render() DebugHalf(enabled=debug)
+  render() DebugHalf(debug)
   difference() {
     union() {
       intersection() {
@@ -853,7 +853,7 @@ module FCG_Disconnector(pivotFactor=0, cutter=false, clearance=0.005, alpha=1, d
     
     color("Olive", alpha)
     RenderIf(!cutter)
-    DebugHalf(enabled=debug)
+    DebugHalf(debug)
     difference() {
       union() {
         
@@ -914,7 +914,7 @@ module FCG_Disconnector(pivotFactor=0, cutter=false, clearance=0.005, alpha=1, d
 module FCG_Housing(clearance=0.01, debug=false, alpha=1) {
   
   color("Chocolate", alpha) render()
-  DebugHalf(enabled=debug)
+  DebugHalf(debug)
   difference() {
     
     // Insert plug

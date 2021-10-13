@@ -88,7 +88,7 @@ module PumpMagazine(height=10.875, hollow=false, clearance=undef, alpha=1, debug
   for (R = [90]) rotate([R,0,0])
   translate([0,MagazineOffset(),0])
   rotate([0,90,0])
-  DebugHalf(enabled=debug)
+  DebugHalf(debug)
   linear_extrude(height=height)
   rotate(0)
   PumpMagazine2d(hollow=hollow);
@@ -105,7 +105,7 @@ module BarrelCollar(clearance=0.002, cutter=false, debug=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
-  color("Silver") DebugHalf(enabled=debug)
+  color("Silver") DebugHalf(debug)
   difference() {
     translate([8,0,0])
     rotate([0,90,0])
@@ -120,7 +120,7 @@ module BarrelCollar(clearance=0.002, cutter=false, debug=false) {
 module Barrel(barrel=BarrelPipe(), barrelLength=BarrelLength(),
               hollow=true, cutter=false,
               clearance=undef, alpha=1, debug=false) {
-  color("SteelBlue", alpha) DebugHalf(enabled=debug)
+  color("SteelBlue", alpha) DebugHalf(debug)
   translate([0,0,0])
   rotate([0,90,0])
   Pipe(pipe=barrel, clearance=clearance,
@@ -175,7 +175,7 @@ module PumpForend(alpha=1, debug=false) {
   ForendWall=0.25;
   ForendLength=5;
 
-  color("Green", alpha) DebugHalf(enabled=debug)
+  color("Green", alpha) DebugHalf(debug)
   difference() {
     mirror([1,0,0])
     Receiver_Segment(length=ForendLength);

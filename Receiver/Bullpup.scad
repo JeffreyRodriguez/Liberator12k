@@ -96,7 +96,7 @@ echo("Bullpup_BoltLength", Bullpup_BoltLength());
 module Bullpup_Bolts(debug=false, head="hex", nut="heatset", cutter=false, teardrop=false, clearance=0.01, teardropAngle=0) {
   clear = cutter ? clearance : 0;
 
-  color("Silver") RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("Silver") RenderIf(!cutter) DebugHalf(debug)
   for (M = [0,1]) mirror([0,M,0])
   translate([Bullpup_BoltX(), Bullpup_BoltY(), Bullpup_BoltZ()])
   rotate([0,90,0])
@@ -127,7 +127,7 @@ module Bullpup_TakedownPinRetainer(cutter=false, clearance=0.005) {
 // * Printed Parts *
 // *****************
 module Bullpup_Front(length=Bullpup_FrontLength(), debug=false, alpha=1) {
-  color("Chocolate", alpha) render() DebugHalf(enabled=debug)
+  color("Chocolate", alpha) render() DebugHalf(debug)
   difference() {
     union() {
       
@@ -151,7 +151,7 @@ module Bullpup_Front(length=Bullpup_FrontLength(), debug=false, alpha=1) {
   }
 }
 module Bullpup_Rear(length=ReceiverLength()+Bullpup_BackplateLength(), debug=false, alpha=1) {
-  color("Chocolate", alpha) render() DebugHalf(enabled=debug)
+  color("Chocolate", alpha) render() DebugHalf(debug)
   difference() {
     
     union() {
@@ -226,7 +226,7 @@ module Bullpup_Rear(length=ReceiverLength()+Bullpup_BackplateLength(), debug=fal
 }
 
 module Bullpup_TriggerBar(cutter=false, debug=false, alpha=1) {
-  color("Olive", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("Olive", alpha) RenderIf(!cutter) DebugHalf(debug)
   
   //translate([Bullpup_LowerX(),0,Bullpup_LowerZ()])
   //translate([-LowerMaxX(),0,ReceiverBottomZ()]) 

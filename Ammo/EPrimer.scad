@@ -31,7 +31,7 @@ function EPrimerElectrodeDepth() = 0.01;
 function EPrimerInsertHeight() = 0.375+0.03125;
 
 module EPrimerElectrode(cutter=false, debug=false) {
-  color("Chocolate") RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("Chocolate") RenderIf(!cutter) DebugHalf(debug)
   translate([0,0,EPrimerElectrodeDepth()]) {
     // Body
     cylinder(r=1/16/2, h=EPrimerElectrodeLength(), $fn=12);
@@ -47,7 +47,7 @@ module EPrimerElectrode(cutter=false, debug=false) {
 }
 
 module EPrimerInsert(height=EPrimerInsertHeight(), brimHeight=0.0625, cutter=false, debug=false) {
-  color("Olive") RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("Olive") RenderIf(!cutter) DebugHalf(debug)
   difference() {
     union() {
       
@@ -88,7 +88,7 @@ module EPrimerCartridge(chamberDiameter=CHAMBER_DIAMETER, wall=SHELL_WALL,
   shellLength     = 2.75;
 
   color("Tan")  
-  render() DebugHalf(enabled=debug)
+  render() DebugHalf(debug)
 
   // Base and rim, minus charge pocket and primer hole
   difference() {

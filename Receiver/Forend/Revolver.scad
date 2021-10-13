@@ -232,7 +232,7 @@ module Revolver_Barrel(barrelLength=BarrelLength(), clearance=BARREL_CLEARANCE, 
   clear = (cutter ? clearance : 0);
   clear2 = clear*2;
 
-  color("Silver", alpha) DebugHalf(enabled=debug) RenderIf(!cutter)
+  color("Silver", alpha) DebugHalf(debug) RenderIf(!cutter)
   translate([(cutter?0:BarrelMinX()),0,0])
   rotate([0,90,0])
   difference() {
@@ -329,7 +329,7 @@ module Revolver_BlastPlateBolts(bolt=RecoilPlateBolt(), boltLength=Revolver_Barr
   clear = cutter ? clearance : 0;
   
   color("Silver")
-  RenderIf(!cutter) DebugHalf(enabled=debug)
+  RenderIf(!cutter) DebugHalf(debug)
   for (M = [0,1]) mirror([0,M,0])
   translate([ForendMaxX(),BarrelRadius()+0.375,0])
   rotate([0,90,0])
@@ -341,7 +341,7 @@ module Revolver_BlastPlate(clearance=0.01, holeClearance=0.002, cutter=false, de
   clear2 = clear*2;
 
   color("LightSteelBlue")
-  RenderIf(!cutter) DebugHalf(enabled=debug)
+  RenderIf(!cutter) DebugHalf(debug)
   difference() {
     union() {
       intersection() {
@@ -372,7 +372,7 @@ module Revolver_BlastPlate(clearance=0.01, holeClearance=0.002, cutter=false, de
 
 module Revolver_Shield(cutter=false, debug=false) {
   color("LightSteelBlue")
-  RenderIf(!cutter) DebugHalf(enabled=debug)
+  RenderIf(!cutter) DebugHalf(debug)
   translate([BarrelMinX()+BlastPlateThickness(),0,CylinderZ()-0.01])
   rotate([0,-90,0])
   linear_extrude(height=0.5)
@@ -380,7 +380,7 @@ module Revolver_Shield(cutter=false, debug=false) {
   semidonut(minor=CylinderDiameter()-0.25, major=CylinderDiameter(), angle=180);
   
   color("LightSteelBlue")
-  RenderIf(!cutter) DebugHalf(enabled=debug)
+  RenderIf(!cutter) DebugHalf(debug)
   for (M = [0,1]) mirror([0,M,0])
   translate([BarrelMinX()+BlastPlateThickness()-ShieldLength(),CylinderRadius()-ShieldWidth(),CylinderZ()-ShieldHeight()])
   cube([ShieldLength(), ShieldWidth(), ShieldHeight()]);
@@ -393,7 +393,7 @@ module Revolver_ReceiverFront(contoured=true, debug=_CUTAWAY_RECEIVER_FRONT, alp
   length = abs(RecoilSpreaderThickness());
   
   color("Chocolate", alpha)
-  render() DebugHalf(enabled=debug)
+  render() DebugHalf(debug)
   difference() {
     union() {
       hull() {
@@ -432,7 +432,7 @@ module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND) {
   
   // Branding text
   color("DimGrey", alpha) 
-  RenderIf(doRender) DebugHalf(enabled=debug) {
+  RenderIf(doRender) DebugHalf(debug) {
     
     fontSize = 0.375;
     
@@ -451,7 +451,7 @@ module Revolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND) {
   }
   
   color("Tan", alpha)
-  RenderIf(doRender) DebugHalf(enabled=debug)
+  RenderIf(doRender) DebugHalf(debug)
   difference() {
     union() {
       
@@ -576,7 +576,7 @@ module Revolver_FrameSpacer(length=ForendMinX(), debug=false, alpha=_ALPHA_FOREN
   extraBottom=0;
   
   color("Tan", alpha)
-  render() DebugHalf(enabled=debug)
+  render() DebugHalf(debug)
   difference() {
     hull() {
       
@@ -713,7 +713,7 @@ module Revolver_Cylinder(chambers=true, supports=true, chamberBolts=false, debug
 }
 
 module Revolver_VerticalForegrip(length=2, debug=true, alpha=1) {
-  color("Tan", alpha) render() DebugHalf(enabled=debug) 
+  color("Tan", alpha) render() DebugHalf(debug) 
   difference() {
     union() {
       translate([ForegripMinX(),0,0])
@@ -751,7 +751,7 @@ module Revolver_VerticalForegrip_print() {
 }
 
 module Revolver_Foregrip(length=PumpGripLength(), debug=false, alpha=1) {
-  color("Tan", alpha) render() DebugHalf(enabled=debug)
+  color("Tan", alpha) render() DebugHalf(debug)
   difference() {
     
     // Body around the barrel

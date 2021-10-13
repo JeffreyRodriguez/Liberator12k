@@ -40,7 +40,7 @@ module Barrel(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, length=Barr
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
-  color("Silver") RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("Silver") RenderIf(!cutter) DebugHalf(debug)
   translate([(cutter?0:cartridgeRimThickness),0,0])
   difference() {
     
@@ -85,7 +85,7 @@ module PumpUpper(cutter=false, clearance=0.002, alpha=1, debug=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
-  color("Yellow", alpha) DebugHalf(enabled=debug)
+  color("Yellow", alpha) DebugHalf(debug)
   difference() {
     union() {
       translate([-clear,0,0])
@@ -131,7 +131,7 @@ module PumpForend(alpha=1, debug=false) {
   ForendLength=BarrelTravel();
   ForendLengthExtra=0;
 
-  color("Green", alpha) DebugHalf(enabled=debug)
+  color("Green", alpha) DebugHalf(debug)
   difference() {
     union() {
       hull() {

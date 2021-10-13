@@ -422,7 +422,7 @@ module Lower_MountFront(id=ReceiverID(), alpha=1, debug=false, doRender=true) {
   mountLength = 1.75-0.01;
   
   color("Chocolate")
-  RenderIf(doRender) DebugHalf(enabled=debug)
+  RenderIf(doRender) DebugHalf(debug)
   difference() {
     union() {
       ReceiverLugFront(doRender=false, extraTop=-ReceiverBottomZ());
@@ -461,7 +461,7 @@ module Lower_MountRear(id=ReceiverID(), alpha=1, debug=false, doRender=true) {
               - ManifoldGap();
   
   color("Chocolate")
-  RenderIf(doRender) DebugHalf(enabled=debug)
+  RenderIf(doRender) DebugHalf(debug)
   difference() {
     union() {
       

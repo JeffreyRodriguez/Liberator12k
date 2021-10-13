@@ -149,7 +149,7 @@ module Receiver_TakedownPin(cutter=false, clearance=0.005, alpha=1, debug=false)
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
-  color("Silver") RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("Silver") RenderIf(!cutter) DebugHalf(debug)
   translate([Receiver_TakedownPinX(),
              0,
              Receiver_TakedownPinZ()])
@@ -318,7 +318,7 @@ module Receiver(receiverLength=ReceiverLength(), doRender=true, alpha=1, debug=f
   CHAMFER_RADIUS = 1/16;
   
   color("Tan", alpha) RenderIf(doRender)
-  DebugHalf(enabled=debug)
+  DebugHalf(debug)
   difference() {
     union() {
       Receiver_Segment(length=ReceiverLength(), highTop=false,

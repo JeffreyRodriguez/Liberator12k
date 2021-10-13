@@ -115,7 +115,7 @@ module OffsetZigZagRevolver(diameter=4, height=2.75,
   // Chamber Inserts
   if (chambers && !cutter)
   color("Silver", alpha) render()
-  DebugHalf(enabled=debug)
+  DebugHalf(debug)
   RevolverChamberIterator(centerOffset=centerOffset, positions=positions)
   linear_extrude(height=chamberLength)
   difference() {
@@ -127,7 +127,7 @@ module OffsetZigZagRevolver(diameter=4, height=2.75,
 
   // The Cylinder
   color("Tan", alpha) RenderIf(render_cylinder)
-  DebugHalf(enabled=debug)
+  DebugHalf(debug)
   difference() {
 
     // Body

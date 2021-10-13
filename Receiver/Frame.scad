@@ -102,7 +102,7 @@ module Frame_Bolts(length=FrameBoltLength(), nut="hex", debug=false, cutter=fals
   clear = cutter ? clearance : 0;
 
   color("Silver", alpha) RenderIf(!cutter)
-  DebugHalf(enabled=debug) {
+  DebugHalf(debug) {
     translate([-FrameReceiverLength()-ManifoldGap(),0,0])
     Frame_BoltIterator()
     rotate([0,-90,0])
@@ -179,7 +179,7 @@ module Frame_Receiver_Segment(length=1, highTop=false, chamferFront=true, chamfe
 // ****************
 module Frame_Spacer(length=FRAME_SPACER_LENGTH, debug=false, alpha=1) {
   color("Tan", alpha)
-  DebugHalf(enabled=debug) render()
+  DebugHalf(debug) render()
   difference() {
     hull()
     Frame_Support(length=length);
@@ -199,14 +199,14 @@ module Frame_Receiver(doRender=true, debug=false, alpha=1) {
   
   // Branding text
   color("DimGrey")
-  RenderIf(doRender) DebugHalf(enabled=debug)
+  RenderIf(doRender) DebugHalf(debug)
   FlipMirror([-FrameReceiverLength()/2, (FrameWidth()/2), FrameBoltZ()])
   rotate([90,0,0])
   linear_extrude(height=LogoTextDepth(), center=true)
   text(FRAME_BRANDING_TEXT, size=LogoTextSize(), font="Impact", halign="center", valign="center");
   
   color("Tan", alpha)
-  RenderIf(doRender) DebugHalf(enabled=debug)
+  RenderIf(doRender) DebugHalf(debug)
   difference() {
     Receiver(doRender=false) {
       

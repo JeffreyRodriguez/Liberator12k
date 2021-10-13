@@ -126,7 +126,7 @@ module Barrels(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, length=Bar
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
-  color("Silver") RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("Silver") RenderIf(!cutter) DebugHalf(debug)
   translate([(cutter?0:cartridgeRimThickness),0,-BARREL_OFFSET])
   for (N = [0,1,2]) rotate([360/3*N,0,0])
   translate([0,0,BARREL_OFFSET])
@@ -159,7 +159,7 @@ module LatchGuides(cutter=false, clearance=0.01) {
 
 // Printed Parts
 module ReceiverFront(debug=false, alpha=1) {
-  color("Tan", alpha) render() DebugHalf(enabled=debug)
+  color("Tan", alpha) render() DebugHalf(debug)
   difference() {
     
     translate([-ReceiverFrontLength(),0,0])
@@ -199,7 +199,7 @@ module ReceiverFront_print() {
 module ReceiverForend(clearance=0.005, debug=false, alpha=1) {  
   // Branding text
   color("DimGrey", alpha) 
-  render() DebugHalf(enabled=debug) {
+  render() DebugHalf(debug) {
     
     fontSize = 0.375;
     
@@ -218,7 +218,7 @@ module ReceiverForend(clearance=0.005, debug=false, alpha=1) {
   }
   
   color("Tan", alpha)
-  render() DebugHalf(enabled=debug)
+  render() DebugHalf(debug)
   difference() {
     union() {
       Frame_Support(length=ForendLength());
@@ -259,7 +259,7 @@ module BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, debug=false, 
   clear = cutter?clearance:0;
   clear2 = clear*2;
                            
-  color("Chocolate", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("Chocolate", alpha) RenderIf(!cutter) DebugHalf(debug)
   difference() {
     intersection() {
       union() {
@@ -333,7 +333,7 @@ module BarrelCollar_print() {
 }
 
 module Foregrip(length=ForegripLength(), debug=false, alpha=1) {
-  color("Tan",alpha) render() DebugHalf(enabled=debug)
+  color("Tan",alpha) render() DebugHalf(debug)
   difference() {
     translate([ForegripOffsetX()+ChargerTravel(),0,0])
     rotate([0,90,0])

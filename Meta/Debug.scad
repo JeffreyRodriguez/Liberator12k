@@ -1,4 +1,4 @@
-module DebugHalf(dimension=100, rotateArray=[0,0,0], mirrorArray=[0,0,0], enabled=true) {
+module DebugHalf(enabled=true, dimension=100, rotateArray=[0,0,0], mirrorArray=[0,0,0]) {
   if (enabled) {
     difference() {
       children();

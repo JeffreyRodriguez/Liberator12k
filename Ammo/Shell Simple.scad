@@ -70,5 +70,5 @@ module ShellSimple(primer=Spec_Primer209(), primerOffset=0,
 
 scale(25.4)
 render()
-DebugHalf(enabled=DEBUG)
+DebugHalf(DEBUG)
 ShellSimple(cutters=!SNAPCAP);

@@ -352,7 +352,7 @@ module TopBreak_LatchBar(doMirror=true, debug=false, cutter=false, clearance=LAT
   clear2 = clear*2;
 
   // Latch
-  color("Silver", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("Silver", alpha) RenderIf(!cutter) DebugHalf(debug)
   MirrorIf(doMirror, [0,1,0], true)
   difference() {
     
@@ -400,7 +400,7 @@ module TopBreak_Barrel(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, le
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
-  color("Silver") RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("Silver") RenderIf(!cutter) DebugHalf(debug)
   translate([0,0,BarrelZ()])
   difference() {
     union() {
@@ -473,7 +473,7 @@ module TopBreak_GripBolt(bolt=GripBolt(), headType="flat", nutType="heatset", le
 
 // Printed Parts
 module TopBreak_ReceiverFront(cutter=false, debug=false, alpha=1) {
-  color("Tan", alpha) render() DebugHalf(enabled=debug)
+  color("Tan", alpha) render() DebugHalf(debug)
   difference() {
     
     translate([-TopBreak_ReceiverFrontLength(),0,0])
@@ -530,7 +530,7 @@ module TopBreak_Forend(clearance=0.005, doRender=true, debug=false, alpha=1) {
     
     // Branding text
     color("DimGrey", alpha) 
-    RenderIf(doRender) DebugHalf(enabled=debug) {
+    RenderIf(doRender) DebugHalf(debug) {
       
       fontSize = 0.375;
       
@@ -549,7 +549,7 @@ module TopBreak_Forend(clearance=0.005, doRender=true, debug=false, alpha=1) {
     }
     
     color("Tan", alpha)
-    RenderIf(doRender) DebugHalf(enabled=debug)
+    RenderIf(doRender) DebugHalf(debug)
     difference() {
       union() {
         Frame_Support(length=ForendLength(),
@@ -636,7 +636,7 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, debu
   clear2 = clear*2;
   clearRear = 1/16;
 
-  color("Chocolate", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("Chocolate", alpha) RenderIf(!cutter) DebugHalf(debug)
   difference() {
     union() {
       PivotOuterBearing(cutter=cutter);
@@ -724,7 +724,7 @@ module TopBreak_Extractor(cutter=false, clearance=0.015, chamferRadius=1/16, deb
   clear2 = clear*2;
 
   color("Olive", alpha)
-  RenderIf(!cutter) DebugHalf(enabled=debug)
+  RenderIf(!cutter) DebugHalf(debug)
   difference() {
     PivotClearanceCut(cut=!cutter, clearance=0)
     union() {
@@ -787,7 +787,7 @@ module TopBreak_LatchTab(debug=false, cutter=false, clearance=0.01, alpha=1) {
   clear2 = clear*2;
   clearCR = cutter?CR:0;
 
-  color("Olive", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("Olive", alpha) RenderIf(!cutter) DebugHalf(debug)
   difference() {
     union() {
       
@@ -837,7 +837,7 @@ module TopBreak_Cluster(debug=false, alpha=1) {
   width = (7/16);
   mlokOffset = (BarrelSleeveRadius()+0.3125);
   
-  color("Tan", alpha) render() DebugHalf(enabled=debug)
+  color("Tan", alpha) render() DebugHalf(debug)
   difference() {
     union() {
       
@@ -933,7 +933,7 @@ module TopBreak_Cluster(debug=false, alpha=1) {
   }
 }
 module TopBreak_Foregrip(length=TopBreak_ForegripLength(), debug=false, alpha=1) {
-  color("Tan",alpha) render() DebugHalf(enabled=debug)
+  color("Tan",alpha) render() DebugHalf(debug)
   difference() {
     translate([TopBreak_ForegripOffsetX()+ChargerTravel(),0,0])
     rotate([0,90,0])

@@ -161,7 +161,7 @@ module Evolver_Barrel(barrelLength=BarrelLength(), clearance=BARREL_CLEARANCE, c
   clear = (cutter ? clearance : 0);
   clear2 = clear*2;
 
-  color("Silver", alpha) DebugHalf(enabled=debug) RenderIf(!cutter)
+  color("Silver", alpha) DebugHalf(debug) RenderIf(!cutter)
   translate([(cutter?0:BarrelMinX()),0,0])
   rotate([0,90,0])
   difference() {
@@ -190,7 +190,7 @@ module Evolver_ReceiverFront(contoured=true, debug=_CUTAWAY_RECEIVER_FRONT, alph
   length = abs(RecoilSpreaderThickness());
   
   color("Chocolate", alpha)
-  render() DebugHalf(enabled=debug)
+  render() DebugHalf(debug)
   difference() {
     union() {
       hull() {
@@ -237,7 +237,7 @@ module Evolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND, $f
   
   // Branding text
   color("DimGrey", alpha) 
-  RenderIf(doRender) DebugHalf(enabled=debug) {
+  RenderIf(doRender) DebugHalf(debug) {
     
     fontSize = 0.375;
     
@@ -256,7 +256,7 @@ module Evolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND, $f
   }
   
   color("Tan", alpha)
-  RenderIf(doRender) DebugHalf(enabled=debug)
+  RenderIf(doRender) DebugHalf(debug)
   difference() {
     union() {
       
@@ -302,7 +302,7 @@ module Evolver_BarrelSupport(doRender=true, debug=false, alpha=_ALPHA_FOREND, $f
 }
 
 module Evolver_VerticalForegrip(length=2, debug=true, alpha=1) {
-  color("Tan", alpha) render() DebugHalf(enabled=debug) 
+  color("Tan", alpha) render() DebugHalf(debug) 
   difference() {
     union() {
       translate([ForegripMinX(),0,0])
@@ -334,7 +334,7 @@ module Evolver_VerticalForegrip(length=2, debug=true, alpha=1) {
 }
 
 module Evolver_Foregrip(length=PumpGripLength(), debug=false, alpha=1) {
-  color("Tan", alpha) render() DebugHalf(enabled=debug)
+  color("Tan", alpha) render() DebugHalf(debug)
   difference() {
     
     // Body around the barrel

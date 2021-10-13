@@ -255,7 +255,7 @@ module LatchScrews(debug=false, cutter=false, clearance=0.008) {
 
 
 module BreakActionReceiverFront(debug=false, alpha=1) {
-  color("Tan", alpha) render() DebugHalf(enabled=debug)
+  color("Tan", alpha) render() DebugHalf(debug)
   difference() {
     translate([-ReceiverFrontLength(),0,0])
     union() {
@@ -299,7 +299,7 @@ module Barrel(barrel=BarrelPipe(), length=BarrelLength(),
               clearance=PipeClearanceSnug(),
               cutter=false, alpha=1, debug=false) {
 
-  color("Silver") RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("Silver") RenderIf(!cutter) DebugHalf(debug)
   translate([0,0,BarrelOffsetZ()])
   difference() {
     rotate([0,90,0])
@@ -383,7 +383,7 @@ module ExtractorAssembly(cutter=false) {
 module BreakActionForend(debug=false, alpha=1) {
 
   // Forward plate
-  color("Tan", alpha) render() DebugHalf(enabled=debug)
+  color("Tan", alpha) render() DebugHalf(debug)
   difference() {
     union() {
 
@@ -502,7 +502,7 @@ module Latch(debug=false, cutter=false, clearance=0.015, alpha=1) {
   clear2 = clear*2;
 
   // Latch block
-  color("Tomato", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("Tomato", alpha) RenderIf(!cutter) DebugHalf(debug)
   difference() {
     translate([LatchX(), 0, LatchZ()])
     rotate([0,90,0])
@@ -533,7 +533,7 @@ module LatchFront(debug=false, cutter=false, clearance=0.015, alpha=1) {
   width=LatchFlatWidth();
 
   // Latch block
-  color("Tomato", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("Tomato", alpha) RenderIf(!cutter) DebugHalf(debug)
   difference() {
     union() {
       translate([LatchRodLength()-0.625-ReceiverFrontLength()+(cutter?0.51:0),
@@ -559,7 +559,7 @@ module LatchFront_print() {
 
 
 module BarrelLatchCollar(debug=false, alpha=1, cutter=false) {
-  color("Chocolate", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("Chocolate", alpha) RenderIf(!cutter) DebugHalf(debug)
   difference() {
     union() {
 
@@ -635,7 +635,7 @@ module BarrelLatchCollar_print() {
 module BarrelPivotCollar(length=((PivotRadius()+WallPivot())*2),
                          debug=false, alpha=1, cutter=false) {
 
-  color("Chocolate", alpha) RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("Chocolate", alpha) RenderIf(!cutter) DebugHalf(debug)
   difference() {
     union() {
 
@@ -707,7 +707,7 @@ module BarrelPivotCollar_print() {
 }
 
 module Foregrip(length=ForegripLength(), debug=false, alpha=1) {
-  color("Tan",alpha) render() DebugHalf(enabled=debug)
+  color("Tan",alpha) render() DebugHalf(debug)
   difference() {
     translate([ForegripOffsetX()+ChargerTravel(),0,0])
     rotate([0,90,0])

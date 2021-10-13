@@ -140,7 +140,7 @@ module SPAT37_Base(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, spigotBaseLengt
   baseTorusRadius = 2/16;
   
   color("Chocolate", alpha) render()
-  DebugHalf(enabled=debug)
+  DebugHalf(debug)
   difference() {
     
     // Base and rim
@@ -200,7 +200,7 @@ module SPAT37_Base(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, spigotBaseLengt
 module SPAT37_Flare(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, spigotDiameterSPIGOT_LENGTH=SPIGOT_LENGTH, spigotBaseLength=SPIGOT_BASE_LENGTH, clearance=CLEARANCE, primerOffset=0, debug=false, alpha=1, $fn=60) {
 
   color("Olive", alpha) render()
-  DebugHalf(enabled=debug)
+  DebugHalf(debug)
   difference() {
     union() {
       
@@ -242,7 +242,7 @@ module SPAT37_Flare(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, spigotDiameter
 
 module SPAT37_SmokeTail(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, SPIGOT_LENGTH=SPIGOT_LENGTH, spigotBaseLength=SPIGOT_BASE_LENGTH, clearance=CLEARANCE, primerOffset=0, debug=false, alpha=1, $fn=60) {
   color("Olive", alpha) render()
-  DebugHalf(enabled=debug)
+  DebugHalf(debug)
   difference() {
     union() {
     
@@ -266,7 +266,7 @@ module SPAT37_SmokeTail(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, SPIGOT_LEN
 }
 module SPAT37_SmokeTip(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, SPIGOT_LENGTH=SPIGOT_LENGTH, spigotBaseLength=SPIGOT_BASE_LENGTH, clearance=CLEARANCE, primerOffset=0, debug=false, alpha=1, $fn=60) {
   color("Olive", alpha) render()
-  DebugHalf(enabled=debug)
+  DebugHalf(debug)
   difference() {
     union() {
     
@@ -305,7 +305,7 @@ module SPAT37_SmokeTip(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, SPIGOT_LENG
 module SPAT37_Whistle(clearance=CLEARANCE, primerOffset=0, debug=false, alpha=1, $fn=60) {
 
   color("Olive", alpha) render()
-  DebugHalf(enabled=debug)
+  DebugHalf(debug)
   difference() {
     union() {
       hull() {

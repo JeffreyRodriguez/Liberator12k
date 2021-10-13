@@ -90,7 +90,7 @@ module Stock_TakedownPin(cutter=false, clearance=0.005, alpha=1, debug=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   
-  color("Silver") RenderIf(!cutter) DebugHalf(enabled=debug)
+  color("Silver") RenderIf(!cutter) DebugHalf(debug)
   translate([Stock_TakedownPinX(),
              0,
              Receiver_TakedownPinZ()])
@@ -122,7 +122,7 @@ module Stock_TakedownPinRetainer(cutter=false, clearance=0.005) {
 // *****************
 module Stock(length=StockLength(), doRender=true, debug=false, alpha=1) {
   color("Tan", alpha=alpha)
-  RenderIf(doRender) DebugHalf(enabled=debug)
+  RenderIf(doRender) DebugHalf(debug)
   difference() {
     
     // Main body
@@ -142,7 +142,7 @@ module Stock(length=StockLength(), doRender=true, debug=false, alpha=1) {
 }
 
 module Stock_Backplate(length=Stock_BackplateLength(), clearance=0.008, debug=false, alpha=1) {
-  color("Chocolate", alpha) render() DebugHalf(enabled=debug)
+  color("Chocolate", alpha) render() DebugHalf(debug)
   difference() {
     union() {
       
@@ -254,7 +254,7 @@ module Stock_Buttpad(doRender=true, debug=false, alpha=1) {
   ribDepth=0.1875;
   compressionRadius = 3/16;
 
-  color("Tan", alpha) RenderIf(doRender) DebugHalf(enabled=debug)
+  color("Tan", alpha) RenderIf(doRender) DebugHalf(debug)
   difference() {
     union() {
       

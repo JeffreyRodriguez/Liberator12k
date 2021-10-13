@@ -186,7 +186,7 @@ module BARBB_HammerCutOut(extraX=0) {
 
 module BARBB_Forend(clearance=0.01, debug=false, alpha=1) {
   color("Tan", alpha) render()
-  DebugHalf(enabled=debug)
+  DebugHalf(debug)
   difference() {
     translate([AR15_TrunnionLength(),0,0])
     Receiver_Segment(length=forendLength);
@@ -234,7 +234,7 @@ module BARBB_Forend(clearance=0.01, debug=false, alpha=1) {
 
 module BARBB_Magwell(alpha=1, debug=false) {
   color("Chocolate", alpha=alpha) render()
-  DebugHalf(enabled=debug)
+  DebugHalf(debug)
   difference() {
     
     translate([magwellX,0,magwellZ])

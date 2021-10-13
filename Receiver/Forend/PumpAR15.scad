@@ -137,7 +137,7 @@ module BarrelCollar(clearance=0.002, cutter=false, debug=false) {
   clear2 = clear*2;
     
   // Gas block shaft collar
-  color("Silver") DebugHalf(enabled=debug)
+  color("Silver") DebugHalf(debug)
   translate([BarrelMinX()+AR15BarrelGasLength(),0,0])
   rotate([0,90,0])
   cylinder(r=BarrelCollarRadius()+clear, h=BarrelCollarWidth(), $fn=40);
@@ -181,7 +181,7 @@ module BoltCarrier(cutter=false, clearance=0.01, chamferRadius=1/16, debug=false
   clear2 = clear*2;
 
   color("Olive", alpha) RenderIf(!cutter)
-  DebugHalf(enabled=debug)
+  DebugHalf(debug)
   difference() {
     union() {
       translate([boltCarrierMinX,0,0])
@@ -269,7 +269,7 @@ module AR15Forend(debug=false, alpha=1) {
   length = ForendLength();
   
   color("Tan", alpha) render()
-  DebugHalf(enabled=debug)
+  DebugHalf(debug)
   difference() {
     union() {
       translate([ForendMinX(),0,0])
@@ -351,7 +351,7 @@ module AR15Forend(debug=false, alpha=1) {
 }
 module CamGuide(length=BarrelMinX(), debug=false, alpha=1) {
   color("Chocolate", alpha) render()
-  DebugHalf(enabled=debug)
+  DebugHalf(debug)
   difference() {
     translate([length,0,0])
     ReceiverTopSlot(length=length, clearance=-0.005);
@@ -380,7 +380,7 @@ module Handguard(debug=false, alpha=1) {
   length = 7.5;
   
   color("Tan", alpha) render()
-  DebugHalf(enabled=debug)
+  DebugHalf(debug)
   difference() {
     union() {
       translate([ForendMinX()+ForendLength(),0,0])

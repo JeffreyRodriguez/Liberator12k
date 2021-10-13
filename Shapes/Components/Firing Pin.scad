@@ -42,7 +42,7 @@ module FiringPin(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT, template=false, cutter=f
     union() {
       if (!template)
       color("Silver")
-      DebugHalf(enabled=debug)
+      DebugHalf(debug)
       Rod(FiringPinRod(), clearance=cutter?RodClearanceLoose():undef,
           length=FiringPinBodyLength()+clear2);
       
@@ -101,7 +101,7 @@ module FiringPinHousingBolts(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT,
 module FiringPinHousing(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT, cutter=false, alpha=0.5, debug=false) {
   
   color("Grey")
-  DebugHalf(enabled=debug)
+  DebugHalf(debug)
   difference() {
     rotate(-90)
     hull() {
