@@ -24,7 +24,7 @@ function PumpGripLength() = 5.25;
 module PumpGrip(r=PumpGripRadius(),
                 h=PumpGripLength(),
                 CR=1/16,
-                rings=true, ringRadius=3/32, ringGap=0.75,
+                rings=true, ringRadius=3/32,
                 doRender=false, alpha=1) {
 
   color("Tan", alpha)
@@ -34,7 +34,7 @@ module PumpGrip(r=PumpGripRadius(),
 
     // Gripping cutout rings
     if (rings)
-    for (Z = [ringGap:ringGap:h-ringGap]) translate([0,0,Z])
+    for (Z = [ringRadius*4:ringRadius*8:h-(ringRadius*4)]) translate([0,0,Z])
     for (M = [0,1]) mirror([0,0,M])
     translate([0,0,-ringRadius*1.5]) scale([1,1,1.5]) translate([0,0,ringRadius])
     TeardropTorus(majorRadius=r,
