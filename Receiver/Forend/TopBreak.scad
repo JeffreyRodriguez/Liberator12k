@@ -794,10 +794,10 @@ module TopBreak_LatchTab(cutaway=false, cutter=false, clearance=0.01, alpha=1) {
       
       // Latch Tab Body
       PivotClearanceCut(offsetX=-TopBreak_LatchTravel(), cut=true)
-      translate([-0.25,
+      translate([-0.5,
                  -(BarrelSleeveRadius()+WallBarrel()),
                  TopBreak_LatchZ()-TopBreak_LatchWall()-TopBreak_LatchTabHeight()-clearance])
-      ChamferedCube([1+TopBreak_LatchTravel(),
+      ChamferedCube([1.5+TopBreak_LatchTravel(),
                      (BarrelSleeveRadius()+WallBarrel())*2,
                      TopBreak_LatchTabHeight()], r=1/16, teardropFlip=[false,true,true]);
       
