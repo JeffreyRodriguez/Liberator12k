@@ -25,8 +25,7 @@ module TangentBoolean(edgeOffset=1, edgeSign=-1,
 
 }
 
-
-module RoundedBoolean(edgeOffset=1, edgeSign=-1,
+module RoundedBoolean(edgeOffset=0, edgeSign=-1,
                       r=0.25, angle=0,
                       teardrop=false, teardropAngle=-90) {
   translate([edgeOffset,0])
