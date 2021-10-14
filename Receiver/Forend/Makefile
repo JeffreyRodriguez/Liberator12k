@@ -81,29 +81,24 @@ $(CLASSES) $(PRESETS): $$(addsuffix .scad,$$(firstword $$(subst _, ,$$@)))
 	touch $@
 
 # Assembly.png - the source of truth
-$(addsuffix /Assembly.png,$(PRESETS)): %.png : $$(firstword $$(subst _, ,%)).scad
-	$(eval CLASS_PRESET=$(firstword $(subst /, ,$@)))
-	$(eval CLASS=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$1 }'))
-	$(eval PRESET=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$2 }'))
-	$(eval PART=$(basename $(notdir $@)))
-	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -P $(PRESET) -o $@ \
+$(addsuffix /Assembly.png,$(PRESETS)): %.png : $(firstword $(subst _, ,%)).scad
+	$$(eval CLASS_PRESET=$$(firstword $$(subst /, ,$$@)))
+	$$(eval CLASS=$$(shell echo $$(CLASS_PRESET) | awk -F _ '{ print $$1 }'))
+	$$(eval PRESET=$$(shell echo $$(CLASS_PRESET) | awk -F _ '{ print $$2 }'))
+	$$(eval PART=$$(basename $$(notdir $$@)))
+	$$(OSBIN) $$(OSOPTS) --preview --imgsize=1920,1080 -P $$(PRESET) -o $$@ \
 		--projection=p --camera=400,1500,300,0,0,0 \
-		$(CLASS).scad
+		$$(CLASS).scad
+
 $(addsuffix /Assembly.jpg,$(PRESETS)): %.jpg : %.png
-	convert $(basename $@).png -quality 90 $@
+	convert $$(basename $$@).png -quality 90 $$@
 	
 # Preview_htmldoc.jpg - Downsampled 800px
 $(addsuffix /Preview_htmldoc.jpg,$(PRESETS)): %_htmldoc.jpg : %.png
 	#cp $< $@
-	convert -resize 1600x900^ $< -quality 90 $@
+	convert -resize 1600x900^ $$< -quality 90 $$@
 
-# HTML file for the preset
-$(PRESET_HTML): %/README.html : %.md %/Assembly.jpg %/Preview_thumb.jpg %/Preview_htmldoc.jpg 
-	$(MDBIN) $< | sed 's/\.md/\.html/' > $@
-$(CLASS_HTML): %.html : %.md
-	$(MDBIN) $< | sed 's/\.md/\.html/' > $@
-
-TARGETS = README.html $(Assembly_STL) $(PRESET_HTML) $(PRESET_STLS) #$(PRESET_MP4) 
+TARGETS =  README.html $(PRESET_STLS) $(PRESET_HTML) $(Assembly_STL) #$(PRESET_MP4)
 
 clean-dir:
 	rm -rf $(TARGETS)
