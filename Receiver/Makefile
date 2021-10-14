@@ -19,7 +19,7 @@ Stock_Hardware=Stock_ButtpadBolt Stock_TakedownPin Stock_TakedownPinRetainer
 FCG_Parts=FCG_Housing FCG_Disconnector FCG_FiringPinCollar \
           FCG_ChargingHandle \
 				  FCG_Hammer FCG_HammerTail \
-				  FCG_TriggerLeft FCG_TriggerMiddle FCG_TriggerRight
+				  FCG_Trigger FCG_TriggerMiddle
 FCG_Hardware=FCG_ActionRod FCG_RecoilPlate \
              FCG_DisconnectorTripBolt FCG_DisconnectorPivotPin \
 						 FCG_HammerBolt FCG_Sear FCG_FiringPin FCG_FiringPinSpring \

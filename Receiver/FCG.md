@@ -28,25 +28,15 @@ The FCG is designed to support slamfire via the optional disconnector.
 |-|-|-|
 |![](FCG_Hammer_thumb.jpg)|![](FCG_HammerTail_thumb.jpg)|![](FCG_ChargingHandle_thumb.jpg)|
 ---
-|FCG_TriggerMiddle|FCG_TriggerLeft|FCG_TriggerRight|
-|-|-|-|
-|![](FCG_TriggerMiddle_thumb.jpg)|![](FCG_TriggerLeft_thumb.jpg)|![](FCG_TriggerRight_thumb.jpg)|
+|FCG_TriggerMiddle|FCG_Trigger|
+|-|-|
+|![](FCG_TriggerMiddle_thumb.jpg)|![](FCG_Trigger_thumb.jpg)
 
 <!-- NEW PAGE -->
 ## Post-Processing
 
 ### Trigger Subassembly
 
-#### Glue Side Plates
-The left and right trigger sides need to be permanently attached with super glue or epoxy
-
-1. Verify the sear cross-pin will slide smoothly in the individual slots.
-2. Apply glue to the raised portions of Trigger_Right
-3. Set the left side on top of the right side.
-4. Align the parts with straight edge (123 blocks).
-5. Apply pressure to the left side plate for a good bond.
-
-#### Assemble
 1. Insert the trigger middle portion into the glued sides. It should slide freely.
 2. Drop the sear return spring into the trigger middle.
 3. Insert the sear and and compress the return spring until the pin hole is visible through the side slot.

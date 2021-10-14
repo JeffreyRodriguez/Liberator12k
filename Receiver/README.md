@@ -49,26 +49,30 @@ designs in detail.
 
 <!-- NEW PAGE -->
 ### Complete Print List
-| Part                | Settings | Filament | Time    | Color   |
-|---------------------|----------|----------|---------|---------|
-| Frame_Receiver      |          |     272g | 1d3h59m | Base    |
-| FCG_Housing         |          |       -g | -h-m    | Base    |
-| FCG_Disconnector    |          |       -g | -h-m    | Accent  |
-| FCG_ChargingHandle  |          |       -g | -h-m    | Accent  |
-| FCG_HammerTail      |          |       -g | -h-m    | Accent  |
-| FCG_FiringPinCollar | Solid    |       1g | 0h48m   | Accent  |
-| FCG_Hammer          | Solid    |       -g | -h-m    | Accent  |
-| FCG_TriggerMiddle   | Solid    |       6g | 33m     | Accent  |
-| FCG_TriggerLeft     | Solid    |      11g | 56m     | Accent  |
-| FCG_TriggerRight    | Solid    |       8g | 46m     | Accent  |
-| Lower_Left          |          |      66g | 5h52m   | Base    |
-| Lower_Middle        |          |      68g | 5h20m   | Accent  |
-| Lower_Right         |          |      66g | 5h52m   | Base    |
-| Lower_MountRear     |          |      23g | 2h21m   | Accent  |
-| Lower_MountFront    |          |      22g | 2h09m   | Accent  |
-| Stock               |          |       -g | -h-m    | Base    |
-| Stock_Backplate     |          |       -g | -h-m    | Accent  |
-| Stock_Buttpad       |          |       -g | -h-m    | Special |
+| Part                | Settings | Filament | Time    | Color    |
+|---------------------|----------|----------|---------|----------|
+| Frame_Receiver      |          |     272g | 1d3h59m | Base     |
+| FCG_Housing         |          |      16g |   2h12m | Base     |
+| FCG_Disconnector    |          |       4g |     29m | Accent   |
+| FCG_ChargingHandle  |          |      34g |   4h07m | Accent   |
+| FCG_HammerTail      |          |      13g |   1h38m | Accent   |
+| FCG_FiringPinCollar | Solid    |       1g |   0h48m | Accent   |
+| FCG_Hammer          | Solid    |      34g |   4h37m | Accent   |
+| FCG_TriggerMiddle   | Solid    |      11g |   1h23m | Accent   |
+| FCG_Trigger         | Solid    |      14g |   1h55m | Accent   |
+| Lower_Left          |          |      66g |   5h52m | Base     |
+| Lower_Right         |          |      66g |   5h52m | Base     |
+| Lower_Middle        |          |      68g |   5h20m | Accent   |
+| Lower_MountRear     |          |      23g |   2h21m | Accent   |
+| Lower_MountFront    |          |      22g |   2h09m | Accent   |
+| Stock               |          |     243g | 1d8h52m | Base     |
+| Stock_Backplate     |          |      95g |  12h05m | Accent   |
+| Stock_Buttpad       |          |     181g |  19h31m | TPU Base |
+
+Base Color: 663g
+Accent Color: 319g
+Total Printer Time - 0.4mm nozzle: 5d12h10m
+
 <br/>
 
 <!-- NEW PAGE -->
