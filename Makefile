@@ -6,7 +6,7 @@ MARKDOWN_HTML = $(addsuffix .html,$(basename $(MARKDOWN)))
 
 Assembly = Receiver/Assembly Receiver/Forend/Assembly
 
-MINUTEMAN_STL = Receiver/Frame_Receiver.stl $(wildcard Receiver/Components/*.stl) \
+MINUTEMAN_STL = Receiver/Frame_Receiver.stl \
 							$(wildcard Receiver/Stock*.stl) $(wildcard Receiver/Lower*.stl) \
 							$(wildcard Receiver/FCG*.stl)
 
@@ -35,7 +35,7 @@ Version.md:
 Manual.pdf: Version.md $(MARKDOWN_HTML) $(MANUAL_IMAGES) FORCE
 	htmldoc --batch Manual.book
 	
-Liberator12k-src/:
+Source/:
 	rm -rf $@ && \
 	git init $@ && \
 	cd $@ && \

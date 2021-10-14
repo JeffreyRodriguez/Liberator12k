@@ -43,10 +43,11 @@ Assembly_STL=$(addprefix Assembly/, $(Parts_STL) $(Hardware_STL))
 Assembly: $(Assembly_STL)
 
 Preview=Minuteman Frame Stock Lower FCG CAFE12 FP37
-Preview_PNG=$(addprefix Preview_,$(addsuffix .png, $(VIEWS)))
-Preview_JPG=$(addprefix Preview_,$(addsuffix .jpg, $(VIEWS)))
+Preview_JPG=$(addprefix Preview_,$(addsuffix .jpg, $(Preview)))
 
-TARGETS = README.html $(Preview_PNG) $(Preview_JPG) $(Components_HTML) $(Parts_STL) $(Parts_STL_png) $(Parts_STL_thumb) $(Preview_STL) $(Assembly_STL)
+Previews: $(Preview_JPG)
+
+TARGETS = README.html $(Preview_JPG) $(Components_HTML) $(Parts_STL) $(Parts_STL_png) $(Parts_STL_thumb) $(Preview_STL) $(Assembly_STL)
 
 Preview_Minuteman.png: Assembly.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
@@ -88,10 +89,22 @@ Preview_FCG.png: Assembly.scad
 		-D _SHOW_FOREND=false \
 		-D _SHOW_STOCK=false \
 		$<
+Preview_CAFE12+.png: Assembly.scad
+	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
+		--projection=p --camera=200,1500,200,0,0,0 \
+		-D _FOREND='"TopBreak"' \
+		$<
 Preview_CAFE12.png: Assembly.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
 		--projection=p --camera=200,1500,200,0,0,0 \
 		-D _FOREND='"TopBreak"' \
+		-P "CAFE12" \
+		$<
+Preview_FP37.png: Assembly.scad
+	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
+		--projection=p --camera=200,1500,200,0,0,0 \
+		-D _FOREND='"TopBreak"' \
+		-P "FP37" \
 		$<
 		
 .SECONDEXPANSION:
