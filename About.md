@@ -24,9 +24,12 @@ Do you think it's a good idea to be armed?
 States run like mindless machines. Code written by lawyers, run on flawed human
 beings each doing their own small task. Its ultimate tool: violence - to death.
  
-The great [democides](https://en.wikipedia.org/Democide) and [wars](https://en.wikipedia.org/wiki/List_of_wars_by_death_toll) have shown the need for individuals to be armed.
+The great [democides](https://en.wikipedia.org/Democide) and
+[wars](https://en.wikipedia.org/wiki/List_of_wars_by_death_toll)
+have shown the need for individuals to be armed.
 
-If it comes to that, you might die like a honeybee. Fight like hell anyway.
+If it comes to that, you might die complying anyway. So be like a honeybee, and
+fight like hell anyway.
 
 The second greatest danger to human prosperity and life is the order giver.
 Stalin, Hitler, and Mao never personally murdered anyone.

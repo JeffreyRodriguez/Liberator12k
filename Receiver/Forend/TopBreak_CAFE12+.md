@@ -49,7 +49,7 @@ which includes everything you need, and uses the stronger 4130 tube.
 |-|-|
 |![](Cluster_thumb.jpg)|![](VerticalForegrip_thumb.jpg)|
 
-### Hardware
+## Vitamins
 | Purpose                | Part                             | Metric Alternative | Quantity |
 |------------------------|----------------------------------|--------------------|----------|
 | Extractor Bit          | #2 flat 1/4" Hex Bit             | TODO               | 1        |

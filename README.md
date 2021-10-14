@@ -23,7 +23,7 @@ If you'd like to support the project as a vendor, get in touch.
 You have to kick in to the project and be *great* to customers.
 
 ### International Builders
-This is a US-based operation. I'm not presently shipping internationally,
+This is a US-based operation. I'm not presently shipping internationally.
 That means I won't knowingly ship to a forwarder, either.
 
 I think it's a much more legally complex issue that has a higher chance of
@@ -31,21 +31,22 @@ getting me arrested over something I didn't know.
 
 Join the chat, there's other builders around the world.
 
-### Patreon and Donations
+## Patreon and Donations
 At the time of this writing, I have a
 [Patreon](https://patreon.com/liberator12k).
 It's a soft target for the authoritarians, but for now it's a great way to help.
 
 Direct Bitcoin contributions are also welcome.
 
-Check the Donation page on the website for full details.
+Check the [Donation page](https://liberator12k.com/donate.html) on the website
+for full details.
 
-### Are you up to this?
+## You can do this
 Any experienced printer can complete this build if they buy a kit from me.
 
 If you intend to DIY everything, you'll need a handful of tools and equipment:
 
-#### Equipment
+### Equipment
 | Ideal    | Good Enough | Strugglebus |
 |----------|-------------|-------------|
 | CNC Mill | Drill Press | Hand Drill  |
@@ -59,7 +60,6 @@ You're also going to need a matching tap handle.
 | Inch   | Metric |
 |--------|--------|
 | \#8-32 | \#4-32 |
-
 
 
 ## How to Laugh at Danger
