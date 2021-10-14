@@ -91,12 +91,15 @@ CLUSTER_BOLT_NUT = "none"; // ["none", "heatset"]
 GRIP_BOLT = "1/4\"-20"; // ["M6", "1/4\"-20"]
 GRIP_BOLT_CLEARANCE = -0.05;
 
+EXTRACTOR_RETAINER_DIAMETER = 0.2501;
+EXTRACTOR_RETAINER_CLEARANCE = 0.008;
+
 LATCH_WIDTH = 0.25;
 LATCH_CLEARANCE = 0.003;
 
 BARREL_SLEEVE_DIAMETER = 1.2501;
 BARREL_OUTSIDE_DIAMETER = 1.0001;
-BARREL_INSIDE_DIAMETER = 0.813;
+BARREL_INSIDE_DIAMETER = 0.8131;
 BARREL_CLEARANCE = 0.008;
 BARREL_LENGTH = 18;
 BARREL_Z = 0.0001;
@@ -158,6 +161,8 @@ function BarrelDiameter(clearance=0)
 function BarrelWall() = (BarrelDiameter() - BARREL_INSIDE_DIAMETER)/2;
 function BarrelSleeveWall() = (BarrelSleeveDiameter() - BarrelDiameter())/2;
 
+
+function TopBreak_ExtractorRetainerRadius() = EXTRACTOR_RETAINER_DIAMETER/2;
 
 // Calculated: Positions
 //function ActionRodZ() = FrameBoltZ()-WallFrameBolt()-(ActionRodWidth()/2);
@@ -232,7 +237,7 @@ function TopBreak_LatchWall() = 0.125;
 function TopBreak_LatchLength() = 3;
 function TopBreak_LatchWidth() = LATCH_WIDTH;
 function TopBreak_LatchHeight() = LATCH_WIDTH;
-function TopBreak_LatchTabHeight() = 0.375;
+function TopBreak_LatchTabHeight() = 0.625;
 
 
 function TopBreak_LatchExtension() = 0.25;
@@ -332,19 +337,16 @@ module TopBreak_ExtractorBit(cartridgeRimThickness=RIM_WIDTH, cutter=false, clea
   }
 }
 
-module TopBreak_ExtractorRetainer(cutaway=false, cutter=false, teardrop=false, clearance=0.008) {
+module TopBreak_ExtractorRetainer(cutaway=false, cutter=false, teardrop=false, clearance=EXTRACTOR_RETAINER_CLEARANCE) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
 
   // Secure the TopBreak_Latch block to the TopBreak_Latch rod
+  color("Silver") RenderIf(!cutter)
   translate([TopBreak_ExtractorWidth()+TopBreak_ExtractorTravel()+0.5-clear,
              0,
-             TopBreak_ExtractorZ()+TopBreak_ExtractorHeight()])
-  NutAndBolt(bolt=GPBolt(),
-       boltLength=TopBreak_ExtractorHeight()+ManifoldGap(), clearance=clear,
-       head="socket", capHeightExtra=(cutter?abs(TopBreak_ExtractorZ())+FrameBoltZ():0), capOrientation=true,
-       nut="heatset-long", teardrop=false, teardropAngle=180,
-       doRender=!cutter);
+             -BarrelSleeveRadius()-1])
+  cylinder(r=TopBreak_ExtractorRetainerRadius()+clear, h=1+clear2);
 }
 
 module TopBreak_LatchBars(doMirror=true, cutaway=false, cutter=false, clearance=LATCH_CLEARANCE, alpha=1) { 
@@ -381,7 +383,7 @@ module TopBreak_LatchSpring(length=TopBreak_LatchSpringLength(), compress=0, doM
            h=length-compress);
 }
 
-module TopBreak_LatchScrews(head="flat", doMirror=true, cutaway=false, cutter=false, clearance=0.008) {
+module TopBreak_LatchScrews(head="flat", doMirror=true, cutaway=false, cutter=false, clearance=0.01) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
 
@@ -391,7 +393,7 @@ module TopBreak_LatchScrews(head="flat", doMirror=true, cutaway=false, cutter=fa
   translate([0.75,TopBreak_LatchY(),TopBreak_LatchZ()-TopBreak_LatchWall()-TopBreak_LatchTabHeight()-0.01])
   rotate([0,180,0])
   Bolt(bolt=GPBolt(),
-       length=0.75+ManifoldGap(), clearance=clear,
+       length=1+ManifoldGap(), clearance=clear,
        head=head, capHeightExtra=(cutter?1:0), capOrientation=true);
 
 }
@@ -436,8 +438,8 @@ module TopBreak_MlokBolts(headType="flat", nutType="heatset", length=0.5, cutter
   
   // Top Bolts
   color("Silver") RenderIf(!cutter)
-  for (X = [0,2])
-  translate([0.5+X,0,BarrelRadius()])
+  for (X = [0.5,1.5,2.5])
+  translate([X,0,BarrelRadius()])
   NutAndBolt(bolt=MlokBolt(),
              boltLength=length+ManifoldGap(2),
              head="socket", capHeightExtra=(cutter?1:0),
@@ -793,13 +795,14 @@ module TopBreak_LatchTab(cutaway=false, cutter=false, clearance=0.01, alpha=1) {
     union() {
       
       // Latch Tab Body
-      PivotClearanceCut(offsetX=-TopBreak_LatchTravel(), cut=true)
-      translate([-0.375,
+      if (!cutter)
+      PivotClearanceCut(offsetX=-TopBreak_LatchTravel(), clearance=0.01, cut=true)
+      translate([-0.5,
                  -(BarrelSleeveRadius()+WallBarrel()),
                  TopBreak_LatchZ()-TopBreak_LatchWall()-TopBreak_LatchTabHeight()-clearance])
-      ChamferedCube([1.5+TopBreak_LatchTravel(),
+      ChamferedCube([1+TopBreak_LatchTravel(),
                      (BarrelSleeveRadius()+WallBarrel())*2,
-                     TopBreak_LatchTabHeight()], r=1/16, teardropFlip=[false,true,true]);
+                     TopBreak_LatchTabHeight()], r=1/16);
       
       // Latch Tab Towers
       for (M = [0,1]) mirror([0,M,0])
@@ -808,9 +811,21 @@ module TopBreak_LatchTab(cutaway=false, cutter=false, clearance=0.01, alpha=1) {
                  TopBreak_LatchZ()-(TopBreak_LatchWall()+TopBreak_LatchTabHeight())-clear])
       ChamferedCube([0.5+(cutter?TopBreak_LatchTravel():0),
                      TopBreak_LatchWidth()+clear2,
-                     (TopBreak_LatchWall()+TopBreak_LatchTabHeight()+0.01)+clear2],
-                     r=1/16, teardropFlip=[false,true,true]);
+                     (TopBreak_LatchWall()+TopBreak_LatchTabHeight()+0.06)+clear2],
+                     r=1/16);
     }
+    
+    // Cut off the sharp tip, it tends to catch on things
+    if (!cutter)
+    translate([-0.3125,0, TopBreak_LatchZ()-TopBreak_LatchWall()-clearance])
+    rotate([90,0,0])
+    linear_extrude((BarrelSleeveRadius()+WallBarrel()+ManifoldGap())*2, center=true) {
+      RoundedBoolean(r=0.0625, teardrop=false, angle=180);
+      
+      translate([-0.1875,-1])
+      square([0.1875, 1]);
+    }
+    
 
     if (!cutter)  
     TopBreak_LatchScrews(cutter=true);
@@ -998,9 +1013,6 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
   TopBreak_ReceiverFront(cutaway=cutaway==true,
                          alpha=_ALPHA_RECEIVER_FRONT);
   
-  if (_SHOW_FOREND)
-  TopBreak_Forend(cutaway=cutaway == true || _CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
-
   // Pivoting barrel assembly
   BreakActionPivot(factor=pivotFactor) {
 
@@ -1069,8 +1081,12 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
     children();
     
   }
-}
+  
+  if (_SHOW_FOREND)
+  TopBreak_Forend(cutaway=cutaway == true || _CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
 
+}
+//
 
 scale(25.4)
 if ($preview) {

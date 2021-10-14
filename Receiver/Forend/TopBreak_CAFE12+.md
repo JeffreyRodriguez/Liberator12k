@@ -53,8 +53,7 @@ which includes everything you need, and uses the stronger 4130 tube.
 | Purpose                | Part                             | Metric Alternative | Quantity |
 |------------------------|----------------------------------|--------------------|----------|
 | Extractor Bit          | #2 flat 1/4" Hex Bit             | TODO               | 1        |
-| Extractor Retainer     | #8-32x5/8" Socket Cap Screw      | TODO               | 1        |
-| Extractor Retainer Nut | #8-32 Heatset Nut (Long)         | TODO               | 1        |
+| Extractor Retainer     | 1/4"x1" Dowel Pin                | TODO               | 1        |
 | Latch Bars             | 1/4"x3" Square Rod               | TODO               | 2        |
 | Latch Screws           | #8-32x3/4" Flat Head Screw       | TODO               | 2        |
 | Latch Springs          | (same as sear spring)            | TODO               | 2        |
