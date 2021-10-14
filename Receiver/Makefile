@@ -64,7 +64,7 @@ Preview_Frame.png: Assembly.scad
 		$<
 Preview_Stock.png: Assembly.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
-		--projection=p --camera=200,800,200,-100,0,0 \
+		--projection=p --camera=-100,500,100,-250,0,0 \
 		-D _SHOW_RECEIVER=false \
 		-D _SHOW_FCG=false \
 		-D _SHOW_LOWER=false \
@@ -73,7 +73,7 @@ Preview_Stock.png: Assembly.scad
 		$<
 Preview_Lower.png: Assembly.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
-		--projection=p --camera=200,800,200,-100,0,0 \
+		--projection=p --camera=100,400,0,-100,0,-50 \
 		-D _SHOW_RECEIVER=false \
 		-D _SHOW_FCG=false \
 		-D _SHOW_LOWER=true \
@@ -82,7 +82,7 @@ Preview_Lower.png: Assembly.scad
 		$<
 Preview_FCG.png: Assembly.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
-		--projection=p --camera=200,800,200,-100,0,0 \
+		--projection=p --camera=100,400,200,-100,0,0 \
 		-D _SHOW_RECEIVER=false \
 		-D _SHOW_FCG=true \
 		-D _SHOW_LOWER=false \

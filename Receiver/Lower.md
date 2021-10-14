@@ -1,6 +1,6 @@
 # 1.3: Lower Receiver
 
-![Lower Receiver Assembly](../Preview_Lower.jpg)
+![Lower Receiver Assembly](Preview_Lower.jpg)
 
 Provides a grip, trigger guard, means of attachment via T-lugs.
 The printed parts are sandwiched and bolted together.
