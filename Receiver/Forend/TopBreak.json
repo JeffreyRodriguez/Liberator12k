@@ -21,6 +21,27 @@
             "RIM_WIDTH": "0.0301",
             "WALL_BARREL": "0.1875"
         },
+        "CAFE12M": {
+            "BARREL_CLEARANCE": "0.005",
+            "BARREL_INSIDE_DIAMETER": "0.813",
+            "BARREL_LENGTH": "18",
+            "BARREL_OUTSIDE_DIAMETER": "1.063",
+            "BARREL_SET_SCREW": "M4",
+            "BARREL_SET_SCREW_CLEARANCE": "-0.05",
+            "BARREL_SLEEVE_DIAMETER": "1.334646",
+            "BARREL_Z": "0.001",
+            "BRANDING_MODEL_NAME": "CAFE12M",
+            "FRAME_BOLT_LENGTH": "10",
+            "GP_BOLT": "M4",
+            "GP_BOLT_CLEARANCE": "0.015",
+            "PIVOT_ANGLE": "30",
+            "PIVOT_RADIUS": "0.501",
+            "PIVOT_WIDTH": "2",
+            "PIVOT_X": "4.501",
+            "RIM_DIAMETER": "0.8875",
+            "RIM_WIDTH": "0.0301",
+            "WALL_BARREL": "0.1875"
+        },
         "FP37": {
             "BARREL_CLEARANCE": "0.005",
             "BARREL_INSIDE_DIAMETER": "1.543",
