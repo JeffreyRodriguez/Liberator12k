@@ -1,6 +1,6 @@
-# 1.1: Framed Receiver
+# 1.1: Large Frame Receiver
 
-![Framed Receiver](Preview_Frame_Receiver.jpg)
+![Large Frame Receiver](Preview_Frame_Receiver.jpg)
 
 ## Prints
 | Frame_Receiver |
@@ -20,3 +20,7 @@ them aligned.
 ### Install Picrail Nuts
 Insert a threaded rod through the receiver from the top and screw on the
 threaded insert while you install the insert.
+
+
+### File/sand internal surfaces smooth
+Mostly optional. The smoother these surfaces, the nicer the gun will run.

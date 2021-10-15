@@ -10,13 +10,6 @@ The lower mount couples the lower to the receiver.
 
 <!-- NEW PAGE -->
 ## Prints
-|Lower_Left|Lower_Middle|Lower_Right|
-|-|-|-|
-|![](Lower_Left_thumb.jpg)|![](Lower_Middle_thumb.jpg)|![](Lower_Right_thumb.jpg)|
----
-|Lower_MountFront|Lower_MountRear|
-|-|-|
-|![](Lower_MountFront_thumb.jpg)|![](Lower_MountRear_thumb.jpg)|
 
 
 45g, 4h30m
@@ -25,6 +18,16 @@ The lower mount couples the lower to the receiver.
 |-----------------------------------------------------------------------------------------------------|----------------------|----------|--------|
 | ![Lower_MountFront.stl](Lower_MountFront_thumb.jpg)<br>[Lower_MountFront.stl](Lower_MountFront.stl) | 3mm Walls 50% Infill | 22g      | 2h09m  |
 | ![Lower_MountRear.stl](Lower_MountRear_thumb.jpg)<br>[Lower_MountRear.stl](Lower_MountRear.stl)     | 3mm Walls 50% Infill | 23g      | 2h21m  |
+
+
+|Lower_Left|Lower_Middle|Lower_Right|
+|-|-|-|
+|![](Lower_Left_thumb.jpg)|![](Lower_Middle_thumb.jpg)|![](Lower_Right_thumb.jpg)|
+---
+|Lower_MountFront|Lower_MountRear|
+|-|-|
+|![](Lower_MountFront_thumb.jpg)|![](Lower_MountRear_thumb.jpg)|
+
 
 
 <!-- NEW PAGE -->

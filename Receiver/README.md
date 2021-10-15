@@ -1,4 +1,4 @@
-# 1: Minuteman Receiver
+# 1: The "Minuteman" Receiver
 
 ![Minuteman](Preview_Minuteman.jpg)
 
@@ -39,7 +39,7 @@ necessary.
 ### Components
 Each component in the Minuteman has its own fabrication instructions.
 
-* [1.1 Framed Receiver](Frame.md)
+* [1.1 Large Framed Receiver](Frame.md)
 * [1.2 Fire Control Group](FCG.md)
 * [1.3 Lower](Lower.md)
 * [1.4 Stock](Stock.md)

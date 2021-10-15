@@ -8,19 +8,8 @@ Chat with me and other builders!
 
 ## The [Liberator12k.com](https://liberator12k.com/store/) Store
 The official store has complete hardware kits.
-This one-man operation cost tens of thousands of dollars and hours invested.
-I'm giving it away for free because I want to support your ability to defend
-yourself. I think that makes me safer, and the world better overall.
 
 All the hardware in the project is fairly easy to source yourself.
-It would be trivial for someone to come along and sell the same hardware kit.
-I'm asking you - the community - to support the official project.
-I didn't start this to get rich, but I wouldn't mind a little support.
-
-I don't need to be the guy selling kits. I'd much rather find trustworthy
-distributors who I can endorse for a cut of the sales.
-If you'd like to support the project as a vendor, get in touch.
-You have to kick in to the project and be *great* to customers.
 
 ### International Builders
 This is a US-based operation. I'm not presently shipping internationally.
@@ -29,55 +18,54 @@ That means I won't knowingly ship to a forwarder, either.
 I think it's a much more legally complex issue that has a higher chance of
 getting me arrested over something I didn't know.
 
-Join the chat, there's other builders around the world.
+Join the chat, there's other builders around the world. There's a metric version
+but it's less well documented.
 
-## Patreon and Donations
-At the time of this writing, I have a
-[Patreon](https://patreon.com/liberator12k).
-It's a soft target for the authoritarians, but for now it's a great way to help.
+<!-- NEW PAGE -->
+## Support the Project
+This one-man operation cost tens of thousands of dollars and years of my time.
+I'm giving it away for free because I want to support your ability to defend
+yourself. I think that makes me safer, and the world better overall.
+If you want to show your appreciation and help me continue this work
+here's how you can help.
 
-Direct Bitcoin contributions are also welcome.
+### Official Kits!
+It would be trivial for someone to come along and sell the same hardware kit.
+I'm asking you - the community - to support the official project.
 
+I didn't start this to get rich, but I wouldn't mind a little support.
+If it pays well enough I'd love to make new guns and ECM machines full-time.
+
+### Partners
+I don't need to be the guy making and selling kits, I'd much rather spend my
+time in R&D.. but I have to fund it somehow.
+
+Manufacturing is not my field and I'm open to endorsing quality manufacturers
+and distributors for a royalty. If you'd like to support the project as a
+partner, get in touch. The requirements are straight forward and good business.
+
+### Donations
+Direct Bitcoin contributions are welcome.
 Check the [Donation page](https://liberator12k.com/donate.html) on the website
 for full details.
 
-## You can do this
-Any experienced printer can complete this build if they buy a kit from me.
+At the time of this writing, I have a
+[Patreon](https://patreon.com/liberator12k).
+It's a soft target for the authoritarians, but for now it's an easy way to help.
 
-If you intend to DIY everything, you'll need a handful of tools and equipment:
-
-### Equipment
-| Ideal    | Good Enough | Strugglebus |
-|----------|-------------|-------------|
-| CNC Mill | Drill Press | Hand Drill  |
-| Lathe    | Metal Saw   | Grinder     |
-
-#### Drill Bits
-
-#### Taps
-You're also going to need a matching tap handle.
-
-| Inch   | Metric |
-|--------|--------|
-| \#8-32 | \#4-32 |
-
-
+<!-- NEW PAGE -->
 ## How to Laugh at Danger
 From behind a solid barrier - don't be stupid.
-
 Everyone's a tough guy until they take a piece of shrapnel to the beanbag.
 
-### Warning: Alpha Release
-It's *not done*, there are bugs and rough edges.
-Weapons may be incomplete and **unsafe** for you or **bystanders**.
-Use extreme caution and two doses of common sense.
-
 ### Make at Your Own Risk
+Any experienced printer can complete this build if they buy a kit from me.
 I have done my best to make sure the designs included here are safe to the user
 and bystanders. Designs that are in "Alpha" *may not be safe* to the user
-**or bystanders.**
+**or bystanders.** Use extreme caution and two doses of common sense.
 
 ### Bystander Care
+It's one thing if you hurt yourself, it's another if you hurt someone else.
 The revolver will throw shot/wadding from the gap - at your range neighbors.
 Keep bystanders behind you and maintain a safe "180 degree" line or
 I'll shake *their* hand for kicking your ass, because you were warned.
@@ -100,3 +88,69 @@ DIY guns require special precautions and procedures that
 
 ### Gut Check
 The power to create weapons is now in your hands, use it responsibly.
+
+<!-- NEW PAGE -->
+## Equipment
+You print and can assemble the official kit with a few basic tools. Reamers are
+recommended for the plastics.
+
+If you intend to DIY everything, you'll need a few more tools and equipment.
+There's not a lot of "machining" required - a couple tapped holes in flat plate
+and square rods. Contouring the recoil plate with a grinder would suck, but it
+can be done.
+
+I would strongly recommend a drill press if you're doing it all yourself, but
+you can probably get by with some printed fixtures and jigs. Not ideal, but
+it'll work.
+
+A cold saw or metal band saw are ideal for cutting the tubing and rods to size.
+A lathe would be great for truing up pipes and tubes, but you can get by
+with a grinder, belt/disc sander, or files in a pinch.
+
+### Metric and Inch
+In the US it's sometimes easier and *much* cheaper to find certain parts in
+metric measurements. Most things are inch-standard, but there are "close enough"
+metric equivalents that are readily available.
+
+In general, here's how things go between inch and mm in this project:
+
+| Purpose       | Inch    | Metric |
+|---------------|---------|--------|
+| Small pins    | 3/32"   | 2.5mm  |
+| Medium Pins   | 1/4"    | 6mm    |
+| Small Screws  | \#8-32  | M4     |
+| Medium Screws | 1/4"-20 | M6     |
+| Large Screws  | 1/2"-13 | 12mm   |
+| Square Rods   | 1/4"    | 6mm    |
+
+A \#39 drill bit is just over 2.5mm - both are acceptable clearance
+drill bits for small pins.
+
+### This Is Spiral Tap
+Those bulk pack taps are called "hand taps" and they suck. If you scrap a part
+with a broken tap, you're already worse off than if you'd just bought a good tap
+in the first place.
+
+Spend a few bucks on a Spiral Point or Spiral Flute tap.
+I like spiral point, myself. You only need one, but buy two just in case.
+
+### Drill Bits
+ * 5/16"
+ * \#29
+ * \#39 or 2.5mm
+
+### Reamers
+You can use a drill bit in a pinch, but reamers are best.
+ * 11/64"
+ * 1/4"
+ * 5/16"
+ * 1/2"
+ * \#39 or 2.5mm
+ 
+#### Taps
+ * \#8-32
+ 
+| Thread | Tap Drill | Clearance Drill |
+|--------|-----------|-----------------|
+| \#8-32 | \#29      | \#39            |
+

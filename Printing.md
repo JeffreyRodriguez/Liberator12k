@@ -1,3 +1,4 @@
+<!-- NEW PAGE -->
 ## Printing Guidelines
 Everything here should be taken as the default unless otherwise stated.
 Most parts are good with a thick shell.
