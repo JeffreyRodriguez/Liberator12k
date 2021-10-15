@@ -8,7 +8,7 @@ OSOPTS=--hardwarnings --colorscheme=Nature
 OS_CAM_AUTO=--projection=p --autocenter --viewall
 GIT_VERSION=$(shell git describe --always)
 DATE=$(shell date +'%Y-%m-%d')
-SUBDIRS := $(dir $(wildcard */Makefile))
+SUBDIRS := $(filter-out Source/,$(dir $(wildcard */Makefile)))
 
 .DEFAULT_GOAL := all
 .PHONY: FORCE $(SUBDIRS) clean clean-dir
