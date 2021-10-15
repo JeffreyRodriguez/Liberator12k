@@ -184,7 +184,6 @@ function CylinderRadius() = CylinderDiameter()/2;
 
 // Calculated: Lengths
 function ForendLength() = FrameExtension(length=FRAME_BOLT_LENGTH)
-                        - ReceiverFrontLength()
                         - NutHexHeight(FrameBolt());
 
 // Calculated: Positions
