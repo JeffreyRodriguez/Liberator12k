@@ -5,16 +5,21 @@ use <../../Meta/Units.scad>;
 use <../../Vitamins/Bearing.scad>;
 use <../../Vitamins/Square Tube.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;
-use <../../Vitamins/Rod.scad>;
 use <../../Shapes/Chamfer.scad>;
 
 DEFAULT_BEARING =Spec_Bearing608();
-DEFAULT_MANDREL=Spec_RodFiveSixteenthInch();
-DEFAULT_DRIVESCREW=Spec_RodFiveSixteenthInch();
-DEFAULT_TUBE=Spec_SquareTubeOneInch();
+DEFAULT_MANDREL=0.3125;
+DEFAULT_DRIVESCREW=0.3125;
+DEFAULT_TUBE=1;
 
-_tube = SquareTubeOuter(DEFAULT_TUBE);
+_tube = 1;
 _halfTube = _tube/2;
+
+function RodDiameter(diameter) = diameter;
+function RodRadius(diameter) = diameter/2;
+module Rod(diameter=1, length=1) {
+  cylinder(r=diameter/2, h=length);
+}
 
 chamferRadius=0.05;
 wall = 0.25;
