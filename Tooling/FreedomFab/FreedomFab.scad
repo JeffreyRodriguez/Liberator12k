@@ -136,7 +136,7 @@ module FreedomFab_SlideX(spec=xBearingSpec, wall=5,  clearance=0.5, cutter=false
   rodOffsetY = SCSxUU_OrthagonalRodOffsetWidth(spec=yBearingSpec);
   
   if (!cutter)
-  %rotate([90,0,90]) {
+  %rotate([0,90,0]) {
     SCSxUU(spec=spec);
   
     cylinder(r=rodRadius, h=xRodLength, center=true);
@@ -144,20 +144,16 @@ module FreedomFab_SlideX(spec=xBearingSpec, wall=5,  clearance=0.5, cutter=false
   
   color("SteelBlue")
   render()
-  translate([0,SCSxUU_Height(spec)/2,0])
+  translate([0,0,SCSxUU_Height(spec)/2])
   union() {
     
     // Bolt plate
     if (!cutter)
     difference() {
-      translate([-SCSxUU_Length(spec)/2,0,-SCSxUU_Width(spec)/2])
-      ChamferedCube(xyz=[SCSxUU_Length(spec),wall,SCSxUU_Width(spec)], r=1, $fn=30);
+      translate([-SCSxUU_Length(spec)/2,-SCSxUU_Width(spec)/2,0])
+      ChamferedCube([SCSxUU_Length(spec),SCSxUU_Width(spec),wall], r=1);
       
-      rotate([-90,0,0])
-      translate([0,0,-ManifoldGap()])
-      linear_extrude(height=wall+ManifoldGap(2))
-      projection(cut=false)
-      rotate([0,-90,0])
+      rotate([0,90,0])
       SCSxUU_Bolts(spec=spec, clearance=clearance, teardropAngle=-90);
     }
   }
