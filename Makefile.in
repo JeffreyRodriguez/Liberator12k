@@ -17,12 +17,12 @@ SUBDIRS := $(filter-out Source/,$(dir $(wildcard */Makefile)))
 $(SUBDIRS): FORCE
 	$(MAKE) -C $@
 
-define list_parts
-	$(shell grep -oP 'if \(_RENDER == "([\w_]+)"\)' $(1) | cut -d\" -f 2)
-endef
-
 Assembly/:
 	mkdir -p Assembly
+	
+$(basename $(wildcard *.scad)).parts: %.scad
+	# Search for all the _RRENDER == "*" lines and extract the part names
+	grep -oP '_RENDER == "(.+)"' $< | cut -d \" -f 2 > $@
 
 #Assembly/*.stl:
 %.png %.stl:
