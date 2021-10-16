@@ -11,7 +11,7 @@ The Minuteman receiver is reusable in several other configurations similar
 to how you might swap AR15 uppers.
 
 ### Supporting the Project
-This has been a one-man operation, ambitious from the start.
+This has been an ambitious one-man operation from the start.
 The project has cost tens of thousands of dollars and years of my time.
 Now we have a modular weapons platform, ammunition, and a suite of ECM tooling.
 I dedicate it to the public domain to secure self-defense for everyone, forever.
@@ -39,6 +39,13 @@ The [Donation page](https://liberator12k.com/donate.html) on the website
 has info on how to donate with crypto and more.
 
 I also have a [Patreon](https://patreon.com/liberator12k).
+
+### Code Contributions
+The first code contributions were received June 2021, after the Alpha release.
+We were able to get the Metric version of the CAFE12 setup as a result.
+Code contributions are priceless, they just need to be public domain/Unlicensed.
+Bug reports and improvement requests on GitHub are also a great way to help
+out if you're not comfortable in OpenSCAD/Bash/Web.
 
 ### Thank YOU
 Prints are the greatest encouragement of all.
@@ -70,7 +77,8 @@ Everyone's a tough guy until they take a piece of shrapnel to the beanbag.
 Any experienced printer can complete this build if they buy a kit from the
 [Liberator12k.com Store](https://liberator12k.com/store/).
 I have done my best to make sure the designs included here are safe to the user
-and bystanders.
+and bystanders, but ultimately you're the one building your own gun at your own
+risk.
 
 ##### WARNING
 Pre-release designs *may not be safe*.
@@ -108,31 +116,7 @@ You can print and assemble an official kit with a couple wrenches and a
 butane torch.
 
 Reaming holes in the prints is recommended. A drill bit will work, but reamers
-are a lot better. The cheap Chinese ones from Amazon work fine on plastic.
-
-If you intend to DIY everything, you'll need more tools.
-There's not a lot of "machining" required - a couple tapped holes in flat plate
-and square rods. Contouring the recoil plate with a grinder would suck, but it
-can be done.
-
-I would strongly recommend a drill press if you're doing it all by yourself, but
-you could get by with some printed fixtures and jigs. Not ideal, but you can
-probably make it happen.
-
-A cold saw or metal band saw are ideal for cutting the tubing and rods to size.
-A lathe would be great for cutting pipes and tubes flush, but you can get by
-with a grinder, belt/disc sander, or files in a pinch.
-
-Some designs may require more advanced tooling, see that specific documentation
-for more details.
-
-### This Is Spiral Tap
-Those bulk pack taps are called "hand taps" and they suck. If you scrap a part
-with a broken tap, you're already worse off than if you'd just bought a good tap
-in the first place.
-
-Spend a few bucks on a Spiral Point or Spiral Flute tap.
-I like spiral point, myself. You only need one, but buy two just in case.
+are a lot better. The cheap Chinese ones from Amazon are fine, buy a whole set.
 
 ### "Close Enough"
 All the parts are inch-standard (or all-metric), but there are "close enough"
@@ -141,6 +125,32 @@ metric equivalents that are readily available even if you live in the US.
 Sometimes it's easier and *much* cheaper to find certain parts in metric, that's
 especially true for little stainless pins.
 3/32" is just under 2.5mm, and a \#39 drill bit is just over 2.5mm.
+
+### You Can DIY Everything
+You can fabricate all the required parts yourself - the documentation, jigs, and
+templates are included in the project files.
+
+If you intend to DIY everything, you'll need more tools.
+There's not a lot of "machining" required - a couple tapped holes in flat plate
+and square rods. A cold saw or metal band saw are ideal for cutting the tubing
+and rods to size.
+If you're using Schedule 40 pipe, a pipe cutter is just the ticket.
+
+I would strongly recommend a drill press if you're doing it all by yourself, but
+you *could get by* with some printed fixtures, jigs, and templates.
+A CNC waterjet/laser/plasma/mill will make life a lot easier later on, but with
+elbow grease and determination all things are possible.
+
+Some designs may require more advanced tooling, see that specific documentation
+for more details. Notably, the revolver needs a lathe and TIG.
+
+#### This Is Spiral Tap
+Those bulk pack taps are called "hand taps" and they suck. If you scrap a part
+with a broken tap, you're already worse off than if you'd just bought a good tap
+in the first place.
+
+Spend a few bucks on a Spiral Point or Spiral Flute tap.
+I like spiral point, myself. You only need one, but buy two just in case.
 
 <!-- NEW PAGE -->
 ### Metric and/or Inch
@@ -177,23 +187,29 @@ Complete assemblies are built from several reusable components.
 Each component in this manual has its own fabrication instructions.
 The component sub-chapters all follow the same pattern.
 
-#### Preview
-The component previewed in the assembly.
-Refer to *Figure 1: The Minuteman Receiver* to orient yourself.
+### Preview
+The component previewed in the assembly position. Refer to the figures depicting
+the complete assembly to orient yourself.
 
-#### Description
+### Description
 A brief description of the component and its purpose.
 
-#### Prints List
+### Prints List
 A table of parts to be printed. Includes the part name and a thumbnail view of
 the model in its print orientation.
 
-#### Post-Processing
+### Hardware List
+A table of hardware required to complete the assembly.
+
+### Preparation
+Any preparation steps for the component. Reminders and tips before you print.
+
+### Post-Processing
 Details on how to finish the prints, hardware installation instructions, and any
 notes on sub-assemblies.
 
-##### Technical Notes and Alternatives
+### Technical Notes
 Explains why certain decisions were made, what's important to consider when
-building the component.
+building or before altering the component.
 
-Includes any pertinent information about alternate hardware.
+May discuss alternate hardware.

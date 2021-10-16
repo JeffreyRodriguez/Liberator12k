@@ -26,7 +26,7 @@ Insert the *Stock Buttpad Bolts* through the *Stock_Buttpad*, and screw
 into the back of the *Stock Latch Subassembly*.
 
 
-### Technical Notes and Alternatives
+## Technical Notes
 
 #### Stock Pin
 The Universal Clevis Pin is simply an off-the-shelf item that works for the job.

@@ -55,7 +55,7 @@ If there are large gaps in the stack, light tapping with a rubber mallet should
 close them. If you need a lot of force, there's probably something binding. 
 Figure out what's bulging, and file it down. Needle files are great for this.
 
-## Technical Notes and Alternatives
+## Technical Notes
 
 ### Trigger Pull
 File, sand smooth, and oil any friction surfaces that are dragging.

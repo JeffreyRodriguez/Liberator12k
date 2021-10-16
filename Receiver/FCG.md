@@ -102,7 +102,7 @@ The full How To is incomplete, but at a high level:
 3. Tap the holes for the tension rods and FCG Housing holes with #8-32.
 
 <!-- NEW PAGE -->
-## Technical Notes and Alternatives
+## Technical Notes
 
 ### Recoil Plate
 2" wide (fits between the frame bolts) and 2.375" high, 1/4" thick.
