@@ -14,7 +14,7 @@ FOREND_STL = $(wildcard Receiver/Forend/*_*/*.stl)
 
 STL := $(MINUTEMAN_STL) $(FOREND_STL)
 EXTRA_DOCS := changelog.txt Manual.pdf
-TARGETS := $(STL) $(EXTRA_DOCS) $(Assembly) Source/
+TARGETS := $(EXTRA_DOCS) Source/
 
 MARKDOWN_HTML: $(MARKDOWN_HTML)
 $(MARKDOWN_HTML): $(addsuffix .md, $(basename $@))
@@ -34,7 +34,7 @@ Version.md:
 	
 Manual.pdf: Version.md $(MARKDOWN_HTML) $(MANUAL_IMAGES) FORCE
 	htmldoc --batch Manual.book
-	
+
 Source/:
 	rm -rf $@ && \
 	git init $@ && \

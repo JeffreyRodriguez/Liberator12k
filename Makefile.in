@@ -20,6 +20,10 @@ $(SUBDIRS): FORCE
 	
 list_renders = $(shell grep -oP '_RENDER == "(.+)"' '$(strip $(1))' | cut -d \" -f 2 | sort)
 
+
+%/Assembly: Assembly/
+	$(MAKE) -C $(subst /Assembly,,$@) Assembly
+	
 Assembly/:
 	mkdir -p Assembly
 	
