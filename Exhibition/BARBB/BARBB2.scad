@@ -24,7 +24,7 @@ use <../../Receiver/Magwells/AR15 Magwell.scad>;
 /* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "BARBB_Forend", "BARBB_BoltCarrier"]
+_RENDER = ""; // ["", "Prints/BARBB_Forend", "Prints/BARBB_BoltCarrier"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;
@@ -389,21 +389,21 @@ if ($preview) {
   // *****************
   // * Printed Parts *
   // *****************
-  if (_RENDER == "BARBB_Forend")
+  if (_RENDER == "Prints/BARBB_Forend")
     if (!_RENDER_PRINT)
       BARBB_Forend();
     else
       rotate([0,-90,0])
       BARBB_Forend();
   
-  if (_RENDER == "BARBB_UpperReceiver")
+  if (_RENDER == "Prints/BARBB_UpperReceiver")
     if (!_RENDER_PRINT)
       BARBB_UpperReceiver();
     else
       rotate([0,-90,0])
       BARBB_UpperReceiver();
 
-  if (_RENDER == "BARBB_BoltCarrier")
+  if (_RENDER == "Prints/BARBB_BoltCarrier")
     if (!_RENDER_PRINT)
       BARBB_BoltCarrier();
     else

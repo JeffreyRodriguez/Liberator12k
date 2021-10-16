@@ -24,7 +24,7 @@ use <../../Receiver/Receiver.scad>;
 /* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "BARBB_HammerSpringTrunnion", "BARBB_HammerGuide", "BARBB_Bolt", "BARBB_LowerReceiver", "BARBB_UpperReceiver", "BARBB_Stock", "BARBB_Buttpad", "BARBB_Foregrip", "BARBB_RailMount", "BARBB_RailMount1", "BARBB_Bipod"]
+_RENDER = ""; // ["", "Prints/BARBB_HammerSpringTrunnion", "Prints/BARBB_HammerGuide", "Prints/BARBB_Bolt", "Prints/BARBB_LowerReceiver", "Prints/BARBB_UpperReceiver", "Prints/BARBB_Stock", "Prints/BARBB_Buttpad", "Prints/BARBB_Foregrip", "Prints/BARBB_RailMount", "Prints/BARBB_RailMount1", "Prints/BARBB_Bipod"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;
@@ -1090,77 +1090,77 @@ if ($preview) {
   // *****************
   // * Printed Parts *
   // *****************
-  if (_RENDER == "BARBB_HammerSpringTrunnion")
+  if (_RENDER == "Prints/BARBB_HammerSpringTrunnion")
     if (!_RENDER_PRINT)
       BARBB_HammerSpringTrunnion();
     else
       rotate([0,90,0])
       BARBB_HammerSpringTrunnion();
     
-  if (_RENDER == "BARBB_HammerGuide")
+  if (_RENDER == "Prints/BARBB_HammerGuide")
     if (!_RENDER_PRINT)
       BARBB_HammerGuide();
     else
       rotate([0,-90,0])
       BARBB_HammerGuide();
     
-  if (_RENDER == "BARBB_Bolt")
+  if (_RENDER == "Prints/BARBB_Bolt")
     if (!_RENDER_PRINT)
       BARBB_Bolt();
     else
       rotate([0,-90,0])
       BARBB_Bolt();
       
-  if (_RENDER == "BARBB_LowerReceiver")
+  if (_RENDER == "Prints/BARBB_LowerReceiver")
     if (!_RENDER_PRINT)
       BARBB_LowerReceiver();
     else
       rotate([0,90,0])
       BARBB_LowerReceiver(extraFront=0);
       
-  if (_RENDER == "BARBB_UpperReceiver")
+  if (_RENDER == "Prints/BARBB_UpperReceiver")
     if (!_RENDER_PRINT)
       BARBB_UpperReceiver();
     else
       rotate([0,90,0])
       BARBB_UpperReceiver();
       
-  if (_RENDER == "BARBB_Stock")
+  if (_RENDER == "Prints/BARBB_Stock")
     if (!_RENDER_PRINT)
       BARBB_Stock();
     else
       rotate([0,90,0])
       BARBB_Stock();
       
-  if (_RENDER == "BARBB_Buttpad")
+  if (_RENDER == "Prints/BARBB_Buttpad")
     if (!_RENDER_PRINT)
       BARBB_Buttpad();
     else
       rotate([0,90,0])
       BARBB_Buttpad();
       
-  if (_RENDER == "BARBB_Foregrip")
+  if (_RENDER == "Prints/BARBB_Foregrip")
     if (!_RENDER_PRINT)
       BARBB_Foregrip();
     else
       rotate([0,-90,0])
       BARBB_Foregrip();
       
-  if (_RENDER == "BARBB_RailMount")
+  if (_RENDER == "Prints/BARBB_RailMount")
     if (!_RENDER_PRINT)
       BARBB_RailMount();
     else
       rotate([0,90,0])
       BARBB_RailMount();
       
-  if (_RENDER == "BARBB_RailMount1")
+  if (_RENDER == "Prints/BARBB_RailMount1")
     if (!_RENDER_PRINT)
       BARBB_RailMount(id=1);
     else
     rotate([0,90,0])
     BARBB_RailMount(id=1);
     
-  if (_RENDER == "BARBB_Bipod")
+  if (_RENDER == "Prints/BARBB_Bipod")
     if (!_RENDER_PRINT)
       BARBB_Bipod();
     else
@@ -1171,18 +1171,18 @@ if ($preview) {
   // ************
   // * Hardware *
   // ************
-  if (_RENDER == "BARBB_AR15_Barrel")
+  if (_RENDER == "Prints/BARBB_AR15_Barrel")
   translate([0,0,barrelZ])
   rotate([0,90,0])
   AR15_Barrel();
   
-  if (_RENDER == "BARBB_AR15_Bolt")
+  if (_RENDER == "Prints/BARBB_AR15_Bolt")
   color("Black")
   translate([boltLockedMaxX,0,barrelZ])
   rotate([0,-90,0])
   AR15_Bolt(teardrop=false, firingPinRetainer=false, extraFiringPin=0);
   
-  if (_RENDER == "BARBB_Tube")
+  if (_RENDER == "Prints/BARBB_Tube")
   color("Silver")
   translate([hammerMaxX, ManifoldGap(), tubeCenterZ])
   rotate([0,90,0])
@@ -1192,7 +1192,7 @@ if ($preview) {
     square(tube_width-0.125, center=true);
   };
   
-  if (_RENDER == "BARBB_Hammer")
+  if (_RENDER == "Prints/BARBB_Hammer")
   translate([lowerX,0,0])
   BARBB_Hammer();
 }

@@ -76,18 +76,18 @@ module AR15_TrunnionAssembly() {
 }
 
 scale(25.4) {
-  if (_RENDER == "Assembly")
+  if (_RENDER == "Prints/Assembly")
   AR15_TrunnionAssembly();
   
   if (_RENDER == "Bolt Carrier")
     BoltCarrier_print();
 
-  if (_RENDER == "AR15_Trunnion")
+  if (_RENDER == "Prints/AR15_Trunnion")
     translate([0,0,0])
     rotate([0,90,0])
     AR15_Trunnion();
   
-  if (_RENDER == "AR15_TrunnionCap")
+  if (_RENDER == "Prints/AR15_TrunnionCap")
     rotate([0,-90,0])
     translate([-AR15_TrunnionLength(),0,0])
     AR15_TrunnionCap();

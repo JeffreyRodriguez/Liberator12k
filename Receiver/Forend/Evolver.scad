@@ -36,7 +36,7 @@ use <../Stock.scad>;
 /* [Print] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Receiver_LargeFrame", "Evolver_ReceiverFront", "Evolver_Foregrip", "Evolver_VerticalForegrip", "Evolver_CylinderCore", "Evolver_CylinderShell", "Evolver_BarrelSupport", "Evolver_Projection_Cylinder", "Evolver_Projection_CylinderCore", "Evolver_Projection_RecoilPlate"]
+_RENDER = ""; // ["", "Prints/Receiver_LargeFrame", "Prints/Evolver_ReceiverFront", "Prints/Evolver_Foregrip", "Prints/Evolver_VerticalForegrip", "Prints/Evolver_CylinderCore", "Prints/Evolver_CylinderShell", "Prints/Evolver_BarrelSupport", "Prints/Evolver_Projection_Cylinder", "Prints/Evolver_Projection_CylinderCore", "Prints/Evolver_Projection_RecoilPlate"]
 
 /* [Assembly] */
 
@@ -463,21 +463,21 @@ if ($preview) {
   EvolverForendAssembly(cutaway=false);
 } else {
 
-  if (_RENDER == "Evolver_ReceiverFront")
+  if (_RENDER == "Prints/Evolver_ReceiverFront")
   rotate([0,-90,0])
   Evolver_ReceiverFront();
   
-  if (_RENDER == "Evolver_BarrelSupport")
+  if (_RENDER == "Prints/Evolver_BarrelSupport")
   rotate([0,90,0]) translate([-ForendMaxX(),0,0])
   render()
   Evolver_BarrelSupport(doRender=false);
 
-  if (_RENDER == "Evolver_Foregrip")
+  if (_RENDER == "Prints/Evolver_Foregrip")
   rotate([0,-90,0])
   translate([-ForegripMinX(),0,0])
   Evolver_Foregrip();
   
-  if (_RENDER == "Evolver_VerticalForegrip")
+  if (_RENDER == "Prints/Evolver_VerticalForegrip")
   rotate([0,-90,0])
   translate([-ForegripMinX(),0,0])
   Evolver_VerticalForegrip();

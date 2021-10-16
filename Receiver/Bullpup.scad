@@ -32,7 +32,7 @@ use <Stock.scad>;
 /* [Print] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Stock", "Stock_Backplate", "Stock_Buttpad"]
+_RENDER = ""; // ["", "Prints/Stock", "Prints/Stock_Backplate", "Prints/Stock_Buttpad"]
 
 /* [Assembly] */
 _FOREND = ""; // ["", "TopBreak", "Trigun", "Revolver", "Evolver", "AR15", "Pump"]
@@ -316,17 +316,17 @@ if ($preview) {
   BullpupAssembly();
 } else {
 
-  if (_RENDER == "Stock")
+  if (_RENDER == "Prints/Stock")
   rotate([0,-90,0])
   translate([ReceiverLength()+StockLength(),0,0])
   Stock();
   
-  if (_RENDER == "Stock_Buttpad")
+  if (_RENDER == "Prints/Stock_Buttpad")
   rotate([0,-90,0])
   translate([StockLength()+ReceiverLength()+ButtpadLength(),0,0])
   Stock_Buttpad();
   
-  if (_RENDER == "Stock_Backplate")
+  if (_RENDER == "Prints/Stock_Backplate")
   rotate([0,-90,0])
   translate([-ButtpadX(),0,0])
   Stock_Backplate();

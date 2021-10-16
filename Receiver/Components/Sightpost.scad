@@ -15,7 +15,7 @@ use <../Receiver.scad>;
 /* [What to Render] */
 
 // Assembly is not for printing.
-_RENDER = ""; // ["Sightpost"]
+_RENDER = ""; // ["Prints/Sightpost"]
 
 // Cut assembly view in half
 _CUTAWAY_ASSEMBLY = false;

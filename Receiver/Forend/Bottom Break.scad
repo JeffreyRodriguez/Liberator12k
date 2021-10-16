@@ -32,7 +32,7 @@ use <Bipod.scad>;
 /* [What to Render] */
 
 // Configure settings below, then choose a part to render. Render that part (F6) then export STL (F7). Assembly is not for printing.
-_RENDER = ""; // ["", "BarrelPivotCollar", "BarrelLatchCollar", "RecoilPlateHousing", "Forend", "Foregrip", "Extractor", "Latch", "LatchFront"]
+_RENDER = ""; // ["", "Prints/BarrelPivotCollar", "Prints/BarrelLatchCollar", "Prints/RecoilPlateHousing", "Prints/Forend", "Prints/Foregrip", "Prints/Extractor", "Prints/Latch", "Prints/LatchFront"]
 
 // Cut assembly view in half
 _CUTAWAY_ASSEMBLY = false;
@@ -818,27 +818,27 @@ if ($preview) {
   }
 } else {
 
-  if (_RENDER == "BarrelPivotCollar")
+  if (_RENDER == "Prints/BarrelPivotCollar")
   BarrelPivotCollar_print();
 
-  if (_RENDER == "BarrelLatchCollar")
+  if (_RENDER == "Prints/BarrelLatchCollar")
   BarrelLatchCollar_print();
 
-  if (_RENDER == "RecoilPlateHousing")
+  if (_RENDER == "Prints/RecoilPlateHousing")
   BreakActionReceiverFront_print();
 
-  if (_RENDER == "Forend")
+  if (_RENDER == "Prints/Forend")
   BreakActionForend_print();
 
-  if (_RENDER == "Foregrip")
+  if (_RENDER == "Prints/Foregrip")
   Foregrip_print();
 
-  if (_RENDER == "Extractor")
+  if (_RENDER == "Prints/Extractor")
   Extractor_print();
 
-  if (_RENDER == "Latch")
+  if (_RENDER == "Prints/Latch")
   Latch_print();
 
-  if (_RENDER == "LatchFront")
+  if (_RENDER == "Prints/LatchFront")
   LatchFront_print();
 }

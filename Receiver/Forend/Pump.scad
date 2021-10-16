@@ -26,7 +26,7 @@ use <../Receiver.scad>;
 /* [Print] */
 
 // Select a part, Render it (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "PumpForend"]
+_RENDER = ""; // ["", "Prints/PumpForend"]
 
 /* [Assembly] */
 //_SHOW_RECEIVER = true;
@@ -247,7 +247,7 @@ scale(25.4)
 if ($preview) {
   PumpShotgunAssembly(cutaway=false);
 } else {
-  if (_RENDER == "PumpForend")
+  if (_RENDER == "Prints/PumpForend")
   rotate([0,-90,0])
   PumpForend();
   

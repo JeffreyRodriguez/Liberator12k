@@ -11,7 +11,7 @@ use <../Shapes/TeardropTorus.scad>;
 /* [Print] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "EPrimerCartridge", "EPrimerInsert"]
+_RENDER = ""; // ["", "Prints/EPrimerCartridge", "Prints/EPrimerInsert"]
 
 /* [Assembly] */
 _SHOW_PRIMER_INSERT = true;
@@ -131,10 +131,10 @@ if ($preview) {
   EPrimerCartridge(cutaway=_CUTAWAY_CARTRIDGE);
 } else {
   
-  if (_RENDER == "EPrimerInsert")
+  if (_RENDER == "Prints/EPrimerInsert")
   EPrimerInsert(cutaway=_CUTAWAY_PRIMER_INSERT);
   
-  if (_RENDER == "EPrimerCartridge")
+  if (_RENDER == "Prints/EPrimerCartridge")
   EPrimerCartridge(cutaway=_CUTAWAY_CARTRIDGE);
 }
 

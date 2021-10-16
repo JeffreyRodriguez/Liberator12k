@@ -19,7 +19,7 @@ use <../Vitamins/Pipe.scad>;
 /* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Receiver", "Receiver_Back", "Receiver_Projection"]
+_RENDER = ""; // ["", "Prints/Receiver", "Prints/Receiver_Back", "Prints/Receiver_Projection"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;

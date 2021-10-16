@@ -21,7 +21,7 @@ use <Receiver.scad>;
 /* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Lower_Left", "Lower_Right", "Lower_Middle", "Lower_MountFront", "Lower_MountRear"]
+_RENDER = ""; // ["", "Prints/Lower_Left", "Prints/Lower_Right", "Prints/Lower_Middle", "Prints/Lower_MountFront", "Prints/Lower_MountRear"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;

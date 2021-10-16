@@ -30,7 +30,7 @@ use <../Stock.scad>;
 /* [Print] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Bolt Carrier", "Forend", "CamGuide", "Handguard"]
+_RENDER = ""; // ["", "Bolt Carrier", "Prints/Forend", "Prints/CamGuide", "Prints/Handguard"]
 
 /* [Assembly] */
 _SHOW_ACTION_ROD = true;
@@ -457,15 +457,15 @@ if ($preview) {
   if (_RENDER == "Bolt Carrier")
   BoltCarrier_print();
 
-  if (_RENDER == "Forend")
+  if (_RENDER == "Prints/Forend")
   rotate([0,-90,0])
   AR15Forend();
   
-  if (_RENDER == "CamGuide")
+  if (_RENDER == "Prints/CamGuide")
   rotate([0,-90,0])
   CamGuide();
   
-  if (_RENDER == "Handguard")
+  if (_RENDER == "Prints/Handguard")
   rotate([0,-90,0])
   translate([-ForendMinX()-ForendLength(),0,0])
   Handguard();

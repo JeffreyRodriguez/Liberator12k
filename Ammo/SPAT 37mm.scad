@@ -386,23 +386,23 @@ if ($preview) {
   }
   
 } else {
-  if (_RENDER == "Base")
+  if (_RENDER == "Prints/Base")
   SPAT37_Base();
   
-  if (_RENDER == "Flare")
+  if (_RENDER == "Prints/Flare")
   translate([0,0,-SPIGOT_BASE_LENGTH])
   SPAT37_Flare();
   
-  if (_RENDER == "Smoke_Tail")
+  if (_RENDER == "Prints/Smoke_Tail")
   translate([0,0,-SPIGOT_BASE_LENGTH])
   SPAT37_SmokeTail();
   
-  if (_RENDER == "Smoke_Tip")
+  if (_RENDER == "Prints/Smoke_Tip")
   rotate([180,0,0])
   translate([0,0,-BASE_HEIGHT-SMOKE_HEIGHT])
   SPAT37_SmokeTip();
   
-  if (_RENDER == "Whistle")
+  if (_RENDER == "Prints/Whistle")
   translate([0,0,-SPIGOT_BASE_LENGTH])
   SPAT37_Whistle();
 }

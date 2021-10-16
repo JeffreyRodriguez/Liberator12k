@@ -18,7 +18,7 @@ use <Receiver.scad>;
 /* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Stock", "Stock_Backplate", "Stock_Buttpad"]
+_RENDER = ""; // ["", "Prints/Stock", "Prints/Stock_Backplate", "Prints/Stock_Buttpad"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;

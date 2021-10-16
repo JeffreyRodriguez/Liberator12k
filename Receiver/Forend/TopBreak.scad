@@ -32,7 +32,7 @@ use <../Stock.scad>;
 /* [Export] */
 
 // Select a part, Render it (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "ReceiverFront", "Forend", "Cluster", "BarrelCollar", "Extractor", "LatchTab", "VerticalForegrip", "Sightpost","BarrelSleeveFixture"]
+_RENDER = ""; // ["", "Prints/ReceiverFront", "Prints/Forend", "Prints/Cluster", "Prints/BarrelCollar", "Prints/Extractor", "Prints/LatchTab", "Prints/VerticalForegrip", "Prints/Sightpost","Prints/BarrelSleeveFixture"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;

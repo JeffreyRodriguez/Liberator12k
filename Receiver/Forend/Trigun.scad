@@ -33,7 +33,7 @@ use <../Stock.scad>;
 /* [Print] */
 
 // Select a part, Render it (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "ReceiverFront", "ReceiverForend", "BarrelCollar", "Extractor", "Latch", "Foregrip"]
+_RENDER = ""; // ["", "Prints/ReceiverFront", "Prints/ReceiverForend", "Prints/BarrelCollar", "Prints/Extractor", "Prints/Latch", "Prints/Foregrip"]
 
 /* [Assembly] */
 _SHOW_BARREL = true;
@@ -405,21 +405,21 @@ if ($preview) {
                                  -SubAnimate(ANIMATION_STEP_LOAD, end=0.25));
 } else {
 
-  if (_RENDER == "BarrelCollar")
+  if (_RENDER == "Prints/BarrelCollar")
   BarrelCollar_print();
 
-  if (_RENDER == "ReceiverFront")
+  if (_RENDER == "Prints/ReceiverFront")
   ReceiverFront_print();
 
-  if (_RENDER == "ReceiverForend")
+  if (_RENDER == "Prints/ReceiverForend")
   ReceiverForend_print();
 
-  if (_RENDER == "Foregrip")
+  if (_RENDER == "Prints/Foregrip")
   Foregrip_print();
 
-  if (_RENDER == "Extractor")
+  if (_RENDER == "Prints/Extractor")
   Extractor_print();
 
-  if (_RENDER == "Latch")
+  if (_RENDER == "Prints/Latch")
   Latch_print();
 }
