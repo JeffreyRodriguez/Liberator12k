@@ -16,7 +16,7 @@ but we'll save that for your second build.
 <!-- NEW PAGE -->
 ## Printing
 
-### Pick your colors
+### Pick Your Colors
 Two-tone is canon - that means it's official.
 
 #### Spool 1: Base Color

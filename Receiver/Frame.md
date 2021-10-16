@@ -22,5 +22,6 @@ Insert a threaded rod through the receiver from the top and screw on the
 threaded insert while you install the insert.
 
 
-### File/sand internal surfaces smooth
-Mostly optional. The smoother these surfaces, the nicer the gun will run.
+### File/Sand Internal Surfaces
+The smoother these surfaces, the nicer the gun will run. Mostly optional, print
+at 0.1mm for better overall quality.
