@@ -605,7 +605,6 @@ if ($preview) {
   // *****************
   if (_RENDER == "Lower_Left")
     if (!_RENDER_PRINT)
-      translate([-LowerMaxX(),0, LowerOffsetZ()])
       Lower_SidePlates(showLeft=true, showRight=false);
     else
       rotate(180)
@@ -615,7 +614,6 @@ if ($preview) {
 
   if (_RENDER == "Lower_Right")
     if (!_RENDER_PRINT)
-      translate([-LowerMaxX(),0, LowerOffsetZ()])
       Lower_SidePlates(showLeft=false, showRight=true);
     else
       rotate([-90,0,0])
@@ -624,7 +622,6 @@ if ($preview) {
 
   if (_RENDER == "Lower_Middle")
     if (!_RENDER_PRINT)
-      translate([-LowerMaxX(),0, LowerOffsetZ()])
       Lower_Middle();
     else
       rotate(180)
@@ -657,7 +654,6 @@ if ($preview) {
   // * Hardware *
   // ************
   if (_RENDER == "Lower_Bolts")
-  translate([-LowerMaxX(),0, LowerOffsetZ()])
   Lower_Bolts();
   
   if (_RENDER == "Lower_MountTakedownPinRetainer")
