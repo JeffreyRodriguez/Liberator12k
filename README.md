@@ -99,7 +99,8 @@ DIY guns require special precautions and procedures that
 * Test with at least 5 of the highest pressure cartridges you can find.
 
 ### Gut Check
-The power to create weapons is now in your hands, use it responsibly.
+The power to create weapons and project lethal force hundreds of yards
+is now in your hands, use it responsibly.
 
 <!-- NEW PAGE -->
 ## Tools and Equipment
