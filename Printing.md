@@ -1,7 +1,7 @@
 <!-- NEW PAGE -->
 ## Printing Guidelines
-Everything here should be taken as the default unless otherwise stated.
-Most parts are good with a thick shell.
+Unless otherwise stated, every print will use these settings.
+Most parts are good with a thick shell and low infill.
 
 If a part needs to be printed solid, the build guide will have a note for you.
 Increase your infill to 100% for these parts.
@@ -23,8 +23,11 @@ These are the only vital Cura settings to override.
 0.2mm layers are a good balance between speed and quality.
 0.1mm layers will look 50% better and take twice as long.
 
-If it's a large part, you can probably print it with tall layers. Smaller parts
-usually have tighter tolerance requirements and taller layers may cause binding.
+This isn't well defined yet but if it's a large part, you can probably print
+it with taller layers and save some print time.
+Smaller parts, notably the small Fire Control Group parts should be printed with
+standard layer heights. Small parts usually have tighter tolerance requirements
+and taller layers may cause binding.
 
 ### \#FatNozzleGang
 Everything can be printed with a 1.5mm nozzle, but 0.4mm works too.
