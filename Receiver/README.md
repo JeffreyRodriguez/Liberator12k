@@ -2,13 +2,13 @@
 
 ![Minuteman](Preview_Minuteman.jpg)
 
-To get very technical, you're going to make a *Framed Receiver with a Stock*.
+To get very technical this is a *Large Frame Receiver with a Stock*.
 That's a mouthful, so I call it the
 [Minuteman](https://en.wikipedia.org/wiki/Minutemen). It supports
 most of the designs in the project.
 This chonk has two big 1/2" bolts to support heavy forends.
 Steel rods reinforce the receiver and stock.
-A TPU buttpad reduces felt recoil.
+A flexible filament buttpad reduces felt recoil.
 
 There are other ways to configure the receiver,
 but we'll save that for your second build.
@@ -29,7 +29,9 @@ Accent parts are often smaller and bear some kind of load, so if you want to
 splurge - do it here.
 
 #### Spool 3: TPU For Your Buttpad
-The buttpad was designed to be TPU, it takes some of the sting out of the shot.
+The buttpad was designed to be printed with "90D" TPU filament.
+90D TPU is a semi-flexible filament, and takes some of the sting out of the shot
+because it's rubbery.
 
 You may not find TPU that matches your base color, keep that in mind when you
 choose your colors.
@@ -44,8 +46,8 @@ Each component in the Minuteman has its own fabrication instructions.
 * [1.3 Lower](Lower.md)
 * [1.4 Stock](Stock.md)
 
-[Chapter 2: Choose Your Weapon](Forend/README.md) covers the different Forend
-designs in detail.
+[Chapter 2: Choose Your Weapon](Forend/README.md) covers the different
+forend configurations in detail.
 
 <!-- NEW PAGE -->
 ### Complete Print List
@@ -144,7 +146,7 @@ Full hardware list for the Minuteman receiver.
 | Hammer Spring             | 1.4mm Wire, 16mm OD, 80mm Length Spring              | 1        |
 | Recoil Plate (L12k)       | None                                                 | 1\*      |
 | Recoil Plate (DIY)        | 6mm Thickness 50.80x60.325mm AISI 4140 Steel Plate   | 1\*      |
-| Sear                      | 6mm*42.42mm Steel Square Rod                         | 1        |
+| Sear                      | 6mm x 42.42mm Steel Square Rod                       | 1        |
 | Sear Cross-Pin            | None                                                 | 1        |
 | Sear Return Spring        | 0.5mm Wire, 6.5mm OD, 35mm Length Spring             | 1        |
 | Recoil Plate Center Bolts | **DIN7991** M4x40 A2/A4 Countersunk Bolt             | 2        |
