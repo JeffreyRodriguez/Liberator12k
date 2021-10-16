@@ -22,7 +22,7 @@ use <Receiver.scad>;
 /* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "FCG_Housing", "FCG_ChargingHandle", "FCG_Disconnector", "FCG_Hammer", "FCG_HammerTail", "FCG_FiringPinCollar", "FCG_Trigger", "FCG_TriggerMiddle", "FCG_RecoilPlate_Fixture", "FCG_RecoilPlate_GangFixture", "FCG_RecoilPlate_TapGuide", "FCG_RecoilPlate_Projection", "FCG_SearJig"]
+_RENDER = ""; // ["", "Prints/FCG__Housing", "Prints/FCG__ChargingHandle", "Prints/FCG__Disconnector", "Prints/FCG__Hammer", "Prints/FCG__HammerTail", "Prints/FCG__FiringPinCollar", "Prints/FCG__Trigger", "Prints/FCG__TriggerMiddle", "Fixtures/FCG__RecoilPlate_Fixture", "Fixtures/FCG__RecoilPlate_GangFixture", "Fixtures/FCG__RecoilPlate_TapGuide", "Fixtures/FCG__SearJig", "Projection/FCG__RecoilPlate_Projection"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;
@@ -1283,7 +1283,7 @@ if ($preview) {
   // *****************
   // * Printed Parts *
   // *****************
-  if (_RENDER == "FCG_TriggerMiddle")
+  if (_RENDER == "Prints/FCG_TriggerMiddle")
     if (!_RENDER_PRINT)
       SearSupportTab();
     else
@@ -1292,14 +1292,14 @@ if ($preview) {
       rotate([90,0,00])
       SearSupportTab();
 
-  if (_RENDER == "FCG_Trigger")
+  if (_RENDER == "Prints/FCG_Trigger")
     if (!_RENDER_PRINT)
       Trigger();
     else
       translate([LowerMaxX(),0,-LowerOffsetZ()+TriggerHeight()])
       Trigger();
   
-  if (_RENDER == "FCG_Housing")
+  if (_RENDER == "Prints/FCG_Housing")
     if (!_RENDER_PRINT)
       FCG_Housing();
     else
@@ -1307,7 +1307,7 @@ if ($preview) {
       translate([FiringPinHousingLength(),0,0])
       FCG_Housing();
   
-  if (_RENDER == "FCG_Hammer")
+  if (_RENDER == "Prints/FCG_Hammer")
     if (!_RENDER_PRINT)
       FCG_Hammer();
     else
@@ -1315,7 +1315,7 @@ if ($preview) {
       translate([-FCG_HammerCockedX,0,0])
       FCG_Hammer();
   
-  if (_RENDER == "FCG_HammerTail")
+  if (_RENDER == "Prints/FCG_HammerTail")
     if (!_RENDER_PRINT)
       FCG_HammerTail();
     else
@@ -1323,14 +1323,14 @@ if ($preview) {
       translate([-FCG_HammerTailMinX,0,0])
       FCG_HammerTail();
   
-  if (_RENDER == "FCG_ChargingHandle")
+  if (_RENDER == "Prints/FCG_ChargingHandle")
     if (!_RENDER_PRINT)
       FCG_ChargingHandle();
     else
       translate([ReceiverLength(),0,-ReceiverTopSlotHeight()+ReceiverTopSlotHorizontalHeight()])
       FCG_ChargingHandle();
   
-  if (_RENDER == "FCG_Disconnector")
+  if (_RENDER == "Prints/FCG_Disconnector")
     if (!_RENDER_PRINT)
       FCG_Disconnector();
     else
@@ -1338,7 +1338,7 @@ if ($preview) {
       translate([-FCG_DisconnectorPivotX,-FCG_DisconnectorOffsetY,-FCG_DisconnectorPivotZ])
       FCG_Disconnector();
   
-  if (_RENDER == "FCG_FiringPinCollar")
+  if (_RENDER == "Prints/FCG_FiringPinCollar")
     if (!_RENDER_PRINT)
       FCG_FiringPinCollar();
     else
@@ -1349,64 +1349,64 @@ if ($preview) {
   // *********************
   // * Fixtures and Jigs *
   // *********************
-  if (_RENDER == "FCG_SearJig")
+  if (_RENDER == "Fixtures/FCG_SearJig")
   FCG_SearJig();
   
-  if (_RENDER == "FCG_RecoilPlate_Fixture")
+  if (_RENDER == "Fixtures/FCG_RecoilPlate_Fixture")
   FCG_RecoilPlate_Fixture();
   
-  if (_RENDER == "FCG_RecoilPlate_GangFixture")
+  if (_RENDER == "Fixtures/FCG_RecoilPlate_GangFixture")
   FCG_RecoilPlate_GangFixture();
   
-  if (_RENDER == "FCG_RecoilPlate_TapGuide")
+  if (_RENDER == "Fixtures/FCG_RecoilPlate_TapGuide")
   FCG_RecoilPlate_TapGuide();
   
-  if (_RENDER == "FCG_RecoilPlate_Projection")
+  if (_RENDER == "Projection/FCG_RecoilPlate")
   projection() rotate([0,90,0])
   RecoilPlate(template=true, contoured=FCG_RECOIL_PLATE_CONTOURED);
   
   // ************
   // * Hardware *
   // ************
-  if (_RENDER == "FCG_DisconnectorTripBolt")
+  if (_RENDER == "Hardware/FCG_DisconnectorTripBolt")
   FCG_DisconnectorTripBolt();
   
-  if (_RENDER == "FCG_DisconnectorPivotPin")
+  if (_RENDER == "Hardware/FCG_DisconnectorPivotPin")
   FCG_DisconnectorPivotPin();
   
-  if (_RENDER == "FCG_DisconnectorSpring")
+  if (_RENDER == "Hardware/FCG_DisconnectorSpring")
   FCG_DisconnectorSpring();
   
-  if (_RENDER == "FCG_HammerBolt")
+  if (_RENDER == "Hardware/FCG_HammerBolt")
   FCG_HammerBolt();
   
-  if (_RENDER == "FCG_ActionRod")
+  if (_RENDER == "Hardware/FCG_ActionRod")
   ActionRod();
   
-  if (_RENDER == "FCG_Sear")
+  if (_RENDER == "Hardware/FCG_Sear")
   Sear();
   
-  if (_RENDER == "FCG_SearPin")
+  if (_RENDER == "Hardware/FCG_SearPin")
   SearPin();
   
-  if (_RENDER == "FCG_FiringPin")
+  if (_RENDER == "Hardware/FCG_FiringPin")
   FiringPin();
   
-  if (_RENDER == "FCG_FiringPinSpring")
+  if (_RENDER == "Hardware/FCG_FiringPinSpring")
   FiringPinSpring();
   
-  if (_RENDER == "FCG_RecoilPlateCenterBolts")
+  if (_RENDER == "Hardware/FCG_RecoilPlateCenterBolts")
   RecoilPlateCenterBolts();
   
-  if (_RENDER == "FCG_RecoilPlateSideBolts")
+  if (_RENDER == "Hardware/FCG_RecoilPlateSideBolts")
   RecoilPlateSideBolts();
   
-  if (_RENDER == "FCG_RecoilPlate")
+  if (_RENDER == "Hardware/FCG_RecoilPlate")
   RecoilPlate();
   
-  if (_RENDER == "FCG_ChargingHandleBolt")
+  if (_RENDER == "Hardware/FCG_ChargingHandleBolt")
   FCG_ChargingHandleBolt();
   
-  if (_RENDER == "FCG_ChargingHandleSpring")
+  if (_RENDER == "Hardware/FCG_ChargingHandleSpring")
   FCG_ChargingHandleSpring();
 }

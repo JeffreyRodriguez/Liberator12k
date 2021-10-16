@@ -36,7 +36,7 @@ use <../Stock.scad>;
 /* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "ReceiverFront", "FrameSpacer", "Foregrip", "VerticalForegrip", "CylinderCore", "CylinderShell", "BarrelSupport", "ForendSpindleToggleLinkage", "ForendSpindleToggleHandle", "Projection_Cylinder", "Projection_CylinderCore", "Projection_BlastPlate", "Projection_RecoilPlate"]
+_RENDER = ""; // ["", "Prints/ReceiverFront", "Prints/FrameSpacer", "Prints/Foregrip", "Prints/VerticalForegrip", "Prints/CylinderCore", "Prints/CylinderShell", "Prints/BarrelSupport", "Prints/ForendSpindleToggleLinkage", "Prints/ForendSpindleToggleHandle", "Projection/Cylinder", "Projection/CylinderCore", "Projection/BlastPlate", "Projection/RecoilPlate"]
 
 /* [Assembly] */
 
@@ -923,20 +923,20 @@ if ($preview) {
   RevolverAssembly();
 } else {
 
-  if (_RENDER == "ReceiverFront")
+  if (_RENDER == "Prints/ReceiverFront")
   rotate([0,-90,0])
   Revolver_ReceiverFront();
   
-  if (_RENDER == "FrameSpacer")
+  if (_RENDER == "Prints/FrameSpacer")
   rotate([0,-90,0])
   translate([0,0,-FrameBoltZ()])
   Revolver_FrameSpacer();
   
-  if (_RENDER == "BarrelSupport")
+  if (_RENDER == "Prints/BarrelSupport")
   rotate([0,90,0]) translate([-ForendMaxX(),0,0])
   Revolver_BarrelSupport();
   
-  if (_RENDER == "CylinderShell")
+  if (_RENDER == "Prints/CylinderShell")
   difference() {
     translate([0,0, CYLINDER_LENGTH])
     rotate([0,180,0])
@@ -945,7 +945,7 @@ if ($preview) {
     cylinder(r=CYLINDER_OFFSET+0.0625, h=CYLINDER_LENGTH+ManifoldGap());
   }
   
-  if (_RENDER == "CylinderCore")
+  if (_RENDER == "Prints/CylinderCore")
   intersection() {
     translate([0,0, CYLINDER_LENGTH])
     rotate([0,180,0])
@@ -953,25 +953,25 @@ if ($preview) {
     
     cylinder(r=CYLINDER_OFFSET-(BARREL_DIAMETER*0.33), h=0.5);
   }
+  
+  if (_RENDER == "Prints/Foregrip")
+  Revolver_Foregrip_print();
 
-  if (_RENDER == "ForendSpindleToggleLinkage")
+  if (_RENDER == "Prints/ForendSpindleToggleLinkage")
   rotate([-90,0,0])
   translate([-SpindleLinkagePinX(),-0.5,-CylinderZ()])
   Revolver_ForendSpindleToggleLinkage();
 
-  if (_RENDER == "ForendSpindleToggleHandle")
+  if (_RENDER == "Prints/ForendSpindleToggleHandle")
   rotate([90,0,0])
   translate([-SpindlePinMinX(),(5/16/2),-CylinderZ()])
   Revolver_ForendSpindleToggleHandle();
   
-  if (_RENDER == "Cylinder_Projection")
+  if (_RENDER == "Projection/Cylinder")
   projection()
   Revolver_Cylinder(chambers=false);
   
-  if (_RENDER == "Foregrip")
-  Revolver_Foregrip_print();
-  
-  if (_RENDER == "Projection_CylinderCore")
+  if (_RENDER == "Projection/CylinderCore")
   projection(cut=true)
   intersection() {
     translate([0,0, CYLINDER_LENGTH])
@@ -981,7 +981,7 @@ if ($preview) {
     cylinder(r=CYLINDER_OFFSET-(BARREL_DIAMETER*0.33), h=0.5);
   }
   
-  if (_RENDER == "Projection_BlastPlate")
+  if (_RENDER == "Projection/BlastPlate")
   projection()
   rotate([0,-90,0])
   translate([-BarrelMinX(),0,-CylinderZ()])

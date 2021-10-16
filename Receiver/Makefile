@@ -3,51 +3,40 @@ include ../Makefile.in
 Components=Receiver Frame Stock FCG Lower
 Components_HTML=$(addsuffix .html, $(Components))
 
-Lower_Parts=Lower_Left Lower_Middle Lower_Right \
-						Lower_MountFront Lower_MountRear
-Lower_Hardware=Lower_Bolts Lower_MountTakedownPinRetainer
+Frame_Renders=$(addprefix Frame/,$(call list_renders,Frame.scad))
+Lower_Renders=$(addprefix Lower/,$(call list_renders,Lower.scad))
+Receiver_Renders=$(addprefix Receiver/,$(call list_renders,Receiver.scad))
+Stock_Renders=$(addprefix Stock/,$(call list_renders,Stock.scad))
+FCG_Renders=$(addprefix FCG/,$(call list_renders,FCG.scad))
 
-Receiver_Parts=Receiver Receiver_Back
-Receiver_Hardware=Receiver_MlokBolts Receiver_TakedownPin Receiver_TensionBolts
 
-Frame_Parts=Frame_Receiver
-Frame_Hardware=Frame_Bolts
+Renders:=$(Frame_Renders) $(Lower_Renders) $(Receiver_Renders) $(Stock_Renders) $(FCG_Renders)
+Prints := $(filter Prints/%, $(Renders))
+Fixtures := $(filter Fixtures/%, $(Renders))
+Projections := $(filter Projection/%, $(Renders))
+Hardware := $(filter Hardware/%, $(Renders))
 
-Stock_Parts=Stock Stock_Buttpad Stock_Backplate
-Stock_Hardware=Stock_ButtpadBolt Stock_TakedownPin Stock_TakedownPinRetainer
+Prints_STL=$(addsuffix .stl, $(Prints))
+Prints_STL_png=$(addsuffix .png, $(Prints))
+Prints_STL_thumb=$(addsuffix _thumb.jpg, $(Prints))
 
-FCG_Parts=FCG_Housing FCG_Disconnector FCG_FiringPinCollar \
-          FCG_ChargingHandle \
-				  FCG_Hammer FCG_HammerTail \
-				  FCG_Trigger FCG_TriggerMiddle
-FCG_Hardware=FCG_ActionRod FCG_RecoilPlate \
-             FCG_DisconnectorTripBolt FCG_DisconnectorPivotPin \
-						 FCG_HammerBolt FCG_Sear FCG_FiringPin FCG_FiringPinSpring \
-						 FCG_RecoilPlateCenterBolts FCG_RecoilPlateSideBolts \
-						 FCG_ChargingHandleBolt FCG_ChargingHandleSpring
+Fixtures_STL=$(filter-out Projection/,$(filter-out Hardware/,$(addsuffix .stl, $(Prints))))
+Fixtures_STL_png=$(addsuffix .png, $(Prints))
+Fixtures_STL_thumb=$(addsuffix _thumb.jpg, $(Prints))
 
-Receiver_STL=$(addsuffix .stl, $(Receiver_Parts))
-Frame_STL=$(addsuffix .stl, $(Frame_Parts))
-Stock_STL=$(addsuffix .stl, $(Stock_Parts))
-FCG_STL=$(addsuffix .stl, $(FCG_Parts))
-
-Parts=$(Receiver_Parts) $(Frame_Parts) $(Stock_Parts) $(FCG_Parts) $(Lower_Parts)
-Parts_STL=$(addsuffix .stl, $(Parts))
-Parts_STL_png=$(addsuffix .png, $(Parts))
-Parts_STL_thumb=$(addsuffix _thumb.jpg, $(Parts))
-
-Hardware=$(Receiver_Hardware) $(Frame_Hardware) $(Stock_Hardware) $(FCG_Hardware) $(Lower_Hardware)
 Hardware_STL= $(addsuffix .stl, $(Hardware))
 
-Assembly_STL=$(addprefix Assembly/, $(Parts_STL) $(Hardware_STL))
+Assembly_STL=$(addprefix Assembly/, $(Prints_STL) $(Hardware_STL))
 Assembly: $(Assembly_STL)
 
+# Special previews, specific configurations
 Preview=Minuteman Frame Stock Lower FCG CAFE12 FP37
+Preview_PNG=$(addprefix Preview_,$(addsuffix .png, $(Preview)))
 Preview_JPG=$(addprefix Preview_,$(addsuffix .jpg, $(Preview)))
 
 Previews: $(Preview_JPG)
 
-TARGETS = README.html $(Preview_JPG) $(Components_HTML) $(Parts_STL) $(Parts_STL_png) $(Parts_STL_thumb) $(Preview_STL) $(Assembly_STL)
+TARGETS = README.html $(Preview_JPG) $(Preview_PNG) $(Components_HTML) $(Prints_STL) $(Prints_STL_png) $(Prints_STL_thumb) $(Preview_STL) $(Assembly_STL)
 
 Preview_Minuteman.png: Assembly.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
@@ -98,17 +87,17 @@ Preview_CAFE12.png: Assembly.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
 		--projection=p --camera=200,1500,200,0,0,0 \
 		-D _FOREND='"TopBreak"' \
-		-P "CAFE12" \
+		-p Forend/TopBreak.json -P "CAFE12" \
 		$<
 Preview_FP37.png: Assembly.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
 		--projection=p --camera=200,1500,200,0,0,0 \
 		-D _FOREND='"TopBreak"' \
-		-P "FP37" \
+		-p Forend/TopBreak.json -P "FP37" \
 		$<
 		
 .SECONDEXPANSION:
-$(addsuffix .html,$(Components)): $$(addsuffix _thumb.jpg, $$($$@_Parts))
+$(addsuffix .html,$(Components)): $$(addsuffix _thumb.jpg, $$($$@_Renders))
 # $(STLS): $$($$@_thumbnails)
 # 	$(eval SOURCE=$(shell echo $($@) | awk -F _ '{ print $$1 }'))
 # 	$(eval PART=$(basename $(notdir $@)))

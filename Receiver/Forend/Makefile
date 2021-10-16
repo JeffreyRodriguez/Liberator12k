@@ -5,42 +5,17 @@ CLASSES := TopBreak Revolver
 CLASS_HTML := $(addsuffix .html,$(CLASSES))
 
 # Forend Class Parts
-TopBreak_Parts := ReceiverFront \
-		              Forend \
-									Cluster\
-									VerticalForegrip \
-                  BarrelCollar \
-                  Extractor \
-									LatchTab \
-						      Sightpost \
-						      Fixture/BarrelSleeveFixture
-TopBreak_Hardware := Hardware/Barrel \
-                     Hardware/ExtractorBit \
-										 Hardware/ExtractorRetainer \
-										 Hardware/LatchBars \
-										 Hardware/MlokBolts \
-										 Hardware/ClusterBolts \
-										 Hardware/SightpostBolts
+TopBreak_Renders := $(call list_renders,TopBreak.scad)
+TopBreak_Prints := $(filter Prints/%, $(TopBreak_Renders))
+TopBreak_Fixtures := $(filter Fixtures/%, $(TopBreak_Renders))
+TopBreak_Projections := $(filter Projection/%, $(TopBreak_Renders))
+TopBreak_Hardware := $(filter Hardware/%, $(TopBreak_Renders))
 
-Revolver_Parts := ReceiverFront \
-						      FrameSpacer \
-						      BarrelSupport \
-						      Foregrip \
-						      CylinderCore \
-						      CylinderShell \
-						      ForendSpindleToggleLinkage \
-						      ForendSpindleToggleHandle
-
-# Revolver_Hardware := Barrel \
-#                      CylinderSpindle \
-# 										 ForendSpindle \
-# 										 ForendSpindlePin \
-# 										 ForendSpindleLinkagePin \
-# 										 ForendSpindleTogglePin \
-# 										 PumpLockRod \
-# 										 BlastPlateBolts \
-# 										 BlatePlate \
-# 										 Shield
+Revolver_Renders := $(call list_renders,Revolver.scad)
+Revolver_Prints := $(filter Prints/%, $(Revolver_Renders))
+Revolver_Fixtures := $(filter Fixtures/%, $(Revolver_Renders))
+Revolver_Projections := $(filter Projection/%, $(Revolver_Renders))
+Revolver_Hardware := $(filter Hardware/%, $(Revolver_Renders))
 
 # Forend Presets
 TopBreak_PRESETS := CAFE12 CAFE12+ FP37
@@ -49,20 +24,18 @@ Revolver_PRESETS := ZZR6x12
 PRESETS := $(addprefix TopBreak_,$(TopBreak_PRESETS)) $(addprefix Revolver_,$(Revolver_PRESETS))
 
 # All Part STLs for all forend presets Class_Preset/Part.stl
-TopBreak_STLS := $(addprefix TopBreak_, $(foreach PRESET,$(TopBreak_PRESETS),$(addsuffix .stl, $(addprefix $(addsuffix /, $(PRESET)),$(TopBreak_Parts)))))
-Revolver_STLS := $(addprefix Revolver_, $(foreach PRESET,$(Revolver_PRESETS),$(addsuffix .stl, $(addprefix $(addsuffix /, $(PRESET)),$(Revolver_Parts)))))
+TopBreak_STLS := $(addprefix TopBreak_, $(foreach PRESET,$(TopBreak_PRESETS),$(addsuffix .stl, $(addprefix $(addsuffix /, $(PRESET)),$(TopBreak_Prints)))))
+Revolver_STLS := $(addprefix Revolver_, $(foreach PRESET,$(Revolver_PRESETS),$(addsuffix .stl, $(addprefix $(addsuffix /, $(PRESET)),$(Revolver_Prints)))))
 
-TopBreak_Hardware_STL := $(addprefix TopBreak_, $(foreach PRESET,$(TopBreak_PRESETS),$(addsuffix .stl, $(addprefix $(addsuffix /, $(PRESET)),$(TopBreak_Hardware)))))
-Revolver_Hardware_STL := $(addprefix Revolver_, $(foreach PRESET,$(Revolver_PRESETS),$(addsuffix .stl, $(addprefix $(addsuffix /, $(PRESET)),$(Revolver_Hardware)))))
+Forend_STLS := $(TopBreak_STLS) $(Revolver_STLS)
 
-PRESET_STLS := $(TopBreak_STLS) $(Revolver_STLS)
+PRESET_STLS := $(filter-out */Projection/, $(filter-out Hardware/, $(Forend_STLS)))
 PRESET_THUMBS := $(addsuffix _thumb.jpg,$(basename $(PRESET_STLS)))
 PRESET_ASSEMBLY_PNG := $(addsuffix /Assembly.png,$(PRESETS))
 PRESET_HTML := $(addsuffix /README.html,$(PRESETS))
 PRESET_MP4 := $(addsuffix .mp4, $(PRESET_STLS))
 
-
-Assembly_STL=$(addprefix Assembly/, $(TopBreak_STLS) $(TopBreak_Hardware_STL) $(Revolver_STLS) $(Revolver_Hardware_STL));
+Assembly_STL=$(addprefix Assembly/, $(TopBreak_STLS) $(Revolver_STLS));
 
 Assembly: $(Assembly_STL)
 

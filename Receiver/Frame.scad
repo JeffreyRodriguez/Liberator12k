@@ -19,7 +19,7 @@ use <Receiver.scad>;
 /* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Frame_Receiver"]
+_RENDER = ""; // ["", "Prints/Frame_Receiver"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;
@@ -276,7 +276,7 @@ if ($preview) {
   // *****************
   // * Printed Parts *
   // *****************
-  if (_RENDER == "Frame_Receiver")
+  if (_RENDER == "Prints/Frame_Receiver")
     if (!_RENDER_PRINT)
       Frame_Receiver();
     else
@@ -286,6 +286,6 @@ if ($preview) {
   // ************
   // * Hardware *
   // ************
-  if (_RENDER == "Frame_Bolts")
+  if (_RENDER == "Hardware/Frame_Bolts")
   Frame_Bolts();
 }

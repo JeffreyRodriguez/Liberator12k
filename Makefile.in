@@ -17,24 +17,22 @@ SUBDIRS := $(filter-out Source/,$(dir $(wildcard */Makefile)))
 $(SUBDIRS): FORCE
 	$(MAKE) -C $@
 	
-define list_parts
-	grep -oP '_RENDER == "(.+)"' $< | cut -d \" -f 2 | sort > $@
-endef
+list_renders = $(shell grep -oP '_RENDER == "(.+)"' '$(strip $(1))' | cut -d \" -f 2 | sort)
 
 Assembly/:
 	mkdir -p Assembly
 	
 %.parts: %.scad
 	@# Search for all the _RENDER == "*" lines and extract the part names
-	echo $(call list_parts, $< ) > $@
+	echo $(call list_renders,$<) > $@
 
 #Assembly/*.stl:
-%.png %.stl:
-	$(eval NAME=$(subst Assembly/, ,$(basename $@)))
+%.svg %.dxf %.png %.stl:
+	$(eval NAME=$(subst Assembly/,,$(basename $@)))
 	$(eval CLASS_PRESET=$(firstword $(subst /, ,$(NAME))))
 	$(eval CLASS=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$1 }'))
 	$(eval PRESET=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$2 }'))
-	$(eval PART=$(basename $(notdir $@)))
+	$(eval PART=$(subst $(CLASS_PRESET)/,,$(NAME)))
 	$(eval RENDER_PRINT=$(if $(findstring Assembly/,$@),false,true) )
 	$(eval RENDER_MODE=$(if $(findstring Assembly.png,$@),--preview,--render) )
 	@echo Target: $@
@@ -48,7 +46,7 @@ Assembly/:
 	@echo Render for Print: $(RENDER_PRINT)
 	@echo Render Mode: $(RENDER_MODE)
 	mkdir -p $(dir $@) && \
-	$(OSBIN) $(OSOPTS) -o $@ -o $(basename $@).png \
+	$(OSBIN) $(OSOPTS) -o $@ \
 		$(RENDER_MODE) --projection=p --autocenter --viewall --view scales \
 		$(if $(PRESET),-p $(CLASS).json -P $(PRESET),) \
 		-D _RENDER=\"$(PART)\" \

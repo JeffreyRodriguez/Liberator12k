@@ -603,7 +603,7 @@ if ($preview) {
   // *****************
   // * Printed Parts *
   // *****************
-  if (_RENDER == "Lower_Left")
+  if (_RENDER == "Prints/Lower_Left")
     if (!_RENDER_PRINT)
       Lower_SidePlates(showLeft=true, showRight=false);
     else
@@ -612,7 +612,7 @@ if ($preview) {
       translate([0,-0.25,2.125])
       Lower_SidePlates(showLeft=true, showRight=false);
 
-  if (_RENDER == "Lower_Right")
+  if (_RENDER == "Prints/Lower_Right")
     if (!_RENDER_PRINT)
       Lower_SidePlates(showLeft=false, showRight=true);
     else
@@ -620,7 +620,7 @@ if ($preview) {
       translate([0,0.25,2.125])
       Lower_SidePlates(showLeft=false, showRight=true);
 
-  if (_RENDER == "Lower_Middle")
+  if (_RENDER == "Prints/Lower_Middle")
     if (!_RENDER_PRINT)
       Lower_Middle();
     else
@@ -629,7 +629,7 @@ if ($preview) {
       translate([0,0.25,2.125])
       Lower_Middle();
 
-  if (_RENDER == "Lower_MountFront")
+  if (_RENDER == "Prints/Lower_MountFront")
     if (!_RENDER_PRINT)
       Lower_MountFront();
     else
@@ -637,7 +637,7 @@ if ($preview) {
     translate([0.5,0,-ReceiverBottomZ()])
     Lower_MountFront();
     
-  if (_RENDER == "Lower_MountRear")
+  if (_RENDER == "Prints/Lower_MountRear")
     if (!_RENDER_PRINT)
       Lower_MountRear();
     else
@@ -653,10 +653,10 @@ if ($preview) {
   // ************
   // * Hardware *
   // ************
-  if (_RENDER == "Lower_Bolts")
+  if (_RENDER == "Hardware/Lower_Bolts")
   Lower_Bolts();
   
-  if (_RENDER == "Lower_MountTakedownPinRetainer")
+  if (_RENDER == "Hardware/Lower_MountTakedownPinRetainer")
   Lower_MountTakedownPinRetainer();
 
 }

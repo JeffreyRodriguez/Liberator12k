@@ -1111,7 +1111,7 @@ if ($preview) {
   // *****************
   // * Printed Parts *
   // *****************
-  if (_RENDER == "BarrelCollar")
+  if (_RENDER == "Prints/BarrelCollar")
     if (!_RENDER_PRINT)
       TopBreak_BarrelCollar();
     else
@@ -1119,7 +1119,7 @@ if ($preview) {
       rotate([0,90,0])
       TopBreak_BarrelCollar();
 
-  if (_RENDER == "ReceiverFront")
+  if (_RENDER == "Prints/ReceiverFront")
     if (!_RENDER_PRINT)
       TopBreak_ReceiverFront();
     else
@@ -1127,7 +1127,7 @@ if ($preview) {
       translate([--TopBreak_ReceiverFrontLength(),0,0])
       TopBreak_ReceiverFront();
 
-  if (_RENDER == "Forend")
+  if (_RENDER == "Prints/Forend")
     if (!_RENDER_PRINT)
       TopBreak_Forend(doRender=false);
     else
@@ -1135,7 +1135,7 @@ if ($preview) {
       translate([-ForendLength(),0,0])
       TopBreak_Forend(doRender=false);
 
-  if (_RENDER == "Cluster")
+  if (_RENDER == "Prints/Cluster")
     if (!_RENDER_PRINT)
       TopBreak_Cluster();
     else
@@ -1143,7 +1143,7 @@ if ($preview) {
       translate([-BarrelSleeveLength()-1.5,0,0])
       TopBreak_Cluster();
 
-  if (_RENDER == "VerticalForegrip")
+  if (_RENDER == "Prints/VerticalForegrip")
     if (!_RENDER_PRINT)
       TopBreak_VerticalForegrip();
     else
@@ -1151,7 +1151,7 @@ if ($preview) {
       translate([-(BarrelSleeveLength()+0.25),0,-(-BarrelRadius()-0.75)])
       TopBreak_VerticalForegrip();
 
-  if (_RENDER == "Foregrip")
+  if (_RENDER  == "Foregrip")
     if (!_RENDER_PRINT)
       TopBreak_Foregrip();
     else
@@ -1160,28 +1160,28 @@ if ($preview) {
       translate([-(TopBreak_ForegripOffsetX()+ChargerTravel()),0,0])
       TopBreak_Foregrip();
 
-  if (_RENDER == "Extractor")
+  if (_RENDER == "Prints/Extractor")
     if (!_RENDER_PRINT)
       TopBreak_Extractor();
     else
       translate([0,0,-TopBreak_ExtractorZ()])
       TopBreak_Extractor();
 
-  if (_RENDER == "Latch")
+  if (_RENDER == "Prints/Latch")
     if (!_RENDER_PRINT)
       TopBreak_LatchBars();
     else
       translate([0,0,-TopBreak_LatchZ()])
       TopBreak_LatchBars(doMirror=false);
 
-  if (_RENDER == "LatchTab")
+  if (_RENDER == "Prints/LatchTab")
     if (!_RENDER_PRINT)
       TopBreak_LatchTab();
     else
       translate([0,0,-TopBreak_LatchZ()])
       TopBreak_LatchTab();
 
-  if (_RENDER == "Sightpost")
+  if (_RENDER == "Prints/Sightpost")
     if (!_RENDER_PRINT)
       translate([BarrelLength()-1,0,0])
       rotate([0,-90,0])
@@ -1193,7 +1193,7 @@ if ($preview) {
   // ********************
   // * Fixures and Jigs *
   // ********************
-  if (_RENDER == "BarrelSleeveFixture")
+  if (_RENDER == "Fixtures/BarrelSleeveFixture")
     if (!_RENDER_PRINT)
       TopBreak_Fixture_BarrelSleeve();
     else
@@ -1202,28 +1202,28 @@ if ($preview) {
   // ************
   // * Hardware *
   // ************
-  if (_RENDER == "Barrel")
+  if (_RENDER == "Hardware/Barrel")
   TopBreak_Barrel();
   
-  if (_RENDER == "ExtractorBit")
+  if (_RENDER == "Hardware/ExtractorBit")
   TopBreak_ExtractorBit();
   
-  if (_RENDER == "ExtractorRetainer")
+  if (_RENDER == "Hardware/ExtractorRetainer")
   TopBreak_ExtractorRetainer();
   
-  if (_RENDER == "MlokBolts")
+  if (_RENDER == "Hardware/MlokBolts")
   TopBreak_MlokBolts();
   
-  if (_RENDER == "ClusterBolts")
+  if (_RENDER == "Hardware/ClusterBolts")
   TopBreak_ClusterBolts();
   
-  if (_RENDER == "LatchBars")
+  if (_RENDER == "Hardware/LatchBars")
   TopBreak_LatchBars();
   
-  if (_RENDER == "LatchScrews")
+  if (_RENDER == "Hardware/LatchScrews")
   TopBreak_LatchScrews();
   
-  if (_RENDER == "SightpostBolts")
+  if (_RENDER == "Hardware/SightpostBolts")
   translate([BarrelLength()-1,0,0])
   rotate([0,-90,0])
   SightpostBolts(radius=BarrelRadius());

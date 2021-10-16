@@ -336,7 +336,7 @@ if ($preview) {
   // *****************
   // * Printed Parts *
   // *****************
-  if (_RENDER == "Stock")
+  if (_RENDER == "Prints/Stock")
     if (!_RENDER_PRINT)
       Stock();
     else
@@ -344,7 +344,7 @@ if ($preview) {
       translate([ReceiverLength()+StockLength(),0,0])
       Stock();
   
-  if (_RENDER == "Stock_Buttpad")
+  if (_RENDER == "Prints/Stock_Buttpad")
     if (!_RENDER_PRINT)
       Stock_Buttpad();
     else
@@ -352,7 +352,7 @@ if ($preview) {
       translate([StockLength()+ReceiverLength()+ButtpadLength(),0,0])
       Stock_Buttpad();
   
-  if (_RENDER == "Stock_Backplate")
+  if (_RENDER == "Prints/Stock_Backplate")
     if (!_RENDER_PRINT)
       Stock_Backplate();
     else
@@ -363,12 +363,12 @@ if ($preview) {
   // ************
   // * Hardware *
   // ************
-  if (_RENDER == "Stock_ButtpadBolt")
+  if (_RENDER == "Hardware/Stock_ButtpadBolt")
   Stock_ButtpadBolt();
   
-  if (_RENDER == "Stock_TakedownPin")
+  if (_RENDER == "Hardware/Stock_TakedownPin")
   Stock_TakedownPin();
   
-  if (_RENDER == "Stock_TakedownPinRetainer")
+  if (_RENDER == "Hardware/Stock_TakedownPinRetainer")
   Stock_TakedownPinRetainer();
 }

@@ -412,14 +412,14 @@ scale(25.4) if ($preview) {
   // *****************
   // * Printed Parts *
   // *****************
-  if (_RENDER == "Receiver")
+  if (_RENDER == "Prints/Receiver")
     if (!_RENDER_PRINT)
       Receiver();
     else
       rotate([0,90,0])
       Receiver();
 
-  if (_RENDER == "Receiver_Back")
+  if (_RENDER == "Prints/Receiver_Back")
     if (!_RENDER_PRINT)
       ReceiverBackSegment();
     else
@@ -427,7 +427,7 @@ scale(25.4) if ($preview) {
     translate([ReceiverLength()+ReceiverBackLength(),0,0])
     ReceiverBackSegment();
   
-  if (_RENDER == "Receiver_Projection")
+  if (_RENDER == "Projection/Receiver")
   projection()
   rotate([0,90,0])
   difference() {
@@ -441,10 +441,10 @@ scale(25.4) if ($preview) {
   // ************
   // * Hardware *
   // ************
-  if (_RENDER == "Receiver_MlokBolts")
+  if (_RENDER == "Hardware/Receiver_MlokBolts")
     Receiver_MlokBolts();
-  if (_RENDER == "Receiver_TakedownPin")
+  if (_RENDER == "Hardware/Receiver_TakedownPin")
     Receiver_TakedownPin();
-  if (_RENDER == "Receiver_TensionBolts")
+  if (_RENDER == "Hardware/Receiver_TensionBolts")
     Receiver_TensionBolts();
 }
