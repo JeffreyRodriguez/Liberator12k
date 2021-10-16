@@ -104,10 +104,10 @@ is now in your hands, use it responsibly.
 
 <!-- NEW PAGE -->
 ## Tools and Equipment
-You can print and assemble an official kit with a couple hex wrenches and an 
-adjustable wrench.
+You can print and assemble an official kit with a couple wrenches and a
+butane torch.
 
-Reaming holes in the prints is recommended, a drill bit will work but reamers
+Reaming holes in the prints is recommended. A drill bit will work, but reamers
 are a lot better. The cheap Chinese ones from Amazon work fine on plastic.
 
 If you intend to DIY everything, you'll need more tools.
