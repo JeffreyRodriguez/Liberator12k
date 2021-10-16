@@ -267,8 +267,8 @@ if ($preview) {
   Receiver_TensionBolts();
 
   if (_SHOW_RECEIVER) {
-    Frame_ReceiverAssembly();
     Receiver_MlokBolts();
+    Frame_ReceiverAssembly();
   }
 } else {
 
