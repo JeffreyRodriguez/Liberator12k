@@ -56,8 +56,10 @@ Chat with me and other builders!
 This is a US-based operation. I won't knowingly ship internationally or to a
 forwarder either, sorry!
 
-Join the chat, there's other builders around the world. There's a metric version
-but it's less well documented.
+There's a metric version but it's less well documented and the STLs
+are not included in the release. You can render them, but it's a bit manual.
+
+Join the chat, there's other builders around the world who can help out.
 
 <!-- NEW PAGE -->
 ## How to Laugh at Danger
@@ -70,7 +72,8 @@ Any experienced printer can complete this build if they buy a kit from the
 I have done my best to make sure the designs included here are safe to the user
 and bystanders.
 
-**WARNING** Pre-release designs *may not be safe* to the user **or bystanders.**
+##### WARNING
+Pre-release designs *may not be safe*.
 Use extreme caution and two doses of common sense.
 
 ### Bystander Care
@@ -99,11 +102,14 @@ DIY guns require special precautions and procedures that
 The power to create weapons is now in your hands, use it responsibly.
 
 <!-- NEW PAGE -->
-## Equipmen
-You can print and assemble the official kit with a few basic tools.
-Reamers for holes in the prints are recommended, but a drill bit will work too.
+## Tools and Equipment
+You can print and assemble an official kit with a couple hex wrenches and an 
+adjustable wrench.
 
-If you intend to DIY everything, you'll need a few more tools and equipment.
+Reaming holes in the prints is recommended, a drill bit will work but reamers
+are a lot better. The cheap Chinese ones from Amazon work fine on plastic.
+
+If you intend to DIY everything, you'll need more tools.
 There's not a lot of "machining" required - a couple tapped holes in flat plate
 and square rods. Contouring the recoil plate with a grinder would suck, but it
 can be done.
@@ -127,6 +133,15 @@ in the first place.
 Spend a few bucks on a Spiral Point or Spiral Flute tap.
 I like spiral point, myself. You only need one, but buy two just in case.
 
+### "Close Enough"
+All the parts are inch-standard (or all-metric), but there are "close enough"
+metric equivalents that are readily available even if you live in the US.
+
+Sometimes it's easier and *much* cheaper to find certain parts in metric, that's
+especially true for little stainless pins.
+3/32" is just under 2.5mm, and a \#39 drill bit is just over 2.5mm.
+
+<!-- NEW PAGE -->
 ### Metric and/or Inch
 In general, here's how things go between inch and mm in this project:
 
@@ -138,14 +153,7 @@ In general, here's how things go between inch and mm in this project:
 | Medium Screws | 1/4"-20 | M6     |
 | Large Screws  | 1/2"-13 | 12mm   |
 | Square Rods   | 1/4"    | 6mm    |
-
-### "Close Enough"
-All the parts are inch-standard (or all-metric), but there are "close enough"
-metric equivalents that are readily available even if you live in the US.
-
-Sometimes it's easier and *much* cheaper to find certain parts in metric, that's
-especially true for little stainless pins.
-3/32" is just under 2.5mm, and a \#39 drill bit is just over 2.5mm.
+<br/>
 
 ### Drill Bits
  * 5/16"
@@ -153,13 +161,38 @@ especially true for little stainless pins.
  * \#39 or 2.5mm
 
 ### Reamers
-You can use a drill bit in a pinch, but reamers are best.
  * 11/64" - \#8-32 Clearance
  * 1/4"
  * 5/16"
  * 1/2"
  * \#39 or 2.5mm
  
-#### Taps
+### Taps
  * \#8-32
- 
+
+<!-- NEW PAGE -->
+## How to Read the Manual
+Complete assemblies are built from several reusable components.
+Each component in this manual has its own fabrication instructions.
+The component sub-chapters all follow the same pattern.
+
+#### Preview
+The component previewed in the assembly.
+Refer to *Figure 1: The Minuteman Receiver* to orient yourself.
+
+#### Description
+A brief description of the component and its purpose.
+
+#### Prints List
+A table of parts to be printed. Includes the part name and a thumbnail view of
+the model in its print orientation.
+
+#### Post-Processing
+Details on how to finish the prints, hardware installation instructions, and any
+notes on sub-assemblies.
+
+##### Technical Notes and Alternatives
+Explains why certain decisions were made, what's important to consider when
+building the component.
+
+Includes any pertinent information about alternate hardware.

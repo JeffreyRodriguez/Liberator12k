@@ -10,42 +10,26 @@ most of the designs in the project.
 There are other ways to configure the receiver,
 but we'll save that for your second build.
 
+After the receiver is assembled, we can continue on to building a CAFE12 forend.
+To put this in AR15 terms: we're going to build the lower first, then the upper.
+
+[Chapter 2: Choose Your Weapon](Forend/README.md) covers the different
+forend configurations in detail, but for now lets focus on the receiver.
 This chonk has two big 1/2" bolts to support heavy forends.
 Steel rods reinforce the receiver and stock.
 A flexible filament buttpad reduces felt recoil.
 
-### About Components
-The Minuteman Receiver is built from several reusable components.
-Each component in this manual has its own fabrication instructions.
-The component sub-chapters contain the following information.
-
-##### Preview
-The component previewed in the assembly.
-Refer to *Figure 1: The Minuteman Receiver* to orient yourself.
-
-##### Prints
-A table of parts to be printed. Includes the part name and a thumbnail view of
-the model in its print orientation.
-
-##### Post-Processing
-Details on how to finish the prints, hardware installation instructions, and any
-notes on sub-assemblies.
-
-##### Technical Notes and Alternatives
-This section explains why certain decisions were made, what's important to
-consider when building the component.
-
-Includes any pertinent information about alternate hardware.
+### Minuteman Component List
+This is the list of components we'll be building first.
+Keep scrolling and we'll get through them all in order.
 
 * [1.1 Large Framed Receiver](Frame.md)
 * [1.2 Fire Control Group](FCG.md)
 * [1.3 Lower](Lower.md)
 * [1.4 Stock](Stock.md)
-[Chapter 2: Choose Your Weapon](Forend/README.md) covers the different
-forend configurations in detail.
 
 <!-- NEW PAGE -->
-## Printing
+## Preparing to Print
 
 ### Pick Your Colors
 Two-tone is canon - that means it's official.
