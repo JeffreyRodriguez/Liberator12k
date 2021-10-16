@@ -1,11 +1,17 @@
 # 1.1: Large Frame Receiver
 
-![Large Frame Receiver](Preview_Frame_Receiver.jpg)
+![Large Frame Receiver](Preview_Frame.jpg)
+
+This is the core of the gun. In the United States it's the receiver.
+Legally-speaking it's a gun. If you need to dispose of it, burn it to ash.
+Don't make one for a stranger - that's a Fed, especially if they're offering
+money in exchange. Screenshot it and ridicule them online.
 
 ## Prints
 | Frame_Receiver |
 |-|
 |![](Frame_Receiver_thumb.jpg)|
+<br/>
 
 <!-- NEW PAGE -->
 ## Post-Processing

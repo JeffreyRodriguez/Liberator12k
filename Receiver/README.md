@@ -1,17 +1,48 @@
 # 1: The "Minuteman" Receiver
 
 ![Minuteman](Preview_Minuteman.jpg)
+*Figure 1: The Minuteman Receiver*
 
 To get very technical this is a *Large Frame Receiver with a Stock*.
 That's a mouthful, so I call it the
-[Minuteman](https://en.wikipedia.org/wiki/Minutemen). It supports
+[Minuteman](https://en.wikipedia.org/wiki/Minutemen). It works with
 most of the designs in the project.
+There are other ways to configure the receiver,
+but we'll save that for your second build.
+
 This chonk has two big 1/2" bolts to support heavy forends.
 Steel rods reinforce the receiver and stock.
 A flexible filament buttpad reduces felt recoil.
 
-There are other ways to configure the receiver,
-but we'll save that for your second build.
+### About Components
+The Minuteman Receiver is built from several reusable components.
+Each component in this manual has its own fabrication instructions.
+The component sub-chapters contain the following information.
+
+##### Preview
+The component previewed in the assembly.
+Refer to *Figure 1: The Minuteman Receiver* to orient yourself.
+
+##### Prints
+A table of parts to be printed. Includes the part name and a thumbnail view of
+the model in its print orientation.
+
+##### Post-Processing
+Details on how to finish the prints, hardware installation instructions, and any
+notes on sub-assemblies.
+
+##### Technical Notes and Alternatives
+This section explains why certain decisions were made, what's important to
+consider when building the component.
+
+Includes any pertinent information about alternate hardware.
+
+* [1.1 Large Framed Receiver](Frame.md)
+* [1.2 Fire Control Group](FCG.md)
+* [1.3 Lower](Lower.md)
+* [1.4 Stock](Stock.md)
+[Chapter 2: Choose Your Weapon](Forend/README.md) covers the different
+forend configurations in detail.
 
 <!-- NEW PAGE -->
 ## Printing
@@ -31,23 +62,28 @@ splurge - do it here.
 #### Spool 3: TPU For Your Buttpad
 The buttpad was designed to be printed with "90D" TPU filament.
 90D TPU is a semi-flexible filament, and takes some of the sting out of the shot
-because it's rubbery.
+because it's rubbery. The 90D stuff will run in a stock Ender 3. Lower than 90D
+is not advised as it requires printer modifications not documented here.
 
 You may not find TPU that matches your base color, keep that in mind when you
 choose your colors.
 You can print the buttpad in any filament, but it may be more punishing than
 necessary.
 
-### Components
-Each component in the Minuteman has its own fabrication instructions.
+### Preheat the Printer and Fire up Cura
+Next we need to print the receiver parts. The STL files are located in
+the Liberator12k zip file where you found this PDF or from
+[Liberator12k.com](https://liberator12k.com/).
 
-* [1.1 Large Framed Receiver](Frame.md)
-* [1.2 Fire Control Group](FCG.md)
-* [1.3 Lower](Lower.md)
-* [1.4 Stock](Stock.md)
+Configure Cura according to the [Printing Guidelines](Printing.md) and slice
+each part for printing.
 
-[Chapter 2: Choose Your Weapon](Forend/README.md) covers the different
-forend configurations in detail.
+The models are already in the proper orientation for printing, so leave the
+bottom side down.
+You are free to position them on the build plate however you like.
+
+Printing one part at a time will produce higher quality prints,
+but it will take longer. You should know your machine.
 
 <!-- NEW PAGE -->
 ### Complete Print List
@@ -71,11 +107,19 @@ forend configurations in detail.
 | Stock_Backplate     |          |      95g |  12h05m | Accent   |
 | Stock_Buttpad       |          |     181g |  19h31m | TPU Base |
 
-Base Color: 663g
-Accent Color: 319g
-Total Printer Time - 0.4mm nozzle: 5d12h10m
+ * Base Color: 663g
+ * Accent Color: 319g
+ * Total Printer Time: 5d12h10m
 
 <br/>
+
+Total Printer Time - 0.4mm nozzle: 5d12h10m
+
+#### Filament Used
+| Color  | Weight | 
+|--------|--------|
+| Base   | 663g   |
+| Accent | 319g   |
 
 <!-- NEW PAGE -->
 ## Bill of Materials
