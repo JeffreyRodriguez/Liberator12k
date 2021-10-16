@@ -5,6 +5,7 @@ SLOW_FRAMES=$(shell seq 0 $(SLOW_FRAME_COUNT))
 MDBIN=cmark-gfm -e table --unsafe
 OSBIN=nice openscad
 OSOPTS=--hardwarnings --colorscheme=Nature 
+OS_RES_HIGH=4096,2160
 OS_CAM_AUTO=--projection=p --autocenter --viewall
 GIT_VERSION=$(shell git describe --always)
 DATE=$(shell date +'%Y-%m-%d')
@@ -18,8 +19,12 @@ SCADS := $(wildcard *.scad)
 $(SUBDIRS): FORCE
 	$(MAKE) -C $@
 	
-list_renders = $(shell grep -oP '_RENDER == "(.+)"' '$(strip $(1))' | cut -d \" -f 2 | sort)
-
+list_renders    = $(shell grep -oP '_RENDER == "(.+)"' '$(strip $(1))' | cut -d \" -f 2 | sort)
+filter_renders  = $(filter $(2),$(call list_renders,$(1)))
+list_prints     = $(call filter_renders,$(1),Prints/%)
+list_hardware   = $(call filter_renders,$(1),Hardware/%)
+list_fixtures   = $(call filter_renders,$(1),Fixtures/%)
+list_projection = $(call filter_renders,$(1),Projection/%)
 
 %/Assembly: Assembly/
 	$(MAKE) -C $(subst /Assembly,,$@) Assembly
@@ -34,12 +39,14 @@ Assembly/:
 #Assembly/*.stl:
 %.svg %.dxf %.png %.stl:
 	$(eval NAME=$(subst Assembly/,,$(basename $@)))
+	$(eval NAME=$(subst Assembly/,,$(basename $@)))
 	$(eval CLASS_PRESET=$(firstword $(subst /, ,$(NAME))))
 	$(eval CLASS=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$1 }'))
 	$(eval PRESET=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$2 }'))
 	$(eval PART=$(subst $(CLASS_PRESET)/,,$(NAME)))
 	$(eval RENDER_PRINT=$(if $(findstring Assembly/,$@),false,true) )
 	$(eval RENDER_MODE=$(if $(findstring Assembly.png,$@),--preview,--render) )
+	$(eval IMAGE_SIZE=$(if $(filter %Assembly%.png,$@),--imgsize $(OS_RES_HIGH),))
 	@echo Target: $@
 	@echo Target Dir: $(dir $@)
 	@echo Deps: $^
@@ -52,7 +59,8 @@ Assembly/:
 	@echo Render Mode: $(RENDER_MODE)
 	mkdir -p $(dir $@) && \
 	$(OSBIN) $(OSOPTS) -o $@ \
-		$(RENDER_MODE) --projection=p --autocenter --viewall --view scales \
+		$(RENDER_MODE) $(IMAGE_SIZE) --projection=p \
+		--autocenter --viewall --view scales \
 		$(if $(PRESET),-p $(CLASS).json -P $(PRESET),) \
 		-D _RENDER=\"$(PART)\" \
 		-D _RENDER_PRINT=$(RENDER_PRINT)\

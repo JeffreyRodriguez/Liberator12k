@@ -5,14 +5,14 @@ MARKDOWN = $(wildcard *.md) $(shell find Receiver -name \*.md)
 MARKDOWN_HTML = $(addsuffix .html,$(basename $(MARKDOWN)))
 
 Assembly = Receiver/Assembly Receiver/Forend/Assembly
+Components = Frame Receiver Stock Lower FCG
 
-MINUTEMAN_STL = Receiver/Frame_Receiver.stl \
-							$(wildcard Receiver/Stock*.stl) $(wildcard Receiver/Lower*.stl) \
-							$(wildcard Receiver/FCG*.stl)
+MINUTEMAN_STL = $(foreach Component,$(Components),$(wildcard Receiver/$(Component)/Prints/*.stl))
 
-FOREND_STL = $(wildcard Receiver/Forend/*_*/*.stl)
+ForendPreset_STLS = $(wildcard Receiver/Forend/*_*/Prints/*.stl) \
+                    $(wildcard Receiver/Forend/*_*/Projection/*.stl) \
 
-STL := $(MINUTEMAN_STL) $(FOREND_STL)
+STL := $(MINUTEMAN_STL) $(ForendPreset_STLS)
 EXTRA_DOCS := changelog.txt Manual.pdf
 TARGETS := $(EXTRA_DOCS) Source/
 
