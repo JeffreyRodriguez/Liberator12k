@@ -71,10 +71,10 @@ smooth. Then install the bolt into the charging handle from the underside.
 
 ## DIY Hardware
 If you don't want to purchase a kit from the
-[Liberator12k.com store](https://liberator12k.com/store/),
+[Liberator12k.com Store](https://liberator12k.com/store/),
 you can make your own. It won't be faster or cheaper, but all the information
-you need is freely available and the hardware is available at the local hardware
-store / metal supplier.
+you need is freely available and the hardware is available at your local
+hardware store or metal supplier.
 
 ### Sear
  * 1/8" hole 5/16" from the bottom for the sear cross-pin
