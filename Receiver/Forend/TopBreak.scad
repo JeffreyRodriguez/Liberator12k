@@ -257,13 +257,18 @@ module PivotClearanceCut(offsetX=0, cut=true, width=PivotWidth(),
   
     // Trim off anything that won't clear the pivot
     if (cut)
-    translate([PivotX()+offsetX, 0, PivotZ()])
-    rotate([90,0,0])
-    linear_extrude(height=width, center=true)
-    rotate(180) mirror([0,1])
-    semidonut(minor=(PivotX()-clearance)*2, major=PivotX()*3,
-              angle=90);
+    difference() {  
+      translate([PivotX()+offsetX, 0, PivotZ()])
+      rotate([90,0,0])
+      linear_extrude(height=width*2, center=true)
+      rotate(180) mirror([0,1])
+      semicircle(od=PivotX()*3, angle=90);
     
+      translate([PivotX()+offsetX, 0, PivotZ()])
+      rotate([90,0,0])
+      ChamferedCylinder(r1=(PivotX()-clearance), r2=1/16,
+                        h=width, center=true);
+    }
   }
 }
 
@@ -644,7 +649,8 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.005, cut
     union() {
       PivotOuterBearing(cutter=cutter);
       
-      PivotClearanceCut(cut=!cutter)
+      PivotClearanceCut(cut=!cutter,
+                        width=(BarrelSleeveRadius()+WallBarrel())*2)
       union() {
         
         // Around the barrel
@@ -789,6 +795,9 @@ module TopBreak_LatchTab(cutaway=false, cutter=false, clearance=0.01, alpha=1) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
   clearCR = cutter?CR:0;
+  
+  width = (BarrelSleeveRadius()+WallBarrel())*2;
+  bottomZ = TopBreak_LatchZ()-TopBreak_LatchWall()-TopBreak_LatchTabHeight()-clearance;
 
   color("Olive", alpha) RenderIf(!cutter) Cutaway(cutaway)
   difference() {
@@ -796,12 +805,12 @@ module TopBreak_LatchTab(cutaway=false, cutter=false, clearance=0.01, alpha=1) {
       
       // Latch Tab Body
       if (!cutter)
-      PivotClearanceCut(offsetX=-TopBreak_LatchTravel(), clearance=0.01, cut=true)
-      translate([-0.5,
-                 -(BarrelSleeveRadius()+WallBarrel()),
-                 TopBreak_LatchZ()-TopBreak_LatchWall()-TopBreak_LatchTabHeight()-clearance])
+      PivotClearanceCut(offsetX=-TopBreak_LatchTravel(),
+                        clearance=0.01, cut=true,
+                        width=width)
+      translate([-0.5, -(width/2), bottomZ])
       ChamferedCube([1+TopBreak_LatchTravel(),
-                     (BarrelSleeveRadius()+WallBarrel())*2,
+                     width,
                      TopBreak_LatchTabHeight()], r=1/16);
       
       // Latch Tab Towers
