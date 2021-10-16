@@ -27,6 +27,7 @@ _RENDER_PRINT = true;
 /* [Assembly] */
 _SHOW_RECEIVER = true;
 _SHOW_RECEIVER_RODS = true;
+_SHOW_FRAME_BOLTS = true;
 
 _CUTAWAY_RECEIVER = false;
 
@@ -252,7 +253,7 @@ module Frame_Receiver(doRender=true, cutaway=false, alpha=1) {
 // **************
 // * Assemblies *
 // **************
-module Frame_ReceiverAssembly(length=FrameBoltLength(), frameBolts=true, cutaway=_CUTAWAY_RECEIVER, alpha=1) {
+module Frame_ReceiverAssembly(length=FrameBoltLength(), frameBolts=_SHOW_FRAME_BOLTS, cutaway=_CUTAWAY_RECEIVER, alpha=1) {
   
   if (frameBolts)
   Frame_Bolts(length=length, cutaway=cutaway, alpha=alpha);
