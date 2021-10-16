@@ -7,6 +7,8 @@
 *.png
 *.jpg
 *.zip
+*.parts
+*.dep
 Version.md
 animation.gif
 animation.mp4
