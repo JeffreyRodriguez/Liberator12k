@@ -26,6 +26,13 @@ list_hardware   = $(call filter_renders,$(1),Hardware/%)
 list_fixtures   = $(call filter_renders,$(1),Fixtures/%)
 list_projection = $(call filter_renders,$(1),Projection/%)
 
+render_name         = $(subst Assembly/,,$(basename $(1)))
+render_class_preset = $(firstword $(subst /, ,$(call render_name,$(1))))
+render_class        = $(shell echo $(call render_class_preset,$(1)) | awk -F _ '{ print $$1 }')
+render_preset       = $(shell echo $(call render_class_preset,$(1)) | awk -F _ '{ print $$2 }')
+render_part         = $(subst $(call render_class_preset,$(1))/,,$(call render_name,$(1)))
+render_source       = $(addsuffix .scad, $(call render_class,$(1)))
+
 %/Assembly: Assembly/
 	$(MAKE) -C $(subst /Assembly,,$@) Assembly
 	
@@ -36,14 +43,12 @@ Assembly/:
 	@# Search for all the _RENDER == "*" lines and extract the part names
 	echo $(call list_renders,$<) > $@
 
-#Assembly/*.stl:
 %.svg %.dxf %.png %.stl:
-	$(eval NAME=$(subst Assembly/,,$(basename $@)))
-	$(eval NAME=$(subst Assembly/,,$(basename $@)))
-	$(eval CLASS_PRESET=$(firstword $(subst /, ,$(NAME))))
-	$(eval CLASS=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$1 }'))
-	$(eval PRESET=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$2 }'))
-	$(eval PART=$(subst $(CLASS_PRESET)/,,$(NAME)))
+	$(eval NAME=$(call render_name,$@))
+	$(eval CLASS_PRESET=$(call render_class_preset,$@))
+	$(eval CLASS=$(call render_class,$@))
+	$(eval PRESET=$(call render_preset,$@))
+	$(eval PART=$(call render_part,$@))
 	$(eval RENDER_PRINT=$(if $(findstring Assembly/,$@),false,true) )
 	$(eval RENDER_MODE=$(if $(findstring Assembly.png,$@),--preview,--render) )
 	$(eval IMAGE_SIZE=$(if $(filter %Assembly%.png,$@),--imgsize $(OS_RES_HIGH),))
