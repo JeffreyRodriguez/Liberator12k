@@ -11,7 +11,7 @@ money in exchange. Screenshot it and ridicule them online.
 ## Prints List
 | Frame_Receiver |
 |-|
-|![](Frame_Receiver_thumb.jpg)|
+|![](Frame/Prints/Frame_Receiver_thumb.jpg)|
 <br/>
 
 <!-- NEW PAGE -->

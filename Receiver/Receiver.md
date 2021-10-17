@@ -16,10 +16,10 @@ The receiver has an assortment of slots and tabs to support different designs.
 
 179g, 15h06m
 
-| Part                                                                                        | Settings              | Filament | Time     |
-|---------------------------------------------------------------------------------------------|-----------------------|----------|----------|
-| ![Receiver.stl](Receiver_thumb.jpg)<br>[Receiver.stl](Receiver.stl)                         | 3mm Walls 20% Infill  | 265g     | 1d6h58m  |
-| ![Receiver_Back.stl](Receiver_Back_thumb.jpg)<br>[Receiver_Back.stl](Receiver_Back.stl)     | 3mm Walls 20% Infill  | 33g      | 4h5m     |
+| Part                                                                              | Settings              | Filament | Time     |
+|-----------------------------------------------------------------------------------|-----------------------|----------|----------|
+| ![Receiver.stl](Lower/Prints/Receiver_thumb.jpg)<br>Receiver.stl                  | 3mm Walls 20% Infill  | 265g     | 1d6h58m  |
+| ![Receiver_Back.stl](Lower/Prints/Receiver_Back_thumb.jpg)<br>Receiver_Back.stl   | 3mm Walls 20% Infill  | 33g      | 4h5m     |
 
 ### Hardware
 

@@ -14,7 +14,7 @@ ForendPreset_STLS = $(wildcard Receiver/Forend/*_*/Prints/*.stl) \
 
 STL := $(MINUTEMAN_STL) $(ForendPreset_STLS)
 EXTRA_DOCS := changelog.txt Manual.pdf
-TARGETS := $(STL) $(Assembly) $(EXTRA_DOCS) Source/
+TARGETS := $(Assembly) $(EXTRA_DOCS) Source/
 
 MARKDOWN_HTML: $(MARKDOWN_HTML)
 $(MARKDOWN_HTML): $(addsuffix .md, $(basename $@))
@@ -43,7 +43,7 @@ Source/:
 	git remote add origin https://github.com/JeffreyRodriguez/Liberator12k.git
 
 Liberator12k.zip: $(TARGETS) FORCE
-	zip -r $@ $(TARGETS)
+	zip -r $@ $(TARGETS) $(STL)
 	
 dist: FORCE $(SUBDIRS)
 	$(MAKE) Liberator12k.zip

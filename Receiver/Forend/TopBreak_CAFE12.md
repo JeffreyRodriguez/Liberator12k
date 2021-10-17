@@ -22,11 +22,12 @@ Since it's built with \#Liberator12k platform components it features:
 * Modular components
 * Ambidextrous
 
+<!-- NEW PAGE -->
 ## Prints
 420g, 2d08h09m
 
 | Part          | Filament Used | Print Time @ 0.4mm |
-|---------------|---------------|--------------------|
+|---------------|-------------: |------------------: |
 | ReceiverFront | 57g           |   07h17m           |
 | Forend        | 189g          | 1d01h10m           |
 | BarrelCollar  | 114g          |   15h00m           |
@@ -35,11 +36,11 @@ Since it's built with \#Liberator12k platform components it features:
 
 |ReceiverFront|Forend|
 |-|-|
-|![](ReceiverFront_thumb.jpg)|![](Forend_thumb.jpg)|
+|![](TopBreak_CAFE12/Prints/ReceiverFront_thumb.jpg)|![](TopBreak_CAFE12/Prints/Forend_thumb.jpg)|
 
 |BarrelCollar|Extractor|
 |-|-|
-|![](BarrelCollar_thumb.jpg)|![](Extractor_thumb.jpg)|
+|![](TopBreak_CAFE12/Prints/BarrelCollar_thumb.jpg)|![](TopBreak_CAFE12/Prints/Extractor_thumb.jpg)|
 
 ## Bill of Materials
 | Part                                       | Quantity |

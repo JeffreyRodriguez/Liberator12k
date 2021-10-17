@@ -23,11 +23,12 @@ your local hardware stores. *That said* tubing is much stronger than pipe.
 You can buy a kit from the [\#Liberator12k store](https://liberator12k.com/store/)
 which includes everything you need, and uses the stronger 4130 tube.
 
+<!-- NEW PAGE -->
 ## Prints
 420g, 2d08h09m
 
 | Part              | Filament Used | Print Time @ 0.4mm |
-|-------------------|---------------|--------------------|
+|-------------------|-------------: |------------------: |
 | ReceiverFront     | 57g           |   07h17m           |
 | Forend            | 189g          | 1d01h10m           |
 | BarrelCollar      | 114g          |   15h00m           |
@@ -39,15 +40,15 @@ which includes everything you need, and uses the stronger 4130 tube.
 
 |ReceiverFront|Forend|BarrelCollar|
 |-|-|-|
-|![](ReceiverFront_thumb.jpg)|![](Forend_thumb.jpg)|![](BarrelCollar_thumb.jpg)|
+|![](TopBreak_CAFE12+/Prints/ReceiverFront_thumb.jpg)|![](TopBreak_CAFE12+/Prints/Forend_thumb.jpg)|![](TopBreak_CAFE12+/Prints/BarrelCollar_thumb.jpg)|
 
 |LatchTab|Extractor|
 |-|-|
-|![](LatchTab_thumb.jpg)|![](Extractor_thumb.jpg)|
+|![](TopBreak_CAFE12+/Prints/LatchTab_thumb.jpg)|![](TopBreak_CAFE12+/Prints/Extractor_thumb.jpg)|
 
 |Cluster|Vertical Foregrip|
 |-|-|
-|![](Cluster_thumb.jpg)|![](VerticalForegrip_thumb.jpg)|
+|![](TopBreak_CAFE12+/Prints/Cluster_thumb.jpg)|![](TopBreak_CAFE12+/Prints/VerticalForegrip_thumb.jpg)|
 
 ## Vitamins
 | Purpose                | Part                             | Metric Alternative | Quantity |

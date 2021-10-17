@@ -8,6 +8,7 @@
  * Single shot
  * Top-break action
 
+<!-- NEW PAGE -->
 ## Prints
 XXXXg, 0h00m
 
@@ -22,11 +23,11 @@ XXXXg, 0h00m
 
 |ReceiverFront|Forend|
 |-|-|
-|![](ReceiverFront_thumb.jpg)|![](Forend_thumb.jpg)|
+|![](TopBreak_FP37/Prints/ReceiverFront_thumb.jpg)|![](TopBreak_FP37/Prints/Forend_thumb.jpg)|
 
 |BarrelCollar|Extractor|
 |-|-|
-|![](BarrelCollar_thumb.jpg)|![](Extractor_thumb.jpg)|
+|![](TopBreak_FP37/Prints/BarrelCollar_thumb.jpg)|![](TopBreak_FP37/Prints/Extractor_thumb.jpg)|
 
 
 ## Bill of Materials

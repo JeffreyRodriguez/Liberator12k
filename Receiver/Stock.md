@@ -13,7 +13,7 @@ of the Receiver in place. Remove to field strip the gun.
 ## Prints
 |Stock|Stock_Backplate|Stock_Buttpad|
 |-|-|-|
-|![](Stock_thumb.jpg)|![](Stock_Backplate_thumb.jpg)|![](Stock_Buttpad_thumb.jpg)|
+|![](Stock/Prints/Stock_thumb.jpg)|![](Stock/Prints/Stock_Backplate_thumb.jpg)|![](Stock/Prints/Stock_Buttpad_thumb.jpg)|
 
 <!-- NEW PAGE -->
 ## Post-Processing
@@ -24,7 +24,6 @@ Insert the *Stock Pin Retaining Pin* into the back of the *Stock_Backplate*.
 #### Buttstock
 Insert the *Stock Buttpad Bolts* through the *Stock_Buttpad*, and screw
 into the back of the *Stock Latch Subassembly*.
-
 
 ## Technical Notes
 
