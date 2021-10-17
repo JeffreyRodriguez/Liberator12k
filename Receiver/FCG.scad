@@ -45,6 +45,7 @@ _SHOW_RECEIVER      = true;
 _SHOW_LOWER         = true;
 
 /* [Transparency] */
+_ALPHA_RECEIVER = 1; // [0:0.1:1]
 _ALPHA_FIRING_PIN_HOUSING = 1; // [0:0.1:1]
 _ALPHA_RECOIL_PLATE = 1; // [0:0.1:1]
 _ALPHA_FCG_Hammer = 1; // [0:0.1:1]
@@ -1277,7 +1278,7 @@ if ($preview) {
   }
   
   if (_SHOW_RECEIVER)
-  ReceiverAssembly(cutaway=_CUTAWAY_RECEIVER);
+  ReceiverAssembly(cutaway=_CUTAWAY_RECEIVER, alpha=_ALPHA_RECEIVER);
 } else {
   
   // *****************

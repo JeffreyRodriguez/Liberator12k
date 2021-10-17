@@ -389,16 +389,16 @@ module ReceiverBackSegment(length=ReceiverBackLength()) {
 // **************
 // * Assemblies *
 // **************
-module ReceiverAssembly(cutaway=false) {
-  if (_SHOW_RECEIVER_RODS)
+module ReceiverAssembly(tensionRods=_SHOW_RECEIVER_RODS, mlokBolts=true, cutaway=false, alpha=_ALPHA_RECEIVER) {
+  if (tensionRods)
   Receiver_TensionBolts(cutaway=cutaway);
 
-  if (_SHOW_RECEIVER) {
-    Receiver_MlokBolts();
-    
-    Receiver(alpha=_ALPHA_RECEIVER, cutaway=cutaway)
-    children();
-  }
+  if (mlokBolts)
+  Receiver_MlokBolts();
+  
+  if (_SHOW_RECEIVER)    
+  Receiver(alpha=alpha, cutaway=cutaway)
+  children();
 }
 ///
 
