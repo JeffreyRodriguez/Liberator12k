@@ -30,7 +30,7 @@ Version.md:
 	echo "subject: How-To" >> $@ && \
 	echo "---" >> $@
 	
-Manual.pdf: Version.md $(MARKDOWN_HTML) $(MANUAL_IMAGES)
+Manual.pdf: $(SUBDIRS) Version.md $(MARKDOWN_HTML) $(MANUAL_IMAGES)
 	htmldoc --batch Manual.book
 
 Source/: .git
