@@ -10,11 +10,11 @@ Components = Frame Receiver Stock Lower FCG
 MINUTEMAN_STL = $(foreach Component,$(Components),$(wildcard Receiver/$(Component)/Prints/*.stl))
 
 ForendPreset_STLS = $(wildcard Receiver/Forend/*_*/Prints/*.stl) \
-                    $(wildcard Receiver/Forend/*_*/Projection/*.stl) \
+                    $(wildcard Receiver/Forend/*_*/Projection/*.svg) \
 
 STL := $(MINUTEMAN_STL) $(ForendPreset_STLS)
 EXTRA_DOCS := changelog.txt Manual.pdf
-TARGETS := $(EXTRA_DOCS) Source/
+TARGETS := $(STL) $(Assembly) $(EXTRA_DOCS) Source/
 
 MARKDOWN_HTML: $(MARKDOWN_HTML)
 $(MARKDOWN_HTML): $(addsuffix .md, $(basename $@))

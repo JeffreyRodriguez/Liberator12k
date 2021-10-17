@@ -1,66 +1,60 @@
 include ../../Makefile.in
 
 # Forend Classes
-CLASSES := TopBreak Revolver
+Classes := TopBreak Revolver
+Classes_HTML=$(addsuffix .html, $(Classes))
 
-# Forend Class Parts
-TopBreak_Renders := $(call list_renders,TopBreak.scad)
-TopBreak_Prints := $(filter %Prints/%, $(TopBreak_Renders))
-TopBreak_Fixtures := $(filter %Fixtures/%, $(TopBreak_Renders))
-TopBreak_Projections := $(filter %Projection/%, $(TopBreak_Renders))
-TopBreak_Hardware := $(filter %Hardware/%, $(TopBreak_Renders))
+TopBreak_Presets := CAFE12 CAFE12+ FP37
+Revolver_Presets := ZZR6x12
+Presets := $(addprefix TopBreak_,$(TopBreak_Presets)) $(addprefix Revolver_,$(Revolver_Presets))
 
-Revolver_Renders := $(call list_renders,Revolver.scad)
-Revolver_Prints := $(filter %Prints/%, $(Revolver_Renders))
-Revolver_Fixtures := $(filter %Fixtures/%, $(Revolver_Renders))
-Revolver_Projections := $(filter %Projection/%, $(Revolver_Renders))
-Revolver_Hardware := $(filter %Hardware/%, $(Revolver_Renders))
+Prints:= $(foreach Preset,$(Presets),$(addprefix $(Preset)/, $(call list_prints,$(call preset_class_name,$(Preset)).scad)))
+Hardware := $(foreach Preset,$(Presets),$(addprefix $(Preset)/, $(call list_hardware,$(call preset_class_name,$(Preset)).scad)))
+Fixtures := $(foreach Preset,$(Presets),$(addprefix $(Preset)/, $(call list_fixtures,$(call preset_class_name,$(Preset)).scad)))
+Projections := $(foreach Preset,$(Presets),$(addprefix $(Preset)/, $(call list_projections,$(call preset_class_name,$(Preset)).scad)))
 
-# Forend Presets
-TopBreak_PRESETS := CAFE12 CAFE12+ FP37
-Revolver_PRESETS := ZZR6x12
+Prints_STL=$(addsuffix .stl, $(Prints))
+Hardware_STL= $(addsuffix .stl, $(Hardware))
+Fixtures_STL=$(addsuffix .stl, $(Fixtures))
+Projections_DXF=$(addsuffix .dxf, $(Projections))
+Projections_SVG=$(addsuffix .svg, $(Projections))
 
-PRESETS := $(addprefix TopBreak_,$(TopBreak_PRESETS)) $(addprefix Revolver_,$(Revolver_PRESETS))
+Prints_STL_thumbs=$(addsuffix _thumb.jpg, $(Prints))
+Assembly_STL=$(addprefix Assembly/, $(Prints_STL) $(Hardware_STL))
+Assembly: $(Assembly_STL)
 
-# All Part STLs for all forend presets Class_Preset/Part.stl
-TopBreak_STLS := $(addprefix TopBreak_, $(foreach PRESET,$(TopBreak_PRESETS),$(addsuffix .stl, $(addprefix $(addsuffix /, $(PRESET)),$(TopBreak_Prints)))))
-Revolver_STLS := $(addprefix Revolver_, $(foreach PRESET,$(Revolver_PRESETS),$(addsuffix .stl, $(addprefix $(addsuffix /, $(PRESET)),$(Revolver_Prints)))))
+Preset_STLS := $(Prints_STL)
+Preset_Thumbs := $(addsuffix _thumb.jpg,$(basename $(Preset_STLS)))
+Preset_Assembly := $(addsuffix /Assembly.jpg,$(Presets))
+Preset_MP4 := $(addsuffix .mp4, $(Preset_STLS))
 
-Forend_STLS := $(TopBreak_STLS) $(Revolver_STLS)
-
-PRESET_STLS := $(filter-out %/Projection/%, $(filter-out %Hardware/%, $(Forend_STLS)))
-PRESET_Thumbs := $(addsuffix _thumb.jpg,$(basename $(PRESET_STLS)))
-PRESET_Assembly := $(addsuffix /Assembly.jpg,$(PRESETS))
-PRESET_MP4 := $(addsuffix .mp4, $(PRESET_STLS))
-
-Assembly_STL=$(addprefix Assembly/, $(TopBreak_STLS) $(Revolver_STLS));
-
-Assembly: Assembly/ $(Assembly_STL)
-	echo $(Assembly_STL)
-.PHONY = Assembly
+foo:
+	@echo Prints_STL: $(Prints_STL)
+	@echo Assembly_STL: $(Assembly_STL)
+	@echo Preset_Thumbs: $(Preset_Thumbs)
 
 Assembly/%_*: %.scad Assembly/
-	$(eval CLASS_PRESET=$(firstword $(subst /, , $(subst Assembly/,, $@))))
-	$(eval CLASS=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$1 }'))
-	$(eval PRESET=$(shell echo $(CLASS_PRESET) | awk -F _ '{ print $$2 }'))
+	$(eval CLASS_Preset=$(firstword $(subst /, , $(subst Assembly/,, $@))))
+	$(eval CLASS=$(shell echo $(CLASS_Preset) | awk -F _ '{ print $$1 }'))
+	$(eval Preset=$(shell echo $(CLASS_Preset) | awk -F _ '{ print $$2 }'))
 	$(eval PART=$(basename $(notdir $@)))
 	$(OSBIN) $(OSOPTS) -o $@ --render \
 	  -D _RENDER=\"$(PART)\"  -D _RENDER_PRINT=false \
 	  $(CLASS).scad
 
 # Preview_htmldoc.jpg - Downsampled 800px
-$(addsuffix /Preview_htmldoc.jpg,$(PRESETS)): %_htmldoc.jpg : %.png
+$(addsuffix /Preview_htmldoc.jpg,$(Presets)): %_htmldoc.jpg : %.png
 	#cp $< $@
 	convert -resize 1600x900^ $< -quality 90 $@
 
 .SECONDEXPANSION:
 	
 # Class/Preset dirs depend on their respective source
-$(CLASSES) $(PRESETS): $$(addsuffix .scad,$$(firstword $$(subst _, ,$$@)))
+$(Classes) $(Presets): $$(addsuffix .scad,$$(firstword $$(subst _, ,$$@)))
 	mkdir -p $@
 	touch $@
 
-TARGETS =  README.html Assembly $(PRESETS) $(PRESET_Thumbs) $(PRESET_Assembly) $(Assembly_STL) #$(PRESET_MP4)
+TARGETS =  README.html Assembly $(Presets) $(Preset_Thumbs) $(Preset_Assembly) $(Assembly_STL) #$(Preset_MP4)
 
 clean-dir:
 	rm -rf $(TARGETS)

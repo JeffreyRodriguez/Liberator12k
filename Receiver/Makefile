@@ -12,7 +12,7 @@ Prints_STL=$(addsuffix .stl, $(Prints))
 Hardware_STL= $(addsuffix .stl, $(Hardware))
 Fixtures_STL=$(addsuffix .stl, $(Fixtures))
 Projections_DXF=$(addsuffix .dxf, $(Projections))
-Projections_SVG=$(addsuffix .dxf, $(Projections))
+Projections_SVG=$(addsuffix .svg, $(Projections))
 
 Prints_STL_thumbs=$(addsuffix _thumb.jpg, $(Prints))
 
