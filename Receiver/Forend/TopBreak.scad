@@ -20,6 +20,8 @@ use <../../Shapes/Components/Pump Grip.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 use <../../Vitamins/Pipe.scad>;
+use <../../Vitamins/Springs/Springs.scad>;
+use <../../Vitamins/Springs/SpringSpec.scad>;
 
 use <../Components/Sightpost.scad>;
 
@@ -157,7 +159,7 @@ function BarrelRadius(clearance=0)
 
 function BarrelDiameter(clearance=0)
     = BARREL_OUTSIDE_DIAMETER+clearance;
-    
+
 function BarrelWall() = (BarrelDiameter() - BARREL_INSIDE_DIAMETER)/2;
 function BarrelSleeveWall() = (BarrelSleeveDiameter() - BarrelDiameter())/2;
 
@@ -199,6 +201,19 @@ function ChargerTravel() = 1.75;
 function TopBreak_ForegripOffsetX() = 6+ChargerTravel();
 function TopBreak_ForegripLength() = 4.625;
 
+// Calculated: Springs
+function ExtractorSpringSpec() = [
+        ["SpringSpec", "Extractor Spring"],
+
+        ["SpringOuterDiameter", UnitsImperial(0.625)],
+        ["SpringPitch", UnitsImperial(0.35)],
+
+        ["SpringFreeLength", UnitsImperial(3.5)],
+        ["SpringSolidHeight", UnitsImperial(1.75)],
+
+        ["SpringWireDiameter", UnitsImperial(0.055)]
+    ];
+
 // Calculated: Positions
 //function ActionRodZ() = FrameBoltZ()-WallFrameBolt()-(ActionRodWidth()/2);
 function BarrelOffsetZ() = 0; // -0.11 for .22LR rimfire
@@ -210,12 +225,9 @@ function TopBreak_ExtractorHeight() = 0.65;
 function TopBreak_ExtractorTravel() = 0.3125;
 function TopBreak_ExtractorBitWidth() = (1/4);
 function TopBreak_ExtractorBitLength() = 1;
-function TopBreak_ExtractorSpringLength() = 1.75;
-function TopBreak_ExtractorSpringDiameter() = 0.625;
-function TopBreak_ExtractorSpringRadius() = TopBreak_ExtractorSpringDiameter()/2;
 function TopBreak_ExtractorLength() = (PivotX()-PivotRadius())
-                           - TopBreak_ExtractorSpringLength()
-                           - WallPivot();
+                                      - SpringSolidHeight(spring=ExtractorSpringSpec())
+                                      - WallPivot();
 
 function TopBreak_ExtractorBitZ() = BarrelZ()
                                   - BarrelInsideRadius()
@@ -254,16 +266,16 @@ module PivotClearanceCut(offsetX=0, cut=true, width=PivotWidth(),
                          clearance=0.005) {
   difference() {
     children();
-  
+
     // Trim off anything that won't clear the pivot
     if (cut)
-    difference() {  
+    difference() {
       translate([PivotX()+offsetX, 0, PivotZ()])
       rotate([90,0,0])
       linear_extrude(height=width*2, center=true)
       rotate(180) mirror([0,1])
       semicircle(od=PivotX()*3, angle=90);
-    
+
       translate([PivotX()+offsetX, 0, PivotZ()])
       rotate([90,0,0])
       ChamferedCylinder(r1=(PivotX()-clearance), r2=1/16,
@@ -275,9 +287,9 @@ module PivotClearanceCut(offsetX=0, cut=true, width=PivotWidth(),
 module PivotOuterBearing(intersect=true, cutter=false, clearance=0.002) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
-  
+
   intersection() {
-    
+
     // Pivot radius
     translate([PivotX(), (PivotWidth()/2)+clear, PivotZ()])
     rotate([90,0,0])
@@ -285,7 +297,7 @@ module PivotOuterBearing(intersect=true, cutter=false, clearance=0.002) {
                       r2=PivotWidth()/2,
                       teardropTop=true, teardropBottom=true,
                       h=PivotWidth()+clear2);
-  
+
     // Square off front and bottom edges
     if (intersect)
     translate([0, -(PivotWidth()/2)-clear, PivotZ()-(sqrt(2)/2*PivotRadius())])
@@ -354,7 +366,7 @@ module TopBreak_ExtractorRetainer(cutaway=false, cutter=false, teardrop=false, c
   cylinder(r=TopBreak_ExtractorRetainerRadius()+clear, h=1+clear2);
 }
 
-module TopBreak_LatchBars(doMirror=true, cutaway=false, cutter=false, clearance=LATCH_CLEARANCE, alpha=1) { 
+module TopBreak_LatchBars(doMirror=true, cutaway=false, cutter=false, clearance=LATCH_CLEARANCE, alpha=1) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
 
@@ -362,7 +374,7 @@ module TopBreak_LatchBars(doMirror=true, cutaway=false, cutter=false, clearance=
   color("Silver", alpha) RenderIf(!cutter) Cutaway(cutaway)
   MirrorIf(doMirror, [0,1,0], true)
   difference() {
-    
+
     // Latch Body
     translate([-0.25-(cutter?0.5:0)-clear,
                TopBreak_LatchY()-(TopBreak_LatchWidth()/2)-clear,
@@ -412,22 +424,22 @@ module TopBreak_Barrel(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, le
   translate([0,0,BarrelZ()])
   difference() {
     union() {
-    
+
       // Barrel
       rotate([0,90,0])
       cylinder(r=(od/2)+clear, h=BarrelLength());
-      
+
       // Barrel Sleeve
       rotate([0,90,0])
       cylinder(r=BarrelSleeveRadius()+clear, h=BarrelSleeveLength()+(1/16)+clear);
     }
-    
+
     if (!cutter) {
-      
+
       // Hollow inside
       rotate([0,90,0])
       cylinder(r=(id/2)+clear, h=length);
-      
+
       // Extractor notch
       *#rotate([90,0,0])
       translate([0,-0.813*0.5,0])
@@ -440,7 +452,7 @@ module TopBreak_Barrel(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, le
 }
 
 module TopBreak_MlokBolts(headType="flat", nutType="heatset", length=0.5, cutter=false, clearance=0.005, teardrop=false) {
-  
+
   // Top Bolts
   color("Silver") RenderIf(!cutter)
   for (X = [0.5,1.5,2.5])
@@ -483,19 +495,19 @@ module TopBreak_GripBolt(bolt=GripBolt(), headType="flat", nutType="heatset", le
 module TopBreak_ReceiverFront(cutter=false, cutaway=false, alpha=1) {
   color("Tan", alpha) render() Cutaway(cutaway)
   difference() {
-    
+
     translate([-TopBreak_ReceiverFrontLength(),0,0])
     union() {
       hull() {
         mirror([1,0,0])
         ReceiverTopSegment(length=1/8);
-        
+
         Frame_Support(length=TopBreak_ReceiverFrontLength(),
                      chamferFront=true, teardropFront=true);
       }
 
       hull() {
-        
+
         // Recoil plate backing
         translate([0,-(RecoilPlateWidth()/2)-0.25,RecoilPlateTopZ()])
         mirror([0,0,1])
@@ -503,12 +515,12 @@ module TopBreak_ReceiverFront(cutter=false, cutaway=false, alpha=1) {
                        RecoilPlateWidth()+0.5,
                        RecoilPlateHeight()-0.5],
                       r=1/8, teardropFlip=[true,true,true]);
-        
+
         // Round off the bottom
         translate([0,0,-1])
         rotate([0,90,0])
         ChamferedCylinder(r1=0.625, r2=1/8, h=0.5);
-      
+
         // Latch Support
         translate([0,
                    -((TopBreak_LatchY()+(TopBreak_LatchWidth()/2)+TopBreak_LatchWall())),
@@ -517,13 +529,13 @@ module TopBreak_ReceiverFront(cutter=false, cutaway=false, alpha=1) {
                        (TopBreak_LatchY()+(TopBreak_LatchWidth()/2)+TopBreak_LatchWall())*2,
                        TopBreak_LatchHeight()+TopBreak_LatchWall()],
                       r=1/16, teardropFlip=[false,true,true]);
-        
+
       }
     }
-    
+
     Frame_Bolts(cutter=true);
     TopBreak_LatchBars(cutter=true);
-    
+
     translate([-TopBreak_ReceiverFrontLength(),0,0]) {
       RecoilPlate(length=RECOIL_PLATE_LENGTH, cutter=true);
       RecoilPlateBolts(cutter=true);
@@ -533,15 +545,15 @@ module TopBreak_ReceiverFront(cutter=false, cutaway=false, alpha=1) {
   }
 }
 
-module TopBreak_Forend(clearance=0.005, doRender=true, cutaway=false, alpha=1) {  
+module TopBreak_Forend(clearance=0.005, doRender=true, cutaway=false, alpha=1) {
   union() {
-    
+
     // Branding text
-    color("DimGrey", alpha) 
+    color("DimGrey", alpha)
     RenderIf(doRender) Cutaway(cutaway) {
-      
+
       fontSize = 0.375;
-      
+
       // Right-side text
       translate([ForendLength()-0.375,-FrameWidth()/2,FrameBoltZ()-(fontSize/2)])
       rotate([90,0,0])
@@ -555,40 +567,40 @@ module TopBreak_Forend(clearance=0.005, doRender=true, cutaway=false, alpha=1) {
       mirror([1,0])
       text(BRANDING_MODEL_NAME, size=fontSize, font="Impact", halign="left");
     }
-    
+
     color("Tan", alpha)
     RenderIf(doRender) Cutaway(cutaway)
     difference() {
       union() {
         Frame_Support(length=ForendLength(),
                      chamferBack=true, teardropBack=true);
-        
+
         hull() {
           translate([PivotX(), 0, PivotZ()])
           rotate([90,0,0])
           ChamferedCylinder(r1=PivotRadius()-0.01, r2=1/4, h=3,
                             teardropTop=false, teardropBottom=false, center=true);
-          
+
           // Front face
           translate([ForendLength(), 0,0])
           mirror([1,0,0])
           Frame_Support(length=1/8,
                        extraBottom=FrameBottomZ()+abs(PivotZ()),
                        chamferFront=true, teardropFront=true);
-          
+
           translate([ForendLength(), 0,0])
           mirror([1,0,0])
           Frame_Support(length=PivotRadius()+(ForendLength()-PivotX())+abs(PivotZ())+FrameTopZ(),
                        chamferFront=true, teardropFront=true);
         }
       }
-      
+
       // Cutout the pivot track for the barrel collar to pass
       translate([PivotX(), 0, PivotZ()])
       rotate([0,180,0]) rotate([90,0,0])
       linear_extrude(BarrelSleeveDiameter()+(WallBarrel()*2)+(clearance*2), center=true)
       semidonut(major=PivotX()*3, minor=abs(PivotZ())*2, angle=PivotAngle());
-      
+
       // Cut a path through the full range of motion (Barrel)
       hull() for (A = [0, PivotAngle()])
       Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1)
@@ -596,12 +608,12 @@ module TopBreak_Forend(clearance=0.005, doRender=true, cutaway=false, alpha=1) {
       rotate([0,90,0])
       cylinder(r=BarrelSleeveRadius()+BARREL_CLEARANCE,
                h=ForendLength()-PivotX());
-      
+
       // Cut a path through the full range of motion (Collar)
       for (A = [0, PivotAngle()])
       Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1)
       TopBreak_BarrelCollar(rearExtension=2, cutter=true);
-      
+
       // Printability chamfer
       translate([ForendLength(),0,BarrelZ()])
       rotate([0,-90,0])
@@ -621,25 +633,25 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.005, cut
   difference() {
     union() {
       PivotOuterBearing(cutter=cutter);
-      
+
       PivotClearanceCut(cut=!cutter,
                         width=(BarrelSleeveRadius()+WallBarrel())*2)
       union() {
-        
+
         // Around the barrel
         translate([clearRear,0,BarrelZ()])
         rotate([0,90,0])
         ChamferedCylinder(r1=BarrelSleeveRadius()+WallBarrel()+clear,
                           h=PivotX()-clearRear+clear,
                           r2=1/16);
-        
+
         // Extractor support
         translate([clearRear-rearExtension-clear,-(TopBreak_ExtractorHousingWidth()/2)-clear,TopBreak_BarrelCollarBottomZ()-clear])
         ChamferedCube([PivotX()-(sqrt(2)/2*PivotRadius())-clearRear+rearExtension+clear2,
                        TopBreak_ExtractorHousingWidth()+clear2,
                        abs(TopBreak_BarrelCollarBottomZ())+clear],
                        r=1/16, teardropFlip=[false,true,true]);
-        
+
         // Latch support
         translate([clearRear-rearExtension-clear,
                    -((BarrelSleeveRadius()+WallBarrel()))-clear,
@@ -648,40 +660,40 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.005, cut
                        (BarrelSleeveRadius()+WallBarrel())*2+clear2,
                        abs(TopBreak_LatchZ())+clear2], r=1/16, teardropFlip=[false,true,true]);
       }
-      
+
       // Optics Rail Support
       hull() {
         translate([clearRear,-0.375,0])
         ChamferedCube([3,0.75, ReceiverTopZ()],
                        r=1/16,teardropFlip=[true,true,true]);
-        
+
         translate([clearRear,-BarrelSleeveRadius(),0])
         ChamferedCube([1,BarrelSleeveDiameter(), BarrelSleeveRadius()],
                        r=1/16,teardropFlip=[true,true,true]);
       }
     }
-    
+
     PivotInnerBearing(cutter=true, clearance=(cutter?0:clearance));
-    
+
     if (!cutter) {
-      
+
       TopBreak_LatchBars(cutter=true);
       TopBreak_LatchTab(cutter=true);
       TopBreak_LatchSpring(cutter=true);
-      
+
       for (M = [0,1]) mirror([0,M,0])
       hull()
       for (X = [-clearance,TopBreak_LatchTravel()+clearance])
       translate([X,0,0])
       TopBreak_LatchScrews(cutter=true, head="none", doMirror=false);
-      
+
       TopBreak_MlokBolts(cutter=true);
-      
+
       translate([0.25,0,ReceiverTopZ()]) {
         MlokSlot(length=2.5);
         MlokSlotBack(length=2.5);
       }
-    
+
       // Angled cut for supportless printability
       *translate([0,-(PivotWidth()/2),PivotZ()])
       rotate([0,90+45,0])
@@ -690,7 +702,7 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.005, cut
       for (X = [0,-TopBreak_ExtractorTravel()])
       translate([X,0,0])
       TopBreak_Extractor(cutter=true);
-      
+
       hull()
       for (X = [0,-TopBreak_ExtractorTravel()])
       translate([X,0,0])
@@ -715,13 +727,13 @@ module TopBreak_Extractor(cutter=false, clearance=0.015, chamferRadius=1/16, cut
       translate([clear,
                  -(TopBreak_ExtractorWidth()/2)-clear,
                  TopBreak_ExtractorZ()-clear])
-      ChamferedCube([TopBreak_ExtractorLength()+(cutter?TopBreak_ExtractorSpringLength()+clear:0),
+      ChamferedCube([TopBreak_ExtractorLength()+(cutter?SpringSolidHeight(spring=ExtractorSpringSpec())+clear:0),
                      TopBreak_ExtractorWidth()+clear2,
                      TopBreak_ExtractorHeight()+clear2], r=chamferRadius);
 
       // Tall portion to hold the retainer
       hull() {
-        
+
         // Wide section
         translate([clear,
                    -(TopBreak_ExtractorWidth()/2)-clear,
@@ -730,7 +742,7 @@ module TopBreak_Extractor(cutter=false, clearance=0.015, chamferRadius=1/16, cut
                        TopBreak_ExtractorWidth()+clear2,
                        abs(TopBreak_ExtractorZ())],
                       r=chamferRadius);
-        
+
         // Narrow section
         translate([clear,
                    -(TopBreak_ExtractorBitWidth()/2)-clear,
@@ -743,16 +755,16 @@ module TopBreak_Extractor(cutter=false, clearance=0.015, chamferRadius=1/16, cut
     }
 
     if (!cutter) {
-      
+
       // Cartridge rim
       rotate([0,90,0])
       cylinder(r=RIM_DIAMETER/2, h=RIM_WIDTH+clearance);
-      
+
       TopBreak_Barrel(cutter=true);
 
       TopBreak_ExtractorBit(cutter=true);
       TopBreak_ExtractorRetainer(cutter=true);
-      
+
       // Chamfer the back edge for smooth operation
       translate([0, 0, TopBreak_ExtractorZ()])
       rotate([90,0,0])
@@ -768,14 +780,14 @@ module TopBreak_LatchTab(cutaway=false, cutter=false, clearance=0.01, alpha=1) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
   clearCR = cutter?CR:0;
-  
+
   width = (BarrelSleeveRadius()+WallBarrel())*2;
   bottomZ = TopBreak_LatchZ()-TopBreak_LatchWall()-TopBreak_LatchTabHeight()-clearance;
 
   color("Olive", alpha) RenderIf(!cutter) Cutaway(cutaway)
   difference() {
     union() {
-      
+
       // Latch Tab Body
       if (!cutter)
       PivotClearanceCut(offsetX=-TopBreak_LatchTravel(),
@@ -785,7 +797,7 @@ module TopBreak_LatchTab(cutaway=false, cutter=false, clearance=0.01, alpha=1) {
       ChamferedCube([1+TopBreak_LatchTravel(),
                      width,
                      TopBreak_LatchTabHeight()], r=1/16);
-      
+
       // Latch Tab Towers
       for (M = [0,1]) mirror([0,M,0])
       translate([0.5-clear,
@@ -796,20 +808,20 @@ module TopBreak_LatchTab(cutaway=false, cutter=false, clearance=0.01, alpha=1) {
                      (TopBreak_LatchWall()+TopBreak_LatchTabHeight()+0.06)+clear2],
                      r=1/16);
     }
-    
+
     // Cut off the sharp tip, it tends to catch on things
     if (!cutter)
     translate([-0.3125,0, TopBreak_LatchZ()-TopBreak_LatchWall()-clearance])
     rotate([90,0,0])
     linear_extrude((BarrelSleeveRadius()+WallBarrel()+ManifoldGap())*2, center=true) {
       RoundedBoolean(r=0.0625, teardrop=false, angle=180);
-      
+
       translate([-0.1875,-1])
       square([0.1875, 1]);
     }
-    
 
-    if (!cutter)  
+
+    if (!cutter)
     TopBreak_LatchScrews(cutter=true);
   }
 }
@@ -820,7 +832,7 @@ module TopBreak_VerticalForegrip(cutaway=false, alpha=1) {
     translate([BarrelSleeveLength()+0.25,0,-BarrelRadius()-0.75])
     mirror([0,0,1])
     PumpGrip(r=0.625, h=3, channelRadius=0.125);
-    
+
     TopBreak_GripBolt(cutter=true, teardrop=false);
   }
 }
@@ -831,89 +843,89 @@ module TopBreak_Cluster(cutaway=false, alpha=1) {
   lowerExtension = 0.75;
   width = (7/16);
   mlokOffset = (BarrelSleeveRadius()+0.3125);
-  
+
   color("Tan", alpha) render() Cutaway(cutaway)
   difference() {
     union() {
-      
+
       // Extension
       hull() {
-        
+
         // Forward Extension
         translate([BarrelSleeveLength(),0,0])
         rotate([0,90,0])
         ChamferedCylinder(r1=BarrelRadius()+WallBarrel(), r2=1/16,
                            h=forwardExtension, teardropTop=true);
-      
+
         // Rear Extension
         translate([BarrelSleeveLength(),0,0])
         rotate([0,-90,0])
         ChamferedCylinder(r1=BarrelSleeveRadius()+WallBarrel(), r2=1/16,
                            h=rearExtension);
       }
-      
+
       // Bolt cap
       hull() {
-        
+
         // Forward Extension
         translate([BarrelSleeveLength(),0,0])
         rotate([0,90,0])
         ChamferedCylinder(r1=BarrelRadius(), r2=1/16,
                            h=forwardExtension, teardropTop=true);
-      
+
         // Rear Extension
         translate([BarrelSleeveLength(),0,0])
         rotate([0,-90,0])
         ChamferedCylinder(r1=BarrelSleeveRadius(), r2=1/16,
                            h=rearExtension);
-        
+
         // Bolt cap
         translate([BarrelSleeveLength()-2,-(width/2),BarrelRadius()])
         ChamferedCube([rearExtension, width, topExtension], r=1/16);
       }
-      
+
       // MLOK Slots
       hull() {
-        
+
           // Forward Extension
           translate([BarrelSleeveLength(),0,0])
           rotate([0,90,0])
           ChamferedCylinder(r1=BarrelRadius(), r2=1/16,
                              h=forwardExtension, teardropTop=true);
-        
+
           // Rear Extension
           translate([BarrelSleeveLength(),0,0])
           rotate([0,-90,0])
           ChamferedCylinder(r1=BarrelSleeveRadius(), r2=1/16,
                              h=rearExtension);
-        
+
           // MLOK slot support
           translate([BarrelSleeveLength()-1,-mlokOffset,-0.375])
           ChamferedCube([2, mlokOffset*2, 0.75], r=1/16);
       }
-      
+
       // Grip Support
       hull() {
-        
+
           // Forward Extension
           translate([BarrelSleeveLength(),0,0])
           rotate([0,90,0])
           ChamferedCylinder(r1=BarrelRadius(), r2=1/16,
                              h=forwardExtension, teardropTop=true);
-        
+
           // Rear Extension
           translate([BarrelSleeveLength(),0,0])
           rotate([0,-90,0])
           ChamferedCylinder(r1=BarrelSleeveRadius(), r2=1/16,
                              h=rearExtension);
-        
+
           // Lower vertical extension
           translate([BarrelSleeveLength()+0.25,0,-BarrelRadius()-lowerExtension])
           ChamferedCylinder(r1=0.5, r2=1/16,
                              h=lowerExtension);
       }
     }
-    
+
     // MLOK slots
     for (M = [0,1]) mirror([0,M,0])
     translate([BarrelSleeveLength()-1+0.25, -mlokOffset, 0])
@@ -921,7 +933,7 @@ module TopBreak_Cluster(cutaway=false, alpha=1) {
       MlokSlot(1.5);
       MlokSlotBack(1.5);
     }
-    
+
     TopBreak_Barrel(cutter=true);
     TopBreak_ClusterBolts(cutter=true);
     TopBreak_GripBolt(cutter=true, teardrop=true);
@@ -945,41 +957,41 @@ module TopBreak_Fixture_BarrelSleeve() {
   guideWidth = 0.5;
   width = BarrelSleeveDiameter()+(wall*2);
   holeDepth = (width/2)+guideExtra;
-  
-  
+
+
   difference() {
-    
+
     union() {
-      
+
       // Tube body
       translate([-(width/2), -(width/2),0])
       ChamferedCube([width, width, BarrelSleeveLength()], r=1/16);
-      
+
       // Drill/Tap guide
       translate([0, -(guideWidth/2),0])
       ChamferedCube([(width/2)+guideExtra, guideWidth, BarrelSleeveLength()], r=1/16);
-      
+
       // Fillets
       for (M = [0,1]) mirror([0,M,0])
       translate([(width/2)-ManifoldGap(), (guideWidth/2)-ManifoldGap(), 0.25])
       rotate(-90)
       Fillet(r=1/8, h=BarrelSleeveLength()-0.5);
     }
-    
+
     ChamferedCircularHole(r1=BarrelSleeveRadius(BARREL_CLEARANCE),
                           r2=1/16,
                           h=BarrelSleeveLength());
-    
+
     // Stand the barrel up
     rotate([0,-90,0])
     TopBreak_Barrel(cutter=true);
-    
+
     // Holes
     for (Z = [0.5:0.5:BarrelSleeveLength()-0.5])
     translate([0,0,Z])
     rotate([0,90,0])
     cylinder(r=1/8/2, h=holeDepth);
-    
+
   }
 }
 
@@ -990,17 +1002,17 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
   translate([-TopBreak_ReceiverFrontLength(),0,0]) {
     SimpleFireControlAssembly(actionRod=false);
   }
-  
+
   if (_SHOW_RECEIVER_FRONT)
   TopBreak_ReceiverFront(cutaway=cutaway==true,
                          alpha=_ALPHA_RECEIVER_FRONT);
-  
+
   // Pivoting barrel assembly
   BreakActionPivot(factor=pivotFactor) {
 
     if (_SHOW_BARREL)
     TopBreak_Barrel(cutaway=cutaway == true || _CUTAWAY_BARREL);
-    
+
     if (_SHOW_SIGHTPOST)
     translate([BarrelLength()-1,0,0])
     rotate([0,-90,0]) {
@@ -1010,60 +1022,59 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
 
     // TopBreak_Extractor Spring
     if (_SHOW_EXTRACTOR_HARDWARE)
-    %translate([PivotX()-PivotRadius()-WallPivot(),0,TopBreak_ExtractorZ()+TopBreak_ExtractorSpringRadius()])
+    %translate([PivotX()-PivotRadius()-WallPivot(),0,TopBreak_ExtractorZ()+SpringOuterRadius(spring=ExtractorSpringSpec())])
     rotate([0,-90,0])
-    cylinder(r=TopBreak_ExtractorSpringRadius(),
-              h=TopBreak_ExtractorSpringLength()+(TopBreak_ExtractorTravel()*extractFactor));
-    
+    Spring(spring=ExtractorSpringSpec(), compressed=true);
+
     translate([-TopBreak_ExtractorTravel()*extractFactor,0,0]) {
-      
+
       if (_SHOW_EXTRACTOR_HARDWARE)
       TopBreak_ExtractorBit();
-    
+
       if (_SHOW_EXTRACTOR_HARDWARE)
       TopBreak_ExtractorRetainer();
-      
+
       if (_SHOW_EXTRACTOR)
       TopBreak_Extractor(cutaway=cutaway == true || _CUTAWAY_EXTRACTOR,
                          alpha=_ALPHA_EXTRACTOR);
     }
-    
+
     translate([-TopBreak_ExtractorTravel()*extractFactor,0,0]) {
-      
+
       if (_SHOW_LATCH) {
         TopBreak_LatchBars();
         TopBreak_LatchTab();
       }
-      
+
       if (_SHOW_LATCH_HARDWARE)
       TopBreak_LatchSpring();
-      
+
       if (_SHOW_LATCH_HARDWARE)
       TopBreak_LatchScrews();
     }
-    
+
     if (_SHOW_COLLAR_HARDWARE)
     TopBreak_MlokBolts();
 
     if (_SHOW_COLLAR)
     TopBreak_BarrelCollar(cutaway=cutaway == true || _CUTAWAY_COLLAR, alpha=_ALPHA_COLLAR);
-    
+
     if (_SHOW_CLUSTER_BOLTS)
     TopBreak_ClusterBolts();
-    
+
     if (_SHOW_GRIP_BOLT)
     TopBreak_GripBolt();
-    
+
     if (_SHOW_CLUSTER)
     TopBreak_Cluster(cutaway=_CUTAWAY_CLUSTER, alpha=_ALPHA_CLUSTER);
-    
+
     if (_SHOW_FOREGRIP)
     TopBreak_VerticalForegrip();
-    
+
     children();
-    
+
   }
-  
+
   if (_SHOW_FOREND)
   TopBreak_Forend(cutaway=cutaway == true || _CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
 
@@ -1072,18 +1083,18 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
 
 scale(25.4)
 if ($preview) {
-  
+
   translate([-TopBreak_ReceiverFrontLength(),0,0]) {
-    
+
 
     if (_SHOW_LOWER) {
       Lower(showLeft=!_CUTAWAY_LOWER);
       LowerMount(cutaway=_CUTAWAY_LOWER);
     }
-    
+
     if (_SHOW_RECEIVER) {
       Receiver_TensionBolts();
-      
+
       Frame_ReceiverAssembly(
         length=FRAME_BOLT_LENGTH-0.5,
         cutaway=_CUTAWAY_RECEIVER);
@@ -1093,7 +1104,7 @@ if ($preview) {
       StockAssembly();
     }
   }
-  
+
   TopBreak_Assembly(pivotFactor=Animate(ANIMATION_STEP_UNLOAD)
                                  -Animate(ANIMATION_STEP_LOAD),
                       chargeFactor=Animate(ANIMATION_STEP_CHARGE)
@@ -1104,10 +1115,10 @@ if ($preview) {
                                  -SubAnimate(ANIMATION_STEP_LOAD, end=0.25)) {
   };
 } else {
-  
+
   echo("Part: ", _RENDER);
   echo("Orientation: ", (_RENDER_PRINT ? "Print" : "Assembly"));
-  
+
   // *****************
   // * Printed Parts *
   // *****************
@@ -1189,7 +1200,7 @@ if ($preview) {
     else
       //translate([-BARREL_LENGTH+2,0,0])
       Sightpost(radius=BarrelRadius()+BARREL_CLEARANCE);
-  
+
   // ********************
   // * Fixures and Jigs *
   // ********************
@@ -1198,31 +1209,31 @@ if ($preview) {
       TopBreak_Fixture_BarrelSleeve();
     else
       TopBreak_Fixture_BarrelSleeve();
-  
+
   // ************
   // * Hardware *
   // ************
   if (_RENDER == "Hardware/Barrel")
   TopBreak_Barrel();
-  
+
   if (_RENDER == "Hardware/ExtractorBit")
   TopBreak_ExtractorBit();
-  
+
   if (_RENDER == "Hardware/ExtractorRetainer")
   TopBreak_ExtractorRetainer();
-  
+
   if (_RENDER == "Hardware/MlokBolts")
   TopBreak_MlokBolts();
-  
+
   if (_RENDER == "Hardware/ClusterBolts")
   TopBreak_ClusterBolts();
-  
+
   if (_RENDER == "Hardware/LatchBars")
   TopBreak_LatchBars();
-  
+
   if (_RENDER == "Hardware/LatchScrews")
   TopBreak_LatchScrews();
-  
+
   if (_RENDER == "Hardware/SightpostBolts")
   translate([BarrelLength()-1,0,0])
   rotate([0,-90,0])
