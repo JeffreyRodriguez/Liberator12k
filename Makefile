@@ -12,12 +12,10 @@ MINUTEMAN_STL = $(foreach Component,$(Components),$(wildcard Receiver/$(Componen
 ForendPreset_STLS = $(wildcard Receiver/Forend/*_*/Prints/*.stl) \
                     $(wildcard Receiver/Forend/*_*/Projection/*.svg) \
 
-STL := $(MINUTEMAN_STL) $(ForendPreset_STLS)
-EXTRA_DOCS := changelog.txt Manual.pdf
-TARGETS := $(Assembly) $(EXTRA_DOCS) Source/
-
-MARKDOWN_HTML: $(MARKDOWN_HTML)
-$(MARKDOWN_HTML): $(addsuffix .md, $(basename $@))
+STL:=$(MINUTEMAN_STL) $(ForendPreset_STLS)
+EXTRA_DOCS:=changelog.txt Manual.pdf
+ZIP_TARGETS:=$(EXTRA_DOCS) Source/
+TARGETS:=Liberator12k.zip Liberator12k-assembly.zip
 
 changelog.txt:
 	git log --oneline > changelog.txt
@@ -32,24 +30,29 @@ Version.md:
 	echo "subject: How-To" >> $@ && \
 	echo "---" >> $@
 	
-Manual.pdf: Version.md $(MARKDOWN_HTML) $(MANUAL_IMAGES) FORCE
+Manual.pdf: Version.md $(MARKDOWN_HTML) $(MANUAL_IMAGES)
 	htmldoc --batch Manual.book
 
-Source/:
+Source/: .git
 	rm -rf $@ && \
 	git init $@ && \
 	cd $@ && \
 	git pull ../ --depth=1 && \
 	git remote add origin https://github.com/JeffreyRodriguez/Liberator12k.git
 
-Liberator12k.zip: $(TARGETS) FORCE
-	zip -r $@ $(TARGETS) $(STL)
+Liberator12k.zip: $(ZIP_TARGETS)
+	zip -r $@ $(ZIP_TARGETS) $(STL)
+
+Liberator12k-assembly.zip: $(Assembly)
+	$(eval CWD=$(shell pwd))
 	
-dist: FORCE $(SUBDIRS)
-	$(MAKE) Liberator12k.zip
+	for DIR in $^; do \
+		cd $$DIR && \
+		zip -r $(abspath $@) * && \
+		cd $(CWD); \
+	done
 
 clean-dir:
-	rm -rf $(MARKDOWN_HTML) $(TARGETS) Liberator12k.zip Version.md changelog.txt
+	rm -rf $(MARKDOWN_HTML) $(TARGETS) Version.md changelog.txt
 
-all: $(SUBDIRS) dist
-.PHONY: STL MARKDOWN_HTML dist Assembly
+all: $(SUBDIRS) $(TARGETS)
