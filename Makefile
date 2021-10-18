@@ -1,6 +1,7 @@
 include Makefile.in
 
-MANUAL_IMAGES = $(wildcard .manual/*.jpg) $(shell find Receiver -name \*.jpg)
+MANUAL_IMAGES = $(wildcard .manual/*.jpg) \
+                $(shell find Receiver -name \*.jpg)
 MARKDOWN = $(wildcard *.md) $(shell find Receiver -name \*.md)
 MARKDOWN_HTML = $(addsuffix .html,$(basename $(MARKDOWN)))
 
@@ -11,9 +12,10 @@ Minuteman = $(foreach Component,$(Components),$(wildcard Receiver/$(Component)/P
                 $(foreach Component,$(Components),$(wildcard Receiver/$(Component)/Fixtures/*.stl)) \
                 $(foreach Component,$(Components),$(wildcard Receiver/$(Component)/Projections/))
 
-Forends = $(shell find Receiver/Forend/ -ipath '*_*/Prints/*.stl' ) \
-					$(shell find Receiver/Forend/ -ipath '*_*/Fixtures/*.stl' ) \
-					$(shell find Receiver/Forend/ -ipath '*_*/Projections/*.dxf')
+Forends = $(filter-out Receiver/Forend/Assembly/*, \
+            $(shell find Receiver/Forend/ -ipath '*_*/Prints/*.stl' ) \
+						$(shell find Receiver/Forend/ -ipath '*_*/Fixtures/*.stl' ) \
+					  $(shell find Receiver/Forend/ -ipath '*_*/Projections/*.dxf'))
 
 EXTRA_DOCS:=changelog.txt Manual.pdf
 ZIP_TARGETS:=$(EXTRA_DOCS) Source/
@@ -43,7 +45,8 @@ Source/: .git
 	git remote add origin https://github.com/JeffreyRodriguez/Liberator12k.git
 
 Liberator12k.zip: $(SUBDIRS) $(ZIP_TARGETS)
-	zip -r $@ $(ZIP_TARGETS) $(Minuteman) $(Forends)
+	zip -r $@ $(ZIP_TARGETS) $(Minuteman) && \
+	cd Receiver && zip -r $(abspath $@) $(subst Receiver/Forend/,Forend/,$(Forends))
 
 Liberator12k-assembly.zip: $(SUBDIRS)
 	$(eval CWD=$(shell pwd))
