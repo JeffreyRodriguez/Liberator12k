@@ -36,7 +36,7 @@ use <../Stock.scad>;
 /* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Prints/ReceiverFront", "Prints/FrameSpacer", "Prints/Foregrip", "Prints/VerticalForegrip", "Prints/CylinderCore", "Prints/CylinderShell", "Prints/BarrelSupport", "Prints/ForendSpindleToggleLinkage", "Prints/ForendSpindleToggleHandle", "Projection/Cylinder", "Projection/CylinderCore", "Projection/BlastPlate", "Projection/RecoilPlate"]
+_RENDER = ""; // ["", "Prints/ReceiverFront", "Prints/FrameSpacer", "Prints/Foregrip", "Prints/VerticalForegrip", "Prints/CylinderCore", "Prints/CylinderShell", "Prints/BarrelSupport", "Prints/ForendSpindleToggleLinkage", "Prints/ForendSpindleToggleHandle", "Projections/Cylinder", "Projections/CylinderCore", "Projections/BlastPlate", "Projections/RecoilPlate"]
 
 /* [Assembly] */
 
@@ -967,11 +967,11 @@ if ($preview) {
   translate([-SpindlePinMinX(),(5/16/2),-CylinderZ()])
   Revolver_ForendSpindleToggleHandle();
   
-  if (_RENDER == "Projection/Cylinder")
+  if (_RENDER == "Projections/Cylinder")
   projection()
   Revolver_Cylinder(chambers=false);
   
-  if (_RENDER == "Projection/CylinderCore")
+  if (_RENDER == "Projections/CylinderCore")
   projection(cut=true)
   intersection() {
     translate([0,0, CYLINDER_LENGTH])
@@ -981,7 +981,7 @@ if ($preview) {
     cylinder(r=CYLINDER_OFFSET-(BARREL_DIAMETER*0.33), h=0.5);
   }
   
-  if (_RENDER == "Projection/BlastPlate")
+  if (_RENDER == "Projections/BlastPlate")
   projection()
   rotate([0,-90,0])
   translate([-BarrelMinX(),0,-CylinderZ()])

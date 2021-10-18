@@ -427,7 +427,7 @@ scale(25.4) if ($preview) {
     translate([ReceiverLength()+ReceiverBackLength(),0,0])
     ReceiverBackSegment();
   
-  if (_RENDER == "Projection/Receiver")
+  if (_RENDER == "Projections/Receiver")
   projection()
   rotate([0,90,0])
   difference() {

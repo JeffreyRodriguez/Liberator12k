@@ -24,7 +24,7 @@ use <Receiver.scad>;
 /* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Prints/FCG__Housing", "Prints/FCG__ChargingHandle", "Prints/FCG__Disconnector", "Prints/FCG__Hammer", "Prints/FCG__HammerTail", "Prints/FCG__FiringPinCollar", "Prints/FCG__Trigger", "Prints/FCG__TriggerMiddle", "Fixtures/FCG__RecoilPlate_Fixture", "Fixtures/FCG__RecoilPlate_GangFixture", "Fixtures/FCG__RecoilPlate_TapGuide", "Fixtures/FCG__SearJig", "Projection/FCG__RecoilPlate_Projection"]
+_RENDER = ""; // ["", "Prints/FCG__Housing", "Prints/FCG__ChargingHandle", "Prints/FCG__Disconnector", "Prints/FCG__Hammer", "Prints/FCG__HammerTail", "Prints/FCG__FiringPinCollar", "Prints/FCG__Trigger", "Prints/FCG__TriggerMiddle", "Fixtures/FCG__RecoilPlate_Fixture", "Fixtures/FCG__RecoilPlate_GangFixture", "Fixtures/FCG__RecoilPlate_TapGuide", "Fixtures/FCG__SearJig", "Projections/FCG__RecoilPlate_Projection"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;
@@ -1422,7 +1422,7 @@ if ($preview) {
   if (_RENDER == "Fixtures/FCG_RecoilPlate_TapGuide")
   FCG_RecoilPlate_TapGuide();
   
-  if (_RENDER == "Projection/FCG_RecoilPlate")
+  if (_RENDER == "Projections/FCG_RecoilPlate")
   projection() rotate([0,90,0])
   RecoilPlate(template=true, contoured=FCG_RECOIL_PLATE_CONTOURED);
   

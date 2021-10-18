@@ -24,7 +24,7 @@ filter_renders  = $(filter $(2),$(call list_renders,$(1)))
 list_prints     = $(call filter_renders,$(1),Prints/%)
 list_hardware   = $(call filter_renders,$(1),Hardware/%)
 list_fixtures   = $(call filter_renders,$(1),Fixtures/%)
-list_projection = $(call filter_renders,$(1),Projection/%)
+list_projections = $(call filter_renders,$(1),Projections/%)
 
 render_name         = $(subst Assembly/,,$(basename $(1)))
 render_class_preset = $(firstword $(subst /, ,$(call render_name,$(1))))

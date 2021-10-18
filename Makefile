@@ -12,8 +12,8 @@ Minuteman = $(foreach Component,$(Components),$(wildcard Receiver/$(Component)/P
                 $(foreach Component,$(Components),$(wildcard Receiver/$(Component)/Projections/))
 
 Forends = $(shell find Receiver/Forend/ -ipath '*_*/Prints/*.stl' ) \
-								$(shell find Receiver/Forend/ -ipath '*_*/Fixtures/*.stl' ) \
-								$(shell find Receiver/Forend/ -ipath '*_*/Projection/*.dxf')
+					$(shell find Receiver/Forend/ -ipath '*_*/Fixtures/*.stl' ) \
+					$(shell find Receiver/Forend/ -ipath '*_*/Projections/*.dxf')
 
 EXTRA_DOCS:=changelog.txt Manual.pdf
 ZIP_TARGETS:=$(EXTRA_DOCS) Source/
