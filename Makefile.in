@@ -98,15 +98,15 @@ Assembly/:
 		-s:v 640:360 -c:v libx264 -crf 20 -pix_fmt yuv420p \
 		"$@"
 	rm -rf $(FRAMES_DIR)
-	
-%_thumb.jpg: %.png
-	convert -thumbnail 500 $< $@
-	
-%_alpha.png: %.png
-	convert -fuzz 4% -transparent "#fafafa" $< $@
 
 %.jpg: %.png
 	convert $(basename $@).png -quality 90 $@
+
+%_alpha.png: %.png
+	convert -fuzz 4% -transparent "#fafafa" $< $@
+
+%_thumb.jpg: %.png
+	convert -thumbnail 500 $< $@
 
 %.html: %.md
 	$(MDBIN) $(basename $@).md \
