@@ -28,11 +28,6 @@ Preset_Thumbs := $(addsuffix _thumb.jpg,$(basename $(Preset_STLS)))
 Preset_Assembly := $(addsuffix /Assembly.jpg,$(Presets))
 Preset_MP4 := $(addsuffix .mp4, $(Preset_STLS))
 
-foo:
-	@echo Prints_STL: $(Prints_STL)
-	@echo Assembly_STL: $(Assembly_STL)
-	@echo Preset_Thumbs: $(Preset_Thumbs)
-
 Assembly/%_*: %.scad Assembly/
 	$(eval CLASS_Preset=$(firstword $(subst /, , $(subst Assembly/,, $@))))
 	$(eval CLASS=$(shell echo $(CLASS_Preset) | awk -F _ '{ print $$1 }'))
@@ -54,7 +49,10 @@ $(Classes) $(Presets): $$(addsuffix .scad,$$(firstword $$(subst _, ,$$@)))
 	mkdir -p $@
 	touch $@
 
-TARGETS =  README.html Assembly $(Presets) $(Preset_Thumbs) $(Preset_Assembly) $(Assembly_STL) #$(Preset_MP4)
+TARGETS=README.html Assembly $(Assembly_STL) $(Preset_Assembly) \
+          $(Preset_STLS) $(Preset_Thumbs) \
+					$(Fixtures_STL) $(Projections_DXF) $(Projections_SVG)
+					
 
 clean-dir:
 	rm -rf $(TARGETS)
