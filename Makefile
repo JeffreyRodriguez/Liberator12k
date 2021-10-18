@@ -12,7 +12,7 @@ Minuteman = $(foreach Component,$(Components),$(wildcard Receiver/$(Component)/P
                 $(foreach Component,$(Components),$(wildcard Receiver/$(Component)/Fixtures/*.stl)) \
                 $(foreach Component,$(Components),$(wildcard Receiver/$(Component)/Projections/))
 
-Forends = $(filter-out Receiver/Forend/Assembly/*, \
+Forends = $(filter-out Receiver/Forend/Assembly/%, \
             $(shell find Receiver/Forend/ -ipath '*_*/Prints/*.stl' ) \
 						$(shell find Receiver/Forend/ -ipath '*_*/Fixtures/*.stl' ) \
 					  $(shell find Receiver/Forend/ -ipath '*_*/Projections/*.dxf'))
