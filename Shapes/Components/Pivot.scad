@@ -33,8 +33,6 @@ module PivotHull(pivotX=DEFAULT_PIVOT_X, pivotZ=DEFAULT_PIVOT_Z,
   steps = angle * resolution;
   pivotStep = 1/(steps);
 
-  render()
-  union()
   for (i = [0:steps])
   hull() {
     if (i > 0)

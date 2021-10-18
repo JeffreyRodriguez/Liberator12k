@@ -183,8 +183,7 @@ module Lower_MountTakedownPinRetainer(cutter=false, clearance=0.005) {
 //**********
 module TriggerGuardSlot(radius=TriggerGuardRadius(), length=0.6, $fn=Resolution(12, 60)) {
 
-  translate([-LowerMaxX(),0, LowerOffsetZ()])
-  union() {
+  translate([-LowerMaxX(),0, LowerOffsetZ()]) {
 
     // Chamfered front edge
     translate([0.65+length, 0, TriggerGuardOffsetZ()])
@@ -220,64 +219,62 @@ module TriggerGuardSlot(radius=TriggerGuardRadius(), length=0.6, $fn=Resolution(
 module TriggerGuard() {
   height = LowerGuardHeight();
 
-  union() {
+  difference() {
+
+    // Main block
+    translate([-LowerMaxX(),0, LowerOffsetZ()])
+    translate([ReceiverLugRearMinX(), -GripWidth()/2, -height])
+    ChamferedCube([LowerMaxX()+abs(ReceiverLugRearMinX()),
+          GripWidth(),
+          height], r=0.0625);
+
+    // Bottom chamfer
+    translate([-LowerMaxX(),0, LowerOffsetZ()])
+    translate([0,0,-height+0.1])
+    rotate([0,-90,0])
+    linear_extrude(height=5, center=true)
     difference() {
+      translate([-height,-GripWidth()])
+      square([height,GripWidth()*2]);
 
-      // Main block
-      translate([-LowerMaxX(),0, LowerOffsetZ()])
-      translate([ReceiverLugRearMinX(), -GripWidth()/2, -height])
-      ChamferedCube([LowerMaxX()+abs(ReceiverLugRearMinX()),
-            GripWidth(),
-            height], r=0.0625);
+      hull()
+      for (i = [-1, 1])
+      translate([0,((GripWidth()/2)-0.09)*i])
+      circle(r=0.1);
+    }
+  }
 
-      // Bottom chamfer
-      translate([-LowerMaxX(),0, LowerOffsetZ()])
-      translate([0,0,-height+0.1])
-      rotate([0,-90,0])
-      linear_extrude(height=5, center=true)
+  LowerReceiverSupports();
+  
+  translate([-LowerMaxX(),0, LowerOffsetZ()])
+  GripHandle();
+
+  // Text
+  translate([-LowerMaxX(),0, LowerOffsetZ()])
+  if (Resolution(false, true)) {
+    translate([-0.2,
+               (GripWidth()/2),
+               -0.55])
+    rotate([90,0,180])
+    linear_extrude(height=0.05, center=true) {
       difference() {
-        translate([-height,-GripWidth()])
-        square([height,GripWidth()*2]);
-
-        hull()
-        for (i = [-1, 1])
-        translate([0,((GripWidth()/2)-0.09)*i])
-        circle(r=0.1);
+        circle(r=0.43);
+      
+      text("A", font="Arial Black", size=0.5,
+           halign = "center", valign="center"); // Anarchism A
       }
     }
 
-    LowerReceiverSupports();
-    
-    translate([-LowerMaxX(),0, LowerOffsetZ()])
-    GripHandle();
+    translate([-0.2,
+               -(GripWidth()/2),
+               -0.55])
+    rotate([90,0,0])
+    linear_extrude(height=0.05, center=true) {
+      difference() {
+        circle(r=0.43);
 
-    // Text
-    translate([-LowerMaxX(),0, LowerOffsetZ()])
-    if (Resolution(false, true)) {
-      translate([-0.2,
-                 (GripWidth()/2),
-                 -0.55])
-      rotate([90,0,180])
-      linear_extrude(height=0.05, center=true) {
-        difference() {
-          circle(r=0.43);
-        
-        text("A", font="Arial Black", size=0.5,
-             halign = "center", valign="center"); // Anarchism A
-        }
-      }
-
-      translate([-0.2,
-                 -(GripWidth()/2),
-                 -0.55])
-      rotate([90,0,0])
-      linear_extrude(height=0.05, center=true) {
-        difference() {
-          circle(r=0.43);
-
-          text("V", font="Arial Black", size=0.5,
-              halign = "center", valign="center"); // Voluntaryism V
-        }
+        text("V", font="Arial Black", size=0.5,
+            halign = "center", valign="center"); // Voluntaryism V
       }
     }
   }

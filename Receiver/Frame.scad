@@ -142,37 +142,34 @@ module Frame_Support(length=1, extraBottom=0, chamferFront=false, chamferBack=fa
 }
 
 module Frame_Receiver_Segment(length=1, highTop=false, chamferFront=true, chamferBack=true, teardropFront=true, teardropBack=true) {
-  union() {
-    
-    if (highTop)
-    hull() {
-      mirror([1,0,0])
-      ReceiverTopSegment(length=length, chamferFront=chamferFront);
-      
-      Frame_Support(length=length,
-                   chamferFront=chamferFront, teardropFront=teardropFront,
-                   chamferBack=chamferBack, teardropBack=teardropBack);
-    }
+  if (highTop)
+  hull() {
+    mirror([1,0,0])
+    ReceiverTopSegment(length=length, chamferFront=chamferFront);
     
     Frame_Support(length=length,
                  chamferFront=chamferFront, teardropFront=teardropFront,
                  chamferBack=chamferBack, teardropBack=teardropBack);
-    
-    mirror([1,0,0])
-    Receiver_Segment(length=length, highTop=highTop,
-                    chamferFront=chamferFront,
-                    chamferBack=chamferBack);
-    
-    // Fillet receiver-to-frame joint
-    for (M = [0, 1]) mirror([0,M,0])
-    translate([length,ReceiverOR(),FrameBottomZ()])
-    rotate([0,-90,0])
-    Fillet(h=length,
-           r=FrameBottomZ(), r2=CHAMFER_RADIUS,
-           chamferBottom=chamferBack, chamferTop=chamferFront,
-           teardropBottom=teardropBack, teardropTop=teardropFront,
-           inset=true);
   }
+  
+  Frame_Support(length=length,
+               chamferFront=chamferFront, teardropFront=teardropFront,
+               chamferBack=chamferBack, teardropBack=teardropBack);
+  
+  mirror([1,0,0])
+  Receiver_Segment(length=length, highTop=highTop,
+                  chamferFront=chamferFront,
+                  chamferBack=chamferBack);
+  
+  // Fillet receiver-to-frame joint
+  for (M = [0, 1]) mirror([0,M,0])
+  translate([length,ReceiverOR(),FrameBottomZ()])
+  rotate([0,-90,0])
+  Fillet(h=length,
+         r=FrameBottomZ(), r2=CHAMFER_RADIUS,
+         chamferBottom=chamferBack, chamferTop=chamferFront,
+         teardropBottom=teardropBack, teardropTop=teardropFront,
+         inset=true);
 }
 
 // ****************

@@ -402,8 +402,7 @@ module FiringPin(radius=FiringPinRadius(), cutter=false, clearance=FIRING_PIN_CL
     RenderIf(!cutter)
     Cutaway(cutaway)
     translate([-FiringPinHousingLength()-FiringPinTravel(),0,0])
-    rotate([0,90,0])
-    union() {
+    rotate([0,90,0]) {
       
       // Pin
       cylinder(r=radius+clear,
@@ -717,65 +716,63 @@ module FCG_Hammer(cutter=false, clearance=UnitsImperial(0.01), cutaway=false, al
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
-  union() {
-    // Head
-    color("Olive", alpha)
-    RenderIf(!cutter) Cutaway(cutaway)
-    difference() {
-      union() {
+  // Head
+  color("Olive", alpha)
+  RenderIf(!cutter) Cutaway(cutaway)
+  difference() {
+    union() {
 
-        // Body
-        translate([FCG_HammerCockedX,0,0])
-        rotate([0,-90,0])
-        ChamferedCylinder(r1=ReceiverIR()-clearance, r2=1/8,
-                           h=FCG_HammerLength,
-                         teardropTop=true, teardropBottom=true);
-
-        // Charging Tip
-        hull()
-        for (XYZ = [[0.125, ReceiverTopSlotWidth(), ActionRodZ()+0.125-0.25],
-                    [ActionRodZ(), ReceiverTopSlotWidth(), 0.25-(1/8)]])
-        translate([FCG_HammerCockedX, -(XYZ.y/2)+clearance, 0.25+clearance])
-        mirror([1,0,0])
-        ChamferedCube([XYZ.x, XYZ.y-(clearance*2), XYZ.z-(clearance*2)],
-                       r=1/32, teardropFlip=[false,true,true]);
-
-        // Wings
-        translate([FCG_HammerCockedX,
-                   -(ReceiverIR()+Receiver_SideSlotDepth()-clearance),
-                   -(Receiver_SideSlotHeight()/2)+clearance])
-        mirror([1,0,0])
-        ChamferedCube([FCG_HammerLength,
-                       (ReceiverIR()+Receiver_SideSlotDepth()-clearance)*2,
-                       Receiver_SideSlotHeight()-(clearance*2)],
-                      r=1/16,teardropFlip=[true, true, true]);
-      }
-
-      // Trigger Slot
-      translate([FCG_HammerCockedX+0.125,-0.375/2,-BoltFlatHeadRadius(FCG_HammerBolt())])
-      mirror([1,0,0])
-      mirror([0,0,1])
-      ChamferedCube([FCG_HammerLength+0.25, 0.375, ReceiverIR()], r=1/32);
-
-      // Main Spring Hole
-      translate([FCG_HammerCockedX-FCG_HammerLength + FCG_HammerSpringHammerInsetLength,0,0])
-      rotate([0,270,0])
-      Spring(spring=HammerSpringSpec(), clearance=HAMMER_SPRING_CLEARANCE, cutter=true, compressed=true);
-
-      // Disconnector chamfered hole
-      translate([FCG_HammerCockedX,0,FCG_DisconnectorPivotZ])
+      // Body
+      translate([FCG_HammerCockedX,0,0])
       rotate([0,-90,0])
-      ChamferedSquareHole(sides=[FCG_DisconnectorHeight+(clearance*2),
-                                 FCG_DisconnectorHeight+(clearance*2)],
-                          length=FCG_DisconnectorLength, chamferRadius=1/16,
-                          center=true, corners=false, chamferTop=false);
+      ChamferedCylinder(r1=ReceiverIR()-clearance, r2=1/8,
+                         h=FCG_HammerLength,
+                       teardropTop=true, teardropBottom=true);
 
+      // Charging Tip
+      hull()
+      for (XYZ = [[0.125, ReceiverTopSlotWidth(), ActionRodZ()+0.125-0.25],
+                  [ActionRodZ(), ReceiverTopSlotWidth(), 0.25-(1/8)]])
+      translate([FCG_HammerCockedX, -(XYZ.y/2)+clearance, 0.25+clearance])
+      mirror([1,0,0])
+      ChamferedCube([XYZ.x, XYZ.y-(clearance*2), XYZ.z-(clearance*2)],
+                     r=1/32, teardropFlip=[false,true,true]);
 
-      translate([-FCG_HammerTravelX,0,0])
-      FCG_Disconnector(cutter=true, cutaway=false);
-
-      FCG_HammerBolt(cutter=true);
+      // Wings
+      translate([FCG_HammerCockedX,
+                 -(ReceiverIR()+Receiver_SideSlotDepth()-clearance),
+                 -(Receiver_SideSlotHeight()/2)+clearance])
+      mirror([1,0,0])
+      ChamferedCube([FCG_HammerLength,
+                     (ReceiverIR()+Receiver_SideSlotDepth()-clearance)*2,
+                     Receiver_SideSlotHeight()-(clearance*2)],
+                    r=1/16,teardropFlip=[true, true, true]);
     }
+
+    // Trigger Slot
+    translate([FCG_HammerCockedX+0.125,-0.375/2,-BoltFlatHeadRadius(FCG_HammerBolt())])
+    mirror([1,0,0])
+    mirror([0,0,1])
+    ChamferedCube([FCG_HammerLength+0.25, 0.375, ReceiverIR()], r=1/32);
+
+    // Main Spring Hole
+    translate([FCG_HammerCockedX-FCG_HammerLength + FCG_HammerSpringHammerInsetLength,0,0])
+    rotate([0,270,0])
+    Spring(spring=HammerSpringSpec(), clearance=HAMMER_SPRING_CLEARANCE, cutter=true, compressed=true);
+
+    // Disconnector chamfered hole
+    translate([FCG_HammerCockedX,0,FCG_DisconnectorPivotZ])
+    rotate([0,-90,0])
+    ChamferedSquareHole(sides=[FCG_DisconnectorHeight+(clearance*2),
+                               FCG_DisconnectorHeight+(clearance*2)],
+                        length=FCG_DisconnectorLength, chamferRadius=1/16,
+                        center=true, corners=false, chamferTop=false);
+
+
+    translate([-FCG_HammerTravelX,0,0])
+    FCG_Disconnector(cutter=true, cutaway=false);
+
+    FCG_HammerBolt(cutter=true);
   }
 }
 

@@ -96,8 +96,7 @@ module HelixSegment(radius=RADIUS, depth=DEPTH, width=WIDTH,
     
     // Chop off the leading and trailing tips
     translate([0,0,-width-bottomExtra-(width*sqrt(2)/2)])
-    linear_extrude(height=height+bottomExtra+topExtra+(width*sqrt(2))+(width))
-    union() {
+    linear_extrude(height=height+bottomExtra+topExtra+(width*sqrt(2))+(width)) {
       semidonut(major=(radius+depth)*2,
                 minor=(radius-depth)*2,
                 angle=angle);

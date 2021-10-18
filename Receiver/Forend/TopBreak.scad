@@ -492,12 +492,11 @@ module TopBreak_GripBolt(bolt=GripBolt(), headType="flat", nutType="heatset", le
 
 
 // Printed Parts
-module TopBreak_ReceiverFront(cutter=false, cutaway=false, alpha=1) {
+module TopBreak_ReceiverFront(cutaway=false, alpha=1) {
   color("Tan", alpha) render() Cutaway(cutaway)
   difference() {
 
-    translate([-TopBreak_ReceiverFrontLength(),0,0])
-    union() {
+    translate([-TopBreak_ReceiverFrontLength(),0,0]) {
       hull() {
         mirror([1,0,0])
         ReceiverTopSegment(length=1/8);
@@ -546,84 +545,83 @@ module TopBreak_ReceiverFront(cutter=false, cutaway=false, alpha=1) {
 }
 
 module TopBreak_Forend(clearance=0.005, doRender=true, cutaway=false, alpha=1) {
-  union() {
 
-    // Branding text
-    color("DimGrey", alpha)
-    RenderIf(doRender) Cutaway(cutaway) {
+  // Branding text
+  color("DimGrey", alpha)
+  RenderIf(doRender) Cutaway(cutaway) {
 
-      fontSize = 0.375;
+    fontSize = 0.375;
 
-      // Right-side text
-      translate([ForendLength()-0.375,-FrameWidth()/2,FrameBoltZ()-(fontSize/2)])
-      rotate([90,0,0])
-      linear_extrude(height=LogoTextDepth(), center=true)
-      text(BRANDING_MODEL_NAME, size=fontSize, font="Impact", halign="right");
+    // Right-side text
+    translate([ForendLength()-0.375,-FrameWidth()/2,FrameBoltZ()-(fontSize/2)])
+    rotate([90,0,0])
+    linear_extrude(height=LogoTextDepth(), center=true)
+    text(BRANDING_MODEL_NAME, size=fontSize, font="Impact", halign="right");
 
-      // Left-side text
-      translate([ForendLength()-0.375,FrameWidth()/2,FrameBoltZ()-(fontSize/2)])
-      rotate([90,0,0])
-      linear_extrude(height=LogoTextDepth(), center=true)
-      mirror([1,0])
-      text(BRANDING_MODEL_NAME, size=fontSize, font="Impact", halign="left");
-    }
+    // Left-side text
+    translate([ForendLength()-0.375,FrameWidth()/2,FrameBoltZ()-(fontSize/2)])
+    rotate([90,0,0])
+    linear_extrude(height=LogoTextDepth(), center=true)
+    mirror([1,0])
+    text(BRANDING_MODEL_NAME, size=fontSize, font="Impact", halign="left");
+  }
 
-    color("Tan", alpha)
-    RenderIf(doRender) Cutaway(cutaway)
-    difference() {
-      union() {
-        Frame_Support(length=ForendLength(),
-                     chamferBack=true, teardropBack=true);
+  color("Tan", alpha)
+  RenderIf(doRender) Cutaway(cutaway)
+  difference() {
+    union() {
+      Frame_Support(length=ForendLength(),
+                   chamferBack=true, teardropBack=true);
 
-        hull() {
-          translate([PivotX(), 0, PivotZ()])
-          rotate([90,0,0])
-          ChamferedCylinder(r1=PivotRadius()-0.01, r2=1/4, h=3,
-                            teardropTop=false, teardropBottom=false, center=true);
+      hull() {
+        translate([PivotX(), 0, PivotZ()])
+        rotate([90,0,0])
+        ChamferedCylinder(r1=PivotRadius()-0.01, r2=1/4, h=3,
+                          teardropTop=false, teardropBottom=false, center=true);
 
-          // Front face
-          translate([ForendLength(), 0,0])
-          mirror([1,0,0])
-          Frame_Support(length=1/8,
-                       extraBottom=FrameBottomZ()+abs(PivotZ()),
-                       chamferFront=true, teardropFront=true);
+        // Front face
+        translate([ForendLength(), 0,0])
+        mirror([1,0,0])
+        Frame_Support(length=1/8,
+                     extraBottom=FrameBottomZ()+abs(PivotZ()),
+                     chamferFront=true, teardropFront=true);
 
-          translate([ForendLength(), 0,0])
-          mirror([1,0,0])
-          Frame_Support(length=PivotRadius()+(ForendLength()-PivotX())+abs(PivotZ())+FrameTopZ(),
-                       chamferFront=true, teardropFront=true);
-        }
+        translate([ForendLength(), 0,0])
+        mirror([1,0,0])
+        Frame_Support(length=PivotRadius()+(ForendLength()-PivotX())+abs(PivotZ())+FrameTopZ(),
+                     chamferFront=true, teardropFront=true);
       }
-
-      // Cutout the pivot track for the barrel collar to pass
-      translate([PivotX(), 0, PivotZ()])
-      rotate([0,180,0]) rotate([90,0,0])
-      linear_extrude(BarrelSleeveDiameter()+(WallBarrel()*2)+(clearance*2), center=true)
-      semidonut(major=PivotX()*3, minor=abs(PivotZ())*2, angle=PivotAngle());
-
-      // Cut a path through the full range of motion (Barrel)
-      hull() for (A = [0, PivotAngle()])
-      Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1)
-      translate([PivotX(),0,0])
-      rotate([0,90,0])
-      cylinder(r=BarrelSleeveRadius()+BARREL_CLEARANCE,
-               h=ForendLength()-PivotX());
-
-      // Cut a path through the full range of motion (Collar)
-      for (A = [0, PivotAngle()])
-      Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1)
-      TopBreak_BarrelCollar(rearExtension=2, cutter=true);
-
-      // Printability chamfer
-      translate([ForendLength(),0,BarrelZ()])
-      rotate([0,-90,0])
-      HoleChamfer(r1=BarrelSleeveRadius(BARREL_CLEARANCE), r2=1/16,
-                  teardrop=true);
-
-      Frame_Bolts(cutter=true);
     }
+
+    // Cutout the pivot track for the barrel collar to pass
+    translate([PivotX(), 0, PivotZ()])
+    rotate([0,180,0]) rotate([90,0,0])
+    linear_extrude(BarrelSleeveDiameter()+(WallBarrel()*2)+(clearance*2), center=true)
+    semidonut(major=PivotX()*3, minor=abs(PivotZ())*2, angle=PivotAngle());
+
+    // Cut a path through the full range of motion (Barrel)
+    hull() for (A = [0, PivotAngle()])
+    Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1)
+    translate([PivotX(),0,0])
+    rotate([0,90,0])
+    cylinder(r=BarrelSleeveRadius()+BARREL_CLEARANCE,
+             h=ForendLength()-PivotX());
+
+    // Cut a path through the full range of motion (Collar)
+    for (A = [0, PivotAngle()])
+    Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1)
+    TopBreak_BarrelCollar(rearExtension=2, cutter=true);
+
+    // Printability chamfer
+    translate([ForendLength(),0,BarrelZ()])
+    rotate([0,-90,0])
+    HoleChamfer(r1=BarrelSleeveRadius(BARREL_CLEARANCE), r2=1/16,
+                teardrop=true);
+
+    Frame_Bolts(cutter=true);
   }
 }
+
 module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.005, cutaway=false, alpha=1) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
@@ -635,8 +633,7 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.005, cut
       PivotOuterBearing(cutter=cutter);
 
       PivotClearanceCut(cut=!cutter,
-                        width=(BarrelSleeveRadius()+WallBarrel())*2)
-      union() {
+                        width=(BarrelSleeveRadius()+WallBarrel())*2) {
 
         // Around the barrel
         translate([clearRear,0,BarrelZ()])
@@ -720,8 +717,7 @@ module TopBreak_Extractor(cutter=false, clearance=0.015, chamferRadius=1/16, cut
   color("Olive", alpha)
   RenderIf(!cutter) Cutaway(cutaway)
   difference() {
-    PivotClearanceCut(cut=!cutter, clearance=0)
-    union() {
+    PivotClearanceCut(cut=!cutter, clearance=0) {
 
       // Long lower section
       translate([clear,

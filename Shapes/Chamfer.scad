@@ -117,34 +117,31 @@ module ChamferedSquareHole(sides=[1,1], length=1, center=true,
                            chamferTop=true, chamferBottom=true, chamferRadius=0.1,
                            teardropTop=true, teardropBottom=true,
                            corners=true, cornerRadius=0.1) {
-  union() {
 
-    // Square Tube
-    translate([0,0,chamferBottom ? -chamferRadius/2 : 0])
-    linear_extrude(height=length
-                         +(chamferTop?chamferRadius/2:0)
-                         +(chamferBottom?chamferRadius/2:0)) {
-      square(sides, center=center);
+  translate([0,0,chamferBottom ? -chamferRadius/2 : 0])
+  linear_extrude(height=length
+                       +(chamferTop?chamferRadius/2:0)
+                       +(chamferBottom?chamferRadius/2:0)) {
+    square(sides, center=center);
 
-      if (corners)
-      translate([center ? -sides[0]/2 : 0,center ? -sides[1]/2 : 0])
-      for (xy = [[0,0], [0, sides[1]], [sides[0],0], [sides[0],sides[1]]])
-      translate([xy[0], xy[1]])
-      circle(r=cornerRadius);
-    }
-
-    // Chamfer the bottom
-    if (ResolutionIsHigh())
-    if (chamferBottom)
-    SquareHoleEndChamfer(xy=sides, r=chamferRadius, center=center, teardrop=teardropTop);
-
-    // Chamfer the tube front
-    if (ResolutionIsHigh())
-    if (chamferTop)
-    translate([0,0,length])
-    mirror([0,0,1])
-    SquareHoleEndChamfer(xy=sides, r=chamferRadius, center=center, teardrop=teardropBottom);
+    if (corners)
+    translate([center ? -sides[0]/2 : 0,center ? -sides[1]/2 : 0])
+    for (xy = [[0,0], [0, sides[1]], [sides[0],0], [sides[0],sides[1]]])
+    translate([xy[0], xy[1]])
+    circle(r=cornerRadius);
   }
+
+  // Chamfer the bottom
+  if (ResolutionIsHigh())
+  if (chamferBottom)
+  SquareHoleEndChamfer(xy=sides, r=chamferRadius, center=center, teardrop=teardropTop);
+
+  // Chamfer the tube front
+  if (ResolutionIsHigh())
+  if (chamferTop)
+  translate([0,0,length])
+  mirror([0,0,1])
+  SquareHoleEndChamfer(xy=sides, r=chamferRadius, center=center, teardrop=teardropBottom);
 }
 
 module ChamferedSquare(xy=[1,1], r=0.25,
@@ -277,8 +274,7 @@ module ChamferedCircularHole(r1=1, r2=0.1, h=1,
                              teardropBottom=true, teardropTop=true) {
    if (ResolutionIsLow()) {
      cylinder(r=r1, h=h);
-   } else
-  union() {
+   } else {
 
     // Bottom Chamfer
     if (chamferBottom)
