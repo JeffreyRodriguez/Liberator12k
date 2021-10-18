@@ -44,7 +44,10 @@ standard layer heights. Small parts usually have tighter tolerance requirements
 and taller layers may cause binding. 0.1mm layers will only help here.
 
 ### \#FatNozzleGang
-All print times are given for 0.4mm nozzles at 0.2mm layer height.
+All print times are given for 0.4mm nozzles at 0.2mm layer height. 
+
+The Fire Control Group (FCG) will benefit most from smaller nozzles, print these
+parts first and then go ahead and swap to a 1.0 (or something in between).
 
 Increasing nozzle diameter yields exponential speed gains. Since you gain so
 much speed from a larger nozzle, you can slow down your print speed and use
@@ -61,11 +64,9 @@ Almost everything can be printed with a 1.5mm nozzle;
 
 #### But Seriously
 You can buy a multipack of nozzles on Amazon Prime for $15.
-
 A nozzle swap takes less than 5 minutes and will save you days of machine time.
 
 There's a few tricks to it.
 Watch some videos about how to do the swap on your machine.
-
 
 ![Fat Nozzle Dimensions](.manual/FatNozzleGang.png)

@@ -8,25 +8,48 @@ That's a mouthful, so I call it the
 [Minuteman](https://en.wikipedia.org/wiki/Minutemen). It works with
 most of the designs in the project.
 There are other ways to configure the receiver,
-but we'll save that for your second build.
+but we'll save that for a future build.
 
-After the receiver is assembled, we can continue on to building a CAFE12 forend.
-To put this in AR15 terms: we're going to build the lower first, then the upper.
-
+After the receiver is assembled, first-time builders can continue on to building
+a CAFE12 forend.
 [Chapter 2: Choose Your Weapon](Forend/README.md) covers the different
 forend configurations in detail, but for now lets focus on the receiver.
-This chonk has two big 1/2" bolts to support heavy forends.
-Steel rods reinforce the receiver and stock.
-A flexible filament buttpad reduces felt recoil.
 
-### Minuteman Component List
-This is the list of components we'll be building first.
-Keep scrolling and we'll get through them all in order.
+## Components
+Each of the following components has its own subchapter.
+Familiarize yourself with figures 1-5, this is your map. You can complete these
+components in any order and assemble them all at the end.
 
-* [1.1 Large Framed Receiver](Frame.md)
-* [1.2 Fire Control Group](FCG.md)
-* [1.3 Lower](Lower.md)
-* [1.4 Stock](Stock.md)
+* Large Framed Receiver
+* Fire Control Group (FCG)
+* Lower
+* Stock
+
+<!-- NEW PAGE -->
+### Large Framed Receiver
+One of the single largest and longest prints you'll make,
+and I can't sell it to you.
+![](Preview_Frame.jpg)
+*Figure 2: Large Framed Receiver*
+
+<!-- NEW PAGE -->
+### Fire Control Group
+Abbreviated "FCG" - the most involved of all the components.
+Literally all the moving parts are here.
+![](Preview_FCG.jpg)
+*Figure 3: Fire Control Group*
+
+<!-- NEW PAGE -->
+### Lower
+The grip for the gun, also holds the trigger from the FCG.
+![](Preview_Lower.jpg)
+*Figure 4: Lower*
+
+<!-- NEW PAGE -->
+### Stock
+A spacer and buttpad for your receiver.
+![](Preview_Stock.jpg)
+*Figure 5: Stock*
 
 <!-- NEW PAGE -->
 ## Preparing to Print
@@ -70,7 +93,7 @@ Printing one part at a time will produce higher quality prints,
 but it will take longer. You should know your machine.
 
 <!-- NEW PAGE -->
-### Complete Print List
+### Minuteman Receiver Complete Print List
 | Part                | Settings | Filament | Time    | Color    |
 |---------------------|----------|----------|---------|----------|
 | Frame_Receiver      |          |     272g | 1d3h59m | Base     |
@@ -90,12 +113,11 @@ but it will take longer. You should know your machine.
 | Stock               |          |     243g | 1d8h52m | Base     |
 | Stock_Backplate     |          |      95g |  12h05m | Accent   |
 | Stock_Buttpad       |          |     181g |  19h31m | TPU Base |
+<br/>
 
  * Base Color: 663g
  * Accent Color: 319g
  * Total Printer Time: 5d12h10m
-
-<br/>
 
 Total Printer Time - 0.4mm nozzle: 5d12h10m
 
@@ -108,9 +130,6 @@ Total Printer Time - 0.4mm nozzle: 5d12h10m
 <!-- NEW PAGE -->
 ## Bill of Materials
 Full hardware list for the Minuteman receiver.
-
-Complete kits available in the 
-[\#Liberator12k.com Store](https://liberator12k.com/store/).
 
 | Purpose                     | Part                                         | Quantity | 
 |-----------------------------|----------------------------------------------|----------|

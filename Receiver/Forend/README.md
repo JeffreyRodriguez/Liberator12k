@@ -16,10 +16,10 @@ your local hardware stores. 4130 tubing is *much* stronger than pipe, but you'll
 have to purchase it from a metals supplier. Since it's stronger, machining is
 harder as well - don't use a pipe cutter on 4130 tubing.
 
-[Liberator12k.com Store](https://liberator12k.com/store/) Kit?
+Using an Official [Liberator12k.com Store](https://liberator12k.com/store/) Kit?
 Go to [2a: CAFE12+ Forend](TopBreak_CAFE12+.md)
 
-"Buy Your Own" Kit?
+Planning to fabricate all your own parts?
 Go to [2b: CAFE12 Forend](TopBreak_CAFE12.md)
 
 ## The Models
@@ -37,7 +37,7 @@ modification.
 | BARBB    | Bolt-Action Bullpup | Prototype |
 <br/>
 
-Just a reminder, the [\#Liberator12k.com Store](https://liberator12k.com/store/)
+Just a reminder, the [Liberator12k.com Store](https://liberator12k.com/store/)
 has complete parts kits if you don't want to source your own hardware.
 Your support is greatly appreciated, thank you!
 
