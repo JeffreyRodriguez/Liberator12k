@@ -7,12 +7,14 @@ MARKDOWN_HTML = $(addsuffix .html,$(basename $(MARKDOWN)))
 Assembly = Receiver/Assembly Receiver/Forend/Assembly
 Components = Frame Receiver Stock Lower FCG
 
-MINUTEMAN_STL = $(foreach Component,$(Components),$(wildcard Receiver/$(Component)/Prints/*.stl))
+Minuteman = $(foreach Component,$(Components),$(wildcard Receiver/$(Component)/Prints/*.stl)) \
+                $(foreach Component,$(Components),$(wildcard Receiver/$(Component)/Fixtures/*.stl)) \
+                $(foreach Component,$(Components),$(wildcard Receiver/$(Component)/Projections/))
 
-ForendPreset_STLS = $(wildcard Receiver/Forend/*_*/Prints/*.stl) \
-                    $(wildcard Receiver/Forend/*_*/Projection/*.svg) \
+Forends = $(shell find Receiver/Forend/ -ipath '*_*/Prints/*.stl' ) \
+								$(shell find Receiver/Forend/ -ipath '*_*/Fixtures/*.stl' ) \
+								$(shell find Receiver/Forend/ -ipath '*_*/Projection/*.dxf')
 
-STL:=$(MINUTEMAN_STL) $(ForendPreset_STLS)
 EXTRA_DOCS:=changelog.txt Manual.pdf
 ZIP_TARGETS:=$(EXTRA_DOCS) Source/
 TARGETS:=Liberator12k.zip Liberator12k-assembly.zip
@@ -40,13 +42,13 @@ Source/: .git
 	git pull ../ --depth=1 && \
 	git remote add origin https://github.com/JeffreyRodriguez/Liberator12k.git
 
-Liberator12k.zip: $(ZIP_TARGETS)
-	zip -r $@ $(ZIP_TARGETS) $(STL)
+Liberator12k.zip: $(SUBDIRS) $(ZIP_TARGETS)
+	zip -r $@ $(ZIP_TARGETS) $(Minuteman) $(Forends)
 
-Liberator12k-assembly.zip: $(Assembly)
+Liberator12k-assembly.zip: $(SUBDIRS)
 	$(eval CWD=$(shell pwd))
 	
-	for DIR in $^; do \
+	for DIR in $(Assembly); do \
 		cd $$DIR && \
 		zip -r $(abspath $@) * && \
 		cd $(CWD); \
