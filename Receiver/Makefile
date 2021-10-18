@@ -85,9 +85,6 @@ Preview_FP37.png: Assembly.scad
 		-D _FOREND='"TopBreak"' \
 		-p Forend/TopBreak.json -P "FP37" \
 		$<
-		
-.SECONDEXPANSION:
-FCG Frame Stock: $$($$@_STL) $$($$@_thumbnails)
 
 clean-dir:
 	rm -rf $(TARGETS)
