@@ -1,6 +1,6 @@
-module RenderIf(test=true) {
+module RenderIf(test=true, convexity=undef) {
   if (test) {
-    render() children();
+    render(convexity) children();
   } else {
     children();
   }
