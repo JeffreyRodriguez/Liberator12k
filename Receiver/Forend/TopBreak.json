@@ -1,13 +1,13 @@
 {
     "parameterSets": {
         "CAFE12": {
-            "BARREL_CLEARANCE": "0.005",
+            "BARREL_CLEARANCE": "0.008",
             "BARREL_INSIDE_DIAMETER": "0.813",
             "BARREL_LENGTH": "18",
             "BARREL_OUTSIDE_DIAMETER": "1.06",
             "BARREL_SET_SCREW": "#8-32",
             "BARREL_SET_SCREW_CLEARANCE": "-0.05",
-            "BARREL_SLEEVE_DIAMETER": "1.3251",
+            "BARREL_SLEEVE_DIAMETER": "1.335",
             "BARREL_Z": "0.001",
             "BRANDING_MODEL_NAME": "CAFE12",
             "FRAME_BOLT_LENGTH": "10",
