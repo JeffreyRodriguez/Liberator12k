@@ -380,7 +380,7 @@ module GripSplitter(clearance=0) {
 module ReceiverLugRear(width=UnitsImperial(0.5), extraTop=ManifoldGap(),
                        cutter=false, clearance=UnitsImperial(0.002), clearVertical=false,
                        chamferCutterHorizontal=false,
-                       teardrop=true, teardropAngle=90, hole=true, doRender=true) {
+                       teardrop=true, teardropAngle=90, hole=true, doRender=false) {
 
   color("DarkOrange")
   RenderIf(doRender)
@@ -462,7 +462,7 @@ module Lower_MountRear(id=ReceiverID(), alpha=1, cutaway=false, doRender=true) {
   difference() {
     union() {
       
-      ReceiverLugRear(doRender=doRender, extraTop=-ReceiverBottomZ());
+      ReceiverLugRear(doRender=false, extraTop=-ReceiverBottomZ());
       
       translate([-LowerMaxX(),0, 0])
       translate([ReceiverLugRearMaxX(),0,-0.26])
