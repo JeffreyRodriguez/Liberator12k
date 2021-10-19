@@ -52,7 +52,7 @@ Assembly/:
 	@# Search for all the _RENDER == "*" lines and extract the part names
 	echo $(call list_renders,$<) > $@
 
-%.svg %.dxf %.png %.stl:
+%.dxf %.png %.stl:
 	$(eval NAME=$(call render_name,$@))
 	$(eval CLASS_PRESET=$(call render_class_preset,$@))
 	$(eval CLASS=$(call render_class,$@))

@@ -17,7 +17,6 @@ Prints_STL=$(addsuffix .stl, $(Prints))
 Hardware_STL= $(addsuffix .stl, $(Hardware))
 Fixtures_STL=$(addsuffix .stl, $(Fixtures))
 Projections_DXF=$(addsuffix .dxf, $(Projections))
-Projections_SVG=$(addsuffix .svg, $(Projections))
 
 Prints_STL_thumbs=$(addsuffix _thumb.jpg, $(Prints))
 Assembly_STL=$(addprefix Assembly/, $(Prints_STL) $(Hardware_STL))
@@ -51,7 +50,7 @@ $(Classes) $(Presets): $$(addsuffix .scad,$$(firstword $$(subst _, ,$$@)))
 
 TARGETS=README.html Assembly $(Assembly_STL) $(Preset_Assembly) \
           $(Preset_STLS) $(Preset_Thumbs) \
-					$(Fixtures_STL) $(Projections_DXF) $(Projections_SVG)
+					$(Fixtures_STL) $(Projections_DXF)
 					
 
 clean-dir:
