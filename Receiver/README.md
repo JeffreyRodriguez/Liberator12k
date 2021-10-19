@@ -27,8 +27,9 @@ components in any order and assemble them all at the end.
 
 <!-- NEW PAGE -->
 ### Large Framed Receiver
-One of the single largest and longest prints you'll make,
-and I can't sell it to you.
+This is "the gun" in the US. I can sell you everything **except** one of these.
+It's just one marathon print - almost two days at 0.4mm or just 20h at 1.0mm.
+
 ![](Preview_Frame.jpg)
 *Figure 2: Large Framed Receiver*
 
@@ -36,18 +37,24 @@ and I can't sell it to you.
 ### Fire Control Group
 Abbreviated "FCG" - the most involved of all the components.
 Literally all the moving parts are here.
+
 ![](Preview_FCG.jpg)
 *Figure 3: Fire Control Group*
+
 
 <!-- NEW PAGE -->
 ### Lower
 The grip for the gun, also holds the trigger from the FCG.
+
 ![](Preview_Lower.jpg)
 *Figure 4: Lower*
 
+
 <!-- NEW PAGE -->
 ### Stock
-A spacer and buttpad for your receiver.
+A spacer and buttpad for your receiver. Another of the major prints that will
+benefit greatly from a large nozzle.
+
 ![](Preview_Stock.jpg)
 *Figure 5: Stock*
 
@@ -77,13 +84,13 @@ choose your colors.
 You can print the buttpad in any filament, but it may be more punishing than
 necessary.
 
-### Preheat the Printer and Fire up Cura
+### Configure Cura and Preheat
 Next we need to print the receiver parts. The STL files are located in
 the Liberator12k zip file where you found this PDF or from
 [Liberator12k.com](https://liberator12k.com/).
 
-Configure Cura according to the [Printing Guidelines](Printing.md) and slice
-each part for printing.
+Configure Cura according to the [Printing Guidelines](Printing.md) in the
+Introduction and slice each part for printing.
 
 The models are already in the proper orientation for printing, so leave the
 bottom side down.
@@ -94,25 +101,25 @@ but it will take longer. You should know your machine.
 
 <!-- NEW PAGE -->
 ### Minuteman Receiver Complete Print List
-| Part                | Settings | Filament | Time    | Color    |
-|---------------------|----------|----------|---------|----------|
-| Frame_Receiver      |          |     272g | 1d3h59m | Base     |
-| FCG_Housing         |          |      16g |   2h12m | Base     |
-| FCG_Disconnector    |          |       4g |     29m | Accent   |
-| FCG_ChargingHandle  |          |      34g |   4h07m | Accent   |
-| FCG_HammerTail      |          |      13g |   1h38m | Accent   |
-| FCG_FiringPinCollar | Solid    |       1g |   0h48m | Accent   |
-| FCG_Hammer          | Solid    |      34g |   4h37m | Accent   |
-| FCG_TriggerMiddle   | Solid    |      11g |   1h23m | Accent   |
-| FCG_Trigger         | Solid    |      14g |   1h55m | Accent   |
-| Lower_Left          |          |      66g |   5h52m | Base     |
-| Lower_Right         |          |      66g |   5h52m | Base     |
-| Lower_Middle        |          |      68g |   5h20m | Accent   |
-| Lower_MountRear     |          |      23g |   2h21m | Accent   |
-| Lower_MountFront    |          |      22g |   2h09m | Accent   |
-| Stock               |          |     243g | 1d8h52m | Base     |
-| Stock_Backplate     |          |      95g |  12h05m | Accent   |
-| Stock_Buttpad       |          |     181g |  19h31m | TPU Base |
+| Part                | Settings    | Filament | Time     | Color      |
+|---------------------|-------------|----------|----------|------------|
+| FCG_FiringPinCollar | 100% Infill |       1g |    0h48m | Accent     |
+| FCG_Hammer          | 100% Infill |      34g |    4h37m | Accent     |
+| FCG_TriggerMiddle   | 100% Infill |      11g |    1h23m | Accent     |
+| FCG_Trigger         | 100% Infill |      14g |    1h55m | Accent     |
+| FCG_Housing         | 100% Infill |      16g |    2h12m | Accent     |
+| FCG_Disconnector    | 100% Infill |       4g |      29m | Accent     |
+| FCG_HammerTail      | 100% Infill |      13g |    1h38m | Accent     |
+| FCG_ChargingHandle  | Standard    |      34g |    4h07m | Accent     |
+| Lower_MountRear     | Standard    |      23g |    2h21m | Accent     |
+| Lower_MountFront    | Standard    |      22g |    2h09m | Accent     |
+| Lower_Middle        | Standard    |      68g |    5h20m | Accent     |
+| Lower_Left          | Standard    |      66g |    5h52m | Base       |
+| Lower_Right         | Standard    |      66g |    5h52m | Base       |
+| Frame_Receiver      | Standard    |     272g | 1d18h01m | Base       |
+| Stock               | Standard    |     243g | 1d08h52m | Base       |
+| Stock_Backplate     | Standard    |      95g |   12h05m | Base       |
+| Stock_Buttpad       | Standard    |     181g |   19h31m | Base (TPU) |
 <br/>
 
  * Base Color: 663g
