@@ -6,20 +6,16 @@ use <Semicircle.scad>;
 module BearingSurface2D(r=4, depth=1, segments=6) {
   diameter = 2*r;
   circumference = PI * diameter;
+  circle(r);
 
-  union() {
-    circle(r);
-
-    for (i = [0:segments-1])
-    rotate(360/segments*i)
-    semicircle(od=(r+depth)*2, angle=360/segments/2, center=true);
-  }
+  for (i = [0:segments-1])
+  rotate(360/segments*i)
+  semicircle(od=(r+depth)*2, angle=360/segments/2, center=true);
 }
 
 module BearingSurface(r=4, depth=1, segments=6, length=30, taperDepth=2, center=true) {
   
-  translate([0,0,(center ? -length/2 : 0)])
-  union() {
+  translate([0,0,(center ? -length/2 : 0)]) {
     linear_extrude(height=length)
     BearingSurface2D(r, depth, segments);
 

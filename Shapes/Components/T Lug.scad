@@ -15,18 +15,14 @@ module T_Lug2d(
              cutter=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
-               
-  render()
-  union() {
 
-    // Vertical
-    translate([-height, -(width/2)-(clearVertical ? clear : 0)])
-    square([height+clearance, width+(clearVertical ? clear2 : 0)]);
+  // Vertical
+  translate([-height, -(width/2)-(clearVertical ? clear : 0)])
+  square([height+clearance, width+(clearVertical ? clear2 : 0)]);
 
-    // Horizontal
-    translate([-tabHeight-clear, -(tabWidth/2)-clear])
-    square([tabHeight+clear2,tabWidth+clear2]);
-  }
+  // Horizontal
+  translate([-tabHeight-clear, -(tabWidth/2)-clear])
+  square([tabHeight+clear2,tabWidth+clear2]);
 }
 
 module T_Lug(length=0.75,
@@ -42,7 +38,6 @@ module T_Lug(length=0.75,
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
-  render()
   if (cutter) {
     rotate([0,90,0])
     translate([0,0,-clear])
@@ -61,18 +56,16 @@ module T_Lug(length=0.75,
     rotate([-90,0,0])
     SquareHoleEndChamfer([length+clear2, tabHeight+clear2], r=1/16);
   } else {
-    union() {
-      
-      // Horizontal
-      translate([0,-tabWidth/2,0])
-      ChamferedCube([length, tabWidth, tabHeight], r=3/64,
-                     teardropFlip=[true,true,true]);
+    
+    // Horizontal
+    translate([0,-tabWidth/2,0])
+    ChamferedCube([length, tabWidth, tabHeight], r=3/64,
+                   teardropFlip=[true,true,true]);
 
-      // Vertical
-      translate([0,-width/2,0])
-      ChamferedCube([length, width, height], r=3/64,
-                     teardropFlip=[true,true,true]);
-    }
+    // Vertical
+    translate([0,-width/2,0])
+    ChamferedCube([length, width, height], r=3/64,
+                   teardropFlip=[true,true,true]);
   }
 }
 

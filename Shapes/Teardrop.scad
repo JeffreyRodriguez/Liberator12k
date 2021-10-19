@@ -10,7 +10,6 @@ $fs = UnitsFs()*ResolutionFs();
 module Teardrop(r=1, rotation=0, enabled=true, truncated=false) {
   side = r*sqrt(2)/2;
 
-  render()
   difference() {
     hull() {
       circle(r);

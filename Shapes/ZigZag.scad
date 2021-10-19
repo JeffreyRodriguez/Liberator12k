@@ -53,46 +53,44 @@ module ZigZag(supportsTop=true, supportsBottom=true,
 
   mirror([0,(mirrored?1:0),0])
   difference() {
-    union() {
-      for (i=[0:positions-1]){
-        rotate([0,0,positionAngle*i]) {
+    for (i=[0:positions-1]){
+      rotate([0,0,positionAngle*i]) {
+        
+        // Lower segment
+        HelixSegment(radius=radius, angle=positionAngle/2,
+              width=width, depth=depth,
+              bottomExtra=extraBottom,
+              topExtra=bottom_slot_height,
+              teardropBottom=false,
+              teardropTop=false,
+              twist_rate=twistRate);
+        
+        // Upper Segment
+        intersection() {
+          rotate([0,0,-(positionAngle/2)])
+          translate([0,0,height+extraBottom+extraTop])
+          mirror([0,0,1])
+          HelixSegment(radius=radius, angle=(positionAngle/2)+overTwist,
+              depth=depth, width=width,
+              bottomExtra=top_slot_height, topExtra=0,
+              teardropBottom=false,
+              teardropTop=false,
+              twist_rate=twistRate);
           
-          // Lower segment
-          HelixSegment(radius=radius, angle=positionAngle/2,
-                width=width, depth=depth,
-                bottomExtra=extraBottom,
-                topExtra=bottom_slot_height,
-                teardropBottom=false,
-                teardropTop=false,
-                twist_rate=twistRate);
-          
-          // Upper Segment
-          intersection() {
-            rotate([0,0,-(positionAngle/2)])
-            translate([0,0,height+extraBottom+extraTop])
-            mirror([0,0,1])
-            HelixSegment(radius=radius, angle=(positionAngle/2)+overTwist,
-                depth=depth, width=width,
-                bottomExtra=top_slot_height, topExtra=0,
-                teardropBottom=false,
-                teardropTop=false,
-                twist_rate=twistRate);
+          linear_extrude(height=height+extraBottom+extraTop)
+          hull() {
+            rotate(-(positionAngle/2)+overTwist)
+            semicircle(od=(radius+depth+depth)*2,
+                       angle=(positionAngle/2)+(overTwist*2));
             
-            linear_extrude(height=height+extraBottom+extraTop)
-            hull() {
-              rotate(-(positionAngle/2)+overTwist)
-              semicircle(od=(radius+depth+depth)*2,
-                         angle=(positionAngle/2)+(overTwist*2));
-              
-              circle(r=width/2, $fn=20);
-            }
+            circle(r=width/2, $fn=20);
           }
-          
-          // Extend the straight section to compensate for overtwist
-          //rotate([0,0,-(positionAngle/2)])
-          translate([radius-depth,-width/2,extraBottom+width])
-          cube([depth*2, width, width]);
         }
+        
+        // Extend the straight section to compensate for overtwist
+        //rotate([0,0,-(positionAngle/2)])
+        translate([radius-depth,-width/2,extraBottom+width])
+        cube([depth*2, width, width]);
       }
     }
         
