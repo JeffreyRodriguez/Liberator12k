@@ -258,15 +258,11 @@ module ReceiverBottomSlotInterface(length=ReceiverLength(), height=abs(ReceiverB
   clear = clearance;
   clear2 = clear*2;
   
-  difference() {
-    union() {
-      translate([-length,-(1/2)+clear,-height+WallTensionRod()+clear])
-      ChamferedCube([length, 1-clear2, height-WallTensionRod()], r=1/32, teardropFlip=[true,true,true]);
-      
-      translate([-length,-(0.75/2)+clear,-height-extension])
-      ChamferedCube([length, 0.75-clear2, height+extension], r=1/32, teardropFlip=[true,true,true]);
-    }
-  }
+  translate([-length,-(1/2)+clear,-height+WallTensionRod()+clear])
+  ChamferedCube([length, 1-clear2, height-WallTensionRod()], r=1/32, teardropFlip=[true,true,true]);
+  
+  translate([-length,-(0.75/2)+clear,-height-extension])
+  ChamferedCube([length, 0.75-clear2, height+extension], r=1/32, teardropFlip=[true,true,true]);
 }
 module ReceiverTopSegment(length=ReceiverLength(), chamferFront=true, chamferBack=true, teardropFront=true, teardropBack=true) {
   CR = 1/4;
