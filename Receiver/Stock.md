@@ -11,6 +11,8 @@ of the Receiver in place. Remove to field strip the gun.
 
 <!-- NEW PAGE -->
 ## Prints
+STL Files Location: `Receiver/Stock/Prints/`
+
 |Stock|Stock_Backplate|Stock_Buttpad|
 |-|-|-|
 |![](Stock/Prints/Stock_thumb.jpg)|![](Stock/Prints/Stock_Backplate_thumb.jpg)|![](Stock/Prints/Stock_Buttpad_thumb.jpg)|

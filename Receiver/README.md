@@ -120,6 +120,11 @@ but it will take longer. You should know your machine.
 | Stock               | Standard    |     243g | 1d08h52m | Base       |
 | Stock_Backplate     | Standard    |      95g |   12h05m | Base       |
 | Stock_Buttpad       | Standard    |     181g |   19h31m | Base (TPU) |
+The table below can be used as a checklist. **Print this page.**
+
+The STL files are located in the Liberator12k.zip file's `Receiver/` directory.
+For instance: `Receiver/FCG/Prints/FCG_Hammer.stl`
+
 <br/>
 
  * Base Color: 663g

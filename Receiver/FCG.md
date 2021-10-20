@@ -20,6 +20,8 @@ The FCG is designed to support slamfire via the optional disconnector.
 
 <!-- NEW PAGE -->
 ## Prints
+STL Files Location: `Receiver/FCG/Prints/`
+
 |FCG_Housing|FCG_Disconnector|FCG_FiringPinCollar|
 |-|-|-|
 |![](FCG/Prints/FCG_Housing_thumb.jpg)|![](FCG/Prints/FCG_Disconnector_thumb.jpg)|![](FCG/Prints/FCG_FiringPinCollar_thumb.jpg)|

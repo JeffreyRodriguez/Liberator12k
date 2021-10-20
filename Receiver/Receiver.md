@@ -12,9 +12,8 @@ The receiver has an assortment of slots and tabs to support different designs.
 
 ## Bill of Materials
 
-### Printed
-
-179g, 15h06m
+### Prints
+STL Files Location: `Receiver/Receiver/Prints/`
 
 | Part                                                                              | Settings              | Filament | Time     |
 |-----------------------------------------------------------------------------------|-----------------------|----------|----------|

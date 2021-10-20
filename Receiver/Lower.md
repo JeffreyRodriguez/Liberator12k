@@ -10,6 +10,8 @@ The lower mount couples the lower to the receiver.
 
 <!-- NEW PAGE -->
 ## Prints
+STL Files Location: `Receiver/Lower/Prints/`
+
 |Lower_Left|Lower_Middle|Lower_Right|
 |-|-|-|
 |![](Lower/Prints/Lower_Left_thumb.jpg)|![](Lower/Prints/Lower_Middle_thumb.jpg)|![](Lower/Prints/Lower_Right_thumb.jpg)|
