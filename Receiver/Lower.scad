@@ -43,7 +43,6 @@ _ALPHA_LOWER = 1;    // [0:0.1:1]
 _ALPHA_RECEIVER = 1; // [0:0.1:1]
 
 /* [Cutaway] */
-_CUTAWAY_LOWER = true;
 _CUTAWAY_LOWERMOUNT_FRONT = false;
 _CUTAWAY_LOWERMOUNT_REAR = false;
 _CUTAWAY_RECEIVER = false;
@@ -571,6 +570,7 @@ module Lower(bolts=true,
             showMiddle=true, showLeft=true, showRight=true,
             cutaway=false, alpha=1) {
       boltLength = 1.25;
+
   // Trigger Guard Center
   if (showMiddle)
   Lower_Middle();
@@ -583,15 +583,16 @@ module Lower(bolts=true,
 
 scale(25.4)
 if ($preview) {
+  
+  if (_SHOW_FCG)
+  SimpleFireControlAssembly();
+  
   LowerMount();
   
   Lower(bolts=_SHOW_LOWER_BOLTS,
          showLeft=_SHOW_LOWER_LEFT, showRight=_SHOW_LOWER_RIGHT,
          showMiddle=_SHOW_LOWER_MIDDLE,
          alpha=_ALPHA_LOWER);
-  
-  if (_SHOW_FCG)
-  SimpleFireControlAssembly();
   
   if (_SHOW_RECEIVER)
   Receiver(cutaway=_CUTAWAY_RECEIVER, alpha=_ALPHA_RECEIVER);
