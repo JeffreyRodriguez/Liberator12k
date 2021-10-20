@@ -101,49 +101,55 @@ but it will take longer. You should know your machine.
 
 <!-- NEW PAGE -->
 ### Minuteman Receiver Complete Print List
-| Part                | Settings    | Filament | Time     | Color      |
-|---------------------|-------------|----------|----------|------------|
-| FCG_FiringPinCollar | 100% Infill |       1g |    0h48m | Accent     |
-| FCG_Hammer          | 100% Infill |      34g |    4h37m | Accent     |
-| FCG_TriggerMiddle   | 100% Infill |      11g |    1h23m | Accent     |
-| FCG_Trigger         | 100% Infill |      14g |    1h55m | Accent     |
-| FCG_Housing         | 100% Infill |      16g |    2h12m | Accent     |
-| FCG_Disconnector    | 100% Infill |       4g |      29m | Accent     |
-| FCG_HammerTail      | 100% Infill |      13g |    1h38m | Accent     |
-| FCG_ChargingHandle  | Standard    |      34g |    4h07m | Accent     |
-| Lower_MountRear     | Standard    |      23g |    2h21m | Accent     |
-| Lower_MountFront    | Standard    |      22g |    2h09m | Accent     |
-| Lower_Middle        | Standard    |      68g |    5h20m | Accent     |
-| Lower_Left          | Standard    |      66g |    5h52m | Base       |
-| Lower_Right         | Standard    |      66g |    5h52m | Base       |
-| Frame_Receiver      | Standard    |     272g | 1d18h01m | Base       |
-| Stock               | Standard    |     243g | 1d08h52m | Base       |
-| Stock_Backplate     | Standard    |      95g |   12h05m | Base       |
-| Stock_Buttpad       | Standard    |     181g |   19h31m | Base (TPU) |
 The table below can be used as a checklist. **Print this page.**
 
 The STL files are located in the Liberator12k.zip file's `Receiver/` directory.
 For instance: `Receiver/FCG/Prints/FCG_Hammer.stl`
 
+| Done    | Color      | Print Settings | Part                | Filament | Time     |
+|:-------:|:-----------|:---------------|---------------------|---------:|---------:|
+| [_]     | Accent     | **Special**    | FCG_FiringPinCollar |       1g |    0h48m |
+| [_]     | Accent     | **Special**    | FCG_Trigger         |      14g |    1h55m |
+| [_]     | Accent     | **Special**    | FCG_Housing         |      16g |    2h12m |
+| [_]     | Accent     | **Special**    | FCG_Disconnector    |       4g |      29m |
+| [_]     | Accent     | 100% Infill    | FCG_Hammer          |      34g |    4h37m |
+| [_]     | Accent     | 100% Infill    | FCG_HammerTail      |      13g |    1h38m |
+| [_]     | Accent     | Standard       | FCG_TriggerMiddle   |      11g |    1h23m |
+| [_]     | Accent     | Standard       | FCG_ChargingHandle  |      34g |    4h07m |
+| [_]     | Accent     | Standard       | Lower_MountRear     |      23g |    2h21m |
+| [_]     | Accent     | Standard       | Lower_MountFront    |      22g |    2h09m |
+| [_]     | Accent     | Standard       | Lower_Middle        |      68g |    5h20m |
+| [_]     | Base       | Standard       | Lower_Left          |      66g |    5h52m |
+| [_]     | Base       | Standard       | Lower_Right         |      66g |    5h52m |
+| [_]     | Base       | Standard       | Frame_Receiver      |     272g | 1d18h01m |
+| [_]     | Base       | Standard       | Stock               |     243g | 1d08h52m |
+| [_]     | Base       | Standard       | Stock_Backplate     |      95g |   12h05m |
+| [_]     | TPU        | **Special**    | Stock_Buttpad       |     181g |   19h31m |
+| <td colspan=6>**Totals**
+| [_]     | Base       |                | TOTAL               |     ?g |   ?d?h?m |
+| [_]     | Accent     |                | TOTAL               |     ?g |   ?d?h?m |
 <br/>
 
- * Base Color: 663g
- * Accent Color: 319g
- * Total Printer Time: 5d12h10m
+#### Standard Print Settings
+* Reminder 1 - use the [Printing Guidelines](../Printing.md) from the Introduction.
+* Reminder 2 - Use the right accent or base color!
+ 
+#### Special Print Settings
+These small FCG parts have special print settings:
+* Infill: 100%
+* Layer Height: 0.1mm
 
-Total Printer Time - 0.4mm nozzle: 5d12h10m
+##### The TPU Buttpad
+I have printed Amazon-brand TPU 95 on my stock Ender 3, just select the proper
+material in Cura. Be sure to **reset the material** before slicing other parts.
 
-#### Filament Used
-| Color  | Weight | 
-|--------|--------|
-| Base   | 663g   |
-| Accent | 319g   |
+You can use other plastics, but TPU is softer and will absorb some recoil.
 
 <!-- NEW PAGE -->
 ## Bill of Materials
-Full hardware list for the Minuteman receiver.
+Full hardware list for the Minuteman receiver
 
-| Purpose                     | Part                                         | Quantity | 
+| Purpose                     | Part                                         | Quantity |
 |-----------------------------|----------------------------------------------|----------|
 | Tension Bolt                | #8-32x12 Threaded Rod                        | 4        |
 | Tension Bolt Nut            | #8-32 Heatset Nut (Long)                     | 4        |
