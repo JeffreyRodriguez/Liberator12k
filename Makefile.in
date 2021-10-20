@@ -106,7 +106,7 @@ Assembly/:
 	convert -fuzz 4% -transparent "#fafafa" $< $@
 
 %_thumb.jpg: %.png
-	convert -thumbnail 500 $< $@
+	convert -thumbnail 450 $< $@
 
 %.html: %.md
 	$(MDBIN) $(basename $@).md \
