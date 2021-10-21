@@ -101,7 +101,8 @@ but it will take longer. You should know your machine.
 
 <!-- NEW PAGE -->
 ### Minuteman Receiver Complete Print List
-The table below can be used as a checklist. **Print this page.**
+The table below can be used as a checklist. **Print this page** then refer to the
+sub-chapters for complete build instructions.
 
 The STL files are located in the Liberator12k.zip file's `Receiver/` directory.
 For instance: `Receiver/FCG/Prints/FCG_Hammer.stl`
