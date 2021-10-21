@@ -10,7 +10,7 @@ module ShellBase(primer=Spec_Primer209(), primerOffset=0,
                  chargeDiameter=0.69, chargeHeight=0.7,
                  wadHeight=0.3,
                  $fn=60) {
-                   
+
   chamberRadius = chamberDiameter/2;
   rimRadius     = rimDiameter/2;
   chargeRadius  = chargeDiameter/2;
@@ -25,7 +25,7 @@ module ShellBase(primer=Spec_Primer209(), primerOffset=0,
     // Base and rim, minus charge pocket and primer hole
     difference() {
       union() {
-        
+
         // Body
         color("Yellow")
         translate([0,0,rimHeight/2])
@@ -39,7 +39,7 @@ module ShellBase(primer=Spec_Primer209(), primerOffset=0,
         // Rim Taper
         cylinder(r1=rimRadius, r2=chamberRadius, h=rimExtra);
       }
-      
+
       // Charge pocket
       hull() {
 
@@ -58,7 +58,7 @@ module ShellBase(primer=Spec_Primer209(), primerOffset=0,
                  r2=chargeRadius/4,
                   h=chargeRadius);
       }
-      
+
       // Primer
       color("Red")
       translate([primerOffset,0,0])
@@ -75,7 +75,7 @@ render()
 difference() {
   ShellBase()
   %cylinder(r=0.78/2);
-  
+
   cube(4);
 }
 

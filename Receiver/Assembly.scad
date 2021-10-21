@@ -54,7 +54,7 @@ _CUTAWAY_STOCK = false;
 
 scale(25.4)
 if ($preview) {
-  
+
   if (_SHOW_FOREND)
   if (_FOREND == "TopBreak") {
     TopBreak_Assembly(pivotFactor=Animate(ANIMATION_STEP_UNLOAD)
@@ -78,16 +78,16 @@ if ($preview) {
   } else if (_FOREND == "Pump") {
     PumpForend(cutaway=_CUTAWAY_FOREND);
   }
-  
+
   if (_SHOW_FCG)
   translate([-0.5,0,0])
   SimpleFireControlAssembly(actionRod=false);
-  
-  
+
+
   if (_SHOW_RECEIVER)
   translate([-0.5,0,0]) {
     Receiver_TensionBolts(cutaway=_CUTAWAY_RECEIVER, headType="socket");
-    
+
     if (_RECEIVER_SIZE == "Framed") {
       Frame_Receiver(cutaway=_CUTAWAY_RECEIVER);
       Frame_Bolts(cutaway=_CUTAWAY_RECEIVER);
@@ -95,11 +95,11 @@ if ($preview) {
       Receiver(cutaway=_CUTAWAY_RECEIVER);
     }
   }
-  
+
   if (_CONFIGURATION == "Stocked") translate([-0.5,0,0]) {
     if (_SHOW_STOCK)
     StockAssembly(cutaway=_CUTAWAY_STOCK);
-    
+
     if (_SHOW_LOWER) {
       Lower();
       LowerMount();
@@ -108,7 +108,7 @@ if ($preview) {
     BullpupAssembly();
   } else if (_CONFIGURATION == "Pistol") translate([-0.5,0,0]) {
     ReceiverBackSegment();
-    
+
     if (_SHOW_LOWER) {
       Lower();
       LowerMount();

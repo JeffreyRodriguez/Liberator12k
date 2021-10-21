@@ -168,7 +168,7 @@ module Evolver_Barrel(barrelLength=BarrelLength(), clearance=BARREL_CLEARANCE, c
     cylinder(r=BarrelRadius()+clear,
              h=barrelLength,
              $fn=Resolution(20,50));
-    
+
     if (!cutter)
     cylinder(r=CHAMBER_ID/2,
              h=barrelLength,
@@ -188,7 +188,7 @@ module Evolver_ForegripBolts(template=false, bolt=ForegripBolt(), cutter=false) 
 //*****************
 module Evolver_ReceiverFront(contoured=true, cutaway=_CUTAWAY_RECEIVER_FRONT, alpha=_ALPHA_RECEIVER_FRONT) {
   length = abs(RecoilSpreaderThickness());
-  
+
   color("Chocolate", alpha)
   render() Cutaway(cutaway)
   difference() {
@@ -196,13 +196,13 @@ module Evolver_ReceiverFront(contoured=true, cutaway=_CUTAWAY_RECEIVER_FRONT, al
       hull() {
         mirror([1,0,0])
         ReceiverTopSegment(length=length, chamferBack=false);
-        
+
         FrameSupport(length=length,
                      chamferFront=true, teardropFront=true);
       }
 
       hull() {
-        
+
         // Recoil plate backing
         translate([0,-(RecoilPlateWidth()/2)-0.25,RecoilPlateTopZ()])
         mirror([0,0,1])
@@ -210,37 +210,37 @@ module Evolver_ReceiverFront(contoured=true, cutaway=_CUTAWAY_RECEIVER_FRONT, al
                        RecoilPlateWidth()+0.5,
                        RecoilPlateHeight()-0.5],
                       r=1/8, teardropFlip=[true,true,true]);
-        
+
         // Round off the bottom
         translate([0,0,-1])
         rotate([0,90,0])
         ChamferedCylinder(r1=0.625, r2=1/8, h=0.5);
-        
+
       }
     }
-    
+
     FrameBolts(cutter=true);
 
     RecoilPlate(contoured=contoured, spindleZ=CylinderZ(), cutter=true);
-    
+
     FiringPin(cutter=true);
-    
+
     RecoilPlateBolts(cutter=true);
     Receiver_TensionBolts(cutter=true);
-    
+
     ActionRod(cutter=true);
   }
 }
 
 module Evolver_BarrelSupport(doRender=true, cutaway=false, alpha=_ALPHA_FOREND, $fn=Resolution(30,100)) {
   extraBottom=0;
-  
+
   // Branding text
-  color("DimGrey", alpha) 
+  color("DimGrey", alpha)
   RenderIf(doRender) Cutaway(cutaway) {
-    
+
     fontSize = 0.375;
-    
+
     // Right-side text
     translate([ForendMaxX()-0.125,-FrameWidth()/2,FrameBoltZ()-(fontSize/2)])
     rotate([90,0,0])
@@ -254,19 +254,19 @@ module Evolver_BarrelSupport(doRender=true, cutaway=false, alpha=_ALPHA_FOREND, 
     mirror([1,0])
     text(BRANDING_MODEL_NAME, size=fontSize, font="Impact", halign="left");
   }
-  
+
   color("Tan", alpha)
   RenderIf(doRender) Cutaway(cutaway)
   difference() {
     union() {
-      
+
       // Frame support
       hull() {
         translate([ForendMinX(),0,0])
         FrameSupport(length=Evolver_BarrelSupportLength(),
                      extraBottom=extraBottom,
                      chamferBack=true, teardropBack=true);
-        
+
         translate([ForendMinX(), 0, 0])
         mirror([1,0,0])
         ReceiverTopSegment(length=Evolver_BarrelSupportLength(),
@@ -280,19 +280,19 @@ module Evolver_BarrelSupport(doRender=true, cutaway=false, alpha=_ALPHA_FOREND, 
         ChamferedCylinder(r1=BarrelRadius()+WallBarrel(), r2=CR(),
                  h=Evolver_BarrelSupportLength(),
                             teardropTop=true);
-        
+
         translate([ForendMinX(), -(BarrelRadius()+WallBarrel()), 0])
         ChamferedCube([Evolver_BarrelSupportLength(),
                        (BarrelRadius()+WallBarrel())*2,
                        FrameBoltZ()], r=CR(), teardropFlip=[true,true,true]);
       }
     }
-    
+
     // Weld clearance: Barrel to blast plate fillet
     translate([ForendMinX(), 0, 0])
     rotate([0,90,0])
     HoleChamfer(r1=BarrelRadius(), r2=0.3125, teardrop=true);
-    
+
     FrameBolts(cutter=true);
 
     ActionRod(cutter=true);
@@ -302,31 +302,31 @@ module Evolver_BarrelSupport(doRender=true, cutaway=false, alpha=_ALPHA_FOREND, 
 }
 
 module Evolver_VerticalForegrip(length=2, cutaway=true, alpha=1) {
-  color("Tan", alpha) render() Cutaway(cutaway) 
+  color("Tan", alpha) render() Cutaway(cutaway)
   difference() {
     union() {
       translate([ForegripMinX(),0,0])
       rotate([0,90,0])
       ChamferedCylinder(r1=BarrelRadius()+WallBarrel(),
                         r2=1/16, h=length, $fn=Resolution(40,80));
-      
+
       // Grip block
       translate([ForegripMinX(),-1/2,0])
       rotate([0,90,0])
       ChamferedCube([abs(CylinderZ())+0.25, 1, length], r=1/16);
-      
+
       // Action Rod Support Block
       translate([ForegripMinX(),-0.75/2,0])
       ChamferedCube([2, 0.75, ActionRodZ()+0.375], r=1/8);
     }
-    
+
     // Inner bearing profile
     translate([ForegripMinX(),0,0])
     rotate([0,90,0])
     BearingSurface(r=BarrelRadius()+0.02,
                    length=length, center=false,
                    depth=0.0625, segments=6, taperDepth=0.125);
-    
+
     ActionRod(cutter=true);
     Evolver_Barrel(cutter=true);
     Evolver_ForegripBolts(cutter=true);
@@ -336,25 +336,25 @@ module Evolver_VerticalForegrip(length=2, cutaway=true, alpha=1) {
 module Evolver_Foregrip(length=PumpGripLength(), cutaway=false, alpha=1) {
   color("Tan", alpha) render() Cutaway(cutaway)
   difference() {
-    
+
     // Body around the barrel
     union() {
       translate([ForegripMinX(),0,0])
       rotate([0,90,0])
       PumpGrip(length=length);
-      
+
       // Action Rod Support Block
       translate([ForegripMinX(),-0.75/2,0])
       ChamferedCube([2, 0.75, ActionRodZ()+0.375], r=1/8);
     }
-    
+
     // Inner bearing profile
     translate([ForegripMinX(),0,0])
     rotate([0,90,0])
     BearingSurface(r=BarrelRadius()+0.02,
                    length=length, center=false,
                    depth=0.0625, segments=6, taperDepth=0.125);
-    
+
     ActionRod(cutter=true);
     Evolver_ForegripBolts(cutter=true);
   }
@@ -388,19 +388,19 @@ module Evolver_ActionRodJig() {
 //* Assemblies *
 //**************
 module EvolverForendAssembly(pipeAlpha=1, cutaway=false) {
-    
+
   animateBarrel = Animate(ANIMATION_STEP_CHARGE)
                 - Animate(ANIMATION_STEP_CHARGER_RESET);
-  
+
   barrelTravel = CHAMBER_LENGTH;
-  
+
   if (_SHOW_BARREL)
   translate([(barrelTravel*animateBarrel),0,0])
   Evolver_Barrel(cutaway=cutaway);
-  
+
   if (_SHOW_BARREL_SUPPORT)
   Evolver_BarrelSupport(cutaway=_CUTAWAY_BARREL_SUPPORT, alpha=_ALPHA_FOREND);
-  
+
   if (_SHOW_RECEIVER_FRONT)
   translate([-0.5,0,0])
   Evolver_ReceiverFront();
@@ -409,19 +409,19 @@ module EvolverForendAssembly(pipeAlpha=1, cutaway=false) {
 
 scale(25.4)
 if ($preview) {
-  
+
   translate([-ReceiverFrontLength(),0,0]) {
-    
+
     if (_SHOW_LOWER_LUGS)
     LowerMount();
 
     if (_SHOW_LOWER)
     Lower();
-    
+
     if (_SHOW_RECEIVER) {
-      
+
       Receiver_TensionBolts(cutaway=_CUTAWAY_RECEIVER);
-      
+
       Receiver_LargeFrameAssembly(
         length=FRAME_BOLT_LENGTH,
         cutaway=_CUTAWAY_RECEIVER);
@@ -429,11 +429,11 @@ if ($preview) {
 
     if (_SHOW_FCG)
     SimpleFireControlAssembly(recoilPlate=_SHOW_RECOIL_PLATE) {
-  
+
       if (_SHOW_FOREGRIP) {
-        
+
         Evolver_ForegripBolts();
-        
+
         if (_FOREGRIP == "Standard") {
           Evolver_Foregrip(cutaway=_CUTAWAY_FOREGRIP,
                             alpha=_ALPHA_FOREGRIP);
@@ -442,13 +442,13 @@ if ($preview) {
                                     alpha=_ALPHA_FOREGRIP);
         }
       }
-    
+
       // Actuator pin
       *translate([0.125+ReceiverFrontLength()+ActionRodTravel(),0,ActionRodZ()])
       mirror([0,0,1])
       cylinder(r=0.125, h=0.15+0.125);
-      
-    
+
+
       // Forward Actuator Pin
       *translate([0.25+ForendMaxX(),0,ActionRodZ()])
       rotate([-90,0,0])
@@ -466,7 +466,7 @@ if ($preview) {
   if (_RENDER == "Prints/Evolver_ReceiverFront")
   rotate([0,-90,0])
   Evolver_ReceiverFront();
-  
+
   if (_RENDER == "Prints/Evolver_BarrelSupport")
   rotate([0,90,0]) translate([-ForendMaxX(),0,0])
   render()
@@ -476,7 +476,7 @@ if ($preview) {
   rotate([0,-90,0])
   translate([-ForegripMinX(),0,0])
   Evolver_Foregrip();
-  
+
   if (_RENDER == "Prints/Evolver_VerticalForegrip")
   rotate([0,-90,0])
   translate([-ForegripMinX(),0,0])

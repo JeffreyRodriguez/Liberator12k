@@ -136,9 +136,9 @@ module OffsetZigZagRevolver(diameter=4, height=2.75,
                       chamferTop=true, teardropTop=true, chamferBottom=!cutter);
 
     if (!cutter) {
-      
+
       children();
-      
+
       // Spindle Hole
       if (spindleRadius > 0)
       cylinder(r=spindleRadius,

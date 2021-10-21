@@ -43,7 +43,7 @@ Requires the trigger from the [Fire Control Group](../FCG.md).
 7. Gently compress the stack by hand.
 
 If there are large gaps in the stack, light tapping with a rubber mallet should
-close them. If you need a lot of force, there's probably something binding. 
+close them. If you need a lot of force, there's probably something binding.
 Figure out what's bulging, and file it down. Needle files are great for this.
 
 ## Technical Notes

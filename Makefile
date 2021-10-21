@@ -33,7 +33,7 @@ Version.md:
 	echo "language: en-US" >> $@ && \
 	echo "subject: How-To" >> $@ && \
 	echo "---" >> $@
-	
+
 Manual.pdf: $(SUBDIRS) Version.md $(MARKDOWN_HTML) $(MANUAL_IMAGES)
 	htmldoc --batch Manual.book
 
@@ -50,7 +50,7 @@ Liberator12k.zip: $(SUBDIRS) $(ZIP_TARGETS)
 
 Liberator12k-assembly.zip: $(SUBDIRS)
 	$(eval CWD=$(shell pwd))
-	
+
 	for DIR in $(Assembly); do \
 		cd $$DIR && \
 		zip -r $(abspath $@) * && \

@@ -122,8 +122,8 @@ module Frame_Support(length=1, extraBottom=0, chamferFront=false, chamferBack=fa
   cr = 1/4;
   height = (FrameBoltRadius()+WallFrameBolt())*2;
   width=(FrameBoltY()+FrameBoltRadius()+WallFrameBolt())*2;
-  
-  translate([0,0,FrameBoltZ()])  
+
+  translate([0,0,FrameBoltZ()])
   hull() {
     for (M = [0,1]) mirror([0,M,0]) {
       translate([0,(width/2)-cr,(FrameBoltRadius()+WallFrameBolt())-cr])
@@ -131,7 +131,7 @@ module Frame_Support(length=1, extraBottom=0, chamferFront=false, chamferBack=fa
       ChamferedCylinder(h=length, r1=cr, r2=chamferRadius,
                         chamferBottom=chamferFront, teardropBottom=teardropFront,
                         chamferTop=chamferBack,     teardropTop=teardropBack);
-      
+
       translate([0,(width/2)-cr,cr-(FrameBoltRadius()+WallFrameBolt())-extraBottom])
       rotate([0,90,0])
       ChamferedCylinder(h=length, r1=cr, r2=chamferRadius,
@@ -146,21 +146,21 @@ module Frame_Receiver_Segment(length=1, highTop=false, chamferFront=true, chamfe
   hull() {
     mirror([1,0,0])
     ReceiverTopSegment(length=length, chamferFront=chamferFront);
-    
+
     Frame_Support(length=length,
                  chamferFront=chamferFront, teardropFront=teardropFront,
                  chamferBack=chamferBack, teardropBack=teardropBack);
   }
-  
+
   Frame_Support(length=length,
                chamferFront=chamferFront, teardropFront=teardropFront,
                chamferBack=chamferBack, teardropBack=teardropBack);
-  
+
   mirror([1,0,0])
   Receiver_Segment(length=length, highTop=highTop,
                   chamferFront=chamferFront,
                   chamferBack=chamferBack);
-  
+
   // Fillet receiver-to-frame joint
   for (M = [0, 1]) mirror([0,M,0])
   translate([length,ReceiverOR(),FrameBottomZ()])
@@ -192,9 +192,9 @@ module Frame_Spacer_print() {
 }
 
 module Frame_Receiver(doRender=true, cutaway=false, alpha=1) {
-  
+
   topCoverHeight = 1;
-  
+
   // Branding text
   color("DimGrey")
   RenderIf(doRender) Cutaway(cutaway)
@@ -202,15 +202,15 @@ module Frame_Receiver(doRender=true, cutaway=false, alpha=1) {
   rotate([90,0,0])
   linear_extrude(height=LogoTextDepth(), center=true)
   text(FRAME_BRANDING_TEXT, size=LogoTextSize(), font="Impact", halign="center", valign="center");
-  
+
   color("Tan", alpha)
   RenderIf(doRender) Cutaway(cutaway)
   difference() {
     Receiver(doRender=false) {
-      
+
       mirror([1,0,0])
       Frame_Receiver_Segment(FrameReceiverLength(), teardropFront=true);
-      
+
       hull() {
         mirror([1,0,0])
         Frame_Support(FrameReceiverLength(),
@@ -218,7 +218,7 @@ module Frame_Receiver(doRender=true, cutaway=false, alpha=1) {
 
         ReceiverTopSegment(length=FrameReceiverLength());
       }
-      
+
       // Bolt head support
       hull() {
         translate([-FrameReceiverLength(),0,0])
@@ -227,22 +227,22 @@ module Frame_Receiver(doRender=true, cutaway=false, alpha=1) {
         ChamferedCylinder(r1=0.5+(1/16), r2=CHAMFER_RADIUS,
                           h=0.3125,
                           teardropBottom=false);
-    
+
         translate([-FrameReceiverLength(),0,0])
         Frame_Support(length=0.1875,
-                     chamferFront=false, 
+                     chamferFront=false,
                      chamferBack=false);
-        
+
         translate([-FrameReceiverLength()-0.3125,0,0])
         mirror([1,0,0])
         ReceiverTopSegment(length=0.5);
       }
   }
-    
+
     ReceiverMlokSlot();
     Receiver_MlokBolts(cutter=true, teardrop=true);
     ReceiverTopSlot(length=ReceiverLength());
-    
+
     Frame_Bolts(cutter=true);
   }
 }
@@ -251,16 +251,16 @@ module Frame_Receiver(doRender=true, cutaway=false, alpha=1) {
 // * Assemblies *
 // **************
 module Frame_ReceiverAssembly(length=FrameBoltLength(), frameBolts=_SHOW_FRAME_BOLTS, cutaway=_CUTAWAY_RECEIVER, alpha=1) {
-  
+
   if (frameBolts)
   Frame_Bolts(length=length, cutaway=cutaway, alpha=alpha);
-  
+
   Frame_Receiver(cutaway=cutaway, alpha=_ALPHA_FRAME);
 }
 
 scale(25.4)
 if ($preview) {
-  
+
   if (_SHOW_RECEIVER_RODS)
   Receiver_TensionBolts();
 
@@ -279,7 +279,7 @@ if ($preview) {
     else
       rotate([0,90,0])
       Frame_Receiver(doRender=false);
-      
+
   // ************
   // * Hardware *
   // ************

@@ -39,7 +39,7 @@ module PATCartridge(primer=PRIMER,
     // Base and rim, minus charge pocket and primer hole
     difference() {
       union() {
-        
+
         // Body
         color("Yellow")
         ChamferedCylinder(r1=chamberRadius, r2=PipeWall(INNER_PIPE)/2,
@@ -49,21 +49,21 @@ module PATCartridge(primer=PRIMER,
         // Rim
         color("Blue")
         cylinder(r=rimRadius, h=rimHeight);
-        
+
 
         // Rim Taper
         cylinder(r1=rimRadius, r2=chamberRadius, h=rimExtra);
       }
-      
-      
+
+
       // Primer
       Primer(primer=primer);
-      
+
       // Bullet
       translate([0,0,PrimerHeight(primer)]) {
         translate([0,0,PipeInnerRadius(INNER_PIPE)])
         sphere(r=PipeInnerRadius(INNER_PIPE), $fn=PipeFn(INNER_PIPE));
-        
+
         cylinder(r=(PrimerMinorDiameter(PRIMER)+PrimerClearance(PRIMER))/2, h=bulletRadius, $fn=PipeFn(INNER_PIPE));
       }
     }
@@ -75,7 +75,7 @@ module PATCartridge(primer=PRIMER,
 }
 
 
-  
+
 color("LightBlue")
   translate([0,0.001,0])
 Cutaway()
@@ -97,15 +97,15 @@ difference() {
   PATCartridge();
   cube(4);
 }
-      
+
 // Bullet
 color("DimGrey")
 translate([0,0,PrimerHeight(PRIMER)]) {
   *cylinder(r=PipeInnerRadius(INNER_PIPE), h=0.3, $fn=PipeFn(INNER_PIPE));
-  
+
   translate([0,0,PipeInnerRadius(INNER_PIPE)])
   sphere(r=PipeInnerRadius(INNER_PIPE), $fn=PipeFn(INNER_PIPE));
-  
+
 }
 
 // Primer

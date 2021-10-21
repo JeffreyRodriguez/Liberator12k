@@ -13,9 +13,9 @@
 // This file is public domain.  Use it for any purpose, including commercial
 // applications.  Attribution would be nice, but is not required.  There is
 // no warranty of any kind, including its correctness, usefulness, or safety.
-// 
+//
 // This is parameterized involute spur (or helical) gear.  It is much simpler and less powerful than
-// others on Thingiverse.  But it is public domain.  I implemented it from scratch from the 
+// others on Thingiverse.  But it is public domain.  I implemented it from scratch from the
 // descriptions and equations on Wikipedia and the web, using Mathematica for calculations and testing,
 // and I now release it into the public domain.
 //
@@ -32,31 +32,31 @@
 // measurements for the gear.  The most important is pitch_radius, which tells how far apart to space
 // gears that are meshing, and adendum_radius, which gives the size of the region filled by the gear.
 // A gear has a "pitch circle", which is an invisible circle that cuts through the middle of each
-// tooth (though not the exact center). In order for two gears to mesh, their pitch circles should 
-// just touch.  So the distance between their centers should be pitch_radius() for one, plus pitch_radius() 
+// tooth (though not the exact center). In order for two gears to mesh, their pitch circles should
+// just touch.  So the distance between their centers should be pitch_radius() for one, plus pitch_radius()
 // for the other, which gives the radii of their pitch circles.
 //
-// In order for two gears to mesh, they must have the same mm_per_tooth and pressure_angle parameters.  
+// In order for two gears to mesh, they must have the same mm_per_tooth and pressure_angle parameters.
 // mm_per_tooth gives the number of millimeters of arc around the pitch circle covered by one tooth and one
 // space between teeth.  The pitch angle controls how flat or bulged the sides of the teeth are.  Common
 // values include 14.5 degrees and 20 degrees, and occasionally 25.  Though I've seen 28 recommended for
 // plastic gears. Larger numbers bulge out more, giving stronger teeth, so 28 degrees is the default here.
 //
-// The ratio of number_of_teeth for two meshing gears gives how many times one will make a full 
-// revolution when the the other makes one full revolution.  If the two numbers are coprime (i.e. 
+// The ratio of number_of_teeth for two meshing gears gives how many times one will make a full
+// revolution when the the other makes one full revolution.  If the two numbers are coprime (i.e.
 // are not both divisible by the same number greater than 1), then every tooth on one gear
 // will meet every tooth on the other, for more even wear.  So coprime numbers of teeth are good.
 //
 // The module rack() gives a rack, which is a bar with teeth.  A rack can mesh with any
 // gear that has the same mm_per_tooth and pressure_angle.
 //
-// Some terminology: 
+// Some terminology:
 // The outline of a gear is a smooth circle (the "pitch circle") which has mountains and valleys
-// added so it is toothed.  So there is an inner circle (the "root circle") that touches the 
+// added so it is toothed.  So there is an inner circle (the "root circle") that touches the
 // base of all the teeth, an outer circle that touches the tips of all the teeth,
 // and the invisible pitch circle in between them.  There is also a "base circle", which can be smaller than
-// all three of the others, which controls the shape of the teeth.  The side of each tooth lies on the path 
-// that the end of a string would follow if it were wrapped tightly around the base circle, then slowly unwound.  
+// all three of the others, which controls the shape of the teeth.  The side of each tooth lies on the path
+// that the end of a string would follow if it were wrapped tightly around the base circle, then slowly unwound.
 // That shape is an "involute", which gives this type of gear its name.
 //
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -105,7 +105,7 @@ module gear (
 //these 4 functions are used by gear
 function polar(r,theta)   = r*[sin(theta), cos(theta)];                            //convert polar to cartesian coordinates
 function iang(r1,r2)      = sqrt((r2/r1)*(r2/r1) - 1)/PI*180 - acos(r1/r2);        //unwind a string this many degrees to go from radius r1 to radius r2
-function q7(f,r,b,r2,t,s) = q6(b,s,t,(1-f)*max(b,r)+f*r2);                         //radius a fraction f up the curved side of the tooth 
+function q7(f,r,b,r2,t,s) = q6(b,s,t,(1-f)*max(b,r)+f*r2);                         //radius a fraction f up the curved side of the tooth
 function q6(b,s,t,d)      = polar(d,s*(iang(b,d)+t));                              //point at radius d on the involute curve
 
 //a rack, which is a straight line with teeth (the same as a segment from a giant gear with a huge number of teeth).
@@ -153,7 +153,7 @@ function outer_radius    (mm_per_tooth=3,number_of_teeth=11,clearance=0.1)    //
 function root_radius    (mm_per_tooth=3,number_of_teeth=11,clearance=0.1) = pitch_radius(mm_per_tooth, number_of_teeth) - mm_per_tooth / PI - clearance;
 
 //////////////////////////////////////////////////////////////////////////////////////////////
-//example gear train.  
+//example gear train.
 //Try it with OpenSCAD View/Animate command with 20 steps and 24 FPS.
 //The gears will continue to be rotated to mesh correctly if you change the number of teeth.
 
@@ -186,7 +186,7 @@ translate([ 0,  d12, 0]) rotate([0,0,-($t+n2/2-0*n1+1/2)*360/n2]) color([0.75,1.
 use <Semicircle.scad>;
 intersection() {
   gear(mm_per_tooth,72,thickness,outer_radius(mm_per_tooth, 72)*2+10,-twist);
-  
+
   linear_extrude(height=height, center=true)
   semicircle(od=300, angle=45);
 }

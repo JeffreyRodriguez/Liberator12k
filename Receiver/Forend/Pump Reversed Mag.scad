@@ -49,16 +49,16 @@ module Barrel(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, length=Barr
   color("Silver") RenderIf(!cutter) Cutaway(cutaway)
   translate([(cutter?0:cartridgeRimThickness),0,0])
   difference() {
-    
+
     rotate([0,90,0])
     cylinder(r=(od/2)+clear, h=length, $fn=60);
 
     if (!cutter) {
-      
+
       // Hollow inside
       rotate([0,90,0])
       cylinder(r=(id/2)+clear, h=length);
-      
+
       // Extractor notch
       *#rotate([90,0,0])
       translate([0,-0.813*0.5,0])

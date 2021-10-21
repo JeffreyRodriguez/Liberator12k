@@ -27,7 +27,7 @@ module PATBase(primer=Spec_Primer22PAT(),
             chargeDiameter=chargeDiameter,
             chargeHeight=chargeHeight, wadHeight=wadHeight,
             rimDiameter=rimDiameter, rimHeight=rimHeight);
-                   
+
 }
 
 module BatonTop(chamberDiameter=DEFAULT_CHAMBER_DIAMETER, height=1.5, alpha=1, $fn=60) {
@@ -36,7 +36,7 @@ module BatonTop(chamberDiameter=DEFAULT_CHAMBER_DIAMETER, height=1.5, alpha=1, $
   render()
   union() {
     cylinder(r=chamberRadius, h=height-chamberRadius);
-    
+
     translate([0,0,height-chamberRadius])
     sphere(r=chamberRadius);
   }
@@ -45,7 +45,7 @@ module BatonTop(chamberDiameter=DEFAULT_CHAMBER_DIAMETER, height=1.5, alpha=1, $
 //!scale(25.4)
 Cutaway()
 PATBase(alpha=1);
-      
+
 // Primer
 color("Red")
 Primer(primer=Spec_Primer27PAT());

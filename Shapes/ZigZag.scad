@@ -24,7 +24,7 @@ module ZigZagSupport(radius,depth, width) {
   translate([radius - (depth*2),-(width/2)-(0.07/2),0])
   hull() {
     cube([depth, 0.07, width]);
-    
+
     translate([depth*0.9,0,width*2])
     cube([depth*2.2, 0.07, width]);
   }
@@ -37,7 +37,7 @@ module ZigZag(supportsTop=true, supportsBottom=true,
            positions=DEFAULT_ZIGZAG_POSITIONS,
            extraTop=0, extraBottom=0,
            twistRate=0.8, mirrored=false) {
-             
+
   zigZagCircumference = (radius+depth)*2*PI;
   slotAngle = (width/zigZagCircumference)*360;
   overTwist = slotAngle/2;
@@ -45,17 +45,17 @@ module ZigZag(supportsTop=true, supportsBottom=true,
   positionAngle=360/positions;
   top_slot_height = (width/2)+extraTop;
   bottom_slot_height = (width/2)+extraBottom;
-  
+
   height = (radius*2*3.14/positions/2/twistRate)
          + (width*3)
          + (width/2*sqrt(2));
-  
+
 
   mirror([0,(mirrored?1:0),0])
   difference() {
     for (i=[0:positions-1]){
       rotate([0,0,positionAngle*i]) {
-        
+
         // Lower segment
         HelixSegment(radius=radius, angle=positionAngle/2,
               width=width, depth=depth,
@@ -64,7 +64,7 @@ module ZigZag(supportsTop=true, supportsBottom=true,
               teardropBottom=false,
               teardropTop=false,
               twist_rate=twistRate);
-        
+
         // Upper Segment
         intersection() {
           rotate([0,0,-(positionAngle/2)])
@@ -76,24 +76,24 @@ module ZigZag(supportsTop=true, supportsBottom=true,
               teardropBottom=false,
               teardropTop=false,
               twist_rate=twistRate);
-          
+
           linear_extrude(height=height+extraBottom+extraTop)
           hull() {
             rotate(-(positionAngle/2)+overTwist)
             semicircle(od=(radius+depth+depth)*2,
                        angle=(positionAngle/2)+(overTwist*2));
-            
+
             circle(r=width/2, $fn=20);
           }
         }
-        
+
         // Extend the straight section to compensate for overtwist
         //rotate([0,0,-(positionAngle/2)])
         translate([radius-depth,-width/2,extraBottom+width])
         cube([depth*2, width, width]);
       }
     }
-        
+
     // Support Material
     // Top
     if (supportsTop)

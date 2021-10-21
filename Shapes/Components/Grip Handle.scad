@@ -12,7 +12,7 @@ module GripHandle(angle=25, gripWidth=1, gripCeiling=0.75, length=1.3, height=5.
   handleOffsetZ = 1.3825-gripCeiling;
   palmSwellOffsetZ=-3.0-gripCeiling;
   fingerSwellOffsetZ=-2.5-gripCeiling;
-  
+
   difference() {
 
 

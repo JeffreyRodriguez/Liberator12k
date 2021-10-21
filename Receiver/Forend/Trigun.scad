@@ -97,9 +97,9 @@ function BarrelRadius(clearance=0)
 
 function BarrelDiameter(clearance=0)
     = BARREL_OUTSIDE_DIAMETER+clearance;
-    
+
 function BarrelWall() = (BarrelDiameter() - BARREL_INSIDE_DIAMETER)/2;
-    
+
 
 // Settings: Dimensions
 function BarrelLength() = BARREL_LENGTH;
@@ -135,7 +135,7 @@ module Barrels(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, length=Bar
     cylinder(r=(od/2)+clear, h=length, $fn=60);
 
     if (!cutter) {
-      
+
       // Hollow inside
       rotate([0,90,0])
       cylinder(r=(id/2)+clear, h=length);
@@ -147,7 +147,7 @@ module Barrels(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, length=Bar
 module LatchGuides(cutter=false, clearance=0.01) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
-  
+
   translate([0,
              -(ExtractorHousingWidth()/2)-LatchGuideWidth()-clear,
              LatchGuideZ()-clear])
@@ -161,13 +161,13 @@ module LatchGuides(cutter=false, clearance=0.01) {
 module ReceiverFront(cutaway=false, alpha=1) {
   color("Tan", alpha) render() Cutaway(cutaway)
   difference() {
-    
+
     translate([-ReceiverFrontLength(),0,0])
     union() {
       hull() {
         mirror([1,0,0])
         ReceiverTopSegment(length=1/16);
-        
+
         Frame_Support(length=ReceiverFrontLength());
       }
 
@@ -179,7 +179,7 @@ module ReceiverFront(cutaway=false, alpha=1) {
                      RecoilPlateHeight()+0.25],
                     r=1/16);
     }
-    
+
     Frame_Bolts(cutter=true);
 
     translate([-ReceiverFrontLength(),0,0]) {
@@ -196,13 +196,13 @@ module ReceiverFront_print() {
   ReceiverFront();
 }
 
-module ReceiverForend(clearance=0.005, cutaway=false, alpha=1) {  
+module ReceiverForend(clearance=0.005, cutaway=false, alpha=1) {
   // Branding text
-  color("DimGrey", alpha) 
+  color("DimGrey", alpha)
   render() Cutaway(cutaway) {
-    
+
     fontSize = 0.375;
-    
+
     // Right-side text
     translate([ForendLength()-0.375,-FrameWidth()/2,FrameBoltZ()-(fontSize/2)])
     rotate([90,0,0])
@@ -216,26 +216,26 @@ module ReceiverForend(clearance=0.005, cutaway=false, alpha=1) {
     mirror([1,0])
     text(BRANDING_MODEL_NAME, size=fontSize, font="Impact", halign="left");
   }
-  
+
   color("Tan", alpha)
   render() Cutaway(cutaway)
   difference() {
     union() {
       Frame_Support(length=ForendLength());
-      
+
       hull() {
         // Front face
         translate([ForendLength(), 0,0])
         mirror([1,0,0])
         Frame_Support(length=ManifoldGap(),
                      extraBottom=0);
-        
+
         translate([ForendLength(), 0,0])
         mirror([1,0,0])
         Frame_Support(length=(ForendLength())+FrameTopZ());
       }
     }
-    
+
     // Printability allowance
     translate([ForendLength(),0,0])
     rotate([0,-90,0])
@@ -258,26 +258,26 @@ module ReceiverForend_print() {
 module BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, cutaway=false, alpha=1) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
-                           
+
   color("Chocolate", alpha) RenderIf(!cutter) Cutaway(cutaway)
   difference() {
     intersection() {
       union() {
         PivotOuterBearing(cutter=cutter);
-        
+
         // Latch guiderails
         LatchGuides(cutter=cutter);
-        
+
         PivotClearanceCut(cut=!cutter)
         union() {
-          
+
           // Around the barrel
           translate([RIM_WIDTH,0,0])
           rotate([0,90,0])
           ChamferedCylinder(r1=BarrelRadius()+WallBarrel()+clear,
                             h=LatchCollarLength()-RIM_WIDTH+clear,
                             r2=1/16, $fn=100);
-          
+
           // Extractor and latch support
           translate([RIM_WIDTH-rearExtension-clear,-(ExtractorHousingWidth()/2)-clear,BarrelCollarBottomZ()-clear])
           ChamferedCube([LatchCollarLength()-RIM_WIDTH+rearExtension+clear2,
@@ -287,16 +287,16 @@ module BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, cutaway=false
         }
       }
     }
-    
+
     PivotInnerBearing(cutter=true);
-    
+
     if (!cutter) {
-    
+
       // Angled cut for supportless printability
       translate([0,-(PivotWidth()/2),PivotZ()])
       rotate([0,90+45,0])
       cube([3, PivotWidth(), 3]);
-      
+
       // Angled cut to remove the front-bottom tip of the pivot bearing interface
       translate([PivotX(),-(PivotWidth()/2)-clear, 0])
       translate([0,0,PivotZ()])
@@ -305,7 +305,7 @@ module BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, cutaway=false
       cube([PivotX(),
             PivotWidth()+clear2,
             abs(BarrelCollarBottomZ())+PivotRadius()]);
-      
+
       // Pic rail slot
       *translate([0,-(UnitsImperial(0.617)/2)-clear,FrameTopZ()-0.125])
       cube([LatchCollarLength(),
@@ -315,7 +315,7 @@ module BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, cutaway=false
       for (X = [0,-ExtractorTravel()])
       translate([X,0,0])
       Extractor(cutter=true);
-      
+
       hull()
       for (X = [0,-ExtractorTravel()])
       translate([X,0,0])
@@ -362,7 +362,7 @@ module TrigunForendAssembly(receiverLength=12, pipeAlpha=1, receiverFrontAlpha=1
 
   if (_SHOW_BARREL)
   Barrels();
-  
+
   if (_SHOW_RECEIVER_FRONT)
   ReceiverFront(cutaway=cutaway, alpha=_ALPHA_RECOIL_PLATE_HOUSING);
 
@@ -373,18 +373,18 @@ module TrigunForendAssembly(receiverLength=12, pipeAlpha=1, receiverFrontAlpha=1
 
 scale(25.4)
 if ($preview) {
-  
+
   translate([-ReceiverFrontLength(),0,0]) {
-    
+
     if (_SHOW_LOWER_MOUNT)
     LowerMount();
 
     if (_SHOW_LOWER)
     Lower();
-    
+
     if (_SHOW_RECEIVER) {
       Receiver_TensionBolts();
-      
+
       Frame_ReceiverAssembly(
         length=FRAME_BOLT_LENGTH,
         cutaway=_CUTAWAY_RECEIVER);
@@ -394,7 +394,7 @@ if ($preview) {
       StockAssembly();
     }
   }
-  
+
   TrigunForendAssembly(pivotFactor=Animate(ANIMATION_STEP_UNLOAD)
                                  -Animate(ANIMATION_STEP_LOAD),
                       chargeFactor=Animate(ANIMATION_STEP_CHARGE)

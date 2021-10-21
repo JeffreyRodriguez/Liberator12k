@@ -13,7 +13,7 @@ module Teardrop(r=1, rotation=0, enabled=true, truncated=false) {
   difference() {
     hull() {
       circle(r);
-      
+
       if (enabled)
       rotate(rotation)
       polygon(points=[

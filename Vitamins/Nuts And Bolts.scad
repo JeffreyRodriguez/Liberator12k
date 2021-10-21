@@ -39,7 +39,7 @@ BOLTS = [
   ["1/4\"-20", Spec_BoltOneQuarter()],
   ["5/16\"-18", Spec_BoltFiveSixteenths()],
   ["1/2\"-13", Spec_BoltOneHalf()],
-  
+
   ["M2", Spec_BoltM2()],
   ["M2.5", Spec_BoltM2pt5()],
   ["M3", Spec_BoltM3()],
@@ -110,7 +110,7 @@ module Bolt(bolt=Spec_BoltTemplate(), length=1,
                   capHeightExtra=capHeightExtra);
     }
   }
-  
+
   translate([0,0,zOrientation])
   children();
 }
@@ -129,7 +129,7 @@ module BoltFlatHead(bolt, clearance=0, capHeightExtra=0, teardrop=false, teardro
                r2=BoltRadius(bolt, clearance),
                 h=BoltFlatHeadHeight(bolt));
     }
-    
+
     // Extension
     linear_extrude(height=(clearance?capHeightExtra:ManifoldGap()))
     if (teardrop) {
@@ -193,7 +193,7 @@ module NutHeatset(spec, teardrop=false, teardropAngle=0, extraLength=0) {
              r2=NutHeatsetMinorRadius(spec),
               h=NutHeatsetHeight(spec));
   }
-  
+
   // Extension
   if (extraLength > 0) {
     mirror([0,0,1])
@@ -208,7 +208,7 @@ module NutHeatset(spec, teardrop=false, teardropAngle=0, extraLength=0) {
 };
 
 module NutHeatsetLong(spec, teardrop=false, teardropAngle=0, extraLength=0) {
-  
+
   if (teardrop) {
     rotate(teardropAngle)
     TeardropTaper(h=NutHeatsetLongHeight(spec),
@@ -219,7 +219,7 @@ module NutHeatsetLong(spec, teardrop=false, teardropAngle=0, extraLength=0) {
              r2=NutHeatsetLongMinorRadius(spec),
               h=NutHeatsetLongHeight(spec));
   }
-  
+
   // Extension
   if (extraLength > 0) {
     mirror([0,0,1])
@@ -257,16 +257,16 @@ module NutAndBolt(bolt=Spec_BoltTemplate(), boltLength=1, boltLengthExtra=0,
     // Nut
     translate([0,0,nutBackset])
     if (nut == "hex") {
-      
+
       color("DimGrey") RenderIf(doRender)
       NutHex(bolt, nutHeightExtra=nutHeightExtra, clearance=clearance);
     } else if (nut == "heatset") {
-      
+
       color("Gold") RenderIf(doRender)
       NutHeatset(bolt, teardrop=teardrop, teardropAngle=teardropAngle, extraLength=nutHeightExtra);
-      
+
     } else if (nut == "heatset-long") {
-      
+
       color("Gold") RenderIf(doRender)
       NutHeatsetLong(bolt, teardrop=teardrop, teardropAngle=teardropAngle, extraLength=nutHeightExtra);
     }

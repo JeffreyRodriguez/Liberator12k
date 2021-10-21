@@ -40,9 +40,9 @@ module FiringPin(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT, template=false, cutter=f
   clear = cutter ? 0.002 : 0;
   clear2 = clear*2;
   radius = template ? RodRadius(FiringPinTemplateRod()) : (3/32/2)+clear;
-  
+
   //FiringPinExtension();
-  
+
   //translate([0,0,FiringPinSpringLength()])
   difference() {
     union() {
@@ -51,13 +51,13 @@ module FiringPin(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT, template=false, cutter=f
       Cutaway(cutaway)
       Rod(FiringPinRod(), clearance=cutter?RodClearanceLoose():undef,
           length=FiringPinBodyLength()+clear2);
-      
+
       color("DarkGoldenrod")
       translate([0,0,-0.5-(cutter?0.5:0)])
       cylinder(r=radius,
                h=FiringPinBodyLength()+(cutter?0.5:0));
     }
-    
+
     if (!cutter)
     translate([3/32/2,-RodRadius(FiringPinRod()), FiringPinRetainerOffset()-BoltRadius(bolt)])
     cube([RodDiameter(FiringPinRod()),
@@ -69,17 +69,17 @@ module FiringPin(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT, template=false, cutter=f
 module FiringPinSpring(cutter=false, cutaway=false) {
   clear = cutter ? 0.01 : 0;
   clear2 = clear*2;
-  
+
   mirror([0,0,1])
   color("Silver", 0.25)
-  render()    
+  render()
   cylinder(r=(0.25/2)+clear, h=FiringPinSpringLength());
 }
 
 module FiringPinRetainingPin(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT, cutter=false) {
   clear = cutter ? 0.002 : 0;
   clear2 = clear*2;
-  
+
   color("CornflowerBlue")
   translate([RodRadius(FiringPinRod()),-FiringPinHousingWidth()/2,FiringPinRetainerOffset()+ManifoldGap()])
   rotate([-90,0,0])
@@ -104,7 +104,7 @@ module FiringPinHousingBolts(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT,
 }
 
 module FiringPinHousing(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT, cutter=false, alpha=0.5, cutaway=false) {
-  
+
   color("Grey")
   Cutaway(cutaway)
   difference() {
@@ -115,21 +115,21 @@ module FiringPinHousing(bolt=DEFAULT_FIRING_PIN_RETAINER_BOLT, cutter=false, alp
       translate([0,Y*FiringPinBoltOffsetY(),0])
       ChamferedCylinder(r1=BoltRadius(bolt)+(1/8), r2=1/32,
                           h=FiringPinHousingLength());
-      
+
       translate([-FiringPinHousingWidth()/2, -FiringPinHousingWidth()/2, 0])
       ChamferedCube([FiringPinHousingWidth(),FiringPinHousingWidth(), FiringPinHousingLength()], r=1/16);
     }
-    
+
     if (!cutter) {
       FiringPin(cutter=true);
-      
+
       FiringPinHousingBolts(bolt=bolt, cutter=true);
-      
+
       FiringPinSpring(cutter=true);
-      
+
       FiringPinRetainingPin(cutter=true);
     }
- 
+
   }
 }
 module FiringPinAssembly(boltLength=DEFAULT_BOLT_LENGTH,
@@ -139,8 +139,8 @@ module FiringPinAssembly(boltLength=DEFAULT_BOLT_LENGTH,
   rotate(-90) {
     FiringPin(template=template, cutter=cutter, cutaway=cutaway);
     FiringPinHousingBolts(template=template, bolt=retainerBolt, boltLength=boltLength, cutter=cutter);
-    
-    
+
+
     if (!template) {
       FiringPinSpring(cutter=cutter, cutaway=cutaway);
       FiringPinRetainingPin(cutter=cutter);
@@ -160,4 +160,3 @@ FiringPinAssembly(template=true);
 // Plated
 *!scale(25.4)
 FiringPinHousing(cutter=false, cutaway=false);
-

@@ -31,7 +31,7 @@ module ShellSimple(primer=Spec_Primer209(), primerOffset=0,
                    $fn=60) {
   difference() {
     union() {
-      
+
       // Body
       cylinder(r=chamberRadius,
                h=chamberLength);
@@ -43,9 +43,9 @@ module ShellSimple(primer=Spec_Primer209(), primerOffset=0,
       translate([0,0,rimHeight])
       cylinder(r1=rimRadius, r2=chamberRadius, h=rimTaperHeight);
     }
-    
+
     if (cutters) {
-    
+
       // Payload Cutout
       translate([0,0,PrimerHeight(primer)+taperLength-ManifoldGap()])
       cylinder(r=boreRadius, h=2.75);
@@ -55,12 +55,12 @@ module ShellSimple(primer=Spec_Primer209(), primerOffset=0,
       cylinder(r1=boreRadius*.66,
                r2=boreRadius,
                 h=taperLength);
-      
+
       // Charge pocket torus
       translate([0,0,PrimerHeight(primer)])
       TeardropTorus(majorRadius=(boreRadius/2),
                     minorRadius=3/64);
-      
+
       // Primer
       translate([primerOffset,0,0])
       Primer(primer=primer);

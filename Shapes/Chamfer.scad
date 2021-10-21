@@ -49,7 +49,7 @@ module RoundedBoolean(edgeOffset=0, edgeSign=-1,
 module Fillet(r=0.125, r1=undef, r2=undef, h=1, inset=false, chamferTop=true, chamferBottom=true, teardropTop=true, teardropBottom=true) {
   r1 = (r1 == undef ? r : r1);  // Default r1 to r
   r2 = (r2 == undef ? r1*(sqrt(2)/2) : r2); // Default end chamfer radius to r
-  
+
   if (ResolutionIsHigh())
   difference() {
     linear_extrude(height=h)
@@ -60,13 +60,13 @@ module Fillet(r=0.125, r1=undef, r2=undef, h=1, inset=false, chamferTop=true, ch
       rotate(90)
       square(r+ManifoldGap());
     }
-      
+
     // Top
     if (chamferTop)
     translate([-r,r,h+ManifoldGap()])
     mirror([0,0,1])
     HoleChamfer(r1=r, r2=r2, teardrop=teardropTop);
-    
+
     // Bottom
     if(chamferBottom)
     translate([-r,r,-ManifoldGap()])
@@ -149,17 +149,17 @@ module ChamferedSquare(xy=[1,1], r=0.25,
                        teardropTop=true,
                        teardropBottom=true) {
   hull() {
-    
+
     offsetX = xy[0];
     offsetY = xy[1];
-    
+
     // Top Left
     translate([r, offsetY-r])
     rotate(teardropFlip ? 180 : 90)
     Teardrop(r=r,
              enabled=teardropTop,
              truncated=true);
-    
+
     // Top Right
     translate([offsetX-r, offsetY-r])
     rotate(teardropFlip ? 0 : 90)
@@ -250,7 +250,7 @@ module ChamferedCylinder(r1=0.5, r2=0.25, h=1,
                          chamferBottom=true, chamferTop=true,
                          teardropBottom=true, teardropTop=false,
                          center=false) {
-        
+
   translate([0,0,(center ? -h/2 : 0)])
   if (ResolutionIsLow()) {
     cylinder(r=r1, h=h);

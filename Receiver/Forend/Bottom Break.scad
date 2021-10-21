@@ -138,7 +138,7 @@ function LatchRodLength() = ReceiverFrontLength()
                           + PivotX()
                           + PivotRadius() + WallPivot()
                           + 0.625;
-                          
+
 function LatchX() = 0.25;
 function LatchZ() = -(BarrelSleeveRadius()+WallBarrel() +LatchSpringRadius());
 function LatchSupportWidth() = (LatchSpringRadius()+LatchWall())*2;
@@ -201,7 +201,7 @@ module ExtractorGuideRod(cutter=false, clearance=0.01) {
   clear2 = clear*2;
 
   // Rod
-  color("Silver") RenderIf(!cutter) 
+  color("Silver") RenderIf(!cutter)
   translate([0.625, 0,ExtractorGuideZ()])
   translate([0,-LatchRodRadius()-clear, -(ActionRodWidth()/2)-clear])
   cube([ExtractorGuideLength(),
@@ -263,7 +263,7 @@ module BreakActionReceiverFront(cutaway=false, alpha=1) {
     translate([-ReceiverFrontLength(),0,0])
     union() {
       Frame_Support(length=ReceiverFrontLength());
-      
+
       hull() {
 
         // Match the recoil plate
@@ -432,9 +432,9 @@ module BreakActionForend(cutaway=false, alpha=1) {
     translate([PivotX(), 0, PivotZ()])
     rotate([90,0,0])
     cylinder(r=PivotRadius()+0.01, h=4, center=true);
-    
+
     BarrelLatchCollar(cutter=true);
-    
+
     // Barrel latch collar pivot clearance
     translate([PivotX(), 0, PivotZ()-0.125])
     rotate([90,0,0])
@@ -515,7 +515,7 @@ module Latch(cutaway=false, cutter=false, clearance=0.015, alpha=1) {
 
     if (!cutter) {
       LatchRod(cutter=true);
-      
+
       hull() for (X = [0,-ChargerTravel()]) translate([X,0,0])
       LatchScrews(cutter=true);
     }
@@ -600,9 +600,9 @@ module BarrelLatchCollar(cutaway=false, alpha=1, cutter=false) {
         *LatchTabs();
       }
     }
-    
+
     if (!cutter) {
-      
+
       // Set screws
       for (R = [90,-90]) rotate([R,0,0])
       translate([0.5,0,BarrelSleeveRadius()])
@@ -737,7 +737,7 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1,
     RecoilPlateBolts();
     RecoilPlate(cutaway=cutaway);
   }
-  
+
   BreakActionReceiverFront(cutaway=cutaway);
 
   // Pivoting barrel assembly
@@ -745,7 +745,7 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1,
 
     translate([-(ChargerTravel()*chargeFactor),0,0])
     translate([0.5*lockFactor,0,0]) {
-      
+
       LatchScrews();
 
       *translate([-ReceiverFrontLength(),0,ActionRodZ()])
@@ -758,7 +758,7 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1,
       Latch(cutaway=cutaway);
       LatchFront(cutaway=cutaway);
     }
-    
+
     LatchSpring(compress=(ReceiverFrontLength()*lockFactor), alpha=0.25);
 
     // Pivot Pin
@@ -808,13 +808,13 @@ if ($preview) {
 
     Frame_ReceiverAssembly();
     StockAssembly();
-    
+
     LowerMount();
-    
+
     translate([-LowerMaxX(),0,ReceiverBottomZ()])
     Lower(showTrigger=true,
           );
-    
+
   }
 } else {
 

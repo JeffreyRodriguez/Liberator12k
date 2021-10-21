@@ -58,7 +58,7 @@ function AR15_FiringPinRetainerOffset() = 0.35; // From the back of the bolt
 
 module AR15_FiringPin(cutter=false, clearance=0.007, extraShoulder=0) {
   clear2 = clearance *2;
-  
+
   color("Silver") RenderIf(!cutter)
   union() {
 
@@ -94,7 +94,7 @@ module AR15_FiringPin(cutter=false, clearance=0.007, extraShoulder=0) {
     translate([0,0,AR15_BoltLength()-ManifoldGap()])
     cylinder(r=AR15_FiringPin_ExtensionRadius()+clear2,
              h=AR15_FiringPin_Extension()+ManifoldGap(2));
-    
+
     // Firing Pin-to-bolt-back taper
     if (cutter)
     translate([0,0,AR15_BoltLength()])
@@ -109,7 +109,7 @@ module AR15_CamPin(cutter=false, clearance=0.007,
                    extraCamPinSquareLength=0,
                    rectangleTop=true,
                    teardrop=true, teardropTruncate=true, teardropAngle=0) {
-                     
+
     color("Silver") RenderIf(!cutter)
     translate([0,0,AR15_CamPinOffset()+AR15_CamPinRadius()])
     rotate([0,90,0]) {
@@ -228,7 +228,7 @@ module AR15_BoltCamPinTrack(length=2,
 
 
 module AR15_BoltAssembly(cutter=false) {
-  
+
   AR15_Bolt(cutter=cutter);
   AR15_CamPin(cutter=cutter);
   AR15_FiringPin(cutter=cutter);

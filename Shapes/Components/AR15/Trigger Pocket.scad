@@ -37,7 +37,7 @@ module AR15_TriggerPocket2d(clearance=UnitsMetric(0.8), cutter=false) {
     // Trigger pack body
     translate([AR15_TriggerSelectorLength()-clear,-triggerPocketWidth/2])
     square([triggerPocketLength,triggerPocketWidth]);
-    
+
     // Hammer travel
     translate([AR15_TriggerSelectorLength()+AR15_TriggerPocketLength()+clear,
                 -(hammerWidth/2)])
@@ -55,7 +55,7 @@ module AR15_TriggerPocket(clearance=UnitsMetric(0.8), cutter=false) {
   translate([0,0,-AR15_TriggerPocketDepth()]) {
     linear_extrude(height=AR15_TriggerPocketDepth()+ManifoldGap())
     AR15_TriggerPocket2d(clearace=clearance, cutter=cutter);
-    
+
     translate([0,0,-UnitsMetric(10)])
     linear_extrude(height=AR15_TriggerPocketDepth())
     AR15_TriggerHole2d(clearance=clearance, cutter=cutter);
@@ -68,7 +68,7 @@ module AR15_TriggerHole2d(clearance=UnitsMetric(0.8), cutter=false) {
 }
 
 module AR15_TriggerPocketTriggerHole(clearance=UnitsMetric(0.8), cutter=false) {
-  
+
   translate([0,0,-UnitsMetric(10)])
   linear_extrude(height=AR15_TriggerPocketDepth())
   AR15_TriggerHole2d();

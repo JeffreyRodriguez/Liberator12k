@@ -50,19 +50,19 @@ module EPrimerInsert(height=EPrimerInsertHeight(), brimHeight=0.0625, cutter=fal
   color("Olive") RenderIf(!cutter) Cutaway(cutaway)
   difference() {
     union() {
-      
+
       // Straight bottom section
       cylinder(r=0.125, h=height, $fn=30);
-      
+
       // Tapered section
       translate([0,0,(height/2)])
       cylinder(r1=0.125, r2=0.1875, h=height/2, $fn=50);
-      
+
       // Brim
       translate([0,0,height])
       mirror([0,0,1])
       cylinder(r=0.25, h=brimHeight, $fn=50);
-      
+
       // Ring
       translate([0,0,height-(brimHeight*2)])
       linear_extrude(brimHeight*2)
@@ -71,7 +71,7 @@ module EPrimerInsert(height=EPrimerInsertHeight(), brimHeight=0.0625, cutter=fal
         circle(r=0.25-0.03125, $fn=50);
       }
     }
-    
+
     if (!cutter)
     EPrimerElectrode(cutter=true);
   }
@@ -87,13 +87,13 @@ module EPrimerCartridge(chamberDiameter=CHAMBER_DIAMETER, wall=SHELL_WALL,
   rimExtra        = rimRadius-chamberRadius;
   shellLength     = 2.75;
 
-  color("Tan")  
+  color("Tan")
   render() Cutaway(cutaway)
 
   // Base and rim, minus charge pocket and primer hole
   difference() {
     union() {
-      
+
       // Body
       cylinder(r=chamberRadius, h=shellLength);
 
@@ -103,7 +103,7 @@ module EPrimerCartridge(chamberDiameter=CHAMBER_DIAMETER, wall=SHELL_WALL,
       // Rim Taper
       cylinder(r1=rimRadius, r2=chamberRadius, h=rimExtra);
     }
-    
+
     // Charge pocket
     translate([0,0,EPrimerInsertHeight()])
     ChamferedCylinder(r1=(chamberRadius-wall),
@@ -112,7 +112,7 @@ module EPrimerCartridge(chamberDiameter=CHAMBER_DIAMETER, wall=SHELL_WALL,
                        teardropBottom=true,
                        teardropTop=true,
                        chamferTop=true);
-    
+
     EPrimerInsert(cutter=true);
   }
 }
@@ -130,12 +130,10 @@ if ($preview) {
   if (_SHOW_CARTRIDGE)
   EPrimerCartridge(cutaway=_CUTAWAY_CARTRIDGE);
 } else {
-  
+
   if (_RENDER == "Prints/EPrimerInsert")
   EPrimerInsert(cutaway=_CUTAWAY_PRIMER_INSERT);
-  
+
   if (_RENDER == "Prints/EPrimerCartridge")
   EPrimerCartridge(cutaway=_CUTAWAY_CARTRIDGE);
 }
-
-

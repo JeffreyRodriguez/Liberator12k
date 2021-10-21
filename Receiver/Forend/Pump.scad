@@ -171,7 +171,7 @@ module ShellLoadingSupport() {
 module ReceiverFront(alpha=1, cutaway=false) {
   difference() {
     Receiver_Segment(length=ReceiverFrontLength());
-    
+
     Receiver_TensionBolts(cutter=true);
   }
 }
@@ -215,15 +215,15 @@ module PumpShotgunAssembly(cutaway=false) {
   translate([-ReceiverFrontLength(),0,0]) {
     Receiver(cutaway=cutaway);
     *Frame_Receiver(cutaway=cutaway);
-    
+
     StockAssembly();
-    
+
     LowerMount();
-    
+
     Lower();
-    
+
   }
-  
+
   PumpForend();
 
   color("LightSteelBlue")
@@ -250,7 +250,7 @@ if ($preview) {
   if (_RENDER == "Prints/PumpForend")
   rotate([0,-90,0])
   PumpForend();
-  
+
 }
 
 //$t=0.75;

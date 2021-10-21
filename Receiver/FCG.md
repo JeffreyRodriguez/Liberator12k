@@ -78,7 +78,7 @@ hardware store or metal supplier.
  * 1/8" hole 5/16" from the bottom for the sear cross-pin
  * This hole should be drilled under-size and reamed if possible.
  * Filing any burrs is Good Enough
- 
+
 ### Sear Cross-Pin
  * 3/32" Music Wire
  * 1/2" long
@@ -126,7 +126,7 @@ A 6D Box nail has a 2.4mm shaft.
 There's some flexibility here. "If it fits, I sits." >5/16" ID and < 5/8" OD.
 
 You shouldn't need a stupid strong spring - 10lb is probably too much,
-but it shouldn't ever be an issue for the FCG. The hammer tail would probably 
+but it shouldn't ever be an issue for the FCG. The hammer tail would probably
 fail first, or the charging handle bolt. If you can't charge it by hand, it's
 too strong.
 
@@ -142,4 +142,3 @@ For improved performance:
 2. Sand/polish the friction surfaces of the trigger sides.
 3. Use a needle file to clean up the inclined slot in the Trigger.
 4. Sand/polish slot smooth.
-

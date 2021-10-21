@@ -56,7 +56,7 @@ It's fun doing this, but it's also nice to know other people appreciate it.
 Thank you so much for joining me on this journey.
 
 ### Join the Community
-Chat with me and other builders! 
+Chat with me and other builders!
 **\#liberator12k:matrix.org** on [Element](https://element.io)
 
 ### International Builders
@@ -91,7 +91,7 @@ Keep bystanders behind your back and maintain a safe "180 degree" line or
 I'll shake *their* hand for kicking your ass, because you were warned.
 
 ### Basic Firearms Safety
- 1. All guns are always loaded. 
+ 1. All guns are always loaded.
  2. Never point the gun at anything you are not willing to destroy.
  3. Keep your finger off the trigger until your sights are on target and you have made the decision to shoot.
  4. Be sure of your target and what is beyond it.
@@ -177,7 +177,7 @@ In general, here's how things go between inch and mm in this project:
  * 5/16"
  * 1/2"
  * \#39 or 2.5mm
- 
+
 ### Taps
  * \#8-32
 

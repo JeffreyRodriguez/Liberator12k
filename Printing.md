@@ -7,7 +7,7 @@ If a part needs to be printed solid, the build guide will have a note for you.
 Increase your infill to 100% for these parts.
 
 ### Compatible Materials
-PLA, PLA+, ABS, PETG, Nylon, PC, POM - almost anything. 
+PLA, PLA+, ABS, PETG, Nylon, PC, POM - almost anything.
 The strength is in the steel.
 
 Check your parts for shrinkage and scale them appropriately in your slicer if
@@ -44,7 +44,7 @@ standard layer heights. Small parts usually have tighter tolerance requirements
 and taller layers may cause binding. 0.1mm layers will only help here.
 
 ### \#FatNozzleGang
-All print times are given for 0.4mm nozzles at 0.2mm layer height. 
+All print times are given for 0.4mm nozzles at 0.2mm layer height.
 
 The Fire Control Group (FCG) will benefit most from smaller nozzles, print these
 parts first and then go ahead and swap to a 1.0 (or something in between).

@@ -39,7 +39,7 @@ assert(SightpostBolt(), "SightpostBolt() is undefined. Unknown SIGHTPOST_BOLT?")
 function SightZ() = ReceiverTopZ()+0.5;
 
 module SightpostBolts(height=SightZ(), radius=SIGHTPOST_DIAMETER/2, length=2, cutter=false, clearance=SIGHTPOST_BOLT_CLEARANCE) {
-  
+
   // Bead
   translate([radius,0,0.1875])
   rotate([0,90,0])
@@ -50,7 +50,7 @@ module SightpostBolts(height=SightZ(), radius=SIGHTPOST_DIAMETER/2, length=2, cu
              teardrop=cutter, teardropAngle=180,
              clearance=cutter?-clearance:0,
              doRender=!cutter);
-  
+
   // Set Screw
   translate([radius,0,length-0.5])
   rotate([0,90,0])
@@ -65,27 +65,27 @@ module SightpostBolts(height=SightZ(), radius=SIGHTPOST_DIAMETER/2, length=2, cu
 
 module Sightpost(height=SightZ(), length=2, radius=SIGHTPOST_DIAMETER/2, wall=0.125, clearance=SIGHTPOST_CLEARANCE, doRender=true) {
   CR=1/16;
-  
+
   color("Tan") RenderIf(doRender)
   difference() {
     union() {
       ChamferedCylinder(r1=radius+wall, r2=CR,
                         h=length);
-      
+
       translate([0,-0.375/2,0])
       ChamferedCube([radius+0.5, 0.375, length], r=CR);
-      
+
       hull() {
         translate([0,-0.375/2,0])
         ChamferedCube([height, 0.375, 0.375], r=CR);
-        
+
         ChamferedCylinder(r1=0.375, r2=CR,
                           h=length);
       }
     }
-    
+
     ChamferedCircularHole(h=length, r1=radius+clearance, r2=CR);
-    
+
     SightpostBolts(height=height, radius=radius, length=length, cutter=true);
   }
 }

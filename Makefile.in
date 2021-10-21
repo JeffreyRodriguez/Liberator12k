@@ -11,7 +11,7 @@ SLOW_FRAME_COUNT=300
 SLOW_FRAMES=$(shell seq 0 $(SLOW_FRAME_COUNT))
 MDBIN=cmark-gfm -e table --unsafe
 OSBIN=nice openscad
-OSOPTS=--hardwarnings --colorscheme=Nature 
+OSOPTS=--hardwarnings --colorscheme=Nature
 OS_RES_HIGH=4096,2160
 OS_CAM_AUTO=--projection=p --autocenter --viewall
 GIT_VERSION=$(shell git describe --always)
@@ -22,10 +22,10 @@ SCADS := $(wildcard *.scad)
 .DEFAULT_GOAL := all
 .PHONY: FORCE $(SUBDIRS) clean clean-dir
 .PRECIOUS: .frames/%.mp4
-	
+
 $(SUBDIRS): FORCE
 	$(MAKE) -C $@
-	
+
 list_renders    = $(shell grep -oP '_RENDER == "(.+)"' '$(strip $(1))' | cut -d \" -f 2 | sort)
 filter_renders  = $(filter $(2),$(call list_renders,$(1)))
 list_prints     = $(call filter_renders,$(1),Prints/%)
@@ -44,10 +44,10 @@ preset_class_name = $(shell echo $(1) | awk -F _ '{ print $$1 }')
 
 %/Assembly: Assembly/
 	$(MAKE) -C $(subst /Assembly,,$@) Assembly
-	
+
 Assembly/:
 	mkdir -p Assembly
-	
+
 %.parts: %.scad
 	@# Search for all the _RENDER == "*" lines and extract the part names
 	echo $(call list_renders,$<) > $@
@@ -117,4 +117,3 @@ clean: FORCE clean-dir
 	for DIR in $(SUBDIRS); do \
 	  $(MAKE) -C $$DIR clean clean-dir; \
 	done
-	

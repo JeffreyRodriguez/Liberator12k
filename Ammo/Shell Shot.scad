@@ -17,7 +17,7 @@ module ShellShot(primer=Spec_Primer209(),
                  fins=false, wall=3/64,
                  chargeDiameter=0.68, chargeHeight=0.3125, wadHeight=0.25,
                  rimDiameter=0.87, rimHeight=0.09) {
-                   
+
   chamberRadius = chamberDiameter/2;
   rimRadius     = rimDiameter/2;
   chargeRadius  = chargeDiameter/2;
@@ -32,13 +32,13 @@ module ShellShot(primer=Spec_Primer209(),
                 chargeDiameter=chargeDiameter,
                 chargeHeight=chargeHeight, wadHeight=wadHeight+1,
                 rimDiameter=rimDiameter, rimHeight=rimHeight)
-        
+
       *color("Orange")
       ShellTopper(chamberDiameter=chamberDiameter,
                   height=height,
                   taperHeight=0);
     }
-    
+
     // SLA-friendly wadding
     for (A = [0:60:360])
     for (X = [2,4])
@@ -47,12 +47,12 @@ module ShellShot(primer=Spec_Primer209(),
     rotate(A)
     translate([chargeRadius/X,0])
     circle(r=1/64, $fn=6);
-    
+
     // Load Cutout
     for (A = [0:90:360])
     translate([0,0,shellBaseHeight-ManifoldGap()])
     ChamferedCylinder(r1=0.729/2, r2=1/16, h=2.75, $fn=40);
-    
+
     *translate([0,0,shellBaseHeight])
     cylinder(r=(chamberRadius)-wall, h=height+ManifoldGap(), $fn=40);
   }

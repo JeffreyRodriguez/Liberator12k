@@ -600,7 +600,7 @@ module TopBreak_Forend(clearance=0.005, doRender=true, cutaway=false, alpha=1) {
     semidonut(major=PivotX()*3, minor=abs(PivotZ())*2, angle=PivotAngle());
 
     // Cut a path through the full range of motion (Barrel)
-    for (flip = [1,-1]) 
+    for (flip = [1,-1])
     hull() for (A = [0, PivotAngle()])
     Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1)
     translate([PivotX(),0,0])

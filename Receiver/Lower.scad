@@ -97,7 +97,7 @@ function Lower_BoltsArray() = [
    // Back-Top
    [ReceiverLugRearMinX()+(ReceiverLugRearLength()/2),
     -0.375],
-    
+
    // Front-Bottom
    [ReceiverLugFrontMaxX()+0.25,
     GripCeilingZ()-TriggerGuardDiameter()],
@@ -133,7 +133,7 @@ function TriggerPocketHeight() = GripCeiling()
 
 function LowerGuardHeight() = TriggerPocketHeight()
                             + TriggerGuardWall();
-                            
+
 
 //************
 //* Vitamins *
@@ -164,12 +164,12 @@ module Lower_Bolts(boltSpec=LowerBolt(),
 module Lower_MountTakedownPinRetainer(cutter=false, clearance=0.005) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
-  
+
   color("Silver") RenderIf(!cutter)
   translate([-LowerMaxX()+ReceiverLugRearMaxX(), 0, Receiver_TakedownPinZ()-0.125])
   rotate([0,-90,0])
   cylinder(r=(3/32/2)+clear, h=ReceiverLugRearMaxX()-Receiver_TakedownPinX()-LowerMaxX()+0.125);
-  
+
   if (cutter)
   translate([-LowerMaxX()+ReceiverLugRearMinX(), 0, Receiver_TakedownPinZ()-0.125])
   rotate([0,-90,0])
@@ -244,7 +244,7 @@ module TriggerGuard() {
   }
 
   LowerReceiverSupports();
-  
+
   translate([-LowerMaxX(),0, LowerOffsetZ()])
   GripHandle();
 
@@ -258,7 +258,7 @@ module TriggerGuard() {
     linear_extrude(height=0.05, center=true) {
       difference() {
         circle(r=0.43);
-      
+
       text("A", font="Arial Black", size=0.5,
            halign = "center", valign="center"); // Anarchism A
       }
@@ -416,19 +416,19 @@ module ReceiverLugFront(width=UnitsImperial(0.5), extraTop=ManifoldGap(),
 //*****************
 module Lower_MountFront(id=ReceiverID(), alpha=1, cutaway=false, doRender=true) {
   mountLength = 1.75-0.01;
-  
+
   color("Chocolate")
   RenderIf(doRender) Cutaway(cutaway)
   difference() {
     union() {
       ReceiverLugFront(doRender=false, extraTop=-ReceiverBottomZ());
-      
+
       translate([ReceiverLugFrontMaxX()-LowerMaxX(),0,0])
       ReceiverBottomSlotInterface(length=mountLength, height=abs(ReceiverBottomZ()));
     }
-    
+
     difference() {
-      
+
       // Receiver ID
       translate([ReceiverLugFrontMaxX()-LowerMaxX()+ManifoldGap(),0,0])
       rotate([0,-90,0])
@@ -440,12 +440,12 @@ module Lower_MountFront(id=ReceiverID(), alpha=1, cutaway=false, doRender=true) 
       hull() {
         translate([0.125,-0.3125/2,-(id/2)-0.3125])
         ChamferedCube([0.25, 0.3125, id/2], r=1/16, teardropFlip=[true,true,true]);
-        
+
         translate([LowerMaxX()-1.25,-0.3125/2,-(id/2)-0.25])
         ChamferedCube([0.25, 0.3125, 0.25], r=1/16, teardropFlip=[true,true,true]);
       }
     }
-    
+
     Sear(length=SearLength()+abs(ReceiverBottomZ()), cutter=true, clearance=0.015);
   }
 }
@@ -455,42 +455,42 @@ module Lower_MountRear(id=ReceiverID(), alpha=1, cutaway=false, doRender=true) {
               - abs(ReceiverLugRearMaxX())
               - LowerMaxX()
               - ManifoldGap();
-  
+
   color("Chocolate")
   RenderIf(doRender) Cutaway(cutaway)
   difference() {
     union() {
-      
+
       ReceiverLugRear(doRender=false, extraTop=-ReceiverBottomZ());
-      
+
       translate([-LowerMaxX(),0, 0])
       translate([ReceiverLugRearMaxX(),0,-0.26])
       ReceiverBottomSlotInterface(length=mountLength, height=abs(ReceiverBottomZ())-0.26);
     }
-      
+
     Receiver_TakedownPin(cutter=true);
-    
+
     Lower_MountTakedownPinRetainer(cutter=true);
-    
+
     difference() {
-      
+
       // Receiver ID
       translate([-LowerMaxX()+ReceiverLugRearMaxX(),0,0])
       rotate([0,-90,0])
       ChamferedCircularHole(r1=id/2, r2=1/8, h=mountLength,
                             teardropBottom=true,
                             teardropTop=true);
-      
+
       // Hammer Guide
       translate([-LowerMaxX()+ReceiverLugRearMaxX(),-0.3125/2,-(id/2)-0.375])
       mirror([1,0,0])
       ChamferedCube([mountLength, 0.3125, id/2], r=1/16, teardropFlip=[true,true,true]);
-      
+
       // Bevel
       translate([-ReceiverLength()+00.75,-ReceiverIR(),-ReceiverIR()])
       rotate([0,-90-45,0])
       cube([ReceiverID(), ReceiverID(), ReceiverID()]);
-      
+
     }
   }
 }
@@ -555,13 +555,13 @@ module Lower_Middle() {
 module LowerMount(alpha=1, cutaway=false) {
   if (_SHOW_TAKEDOWN_PIN_RETAINER)
   Lower_MountTakedownPinRetainer();
-  
+
   if (_SHOW_TAKEDOWN_PIN)
   Receiver_TakedownPin();
-  
+
   if (_SHOW_LOWER_MOUNT_FRONT)
   Lower_MountFront();
-  
+
   if (_SHOW_LOWER_MOUNT_REAR)
   Lower_MountRear();
 }
@@ -583,17 +583,17 @@ module Lower(bolts=true,
 
 scale(25.4)
 if ($preview) {
-  
+
   if (_SHOW_FCG)
   SimpleFireControlAssembly();
-  
+
   LowerMount();
-  
+
   Lower(bolts=_SHOW_LOWER_BOLTS,
          showLeft=_SHOW_LOWER_LEFT, showRight=_SHOW_LOWER_RIGHT,
          showMiddle=_SHOW_LOWER_MIDDLE,
          alpha=_ALPHA_LOWER);
-  
+
   if (_SHOW_RECEIVER)
   Receiver(cutaway=_CUTAWAY_RECEIVER, alpha=_ALPHA_RECEIVER);
 } else {
@@ -634,7 +634,7 @@ if ($preview) {
     rotate([0,90,0])
     translate([0.5,0,-ReceiverBottomZ()])
     Lower_MountFront();
-    
+
   if (_RENDER == "Prints/Lower_MountRear")
     if (!_RENDER_PRINT)
       Lower_MountRear();
@@ -642,18 +642,18 @@ if ($preview) {
       rotate([0,90,0])
       translate([LowerMaxX()-ReceiverLugRearMaxX(),0,-ReceiverBottomZ()])
       Lower_MountRear();
-  
+
   /*
   ReceiverLugRear(cutter=false);
   ReceiverLugFront();
   */
-    
+
   // ************
   // * Hardware *
   // ************
   if (_RENDER == "Hardware/Lower_Bolts")
   Lower_Bolts();
-  
+
   if (_RENDER == "Hardware/Lower_MountTakedownPinRetainer")
   Lower_MountTakedownPinRetainer();
 

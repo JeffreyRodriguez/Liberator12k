@@ -89,7 +89,7 @@ module Stock_ButtpadBolt(cutaway=false, head="flat", nut="heatset", cutter=false
 module Stock_TakedownPin(cutter=false, clearance=0.005, alpha=1, cutaway=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
-  
+
   color("Silver") RenderIf(!cutter) Cutaway(cutaway)
   translate([Stock_TakedownPinX(),
              0,
@@ -102,17 +102,17 @@ module Stock_TakedownPin(cutter=false, clearance=0.005, alpha=1, cutaway=false) 
 module Stock_TakedownPinRetainer(cutter=false, clearance=0.005) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
-  
+
   color("Silver") RenderIf(!cutter)
   translate([ButtpadX(), 0, Receiver_TakedownPinZ()-0.125])
   rotate([0,90,0])
   cylinder(r=(3/32/2)+clear, h=2);
-  
+
   if (cutter)
   translate([StockMinX(), 0, Receiver_TakedownPinZ()-0.125])
   rotate([0,90,0])
   cylinder(r=0.125, h=2);
-  
+
 }
 
 ///
@@ -124,19 +124,19 @@ module Stock(length=StockLength(), doRender=true, cutaway=false, alpha=1) {
   color("Tan", alpha=alpha)
   RenderIf(doRender) Cutaway(cutaway)
   difference() {
-    
+
     // Main body
     translate([-ReceiverLength(),0,0])
     Receiver_Segment(length=length, highTop=false, chamferBack=true);
-    
+
     Receiver_TensionBolts(nutType="none", headType="none", cutter=true);
-    
+
     translate([-ReceiverLength(),0,0]) {
       ReceiverBottomSlot(length=length);
       Receiver_RoundSlot(length=length);
       Receiver_SideSlot(length=length);
     }
-    
+
     Stock_TakedownPin(cutter=true);
   }
 }
@@ -145,24 +145,24 @@ module Stock_Backplate(length=Stock_BackplateLength(), clearance=0.008, cutaway=
   color("Chocolate", alpha) render() Cutaway(cutaway)
   difference() {
     union() {
-      
+
       // Backplate
       translate([StockMinX(),0,0])
       Receiver_Segment(length=0.5, highTop=false,
                       chamferFront=true, chamferBack=true);
-        
+
       // Tension nut cover
       translate([StockMinX()+ManifoldGap(),0,0])
       TensionBoltIterator()
       ChamferedCylinder(r1=WallTensionRod()+0.0625, r2=1/16,
                         h=0.5, teardropTop=true);
-      
+
       // Central insert body
       translate([StockMinX()-0.5,0,0])
       rotate([0,90,0])
       ChamferedCylinder(r1=ReceiverIR()-clearance, h=length+0.5,
                         r2=1/16, teardropTop=true);
-      
+
       // Insert wings
       translate([StockMinX()-0.5,
                  -(ReceiverIR()+Receiver_SideSlotDepth()-clearance),
@@ -171,21 +171,21 @@ module Stock_Backplate(length=Stock_BackplateLength(), clearance=0.008, cutaway=
                      (ReceiverIR()+Receiver_SideSlotDepth()-clearance)*2,
                      Receiver_SideSlotHeight()-(clearance*2)],
                     r=1/16, teardropFlip=[true, true, true]);
-      
+
       // Bottom Slot
       translate([StockMinX()+length,0,0])
       ReceiverBottomSlotInterface(length=length+0.5,
                                   height=abs(ReceiverBottomZ()),
                                   extension=0.875);
-      
+
       // Back tab
       translate([StockMinX()-0.5,-(1/2),0])
       mirror([0,0,1])
       ChamferedCube([0.5, 1, 2],
                     r=1/16, teardropFlip=[true, true, true]);
-                    
-                    
-        
+
+
+
       // Wide rear section
       translate([StockMinX()-0.5,
                  -(ReceiverBottomSlotWidth()/2)-0.125,
@@ -195,11 +195,11 @@ module Stock_Backplate(length=Stock_BackplateLength(), clearance=0.008, cutaway=
                      ReceiverBottomSlotWidth()+0.25,
                      abs(ReceiverBottomZ())+1-clearance],
                     r=1/16, teardropFlip=[true, true, true]);
-      
-      
+
+
       // Bottom Tab
       hull() {
-        
+
         // Wide rear section
         translate([StockMinX()-0.5,
                    -(ReceiverBottomSlotWidth()/2)-0.125,
@@ -209,7 +209,7 @@ module Stock_Backplate(length=Stock_BackplateLength(), clearance=0.008, cutaway=
                        ReceiverBottomSlotWidth()+0.25,
                        1-(clearance*2)],
                       r=1/16, teardropFlip=[true, true, true]);
-        
+
         // Narrow front section
         translate([StockMinX()-0.5,
                    -(ReceiverBottomSlotWidth()/2),
@@ -222,16 +222,16 @@ module Stock_Backplate(length=Stock_BackplateLength(), clearance=0.008, cutaway=
       }
     }
     ///
-    
+
     // Clearance for the tension bolts
     translate([StockMinX()+ManifoldGap(),0,0])
     TensionBoltIterator()
     ChamferedCircularHole(r1=(0.35/2), r2=1/16, h=0.5+ManifoldGap(2));
-    
+
     Stock_TakedownPin(cutter=true);
     Stock_TakedownPinRetainer(cutter=true);
     Stock_ButtpadBolt(cutter=true, teardrop=false);
-      
+
     // M-LOK Side slots
     for (M = [0,1]) mirror([0,M,0])
     translate([ButtpadX()+0.125,0.625,ReceiverBottomZ()-0.625])
@@ -257,7 +257,7 @@ module Stock_Buttpad(doRender=true, cutaway=false, alpha=1) {
   color("Tan", alpha) RenderIf(doRender) Cutaway(cutaway)
   difference() {
     union() {
-      
+
       // Stock and extension hull
       translate([ButtpadX(),0,0])
       hull() {
@@ -268,11 +268,11 @@ module Stock_Buttpad(doRender=true, cutaway=false, alpha=1) {
         for (L = [0,1]) translate([(length*L)-(outsideRadius/2),0,0])
         ChamferedCylinder(r1=baseRadius, r2=chamferRadius,
                            h=base);
-        
+
         // Merge to receiver
         Receiver_Segment(length=0.5, highTop=false, chamferFront=true);
-        
-        
+
+
         // Meet lower tab
         translate([0,-(ReceiverBottomSlotWidth()+0.25)/2,-2.125])
         mirror([1,0,0])
@@ -292,7 +292,7 @@ module Stock_Buttpad(doRender=true, cutaway=false, alpha=1) {
                baseRadius+(baseRadius/5),
                -ManifoldGap()])
     cylinder(r1=baseRadius/2, r2=0, h=base);
-    
+
     Stock_ButtpadBolt(cutter=true);
   }
 }
@@ -304,18 +304,18 @@ module Stock_Buttpad(doRender=true, cutaway=false, alpha=1) {
 module StockAssembly(cutaway=undef) {
   if (_SHOW_BUTTPAD_BOLT)
   Stock_ButtpadBolt();
-  
+
   if (_SHOW_STOCK_TAKEDOWN_PIN) {
     Stock_TakedownPin();
     Stock_TakedownPinRetainer();
   }
-  
+
   if (_SHOW_STOCK_BACKPLATE)
   Stock_Backplate(alpha=_ALPHA_STOCK_BACKPLATE, cutaway=(cutaway == true || _CUTAWAY_STOCK_BACKPLATE));
-  
+
   if (_SHOW_BUTTPAD)
   Stock_Buttpad(alpha=_ALPHA_BUTTPAD, cutaway=(cutaway == true || _CUTAWAY_BUTTPAD));
-  
+
   if (_SHOW_STOCK)
   Stock(alpha=_ALPHA_STOCK, cutaway=(cutaway == true || _CUTAWAY_STOCK));
 }
@@ -324,12 +324,12 @@ scale(25.4)
 if ($preview) {
   if (_SHOW_RECEIVER)
   ReceiverAssembly(cutaway=_CUTAWAY_RECEIVER);
-  
+
   if (_SHOW_LOWER) {
     LowerMount();
     Lower();
   }
-  
+
   StockAssembly();
 } else {
 
@@ -343,7 +343,7 @@ if ($preview) {
       rotate([0,-90,0])
       translate([ReceiverLength()+StockLength(),0,0])
       Stock();
-  
+
   if (_RENDER == "Prints/Stock_Buttpad")
     if (!_RENDER_PRINT)
       Stock_Buttpad();
@@ -351,7 +351,7 @@ if ($preview) {
       rotate([0,-90,0])
       translate([StockLength()+ReceiverLength()+ButtpadLength(),0,0])
       Stock_Buttpad();
-  
+
   if (_RENDER == "Prints/Stock_Backplate")
     if (!_RENDER_PRINT)
       Stock_Backplate();
@@ -359,16 +359,16 @@ if ($preview) {
       rotate([0,-90,0])
       translate([-ButtpadX(),0,0])
       Stock_Backplate();
-  
+
   // ************
   // * Hardware *
   // ************
   if (_RENDER == "Hardware/Stock_ButtpadBolt")
   Stock_ButtpadBolt();
-  
+
   if (_RENDER == "Hardware/Stock_TakedownPin")
   Stock_TakedownPin();
-  
+
   if (_RENDER == "Hardware/Stock_TakedownPinRetainer")
   Stock_TakedownPinRetainer();
 }

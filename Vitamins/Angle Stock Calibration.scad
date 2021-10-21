@@ -4,7 +4,7 @@ include <Angle Stock.scad>;
 module AngleStockCalibration(stock = AngleStockThreeQuartersByOneEighthInch,
                              wall  = 1/4,
                              height=1) {
-  
+
   width = lookup(AngleStockWidth, stock);
 
   difference() {
@@ -26,7 +26,7 @@ module AngleStockCalibration(stock = AngleStockThreeQuartersByOneEighthInch,
                length=height*2);
   }
 }
-  
+
 scale([25.4, 25.4, 25.4]) {
   AngleStockCalibration();
 }

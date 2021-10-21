@@ -8,7 +8,7 @@ The *BarrelCollar* is not compatible between the CAFE12 and CAFE12+.
 If you didn't buy a kit from the
 [\#Liberator12k store](https://liberator12k.com/store/)
 or are planning to build with Schedule 40 pipe, check out
-[Build 2b: CAFE12](TopBreak_CAFE12.md). 
+[Build 2b: CAFE12](TopBreak_CAFE12.md).
 
 This is the gun I set out to make when I started the project;
 better than a slamfire in two big ways:

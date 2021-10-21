@@ -49,14 +49,14 @@ module T_Lug(length=0.75,
         clearance=clearance,
     clearVertical=clearVertical,
            cutter=cutter);
-    
+
     if (chamferCutterHorizontal)
     for (M = [0,1]) mirror([0,M,0])
     translate([0,(width/2)-clear,tabHeight+clear2])
     rotate([-90,0,0])
     SquareHoleEndChamfer([length+clear2, tabHeight+clear2], r=1/16);
   } else {
-    
+
     // Horizontal
     translate([0,-tabWidth/2,0])
     ChamferedCube([length, tabWidth, tabHeight], r=3/64,

@@ -24,7 +24,7 @@ Preview_PNG=$(addprefix Preview_,$(addsuffix .png, $(Preview)))
 Preview_JPG=$(addprefix Preview_,$(addsuffix .jpg, $(Preview)))
 
 Previews: $(Preview_JPG)
-	
+
 TARGETS = README.html $(Preview_JPG) $(Components_HTML) $(Prints_STL) $(Prints_STL_thumbs) $(Assembly_STL)
 
 Preview_Minuteman.png: Assembly.scad
@@ -89,4 +89,3 @@ clean-dir:
 	rm -rf $(TARGETS)
 
 all: $(SUBDIRS) $(TARGETS)
- 

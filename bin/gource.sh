@@ -10,4 +10,3 @@ exec gource -o - \
       -f image2pipe -vcodec ppm -vcodec libx264 \
       -preset ultrafast -pix_fmt yuv420p -crf 17 -bf 0 \
       gource.mp4
-

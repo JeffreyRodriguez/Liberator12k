@@ -33,10 +33,10 @@ module PipeInnerCalibration(pipe, clearance, wall=3/32, height=1/2) {
 }
 
 module PipeCalibration(pipe=undef, clearance=PipeClearanceSnug, height=1/4, wall=3/32, inner=true, outer=true) {
-  
+
   if (outer)
   PipeOuterCalibration(pipe=pipe, clearance=clearance, height=height, wall=wall);
-  
+
   if (inner)
   PipeInnerCalibration(pipe=pipe, clearance=clearance, height=height, wall=wall);
 }
@@ -44,10 +44,8 @@ module PipeCalibration(pipe=undef, clearance=PipeClearanceSnug, height=1/4, wall
 
 scale([25.4,25.4,25.4]) {
   TeeCalibration(tee=Spec_AnvilForgedSteel_OneInch());
-  
+
   *PipeCalibration(pipe=TubingOnePointOneTwoFive, clearance=PipeClearanceLoose,
                   height=1/2, wall=1/4,
                   inner=false, outer=true);
 }
-
-

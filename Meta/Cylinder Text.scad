@@ -3,16 +3,16 @@ module CylinderTextSweep(t="Liberator12k.com", r=1, letterSpacingFactor=.1, scal
                          center=true, centerZ=true,
                          font="Liberation Mono") {
     letterCount  = len(t);
-    
+
     circumference = (2*r)*PI;
     circSweep = circumference * (sweep/360);
     letterArc = sweep/letterCount;
     letterSegment = circSweep/letterCount;
     letterSpacing=letterSegment*letterSpacingFactor;
     size = letterSegment-letterSpacing;
-                    
-                           
-                           
+
+
+
     letterWidth  = size;
     letterHeight = 1.13 * letterWidth;
 

@@ -42,7 +42,7 @@ $(addsuffix /Preview_htmldoc.jpg,$(Presets)): %_htmldoc.jpg : %.png
 	convert -resize 1600x900^ $< -quality 90 $@
 
 .SECONDEXPANSION:
-	
+
 # Class/Preset dirs depend on their respective source
 $(Classes) $(Presets): $$(addsuffix .scad,$$(firstword $$(subst _, ,$$@)))
 	mkdir -p $@
@@ -51,7 +51,7 @@ $(Classes) $(Presets): $$(addsuffix .scad,$$(firstword $$(subst _, ,$$@)))
 TARGETS=README.html Assembly $(Assembly_STL) $(Preset_Assembly) \
           $(Preset_STLS) $(Preset_Thumbs) \
 					$(Fixtures_STL) $(Projections_DXF)
-					
+
 
 clean-dir:
 	rm -rf $(TARGETS)

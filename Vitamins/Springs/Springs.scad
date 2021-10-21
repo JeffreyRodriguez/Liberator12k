@@ -31,29 +31,29 @@ function Spec_SpringCustomizer() = [
 module Spring(spring = Spec_SpringCustomizer(), degrees_per_step = ResolutionFa()*4, compressed = false, custom_compression_ratio = -1, cutter = false, clearance = 0, doRender=true) {
   compressed_length = max(SpringSolidHeight(spring),
                           SpringFreeLength(spring) * custom_compression_ratio);
-  
+
   if (!cutter) {
     effective_pitch = !compressed ? SpringPitch(spring)
         : SpringPitch(spring) / (SpringFreeLength(spring) / compressed_length);
-    
+
     helix_r = SpringMiddleRadius(spring);
     wire_r = SpringWireRadius(spring);
 
     // TODO: Check why * 1.5 look at firing pin spring
     active_length = (SpringFreeLength(spring) - SpringWireDiameter(spring) * 1.5);
     active_coils = active_length / SpringPitch(spring);
-    
+
     total_degrees = 360 * active_coils;
     total_steps = total_degrees / degrees_per_step;
-    
+
     z_factor = effective_pitch / 360;
-    
+
     translate([0,0,wire_r])
     union() {
       for (i = [0 : total_steps-1]) {
         start_degrees = i * degrees_per_step;
         end_degrees = (i + 1) * degrees_per_step;
-        
+
         hull() {
           translate([helix_r * sin(start_degrees),
                      helix_r * cos(start_degrees),
