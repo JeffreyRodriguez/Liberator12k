@@ -19,7 +19,7 @@ Forends = $(filter-out Receiver/Forend/Assembly/%, \
 
 EXTRA_DOCS:=changelog.txt Manual.pdf
 ZIP_TARGETS:=$(EXTRA_DOCS) Source/
-TARGETS:=Liberator12k.zip Liberator12k-assembly.zip
+TARGETS:=Liberator12k.zip Liberator12k-source.zip Liberator12k-assembly.zip 
 
 changelog.txt:
 	git log --oneline > changelog.txt
@@ -47,6 +47,9 @@ Source/: .git
 Liberator12k.zip: $(SUBDIRS) $(ZIP_TARGETS)
 	zip -r $@ $(ZIP_TARGETS) $(Minuteman) && \
 	cd Receiver && zip -r $(abspath $@) $(subst Receiver/Forend/,Forend/,$(Forends))
+
+Liberator12k-source.zip: Source/
+	zip -r $@ $^
 
 Liberator12k-assembly.zip: $(SUBDIRS)
 	$(eval CWD=$(shell pwd))
