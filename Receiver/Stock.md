@@ -1,6 +1,6 @@
 # 1.4: Stock
 
-![Stock](Preview_Stock.jpg)
+![Stock](Stock/Assembly.jpg)
 
 A stock and buttpad designed to fit the standard receiver.
 

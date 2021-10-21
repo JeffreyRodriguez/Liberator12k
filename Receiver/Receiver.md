@@ -1,12 +1,7 @@
-# [\#Liberator12k Manual](README.md)
-
-## Platform Components: Receiver
+# Small Receiver
+![Small Receiver](Preview_Receiver.jpg)
 
 The universal receiver in its base configuration. Note: You probably want the Frame, not this.
-
-![Receiver](Receiver.jpg)
-
-## How it Works
 
 The receiver has an assortment of slots and tabs to support different designs.
 
