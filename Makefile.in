@@ -14,7 +14,7 @@ OSBIN=nice openscad
 OSOPTS=--hardwarnings --colorscheme=Nature
 OS_RES_HIGH=4096,2160
 OS_CAM_STL=--autocenter --viewall --view scales
-OS_CAM_ASSEMBLY=--camera=200,1200,200,0,0,0
+OS_CAM_ASSEMBLY=--camera=200,1200,200,50,0,0
 GIT_VERSION=$(shell git describe --always)
 DATE=$(shell date +'%Y-%m-%d')
 SUBDIRS := $(filter-out Source/,$(dir $(wildcard */Makefile)))
