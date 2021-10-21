@@ -59,8 +59,8 @@ Assembly/:
 	$(eval CLASS=$(call render_class,$@))
 	$(eval PRESET=$(call render_preset,$@))
 	$(eval PART=$(call render_part,$@))
-	$(eval RENDER_PRINT=$(if $(findstring Prints/%,$@),true,false) )
 	$(eval RENDER_MODE=$(if $(findstring Assembly.png,$@),--preview,--render))
+	$(eval RENDER_PRINT=$(if $(findstring Assembly,$@),false,true) )
 	$(eval VIEWPORT=$(if $(findstring Assembly.png,$@),$(OS_CAM_ASSEMBLY),$(OS_CAM_STL)) )
 	$(eval IMAGE_SIZE=$(if $(filter %Assembly%.png,$@),--imgsize $(OS_RES_HIGH),--imgsize 1920,1080))
 	@echo Target: $@
