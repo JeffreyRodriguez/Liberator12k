@@ -13,7 +13,8 @@ MDBIN=cmark-gfm -e table --unsafe
 OSBIN=nice openscad
 OSOPTS=--hardwarnings --colorscheme=Nature
 OS_RES_HIGH=4096,2160
-OS_CAM_AUTO=--projection=p --autocenter --viewall
+OS_CAM_STL=--autocenter --viewall --view scales
+OS_CAM_ASSEMBLY=--camera=200,1200,200,0,0,0
 GIT_VERSION=$(shell git describe --always)
 DATE=$(shell date +'%Y-%m-%d')
 SUBDIRS := $(filter-out Source/,$(dir $(wildcard */Makefile)))
@@ -58,9 +59,10 @@ Assembly/:
 	$(eval CLASS=$(call render_class,$@))
 	$(eval PRESET=$(call render_preset,$@))
 	$(eval PART=$(call render_part,$@))
-	$(eval RENDER_PRINT=$(if $(findstring Assembly/,$@),false,true) )
-	$(eval RENDER_MODE=$(if $(findstring Assembly.png,$@),--preview,--render) )
-	$(eval IMAGE_SIZE=$(if $(filter %Assembly%.png,$@),--imgsize $(OS_RES_HIGH),))
+	$(eval RENDER_PRINT=$(if $(findstring Prints/%,$@),true,false) )
+	$(eval RENDER_MODE=$(if $(findstring Assembly.png,$@),--preview,--render))
+	$(eval VIEWPORT=$(if $(findstring Assembly.png,$@),$(OS_CAM_ASSEMBLY),$(OS_CAM_STL)) )
+	$(eval IMAGE_SIZE=$(if $(filter %Assembly%.png,$@),--imgsize $(OS_RES_HIGH),--imgsize 1920,1080))
 	@echo Target: $@
 	@echo Target Dir: $(dir $@)
 	@echo Deps: $^
@@ -74,7 +76,7 @@ Assembly/:
 	mkdir -p $(dir $@) && \
 	$(OSBIN) $(OSOPTS) -o $@ \
 		$(RENDER_MODE) $(IMAGE_SIZE) --projection=p \
-		--autocenter --viewall --view scales \
+		$(VIEWPORT) \
 		$(if $(PRESET),-p $(CLASS).json -P $(PRESET),) \
 		-D _RENDER=\"$(PART)\" \
 		-D _RENDER_PRINT=$(RENDER_PRINT)\

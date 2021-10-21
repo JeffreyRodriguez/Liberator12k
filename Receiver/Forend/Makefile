@@ -20,7 +20,8 @@ Projections_DXF=$(addsuffix .dxf, $(Projections))
 
 Prints_STL_thumbs=$(addsuffix _thumb.jpg, $(Prints))
 Assembly_STL=$(addprefix Assembly/, $(Prints_STL) $(Hardware_STL))
-Assembly: $(Assembly_STL)
+Assembly_JPG=$(addsuffix /Assembly.jpg,$(Presets))
+Assembly: $(Assembly_STL) $(Assembly_JPG)
 
 Preset_STLS := $(Prints_STL)
 Preset_Thumbs := $(addsuffix _thumb.jpg,$(basename $(Preset_STLS)))

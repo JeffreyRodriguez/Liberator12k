@@ -1,5 +1,5 @@
 # 2a: CAFE12+ Forend
-![Forend Assembly](Preview_htmldoc.jpg)
+![CAFE12+ Forend Assembly](TopBreak_CAFE12+/Assembly.jpg)
 
 A 12ga [Top Break](TopBreak.md) variant inspired by the venerable pipe shotgun.
 
@@ -38,17 +38,13 @@ which includes everything you need, and uses the stronger 4130 tube.
 | Vertical Foregrip | ?g            |   ?h?m             |
 <br/>
 
-|ReceiverFront|Forend|BarrelCollar|
-|-|-|-|
-|![](TopBreak_CAFE12+/Prints/ReceiverFront_thumb.jpg)|![](TopBreak_CAFE12+/Prints/Forend_thumb.jpg)|![](TopBreak_CAFE12+/Prints/BarrelCollar_thumb.jpg)|
+|ReceiverFront|Forend|BarrelCollar|Extractor|
+|-|-|-|-|
+|![](TopBreak_CAFE12+/Prints/ReceiverFront_thumb.jpg)|![](TopBreak_CAFE12+/Prints/Forend_thumb.jpg)|![](TopBreak_CAFE12+/Prints/BarrelCollar_thumb.jpg)|![](TopBreak_CAFE12+/Prints/Extractor_thumb.jpg)|
 
-|LatchTab|Extractor|
-|-|-|
-|![](TopBreak_CAFE12+/Prints/LatchTab_thumb.jpg)|![](TopBreak_CAFE12+/Prints/Extractor_thumb.jpg)|
-
-|Cluster|Vertical Foregrip|
-|-|-|
-|![](TopBreak_CAFE12+/Prints/Cluster_thumb.jpg)|![](TopBreak_CAFE12+/Prints/VerticalForegrip_thumb.jpg)|
+|LatchTab|Cluster|Vertical Foregrip|Sightpost|
+|-|-|-|-|
+|![](TopBreak_CAFE12+/Prints/LatchTab_thumb.jpg)|![](TopBreak_CAFE12+/Prints/Cluster_thumb.jpg)|![](TopBreak_CAFE12+/Prints/VerticalForegrip_thumb.jpg)|![](TopBreak_CAFE12+/Prints/Sightpost_thumb.jpg)|
 
 ## Vitamins
 | Purpose                | Part                             | Metric Alternative | Quantity |

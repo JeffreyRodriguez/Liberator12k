@@ -16,7 +16,8 @@ Projections_DXF=$(addsuffix .dxf, $(Projections))
 Prints_STL_thumbs=$(addsuffix _thumb.jpg, $(Prints))
 
 Assembly_STL=$(addprefix Assembly/, $(Prints_STL) $(Hardware_STL))
-Assembly: $(Assembly_STL)
+Assembly_JPG=$(addsuffix /Assembly.jpg,$(Components))
+Assembly: $(Assembly_STL) $(Assembly_JPG)
 
 # Special previews, specific configurations
 Preview=Minuteman Frame Stock Lower FCG CAFE12 FP37

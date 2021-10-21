@@ -12,7 +12,7 @@ but we'll save that for a future build.
 
 After the receiver is assembled, first-time builders can continue on to building
 a CAFE12 forend.
-[Chapter 2: Choose Your Weapon](Forend/README.md) covers the different
+[Chapter 2: Forends - Choose Your Weapon](Forend/README.md) covers the different
 forend configurations in detail, but for now lets focus on the receiver.
 
 ## Components

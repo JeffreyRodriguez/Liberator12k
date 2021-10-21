@@ -25,7 +25,7 @@ STL Files Location: `Receiver/FCG/Prints/`
 |FCG_Housing|FCG_Disconnector|FCG_FiringPinCollar|FCG_ChargingHandle|
 |-|-|-|-|
 |![](FCG/Prints/FCG_Housing_thumb.jpg)|![](FCG/Prints/FCG_Disconnector_thumb.jpg)|![](FCG/Prints/FCG_FiringPinCollar_thumb.jpg)|![](FCG/Prints/FCG_ChargingHandle_thumb.jpg)|
----
+
 |FCG_Hammer|FCG_HammerTail|FCG_TriggerMiddle|FCG_Trigger|
 |-|-|-|-|
 |![](FCG/Prints/FCG_Hammer_thumb.jpg)|![](FCG/Prints/FCG_HammerTail_thumb.jpg)|![](FCG/Prints/FCG_TriggerMiddle_thumb.jpg)|![](FCG/Prints/FCG_Trigger_thumb.jpg)

@@ -1,5 +1,5 @@
 # 2c: FP37 Forend
-![Forend Assembly](Preview_htmldoc.jpg)
+![FP37 Forend Assembly](TopBreak_FP37/Assembly.jpg)
 
 "Flare Projector" 37mm - It's not a weapon.
 

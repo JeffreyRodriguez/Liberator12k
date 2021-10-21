@@ -1,4 +1,4 @@
-# 2: Choose Your Weapon
+# 2: Forends - Choose Your Weapon
 
 ### Your First Build
 

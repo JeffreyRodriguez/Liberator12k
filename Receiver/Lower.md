@@ -15,7 +15,7 @@ STL Files Location: `Receiver/Lower/Prints/`
 |Lower_Left|Lower_Middle|Lower_Right|
 |-|-|-|
 |![](Lower/Prints/Lower_Left_thumb.jpg)|![](Lower/Prints/Lower_Middle_thumb.jpg)|![](Lower/Prints/Lower_Right_thumb.jpg)|
----
+
 |Lower_MountFront|Lower_MountRear|
 |-|-|
 |![](Lower/Prints/Lower_MountFront_thumb.jpg)|![](Lower/Prints/Lower_MountRear_thumb.jpg)|

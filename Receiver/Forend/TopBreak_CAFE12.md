@@ -1,5 +1,5 @@
 # 2b: CAFE12 Forend
-![Forend Assembly](Preview_htmldoc.jpg)
+![CAFE12 Forend Assembly](TopBreak_CAFE12/Assembly.jpg)
 
 A 12ga [Top Break](TopBreak.md) variant based on the venerable pipe shotgun.
 
