@@ -261,6 +261,8 @@ function TopBreak_LatchZ() = -1.625;
 function TopBreak_LatchY() = (TopBreak_ExtractorHousingWidth()/2)
                            + (TopBreak_LatchWidth()/2);
 
+function VerticalForegripRadius() = 0.625;
+
 // Pivot modules
 module PivotClearanceCut(offsetX=0, cut=true, width=PivotWidth(),
                          clearance=0.005) {
@@ -828,7 +830,7 @@ module TopBreak_VerticalForegrip(cutaway=false, alpha=1) {
   difference() {
     translate([BarrelSleeveLength()+0.25,0,-BarrelRadius()-0.75])
     mirror([0,0,1])
-    PumpGrip(r=0.625, h=3, channelRadius=0.125);
+    PumpGrip(r=VerticalForegripRadius(), h=3, channelRadius=0.125);
 
     TopBreak_GripBolt(cutter=true, teardrop=false);
   }
@@ -918,7 +920,7 @@ module TopBreak_Cluster(cutaway=false, alpha=1) {
 
           // Lower vertical extension
           translate([BarrelSleeveLength()+0.25,0,-BarrelRadius()-lowerExtension])
-          ChamferedCylinder(r1=0.5, r2=1/16,
+          ChamferedCylinder(r1=VerticalForegripRadius(), r2=1/16,
                              h=lowerExtension);
       }
     }
