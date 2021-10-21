@@ -2,7 +2,7 @@
 
 ### Your First Build
 
-For your first build I recommend making a CAFE12 break-action 12ga.
+Your first build should be a CAFE12 break-action 12ga.
 Even if there's another design that caught your eye: The CAFE12 is training
 wheels for the project and a great way to kick the tires on your receiver build.
 
