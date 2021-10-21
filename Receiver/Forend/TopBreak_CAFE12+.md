@@ -3,7 +3,7 @@
 
 A 12ga [Top Break](TopBreak.md) variant inspired by the venerable pipe shotgun.
 
-The CAFE12 is the gun I set out to make when I started the project.
+The gun I set out to make when I started the project.
 Since it's built with \#Liberator12k platform components it features:
 
 * Optics-ready Picatinny Rail
@@ -59,3 +59,28 @@ See [Chapter 2b: CAFE12 Forend](TopBreak_CAFE12.md)
 
 ### Metric BOM
 TODO
+
+<!-- NEW PAGE -->
+## Post-Processing
+
+### Barrel Subassembly
+1. Install the Cluster
+2. Install the VFG
+
+
+### Barrel Collar: Extractor Subassembly
+1. Insert the *Extractor Bit* into the *Extractor*.
+2. Drop the *Extractor Spring* into the *Barrel Collar*'s large rectangular hole.
+3. Insert the *Extractor* into the hole, and install the *Extractor Retainer* from the large round hole for the barrel.
+
+### Barrel Collar: Latch Subassembly
+1. Insert the *Latch Springs* into the small square holes in the *Barrel Collar*.
+2. Insert the *Latch Bars* into the square holes in the *Barrel Collar*.
+3. Ensure the *Latch Bars* slide smoothly - file the holes if necessary.
+4. Insert the two rectangular tabs of the *Latch* into the underside of the *Barrel Collar
+5. Depress the *Latch Bars* while you install the *Latch Screws*.
+6. Lube the slots and bars.
+
+### Forend Subassembly
+1. Rotate the *Barrel Collar* up into the *Forend*.
+2. Install the Barrel with the sleeve
