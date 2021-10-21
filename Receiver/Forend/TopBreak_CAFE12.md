@@ -24,23 +24,40 @@ Since it's built with \#Liberator12k platform components it features:
 
 <!-- NEW PAGE -->
 ## Prints
+**These numbers are wrong, TODO: Redo them.** Copied from CAFE12+, ballpark accurate.
+
 420g, 2d08h09m
 
-| Part          | Filament Used | Print Time @ 0.4mm |
-|---------------|-------------: |------------------: |
-| ReceiverFront | 57g           |   07h17m           |
-| Forend        | 189g          | 1d01h10m           |
-| BarrelCollar  | 114g          |   15h00m           |
-| Extractor     | 14g           |    1h55m           |
+| Part              | Filament Used | Print Time @ 0.4mm |
+|-------------------|-------------: |------------------: |
+| ReceiverFront     | 57g           |   07h17m           |
+| Forend            | 189g          | 1d01h10m           |
+| BarrelCollar      | 114g          |   15h00m           |
+| Extractor         | 14g           |    1h55m           |
+| LatchBlock        | 114g          |   15h00m           |
+| Cluster           | ?g            |   ?h?m             |
+| Vertical Foregrip | ?g            |   ?h?m             |
 <br/>
 
-|ReceiverFront|Forend|
-|-|-|
-|![](TopBreak_CAFE12/Prints/ReceiverFront_thumb.jpg)|![](TopBreak_CAFE12/Prints/Forend_thumb.jpg)|
+|ReceiverFront|Forend|BarrelCollar|Extractor|
+|-|-|-|-|
+|![](TopBreak_CAFE12/Prints/ReceiverFront_thumb.jpg)|![](TopBreak_CAFE12/Prints/Forend_thumb.jpg)|![](TopBreak_CAFE12/Prints/BarrelCollar_thumb.jpg)|![](TopBreak_CAFE12/Prints/Extractor_thumb.jpg)|
 
-|BarrelCollar|Extractor|
-|-|-|
-|![](TopBreak_CAFE12/Prints/BarrelCollar_thumb.jpg)|![](TopBreak_CAFE12/Prints/Extractor_thumb.jpg)|
+|LatchTab|Cluster|Vertical Foregrip|Sightpost|
+|-|-|-|-|
+|![](TopBreak_CAFE12/Prints/LatchTab_thumb.jpg)|![](TopBreak_CAFE12/Prints/Cluster_thumb.jpg)|![](TopBreak_CAFE12/Prints/VerticalForegrip_thumb.jpg)|![](TopBreak_CAFE12/Prints/Sightpost_thumb.jpg)|
+
+## Vitamins
+| Purpose                | Part                             | Quantity |
+|------------------------|----------------------------------|----------|
+| Extractor Bit          | #2 flat 1/4" Hex Bit             | 1        |
+| Extractor Retainer     | 1/4"x1" Dowel Pin                | 1        |
+| Latch Bars             | 1/4"x3" Square Rod               | 2        |
+| Latch Screws           | #8-32x3/4" Flat Head Screw       | 2        |
+| Latch Springs          | (same as sear spring)            | 2        |
+| Barrel Sleeve          | 1.25"x0.125" 4130 Tubing 8" Long | 1        |
+| Barrel                 | 1"x0.093" 4130 Tubing 18.5" Long | 1        |
+<br/>
 
 ## Bill of Materials
 | Part                                       | Quantity |

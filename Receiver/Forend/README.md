@@ -12,9 +12,13 @@ The **Plus** version uses 4130 tube instead of Schedule 40 pipe.
 CAFE12 and CAFE12+ forends do not share parts.
 
 The CAFE12 will be slightly cheaper, and you can easily source the parts from
-your local hardware stores. 4130 tubing is *much* stronger than pipe, but you'll
-have to purchase it from a metals supplier. Since it's stronger, machining is
-harder as well - don't use a pipe cutter on 4130 tubing.
+your local hardware stores.
+The pipe seam must be removed from the barrel, a large rat tail or half-round
+file works nicely. This may take some WORK. Pipe seams suck and are sketchy.
+
+The CAFE12+'s normalized 4130 tube is much stronger **and** seamless.
+You'll have to purchase it from a metals supplier. Since it's stronger,
+machining is harder as well - don't use a pipe cutter on 4130 tubing.
 
 Using an Official [Liberator12k.com Store](https://liberator12k.com/store/) Kit?
 Go to [2a: CAFE12+ Forend](TopBreak_CAFE12+.md)

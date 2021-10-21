@@ -12,12 +12,9 @@ Since it's built with \#Liberator12k platform components it features:
 * Ambidextrous
 
 ## CAFE12 or CAFE2+
-The **Plus** version uses 4130 tube instead of Schedule 40 pipe.
-3/4" Schedule 40 pipes and 4130 tube are different sizes, so the
-CAFE12 and CAFE12+ forends do not share parts.
-
-The CAFE12 will be slightly cheaper, and you can easily source the parts from
-your local hardware stores. *That said* tubing is much stronger than pipe.
+This is the documentation for the **Plus Version** using 4130 tube instead of
+Schedule 40 pipe. 3/4" Schedule 40 pipes and 4130 tube are different sizes,
+so the CAFE12 and CAFE12+ forends do not share parts.
 
 ## The Easy Way
 You can buy a kit from the [\#Liberator12k store](https://liberator12k.com/store/)
