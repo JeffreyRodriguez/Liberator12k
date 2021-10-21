@@ -39,7 +39,7 @@ _SHOW_FCG_DISCONNECTOR_HARDWARE = true;
 _SHOW_FCG_Hammer = true;
 _SHOW_CHARGING_HANDLE = true;
 _SHOW_HAMMER_TAIL = true;
-_SHOW_ACTION_ROD = true;
+_SHOW_ACTION_ROD = false;
 _SHOW_FIRING_PIN = true;
 _SHOW_RECOIL_PLATE = true;
 _SHOW_RECOIL_PLATE_BOLTS = true;
@@ -58,6 +58,7 @@ _CUTAWAY_FCG_Disconnector = false;
 _CUTAWAY_FCG_Hammer = false;
 _CUTAWAY_FCG_Hammer_CHARGER = false;
 _CUTAWAY_RECEIVER = true;
+_CUTAWAY_LOWER = false;
 _CUTAWAY_RECOIL_PLATE = false;
 _CUTAWAY_FIRING_PIN = false;
 _CUTAWAY_FIRING_PIN_SPRING = false;
@@ -1330,12 +1331,12 @@ if ($preview) {
   SimpleFireControlAssembly();
 
   if (_SHOW_LOWER) {
-    LowerMount();
-    Lower();
+    LowerMount(cutaway=_CUTAWAY_LOWER);
+    Lower(cutaway=_CUTAWAY_LOWER);
   }
 
   if (_SHOW_RECEIVER)
-  ReceiverAssembly(cutaway=_CUTAWAY_RECEIVER, alpha=_ALPHA_RECEIVER);
+  ReceiverAssembly(tensionRods=!_CUTAWAY_RECEIVER, cutaway=_CUTAWAY_RECEIVER, alpha=_ALPHA_RECEIVER);
 } else {
 
   // *****************

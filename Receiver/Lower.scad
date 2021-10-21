@@ -28,7 +28,7 @@ _RENDER_PRINT = true;
 
 /* [Assembly] */
 _SHOW_RECEIVER = true;
-_SHOW_FCG = true;
+_SHOW_FCG = false;
 _SHOW_LOWER_LEFT = true;
 _SHOW_LOWER_RIGHT = true;
 _SHOW_LOWER_MIDDLE = true;
@@ -39,8 +39,8 @@ _SHOW_TAKEDOWN_PIN = true;
 _SHOW_TAKEDOWN_PIN_RETAINER = true;
 
 /* [Transparency] */
-_ALPHA_LOWER = 1;    // [0:0.1:1]
-_ALPHA_RECEIVER = 1; // [0:0.1:1]
+_ALPHA_LOWER =  1;    // [0:0.1:1]
+_ALPHA_RECEIVER = 0.1; // [0:0.1:1]
 
 /* [Cutaway] */
 _CUTAWAY_LOWERMOUNT_FRONT = false;
@@ -578,6 +578,7 @@ module Lower(bolts=true,
   if (_SHOW_LOWER_BOLTS)
   Lower_Bolts();
 
+  if (!cutaway)
   Lower_SidePlates(showLeft=showLeft, showRight=showRight, alpha=alpha);
 }
 

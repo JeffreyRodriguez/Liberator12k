@@ -132,7 +132,7 @@ For instance: `Receiver/FCG/Prints/FCG_Hammer.stl`
 <br/>
 
 #### Standard Print Settings
-Use the [Printing Guidelines](../Printing.md) from the Introduction.
+Review the [Printing Guidelines](../Printing.md) from the Introduction.
 Use the right accent or base color!
 
 #### FCG Print Settings
