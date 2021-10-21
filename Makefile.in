@@ -17,7 +17,7 @@ OS_CAM_STL=--autocenter --viewall --view scales
 OS_CAM_ASSEMBLY=--camera=200,1200,200,50,0,0
 GIT_VERSION=$(shell git describe --always)
 DATE=$(shell date +'%Y-%m-%d')
-SUBDIRS := $(filter-out Source/,$(dir $(wildcard */Makefile)))
+SUBDIRS := $(filter-out Liberator12k-source/,$(dir $(wildcard */Makefile)))
 SCADS := $(wildcard *.scad)
 
 .DEFAULT_GOAL := all
