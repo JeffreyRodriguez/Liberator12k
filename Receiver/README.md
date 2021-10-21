@@ -108,12 +108,12 @@ For instance: `Receiver/FCG/Prints/FCG_Hammer.stl`
 
 | Done    | Color      | Print Settings | Part                | Filament | Time     |
 |:-------:|:-----------|:---------------|---------------------|---------:|---------:|
-| [_]     | Accent     | **Special**    | FCG_FiringPinCollar |       1g |    0h48m |
-| [_]     | Accent     | **Special**    | FCG_Trigger         |      14g |    1h55m |
-| [_]     | Accent     | **Special**    | FCG_Housing         |      16g |    2h12m |
-| [_]     | Accent     | **Special**    | FCG_Disconnector    |       4g |      29m |
-| [_]     | Accent     | 100% Infill    | FCG_Hammer          |      34g |    4h37m |
-| [_]     | Accent     | 100% Infill    | FCG_HammerTail      |      13g |    1h38m |
+| [_]     | Accent     | See Below      | FCG_FiringPinCollar |       1g |    0h48m |
+| [_]     | Accent     | See Below      | FCG_Trigger         |      14g |    1h55m |
+| [_]     | Accent     | See Below      | FCG_Housing         |      16g |    2h12m |
+| [_]     | Accent     | See Below      | FCG_Disconnector    |       4g |      29m |
+| [_]     | Accent     | See Below      | FCG_Hammer          |      34g |    4h37m |
+| [_]     | Accent     | See Below      | FCG_HammerTail      |      13g |    1h38m |
 | [_]     | Accent     | Standard       | FCG_TriggerMiddle   |      11g |    1h23m |
 | [_]     | Accent     | Standard       | FCG_ChargingHandle  |      34g |    4h07m |
 | [_]     | Accent     | Standard       | Lower_MountRear     |      23g |    2h21m |
@@ -124,7 +124,7 @@ For instance: `Receiver/FCG/Prints/FCG_Hammer.stl`
 | [_]     | Base       | Standard       | Frame_Receiver      |     272g | 1d18h01m |
 | [_]     | Base       | Standard       | Stock               |     243g | 1d08h52m |
 | [_]     | Base       | Standard       | Stock_Backplate     |      95g |   12h05m |
-| [_]     | TPU        | **Special**    | Stock_Buttpad       |     181g |   19h31m |
+| [_]     | TPU        | See Below      | Stock_Buttpad       |     181g |   19h31m |
 | <td colspan=6>**Totals**
 | [_]     | Base       |                | TOTAL               |     ?g |   ?d?h?m |
 | [_]     | Accent     |                | TOTAL               |     ?g |   ?d?h?m |
@@ -134,16 +134,17 @@ For instance: `Receiver/FCG/Prints/FCG_Hammer.stl`
 * Reminder 1 - use the [Printing Guidelines](../Printing.md) from the Introduction.
 * Reminder 2 - Use the right accent or base color!
 
-#### Special Print Settings
+#### FCG Print Settings
 These small FCG parts have special print settings:
 * Infill: 100%
 * Layer Height: 0.1mm
 
-##### The TPU Buttpad
+#### Buttpad Print Settings
 I have printed Amazon-brand TPU 95 on my stock Ender 3, just select the proper
 material in Cura. Be sure to **reset the material** before slicing other parts.
-
 You can use other plastics, but TPU is softer and will absorb some recoil.
+
+Just select *Generic TPU* for the material in Cura.
 
 <!-- NEW PAGE -->
 ## Bill of Materials
