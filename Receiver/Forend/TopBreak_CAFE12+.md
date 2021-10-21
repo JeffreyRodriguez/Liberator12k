@@ -11,14 +11,16 @@ Since it's built with \#Liberator12k platform components it features:
 * Modular components
 * Ambidextrous
 
+## The Easy Way
+You can buy a kit from the [\#Liberator12k store](https://liberator12k.com/store/)
+for the CAFE12+, which includes everything you need for the
+better, faster, stronger 4130 alloy steel tubing version of the gun.
+
 ## CAFE12 or CAFE2+
 This is the documentation for the **Plus Version** using 4130 tube instead of
 Schedule 40 pipe. 3/4" Schedule 40 pipes and 4130 tube are different sizes,
 so the CAFE12 and CAFE12+ forends do not share parts.
-
-## The Easy Way
-You can buy a kit from the [\#Liberator12k store](https://liberator12k.com/store/)
-which includes everything you need, and uses the stronger 4130 tube.
+See [Chapter 2b: CAFE12 Forend](TopBreak_CAFE12.md)
 
 <!-- NEW PAGE -->
 ## Prints
@@ -44,15 +46,15 @@ which includes everything you need, and uses the stronger 4130 tube.
 |![](TopBreak_CAFE12+/Prints/LatchTab_thumb.jpg)|![](TopBreak_CAFE12+/Prints/Cluster_thumb.jpg)|![](TopBreak_CAFE12+/Prints/VerticalForegrip_thumb.jpg)|![](TopBreak_CAFE12+/Prints/Sightpost_thumb.jpg)|
 
 ## Vitamins
-| Purpose                | Part                             | Metric Alternative | Quantity |
-|------------------------|----------------------------------|--------------------|----------|
-| Extractor Bit          | #2 flat 1/4" Hex Bit             | TODO               | 1        |
-| Extractor Retainer     | 1/4"x1" Dowel Pin                | TODO               | 1        |
-| Latch Bars             | 1/4"x3" Square Rod               | TODO               | 2        |
-| Latch Screws           | #8-32x3/4" Flat Head Screw       | TODO               | 2        |
-| Latch Springs          | (same as sear spring)            | TODO               | 2        |
-| Barrel Sleeve          | 1.25"x0.125" 4130 Tubing 8" Long | TODO               | 1        |
-| Barrel                 | 1"x0.093" 4130 Tubing 18.5" Long | TODO               | 1        |
+| Purpose                | Part                             | Quantity |
+|------------------------|----------------------------------|----------|
+| Extractor Bit          | #2 flat 1/4" Hex Bit             | 1        |
+| Extractor Retainer     | 1/4"x1" Dowel Pin                | 1        |
+| Latch Bars             | 1/4"x3" Square Rod               | 2        |
+| Latch Screws           | #8-32x3/4" Flat Head Screw       | 2        |
+| Latch Springs          | (same as sear spring)            | 2        |
+| Barrel Sleeve          | 1.25"x0.125" 4130 Tubing 8" Long | 1        |
+| Barrel                 | 1"x0.093" 4130 Tubing 18.5" Long | 1        |
 <br/>
 
 ### Metric BOM
