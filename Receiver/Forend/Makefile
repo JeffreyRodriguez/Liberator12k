@@ -5,7 +5,7 @@ Classes := TopBreak Revolver
 Classes_HTML=$(addsuffix .html, $(Classes))
 
 TopBreak_Presets := CAFE12 CAFE12+ FP37
-Revolver_Presets := 
+Revolver_Presets :=
 Presets := $(addprefix TopBreak_,$(TopBreak_Presets)) $(addprefix Revolver_,$(Revolver_Presets))
 
 Prints:= $(foreach Preset,$(Presets),$(addprefix $(Preset)/, $(call list_prints,$(call preset_class_name,$(Preset)).scad)))
@@ -18,7 +18,6 @@ Hardware_STL= $(addsuffix .stl, $(Hardware))
 Fixtures_STL=$(addsuffix .stl, $(Fixtures))
 Projections_DXF=$(addsuffix .dxf, $(Projections))
 
-Prints_STL_thumbs=$(addsuffix _thumb.jpg, $(Prints))
 Assembly_STL=$(addprefix Assembly/, $(Prints_STL) $(Hardware_STL))
 Assembly_JPG=$(addsuffix /Assembly.jpg,$(Presets))
 Assembly: $(Assembly_STL) $(Assembly_JPG)
