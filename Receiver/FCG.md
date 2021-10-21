@@ -40,7 +40,7 @@ STL Files Location: `Receiver/FCG/Prints/`
 3. Insert the sear and and compress the return spring until the pin hole is visible through the side slot.
 4. Insert cross-pin through the inclined slot through the sear. It should lay flush or just below the surface of the trigger sides.
 5. Verify the trigger moves freely.
-6. Oil the cross-pin hole, both sides of the slot, front and rear of the sear.
+6. Lube the cross-pin hole, both sides of the slot, front and rear of the sear.
 7. Squeezing the trigger should now feel silky smooth.
 
 ### Hammer Subassembly
@@ -131,14 +131,14 @@ fail first, or the charging handle bolt. If you can't charge it by hand, it's
 too strong.
 
 ### Trigger Pull
-The coefficient of friction for oiled steel/steel is ~0.16, the trigger has a
+The coefficient of friction for lubed steel/steel is ~0.16, the trigger has a
 mechanical advantage of 1.5. Give or take, trigger pull is 10% of hammer spring.
 
 Plastic-on-plastic friction probably contributes much more to trigger pull than
 the hammer spring does.
 
 For improved performance:
-1. Polish and oil the sear surfaces and pin.
+1. Polish and lube the sear surfaces and pin.
 2. Sand/polish the friction surfaces of the trigger sides.
 3. Use a needle file to clean up the inclined slot in the Trigger.
 4. Sand/polish slot smooth.

@@ -49,4 +49,4 @@ Figure out what's bulging, and file it down. Needle files are great for this.
 ## Technical Notes
 
 ### Trigger Pull
-File, sand smooth, and oil any friction surfaces that are dragging.
+File, sand smooth, and lube any friction surfaces that are dragging.
