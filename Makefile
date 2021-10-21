@@ -18,7 +18,7 @@ Forends = $(filter-out Receiver/Forend/Assembly/%, \
 					  $(shell find Receiver/Forend/ -ipath '*_*/Projections/*.dxf'))
 
 EXTRA_DOCS:=changelog.txt Manual.pdf
-ZIP_TARGETS:=$(EXTRA_DOCS) Source/
+ZIP_TARGETS:=$(EXTRA_DOCS) Liberator12k-source/
 TARGETS:=Liberator12k.zip Liberator12k-source.zip Liberator12k-assembly.zip
 
 changelog.txt:
@@ -37,7 +37,7 @@ Version.md:
 Manual.pdf: $(SUBDIRS) Version.md $(MARKDOWN_HTML) $(MANUAL_IMAGES)
 	htmldoc --batch Manual.book
 
-Source/: .git
+Liberator12k-source/: .git
 	rm -rf $@ && \
 	git init $@ && \
 	cd $@ && \
@@ -48,7 +48,7 @@ Liberator12k.zip: $(SUBDIRS) $(ZIP_TARGETS)
 	zip -9r $@ $(ZIP_TARGETS) $(Minuteman) && \
 	cd Receiver && zip -r $(abspath $@) $(subst Receiver/Forend/,Forend/,$(Forends))
 
-Liberator12k-source.zip: Source/
+Liberator12k-source.zip: Liberator12k-source/
 	zip -9r $@ $^
 
 Liberator12k-assembly.zip: $(SUBDIRS)
