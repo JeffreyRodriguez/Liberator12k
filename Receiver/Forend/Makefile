@@ -5,7 +5,7 @@ Classes := TopBreak Revolver
 Classes_HTML=$(addsuffix .html, $(Classes))
 
 TopBreak_Presets := CAFE12 CAFE12+ FP37
-Revolver_Presets := ZZR6x12
+Revolver_Presets := 
 Presets := $(addprefix TopBreak_,$(TopBreak_Presets)) $(addprefix Revolver_,$(Revolver_Presets))
 
 Prints:= $(foreach Preset,$(Presets),$(addprefix $(Preset)/, $(call list_prints,$(call preset_class_name,$(Preset)).scad)))
