@@ -19,7 +19,7 @@ use <../Vitamins/Pipe.scad>;
 /* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Prints/Receiver", "Prints/Receiver_Back", "Prints/Receiver_Projection"]
+_RENDER = ""; // ["", "Prints/Receiver", "Prints/Receiver_Back", "Prints/Receiver_Projection", "Projections/ReceiverBottomSlotInterface"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;
@@ -422,6 +422,11 @@ scale(25.4) if ($preview) {
     rotate([0,-90,0])
     translate([ReceiverLength()+ReceiverBackLength(),0,0])
     ReceiverBackSegment();
+    
+  if (_RENDER == "Projections/ReceiverBottomSlotInterface")
+  projection()
+  rotate([0,90,0])
+  ReceiverBottomSlotInterface();
 
   if (_RENDER == "Projections/Receiver")
   projection()
