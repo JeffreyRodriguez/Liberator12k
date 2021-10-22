@@ -11,7 +11,7 @@ The Minuteman receiver is reusable in several other configurations similar
 to how you might swap AR15 uppers.
 
 ### Supporting the Project
-This has been an ambitious one-man operation from the start.
+This has been an ambitious one-man pro-bono operation from the start.
 The project has cost tens of thousands of dollars and years of my time.
 Now we have a modular weapons platform, ammunition, and a suite of ECM tooling.
 I dedicate it to the public domain to secure self-defense for everyone, forever.

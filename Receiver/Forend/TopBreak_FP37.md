@@ -10,7 +10,8 @@
 
 <!-- NEW PAGE -->
 ## Prints
-## Prints
+STL Files Location: `Forend/TopBreak_FP37/Prints/`
+
 **These numbers are wrong, TODO: Redo them.** Copied from CAFE12+, ballpark accurate.
 
 420g, 2d08h09m
@@ -24,6 +25,7 @@
 | LatchBlock        | 114g          |   15h00m           |
 | Cluster           | ?g            |   ?h?m             |
 | Vertical Foregrip | ?g            |   ?h?m             |
+| **Total**         | 420g          |           2d08h09m |
 <br/>
 
 |ReceiverFront|Forend|BarrelCollar|Extractor|

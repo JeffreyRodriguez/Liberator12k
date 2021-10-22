@@ -24,17 +24,18 @@ See [Chapter 2b: CAFE12 Forend](TopBreak_CAFE12.md)
 
 <!-- NEW PAGE -->
 ## Prints
-420g, 2d08h09m
+STL Files Location: `Forend/TopBreak_CAFE12+/Prints/`
 
 | Part              | Filament Used | Print Time @ 0.4mm |
 |-------------------|-------------: |------------------: |
-| ReceiverFront     | 57g           |   07h17m           |
-| Forend            | 189g          | 1d01h10m           |
-| BarrelCollar      | 114g          |   15h00m           |
-| Extractor         | 14g           |    1h55m           |
-| LatchBlock        | 114g          |   15h00m           |
-| Cluster           | ?g            |   ?h?m             |
-| Vertical Foregrip | ?g            |   ?h?m             |
+| ReceiverFront     | 57g           |             07h17m |
+| Forend            | 189g          |           1d01h10m |
+| BarrelCollar      | 114g          |             15h00m |
+| Extractor         | 14g           |              1h55m |
+| LatchBlock        | 114g          |             15h00m |
+| Cluster           | ?g            |               ?h?m |
+| Vertical Foregrip | ?g            |               ?h?m |
+| **Total**         | 420g          |           2d08h09m |
 <br/>
 
 |ReceiverFront|Forend|BarrelCollar|Extractor|

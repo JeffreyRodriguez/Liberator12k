@@ -9,10 +9,9 @@ better, faster, stronger 4130 tube forend.
 
 <!-- NEW PAGE -->
 ## Prints
+STL Files Location: `Forend/TopBreak_CAFE12/Prints/`
+
 **These numbers are wrong, TODO: Redo them.** Copied from CAFE12+, ballpark accurate.
-
-420g, 2d08h09m
-
 | Part              | Filament Used | Print Time @ 0.4mm |
 |-------------------|-------------: |------------------: |
 | ReceiverFront     | 57g           |   07h17m           |
@@ -22,6 +21,7 @@ better, faster, stronger 4130 tube forend.
 | LatchBlock        | 114g          |   15h00m           |
 | Cluster           | ?g            |   ?h?m             |
 | Vertical Foregrip | ?g            |   ?h?m             |
+| **Total**         | 420g          |           2d08h09m |
 <br/>
 
 |ReceiverFront|Forend|BarrelCollar|Extractor|
