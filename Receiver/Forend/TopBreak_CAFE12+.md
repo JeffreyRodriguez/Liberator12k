@@ -59,6 +59,7 @@ STL Files Location: `Forend/TopBreak_CAFE12+/Prints/`
 | Cluster Bolts          | #8-32x1/2" Flat Head Screw       | 2        |
 | Foregrip Bolt          | 1/4"-20x3.5" Flat Head Screw     | 1        |
 | Foregrip Bolt Nut      | 1/4"-20 Heatset Insert           | 1        |
+| Barrel Collar Bolts    | #8-32x1/2" Socket Head Screw     | 1        |
 | Barrel Sleeve          | 1.25"x0.125" 4130 Tubing 8" Long | 1        |
 | Barrel                 | 1"x0.093" 4130 Tubing 18.5" Long | 1        |
 <br/>
@@ -68,55 +69,35 @@ TODO
 
 <!-- NEW PAGE -->
 ## Post-Processing
-If you purchased a kit, all the machining is already done for you.
+If you purchased a kit, all the machining is already done for you - proceed to the
+subassemblies.
+To DIY all the parts yourself, read the Machining section and then come back here.
 
-### Foregrip Cluster Heatset
+### Subassemblies
+
+#### Foregrip Cluster
 Install the *Foregrip Bolt Nut* on the inside of the *Cluster*.
 
-### Barrel Sleeve Machining
-The *Barrel Sleeve* has several \#8-32 holes drilled along the top.
-These holes are used to secure the *BarrelCollar* to the *Barrel Sleeve*
-and the *Foregrip Cluster* to the *Barrel Sleeve* and *Barrel*.
+#### Barrel Group
+1. Insert the *Barrel Sleeve* into the rear of the *Cluster* and line up the threaded
+holes on top.
+2. Insert the *Barrel* into the front of the *Cluster*.
+Extractor cutout-side first.
+3. Headspace on a dummy cartridge.
+The *Barrel Sleeve* should be flush and the *Barrel* slightly recessed.
+4. Install the *Cluster Bolts*.
+6. Install the *Foregrip Bolt* into the *Foregrip* and screw into the *Cluster*
+from the bottom.
 
-#### DIY Fixture
-**DO NOT DRILL THE BARREL**
+#### Extractor
+1. Insert the *Extractor Bit* into the *Extractor*, shim it if loose.
+2. File/sand the extractor's top/bottom/sides smooth.
+3. Drop the *Extractor Spring* into the *Barrel Collar*'s large rectangular hole.
+4. Insert the *Extractor* into the hole.
+5. With the *Extractor* pressed inwards, install the *Extractor Retainer*.
+You can access the top of the extractor from the large round hole for the barrel.
 
-A fixture located at `Forend/TopBreak_CAFE12+/Fixtures/BarrelSleeveFixture.stl`
-can be used to help you drill and tap your own *Barrel Sleeve*.
-
-Using a \#8-32 tap, add threads to the hole in the middle.
-Use a 1.5" \#8-32 to hold the *Barrel Sleeve* in place like a set screw.
-Now you're ready to drill and tap the holes.
-
-**DO NOT DRILL THE BARREL**
-
-Drill the holes out with a \#29 wire bit, start out very slowly so the drill bit doesn't
-walk on the round surface.Be sure to clear your chips early and often, use lots of cutting fluid.
-
-Once you've finished drilling and tapping, ensure the inside of the *Barrel Sleeve* is
-clear of any chips and debris.
-
-#### Extractor Slot Machining
-File out a 1/4" wide slot in the 6-O'clock position for the extractor bit.
-Aim for a 45 degree angle 1/8" deep.
-
-File this same notch in a matching location on the barrel. This is easiest
-if you wait until you've installed the *Cluster*.
-
-#### Latch Bars Machining
-Drill and tap the the *Latch Rods* 1" from the end -
-
-### Barrel Subassembly
-Install the *Barrel* into the *Barrel Sleeve*, add the *Cluster* and *Foregrip*.
-The *Foregrip Bolt Nut* and *Cluster Bolts* should act as set screws to secure
-the *Barrel* into the *Barrel Sleeve*.
-
-### Barrel Collar: Extractor Subassembly
-1. Insert the *Extractor Bit* into the *Extractor*.
-2. Drop the *Extractor Spring* into the *Barrel Collar*'s large rectangular hole.
-3. Insert the *Extractor* into the hole, and install the *Extractor Retainer* from the large round hole for the barrel.
-
-### Barrel Collar: Latch Subassembly
+#### Latch
 1. Insert the *Latch Springs* into the small square holes in the *Barrel Collar*.
 2. Insert the *Latch Bars* into the square holes in the *Barrel Collar*.
 3. Ensure the *Latch Bars* slide smoothly - file the holes if necessary.
@@ -124,6 +105,45 @@ the *Barrel* into the *Barrel Sleeve*.
 5. Depress the *Latch Bars* while you install the *Latch Screws*.
 6. Lube the slots and bars.
 
-### Forend Subassembly
+#### Forend
 1. Rotate the *Barrel Collar* up into the *Forend*.
-2. Install the Barrel with the sleeve
+2. Holding the *Barrel Collar*, install the *Barrel Group* from the front.
+3. Secure the *Barrel Collar Bolts*
+
+### Machining
+
+#### Drill and Tap the Barrel Sleeve
+**DO NOT DRILL THE BARREL**
+
+A fixture located at `Forend/TopBreak_CAFE12+/Fixtures/BarrelSleeveFixture.stl`
+can be used to help you drill and tap your own *Barrel Sleeve*.
+
+Using a \#8-32 tap, thread the hole in the middle of the fixture.
+Use a 1.5" \#8-32 to hold the *Barrel Sleeve* in place, like a set screw.
+Now you're ready to drill and tap the holes.
+
+**DO NOT DRILL THE BARREL**
+
+Drill the holes out with a \#29 wire bit, start out very slowly so the drill bit doesn't
+walk on the round surface.
+Be sure to clear your chips early and often, use lots of cutting fluid.
+
+**Tip:** Use a small end mill to put a flat on it first, if you have one.
+This will prevent the drill bit from wandering.
+
+Once you've finished drilling and tapping, ensure the inside of the *Barrel Sleeve* is
+clear of chips and debris.
+
+#### Cut the Extractor Slot
+File out a 1/4" wide slot in the 6-O'clock position for the extractor bit.
+Aim for a 45 degree angle 1/8" deep.
+
+File this same notch in a matching location on the barrel. This is easiest to do
+with the *Barrel Sleeve* installed on the barrel so you can do both at once.
+A large square-edged file makes quick work of this operation but you can also
+use a Dremel or angle grinder (and a lot of finesse).
+
+**Tip:** Use a vise.
+
+#### Drill and Tap the Latch Bars
+Drill and tap (#8-32) the *Latch Bars* 1" from the end

@@ -82,6 +82,9 @@ _CUTAWAY_LATCH = false;
 GP_BOLT = "#8-32"; // ["M4", "#8-32"]
 GP_BOLT_CLEARANCE = 0.015;
 
+BARREL_COLLAR_BOLT  = "#8-32"; // ["M4", "#8-32"]
+BARREL_COLLAR_BOLT_CLEARANCE = 0.015;
+
 BARREL_SET_SCREW = "#8-32"; // ["M4", "#8-32"]
 BARREL_SET_SCREW_CLEARANCE = -0.05;
 
@@ -138,6 +141,9 @@ assert(GripBolt(), "GripBolt() is undefined. Unknown GRIP_BOLT?");
 
 function GPBolt() = BoltSpec(GP_BOLT);
 assert(GPBolt(), "GPBolt() is undefined. Unknown GP_BOLT?");
+
+function BarrelCollarBolt() = BoltSpec(BARREL_COLLAR_BOLT);
+assert(BarrelCollarBolt(), "BarrelCollarBolt() is undefined. Unknown BARREL_COLLAR_BOLT?");
 
 function ClusterBolt() = BoltSpec(CLUSTER_BOLT);
 assert(ClusterBolt(), "ClusterBolt() is undefined. Unknown CLUSTER_BOLT?");
@@ -453,13 +459,13 @@ module TopBreak_Barrel(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, le
   }
 }
 
-module TopBreak_MlokBolts(headType="flat", nutType="heatset", length=0.5, cutter=false, clearance=0.005, teardrop=false) {
+module TopBreak_BarrelCollarBolts(headType="flat", nutType="heatset", length=0.5, cutter=false, clearance=0.005, teardrop=false) {
 
   // Top Bolts
   color("Silver") RenderIf(!cutter)
   for (X = [0.5,1.5,2.5])
   translate([X,0,BarrelRadius()])
-  NutAndBolt(bolt=MlokBolt(),
+  NutAndBolt(bolt=BarrelCollarBolt(),
              boltLength=length+ManifoldGap(2),
              head="socket", capHeightExtra=(cutter?1:0),
              nut="none",
@@ -687,7 +693,7 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.005, cut
       translate([X,0,0])
       TopBreak_LatchScrews(cutter=true, head="none", doMirror=false);
 
-      TopBreak_MlokBolts(cutter=true);
+      TopBreak_BarrelCollarBolts(cutter=true);
 
       translate([0.25,0,ReceiverTopZ()]) {
         MlokSlot(length=2.5);
@@ -1053,7 +1059,7 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
     }
 
     if (_SHOW_COLLAR_HARDWARE)
-    TopBreak_MlokBolts();
+    TopBreak_BarrelCollarBolts();
 
     if (_SHOW_COLLAR)
     TopBreak_BarrelCollar(cutaway=cutaway == true || _CUTAWAY_COLLAR, alpha=_ALPHA_COLLAR);
@@ -1221,8 +1227,8 @@ if ($preview) {
   if (_RENDER == "Hardware/ExtractorRetainer")
   TopBreak_ExtractorRetainer();
 
-  if (_RENDER == "Hardware/MlokBolts")
-  TopBreak_MlokBolts();
+  if (_RENDER == "Hardware/BarrelCollarBolts")
+  TopBreak_BarrelCollarBolts();
 
   if (_RENDER == "Hardware/ClusterBolts")
   TopBreak_ClusterBolts();
