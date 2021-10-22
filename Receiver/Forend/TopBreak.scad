@@ -368,9 +368,9 @@ module TopBreak_ExtractorRetainer(cutaway=false, cutter=false, teardrop=false, c
 
   // Secure the TopBreak_Latch block to the TopBreak_Latch rod
   color("Silver") RenderIf(!cutter)
-  translate([TopBreak_ExtractorWidth()+TopBreak_ExtractorTravel()+0.5-clear,
+  translate([TopBreak_ExtractorWidth()+TopBreak_ExtractorTravel()+0.5,
              0,
-             -BarrelSleeveRadius()-1])
+             -BarrelSleeveRadius()-1-clear2])
   cylinder(r=TopBreak_ExtractorRetainerRadius()+clear, h=1+clear2);
 }
 
@@ -719,7 +719,7 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.005, cut
   }
 }
 
-module TopBreak_Extractor(cutter=false, clearance=0.015, chamferRadius=1/16, cutaway=false, alpha=1) {
+module TopBreak_Extractor(cutter=false, clearance=0.005, chamferRadius=1/16, cutaway=false, alpha=1) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
@@ -799,7 +799,7 @@ module TopBreak_LatchTab(cutaway=false, cutter=false, clearance=0.01, alpha=1) {
                         clearance=0.01, cut=true,
                         width=width)
       translate([-0.5, -(width/2), bottomZ])
-      ChamferedCube([1+TopBreak_LatchTravel(),
+      ChamferedCube([1.5+TopBreak_LatchTravel(),
                      width,
                      TopBreak_LatchTabHeight()], r=1/16);
 
@@ -808,7 +808,7 @@ module TopBreak_LatchTab(cutaway=false, cutter=false, clearance=0.01, alpha=1) {
       translate([0.5-clear,
                  TopBreak_LatchY()-(TopBreak_LatchWidth()/2)-clear,
                  TopBreak_LatchZ()-(TopBreak_LatchWall()+TopBreak_LatchTabHeight())-clear])
-      ChamferedCube([0.5+(cutter?TopBreak_LatchTravel():0),
+      ChamferedCube([1+(cutter?TopBreak_LatchTravel():0),
                      TopBreak_LatchWidth()+clear2,
                      (TopBreak_LatchWall()+TopBreak_LatchTabHeight()+0.06)+clear2],
                      r=1/16);
@@ -1046,16 +1046,17 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
 
     translate([-TopBreak_ExtractorTravel()*extractFactor,0,0]) {
 
-      if (_SHOW_LATCH) {
-        TopBreak_LatchBars();
-        TopBreak_LatchTab();
-      }
+      if (_SHOW_LATCH_HARDWARE)
+      TopBreak_LatchScrews(cutaway=cutaway == true || _CUTAWAY_LATCH);
+      
+      if (_SHOW_LATCH_HARDWARE)
+      TopBreak_LatchBars(cutaway=cutaway == true || _CUTAWAY_LATCH);
 
       if (_SHOW_LATCH_HARDWARE)
       TopBreak_LatchSpring();
-
-      if (_SHOW_LATCH_HARDWARE)
-      TopBreak_LatchScrews();
+      
+      if (_SHOW_LATCH)
+      TopBreak_LatchTab(cutaway=cutaway == true || _CUTAWAY_LATCH);
     }
 
     if (_SHOW_COLLAR_HARDWARE)
