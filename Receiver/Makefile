@@ -29,11 +29,11 @@ Previews: $(Preview_JPG)
 TARGETS = README.html $(Preview_JPG) $(Components_HTML) $(Prints_STL) $(Prints_STL_thumbs) $(Assembly_STL)
 
 Preview_Minuteman.png: Assembly.scad
-	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
+	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_HIGH) -o $@ \
 		--projection=p --camera=200,800,200,-100,0,0 \
 		$<
 Preview_Frame.png: Assembly.scad
-	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
+	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_HIGH) -o $@ \
 		--projection=p --camera=200,800,200,-100,0,0 \
 		-D _SHOW_RECEIVER=true \
 		-D _SHOW_FCG=false \
@@ -42,7 +42,7 @@ Preview_Frame.png: Assembly.scad
 		-D _SHOW_STOCK=false \
 		$<
 Preview_Stock.png: Assembly.scad
-	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
+	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_HIGH) -o $@ \
 		--projection=p --camera=-100,500,100,-250,0,0 \
 		-D _SHOW_RECEIVER=false \
 		-D _SHOW_FCG=false \
@@ -51,7 +51,7 @@ Preview_Stock.png: Assembly.scad
 		-D _SHOW_STOCK=true \
 		$<
 Preview_Lower.png: Assembly.scad
-	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
+	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_HIGH) -o $@ \
 		--projection=p --camera=100,400,0,-100,0,-50 \
 		-D _SHOW_RECEIVER=false \
 		-D _SHOW_FCG=false \
@@ -60,7 +60,7 @@ Preview_Lower.png: Assembly.scad
 		-D _SHOW_STOCK=false \
 		$<
 Preview_FCG.png: Assembly.scad
-	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
+	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_HIGH) -o $@ \
 		--projection=p --camera=100,400,200,-100,0,0 \
 		-D _SHOW_RECEIVER=false \
 		-D _SHOW_FCG=true \
@@ -69,18 +69,18 @@ Preview_FCG.png: Assembly.scad
 		-D _SHOW_STOCK=false \
 		$<
 Preview_CAFE12+.png: Assembly.scad
-	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
+	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_HIGH) -o $@ \
 		--projection=p --camera=200,1500,200,0,0,0 \
 		-D _FOREND='"TopBreak"' \
 		$<
 Preview_CAFE12.png: Assembly.scad
-	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
+	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_HIGH) -o $@ \
 		--projection=p --camera=200,1500,200,0,0,0 \
 		-D _FOREND='"TopBreak"' \
 		-p Forend/TopBreak.json -P "CAFE12" \
 		$<
 Preview_FP37.png: Assembly.scad
-	$(OSBIN) $(OSOPTS) --preview --imgsize=1920,1080 -o $@ \
+	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_HIGH) -o $@ \
 		--projection=p --camera=200,1500,200,0,0,0 \
 		-D _FOREND='"TopBreak"' \
 		-p Forend/TopBreak.json -P "FP37" \
