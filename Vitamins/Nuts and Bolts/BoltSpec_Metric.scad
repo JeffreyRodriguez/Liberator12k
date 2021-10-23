@@ -1,6 +1,8 @@
 use <../../Meta/Units.scad>;
 use <BoltSpec.scad>;
 
+// Bolt tapping drill sizes: https://web.archive.org/web/20210406172745/https://www.natool.com/wp-content/uploads/2019/06/tapdrillsizes-inmet_web_catp113-116.pdf
+
 // DIN912 spec: https://en.torqbolt.com/din-912-dimensions-standards-specifications/#
 // BoltSocketCapDiameter -> dk
 // BoltSocketCapHeight   -> k
@@ -26,6 +28,7 @@ use <BoltSpec.scad>;
 
 function Spec_BoltM2() = [ // these are all a total guess
   ["BoltDiameter",            UnitsMetric(2.00)],
+  ["BoltTappingDrillSize",    UnitsMetric(1.60)],
 
   // DIN912
   ["BoltSocketCapDiameter",   UnitsMetric(3.80)],  // +- 0.18mm
@@ -56,6 +59,7 @@ function Spec_BoltM2() = [ // these are all a total guess
 
 function Spec_BoltM2pt5() = [
   ["BoltDiameter",            UnitsMetric(2.50)],
+  ["BoltTappingDrillSize",    UnitsMetric(2.05)],
 
   // DIN912
   ["BoltSocketCapDiameter",   UnitsMetric(4.50)],  // +- 0.18mm
@@ -87,6 +91,7 @@ function Spec_BoltM2pt5() = [
 
 function Spec_BoltM3() = [
   ["BoltDiameter",          UnitsMetric(3.00)],
+  ["BoltTappingDrillSize",  UnitsMetric(2.50)],
 
   // DIN912
   ["BoltSocketCapDiameter", UnitsMetric(5.50)],  // +- 0.18mm
@@ -127,6 +132,7 @@ function Spec_BoltM3() = [
 
 function Spec_BoltM3pt5() = [
   ["BoltDiameter",            UnitsMetric(3.50)],
+  ["BoltTappingDrillSize",    UnitsMetric(2.90)],
 
   // DIN912 (this is somewhat of a guess for M3.5)
   ["BoltSocketCapDiameter",   UnitsMetric(6.25)],  // +- 0.2mm
@@ -149,6 +155,7 @@ function Spec_BoltM3pt5() = [
 
 function Spec_BoltM4() = [
   ["BoltDiameter",          UnitsMetric(4.00)],
+  ["BoltTappingDrillSize",  UnitsMetric(3.30)],
 
   // DIN912
   ["BoltSocketCapDiameter", UnitsMetric(7.00)],  // +- 0.22mm
@@ -181,6 +188,7 @@ function Spec_BoltM4() = [
 
 function Spec_BoltM5() = [
   ["BoltDiameter",          UnitsMetric(5.00)],
+  ["BoltTappingDrillSize",  UnitsMetric(4.20)],
 
   // DIN912
   ["BoltSocketCapDiameter", UnitsMetric(8.50)],  // +- 0.22mm
@@ -214,6 +222,7 @@ function Spec_BoltM5() = [
 
 function Spec_BoltM6() = [
   ["BoltDiameter",          UnitsMetric(6.00)],
+  ["BoltTappingDrillSize",  UnitsMetric(5.00)],
 
   // DIN912
   ["BoltSocketCapDiameter", UnitsMetric(10.00)],  // +- 0.22mm
@@ -247,6 +256,7 @@ function Spec_BoltM6() = [
 
 function Spec_BoltM8() = [
   ["BoltDiameter",          UnitsMetric(8.00)],
+  ["BoltTappingDrillSize",  UnitsMetric(6.70)],
 
   // DIN912
   ["BoltSocketCapDiameter", UnitsMetric(13.00)],  // +- 0.27mm
@@ -273,6 +283,7 @@ function Spec_BoltM8() = [
 
 function Spec_BoltM10() = [
   ["BoltDiameter",          UnitsMetric(10.00)],
+  ["BoltTappingDrillSize",  UnitsMetric(8.50)],
 
   // DIN912
   ["BoltSocketCapDiameter", UnitsMetric(16.00)],  // +- 0.27mm
@@ -299,6 +310,7 @@ function Spec_BoltM10() = [
 
 function Spec_BoltM12() = [
   ["BoltDiameter",          UnitsMetric(12.00)],
+  ["BoltTappingDrillSize",  UnitsMetric(10.20)],
 
   // DIN912
   ["BoltSocketCapDiameter", UnitsMetric(18.00)],  // +- 0.27mm

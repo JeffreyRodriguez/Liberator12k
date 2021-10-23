@@ -3,6 +3,7 @@ use <BoltSpec.scad>;
 
 function Spec_Bolt4_40() = [
   ["BoltDiameter",    UnitsImperial(0.1055)],
+  ["BoltTappingDrillSize",  UnitsImperial(0.0890)],
 
   /* ["BoltSocketCapDiameter", UnitsImperial(0.270)],
   ["BoltSocketCapHeight",   UnitsImperial(0.164)], */
@@ -24,6 +25,7 @@ function Spec_Bolt4_40() = [
 
 function Spec_Bolt6_32() = [
   ["BoltDiameter",    UnitsImperial(0.135)],
+  ["BoltTappingDrillSize",  UnitsImperial(0.1065)],
 
   /* ["BoltSocketCapDiameter", UnitsImperial(0.270)],
   ["BoltSocketCapHeight",   UnitsImperial(0.164)], */
@@ -46,6 +48,7 @@ function Spec_Bolt6_32() = [
 
 function Spec_Bolt8_32() = [
   ["BoltDiameter",    UnitsImperial(0.1640)],
+  ["BoltTappingDrillSize",  UnitsImperial(0.1360)],
 
   ["BoltSocketCapDiameter", UnitsImperial(0.270)],
   ["BoltSocketCapHeight",   UnitsImperial(0.164)],
@@ -70,6 +73,7 @@ function Spec_Bolt8_32() = [
 
 function Spec_Bolt10_24() = [
   ["BoltDiameter",    UnitsImperial(0.1900)],
+  ["BoltTappingDrillSize",  UnitsImperial(0.1470)],
 
   ["BoltSocketCapDiameter", UnitsImperial(0.270)],
   ["BoltSocketCapHeight",   UnitsImperial(0.164)],
@@ -91,6 +95,7 @@ function Spec_Bolt10_24() = [
 
 function Spec_BoltOneHalf() = [
   ["BoltDiameter",    UnitsImperial(0.5)],
+  ["BoltTappingDrillSize",  UnitsImperial(0.4219)],
   ["BoltHexDiameter", UnitsImperial(0.85)], // WRONG
   ["BoltHexHeight",   UnitsImperial(0.325)],  // WRONG
 
@@ -103,6 +108,7 @@ function Spec_BoltOneHalf() = [
 
 function Spec_BoltOneQuarter() = [
   ["BoltDiameter",    UnitsImperial(0.25)],
+  ["BoltTappingDrillSize",  UnitsImperial(0.2010)],
 
   ["BoltSocketCapDiameter", UnitsImperial(0.375)],
   ["BoltSocketCapHeight",   UnitsImperial(0.25)],
@@ -127,6 +133,7 @@ function Spec_BoltOneQuarter() = [
 
 function Spec_BoltFiveSixteenths() = [
   ["BoltDiameter",    UnitsImperial(0.3125)],
+  ["BoltTappingDrillSize",  UnitsImperial(0.2570)],
 
   ["BoltHexDiameter", UnitsImperial(0.565)],
   ["BoltHexHeight",   UnitsImperial(0.203)],
@@ -155,6 +162,7 @@ function Spec_BoltFiveSixteenths() = [
 
 function Spec_BoltThreeEighths() = [
   ["BoltDiameter",    UnitsImperial(3/8)],
+  ["BoltTappingDrillSize",  UnitsImperial(0.3125)],
   ["BoltSocketCapDiameter", UnitsImperial(0.5625)], // Verify?
   ["BoltSocketCapHeight",   UnitsImperial(0.25)],// Verify?
   ["NutHexDiameter", UnitsImperial(0.5625)],

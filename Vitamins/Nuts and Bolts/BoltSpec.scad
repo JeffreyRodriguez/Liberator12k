@@ -30,9 +30,7 @@ function Spec_BoltTemplate() = [ // these are all a total guess
  * @param clearance Add clearance for holes with 'true'
  */
 function BoltDiameter(bolt=undef, clearance=0, threaded=false)
-           = slookup("BoltDiameter", bolt)
-           + clearance
-           * (threaded ? 0.9 : 1);
+           = (threaded ? BoltTappingDrillSize(bolt) : (slookup("BoltDiameter", bolt) + clearance));
 
 /**
  * Lookup the radius of a bolt.
@@ -41,6 +39,8 @@ function BoltDiameter(bolt=undef, clearance=0, threaded=false)
  */
 function BoltRadius(bolt, clearance=0, threaded=false)
          = BoltDiameter(bolt, clearance, threaded)/2;
+
+function BoltTappingDrillSize(bolt=undef) = slookup("BoltTappingDrillSize", bolt);
 
 function BoltHexDiameter(bolt=undef, clearance=0)
           = slookup("BoltHexDiameter", bolt)
