@@ -1,0 +1,28 @@
+/*
+	Ouija Drill Code V0.1
+	Written by FelixB
+	August 21, 2018
+	
+	OPERATOR NOTIFICATION:
+	This drill uses 5 important variables labeled OPERATOR MANIPULATED VARIABLES. Improper inputs for these variables WILL lead to increased burn times, and MAY lead to complete failure to burn under certain circumstances.
+	-ANALOG_EDGE_FINDING determines whether a digital or analog edge finding circuit is used. The input voltage required to the pin is >3.0V (up to 5V) when ANALOG_EDGE_FINDING is false. When ANALOG_EDGE_FINDING is true, the value is dependent on EDGE_FINDER_VOLTAGE.
+	-EDGE_FINDER_VOLTAGE used when ANALOG_EDGE_FINDING is set to true. The analog pin reads 0.0049V per unit to a maximum of 5V. When ANALOG_EDGE_FINDING is true, the edge finding functions will read HIGH when the voltage is equal to or greater than the EDGE_FINDER_VOLTAGE value. For example, if the desired trigger voltage is 1V, divide 1 by .0049, to get a value of 204 for EDGE_FINDER_VOLTAGE. If the value is set too high, the tool will collide into the workpiece and potentially misalign or damage the drill.
+	-DRILL_DISTANCE is the total distance the drill will travel during a burn. The value of DRILL_DISTANCE is in steps. If using a 1.8 degree stepper motor and a 8mm 2mm pitch leadscrew, 1mm is equal to 100 steps. If the motor is replaced with a 0.9 degree stepper motor, or if the pitch of the lead screw is changed, so does the distance travelled. The distance travelled is always from the position the drill begins the burn at. For example: If a burn is started 10mm from the rear endstop, and assume the DRILL_DISTANCE is 500mm. If the burn goes 100mm in distance and then is stopped, then is started again and allowed to run the full distance, assuming it does not reach the full travel of the endstop it will burn an additional 500mm, to a full distance of 600mm.
+	-EDGE_DISTANCE is the amount of distance the tool will back away from the workpiece after it touches off during a burn cycle. This value is in steps, it uses the same steps per mm that DRILL_DISTANCE does. So for example: during the burn, the edge finder will reach the edge of the part, back off EDGE_DISTANCE in steps, then check again. If it is still contacting the part, it will pull back EDGE_DISTANCE in steps again. It will check and retract until 
+	-BURN_TIME is in seconds. The longer the burn time, the less often that the burn will stop and the edge will be checked. 
+	
+	ASSEMBLY NOTES:
+	-This code uses the Z min/max endstop pins for the endstops. This is because on a CNC lathe the direction along the workpiece is the Z axis. 
+	-The drill uses the Y motor for progressing the drill. This is so that if rotational motion is added to the drill the dual Z motors can rotate the workpiece.
+	-The coding for the endstops is intended for a snap action switch wired up in the Normally Closed configuration, with one wire attached to the signal pin, and the other on the Negative pin. This is done to protect the electronics.
+	-The coding for the Progress and Reverse switches are to be Normally Closed, and be wired to their signal pins and Negative pins. The Reverse switch corresponds to the Y min pin, and the Progress switch uses the Y max pin. This is so that if an X axis is added for lathe functionality the endstops can be placed on the x min/max pins. 
+	-The pump can either be turned on manually, or can be controlled using an SSR. If using the board to control the pump, connect the terminals on the SSR to Pin 20 and +5v. Pin 20 is right next to the Z Max pin.
+	-The power supply for the burn is just on/off in this version. It uses Digital Pin 0, which is part of the auxilary pin section. You will need the diagram to find it. This pin was chosen in case an LED display is considered in the future.
+	-The Edge Finder uses Digital Pin D57(A3) and a +5v pin. The opto-isolator will need to be wired to isolate both pins. The opto-isolator uses Digital Pin 01.
+	
+	CONTROLS:
+	-The Retract switch does 3 things: It turns off the pump (if controlled by the board) it turns off the burn, and it will retract the drill toward the Z min switch. It will override the Progress switch and the Edge Finder Switch.
+	-The Progress switch will turn the pump on, turn the burn on, and begin to move the drill forward toward the Z max endstop until it finds the edge, then it will begin the burn cycle, where it will burn, edge find, then burn again, repeating until it either drills the full length of the cycle as specified by the DRILL_DISTANCE variable, or until it hits the Z max endstop.
+	-The Edge Finder switch will turn the edge finder function on, then move the drill forward toward until it contacts the workpiece or Z max endstop. It will also turn the pump and burn off.
+	
+*/
