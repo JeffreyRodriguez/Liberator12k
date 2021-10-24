@@ -17,9 +17,8 @@ Forends = $(filter-out Forend/Assembly/%, \
 						$(shell find Forend/ -ipath '*_*/Fixtures/*.stl' ) \
 					  $(shell find Forend/ -ipath '*_*/Projections/*.dxf'))
 
-EXTRA_DOCS:=changelog.txt Manual.pdf
-ZIP_TARGETS:=$(EXTRA_DOCS) Liberator12k-source/
-TARGETS:=Liberator12k.zip Liberator12k-source.zip Liberator12k-assembly.zip
+ZIP_TARGETS:=changelog.txt Manual.pdf Liberator12k-source/
+TARGETS:=$(ZIP_TARGETS) Liberator12k.zip Liberator12k-source.zip Liberator12k-assembly.zip
 
 changelog.txt:
 	git log --oneline > changelog.txt
@@ -55,11 +54,14 @@ Liberator12k-assembly.zip: $(SUBDIRS)
 
 	for DIR in $(Assembly); do \
 		cd $$DIR && \
-		zip -9r $(abspath $@) * && \
+		zip -9r $(abspath $@) $(Assembly) * && \
 		cd $(CWD); \
 	done
 
-clean-dir:
-	rm -rf $(MARKDOWN_HTML) $(TARGETS) Version.md changelog.txt Liberator12k-source/
+dist: $(TARGETS) $(ZIP_TARGETS)
+	cp $^ $@/
 
-all: $(SUBDIRS) $(TARGETS)
+clean-dir:
+	rm -rf $(MARKDOWN_HTML) $(TARGETS) Version.md changelog.txt Liberator12k-source/ dist/
+
+all: $(SUBDIRS) $(TARGETS) dist

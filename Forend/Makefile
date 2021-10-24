@@ -19,11 +19,14 @@ Fixtures_STL=$(addsuffix .stl, $(Fixtures))
 Projections_DXF=$(addsuffix .dxf, $(Projections))
 
 Assembly_STL=$(addprefix Assembly/, $(Prints_STL) $(Hardware_STL))
+Assembly_PNG=$(addsuffix /Assembly.png,$(Presets))
 Assembly_JPG=$(addsuffix /Assembly.jpg,$(Presets))
 Assembly: $(Assembly_STL) $(Assembly_JPG)
 
 Preset_STLS := $(Prints_STL)
+Preset_PNG := $(addsuffix .png,$(basename $(Preset_STLS)))
 Preset_Thumbs := $(addsuffix _thumb.jpg,$(basename $(Preset_STLS)))
+Preset_Assembly_PNG := $(addsuffix /Assembly.png,$(Presets))
 Preset_Assembly := $(addsuffix /Assembly.jpg,$(Presets))
 Preset_MP4 := $(addsuffix .mp4, $(Preset_STLS))
 
@@ -48,12 +51,13 @@ $(Classes) $(Presets): $$(addsuffix .scad,$$(firstword $$(subst _, ,$$@)))
 	mkdir -p $@
 	touch $@
 
-TARGETS=README.html Assembly $(Assembly_STL) $(Preset_Assembly) \
+TARGETS=README.html Assembly $(Assembly_STL) $(Assembly_PNG) \
+					$(Preset_Assembly_PNG) $(Preset_Assembly) \
           $(Preset_STLS) $(Preset_Thumbs) \
 					$(Fixtures_STL) $(Projections_DXF)
 
 
 clean-dir:
-	rm -rf $(TARGETS)
+	rm -rf $(TARGETS) Assembly $(Presets)
 
 all: $(SUBDIRS) $(TARGETS)

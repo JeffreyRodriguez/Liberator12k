@@ -13,9 +13,11 @@ Hardware_STL= $(addsuffix .stl, $(Hardware))
 Fixtures_STL=$(addsuffix .stl, $(Fixtures))
 Projections_DXF=$(addsuffix .dxf, $(Projections))
 
+Prints_PNG=$(addsuffix .png, $(Prints))
 Prints_STL_thumbs=$(addsuffix _thumb.jpg, $(Prints))
 
 Assembly_STL=$(addprefix Assembly/, $(Prints_STL) $(Hardware_STL))
+Assembly_PNG=$(addsuffix /Assembly.png,$(Components))
 Assembly_JPG=$(addsuffix /Assembly.jpg,$(Components))
 Assembly: $(Assembly_STL) $(Assembly_JPG)
 
@@ -26,7 +28,7 @@ Preview_JPG=$(addprefix Preview_,$(addsuffix .jpg, $(Preview)))
 
 Previews: $(Preview_JPG)
 
-TARGETS = README.html $(Preview_JPG) $(Components_HTML) $(Prints_STL) $(Prints_STL_thumbs) $(Assembly_STL)
+TARGETS = README.html $(Preview_PNG) $(Preview_JPG) $(Components_HTML) $(Prints_STL) $(Prints_PNG) $(Prints_STL_thumbs) $(Assembly_STL) $(Assembly_PNG) $(Assembly_JPG)
 
 Preview_Minuteman.png: Assembly.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_HIGH) -o $@ \
@@ -87,6 +89,6 @@ Preview_FP37.png: Assembly.scad
 		$<
 
 clean-dir:
-	rm -rf $(TARGETS)
+	rm -rf $(TARGETS) Assembly $(Components)
 
 all: $(SUBDIRS) $(TARGETS)
