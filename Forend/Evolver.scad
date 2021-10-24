@@ -235,8 +235,7 @@ module Evolver_BarrelCollar(clearance=BARREL_CLEARANCE, cutter=false, alpha=1, c
     cylinder(r=(BarrelCollarDiameter()/2)+clear, h=BarrelCollarLength()+clear2);
 
     if (!cutter)
-    cylinder(r=BarrelRadius()+clearance,
-             h=barrelLength);
+    Evolver_Barrel(cutter=true);
   }
 }
 
@@ -1185,7 +1184,7 @@ if ($preview) {
 
   if (_RENDER == "Prints/PumpRod")
     if (!_RENDER_PRINT)
-      Evolver_PumpRod();
+      Evolver_PumpRods();
     else
       translate([-pumpPinX,-BarrelCollarRadius(),0.1235])
       rotate([-30,0,0])
