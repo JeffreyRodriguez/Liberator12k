@@ -60,7 +60,7 @@ Liberator12k-assembly.zip: $(SUBDIRS)
 
 dist: $(TARGETS) $(ZIP_TARGETS)
 	mkdir dist/
-	cp $^ $@/
+	cp -r $^ $@/
 
 clean-dir:
 	rm -rf $(MARKDOWN_HTML) $(TARGETS) Version.md changelog.txt Liberator12k-source/ dist/
