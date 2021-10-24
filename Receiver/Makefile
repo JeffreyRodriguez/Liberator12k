@@ -77,13 +77,13 @@ Preview_CAFE12.png: Assembly.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_HIGH) -o $@ \
 		--projection=p --camera=200,1500,200,0,0,0 \
 		-D _FOREND='"TopBreak"' \
-		-p Forend/TopBreak.json -P "CAFE12" \
+		-p ../Forend/TopBreak.json -P "CAFE12" \
 		$<
 Preview_FP37.png: Assembly.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_HIGH) -o $@ \
 		--projection=p --camera=200,1500,200,0,0,0 \
 		-D _FOREND='"TopBreak"' \
-		-p Forend/TopBreak.json -P "FP37" \
+		-p ../Forend/TopBreak.json -P "FP37" \
 		$<
 
 clean-dir:

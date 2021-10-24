@@ -1,9 +1,9 @@
-use <../../Meta/Cutaway.scad>;
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Resolution.scad>;
-use <../../Meta/Units.scad>;
-use <../../Shapes/Teardrop.scad>;
-use <../../Shapes/Chamfer.scad>;
+use <../Meta/Cutaway.scad>;
+use <../Meta/Manifold.scad>;
+use <../Meta/Resolution.scad>;
+use <../Meta/Units.scad>;
+use <../Shapes/Teardrop.scad>;
+use <../Shapes/Chamfer.scad>;
 
 
 // *********

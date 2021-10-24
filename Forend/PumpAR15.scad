@@ -1,31 +1,31 @@
-include <../../Meta/Animation.scad>;
+include <../Meta/Animation.scad>;
 
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Math/Circles.scad>;
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Units.scad>;
-use <../../Meta/Cutaway.scad>;
-use <../../Meta/Resolution.scad>;
-use <../../Meta/Conditionals/RenderIf.scad>;
+use <../Meta/Manifold.scad>;
+use <../Meta/Math/Circles.scad>;
+use <../Meta/Manifold.scad>;
+use <../Meta/Units.scad>;
+use <../Meta/Cutaway.scad>;
+use <../Meta/Resolution.scad>;
+use <../Meta/Conditionals/RenderIf.scad>;
 
-use <../../Shapes/Chamfer.scad>;
-use <../../Shapes/Semicircle.scad>;
-use <../../Shapes/Helix.scad>;
-use <../../Shapes/Teardrop.scad>;
+use <../Shapes/Chamfer.scad>;
+use <../Shapes/Semicircle.scad>;
+use <../Shapes/Helix.scad>;
+use <../Shapes/Teardrop.scad>;
 
-use <../../Vitamins/Nuts And Bolts.scad>;
-use <../../Vitamins/Pipe.scad>;
-use <../../Vitamins/AR15/Barrel.scad>;
-use <../../Vitamins/AR15/Bolt.scad>;
+use <../Vitamins/Nuts And Bolts.scad>;
+use <../Vitamins/Pipe.scad>;
+use <../Vitamins/AR15/Barrel.scad>;
+use <../Vitamins/AR15/Bolt.scad>;
 
-use <../Components/AR15 Trunnion.scad>;
-use <../Magwells/AR15 Magwell.scad>;
+use <../Receiver/Components/AR15 Trunnion.scad>;
+use <../Receiver/Magwells/AR15 Magwell.scad>;
 
-use <../FCG.scad>;
-use <../Frame.scad>;
-use <../Lower.scad>;
-use <../Receiver.scad>;
-use <../Stock.scad>;
+use <../Receiver/FCG.scad>;
+use <../Receiver/Frame.scad>;
+use <../Receiver/Lower.scad>;
+use <../Receiver/Receiver.scad>;
+use <../Receiver/Stock.scad>;
 
 /* [Print] */
 

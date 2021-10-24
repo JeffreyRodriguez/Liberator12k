@@ -1,4 +1,4 @@
-include ../../Makefile.in
+include ../Makefile.in
 
 # Forend Classes
 Classes := TopBreak Revolver

@@ -16,13 +16,13 @@ use <../Vitamins/Nuts And Bolts.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 
 
-use <Forend/Evolver.scad>;
-use <Forend/PumpAR15.scad>;
-use <Forend/Revolver.scad>;
-use <Forend/TopBreak.scad>;
-use <Forend/Trigun.scad>;
-use <Forend/Pump.scad>;
-use <Forend/Pump Reversed Mag.scad>;
+use <../Forend/Evolver.scad>;
+use <../Forend/PumpAR15.scad>;
+use <../Forend/Revolver.scad>;
+use <../Forend/TopBreak.scad>;
+use <../Forend/Trigun.scad>;
+use <../Forend/Pump.scad>;
+use <../Forend/Pump Reversed Mag.scad>;
 
 use <Bullpup.scad>;
 use <Lower.scad>;

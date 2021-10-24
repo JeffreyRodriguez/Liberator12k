@@ -1,24 +1,24 @@
-include <../../Meta/Animation.scad>;
+include <../Meta/Animation.scad>;
 
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Units.scad>;
-use <../../Meta/Cutaway.scad>;
-use <../../Meta/Conditionals/RenderIf.scad>;
-use <../../Meta/Resolution.scad>;
+use <../Meta/Manifold.scad>;
+use <../Meta/Units.scad>;
+use <../Meta/Cutaway.scad>;
+use <../Meta/Conditionals/RenderIf.scad>;
+use <../Meta/Resolution.scad>;
 
-use <../../Shapes/Chamfer.scad>;
-use <../../Shapes/Semicircle.scad>;
-use <../../Shapes/Teardrop.scad>;
+use <../Shapes/Chamfer.scad>;
+use <../Shapes/Semicircle.scad>;
+use <../Shapes/Teardrop.scad>;
 
-use <../../Vitamins/Nuts And Bolts.scad>;
-use <../../Vitamins/Pipe.scad>;
-use <../../Vitamins/Square Tube.scad>;
+use <../Vitamins/Nuts And Bolts.scad>;
+use <../Vitamins/Pipe.scad>;
+use <../Vitamins/Square Tube.scad>;
 
-use <../../Ammo/Shell Slug.scad>;
+use <../Ammo/Shell Slug.scad>;
 
-use <../Frame.scad>;
-use <../Lower.scad>;
-use <../Receiver.scad>;
+use <../Receiver/Frame.scad>;
+use <../Receiver/Lower.scad>;
+use <../Receiver/Receiver.scad>;
 
 
 BARREL_OUTSIDE_DIAMETER = 1.0001;

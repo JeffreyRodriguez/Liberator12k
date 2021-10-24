@@ -1,30 +1,30 @@
-include <../../Meta/Animation.scad>;
+include <../Meta/Animation.scad>;
 
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Units.scad>;
-use <../../Meta/Cutaway.scad>;
-use <../../Meta/Resolution.scad>;
-use <../../Meta/Conditionals/RenderIf.scad>;
+use <../Meta/Manifold.scad>;
+use <../Meta/Units.scad>;
+use <../Meta/Cutaway.scad>;
+use <../Meta/Resolution.scad>;
+use <../Meta/Conditionals/RenderIf.scad>;
 
-use <../../Shapes/Chamfer.scad>;
-use <../../Shapes/Bearing Surface.scad>;
-use <../../Shapes/Teardrop.scad>;
-use <../../Shapes/TeardropTorus.scad>;
-use <../../Shapes/Semicircle.scad>;
-use <../../Shapes/ZigZag.scad>;
+use <../Shapes/Chamfer.scad>;
+use <../Shapes/Bearing Surface.scad>;
+use <../Shapes/Teardrop.scad>;
+use <../Shapes/TeardropTorus.scad>;
+use <../Shapes/Semicircle.scad>;
+use <../Shapes/ZigZag.scad>;
 
-use <../../Shapes/Components/Cylinder Redux.scad>;
-use <../../Shapes/Components/Pivot.scad>;
-use <../../Shapes/Components/Pump Grip.scad>;
+use <../Shapes/Components/Cylinder Redux.scad>;
+use <../Shapes/Components/Pivot.scad>;
+use <../Shapes/Components/Pump Grip.scad>;
 
-use <../../Vitamins/Nuts And Bolts.scad>;
-use <../../Vitamins/Pipe.scad>;
+use <../Vitamins/Nuts And Bolts.scad>;
+use <../Vitamins/Pipe.scad>;
 
-use <../FCG.scad>;
-use <../Frame.scad>;
-use <../Lower.scad>;
-use <../Receiver.scad>;
-use <../Stock.scad>;
+use <../Receiver/FCG.scad>;
+use <../Receiver/Frame.scad>;
+use <../Receiver/Lower.scad>;
+use <../Receiver/Receiver.scad>;
+use <../Receiver/Stock.scad>;
 
 use <Bipod.scad>;
 

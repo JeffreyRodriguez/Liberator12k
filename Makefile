@@ -2,20 +2,20 @@ include Makefile.in
 
 MANUAL_IMAGES = $(wildcard .manual/*.jpg) \
                 $(shell find Receiver -name \*.jpg)
-MARKDOWN = $(wildcard *.md) $(shell find Receiver -name \*.md)
-MARKDOWN_HTML = $(addsuffix .html,$(basename $(MARKDOWN)))
+MARKDOWN = $(wildcard *.md) $(shell find Receiver -name \*.md) $(shell find Forend -name \*.md)
+MARKDOWN_HTML = $(addsuffix .html, $(basename $(MARKDOWN)))
 
-Assembly = Receiver/Assembly Receiver/Forend/Assembly
+Assembly = Receiver/Assembly Forend/Assembly
 Components = Frame Receiver Stock Lower FCG
 
 Minuteman = $(foreach Component,$(Components),$(wildcard Receiver/$(Component)/Prints/*.stl)) \
                 $(foreach Component,$(Components),$(wildcard Receiver/$(Component)/Fixtures/*.stl)) \
                 $(foreach Component,$(Components),$(wildcard Receiver/$(Component)/Projections/))
 
-Forends = $(filter-out Receiver/Forend/Assembly/%, \
-            $(shell find Receiver/Forend/ -ipath '*_*/Prints/*.stl' ) \
-						$(shell find Receiver/Forend/ -ipath '*_*/Fixtures/*.stl' ) \
-					  $(shell find Receiver/Forend/ -ipath '*_*/Projections/*.dxf'))
+Forends = $(filter-out Forend/Assembly/%, \
+            $(shell find Forend/ -ipath '*_*/Prints/*.stl' ) \
+						$(shell find Forend/ -ipath '*_*/Fixtures/*.stl' ) \
+					  $(shell find Forend/ -ipath '*_*/Projections/*.dxf'))
 
 EXTRA_DOCS:=changelog.txt Manual.pdf
 ZIP_TARGETS:=$(EXTRA_DOCS) Liberator12k-source/
@@ -45,8 +45,7 @@ Liberator12k-source/: .git
 	git remote add origin https://github.com/JeffreyRodriguez/Liberator12k.git
 
 Liberator12k.zip: $(SUBDIRS) $(ZIP_TARGETS)
-	zip -9r $@ $(ZIP_TARGETS) $(Minuteman) && \
-	cd Receiver && zip -r $(abspath $@) $(subst Receiver/Forend/,Forend/,$(Forends))
+	zip -9r $@ $(ZIP_TARGETS) $(Minuteman) $(Forends)
 
 Liberator12k-source.zip: Liberator12k-source/
 	zip -9r $@ $^
@@ -61,6 +60,6 @@ Liberator12k-assembly.zip: $(SUBDIRS)
 	done
 
 clean-dir:
-	rm -rf $(MARKDOWN_HTML) $(TARGETS) Version.md changelog.txt
+	rm -rf $(MARKDOWN_HTML) $(TARGETS) Version.md changelog.txt Liberator12k-source/
 
 all: $(SUBDIRS) $(TARGETS)
