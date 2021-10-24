@@ -1119,14 +1119,14 @@ if ($preview) {
   // **********
   // * Prints *
   // **********
-  if (_RENDER == "ReceiverFront")
+  if (_RENDER == "Prints/ReceiverFront")
     if (!_RENDER_PRINT)
       Evolver_ReceiverFront();
     else
       rotate([0,-90,0])
       Evolver_ReceiverFront();
 
-  if (_RENDER == "BarrelSupport")
+  if (_RENDER == "Prints/BarrelSupport")
     if (!_RENDER_PRINT)
       Evolver_BarrelSupport();
     else
@@ -1134,14 +1134,14 @@ if ($preview) {
       translate([-ForendSpacerLength()-Evolver_BarrelSupportLength(),0,0])
       Evolver_BarrelSupport();
 
-  if (_RENDER == "ForendSpacer")
+  if (_RENDER == "Prints/ForendSpacer")
     if (!_RENDER_PRINT)
       Evolver_ForendSpacer();
     else
       rotate([0,-90,0])
       Evolver_ForendSpacer();
 
-  if (_RENDER == "Spindle")
+  if (_RENDER == "Prints/Spindle")
     if (!_RENDER_PRINT)
       Evolver_Spindle();
     else
@@ -1149,7 +1149,7 @@ if ($preview) {
       translate([-2.75,0,1])
       Evolver_Spindle();
 
-  if (_RENDER == "Ratchet")
+  if (_RENDER == "Prints/Ratchet")
     if (!_RENDER_PRINT)
       Evolver_Ratchet();
     else
@@ -1157,7 +1157,7 @@ if ($preview) {
       translate([-3.25,0,1])
       Evolver_Ratchet();
 
-  if (_RENDER == "ZigZag")
+  if (_RENDER == "Prints/ZigZag")
     if (!_RENDER_PRINT)
       Evolver_ZigZag();
     else
@@ -1165,7 +1165,7 @@ if ($preview) {
       translate([-(SpindleMaxX()+0.125),0,-SpindleZ()])
       Evolver_ZigZag();
 
-  if (_RENDER == "Actuator")
+  if (_RENDER == "Prints/Actuator")
     if (!_RENDER_PRINT)
       Evolver_Actuator();
     else
@@ -1174,7 +1174,7 @@ if ($preview) {
       translate([0,0, -SpindleZ()])
       Evolver_Actuator();
 
-  if (_RENDER == "ActuatorToggle")
+  if (_RENDER == "Prints/ActuatorToggle")
     if (!_RENDER_PRINT)
       Evolver_ActuatorToggle();
     else
@@ -1183,7 +1183,7 @@ if ($preview) {
       translate([-(ForendSpacerLength()+0.25),0,0])
       Evolver_ActuatorToggle(AF=1);
 
-  if (_RENDER == "PumpRod")
+  if (_RENDER == "Prints/PumpRod")
     if (!_RENDER_PRINT)
       Evolver_PumpRod();
     else
@@ -1191,7 +1191,7 @@ if ($preview) {
       rotate([-30,0,0])
       Evolver_PumpRods(doMirror=false);
 
-  if (_RENDER == "PumpCollar")
+  if (_RENDER == "Prints/PumpCollar")
     if (!_RENDER_PRINT)
       Evolver_PumpCollar();
     else
@@ -1202,17 +1202,17 @@ if ($preview) {
   // ************
   // * Vitamins *
   // ************
-  if (_RENDER == "Barrel")
+  if (_RENDER == "Hardware/Barrel")
   Evolver_Barrel();
-  if (_RENDER == "BarrelCollar")
+  if (_RENDER == "Hardware/BarrelCollar")
   Evolver_BarrelCollar();
-  if (_RENDER == "SpindleRod")
+  if (_RENDER == "Hardware/SpindleRod")
   Evolver_SpindleRod();
-  if (_RENDER == "SpindlePins")
+  if (_RENDER == "Hardware/SpindlePins")
   Evolver_SpindlePins();
-  if (_RENDER == "RatchetPawlPin")
+  if (_RENDER == "Hardware/RatchetPawlPin")
   Evolver_RatchetPawlPin();
-  if (_RENDER == "PumpCollarBolts")
+  if (_RENDER == "Hardware/PumpCollarBolts")
   Evolver_PumpCollarBolts();
 
 }
