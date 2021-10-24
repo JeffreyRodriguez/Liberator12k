@@ -59,7 +59,7 @@ Liberator12k-assembly.zip: $(SUBDIRS)
 	done
 
 dist: $(TARGETS) $(ZIP_TARGETS)
-	mkdir dist/
+	mkdir -p dist/
 	cp -r $^ $@/
 
 clean-dir:
