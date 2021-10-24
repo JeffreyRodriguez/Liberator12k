@@ -1,0 +1,221 @@
+# NOTE Lines must not exceed 132 characters
+
+#grbl_mode    true # Not yet.... need different software
+
+
+
+# General handling of movement G-codes and slicing into moves
+default_feed_rate                            4000             # Default rate ( mm/minute ) for G1/G2/G3 moves
+default_seek_rate                            4000             # Default rate ( mm/minute ) for G0 moves
+mm_per_arc_segment                           0.5              # Arcs are cut into segments ( lines ), this is the length for
+                                                              # these segments.  Smaller values mean more resolution,
+                                                              # higher values mean faster computation
+mm_per_line_segment                          5                # Lines can be cut into segments ( not usefull with cartesian
+                                                              # coordinates robots ).
+
+# Arm solution configuration : Cartesian robot. Translates mm positions into stepper positions
+alpha_steps_per_mm                           400               # Steps per mm for alpha stepper
+beta_steps_per_mm                            400               # Steps per mm for beta stepper
+gamma_steps_per_mm                           400               # Steps per mm for gamma stepper
+
+# Planner module configuration : Look-ahead and acceleration configuration
+planner_queue_size                           32               # DO NOT CHANGE THIS UNLESS YOU KNOW EXACTLY WHAT YOU ARE DOING
+acceleration                                 100             # Acceleration in mm/second/second.
+z_acceleration                               60               # Acceleration for Z only moves in mm/s^2, 0 uses acceleration which is the default. DO NOT SET ON A DELTA
+acceleration_ticks_per_second                1000             # Number of times per second the speed is updated
+junction_deviation                           0.05             # Similar to the old "max_jerk", in millimeters,
+                                                              # see https://github.com/grbl/grbl/blob/master/planner.c
+                                                              # and https://github.com/grbl/grbl/wiki/Configuring-Grbl-v0.8
+                                                              # Lower values mean being more careful, higher values means being
+                                                              # faster and have more jerk
+#z_junction_deviation                        0.0              # for Z only moves, -1 uses junction_deviation, zero disables junction_deviation on z moves DO NOT SET ON A DELTA
+#minimum_planner_speed                       0.0              # sets the minimum planner speed in mm/sec
+
+
+
+
+
+# Stepper module configuration
+microseconds_per_step_pulse                  1                # Duration of step pulses to stepper drivers, in microseconds
+base_stepping_frequency                      100000           # Base frequency for stepping, higher gives smoother movement
+
+# Cartesian axis speed limits
+x_axis_max_speed                             480   # mm/min
+y_axis_max_speed                             480   # mm/min
+z_axis_max_speed                             400   # mm/min
+alpha_acceleration                           100 # mm/s^2
+beta_acceleration                            100 # mm/s^2
+
+# Stepper module pins ( ports, and pin numbers, appending "!" to the number will invert a pin )
+alpha_step_pin                               2.0              # Pin for alpha stepper step signal
+alpha_dir_pin                                0.5!             # Pin for alpha stepper direction
+alpha_en_pin                                 0.4              # Pin for alpha enable pin
+alpha_current                                1.0              # X stepper motor current
+alpha_max_rate                               480.0          # mm/min
+
+beta_step_pin                                2.1              # Pin for beta stepper step signal
+beta_dir_pin                                 0.11             # Pin for beta stepper direction
+beta_en_pin                                  0.10             # Pin for beta enable
+beta_current                                 1.0              # Y stepper motor current
+beta_max_rate                                480.0          # mm/min
+
+gamma_step_pin                               2.2              # Pin for gamma stepper step signal
+gamma_dir_pin                                0.20!            # Pin for gamma stepper direction
+gamma_en_pin                                 0.19             # Pin for gamma enable
+gamma_current                                1.0              # Z stepper motor current
+gamma_max_rate                               400.0            # mm/min
+
+# Extruder module configuration
+extruder.hotend.enable                          true             # Whether to activate the extruder module at all. All configuration is ignored if false
+extruder.hotend.steps_per_mm                    711.11104        # Steps per mm for extruder stepper
+extruder.hotend.default_feed_rate               1020             # Default rate ( mm/minute ) for moves where only the extruder moves
+extruder.hotend.acceleration                    300              # mm/s^2
+extruder.hotend.max_speed                       17               # mm/s
+extruder.hotend.step_pin                        2.3              # Pin for extruder step signal
+extruder.hotend.dir_pin                         0.22!            # Pin for extruder dir signal
+extruder.hotend.en_pin                          0.21             # Pin for extruder enable signal
+delta_current                                   1.0              # First extruder stepper motor current
+
+
+# Serial communications configuration ( baud rate default to 9600 if undefined )
+uart0.baud_rate                              115200           # Baud rate for the default hardware serial port
+second_usb_serial_enable                     true             # This enables a second usb serial port (to have both pronterface
+                                                              # and a terminal connected)
+
+#leds_disable                                true             # disable using leds after config loaded
+#play_led_disable                            true             # disable the play led
+pause_button_enable                          true             # Pause button enable
+#pause_button_pin                            2.12             # pause button pin. default is P2.12
+#kill_button_enable                           false            # set to true to enable a kill button
+#kill_button_pin                              2.12             # kill button pin. default is same as pause button 2.12 (2.11 is another good choice)
+#msd_disable                                 false            # disable the MSD (USB SDCARD) when set to true (needs special binary)
+#dfu_enable                                  false            # for linux developers, set to true to enable DFU
+
+# Hotend temperature control configuration
+temperature_control.hotend.enable            true             # Whether to activate this ( "hotend" ) module at all.
+                                                              # All configuration is ignored if false.
+temperature_control.hotend.heater_pin          2.7              # Pin that controls the heater, set to nc if a readonly thermistor is being defined   2.7
+temperature_control.hotend.sensor              max6675
+temperature_control.hotend.readings_per_second 4
+temperature_control.hotend.chip_select_pin     0.16
+temperature_control.hotend.spi_channel         0
+temperature_control.hotend.set_m_code          104              #
+temperature_control.hotend.set_and_wait_m_code 109            #
+temperature_control.hotend.designator          T                #
+
+temperature_control.hotend.p_factor            20.6             # permanently set the PID values after an auto pid
+temperature_control.hotend.i_factor            2.254            #
+temperature_control.hotend.d_factor            47               #
+temperature_control.hotend.max_pwm             180              # GARCAD hotend max 17v; this gives ~17v on 24v input.
+temperature_control.hotend.max_temp            400
+temperature_control.hotend.runaway_range       20
+
+temperature_control.bed.enable                  true             #
+temperature_control.bed.runaway_heating_timeout 300              # Without this, the bed may timeout if heating to 150C
+temperature_control.bed.thermistor_pin          0.23             #
+temperature_control.bed.heater_pin              2.5              #  2.5
+temperature_control.bed.thermistor              RRRF100K         # see http://smoothieware.org/temperaturecontrol#toc5
+#temperature_control.bed.beta                   3960             # or set the beta value
+
+temperature_control.bed.set_m_code           140              #
+temperature_control.bed.set_and_wait_m_code  190              #
+temperature_control.bed.designator           B                #
+
+temperature_control.bed.p_factor             152.1
+temperature_control.bed.i_factor             9.332
+temperature_control.bed.d_factor             620
+
+# Switch module for fan control
+switch.fan.enable                            true             #
+switch.fan.input_on_command                  M106             #
+switch.fan.input_off_command                 M107             #
+switch.fan.output_pin                        2.4              #
+switch.fan.output_type                       pwm              #
+switch.fan.max_pwm                           255
+
+# Switch module for IR array
+switch.irarray.enable                           true           #
+switch.irarray.input_on_command                 M42            #
+switch.irarray.input_off_command                M43            #
+switch.irarray.output_pin                       2.6            #
+switch.irarray.output_type                      pwm            # Settable with S-parameters
+switch.irarray.max_pwm                          255
+
+# automatically toggle a switch at a specified temperature. Different ones of these may be defined to monitor different temperatures and switch different swithxes
+# useful to turn on a fan or water pump to cool the hotend
+#temperatureswitch.hotend.enable	            true             #
+#temperatureswitch.hotend.designator          T                # first character of the temperature control designator to use as the temperature sensor to monitor
+#temperatureswitch.hotend.switch              misc             # select which switch to use, matches the name of the defined switch
+#temperatureswitch.hotend.threshold_temp      60.0             # temperature to turn on (if rising) or off the switch
+#temperatureswitch.hotend.heatup_poll         15               # poll heatup at 15 sec intervals
+#temperatureswitch.hotend.cooldown_poll       60               # poll cooldown at 60 sec intervals
+
+# Switch module for spindle control
+#switch.spindle.enable                        false            #
+
+# Endstops
+endstops_enable                              true             # the endstop module is enabled by default and can be disabled here
+#corexy_homing                               false            # set to true if homing on a hbit or corexy
+alpha_min_endstop                            1.24            # add a ! to invert if endstop is NO connected to ground
+alpha_max_endstop                            nc #1.25            # NOTE set to nc if this is not installed
+alpha_homing_direction                       home_to_min      # or set to home_to_max and set alpha_max
+alpha_min                                    0                # this gets loaded after homing when home_to_min is set
+alpha_max                                    200              # this gets loaded after homing when home_to_max is set
+beta_min_endstop                             nc #1.26            #
+beta_max_endstop                             1.27            #
+beta_homing_direction                        home_to_max      #
+beta_min                                     0                #
+beta_max                                     200              #
+gamma_min_endstop                            1.28            #
+gamma_max_endstop                            nc #1.29            #
+gamma_homing_direction                       home_to_min      #
+gamma_min                                    0                #
+gamma_max                                    300              #
+
+# optional order in which axis will home, default is they all home at the same time,
+# if this is set it will force each axis to home one at a time in the specified order
+#homing_order                                 XYZ              # x axis followed by y then z last
+
+# optional enable limit switches, actions will stop if any enabled limit switch is triggered
+alpha_limit_enable                          false            # set to true to enable X min and max limit switches
+beta_limit_enable                           false            # set to true to enable Y min and max limit switches
+gamma_limit_enable                          false            # set to true to enable Z min and max limit switches
+
+alpha_fast_homing_rate_mm_s                  50               # feedrates in mm/second
+beta_fast_homing_rate_mm_s                   50               # "
+gamma_fast_homing_rate_mm_s                  4                # "
+alpha_slow_homing_rate_mm_s                  25               # "
+beta_slow_homing_rate_mm_s                   25               # "
+gamma_slow_homing_rate_mm_s                  2                # "
+
+alpha_homing_retract_mm                      5                # distance in mm
+beta_homing_retract_mm                       5                # "
+gamma_homing_retract_mm                      1                # "
+
+#endstop_debounce_count                       100              # uncomment if you get noise on your endstops, default is 100
+
+# optional Z probe
+zprobe.enable                                false           # set to true to enable a zprobe
+zprobe.probe_pin                             1.28!^          # pin probe is attached to if NC remove the !
+zprobe.slow_feedrate                         5               # mm/sec probe feed rate
+#zprobe.debounce_count                       100             # set if noisy
+zprobe.fast_feedrate                         100             # move feedrate mm/sec
+zprobe.probe_height                          5               # how much above bed to start probe
+#gamma_min_endstop                           nc              # normally 1.28. Change to nc to prevent conflict,
+
+# Only needed on a smoothieboard
+currentcontrol_module_enable                  true             #
+
+
+return_error_on_unhandled_gcode              false            #
+
+# network settings
+network.enable                               true            # enable the ethernet network services
+network.webserver.enable                     true             # enable the webserver
+network.telnet.enable                        true             # enable the telnet server
+#network.ip_address                           auto             # use dhcp to get ip address
+# uncomment the 3 below to manually setup ip address
+network.ip_address                           192.168.3.221    # the IP address
+network.ip_mask                              255.255.255.0    # the ip mask
+network.ip_gateway                           192.168.3.1      # the gateway address
+#network.mac_override                         xx.xx.xx.xx.xx.xx  # override the mac address, only do this if you have a conflict
