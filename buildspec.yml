@@ -14,7 +14,7 @@ phases:
     on-failure: ABORT
     commands:
       - xvfb-run -f .Xauthority -n 99 -s "-screen 0 1920x1080x24 +extension GLX +render -noreset" sleep infinity &
-      - env DISPLAY=:99 XAUTHPROTO=. XAUTHORITY=`pwd`/.Xauthority make -j -Otarget -l 2.5 all
+      - env DISPLAY=:99 XAUTHPROTO=. XAUTHORITY=`pwd`/.Xauthority make -k -j -Otarget -l 2.5 all
 artifacts:
   files:
     - '**/*'
