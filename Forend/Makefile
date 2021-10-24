@@ -24,7 +24,7 @@ Assembly_JPG=$(addsuffix /Assembly.jpg,$(Presets))
 Assembly: $(Assembly_STL) $(Assembly_JPG)
 
 Preset_STLS := $(Prints_STL)
-Preset_PNG := $(addsuffix .png,$(basename $(Preset_STLS)))
+Preset_PNG := $(addsuffix .png,$(basename $(Prints)))
 Preset_Thumbs := $(addsuffix _thumb.jpg,$(basename $(Preset_STLS)))
 Preset_Assembly_PNG := $(addsuffix /Assembly.png,$(Presets))
 Preset_Assembly := $(addsuffix /Assembly.jpg,$(Presets))
