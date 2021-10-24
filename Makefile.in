@@ -74,7 +74,7 @@ Assembly/:
 	$(eval RENDER_MODE=$(if $(findstring Assembly.png,$@),--preview,--render))
 	$(eval RENDER_PRINT=$(if $(findstring Assembly,$@),false,true) )
 	$(eval VIEWPORT=$(if $(findstring Assembly.png,$@),$(OS_CAM_ASSEMBLY),$(OS_CAM_STL)) )
-	$(eval IMAGE_SIZE=$(if $(filter-out Assembly,$@),--imgsize $(OS_RES_LOW),--imgsize $(OS_RES_HIGH)))
+	$(eval IMAGE_SIZE=$(if $(findstring Assembly,$@),--imgsize $(OS_RES_HIGH),--imgsize $(OS_RES_LOW)))
 	@echo Target: $@
 	@echo Target Dir: $(dir $@)
 	@echo Deps: $^
