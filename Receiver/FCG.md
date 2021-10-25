@@ -1,6 +1,6 @@
 # 1.2: Fire Control Group
 
-![Fire Control Group](FCG/Assembly.jpg)
+![Fire Control Group](FCG/Assembly_htmldoc.jpg)
 
 A fire control group for fixed recoil plate designs. Trigger is based on
 [The Unknown Cat's](https://www.youtube.com/channel/UCNR0HGw5airGKkiPcquS0TA)

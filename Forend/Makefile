@@ -1,12 +1,15 @@
 include ../Makefile.in
 
 # Forend Classes
-Classes := TopBreak Revolver
+Classes := TopBreak Revolver Evolver
 Classes_HTML=$(addsuffix .html, $(Classes))
 
 TopBreak_Presets := CAFE12 CAFE12+ FP37
-Revolver_Presets :=
-Presets := $(addprefix TopBreak_,$(TopBreak_Presets)) $(addprefix Revolver_,$(Revolver_Presets))
+Revolver_Presets := ZZR6x12
+Evolver_Presets := 12GA
+Presets := $(addprefix TopBreak_,$(TopBreak_Presets)) \
+           $(addprefix Revolver_,$(Revolver_Presets)) \
+					 $(addprefix Evolver_,$(Evolver_Presets))
 
 Prints:= $(foreach Preset,$(Presets),$(addprefix $(Preset)/, $(call list_prints,$(call preset_class_name,$(Preset)).scad)))
 Hardware := $(foreach Preset,$(Presets),$(addprefix $(Preset)/, $(call list_hardware,$(call preset_class_name,$(Preset)).scad)))
@@ -20,8 +23,9 @@ Projections_DXF=$(addsuffix .dxf, $(Projections))
 
 Assembly_STL=$(addprefix Assembly/, $(Prints_STL) $(Hardware_STL))
 Assembly_PNG=$(addsuffix /Assembly.png,$(Presets))
-Assembly_JPG=$(addsuffix /Assembly.jpg,$(Presets))
-Assembly: $(Assembly_STL) $(Assembly_JPG)
+Assembly_JPG=$(addsuffix /Assembly.jpg,$(Presets)) $(addsuffix /Assembly_htmldoc.jpg, $(Presets))
+Assembly_htmldoc=$(addsuffix /Assembly_htmldoc.jpg, $(Presets))
+Assembly: $(Assembly_STL) $(Assembly_JPG) $(Assembly_htmldoc)
 
 Preset_STLS := $(Prints_STL)
 Preset_PNG := $(addsuffix .png,$(basename $(Prints)))
@@ -40,9 +44,8 @@ Assembly/%_*: %.scad Assembly/
 	  $(CLASS).scad
 
 # Preview_htmldoc.jpg - Downsampled 800px
-$(addsuffix /Preview_htmldoc.jpg,$(Presets)): %_htmldoc.jpg : %.png
-	#cp $< $@
-	convert -resize 1600x900^ $< -quality 90 $@
+$(Assembly_htmldoc): %/Assembly_htmldoc.jpg : %/Assembly.png
+	convert -trim -resize 1600x900^ $< -quality 90 $@
 
 .SECONDEXPANSION:
 

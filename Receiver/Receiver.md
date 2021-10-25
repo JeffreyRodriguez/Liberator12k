@@ -1,5 +1,5 @@
 # Small Receiver
-![Small Receiver](Preview_Receiver.jpg)
+![Small Receiver](Receiver/Assembly_htmldoc.jpg)
 
 The universal receiver in its base configuration. Note: You probably want the Frame, not this.
 

@@ -1,6 +1,6 @@
 # 1.1: Large Frame Receiver
 
-![Large Frame Receiver](Frame/Assembly.jpg)
+![Large Frame Receiver](Frame/Assembly_htmldoc.jpg)
 
 This is the core of the gun. In the United States it's the receiver.
 Legally-speaking it's a gun. If you need to dispose of it, burn it to ash.

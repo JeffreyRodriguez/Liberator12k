@@ -113,6 +113,10 @@ Assembly/:
 		"$@"
 	rm -rf $(FRAMES_DIR)
 
+# Downsampled for HTMLDoc PDF
+%/Assembly_htmldoc.jpg: %/Assembly.png
+	convert -trim -resize 1600x900^ $^ -quality 90 $@
+
 %.jpg: %.png
 	convert $(basename $@).png -quality 90 $@
 
