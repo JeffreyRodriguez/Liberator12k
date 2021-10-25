@@ -50,13 +50,7 @@ Liberator12k-source.zip: Liberator12k-source/
 	zip -9r $@ $^
 
 Liberator12k-assembly.zip: $(SUBDIRS)
-	$(eval CWD=$(shell pwd))
-
-	for DIR in $(Assembly); do \
-		cd $$DIR && \
-		zip -9r $(abspath $@) $(Assembly) * && \
-		cd $(CWD); \
-	done
+	zip -9r $@ $(Assembly)
 
 dist: $(TARGETS) $(ZIP_TARGETS)
 	mkdir -p dist/
