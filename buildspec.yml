@@ -18,7 +18,7 @@ phases:
       - xvfb-run -f .Xauthority -n 99 -s "-screen 0 1920x1080x24 +extension GLX +render -noreset" sleep infinity &
       - env DISPLAY=:99 XAUTHPROTO=. XAUTHORITY=`pwd`/.Xauthority make -k -j -Otarget -l 2.5 || true
       - env DISPLAY=:99 XAUTHPROTO=. XAUTHORITY=`pwd`/.Xauthority make -k -j -Otarget -l 2.5 || true
-      - env DISPLAY=:99 XAUTHPROTO=. XAUTHORITY=`pwd`/.Xauthority make -t -Otarget -l 2.5
+      - env DISPLAY=:99 XAUTHPROTO=. XAUTHORITY=`pwd`/.Xauthority make --trace -Otarget -l 2.5
 artifacts:
   files:
     - '**/*'
