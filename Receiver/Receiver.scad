@@ -25,6 +25,8 @@ _RENDER = ""; // ["", "Prints/Receiver", "Prints/Receiver_Back", "Prints/Receive
 _RENDER_PRINT = true;
 
 /* [Assembly] */
+_SHOW_HARDWARE            = true;
+_SHOW_PRINTS              = true;
 _SHOW_RECEIVER            = true;
 _SHOW_RECEIVER_RODS       = true;
 _SHOW_RECEIVER_BACK       = true;
@@ -385,14 +387,14 @@ module ReceiverBackSegment(length=ReceiverBackLength()) {
 // **************
 // * Assemblies *
 // **************
-module ReceiverAssembly(tensionRods=_SHOW_RECEIVER_RODS, mlokBolts=true, cutaway=false, alpha=_ALPHA_RECEIVER) {
-  if (tensionRods)
+module ReceiverAssembly(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, tensionRods=_SHOW_RECEIVER_RODS, mlokBolts=true, cutaway=false, alpha=_ALPHA_RECEIVER) {
+  if (hardware && tensionRods)
   Receiver_TensionBolts(cutaway=cutaway);
 
-  if (mlokBolts)
+  if (hardware && mlokBolts)
   Receiver_MlokBolts();
 
-  if (_SHOW_RECEIVER)
+  if (prints && _SHOW_RECEIVER)
   Receiver(alpha=alpha, cutaway=cutaway)
   children();
 }
