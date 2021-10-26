@@ -37,7 +37,7 @@ Manual.pdf: $(SUBDIRS) Version.md $(MANUAL_HTML) $(MANUAL_IMAGES)
 
 Liberator12k-source/: .git
 	rm -rf $@ && \
-	git clone --depth=1 "file://$(CWD)" $@ && \
+	git clone --depth=1 "file://$(CURDIR)" $@ && \
 	cd $@ && \
 	git remote set-url origin https://github.com/JeffreyRodriguez/Liberator12k.git
 
