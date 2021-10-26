@@ -1,5 +1,5 @@
 # 2b: CAFE12 Forend
-![CAFE12 Forend Assembly](TopBreak_CAFE12/Assembly.jpg)
+![CAFE12 Forend Assembly](TopBreak_CAFE12/Assembly_htmldoc.jpg)
 
 A 12ga [Top Break](TopBreak.md) variant based on the venerable pipe shotgun.
 
@@ -10,6 +10,14 @@ better, faster, stronger 4130 tube forend.
 <!-- NEW PAGE -->
 ## Prints
 STL Files Location: `Forend/TopBreak_CAFE12/Prints/`
+
+|ReceiverFront|Forend|BarrelCollar|Extractor|
+|-|-|-|-|
+|![](TopBreak_CAFE12/Prints/ReceiverFront_thumb.jpg)|![](TopBreak_CAFE12/Prints/Forend_thumb.jpg)|![](TopBreak_CAFE12/Prints/BarrelCollar_thumb.jpg)|![](TopBreak_CAFE12/Prints/Extractor_thumb.jpg)|
+
+|LatchTab|Cluster|Vertical Foregrip|Sightpost|
+|-|-|-|-|
+|![](TopBreak_CAFE12/Prints/LatchTab_thumb.jpg)|![](TopBreak_CAFE12/Prints/Cluster_thumb.jpg)|![](TopBreak_CAFE12/Prints/VerticalForegrip_thumb.jpg)|![](TopBreak_CAFE12/Prints/Sightpost_thumb.jpg)|
 
 **These numbers are wrong, TODO: Redo them.** Copied from CAFE12+, ballpark accurate.
 
@@ -24,14 +32,6 @@ STL Files Location: `Forend/TopBreak_CAFE12/Prints/`
 | Vertical Foregrip | ?g            |   ?h?m             |
 | **Total**         | 420g          |           2d08h09m |
 <br/>
-
-|ReceiverFront|Forend|BarrelCollar|Extractor|
-|-|-|-|-|
-|![](TopBreak_CAFE12/Prints/ReceiverFront_thumb.jpg)|![](TopBreak_CAFE12/Prints/Forend_thumb.jpg)|![](TopBreak_CAFE12/Prints/BarrelCollar_thumb.jpg)|![](TopBreak_CAFE12/Prints/Extractor_thumb.jpg)|
-
-|LatchTab|Cluster|Vertical Foregrip|Sightpost|
-|-|-|-|-|
-|![](TopBreak_CAFE12/Prints/LatchTab_thumb.jpg)|![](TopBreak_CAFE12/Prints/Cluster_thumb.jpg)|![](TopBreak_CAFE12/Prints/VerticalForegrip_thumb.jpg)|![](TopBreak_CAFE12/Prints/Sightpost_thumb.jpg)|
 
 ## Vitamins
 | Purpose                | Part                             | Quantity |
@@ -53,8 +53,13 @@ STL Files Location: `Forend/TopBreak_CAFE12/Prints/`
 These Schedule 40 galvanized pipes are common in every single hardware store in
 the United States. They'll be in the plumbing section, with a silvery finish.
 
+#### Pipe Seam
+Pipes have a seam - this is not a good thing for many reasons, but it is what it is.
+You'll have to file the seam out of the 3/4" pipe near the chamber area, and out of the entire 1" pipe.
+
 #### 1" Pipe Nipples
-"Pipe nipples" - they're just short pipes - tend to be smoother on the inside and will require less to not filing.
+"Pipe nipples" - they're just short pipes threaded on both ends.
+They're more expensive per foot, but they tend to be smoother on the inside and will require less filing.
 
 ### Metric BOM
 TODO
@@ -62,7 +67,7 @@ TODO
 
 <!-- NEW PAGE -->
 ## Post-Processing
-If you purchased a kit, all the machining is already done for you.
+If you purchased a kit all the machining is already done for you.
 
 ### Foregrip Cluster Heatset
 Install the *Foregrip Bolt Nut* on the inside of the *Cluster*.

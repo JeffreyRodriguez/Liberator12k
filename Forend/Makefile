@@ -45,7 +45,6 @@ Assembly/%_*: %.scad Assembly/
 
 # Preview_htmldoc.jpg - Downsampled 800px
 $(Assembly_htmldoc): %/Assembly_htmldoc.jpg : %/Assembly.png
-	convert -trim -resize 1600x900^ $< -quality 90 $@
 
 .SECONDEXPANSION:
 

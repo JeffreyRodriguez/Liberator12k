@@ -417,7 +417,7 @@ module ReceiverLugFront(width=UnitsImperial(0.5), extraTop=ManifoldGap(),
 module Lower_MountFront(id=ReceiverID(), alpha=1, cutaway=false, doRender=true) {
   mountLength = 1.75-0.01;
 
-  color("Chocolate")
+  color("Chocolate", alpha)
   RenderIf(doRender) Cutaway(cutaway)
   difference() {
     union() {
@@ -456,7 +456,7 @@ module Lower_MountRear(id=ReceiverID(), alpha=1, cutaway=false, doRender=true) {
               - LowerMaxX()
               - ManifoldGap();
 
-  color("Chocolate")
+  color("Chocolate", alpha)
   RenderIf(doRender) Cutaway(cutaway)
   difference() {
     union() {
@@ -519,8 +519,8 @@ module Lower_SidePlates(showLeft=true, showRight=true, alpha=1) {
 
 }
 
-module Lower_Middle() {
-  color("Chocolate") render()
+module Lower_Middle(alpha=1) {
+  color("Chocolate",alpha) render()
   difference() {
     intersection() {
       TriggerGuard();
@@ -552,33 +552,33 @@ module Lower_Middle() {
 //**************
 //* Assemblies *
 //**************
-module LowerMount(alpha=1, cutaway=false) {
-  if (_SHOW_TAKEDOWN_PIN_RETAINER)
+module LowerMount(hardware=true, prints=true, alpha=1, cutaway=false) {
+  if (hardware && _SHOW_TAKEDOWN_PIN_RETAINER)
   Lower_MountTakedownPinRetainer();
 
-  if (_SHOW_TAKEDOWN_PIN)
+  if (hardware && _SHOW_TAKEDOWN_PIN)
   Receiver_TakedownPin();
 
-  if (_SHOW_LOWER_MOUNT_FRONT)
-  Lower_MountFront();
+  if (prints && _SHOW_LOWER_MOUNT_FRONT)
+  Lower_MountFront(alpha=alpha);
 
-  if (_SHOW_LOWER_MOUNT_REAR)
-  Lower_MountRear();
+  if (prints && _SHOW_LOWER_MOUNT_REAR)
+  Lower_MountRear(alpha=alpha);
 }
 
-module Lower(bolts=true,
+module Lower(hardware=true, prints=true, bolts=_SHOW_LOWER_BOLTS,
             showMiddle=true, showLeft=true, showRight=true,
             cutaway=false, alpha=1) {
       boltLength = 1.25;
 
-  // Trigger Guard Center
-  if (showMiddle)
-  Lower_Middle();
-
-  if (_SHOW_LOWER_BOLTS)
+  if (hardware && bolts)
   Lower_Bolts();
 
-  if (!cutaway)
+  // Trigger Guard Center
+  if (prints && showMiddle)
+  Lower_Middle(alpha=alpha);
+
+  if (prints && !cutaway)
   Lower_SidePlates(showLeft=showLeft, showRight=showRight, alpha=alpha);
 }
 

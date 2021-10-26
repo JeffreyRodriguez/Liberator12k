@@ -1,5 +1,5 @@
 # 2c: FP37 Forend
-![FP37 Forend Assembly](TopBreak_FP37/Assembly.jpg)
+![FP37 Forend Assembly](TopBreak_FP37/Assembly_htmldoc.jpg)
 
 "Flare Projector" 37mm - It's not a weapon.
 
@@ -11,6 +11,14 @@
 <!-- NEW PAGE -->
 ## Prints
 STL Files Location: `Forend/TopBreak_FP37/Prints/`
+
+|ReceiverFront|Forend|BarrelCollar|Extractor|
+|-|-|-|-|
+|![](TopBreak_FP37/Prints/ReceiverFront_thumb.jpg)|![](TopBreak_FP37/Prints/Forend_thumb.jpg)|![](TopBreak_FP37/Prints/BarrelCollar_thumb.jpg)|![](TopBreak_FP37/Prints/Extractor_thumb.jpg)|
+
+|LatchTab|Cluster|Vertical Foregrip|Sightpost|
+|-|-|-|-|
+|![](TopBreak_FP37/Prints/LatchTab_thumb.jpg)|![](TopBreak_FP37/Prints/Cluster_thumb.jpg)|![](TopBreak_FP37/Prints/VerticalForegrip_thumb.jpg)|![](TopBreak_FP37/Prints/Sightpost_thumb.jpg)|
 
 **These numbers are wrong, TODO: Redo them.** Copied from CAFE12+, ballpark accurate.
 
@@ -25,14 +33,6 @@ STL Files Location: `Forend/TopBreak_FP37/Prints/`
 | Vertical Foregrip | ?g            |   ?h?m             |
 | **Total**         | 420g          |           2d08h09m |
 <br/>
-
-|ReceiverFront|Forend|BarrelCollar|Extractor|
-|-|-|-|-|
-|![](TopBreak_FP37/Prints/ReceiverFront_thumb.jpg)|![](TopBreak_FP37/Prints/Forend_thumb.jpg)|![](TopBreak_FP37/Prints/BarrelCollar_thumb.jpg)|![](TopBreak_FP37/Prints/Extractor_thumb.jpg)|
-
-|LatchTab|Cluster|Vertical Foregrip|Sightpost|
-|-|-|-|-|
-|![](TopBreak_FP37/Prints/LatchTab_thumb.jpg)|![](TopBreak_FP37/Prints/Cluster_thumb.jpg)|![](TopBreak_FP37/Prints/VerticalForegrip_thumb.jpg)|![](TopBreak_FP37/Prints/Sightpost_thumb.jpg)|
 
 ## Vitamins
 | Purpose                | Part                             | Quantity |

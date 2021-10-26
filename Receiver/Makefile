@@ -37,7 +37,6 @@ TARGETS = README.html $(Components_HTML) \
 
 # Preview_htmldoc.jpg - Downsampled 800px
 $(Assembly_htmldoc): %/Assembly_htmldoc.jpg : %/Assembly.png
-	convert -resize 1600x900^ $< -quality 90 $@
 
 Preview_%_htmldoc.jpg: Preview_%.png
 	convert -trim -resize 1600x900^ $^ -quality 90 $@

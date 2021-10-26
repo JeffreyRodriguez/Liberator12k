@@ -1,9 +1,8 @@
 include Makefile.in
 
-MANUAL_IMAGES = $(wildcard .manual/*.jpg) \
-                $(shell find Receiver -name \*.jpg)
-MARKDOWN = $(wildcard *.md) $(shell find Receiver -name \*.md) $(shell find Forend -name \*.md)
-MARKDOWN_HTML = $(addsuffix .html, $(basename $(MARKDOWN)))
+MANUAL_HTML:=$(shell tail -n +3 Manual.book)
+MANUAL_IMAGES=$(wildcard .manual/*.jpg) \
+              $(shell find Receiver -name \*.jpg)
 
 Assembly = Receiver/Assembly Forend/Assembly
 Components = Frame Receiver Stock Lower FCG
@@ -33,7 +32,7 @@ Version.md:
 	echo "subject: How-To" >> $@ && \
 	echo "---" >> $@
 
-Manual.pdf: $(SUBDIRS) Version.md $(MARKDOWN_HTML) $(MANUAL_IMAGES)
+Manual.pdf: $(SUBDIRS) Version.md $(MANUAL_HTML) $(MANUAL_IMAGES)
 	htmldoc --batch Manual.book
 
 Liberator12k-source/: .git

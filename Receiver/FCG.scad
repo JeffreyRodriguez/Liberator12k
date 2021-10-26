@@ -44,10 +44,12 @@ _SHOW_FIRING_PIN = true;
 _SHOW_RECOIL_PLATE = true;
 _SHOW_RECOIL_PLATE_BOLTS = true;
 _SHOW_RECEIVER      = true;
+_SHOW_TENSION_RODS  = false;
 _SHOW_LOWER         = true;
 
 /* [Transparency] */
-_ALPHA_RECEIVER = 1; // [0:0.1:1]
+_ALPHA_RECEIVER = 0.15; // [0:0.1:1]
+_ALPHA_LOWER = 0.15; // [0:0.1:1]
 _ALPHA_FIRING_PIN_HOUSING = 1; // [0:0.1:1]
 _ALPHA_RECOIL_PLATE = 1; // [0:0.1:1]
 _ALPHA_FCG_Hammer = 1; // [0:0.1:1]
@@ -57,7 +59,7 @@ _CUTAWAY_FIRING_PIN_HOUSING = false;
 _CUTAWAY_FCG_Disconnector = false;
 _CUTAWAY_FCG_Hammer = false;
 _CUTAWAY_FCG_Hammer_CHARGER = false;
-_CUTAWAY_RECEIVER = true;
+_CUTAWAY_RECEIVER = false;
 _CUTAWAY_LOWER = false;
 _CUTAWAY_RECOIL_PLATE = false;
 _CUTAWAY_FIRING_PIN = false;
@@ -563,13 +565,13 @@ module FCG_ChargingHandleSpring(cutter=false, clearance=0.002) {
 //*****************
 //* Printed Parts *
 //*****************
-module FCG_FiringPinCollar(cutter=false, clearance=FIRING_PIN_CLEARANCE, template=false, cutaway=false) {
+module FCG_FiringPinCollar(cutter=false, clearance=FIRING_PIN_CLEARANCE, template=false, cutaway=false, alpha=1) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
   flareRadius = FiringPinBodyRadius()+(1/16);
 
-  color("Olive")
+  color("Olive", alpha)
   RenderIf(!cutter)
   Cutaway(cutaway)
   difference() {
@@ -614,7 +616,7 @@ module FCG_FiringPinCollar(cutter=false, clearance=FIRING_PIN_CLEARANCE, templat
     }
   }
 }
-module FCG_ChargingHandle(clearance=0.005) {
+module FCG_ChargingHandle(clearance=0.005, alpha=1) {
   clear = clearance;
   clear2 = clear*2;
 
@@ -632,7 +634,7 @@ module FCG_ChargingHandle(clearance=0.005) {
   fingerHoleX = -ReceiverLength()-(rearExtension/2);
   rearLength = (rearExtension/2) + ReceiverLength();
 
-  color("Olive") render()
+  color("Olive", alpha) render()
   difference() {
     union() {
 
@@ -957,14 +959,14 @@ module FCG_Housing(clearance=0.01, cutaway=false, alpha=1) {
   }
 }
 
-module SearSupportTab(cutter=false, clearance=0.015, searClearance=SEAR_CLEARANCE) {
+module SearSupportTab(cutter=false, clearance=0.015, searClearance=SEAR_CLEARANCE, alpha=1) {
   clearance2 = clearance*2;
   width = 0.25-clearance*2;
 
   frontExtra = 0.375;
   backHeight = 0.375;
 
-  color("Chocolate")
+  color("Chocolate", alpha)
   render()
   difference() {
     union() {
@@ -1017,7 +1019,7 @@ module SearSupportTab(cutter=false, clearance=0.015, searClearance=SEAR_CLEARANC
   }
 }
 
-module Trigger(width=0.5, clearance=0.015) {
+module Trigger(width=0.5, clearance=0.015, alpha=1) {
   sideplateWidth = (TriggerWidth()/2)
                  - (SearWidth(SEAR_CLEARANCE)/2);
   clearance2 = clearance*2;
@@ -1026,7 +1028,7 @@ module Trigger(width=0.5, clearance=0.015) {
   frontExtra = 0.3125;
   backHeight = 0.375;
 
-  color("Olive")
+  color("Olive", alpha)
   render()
   difference() {
     union() {
@@ -1221,28 +1223,29 @@ module FCG_RecoilPlate_GangFixture(xyz = [1,0.375,0.375], gang=[5,2], holeRadius
 //**************
 //* Assemblies *
 //**************
-module TriggerGroup(animationFactor=TriggerAnimationFactor(),
-                    searLength=SearLength()) {
+module TriggerGroup(hardware=true, prints=true, animationFactor=TriggerAnimationFactor(),
+                    searLength=SearLength(), alpha=1) {
 
-  if (_SHOW_SEAR)
+  if (hardware && _SHOW_SEAR)
   Sear(animationFactor=animationFactor, length=searLength) {
     SearPin();
   }
 
-  if (_SHOW_TRIGGER_MIDDLE) {
-    SearSupportTab();
+  if (prints && _SHOW_TRIGGER_MIDDLE) {
+    SearSupportTab(alpha=alpha);
 
+    if (hardware)
     translate([-LowerMaxX(),0, LowerOffsetZ() - SearLength() + SpringSolidHeight(spring=SearReturnSpringSpec())])
     rotate([0, 0, 0])
     SearReturnSpring();
   }
 
-  if (_SHOW_TRIGGER)
+  if (prints && _SHOW_TRIGGER)
   translate([-(TriggerTravel()*animationFactor),0,0])
-  Trigger();
+  Trigger(alpha=alpha);
 }
 
-module SimpleFireControlAssembly(actionRod=_SHOW_ACTION_ROD, recoilPlate=_SHOW_RECOIL_PLATE, cutaway=false) {
+module SimpleFireControlAssembly(hardware=true, prints=true, actionRod=_SHOW_ACTION_ROD, recoilPlate=_SHOW_RECOIL_PLATE, cutaway=false, alpha=1) {
   disconnectStart = 0.8;
   disconnectLetdown = 0.2;
   connectStart = 0.99;
@@ -1263,25 +1266,32 @@ module SimpleFireControlAssembly(actionRod=_SHOW_ACTION_ROD, recoilPlate=_SHOW_R
   if (_SHOW_CHARGING_HANDLE)
   translate([SubAnimate(ANIMATION_STEP_CHARGE, start=FCG_HammerChargeStart)*-(FCG_HammerTravelX+FCG_HammerOvertravelX),0,0])
   translate([SubAnimate(ANIMATION_STEP_CHARGER_RESET)*(FCG_HammerTravelX+FCG_HammerOvertravelX),0,0]) {
-    FCG_ChargingHandle();
+    if (prints)
+    FCG_ChargingHandle(alpha=alpha);
+    
+    if (hardware)
     FCG_ChargingHandleBolt();
   }
 
   if (actionRod)
   translate([-chargerTravel*chargeAF,0,0]) {
+    if (hardware)
     ActionRod();
+    
+    if (hardware)
     FCG_DisconnectorTripBolt();
+    
     children();
   }
 
-  if (_SHOW_FCG_DISCONNECTOR_HARDWARE) {
-    FCG_DisconnectorSpring();
+  if (hardware && _SHOW_FCG_DISCONNECTOR_HARDWARE)
+  FCG_DisconnectorSpring();
 
-    FCG_DisconnectorPivotPin();
-  }
+  if (hardware && _SHOW_FCG_DISCONNECTOR_HARDWARE)
+  FCG_DisconnectorPivotPin();
 
-  if (_SHOW_FCG_Disconnector)
-  FCG_Disconnector(pivotFactor=FCG_DisconnectorAF);
+  if (prints && _SHOW_FCG_Disconnector)
+  FCG_Disconnector(pivotFactor=FCG_DisconnectorAF, alpha=alpha);
 
   // Linear FCG_Hammer
   if (_SHOW_FCG_Hammer) {
@@ -1290,35 +1300,45 @@ module SimpleFireControlAssembly(actionRod=_SHOW_ACTION_ROD, recoilPlate=_SHOW_R
     translate([SubAnimate(ANIMATION_STEP_CHARGE, start=FCG_HammerChargeStart)*-(FCG_HammerTravelX+FCG_HammerOvertravelX),0,0])
     translate([SubAnimate(ANIMATION_STEP_CHARGER_RESET, end=0.1)*(FCG_HammerOvertravelX-disconnectDistance),0,0])
     translate([SubAnimate(ANIMATION_STEP_CHARGER_RESET, start=0.97, end=1)*disconnectDistance,0,0]) {
+      if (hardware)
       FCG_HammerBolt();
-      FCG_Hammer(cutaway=_CUTAWAY_FCG_Hammer, alpha=_ALPHA_FCG_Hammer);
+      
+      if (hardware)
       FCG_HammerSpring();
+      
+      if (prints)
+      FCG_Hammer(cutaway=_CUTAWAY_FCG_Hammer, alpha=min(alpha,_ALPHA_FCG_Hammer));
     }
   }
 
   if (_SHOW_FIRING_PIN) {
     translate([(3/32)*SubAnimate(ANIMATION_STEP_FIRE, start=0.95),0,0])
     translate([-(3/32)*SubAnimate(ANIMATION_STEP_CHARGE, start=0.07, end=0.2),0,0]) {
+      
+      if (hardware)
       FiringPin(cutaway=_CUTAWAY_FIRING_PIN);
-      FCG_FiringPinCollar(cutaway=_CUTAWAY_FIRING_PIN);
+      
+      if (prints)
+      FCG_FiringPinCollar(cutaway=_CUTAWAY_FIRING_PIN, alpha=alpha);
     }
 
+    if (hardware)
     FiringPinSpring();
   }
 
-  TriggerGroup(searLength=1.67188);
+  TriggerGroup(hardware=hardware, prints=prints, searLength=1.67188, alpha=alpha);
 
-  if(_SHOW_HAMMER_TAIL)
-  FCG_HammerTail(cutaway=_CUTAWAY_FCG_Hammer, alpha=_ALPHA_FCG_Hammer);
+  if(prints && _SHOW_HAMMER_TAIL)
+  FCG_HammerTail(cutaway=_CUTAWAY_FCG_Hammer, alpha=min(alpha,_ALPHA_FCG_Hammer));
 
-  if (_SHOW_RECOIL_PLATE_BOLTS)
+  if (hardware && _SHOW_RECOIL_PLATE_BOLTS)
   RecoilPlateBolts();
 
-  if (_SHOW_FIRE_CONTROL_HOUSING)
-  FCG_Housing(alpha=_ALPHA_FIRING_PIN_HOUSING, cutaway=_CUTAWAY_FIRING_PIN_HOUSING);
+  if (prints && _SHOW_FIRE_CONTROL_HOUSING)
+  FCG_Housing(alpha=min(alpha,_ALPHA_FIRING_PIN_HOUSING), cutaway=_CUTAWAY_FIRING_PIN_HOUSING);
 
-  if (recoilPlate)
-  RecoilPlate(contoured=FCG_RECOIL_PLATE_CONTOURED, cutaway=_CUTAWAY_RECOIL_PLATE, alpha=_ALPHA_RECOIL_PLATE);
+  if (hardware && recoilPlate)
+  RecoilPlate(contoured=FCG_RECOIL_PLATE_CONTOURED, cutaway=_CUTAWAY_RECOIL_PLATE, alpha=min(alpha,_ALPHA_RECOIL_PLATE));
 }
 ///
 
@@ -1331,12 +1351,12 @@ if ($preview) {
   SimpleFireControlAssembly();
 
   if (_SHOW_LOWER) {
-    LowerMount(cutaway=_CUTAWAY_LOWER);
-    Lower(cutaway=_CUTAWAY_LOWER);
+    LowerMount(cutaway=_CUTAWAY_LOWER, alpha=_ALPHA_LOWER);
+    Lower(cutaway=_CUTAWAY_LOWER, alpha=_ALPHA_LOWER);
   }
 
   if (_SHOW_RECEIVER)
-  ReceiverAssembly(tensionRods=!_CUTAWAY_RECEIVER, cutaway=_CUTAWAY_RECEIVER, alpha=_ALPHA_RECEIVER);
+  ReceiverAssembly(tensionRods=_SHOW_TENSION_RODS, cutaway=_CUTAWAY_RECEIVER, alpha=_ALPHA_RECEIVER);
 } else {
 
   // *****************

@@ -115,7 +115,11 @@ Assembly/:
 
 # Downsampled for HTMLDoc PDF
 %/Assembly_htmldoc.jpg: %/Assembly.png
-	convert -trim -resize 1600x900^ $^ -quality 90 $@
+	convert -trim \
+	  -resize 1920x900 \
+		-background "#fafafa" \
+		-gravity center -extent 1920x900 \
+		$^ -quality 90 $@
 
 %.jpg: %.png
 	convert $(basename $@).png -quality 90 $@
@@ -124,6 +128,8 @@ Assembly/:
 	convert -fuzz 4% -transparent "#fafafa" $< $@
 
 %_thumb.jpg: %.png
+	@# HACK: The dep isn't working and I haven't been able to sort out why
+	$(MAKE) $^ && \
 	convert -thumbnail 450 $< $@
 
 %.html: %.md

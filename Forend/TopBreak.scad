@@ -40,9 +40,12 @@ _RENDER = ""; // ["", "Prints/ReceiverFront", "Prints/Forend", "Prints/Cluster",
 _RENDER_PRINT = true;
 
 /* [Assembly] */
+_SHOW_PRINTS = true;
+_SHOW_HARDWARE = true;
 _SHOW_RECEIVER = true;
+_SHOW_TENSION_RODS = false;
 _SHOW_STOCK = true;
-_SHOW_FCG = true;
+_SHOW_FCG = false;
 _SHOW_LOWER = true;
 _SHOW_SIGHTPOST = true;
 
@@ -67,6 +70,10 @@ _ALPHA_COLLAR = 1; // [0:0.1:1]
 _ALPHA_CLUSTER = 1; // [0:0.1:1]
 _ALPHA_EXTRACTOR = 1; // [0:0.1:1]
 _ALPHA_LATCH = 1; // [0:0.1:1]
+_ALPHA_RECEIVER = 0.15; // [0:0.1:1]
+_ALPHA_LOWER = 0.15; // [0:0.1:1]
+_ALPHA_STOCK = 0.15; // [0:0.1:1]
+_ALPHA_FCG = 0.15; // [0:0.1:1]
 
 /* [Cutaway] */
 _CUTAWAY_RECEIVER = false;
@@ -1001,87 +1008,90 @@ module TopBreak_Fixture_BarrelSleeve() {
 }
 
 // Assembly
-module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontAlpha=1, pivotFactor=0, extractFactor=0, chargeFactor=0, lockFactor=0, stock=true, tailcap=false, cutaway=undef) {
+module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontAlpha=1, pivotFactor=0, extractFactor=0, chargeFactor=0, lockFactor=0, fcg=_SHOW_FCG, stock=true, tailcap=false, cutaway=undef, hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS) {
 
-  if (_SHOW_FCG)
+  if (fcg)
   translate([-TopBreak_ReceiverFrontLength(),0,0]) {
-    SimpleFireControlAssembly(actionRod=false);
+    SimpleFireControlAssembly(hardware=hardware, prints=prints, actionRod=false, alpha=_ALPHA_FCG);
   }
 
-  if (_SHOW_RECEIVER_FRONT)
+  if (prints && _SHOW_RECEIVER_FRONT)
   TopBreak_ReceiverFront(cutaway=cutaway==true,
                          alpha=_ALPHA_RECEIVER_FRONT);
 
   // Pivoting barrel assembly
   BreakActionPivot(factor=pivotFactor) {
 
-    if (_SHOW_BARREL)
+    if (hardware && _SHOW_BARREL)
     TopBreak_Barrel(cutaway=cutaway == true || _CUTAWAY_BARREL);
 
     if (_SHOW_SIGHTPOST)
     translate([BarrelLength()-1,0,0])
     rotate([0,-90,0]) {
+      if (prints)
       Sightpost(radius=BarrelRadius()+BARREL_CLEARANCE);
+      
+      if (hardware)
       SightpostBolts(radius=BarrelRadius()+BARREL_CLEARANCE);
     }
 
     // TopBreak_Extractor Spring
-    if (_SHOW_EXTRACTOR_HARDWARE)
+    if (hardware && _SHOW_EXTRACTOR_HARDWARE)
     %translate([PivotX()-PivotRadius()-WallPivot(),0,TopBreak_ExtractorZ()+SpringOuterRadius(spring=ExtractorSpringSpec())])
     rotate([0,-90,0])
     Spring(spring=ExtractorSpringSpec(), compressed=true);
 
     translate([-TopBreak_ExtractorTravel()*extractFactor,0,0]) {
 
-      if (_SHOW_EXTRACTOR_HARDWARE)
+      if (hardware && _SHOW_EXTRACTOR_HARDWARE)
       TopBreak_ExtractorBit();
 
-      if (_SHOW_EXTRACTOR_HARDWARE)
+      if (hardware && _SHOW_EXTRACTOR_HARDWARE)
       TopBreak_ExtractorRetainer();
 
-      if (_SHOW_EXTRACTOR)
+      if (prints && _SHOW_EXTRACTOR)
       TopBreak_Extractor(cutaway=cutaway == true || _CUTAWAY_EXTRACTOR,
                          alpha=_ALPHA_EXTRACTOR);
     }
 
     translate([-TopBreak_ExtractorTravel()*extractFactor,0,0]) {
 
-      if (_SHOW_LATCH_HARDWARE)
+      if (hardware && _SHOW_LATCH_HARDWARE)
       TopBreak_LatchScrews(cutaway=cutaway == true || _CUTAWAY_LATCH);
       
-      if (_SHOW_LATCH_HARDWARE)
+      if (hardware && _SHOW_LATCH_HARDWARE)
       TopBreak_LatchBars(cutaway=cutaway == true || _CUTAWAY_LATCH);
 
-      if (_SHOW_LATCH_HARDWARE)
+      if (hardware && _SHOW_LATCH_HARDWARE)
       TopBreak_LatchSpring();
       
-      if (_SHOW_LATCH)
+      if (prints && _SHOW_LATCH)
       TopBreak_LatchTab(cutaway=cutaway == true || _CUTAWAY_LATCH);
-    }
+    } 
 
-    if (_SHOW_COLLAR_HARDWARE)
+    if (hardware && _SHOW_COLLAR_HARDWARE)
     TopBreak_BarrelCollarBolts();
 
-    if (_SHOW_COLLAR)
+    if (prints && _SHOW_COLLAR)
     TopBreak_BarrelCollar(cutaway=cutaway == true || _CUTAWAY_COLLAR, alpha=_ALPHA_COLLAR);
 
-    if (_SHOW_CLUSTER_BOLTS)
+    if (hardware && _SHOW_CLUSTER_BOLTS)
     TopBreak_ClusterBolts();
 
-    if (_SHOW_GRIP_BOLT)
+    if (hardware && _SHOW_GRIP_BOLT)
     TopBreak_GripBolt();
 
-    if (_SHOW_CLUSTER)
+    if (prints && _SHOW_CLUSTER)
     TopBreak_Cluster(cutaway=_CUTAWAY_CLUSTER, alpha=_ALPHA_CLUSTER);
 
-    if (_SHOW_FOREGRIP)
+    if (prints && _SHOW_FOREGRIP)
     TopBreak_VerticalForegrip();
 
     children();
 
   }
 
-  if (_SHOW_FOREND)
+  if (prints && _SHOW_FOREND)
   TopBreak_Forend(cutaway=cutaway == true || _CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
 
 }
@@ -1090,27 +1100,6 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
 scale(25.4)
 if ($preview) {
 
-  translate([-TopBreak_ReceiverFrontLength(),0,0]) {
-
-
-    if (_SHOW_LOWER) {
-      Lower(showLeft=!_CUTAWAY_LOWER);
-      LowerMount(cutaway=_CUTAWAY_LOWER);
-    }
-
-    if (_SHOW_RECEIVER) {
-      Receiver_TensionBolts();
-
-      Frame_ReceiverAssembly(
-        length=FRAME_BOLT_LENGTH-0.5,
-        cutaway=_CUTAWAY_RECEIVER);
-    }
-
-    if (_SHOW_STOCK) {
-      StockAssembly();
-    }
-  }
-
   TopBreak_Assembly(pivotFactor=Animate(ANIMATION_STEP_UNLOAD)
                                  -Animate(ANIMATION_STEP_LOAD),
                       chargeFactor=Animate(ANIMATION_STEP_CHARGE)
@@ -1118,8 +1107,29 @@ if ($preview) {
                       lockFactor=Animate(ANIMATION_STEP_UNLOCK)
                                  -Animate(ANIMATION_STEP_LOCK),
                       extractFactor=Animate(ANIMATION_STEP_UNLOAD)
-                                 -SubAnimate(ANIMATION_STEP_LOAD, end=0.25)) {
-  };
+                                 -SubAnimate(ANIMATION_STEP_LOAD, end=0.25));
+  
+  translate([-TopBreak_ReceiverFrontLength(),0,0])
+  if (_SHOW_LOWER) {
+    Lower(bolts=false, showLeft=!_CUTAWAY_LOWER, alpha=_ALPHA_LOWER);
+    LowerMount(hardware=false, cutaway=_CUTAWAY_LOWER, alpha=_ALPHA_LOWER);
+  }
+
+  translate([-TopBreak_ReceiverFrontLength(),0,0]) {
+  
+    if(_SHOW_TENSION_RODS)
+    Receiver_TensionBolts();
+    
+    if (_SHOW_RECEIVER)
+    Frame_ReceiverAssembly(
+      length=FRAME_BOLT_LENGTH-0.5,
+      cutaway=_CUTAWAY_RECEIVER,
+      alpha=_ALPHA_RECEIVER);
+  }
+  
+  if (_SHOW_STOCK)
+  translate([-TopBreak_ReceiverFrontLength(),0,0])
+  StockAssembly(hardware=false, alpha=_ALPHA_STOCK);
 } else {
 
   echo("Part: ", _RENDER);

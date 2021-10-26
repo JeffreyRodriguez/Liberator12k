@@ -32,6 +32,15 @@ use <Receiver.scad>
 use <Stock.scad>;
 
 /* [Assembly] */
+_SHOW_PRINTS = true;
+_SHOW_HARDWARE = true;
+_SHOW_RECEIVER = true;
+_SHOW_LOWER = true;
+_SHOW_FOREND = true;
+_SHOW_STOCK = true;
+_SHOW_FCG = true;
+
+/* [Configuration] */
 // Does your shoulder thing go up?
 _CONFIGURATION  = "Stocked"; // ["Pistol", "Stocked", "Bullpup"]
 
@@ -41,12 +50,7 @@ _FOREND = ""; // ["", "TopBreak", "Trigun", "Revolver", "Evolver", "AR15", "Pump
 // The forend might disagree with your choice
 _RECEIVER_SIZE  = "Framed"; // ["Framed", "Micro"]
 
-_SHOW_RECEIVER = true;
-_SHOW_LOWER = true;
-_SHOW_FOREND = true;
-_SHOW_STOCK = true;
-_SHOW_FCG = true;
-
+/* [Cutaways] */
 _CUTAWAY_RECEIVER = false;
 _CUTAWAY_LOWER = false;
 _CUTAWAY_FOREND = false;
@@ -65,11 +69,12 @@ if ($preview) {
                                    -Animate(ANIMATION_STEP_LOCK),
                         extractFactor=Animate(ANIMATION_STEP_UNLOAD)
                                    -SubAnimate(ANIMATION_STEP_LOAD, end=0.25),
+                        hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS,
                         cutaway=_CUTAWAY_FOREND);
   } else if (_FOREND == "Revolver") {
-    RevolverForendAssembly(cutaway=_CUTAWAY_FOREND);
+    RevolverForendAssembly(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, cutaway=_CUTAWAY_FOREND);
   } else if (_FOREND == "Evolver") {
-    EvolverForendAssembly(cutaway=_CUTAWAY_FOREND);
+    EvolverForendAssembly(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, cutaway=_CUTAWAY_FOREND);
   } else if (_FOREND == "AR15") {
     translate([-0.5,0,0])
     PumpAR15ForendAssembly(cutaway=_CUTAWAY_FOREND);
@@ -81,28 +86,27 @@ if ($preview) {
 
   if (_SHOW_FCG)
   translate([-0.5,0,0])
-  SimpleFireControlAssembly(actionRod=false);
+  SimpleFireControlAssembly(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, actionRod=false);
 
 
   if (_SHOW_RECEIVER)
   translate([-0.5,0,0]) {
-    Receiver_TensionBolts(cutaway=_CUTAWAY_RECEIVER, headType="socket");
+    //Receiver_TensionBolts(cutaway=_CUTAWAY_RECEIVER, headType="socket");
 
     if (_RECEIVER_SIZE == "Framed") {
-      Frame_Receiver(cutaway=_CUTAWAY_RECEIVER);
-      Frame_Bolts(cutaway=_CUTAWAY_RECEIVER);
+      Frame_ReceiverAssembly(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, cutaway=_CUTAWAY_RECEIVER);
     } else {
-      Receiver(cutaway=_CUTAWAY_RECEIVER);
+      Receiver(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, cutaway=_CUTAWAY_RECEIVER);
     }
   }
 
   if (_CONFIGURATION == "Stocked") translate([-0.5,0,0]) {
     if (_SHOW_STOCK)
-    StockAssembly(cutaway=_CUTAWAY_STOCK);
+    StockAssembly(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, cutaway=_CUTAWAY_STOCK);
 
     if (_SHOW_LOWER) {
-      Lower();
-      LowerMount();
+      LowerMount(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS);
+      Lower(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS);
     }
   } else if (_CONFIGURATION == "Bullpup") {
     BullpupAssembly();
@@ -110,8 +114,8 @@ if ($preview) {
     ReceiverBackSegment();
 
     if (_SHOW_LOWER) {
-      Lower();
       LowerMount();
+      Lower();
     }
   }
 }

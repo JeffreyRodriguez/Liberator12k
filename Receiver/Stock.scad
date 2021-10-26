@@ -301,23 +301,23 @@ module Stock_Buttpad(doRender=true, cutaway=false, alpha=1) {
 // **************
 // * Assemblies *
 // **************
-module StockAssembly(cutaway=undef) {
-  if (_SHOW_BUTTPAD_BOLT)
+module StockAssembly(hardware=true, prints=true, cutaway=undef, alpha=1) {
+  if (hardware && _SHOW_BUTTPAD_BOLT)
   Stock_ButtpadBolt();
 
-  if (_SHOW_STOCK_TAKEDOWN_PIN) {
+  if (hardware && _SHOW_STOCK_TAKEDOWN_PIN) {
     Stock_TakedownPin();
     Stock_TakedownPinRetainer();
   }
 
-  if (_SHOW_STOCK_BACKPLATE)
-  Stock_Backplate(alpha=_ALPHA_STOCK_BACKPLATE, cutaway=(cutaway == true || _CUTAWAY_STOCK_BACKPLATE));
+  if (prints && _SHOW_STOCK_BACKPLATE)
+  Stock_Backplate(alpha=min(alpha,_ALPHA_STOCK_BACKPLATE), cutaway=(cutaway == true || _CUTAWAY_STOCK_BACKPLATE));
 
-  if (_SHOW_BUTTPAD)
-  Stock_Buttpad(alpha=_ALPHA_BUTTPAD, cutaway=(cutaway == true || _CUTAWAY_BUTTPAD));
+  if (prints && _SHOW_BUTTPAD)
+  Stock_Buttpad(alpha=min(alpha,_ALPHA_BUTTPAD), cutaway=(cutaway == true || _CUTAWAY_BUTTPAD));
 
-  if (_SHOW_STOCK)
-  Stock(alpha=_ALPHA_STOCK, cutaway=(cutaway == true || _CUTAWAY_STOCK));
+  if (prints && _SHOW_STOCK)
+  Stock(alpha=min(alpha,_ALPHA_STOCK), cutaway=(cutaway == true || _CUTAWAY_STOCK));
 }
 
 scale(25.4)

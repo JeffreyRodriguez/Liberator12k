@@ -42,6 +42,8 @@ _RENDER = ""; // ["", "Prints/ReceiverFront", "Prints/FrameSpacer", "Prints/Fore
 
 _FOREGRIP = "Standard"; // ["Standard", "Vertical"]
 
+_SHOW_HARDWARE = true;
+_SHOW_PRINTS = true;
 _SHOW_RECEIVER = true;
 _SHOW_LOWER_LUGS = true;
 _SHOW_LOWER = true;
@@ -863,7 +865,7 @@ module RevolverForendAssembly(pipeAlpha=1, cutaway=false) {
   Revolver_Cylinder(supports=false);
 }
 
-module RevolverAssembly(stock=true) {
+module RevolverAssembly(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, stock=true) {
 
   translate([-ReceiverFrontLength(),0,0]) {
 

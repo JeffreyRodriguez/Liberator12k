@@ -48,11 +48,13 @@ _RENDER = ""; // ["", "ReceiverFront", "Spindle", "ZigZag", "Ratchet", "RatchetP
 _RENDER_PRINT = true;
 
 /* [Assembly] */
-_SHOW_RECEIVER = false;
-_SHOW_STOCK = false;
-_SHOW_FCG = false;
-_SHOW_LOWER = false;
-_SHOW_RECEIVER_FRONT = false;
+_SHOW_PRINTS = true;
+_SHOW_HARDWARE = true;
+_SHOW_RECEIVER = true;
+_SHOW_STOCK = true;
+_SHOW_FCG = true;
+_SHOW_LOWER = true;
+_SHOW_RECEIVER_FRONT = true;
 _SHOW_FOREND_SPACER = true;
 _SHOW_BARREL_SUPPORT = true;
 _SHOW_BARREL = true;
@@ -70,9 +72,12 @@ _ALPHA_BARREL_SUPPORT = 1;     // [0:0.1:1]
 _ALPHA_FOREND_SPACER = 1;      // [0:0.1:1]
 _ALPHA_SPINDLE = 1;            // [0:0.1:1]
 _ALPHA_RECEIVER_FRONT = 1;     // [0:0.1:1]
-_ALPHA_FCG = 1;                // [0:0.1:1]
 _ALPHA_ACTUATOR = 1;           // [0:0.1:1]
 _ALPHA_PUMP = 1;               // [0:0.1:1]
+_ALPHA_RECEIVER = 0.15;        // [0:0.1:1]
+_ALPHA_LOWER = 0.15;           // [0:0.1:1]
+_ALPHA_STOCK = 0.15;           // [0:0.1:1]
+_ALPHA_FCG = 0.15;             // [0:0.1:1]
 
 /* [Cutaways] */
 _CUTAWAY_BARREL = false;
@@ -992,7 +997,7 @@ module Evolver_PumpCollar() {
 //**************
 //* Assemblies *
 //**************
-module EvolverForendAssembly(pipeAlpha=1, cutaway=false) {
+module EvolverForendAssembly(hardware=true, prints=true, pipeAlpha=1, cutaway=false) {
   animateSpindle = (SubAnimate(ANIMATION_STEP_EXTRACT, start=0.19, end=0.46)
                    + SubAnimate(ANIMATION_STEP_EXTRACT, start=0.63, end=0.9))/2;
 
@@ -1008,8 +1013,10 @@ module EvolverForendAssembly(pipeAlpha=1, cutaway=false) {
   Evolver_SpindleRod();
 
   if (_SHOW_RATCHET_PAWL) {
+    if (hardware)
     Evolver_RatchetPawlPin();
-
+    
+    if (prints)
     Evolver_RatchetPawlPivot(factor=0)
     Evolver_RatchetPawl();
   }
@@ -1018,7 +1025,7 @@ module EvolverForendAssembly(pipeAlpha=1, cutaway=false) {
   rotate([animateSpindle*120,0,0])
   translate([0,0,1]) {
 
-    if (_SHOW_BELT)
+    if (prints && _SHOW_BELT)
     translate([beltOffsetX,0,SpindleZ()]) {
 
       // First round
@@ -1035,12 +1042,20 @@ module EvolverForendAssembly(pipeAlpha=1, cutaway=false) {
     }
 
     if (_SHOW_SPINDLE) {
-      if (_SHOW_EXTRACTOR)
+      if (hardware && _SHOW_EXTRACTOR)
       Evolver_Extractor(cutaway=_CUTAWAY_SPINDLE);
 
+      if (hardware)
       Evolver_SpindlePins();
+      
+      
+      if (prints)
       Evolver_Spindle(cutaway=_CUTAWAY_SPINDLE, alpha=_ALPHA_SPINDLE);
+      
+      if (prints)
       Evolver_Ratchet(cutaway=_CUTAWAY_SPINDLE, alpha=_ALPHA_SPINDLE);
+      
+      if (prints)
       Evolver_ZigZag(cutaway=_CUTAWAY_SPINDLE, alpha=_ALPHA_SPINDLE);
     }
   }
@@ -1049,45 +1064,45 @@ module EvolverForendAssembly(pipeAlpha=1, cutaway=false) {
   translate([(Evolver_ActuatorTravel()*animateBarrel2),0,0])
   translate([(Evolver_BarrelTravel()*animateBarrel),0,0]) {
 
-    if (_SHOW_BARREL)
+    if (hardware && _SHOW_BARREL)
     Evolver_Barrel(cutaway=_CUTAWAY_BARREL);
 
-    if (_SHOW_PUMP_COLLAR)
+    if (prints && _SHOW_PUMP_COLLAR)
     Evolver_PumpCollar();
   }
 
   translate([Evolver_ActuatorTravel()*animateBarrel2,0,0]) {
 
-    if (_SHOW_ACTUATOR_TOGGLE)
+    if (prints && _SHOW_ACTUATOR_TOGGLE)
     Evolver_ActuatorToggle(AF=animateActuatorLatch);
 
-    if (_SHOW_ACTUATOR)
+    if (hardware && _SHOW_ACTUATOR)
     Evolver_ActuatorPin();
 
-    if (_SHOW_ACTUATOR)
+    if (prints && _SHOW_ACTUATOR)
     Evolver_Actuator(cutaway=_CUTAWAY_ACTUATOR, alpha=_ALPHA_ACTUATOR);
   }
 
   translate([(Evolver_ActuatorTravel()*animateBarrel2),0,0])
   translate([(Evolver_BarrelTravel()*animateBarrel),0,0]) {
 
-    if (_SHOW_PUMP_RODS)
+    if (hardware && _SHOW_PUMP_RODS)
     Evolver_PumpCollarBolts();
 
-    if (_SHOW_PUMP_RODS)
+    if (prints && _SHOW_PUMP_RODS)
     Evolver_PumpRods(alpha=_ALPHA_PUMP);
 
     *translate([-3,0,0.125])
     ActionRod();
   }
 
-  if (_SHOW_FOREND_SPACER)
+  if (prints && _SHOW_FOREND_SPACER)
   Evolver_ForendSpacer(cutaway=_CUTAWAY_FOREND_SPACER, alpha=_ALPHA_FOREND_SPACER);
 
-  if (_SHOW_BARREL_SUPPORT)
+  if (prints && _SHOW_BARREL_SUPPORT)
   Evolver_BarrelSupport(cutaway=_CUTAWAY_BARREL_SUPPORT, alpha=_ALPHA_BARREL_SUPPORT);
 
-  if (_SHOW_RECEIVER_FRONT)
+  if (prints && _SHOW_RECEIVER_FRONT)
   translate([-0.5,0,0])
   Evolver_ReceiverFront();
 }
@@ -1095,24 +1110,28 @@ module EvolverForendAssembly(pipeAlpha=1, cutaway=false) {
 
 scale(25.4)
 if ($preview) {
-
   translate([-ReceiverFrontLength(),0,0]) {
     if (_SHOW_FCG)
-      SimpleFireControlAssembly(actionRod=false);
+      SimpleFireControlAssembly(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS,
+                                actionRod=false);
 
-    if (_SHOW_LOWER)
-    Lower();
+    if (_SHOW_LOWER) {
+      LowerMount(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS);
+      Lower(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS);
+    }
 
     if (_SHOW_RECEIVER)
-    Receiver_LargeFrameAssembly(
+    Frame_ReceiverAssembly(
+      hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS,
       length=FRAME_BOLT_LENGTH,
       cutaway=_CUTAWAY_RECEIVER);
 
     if (_SHOW_STOCK)
-    StockAssembly();
+    StockAssembly(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS);
   }
 
-  EvolverForendAssembly(cutaway=false);
+  EvolverForendAssembly(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS,
+                        cutaway=false);
 } else {
 
   // **********

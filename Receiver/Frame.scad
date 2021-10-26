@@ -196,7 +196,7 @@ module Frame_Receiver(doRender=true, cutaway=false, alpha=1) {
   topCoverHeight = 1;
 
   // Branding text
-  color("DimGrey")
+  color("DimGrey", alpha)
   RenderIf(doRender) Cutaway(cutaway)
   FlipMirror([-FrameReceiverLength()/2, (FrameWidth()/2), FrameBoltZ()])
   rotate([90,0,0])
@@ -250,12 +250,16 @@ module Frame_Receiver(doRender=true, cutaway=false, alpha=1) {
 // **************
 // * Assemblies *
 // **************
-module Frame_ReceiverAssembly(length=FrameBoltLength(), frameBolts=_SHOW_FRAME_BOLTS, cutaway=_CUTAWAY_RECEIVER, alpha=1) {
+module Frame_ReceiverAssembly(hardware=true, prints=true, length=FrameBoltLength(), frameBolts=_SHOW_FRAME_BOLTS, cutaway=_CUTAWAY_RECEIVER, alpha=1) {
 
-  if (frameBolts)
-  Frame_Bolts(length=length, cutaway=cutaway, alpha=alpha);
-
-  Frame_Receiver(cutaway=cutaway, alpha=_ALPHA_FRAME);
+  if (hardware && frameBolts)
+  Frame_Bolts(length=length, cutaway=cutaway, alpha=min(alpha,_ALPHA_FRAME));
+  
+  if (prints)
+  Frame_Receiver(cutaway=cutaway, alpha=min(alpha,_ALPHA_FRAME));
+  
+  if (hardware)
+  Receiver_MlokBolts();
 }
 
 scale(25.4)

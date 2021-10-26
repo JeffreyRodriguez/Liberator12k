@@ -1,5 +1,5 @@
 # 2a: CAFE12+ Forend
-![CAFE12+ Forend Assembly](TopBreak_CAFE12+/Assembly.jpg)
+![CAFE12+ Forend Assembly](TopBreak_CAFE12+/Assembly_htmldoc.jpg)
 
 A 12ga [Top Break](TopBreak.md) variant inspired by the venerable pipe shotgun.
 
@@ -27,6 +27,14 @@ own barrel from pipe.
 ## Prints
 STL Files Location: `Forend/TopBreak_CAFE12+/Prints/`
 
+|ReceiverFront|Forend|BarrelCollar|Extractor|
+|-|-|-|-|
+|![](TopBreak_CAFE12+/Prints/ReceiverFront_thumb.jpg)|![](TopBreak_CAFE12+/Prints/Forend_thumb.jpg)|![](TopBreak_CAFE12+/Prints/BarrelCollar_thumb.jpg)|![](TopBreak_CAFE12+/Prints/Extractor_thumb.jpg)|
+
+|LatchTab|Cluster|Vertical Foregrip|Sightpost|
+|-|-|-|-|
+|![](TopBreak_CAFE12+/Prints/LatchTab_thumb.jpg)|![](TopBreak_CAFE12+/Prints/Cluster_thumb.jpg)|![](TopBreak_CAFE12+/Prints/VerticalForegrip_thumb.jpg)|![](TopBreak_CAFE12+/Prints/Sightpost_thumb.jpg)|
+
 | Part              | Filament Used | Print Time @ 0.4mm |
 |-------------------|-------------: |------------------: |
 | ReceiverFront     | 57g           |             07h17m |
@@ -38,14 +46,6 @@ STL Files Location: `Forend/TopBreak_CAFE12+/Prints/`
 | Vertical Foregrip | ?g            |               ?h?m |
 | **Total**         | 420g          |           2d08h09m |
 <br/>
-
-|ReceiverFront|Forend|BarrelCollar|Extractor|
-|-|-|-|-|
-|![](TopBreak_CAFE12+/Prints/ReceiverFront_thumb.jpg)|![](TopBreak_CAFE12+/Prints/Forend_thumb.jpg)|![](TopBreak_CAFE12+/Prints/BarrelCollar_thumb.jpg)|![](TopBreak_CAFE12+/Prints/Extractor_thumb.jpg)|
-
-|LatchTab|Cluster|Vertical Foregrip|Sightpost|
-|-|-|-|-|
-|![](TopBreak_CAFE12+/Prints/LatchTab_thumb.jpg)|![](TopBreak_CAFE12+/Prints/Cluster_thumb.jpg)|![](TopBreak_CAFE12+/Prints/VerticalForegrip_thumb.jpg)|![](TopBreak_CAFE12+/Prints/Sightpost_thumb.jpg)|
 
 ## Vitamins
 | Purpose                | Part                             | Quantity |
