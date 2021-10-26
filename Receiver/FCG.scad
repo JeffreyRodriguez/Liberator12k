@@ -386,7 +386,7 @@ module SearPin(cutter=false, clearance=SEAR_PIN_CLEARANCE) {
   translate([-LowerMaxX(),0, LowerOffsetZ()])
   translate([0,0,SearPinOffsetZ()])
   rotate([90,0,0])
-  color("SteelBlue") RenderIf(!cutter)
+  color("Silver") RenderIf(!cutter)
   cylinder(r=SearPinRadius(clear), h=0.5, center=true);
 }
 
