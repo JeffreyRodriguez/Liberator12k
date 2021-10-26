@@ -44,7 +44,6 @@ _SHOW_FIRING_PIN = true;
 _SHOW_RECOIL_PLATE = true;
 _SHOW_RECOIL_PLATE_BOLTS = true;
 _SHOW_RECEIVER      = true;
-_SHOW_TENSION_RODS  = false;
 _SHOW_LOWER         = true;
 
 /* [Transparency] */
@@ -358,6 +357,7 @@ module FCG_HammerBolt(clearance=FCG_Hammer_BOLT_CLEARANCE, head=HAMMER_BOLT_HEAD
              doRender=!cutter);
 }
 module FCG_HammerSpring() {
+  color("Silver")
   translate([FCG_HammerCockedX-FCG_HammerLength + 11/16,0,0])
   rotate([0,-90,0])
   Spring(spring=HammerSpringSpec(), compressed=true, cutter=false, clearance=HAMMER_SPRING_CLEARANCE);
@@ -422,6 +422,7 @@ module FiringPin(radius=FiringPinRadius(), cutter=false, clearance=FIRING_PIN_CL
 }
 
 module FiringPinSpring(cutter=false, clearance=0.005, cutaway=false) {
+  color("Silver")
   Cutaway(cutaway)
   translate([-0.25,0,0])
   rotate([0,90,0])
@@ -1351,12 +1352,12 @@ if ($preview) {
   SimpleFireControlAssembly();
 
   if (_SHOW_LOWER) {
-    LowerMount(cutaway=_CUTAWAY_LOWER, alpha=_ALPHA_LOWER);
-    Lower(cutaway=_CUTAWAY_LOWER, alpha=_ALPHA_LOWER);
+    LowerMount(hardware=false, cutaway=_CUTAWAY_LOWER, alpha=_ALPHA_LOWER);
+    Lower(hardware=false, cutaway=_CUTAWAY_LOWER, alpha=_ALPHA_LOWER);
   }
 
   if (_SHOW_RECEIVER)
-  ReceiverAssembly(tensionRods=_SHOW_TENSION_RODS, cutaway=_CUTAWAY_RECEIVER, alpha=_ALPHA_RECEIVER);
+  ReceiverAssembly(hardware=false, cutaway=_CUTAWAY_RECEIVER, alpha=_ALPHA_RECEIVER);
 } else {
 
   // *****************
