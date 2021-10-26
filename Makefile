@@ -27,7 +27,7 @@ Version.md:
 	echo "title: #Liberator12k Manual" >> $@ && \
 	echo "author: Jeff Rodriguez" >> $@ && \
 	echo "copyright: Unlicensed" >> $@ && \
-	echo "version: $(GIT_VERSION)" >> $@ && \
+	echo "version: $(GIT_DATE) $(GIT_VERSION)" >> $@ && \
 	echo "language: en-US" >> $@ && \
 	echo "subject: How-To" >> $@ && \
 	echo "---" >> $@
