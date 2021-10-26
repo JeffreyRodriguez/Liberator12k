@@ -20,6 +20,29 @@ STL Files Location: `Receiver/Frame/Prints/`
 <br/>
 
 <!-- NEW PAGE -->
+## Vitamins - Imperial
+| Purpose                     | Part                     | Quantity |
+|-----------------------------|--------------------------|----------|
+| Frame Bolt                  | 1/2-13x10 Hex Bolt       | 2        |
+| Frame Nut                   | 1/2-13 Hex Nut           | 4        |
+| Rail Nuts                   | #8-32 Heatset Nut (Long) | 2        |
+| Tension Bolt                | #8-32x12 Threaded Rod    | 4        |
+| Tension Bolt Nut            | #8-32 Heatset Nut (Long) | 4        |
+| Tension Bolt Washer         | #8-32 Washer             | 4        |
+| Tension Bolt Acorn Nut      | #8-32 Acorn Nut          | 4        |
+
+## Vitamins - Metric
+| Purpose                   | Part                             | Quantity |
+|---------------------------|----------------------------------|----------|
+| Frame Bolt                | **DIN931** M12x260 Hex Head Bolt | 2        |
+| Frame Nut                 | **DIN934** M12 Hex Nut           | 4        |
+| Rail Nuts                 | M4 Heatset Nut (TODO: Long)      | 2        |
+| Tension Bolt              | **DIN795** M4x305 Threaded Rod   | 4        |
+| Tension Bolt Nut          | M4 Heatset Nut (**M4xD7xL8**)    | 4        |
+| Tension Bolt Washer       | **DIN125** M4 Washer             | 4        |
+| Tension Bolt Acorn Nut    | **DIN1587** M4 Domed Hex Cap Nut | 4        |
+
+<!-- NEW PAGE -->
 ## Post-Processing
 
 ### Install Tension Nuts
@@ -29,10 +52,14 @@ Insert a threaded rod through the receiver from the rear and screw on the
 threaded insert while you install the threaded inserts, this will help keep
 them aligned.
 
-### Install Picrail Nuts
+### Install Rail Nuts
 Insert a threaded rod through the receiver from the top and screw on the
 threaded insert while you install the insert.
 
+### Epoxy Acorn Nuts
+The acorn nuts need to be permanently secured to the threaded rods
+so you can actually unscrew them from the back.
+Red threadlocker or 2-part epoxy are both good options.
 
 ### File/Sand Internal Surfaces
 The smoother these surfaces, the nicer the gun will run. Mostly optional, print

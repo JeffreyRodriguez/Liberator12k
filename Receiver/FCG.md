@@ -30,6 +30,58 @@ STL Files Location: `Receiver/FCG/Prints/`
 |-|-|-|-|
 |![](FCG/Prints/FCG_Hammer_thumb.jpg)|![](FCG/Prints/FCG_HammerTail_thumb.jpg)|![](FCG/Prints/FCG_TriggerMiddle_thumb.jpg)|![](FCG/Prints/FCG_Trigger_thumb.jpg)
 
+
+<!-- NEW PAGE -->
+## Vitamins - Imperial
+| Purpose                     | Part                                         | Quantity |
+|-----------------------------|----------------------------------------------|----------|
+| Charging Handle Bolt        | #8-32x1/4" SS Socket Cap Bolt                | 1        |
+| Charging Handle Nut         | #8-32 Short Heatset Nut                      | 1        |
+| Disconnector Pivot Pin      | 3/32"x3/4" Steel Pin                         | 1        |
+| Disconnector Spring         | 0.22" OD 0.625" Long (0.02" wire)            | 1        |
+| Firing Pin                  | 6Dx2" Box Nail, cut flush to 1.54" OAL       | 1        |
+| Firing Pin Spring           | 0.22" OD 0.625" Long (0.02" wire)            | 1        |
+| Hammer Bolt                 | 1/4-20x5" Flat Head Bolt                     | 1        |
+| Hammer Bolt Sleeve          | 9/32"x3.5" K&S Brass Tube                    | 1        |
+| Hammer Cap Nut              | 1/4-20" Acorn Nut                            | 1        |
+| Hammer Nut                  | 1/4-20" Heatset Nut (Short)                  | 1        |
+| Hammer Spring               | 0.052x0.625x3" ~6.3lbs/in Compression Spring | 1        |
+| Recoil Plate (L12k)         | #Liberator12k Official Alloy Recoil Plate    | 1\*      |
+| Recoil Plate (DIY)          | 2x2-3/8x3/8" Mild Steel Plate                | 1\*      |
+| Recoil Plate Center Bolts   | #8-32x1.5 SS Flat-Head Bolt                  | 2        |
+| Recoil Plate Side Bolts     | #8-32x0.5 SS Flat-Head Bolt                  | 4        |
+| Sear                        | 1/4"x1.67" Steel Square Rod                  | 1        |
+| Sear Pin                    | 3/32"x1/2" Music Wire                        | 1        |
+| Sear Return Spring          | 0.02" Wire, 0.25"x1.25"                      | 1        |
+
+\* Pick one, these parts have alternates.
+
+<!-- NEW PAGE -->
+## Vitamins - Metric
+| Purpose                   | Part                                                 | Quantity |
+|---------------------------|------------------------------------------------------|----------|
+| Charging Handle Bolt      | TODO: **DIN????** M4x1/4" SS Socket Cap Bolt         | 1        |
+| Charging Handle Nut       | TODO: M4 Heatset                                     | 1        |
+| Disconnector Pivot Pin    | 2.5x18mm Stainless Steel Pin                         | 1        |
+| Disconnector Spring       | 0.5mm Wire, 6mm OD, 20mm Length Spring (Cut to 16mm) | 1        |
+| Firing Pin                | 2.5x50mm Nail, , cut flush to 40mm OAL               | 1        |
+| Firing Pin Spring         | 0.5mm Wire, 6mm OD, 20mm Length Spring (Cut to 16mm) | 1        |
+| Hammer Bolt               | **DIN7991** M6x130 Countersunk Bolt                  | 1        |
+| Hammer Bolt Sleeve        | 6mm ID Sleeve for _Hammer Bolt_                      | 1        |
+| Hammer Cap Nut            | **DIN1587** M6 Domed Hex Cap Nut                     | 1        |
+| Hammer Nut                | M6 Heatset Nut (**M6xD9.5xL6**)                      | 1        |
+| Hammer Spring             | 1.4mm Wire, 16mm OD, 80mm Length Spring              | 1        |
+| Recoil Plate (L12k)       | None                                                 | 1\*      |
+| Recoil Plate (DIY)        | 6mm Thickness 50.80x60.325mm AISI 4140 Steel Plate   | 1\*      |
+| Recoil Plate Center Bolts | **DIN7991** M4x40 A2/A4 Countersunk Bolt             | 2        |
+| Recoil Plate Side Bolts   | **DIN7991** M4x40 A2/A4 Countersunk Bolt             | 4        |
+| Sear                      | 6mm x 42.42mm Steel Square Rod                       | 1        |
+| Sear Pin                  | None                                                 | 1        |
+| Sear Return Spring        | 0.5mm Wire, 6.5mm OD, 35mm Length Spring             | 1        |
+
+\* Pick one, these parts have alternates.
+
+
 <!-- NEW PAGE -->
 ## Post-Processing
 

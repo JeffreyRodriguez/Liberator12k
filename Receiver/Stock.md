@@ -18,6 +18,23 @@ STL Files Location: `Receiver/Stock/Prints/`
 |![](Stock/Prints/Stock_thumb.jpg)|![](Stock/Prints/Stock_Backplate_thumb.jpg)|![](Stock/Prints/Stock_Buttpad_thumb.jpg)|
 
 <!-- NEW PAGE -->
+## Vitamins - Imperial
+| Purpose                     | Part                          | Quantity |
+|-----------------------------|-------------------------------|----------|
+| Stock Pin                   | Universal Clevis Pin 1/4x2"   | 1        |
+| Stock Pin Retaining Pin     | 6Dx2" **Box** Nail            | 1        |
+| Stock Backplate Nut         | 1/4-20 Heatset Nut (Short)    | 2        |
+| Stock Buttpad Bolt          | 1/4-20x3-1/2" Flat Head Screw | 2        |
+
+## Vitamins - Metric
+| Purpose                   | Part                               | Quantity |
+|---------------------------|----------------------------------- |----------|
+| Stock Pin                 | None                               | 1        |
+| Stock Pin Retaining Pin   | 2.5x50mm Nail                      | 1        |
+| Stock Backplate Nut       | M6 Heatset Nut (**M6xD9.5xL6**)    | 2        |
+| Stock Buttpad Bolt        | **DIN7991** M6x90 Countersunk Bolt | 2        |
+
+<!-- NEW PAGE -->
 ## Post-Processing
 
 #### Stock Backplate

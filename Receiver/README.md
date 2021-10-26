@@ -151,37 +151,41 @@ Just select *Generic TPU* for the material in Cura.
 ## Bill of Materials
 Full hardware list for the Minuteman receiver
 
-| Purpose                     | Part                                         | Quantity |
-|-----------------------------|----------------------------------------------|----------|
-| Tension Bolt                | #8-32x12 Threaded Rod                        | 4        |
-| Tension Bolt Nut            | #8-32 Heatset Nut (Long)                     | 4        |
-| Tension Bolt Washer         | #8-32 Washer                                 | 4        |
-| Tension Bolt Acorn Nut      | #8-32 Acorn Nut                              | 4        |
-| Lower Pin                   | Universal Clevis Pin 1/4x2"                  | 1        |
-| Lower Pin Retaining Pin     | 6Dx2" Box Nail                               | 1        |
-| Frame Bolt                  | 1/2-13x10 Hex Bolt                           | 2        |
-| Frame Nut                   | 1/2-13 Hex Nut                               | 4        |
-| Stock Pin                   | Universal Clevis Pin 1/4x2"                  | 1        |
-| Stock Pin Retaining Pin     | 6Dx2" **Box** Nail                           | 1        |
-| Stock Backplate Nut         | 1/4-20 Heatset Nut (Short)                   | 2        |
-| Stock Buttpad Bolt          | 1/4-20x3-1/2" Flat Head Screw                | 2        |
-| Firing Pin                  | 6Dx2" Box Nail, cut flush to 1.54" OAL       | 1        |
-| Firing Pin Spring           | 0.22" OD 0.625" Long (0.02" wire)            | 1        |
-| Hammer                      | 1/4-20x5" Flat Head Bolt                     | 1        |
-| Hammer Bolt                 | 1/4-20x5" Flat Head Bolt                     | 1        |
-| Hammer Bolt Sleeve          | 9/32"x3.5" K&S Brass Tube                    | 1        |
-| Hammer Nut                  | 1/4-20" Heatset Nut (Short)                  | 1        |
-| Hammer Cap Nut              | 1/4-20" Acorn Nut                            | 1        |
-| Hammer Spring               | 0.052x0.625x3" ~6.3lbs/in Compression Spring | 1        |
-| Recoil Plate (L12k)         | #Liberator12k Official Alloy Recoil Plate    | 1\*      |
-| Recoil Plate (DIY)          | 2x2-3/8x3/8" Mild Steel Plate                | 1\*      |
-| Sear                        | 1/4"x1.67" Steel Square Rod                  | 1        |
-| Sear Cross-Pin              | 3/32"x1/2" Music Wire                        | 1        |
-| Sear Return Spring          | 0.02" Wire, 0.25"x1.25"                      | 1        |
-| Recoil Plate Center Bolts   | #8-32x1.5 SS Flat-Head Bolt                  | 2        |
-| Recoil Plate Side Bolts     | #8-32x0.5 SS Flat-Head Bolt                  | 4        |
-| Lower Nut                   | #8-32 Heatset Nut (Short)                    | 5        |
-| Lower Bolt                  | #8-32x1.25 SS Flat-Head Bolt                 | 5        |
+| Component            | Purpose                     | Part                                         | Quantity |
+|----------------------|-----------------------------|----------------------------------------------|----------|
+| Large Frame Receiver | Frame Bolt                  | 1/2-13x10 Hex Bolt                           | 2        |
+| Large Frame Receiver | Frame Nut                   | 1/2-13 Hex Nut                               | 4        |
+| Large Frame Receiver | Rail Nuts                   | #8-32 Heatset Nut (Long)                     | 2        |
+| Large Frame Receiver | Tension Bolt                | #8-32x12 Threaded Rod                        | 4        |
+| Large Frame Receiver | Tension Bolt Nut            | #8-32 Heatset Nut (Long)                     | 4        |
+| Large Frame Receiver | Tension Bolt Washer         | #8-32 Washer                                 | 4        |
+| Large Frame Receiver | Tension Bolt Acorn Nut      | #8-32 Acorn Nut                              | 4        |
+| Lower                | Lower Nut                   | #8-32 Heatset Nut (Short)                    | 5        |
+| Lower                | Lower Bolt                  | #8-32x1.25 SS Flat-Head Bolt                 | 5        |
+| Lower                | Lower Pin                   | Universal Clevis Pin 1/4x2"                  | 1        |
+| Lower                | Lower Pin Retaining Pin     | 6Dx2" Box Nail                               | 1        |
+| Stock                | Stock Pin                   | Universal Clevis Pin 1/4x2"                  | 1        |
+| Stock                | Stock Pin Retaining Pin     | 6Dx2" **Box** Nail                           | 1        |
+| Stock                | Stock Backplate Nut         | 1/4-20 Heatset Nut (Short)                   | 2        |
+| Stock                | Stock Buttpad Bolt          | 1/4-20x3-1/2" Flat Head Screw                | 2        |
+| Fire Control Group   | Charging Handle Bolt        | #8-32x1/4" SS Socket Cap Bolt                | 1        |
+| Fire Control Group   | Charging Handle Nut         | #8-32 Short Heatset Nut                      | 1        |
+| Fire Control Group   | Disconnector Pivot Pin      | 3/32"x3/4" Steel Pin                         | 1        |
+| Fire Control Group   | Disconnector Spring         | 0.22" OD 0.625" Long (0.02" wire)            | 1        |
+| Fire Control Group   | Firing Pin                  | 6Dx2" Box Nail, cut flush to 1.54" OAL       | 1        |
+| Fire Control Group   | Firing Pin Spring           | 0.22" OD 0.625" Long (0.02" wire)            | 1        |
+| Fire Control Group   | Hammer Bolt                 | 1/4-20x5" Flat Head Bolt                     | 1        |
+| Fire Control Group   | Hammer Bolt Sleeve          | 9/32"x3.5" K&S Brass Tube                    | 1        |
+| Fire Control Group   | Hammer Cap Nut              | 1/4-20" Acorn Nut                            | 1        |
+| Fire Control Group   | Hammer Nut                  | 1/4-20" Heatset Nut (Short)                  | 1        |
+| Fire Control Group   | Hammer Spring               | 0.052x0.625x3" ~6.3lbs/in Compression Spring | 1        |
+| Fire Control Group   | Recoil Plate (L12k)         | #Liberator12k Official Alloy Recoil Plate    | 1\*      |
+| Fire Control Group   | Recoil Plate (DIY)          | 2x2-3/8x3/8" Mild Steel Plate                | 1\*      |
+| Fire Control Group   | Recoil Plate Center Bolts   | #8-32x1.5 SS Flat-Head Bolt                  | 2        |
+| Fire Control Group   | Recoil Plate Side Bolts     | #8-32x0.5 SS Flat-Head Bolt                  | 4        |
+| Fire Control Group   | Sear                        | 1/4"x1.67" Steel Square Rod                  | 1        |
+| Fire Control Group   | Sear Pin                    | 3/32"x1/2" Music Wire                        | 1        |
+| Fire Control Group   | Sear Return Spring          | 0.02" Wire, 0.25"x1.25"                      | 1        |
 
 \* Pick one, these parts have alternates.
 
@@ -189,36 +193,39 @@ Full hardware list for the Minuteman receiver
 ## Metric BOM
 Full hardware list for the Minuteman receiver.
 
-| Purpose                   | Part                                                 | Quantity |
-|---------------------------|------------------------------------------------------|----------|
-| Tension Bolt              | **DIN795** M4x305 Threaded Rod                       | 4        |
-| Tension Bolt Nut          | M4 Heatset Nut (**M4xD7xL8**)                        | 4        |
-| Tension Bolt Washer       | **DIN125** M4 Washer                                 | 4        |
-| Tension Bolt Acorn Nut    | **DIN1587** M4 Domed Hex Cap Nut                     | 4        |
-| Lower Pin                 | None                                                 | 1        |
-| Lower Pin Retaining Pin   | 2.5x50mm Nail                                        | 1        |
-| Frame Bolt                | **DIN931** M12x260 Hex Head Bolt                     | 2        |
-| Frame Nut                 | **DIN934** M12 Hex Nut                               | 4        |
-| Stock Pin                 | None                                                 | 1        |
-| Stock Pin Retaining Pin   | 2.5x50mm Nail                                        | 1        |
-| Stock Backplate Nut       | M6 Heatset Nut (**M6xD9.5xL6**)                      | 2        |
-| Stock Buttpad Bolt        | **DIN7991** M6x90 Countersunk Bolt                   | 2        |
-| Firing Pin                | 2.5x50mm Nail, , cut flush to 40mm OAL               | 1        |
-| Firing Pin Spring         | 0.5mm Wire, 6mm OD, 20mm Length Spring (Cut to 16mm) | 1        |
-| Hammer                    | **DIN7991** M6x130 Countersunk Bolt                  | 1        |
-| Hammer Bolt               | **DIN7991** M6x130 Countersunk Bolt                  | 1        |
-| Hammer Bolt Sleeve        | 6mm ID Sleeve for _Hammer Bolt_                      | 1        |
-| Hammer Nut                | M6 Heatset Nut (**M6xD9.5xL6**)                      | 1        |
-| Hammer Cap Nut            | **DIN1587** M6 Domed Hex Cap Nut                     | 1        |
-| Hammer Spring             | 1.4mm Wire, 16mm OD, 80mm Length Spring              | 1        |
-| Recoil Plate (L12k)       | None                                                 | 1\*      |
-| Recoil Plate (DIY)        | 6mm Thickness 50.80x60.325mm AISI 4140 Steel Plate   | 1\*      |
-| Sear                      | 6mm x 42.42mm Steel Square Rod                       | 1        |
-| Sear Cross-Pin            | None                                                 | 1        |
-| Sear Return Spring        | 0.5mm Wire, 6.5mm OD, 35mm Length Spring             | 1        |
-| Recoil Plate Center Bolts | **DIN7991** M4x40 A2/A4 Countersunk Bolt             | 2        |
-| Recoil Plate Side Bolts   | **DIN7991** M4x40 A2/A4 Countersunk Bolt             | 4        |
-| Lower Nut                 | M4 Heatset Nut (**M4xD7xL5**)                        | 5        |
-| Lower Bolt                | **DIN7991** M4x35 A2/A4 Countersunk Bolt             | 5        |
+| Component            | Purpose                   | Part                                                 | Quantity |
+|----------------------|---------------------------|------------------------------------------------------|----------|
+| Large Frame Receiver | Frame Bolt                | **DIN931** M12x260 Hex Head Bolt                     | 2        |
+| Large Frame Receiver | Rail Nuts                 | **DIN934** M12 Hex Nut                               | 4        |
+| Large Frame Receiver | Tension Bolt              | **DIN795** M4x305 Threaded Rod                       | 4        |
+| Large Frame Receiver | Tension Bolt Nut          | M4 Heatset Nut (**M4xD7xL8**)                        | 4        |
+| Large Frame Receiver | Tension Bolt Washer       | **DIN125** M4 Washer                                 | 4        |
+| Large Frame Receiver | Tension Bolt Acorn Nut    | **DIN1587** M4 Domed Hex Cap Nut                     | 4        |
+| Lower                | Lower Nut                 | M4 Heatset Nut (**M4xD7xL5**)                        | 5        |
+| Lower                | Lower Bolt                | **DIN7991** M4x35 A2/A4 Countersunk Bolt             | 5        |
+| Lower                | Lower Pin                 | None                                                 | 1        |
+| Lower                | Lower Pin Retaining Pin   | 2.5x50mm Nail                                        | 1        |
+| Stock                | Stock Pin                 | None                                                 | 1        |
+| Stock                | Stock Pin Retaining Pin   | 2.5x50mm Nail                                        | 1        |
+| Stock                | Stock Backplate Nut       | M6 Heatset Nut (**M6xD9.5xL6**)                      | 2        |
+| Stock                | Stock Buttpad Bolt        | **DIN7991** M6x90 Countersunk Bolt                   | 2        |
+| Fire Control Group   | Charging Handle Bolt      | TODO: **DIN????** M4x1/4" SS Socket Cap Bolt         | 1        |
+| Fire Control Group   | Charging Handle Nut       | TODO: M4 Heatset                                     | 1        |
+| Fire Control Group   | Disconnector Pivot Pin    | 2.5x18mm Stainless Steel Pin                         | 1        |
+| Fire Control Group   | Disconnector Spring       | 0.5mm Wire, 6mm OD, 20mm Length Spring (Cut to 16mm) | 1        |
+| Fire Control Group   | Firing Pin                | 2.5x50mm Nail, , cut flush to 40mm OAL               | 1        |
+| Fire Control Group   | Firing Pin Spring         | 0.5mm Wire, 6mm OD, 20mm Length Spring (Cut to 16mm) | 1        |
+| Fire Control Group   | Hammer Bolt               | **DIN7991** M6x130 Countersunk Bolt                  | 1        |
+| Fire Control Group   | Hammer Bolt Sleeve        | 6mm ID Sleeve for _Hammer Bolt_                      | 1        |
+| Fire Control Group   | Hammer Cap Nut            | **DIN1587** M6 Domed Hex Cap Nut                     | 1        |
+| Fire Control Group   | Hammer Nut                | M6 Heatset Nut (**M6xD9.5xL6**)                      | 1        |
+| Fire Control Group   | Hammer Spring             | 1.4mm Wire, 16mm OD, 80mm Length Spring              | 1        |
+| Fire Control Group   | Recoil Plate (L12k)       | None                                                 | 1\*      |
+| Fire Control Group   | Recoil Plate (DIY)        | 6mm Thickness 50.80x60.325mm AISI 4140 Steel Plate   | 1\*      |
+| Fire Control Group   | Recoil Plate Center Bolts | **DIN7991** M4x40 A2/A4 Countersunk Bolt             | 2        |
+| Fire Control Group   | Recoil Plate Side Bolts   | **DIN7991** M4x40 A2/A4 Countersunk Bolt             | 4        |
+| Fire Control Group   | Sear                      | 6mm x 42.42mm Steel Square Rod                       | 1        |
+| Fire Control Group   | Sear Pin                  | None                                                 | 1        |
+| Fire Control Group   | Sear Return Spring        | 0.5mm Wire, 6.5mm OD, 35mm Length Spring             | 1        |
 
 \* Pick one, these parts have alternates.
