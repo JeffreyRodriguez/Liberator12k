@@ -11,7 +11,7 @@ The *Large Frame Receiver* is the same as the standard *Receiver*, but with
 two large (1/2") bolts support heavy forends.
 
 <!-- NEW PAGE -->
-## Prints List
+## Prints
 STL Files Location: `Receiver/Frame/Prints/`
 
 | Frame_Receiver |
