@@ -19,6 +19,7 @@ STL Files Location: `Forend/TopBreak_FP37/Prints/`
 |LatchTab|Cluster|Vertical Foregrip|Sightpost|
 |-|-|-|-|
 |![](TopBreak_FP37/Prints/LatchTab_thumb.jpg)|![](TopBreak_FP37/Prints/Cluster_thumb.jpg)|![](TopBreak_FP37/Prints/VerticalForegrip_thumb.jpg)|![](TopBreak_FP37/Prints/Sightpost_thumb.jpg)|
+<br/>
 
 **These numbers are wrong, TODO: Redo them.** Copied from CAFE12+, ballpark accurate.
 
