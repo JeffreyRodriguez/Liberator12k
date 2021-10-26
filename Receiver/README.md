@@ -126,9 +126,9 @@ For instance: `Receiver/FCG/Prints/FCG_Hammer.stl`
 | [_]     | Base       | Standard       | Stock               |     243g | 1d08h52m |
 | [_]     | Base       | Standard       | Stock_Backplate     |      95g |   12h05m |
 | [_]     | TPU        | See Below      | Stock_Buttpad       |     181g |   19h31m |
-| <td colspan=6>**Totals**
-| [_]     | Base       |                | TOTAL               |     ?g |   ?d?h?m |
-| [_]     | Accent     |                | TOTAL               |     ?g |   ?d?h?m |
+|**Totals**  <td colspan=6>|
+|Base Color  <td colspan=3>   | ?g |   ?d?h?m |
+|Accent Color<td colspan=3> | ?g |   ?d?h?m |
 <br/>
 
 #### Standard Print Settings
