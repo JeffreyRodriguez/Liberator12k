@@ -47,7 +47,7 @@ _SHOW_PRINTS = true;
 _SHOW_RECEIVER = true;
 _SHOW_LOWER_LUGS = true;
 _SHOW_LOWER = true;
-_SHOW_FCG = true;
+_SHOW_FCG = false;
 _SHOW_STOCK = true;
 _SHOW_RECEIVER_FRONT = true;
 _SHOW_RECOIL_PLATE = true;
@@ -70,8 +70,10 @@ _ALPHA_RECEIVER_COUPLING = 1;  // [0:0.1:1]
 _ALPHA_RECEIVER_FRONT = 1;     // [0:0.1:1]
 _ALPHA_RECOIL_PLATE_HOUSING=1; // [0:0.1:1]
 _ALPHA_SPINDLE = 1;            // [0:0.1:1]
-_ALPHA_FCG = 1;                // [0:0.1:1]
-_ALPHA_STOCK = 1;              // [0:0.1:1]
+_ALPHA_FCG      = 0.15;        // [0:0.1:1]
+_ALPHA_STOCK    = 0.15;        // [0:0.1:1]
+_ALPHA_LOWER    = 0.15;        // [0:0.1:1]
+_ALPHA_RECEIVER = 0.15;        // [0:0.1:1]
 
 _CUTAWAY_RECOIL_PLATE = false;
 _CUTAWAY_SHIELD = false;
@@ -869,21 +871,6 @@ module RevolverAssembly(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, stock=true
 
   translate([-ReceiverFrontLength(),0,0]) {
 
-    if (_SHOW_LOWER_LUGS)
-    LowerMount();
-
-    if (_SHOW_LOWER)
-    Lower();
-
-    if (_SHOW_RECEIVER) {
-
-      Receiver_TensionBolts(cutaway=_CUTAWAY_RECEIVER);
-
-      Frame_ReceiverAssembly(
-        length=FRAME_BOLT_LENGTH,
-        cutaway=_CUTAWAY_RECEIVER);
-    }
-
     if (_SHOW_FCG)
     SimpleFireControlAssembly(recoilPlate=_SHOW_RECOIL_PLATE) {
 
@@ -912,8 +899,22 @@ module RevolverAssembly(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, stock=true
       cylinder(r=0.125, h=0.15+0.125+3);
     }
 
+    if (_SHOW_LOWER)
+    LowerMount(hardware=false, alpha=_ALPHA_LOWER);
+
+    if (_SHOW_LOWER)
+    Lower(hardware=false, alpha=_ALPHA_LOWER);
+
+    if (_SHOW_RECEIVER) {
+
+      Frame_ReceiverAssembly(
+        hardware=false, alpha=_ALPHA_RECEIVER,
+        length=FRAME_BOLT_LENGTH,
+        cutaway=_CUTAWAY_RECEIVER);
+    }
+
     if (_SHOW_STOCK) {
-      StockAssembly();
+      StockAssembly(hardware=false, alpha=_ALPHA_STOCK);
     }
   }
 

@@ -1112,22 +1112,22 @@ scale(25.4)
 if ($preview) {
   translate([-ReceiverFrontLength(),0,0]) {
     if (_SHOW_FCG)
-      SimpleFireControlAssembly(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS,
-                                actionRod=false);
+      SimpleFireControlAssembly(hardware=false, prints=_SHOW_PRINTS,
+                                actionRod=false, alpha=_ALPHA_FCG);
 
     if (_SHOW_LOWER) {
-      LowerMount(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS);
-      Lower(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS);
+      LowerMount(hardware=false, prints=_SHOW_PRINTS, alpha=_ALPHA_LOWER);
+      Lower(hardware=false, prints=_SHOW_PRINTS, alpha=_ALPHA_LOWER);
     }
 
     if (_SHOW_RECEIVER)
     Frame_ReceiverAssembly(
-      hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS,
+      hardware=false, prints=_SHOW_PRINTS,
       length=FRAME_BOLT_LENGTH,
-      cutaway=_CUTAWAY_RECEIVER);
+      cutaway=_CUTAWAY_RECEIVER, alpha=_ALPHA_RECEIVER);
 
     if (_SHOW_STOCK)
-    StockAssembly(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS);
+    StockAssembly(hardware=false, prints=_SHOW_PRINTS, alpha=_ALPHA_STOCK);
   }
 
   EvolverForendAssembly(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS,
