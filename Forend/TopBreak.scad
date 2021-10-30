@@ -660,10 +660,12 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.005, cut
                           r2=1/16);
 
         // Extractor support
-        translate([clearRear-rearExtension-clear,-(TopBreak_ExtractorHousingWidth()/2)-clear,TopBreak_BarrelCollarBottomZ()-clear])
-        ChamferedCube([PivotX()-(sqrt(2)/2*PivotRadius())-clearRear+rearExtension+clear2,
-                       TopBreak_ExtractorHousingWidth()+clear2,
-                       abs(TopBreak_BarrelCollarBottomZ())+clear],
+        translate([clearRear-rearExtension,
+                   -(TopBreak_ExtractorHousingWidth()/2),
+                   TopBreak_BarrelCollarBottomZ()])
+        ChamferedCube([PivotX()-(sqrt(2)/2*PivotRadius())-clearRear+rearExtension,
+                       TopBreak_ExtractorHousingWidth(),
+                       abs(TopBreak_BarrelCollarBottomZ())],
                        r=1/16, teardropFlip=[false,true,true]);
 
         // Latch support
@@ -833,6 +835,14 @@ module TopBreak_LatchTab(cutaway=false, cutter=false, clearance=0.01, alpha=1) {
       square([0.1875, 1]);
     }
 
+    // Extractor support clearance
+    translate([-0.5-clearance,
+               -(TopBreak_ExtractorHousingWidth()/2)-clearance,
+               TopBreak_BarrelCollarBottomZ()-clearance])
+    ChamferedCube([PivotX()-(sqrt(2)/2*PivotRadius())+(clearance*2),
+                   TopBreak_ExtractorHousingWidth()+(clearance*2),
+                   abs(TopBreak_BarrelCollarBottomZ())+clearance],
+                   r=1/16, teardropFlip=[false,true,true]);
 
     if (!cutter)
     TopBreak_LatchScrews(cutter=true);
