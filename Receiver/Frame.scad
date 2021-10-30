@@ -252,14 +252,14 @@ module Frame_Receiver(doRender=true, cutaway=false, alpha=1) {
 // **************
 module Frame_ReceiverAssembly(hardware=true, prints=true, length=FrameBoltLength(), frameBolts=_SHOW_FRAME_BOLTS, cutaway=_CUTAWAY_RECEIVER, alpha=1) {
 
+  if (hardware)
+  Receiver_MlokBolts();
+  
   if (hardware && frameBolts)
   Frame_Bolts(length=length, cutaway=cutaway, alpha=min(alpha,_ALPHA_FRAME));
   
   if (prints)
   Frame_Receiver(cutaway=cutaway, alpha=min(alpha,_ALPHA_FRAME));
-  
-  if (hardware)
-  Receiver_MlokBolts();
 }
 
 scale(25.4)
