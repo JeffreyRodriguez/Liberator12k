@@ -52,7 +52,7 @@ _SHOW_PRINTS = true;
 _SHOW_HARDWARE = true;
 _SHOW_RECEIVER = true;
 _SHOW_STOCK = true;
-_SHOW_FCG = true;
+_SHOW_FCG = false;
 _SHOW_LOWER = true;
 _SHOW_RECEIVER_FRONT = true;
 _SHOW_FOREND_SPACER = true;
@@ -1038,7 +1038,7 @@ module EvolverForendAssembly(hardware=true, prints=true, pipeAlpha=1, cutaway=fa
       rotate([-120,0,0])
       translate([0,0,1])
       rotate([0,90,0]) rotate(90)
-      Belt(rounds=1,offset=0, expand=SubAnimate(ANIMATION_STEP_LOAD, start=0.1, end=0.2));
+      Belt(rounds=3, offset=0, expand=SubAnimate(ANIMATION_STEP_LOAD, start=0.1, end=0.2));
     }
 
     if (_SHOW_SPINDLE) {
@@ -1047,7 +1047,6 @@ module EvolverForendAssembly(hardware=true, prints=true, pipeAlpha=1, cutaway=fa
 
       if (hardware)
       Evolver_SpindlePins();
-      
       
       if (prints)
       Evolver_Spindle(cutaway=_CUTAWAY_SPINDLE, alpha=_ALPHA_SPINDLE);
