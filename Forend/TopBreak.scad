@@ -1133,6 +1133,7 @@ if ($preview) {
     
     if (_SHOW_RECEIVER)
     Frame_ReceiverAssembly(
+      hardware=false,
       length=FRAME_BOLT_LENGTH-0.5,
       cutaway=_CUTAWAY_RECEIVER,
       alpha=_ALPHA_RECEIVER);
