@@ -1041,7 +1041,7 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
     rotate([0,-90,0]) {
       if (prints)
       Sightpost(radius=BarrelRadius()+BARREL_CLEARANCE);
-      
+
       if (hardware)
       SightpostBolts(radius=BarrelRadius()+BARREL_CLEARANCE);
     }
@@ -1069,16 +1069,16 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
 
       if (hardware && _SHOW_LATCH_HARDWARE)
       TopBreak_LatchScrews(cutaway=cutaway == true || _CUTAWAY_LATCH);
-      
+
       if (hardware && _SHOW_LATCH_HARDWARE)
       TopBreak_LatchBars(cutaway=cutaway == true || _CUTAWAY_LATCH);
 
       if (hardware && _SHOW_LATCH_HARDWARE)
       TopBreak_LatchSpring();
-      
+
       if (prints && _SHOW_LATCH)
       TopBreak_LatchTab(cutaway=cutaway == true || _CUTAWAY_LATCH);
-    } 
+    }
 
     if (hardware && _SHOW_COLLAR_HARDWARE)
     TopBreak_BarrelCollarBolts();
@@ -1119,7 +1119,7 @@ if ($preview) {
                                  -Animate(ANIMATION_STEP_LOCK),
                       extractFactor=Animate(ANIMATION_STEP_UNLOAD)
                                  -SubAnimate(ANIMATION_STEP_LOAD, end=0.25));
-  
+
   translate([-TopBreak_ReceiverFrontLength(),0,0])
   if (_SHOW_LOWER) {
     Lower(bolts=false, showLeft=!_CUTAWAY_LOWER, alpha=_ALPHA_LOWER);
@@ -1127,10 +1127,10 @@ if ($preview) {
   }
 
   translate([-TopBreak_ReceiverFrontLength(),0,0]) {
-  
+
     if(_SHOW_TENSION_RODS)
     Receiver_TensionBolts();
-    
+
     if (_SHOW_RECEIVER)
     Frame_ReceiverAssembly(
       hardware=false,
@@ -1138,7 +1138,7 @@ if ($preview) {
       cutaway=_CUTAWAY_RECEIVER,
       alpha=_ALPHA_RECEIVER);
   }
-  
+
   if (_SHOW_STOCK)
   translate([-TopBreak_ReceiverFrontLength(),0,0])
   StockAssembly(hardware=false, alpha=_ALPHA_STOCK);
