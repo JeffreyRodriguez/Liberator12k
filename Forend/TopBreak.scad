@@ -656,6 +656,7 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.005, cut
         rotate([0,90,0])
         ChamferedCylinder(r1=BarrelSleeveRadius()+WallBarrel()+clear,
                           h=PivotX()-clearRear+clear,
+                          teardropTop=true,
                           r2=1/16);
 
         // Extractor support
