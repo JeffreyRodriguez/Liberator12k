@@ -1205,13 +1205,6 @@ if ($preview) {
       translate([0,0,-TopBreak_ExtractorZ()])
       TopBreak_Extractor();
 
-  if (_RENDER == "Prints/Latch")
-    if (!_RENDER_PRINT)
-      TopBreak_LatchBars();
-    else
-      translate([0,0,-TopBreak_LatchZ()])
-      TopBreak_LatchBars(doMirror=false);
-
   if (_RENDER == "Prints/LatchTab")
     if (!_RENDER_PRINT)
       TopBreak_LatchTab();
