@@ -7,7 +7,7 @@ Classes_HTML=$(addsuffix .html, $(Classes))
 TopBreak_Presets := CAFE12 CAFE12+ FP37
 Revolver_Presets := ZZR6x12
 Evolver_Presets := 12GA
-Presets := $(addprefix TopBreak_,$(TopBreak_Presets))
+Presets := $(addprefix TopBreak_,$(TopBreak_Presets)) $(addprefix Revolver_,$(Revolver_Presets)) $(addprefix Evolver_,$(Evolver_Presets))
 
 Prints:= $(foreach Preset,$(Presets),$(addprefix $(Preset)/, $(call list_prints,$(call preset_class_name,$(Preset)).scad)))
 Hardware := $(foreach Preset,$(Presets),$(addprefix $(Preset)/, $(call list_hardware,$(call preset_class_name,$(Preset)).scad)))
