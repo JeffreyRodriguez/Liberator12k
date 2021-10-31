@@ -379,7 +379,7 @@ module TopBreak_ExtractorRetainer(cutaway=false, cutter=false, teardrop=false, c
   translate([TopBreak_ExtractorWidth()+TopBreak_ExtractorTravel()+0.5,
              0,
              -BarrelSleeveRadius()-1-clear2])
-  cylinder(r=TopBreak_ExtractorRetainerRadius()+clear, h=1+clear2);
+  cylinder(r=TopBreak_ExtractorRetainerRadius()+clear, h=1+clear2+(cutter?BarrelRadius():0));
 }
 
 module TopBreak_LatchBars(doMirror=true, cutaway=false, cutter=false, clearance=LATCH_CLEARANCE, alpha=1) {
