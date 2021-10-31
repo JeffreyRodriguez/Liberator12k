@@ -90,6 +90,7 @@ GP_BOLT = "#8-32"; // ["M4", "#8-32"]
 GP_BOLT_CLEARANCE = 0.015;
 
 BARREL_COLLAR_BOLT  = "#8-32"; // ["M4", "#8-32"]
+BARREL_COLLAR_BOLT_NUT = "none"; // ["none", "heatset"]
 BARREL_COLLAR_BOLT_CLEARANCE = 0.015;
 
 BARREL_SET_SCREW = "#8-32"; // ["M4", "#8-32"]
@@ -466,18 +467,17 @@ module TopBreak_Barrel(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, le
   }
 }
 
-module TopBreak_BarrelCollarBolts(headType="flat", nutType="heatset", length=0.5, cutter=false, clearance=0.005, teardrop=false) {
+module TopBreak_BarrelCollarBolts(headType="flat", nutType=BARREL_COLLAR_BOLT_NUT, length=0.5, cutter=false, clearance=0.005, teardrop=false) {
 
   // Top Bolts
-  color("Silver") RenderIf(!cutter)
   for (X = [0.5,1.5,2.5])
   translate([X,0,BarrelRadius()])
   NutAndBolt(bolt=BarrelCollarBolt(),
              boltLength=length+ManifoldGap(2),
              head="socket", capHeightExtra=(cutter?1:0),
-             nut="none",
+             nut=nutType, nutHeightExtra=(cutter?BarrelRadius():0),
              teardrop=false, teardropAngle=180,
-             clearance=cutter?clearance:0);
+             clearance=cutter?clearance:0, doRender=!cutter);
 }
 
 module TopBreak_ClusterBolts(bolt=ClusterBolt(), headType=CLUSTER_BOLT_HEAD, nutType=CLUSTER_BOLT_NUT, length=0.5, cutter=false, clearance=0.005, teardrop=false) {
