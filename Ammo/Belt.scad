@@ -366,6 +366,7 @@ module Belt(rounds=3, offset=0, expand=0) {
     Cartridge();
     CarrierPetals(AF=AF);
 
+    color("Chocolate")
     render()
     BeltLink();
   }
