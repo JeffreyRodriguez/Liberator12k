@@ -38,7 +38,7 @@ COLUMN_WALL=0.25;
 
 DRIVE_ANGLE=0;
 DRIVESCREW_OFFSET_X = -(COLUMN_WIDTH/2);
-DRIVESCREW_OFFSET_Y = (COLUMN_WIDTH/2)+COLUMN_WALL+UnitsMetric(21);
+DRIVESCREW_OFFSET_Y = (COLUMN_WIDTH/2)+COLUMN_WALL+Millimeters(21);
 DRIVESCREW_DIAMETER=5/16;
 DRIVESCREW_MOUNT_HEIGHT = 1;
 
@@ -111,7 +111,7 @@ module DriveScrew(cutter=false) {
 }
 
 module DriveNut(cutter=false) {
-  translate([0,0,-UnitsMetric(3)]) {
+  translate([0,0,-Millimeters(3)]) {
     
     // T8 Nut Cap
     color("Gold")

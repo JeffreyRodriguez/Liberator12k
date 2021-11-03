@@ -68,7 +68,7 @@ module PipeSlotDrillingJig(pipeSpec=Spec_TubingOnePointOneTwoFive(),
                NutHexRadius(setScrewSpec)+wall])
     rotate([0,90,0])
     rotate([0,0,90])
-    NutAndBolt(bolt=setScrewSpec, boltLength=UnitsImperial(2),
+    NutAndBolt(bolt=setScrewSpec, boltLength=Inches(2),
                nutHeightExtra=PipeOuterRadius(pipeSpec),
                clearance=true);
   }

@@ -4,13 +4,13 @@ use <../../Meta/slookup.scad>;
 function Spec_SpringTemplate() = [
   ["SpringSpec", "SpringTemplate"],
 
-  ["SpringOuterDiameter", UnitsImperial(0.625)],
-  ["SpringPitch", UnitsImperial(0.35)],
+  ["SpringOuterDiameter", Inches(0.625)],
+  ["SpringPitch", Inches(0.35)],
 
-  ["SpringFreeLength", UnitsImperial(3.5)],
-  ["SpringSolidHeight", UnitsImperial(0.93)],
+  ["SpringFreeLength", Inches(3.5)],
+  ["SpringSolidHeight", Inches(0.93)],
 
-  ["SpringWireDiameter", UnitsImperial(0.055)]
+  ["SpringWireDiameter", Inches(0.055)]
 ];
 
 /**

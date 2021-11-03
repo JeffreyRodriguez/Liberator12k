@@ -19,20 +19,20 @@ function MlokBolt() = BoltSpec(MLOK_BOLT);
 assert(MlokBolt(), "MlokBolt() is undefined. Unknown MLOK_BOLT?");
 
 
-function MlokSlotLength() = UnitsMetric(32);
-function MlokSlotSpacing() = UnitsMetric(8);
+function MlokSlotLength() = Millimeters(32);
+function MlokSlotSpacing() = Millimeters(8);
 function MlokSlotDepth() = 0.125;
 function MlokBackWidth() = (0.45)+0.004;
-function MlokSlotWidth() = UnitsMetric(7)+0.004;
+function MlokSlotWidth() = Millimeters(7)+0.004;
 
 
-module MlokSlot(length=MlokSlotLength(), extension=UnitsMetric(20), center=true, clearance=0.005) {
+module MlokSlot(length=MlokSlotLength(), extension=Millimeters(20), center=true, clearance=0.005) {
   translate([0, (center?-(MlokSlotWidth()/2):0),-MlokSlotDepth()])
   cube([length, MlokSlotWidth(), MlokSlotDepth()+ManifoldGap()]);
 }
 
 
-module MlokSlotBack(length=MlokSlotLength(), extension=UnitsMetric(4), center=true, clearance=0.005) {
+module MlokSlotBack(length=MlokSlotLength(), extension=Millimeters(4), center=true, clearance=0.005) {
   translate([0,(center?-(MlokBackWidth()/2):-(MlokBackWidth()-MlokSlotWidth())/2),-MlokSlotDepth()-extension])
   cube([length, MlokBackWidth(), extension]);
 }

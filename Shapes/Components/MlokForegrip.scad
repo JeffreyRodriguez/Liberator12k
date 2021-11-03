@@ -30,7 +30,7 @@ module MlokForegripBolts(boltSpec=BoltSpec(MLOK_BOLT), headType="flat", nutType=
   assert(boltSpec, "boltSpec is undefined. Unknown MLOK_BOLT?");
 
   color("Silver") RenderIf(!cutter)
-  for (Y = [-UnitsMetric(10),UnitsMetric(10)])
+  for (Y = [-Millimeters(10),Millimeters(10)])
   translate([0,Y,MlokForegripLength()+MlokForegripBoltExtension()])
   mirror([0,0,1])
   NutAndBolt(bolt=boltSpec,
@@ -53,11 +53,11 @@ assert(boltSpec, "boltSpec is undefined. Unknown MLOK_BOLT?");
     union() {
 
       hull()
-      for (Y = [1,-1]) translate([0,Y*UnitsMetric(10),0])
+      for (Y = [1,-1]) translate([0,Y*Millimeters(10),0])
       ChamferedCylinder(r1=0.5, r2=1/8, h=length);
 
-      translate([-0.125,-UnitsMetric(10)-0.1875,0])
-      ChamferedCube([0.25, UnitsMetric(20)+0.375, length+(1/16)], r=1/32);
+      translate([-0.125,-Millimeters(10)-0.1875,0])
+      ChamferedCube([0.25, Millimeters(20)+0.375, length+(1/16)], r=1/32);
     }
 
     MlokForegripBolts(cutter=true);

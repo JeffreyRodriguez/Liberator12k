@@ -37,13 +37,13 @@ function Spec_Bearing608() = Bearing608;
 
 // 623 Bearing
 Bearing623 = [
-  [BearingInnerRadius,    UnitsMetric(3/2)],
-  [BearingOuterRadius,    UnitsMetric(10/2)],
-  [BearingHeight,         UnitsMetric(4)],
-  [BearingRaceRadius,     UnitsMetric(5.2/2)],
+  [BearingInnerRadius,    Millimeters(3/2)],
+  [BearingOuterRadius,    Millimeters(10/2)],
+  [BearingHeight,         Millimeters(4)],
+  [BearingRaceRadius,     Millimeters(5.2/2)],
   [BearingFn,             30],
-  [BearingClearanceLoose, UnitsMetric(.3)], // TODO: Verify
-  [BearingClearanceSnug,  UnitsMetric(.15)], // TODO: Verify
+  [BearingClearanceLoose, Millimeters(.3)], // TODO: Verify
+  [BearingClearanceSnug,  Millimeters(.15)], // TODO: Verify
 ];
 function Spec_Bearing623() = Bearing623;
 

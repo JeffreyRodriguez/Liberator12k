@@ -307,9 +307,9 @@ module BarrelCollar(rearExtension=0, cutter=false, clearance=0.01, cutaway=false
             abs(BarrelCollarBottomZ())+PivotRadius()]);
 
       // Pic rail slot
-      *translate([0,-(UnitsImperial(0.617)/2)-clear,FrameTopZ()-0.125])
+      *translate([0,-(Inches(0.617)/2)-clear,FrameTopZ()-0.125])
       cube([LatchCollarLength(),
-            UnitsImperial(0.617)+clear2,
+            Inches(0.617)+clear2,
             FrameTopZ()+clear]);
 
       for (X = [0,-ExtractorTravel()])

@@ -51,7 +51,7 @@ module MlokClusterBolts(radius=BarrelRadius(), boltSpec=BoltSpec(MLOK_BOLT), hea
   assert(boltSpec, "boltSpec is undefined. Unknown MLOK_BOLT?");
 
   color("Silver") RenderIf(!cutter)
-  for (Z = [-UnitsMetric(10),UnitsMetric(10)])
+  for (Z = [-Millimeters(10),Millimeters(10)])
   translate([radius,0,MlokClusterLength()/2-Z])
   rotate([0,90,0])
   NutAndBolt(bolt=boltSpec,

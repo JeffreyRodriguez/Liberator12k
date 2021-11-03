@@ -140,7 +140,7 @@ function RecoilPlateWidth() = 2;
 function RecoilSpreaderThickness() = 0.5;
 function BarrelCollarDiameter() = 1.625;
 function BarrelCollarLength() = 0.625;
-function ActuatorPinDiameter() = UnitsMetric(2.5);
+function ActuatorPinDiameter() = Millimeters(2.5);
 function ActuatorPinRadius() = ActuatorPinDiameter()/2;
 
 // Settings: Vitamins
@@ -191,7 +191,7 @@ pawlRadius = (1/64)+(1/128);
 pawlPivotZ = -1.75;
 pawlPivotY = 0;
 pawlPivotAngle = -15;
-pawlPinRadius = UnitsMetric(2.5)/2;
+pawlPinRadius = Millimeters(2.5)/2;
 actuatorPinRadius = ActuatorPinRadius();
 actuatorPinDepth = 0.125;
 actuatorPinX = ForendSpacerLength()+ActuatorPinRadius();
@@ -265,7 +265,7 @@ module Evolver_SpindlePins(cutter=false, clearance=0.003) {
   rotate([0,90,0])
   for (R = [0:120:360]) rotate(R)
   translate([0.25, 0, -clear])
-  cylinder(r=(UnitsMetric(2.5)/2)+clear, h=3/4+(cutter?2:0)+clear2);
+  cylinder(r=(Millimeters(2.5)/2)+clear, h=3/4+(cutter?2:0)+clear2);
 }
 
 
@@ -1015,7 +1015,7 @@ module EvolverForendAssembly(hardware=true, prints=true, pipeAlpha=1, cutaway=fa
   if (_SHOW_RATCHET_PAWL) {
     if (hardware)
     Evolver_RatchetPawlPin();
-    
+
     if (prints)
     Evolver_RatchetPawlPivot(factor=0)
     Evolver_RatchetPawl();
@@ -1047,13 +1047,13 @@ module EvolverForendAssembly(hardware=true, prints=true, pipeAlpha=1, cutaway=fa
 
       if (hardware)
       Evolver_SpindlePins();
-      
+
       if (prints)
       Evolver_Spindle(cutaway=_CUTAWAY_SPINDLE, alpha=_ALPHA_SPINDLE);
-      
+
       if (prints)
       Evolver_Ratchet(cutaway=_CUTAWAY_SPINDLE, alpha=_ALPHA_SPINDLE);
-      
+
       if (prints)
       Evolver_ZigZag(cutaway=_CUTAWAY_SPINDLE, alpha=_ALPHA_SPINDLE);
     }

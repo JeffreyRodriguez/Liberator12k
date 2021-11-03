@@ -2,169 +2,169 @@ use <../../Meta/Units.scad>;
 use <BoltSpec.scad>;
 
 function Spec_Bolt4_40() = [
-  ["BoltDiameter",    UnitsImperial(0.1055)],
-  ["BoltTappingDrillSize",  UnitsImperial(0.0890)],
+  ["BoltDiameter",    Inches(0.1055)],
+  ["BoltTappingDrillSize",  Inches(0.0890)],
 
-  /* ["BoltSocketCapDiameter", UnitsImperial(0.270)],
-  ["BoltSocketCapHeight",   UnitsImperial(0.164)], */
+  /* ["BoltSocketCapDiameter", Inches(0.270)],
+  ["BoltSocketCapHeight",   Inches(0.164)], */
 
-  ["BoltFlatHeadDiameter", UnitsImperial(0.23)],
-  ["BoltFlatHeadHeight",   UnitsImperial(0.1)],
+  ["BoltFlatHeadDiameter", Inches(0.23)],
+  ["BoltFlatHeadHeight",   Inches(0.1)],
 
-  /* ["NutHexDiameter", UnitsImperial(0.34375)],
-  ["NutHexHeight",   UnitsImperial(0.125)], */
+  /* ["NutHexDiameter", Inches(0.34375)],
+  ["NutHexHeight",   Inches(0.125)], */
 
-  /* ["NutHeatsetMajorDiameter", UnitsImperial(0.234)],
-  ["NutHeatsetMinorDiameter", UnitsImperial(0.226)],
-  ["NutHeatsetHeight",        UnitsImperial(0.185)], */
+  /* ["NutHeatsetMajorDiameter", Inches(0.234)],
+  ["NutHeatsetMinorDiameter", Inches(0.226)],
+  ["NutHeatsetHeight",        Inches(0.185)], */
 
-  /* ["NutHeatsetLongMajorDiameter", UnitsMetric(6.35)],
-  ["NutHeatsetLongMinorDiameter", UnitsMetric(5.38)],
-  ["NutHeatsetLongHeight",        UnitsMetric(7.92)] */
+  /* ["NutHeatsetLongMajorDiameter", Millimeters(6.35)],
+  ["NutHeatsetLongMinorDiameter", Millimeters(5.38)],
+  ["NutHeatsetLongHeight",        Millimeters(7.92)] */
 ];
 
 function Spec_Bolt6_32() = [
-  ["BoltDiameter",    UnitsImperial(0.135)],
-  ["BoltTappingDrillSize",  UnitsImperial(0.1065)],
+  ["BoltDiameter",    Inches(0.135)],
+  ["BoltTappingDrillSize",  Inches(0.1065)],
 
-  /* ["BoltSocketCapDiameter", UnitsImperial(0.270)],
-  ["BoltSocketCapHeight",   UnitsImperial(0.164)], */
+  /* ["BoltSocketCapDiameter", Inches(0.270)],
+  ["BoltSocketCapHeight",   Inches(0.164)], */
 
-  ["BoltFlatHeadDiameter", UnitsImperial(0.270)],
-  ["BoltFlatHeadHeight",   UnitsImperial(0.115)],
+  ["BoltFlatHeadDiameter", Inches(0.270)],
+  ["BoltFlatHeadHeight",   Inches(0.115)],
 
-  /* ["NutHexDiameter", UnitsImperial(0.34375)],
-  ["NutHexHeight",   UnitsImperial(0.125)], */
+  /* ["NutHexDiameter", Inches(0.34375)],
+  ["NutHexHeight",   Inches(0.125)], */
 
-  /* ["NutHeatsetMajorDiameter", UnitsImperial(0.234)],
-  ["NutHeatsetMinorDiameter", UnitsImperial(0.226)],
-  ["NutHeatsetHeight",        UnitsImperial(0.185)], */
+  /* ["NutHeatsetMajorDiameter", Inches(0.234)],
+  ["NutHeatsetMinorDiameter", Inches(0.226)],
+  ["NutHeatsetHeight",        Inches(0.185)], */
 
-  /* ["NutHeatsetLongMajorDiameter", UnitsMetric(6.35)],
-  ["NutHeatsetLongMinorDiameter", UnitsMetric(5.38)],
-  ["NutHeatsetLongHeight",        UnitsMetric(7.92)] */
+  /* ["NutHeatsetLongMajorDiameter", Millimeters(6.35)],
+  ["NutHeatsetLongMinorDiameter", Millimeters(5.38)],
+  ["NutHeatsetLongHeight",        Millimeters(7.92)] */
 ];
 
 
 function Spec_Bolt8_32() = [
-  ["BoltDiameter",    UnitsImperial(0.1640)],
-  ["BoltTappingDrillSize",  UnitsImperial(0.1360)],
+  ["BoltDiameter",    Inches(0.1640)],
+  ["BoltTappingDrillSize",  Inches(0.1360)],
 
-  ["BoltSocketCapDiameter", UnitsImperial(0.270)],
-  ["BoltSocketCapHeight",   UnitsImperial(0.164)],
+  ["BoltSocketCapDiameter", Inches(0.270)],
+  ["BoltSocketCapHeight",   Inches(0.164)],
 
-  ["BoltFlatHeadDiameter", UnitsImperial(0.359)],
-  ["BoltFlatHeadHeight",   UnitsImperial(0.112)],
+  ["BoltFlatHeadDiameter", Inches(0.359)],
+  ["BoltFlatHeadHeight",   Inches(0.112)],
 
-  ["BoltHexDiameter", UnitsImperial(0.3095)],
-  ["BoltHexHeight",   UnitsImperial(0.125)],
+  ["BoltHexDiameter", Inches(0.3095)],
+  ["BoltHexHeight",   Inches(0.125)],
 
-  ["NutHexDiameter", UnitsImperial(0.3755)],
-  ["NutHexHeight",   UnitsImperial(0.125)],
+  ["NutHexDiameter", Inches(0.3755)],
+  ["NutHexHeight",   Inches(0.125)],
 
-  ["NutHeatsetMajorDiameter", UnitsImperial(0.234)],
-  ["NutHeatsetMinorDiameter", UnitsImperial(0.226)],
-  ["NutHeatsetHeight",        UnitsImperial(0.185)],
+  ["NutHeatsetMajorDiameter", Inches(0.234)],
+  ["NutHeatsetMinorDiameter", Inches(0.226)],
+  ["NutHeatsetHeight",        Inches(0.185)],
 
-  ["NutHeatsetLongMajorDiameter", UnitsMetric(6.35)],
-  ["NutHeatsetLongMinorDiameter", UnitsMetric(5.38)],
-  ["NutHeatsetLongHeight",        UnitsMetric(7.92)]
+  ["NutHeatsetLongMajorDiameter", Millimeters(6.35)],
+  ["NutHeatsetLongMinorDiameter", Millimeters(5.38)],
+  ["NutHeatsetLongHeight",        Millimeters(7.92)]
 ];
 
 function Spec_Bolt10_24() = [
-  ["BoltDiameter",    UnitsImperial(0.1900)],
-  ["BoltTappingDrillSize",  UnitsImperial(0.1470)],
+  ["BoltDiameter",    Inches(0.1900)],
+  ["BoltTappingDrillSize",  Inches(0.1470)],
 
-  ["BoltSocketCapDiameter", UnitsImperial(0.270)],
-  ["BoltSocketCapHeight",   UnitsImperial(0.164)],
+  ["BoltSocketCapDiameter", Inches(0.270)],
+  ["BoltSocketCapHeight",   Inches(0.164)],
 
-  ["BoltFlatHeadDiameter", UnitsImperial(0.411)],
-  ["BoltFlatHeadHeight",   UnitsImperial(0.127)],
+  ["BoltFlatHeadDiameter", Inches(0.411)],
+  ["BoltFlatHeadHeight",   Inches(0.127)],
 
-  ["NutHexDiameter", UnitsImperial(0.34375)],
-  ["NutHexHeight",   UnitsImperial(0.125)],
+  ["NutHexDiameter", Inches(0.34375)],
+  ["NutHexHeight",   Inches(0.125)],
 
-  ["NutHeatsetMajorDiameter", UnitsMetric(7.52)],
-  ["NutHeatsetMinorDiameter", UnitsMetric(6.90)],
-  ["NutHeatsetHeight",        UnitsMetric(5.72)],
+  ["NutHeatsetMajorDiameter", Millimeters(7.52)],
+  ["NutHeatsetMinorDiameter", Millimeters(6.90)],
+  ["NutHeatsetHeight",        Millimeters(5.72)],
 
-  ["NutHeatsetLongMajorDiameter", UnitsMetric(7.54)],
-  ["NutHeatsetLongMinorDiameter", UnitsMetric(6.38)],
-  ["NutHeatsetLongHeight",        UnitsMetric(9.53)]
+  ["NutHeatsetLongMajorDiameter", Millimeters(7.54)],
+  ["NutHeatsetLongMinorDiameter", Millimeters(6.38)],
+  ["NutHeatsetLongHeight",        Millimeters(9.53)]
 ];
 
 function Spec_BoltOneHalf() = [
-  ["BoltDiameter",    UnitsImperial(0.5)],
-  ["BoltTappingDrillSize",  UnitsImperial(0.4219)],
-  ["BoltHexDiameter", UnitsImperial(0.85)], // WRONG
-  ["BoltHexHeight",   UnitsImperial(0.325)],  // WRONG
+  ["BoltDiameter",    Inches(0.5)],
+  ["BoltTappingDrillSize",  Inches(0.4219)],
+  ["BoltHexDiameter", Inches(0.85)], // WRONG
+  ["BoltHexHeight",   Inches(0.325)],  // WRONG
 
-  ["BoltSocketCapDiameter", UnitsImperial(0.85)],
-  ["BoltSocketCapHeight",   UnitsImperial(0.310)],
+  ["BoltSocketCapDiameter", Inches(0.85)],
+  ["BoltSocketCapHeight",   Inches(0.310)],
 
-  ["NutHexDiameter", UnitsImperial(0.85)],
-  ["NutHexHeight",   UnitsImperial(0.45)],
+  ["NutHexDiameter", Inches(0.85)],
+  ["NutHexHeight",   Inches(0.45)],
 ];
 
 function Spec_BoltOneQuarter() = [
-  ["BoltDiameter",    UnitsImperial(0.25)],
-  ["BoltTappingDrillSize",  UnitsImperial(0.2010)],
+  ["BoltDiameter",    Inches(0.25)],
+  ["BoltTappingDrillSize",  Inches(0.2010)],
 
-  ["BoltSocketCapDiameter", UnitsImperial(0.375)],
-  ["BoltSocketCapHeight",   UnitsImperial(0.25)],
+  ["BoltSocketCapDiameter", Inches(0.375)],
+  ["BoltSocketCapHeight",   Inches(0.25)],
 
-  ["BoltFlatHeadDiameter", UnitsImperial(0.49)],
-  ["BoltFlatHeadHeight",   UnitsImperial(0.191)],
+  ["BoltFlatHeadDiameter", Inches(0.49)],
+  ["BoltFlatHeadHeight",   Inches(0.191)],
 
-  ["BoltHexDiameter", UnitsImperial(0.566)],
-  ["BoltHexHeight",   UnitsImperial(0.25)],
+  ["BoltHexDiameter", Inches(0.566)],
+  ["BoltHexHeight",   Inches(0.25)],
 
-  ["NutHexDiameter", UnitsImperial(0.566)],
-  ["NutHexHeight",   UnitsImperial(0.25)],
+  ["NutHexDiameter", Inches(0.566)],
+  ["NutHexHeight",   Inches(0.25)],
 
-  ["NutHeatsetMajorDiameter", UnitsMetric(9.53)],
-  ["NutHeatsetMinorDiameter", UnitsMetric(9.0)],
-  ["NutHeatsetHeight",        UnitsMetric(7.62)],
+  ["NutHeatsetMajorDiameter", Millimeters(9.53)],
+  ["NutHeatsetMinorDiameter", Millimeters(9.0)],
+  ["NutHeatsetHeight",        Millimeters(7.62)],
 
-  ["NutHeatsetLongMajorDiameter", UnitsMetric(9.52)],
-  ["NutHeatsetLongMinorDiameter", UnitsMetric(8.0)],
-  ["NutHeatsetLongHeight",        UnitsMetric(12.7)]
+  ["NutHeatsetLongMajorDiameter", Millimeters(9.52)],
+  ["NutHeatsetLongMinorDiameter", Millimeters(8.0)],
+  ["NutHeatsetLongHeight",        Millimeters(12.7)]
 ];
 
 function Spec_BoltFiveSixteenths() = [
-  ["BoltDiameter",    UnitsImperial(0.3125)],
-  ["BoltTappingDrillSize",  UnitsImperial(0.2570)],
+  ["BoltDiameter",    Inches(0.3125)],
+  ["BoltTappingDrillSize",  Inches(0.2570)],
 
-  ["BoltHexDiameter", UnitsImperial(0.565)],
-  ["BoltHexHeight",   UnitsImperial(0.203)],
+  ["BoltHexDiameter", Inches(0.565)],
+  ["BoltHexHeight",   Inches(0.203)],
 
   // TODO: Verify
-  //["BoltSocketCapDiameter", UnitsImperial(0.567)],
-  //["BoltSocketCapHeight",   UnitsImperial(0.212)],
+  //["BoltSocketCapDiameter", Inches(0.567)],
+  //["BoltSocketCapHeight",   Inches(0.212)],
 
-  //["BoltFlatHeadDiameter", UnitsImperial(0.411)],
-  //["BoltFlatHeadHeight",   UnitsImperial(0.127)],
+  //["BoltFlatHeadDiameter", Inches(0.411)],
+  //["BoltFlatHeadHeight",   Inches(0.127)],
 
-  ["NutHexDiameter", UnitsImperial(0.557)],
-  ["NutHexHeight",   UnitsImperial(0.263)],
+  ["NutHexDiameter", Inches(0.557)],
+  ["NutHexHeight",   Inches(0.263)],
 
-  //["NutHeatsetMajorDiameter", UnitsMetric(6.35)],
-  //["NutHeatsetMinorDiameter", UnitsMetric(5.38)],
-  //["NutHeatsetHeight",        UnitsMetric(7.92)]
+  //["NutHeatsetMajorDiameter", Millimeters(6.35)],
+  //["NutHeatsetMinorDiameter", Millimeters(5.38)],
+  //["NutHeatsetHeight",        Millimeters(7.92)]
 
 
-  ["BoltDiameter",    UnitsImperial(0.3125)],
-  ["BoltSocketCapDiameter", UnitsImperial(0.567)], // Verify?
-  ["BoltSocketCapHeight",   UnitsImperial(0.212)],// Verify?
-  ["NutHexDiameter", UnitsImperial(0.557)],
-  ["NutHexHeight",   UnitsImperial(0.263)],
+  ["BoltDiameter",    Inches(0.3125)],
+  ["BoltSocketCapDiameter", Inches(0.567)], // Verify?
+  ["BoltSocketCapHeight",   Inches(0.212)],// Verify?
+  ["NutHexDiameter", Inches(0.557)],
+  ["NutHexHeight",   Inches(0.263)],
 ];
 
 function Spec_BoltThreeEighths() = [
-  ["BoltDiameter",    UnitsImperial(3/8)],
-  ["BoltTappingDrillSize",  UnitsImperial(0.3125)],
-  ["BoltSocketCapDiameter", UnitsImperial(0.5625)], // Verify?
-  ["BoltSocketCapHeight",   UnitsImperial(0.25)],// Verify?
-  ["NutHexDiameter", UnitsImperial(0.5625)],
-  ["NutHexHeight",   UnitsImperial(0.25)],
+  ["BoltDiameter",    Inches(3/8)],
+  ["BoltTappingDrillSize",  Inches(0.3125)],
+  ["BoltSocketCapDiameter", Inches(0.5625)], // Verify?
+  ["BoltSocketCapHeight",   Inches(0.25)],// Verify?
+  ["NutHexDiameter", Inches(0.5625)],
+  ["NutHexHeight",   Inches(0.25)],
 ];

@@ -139,7 +139,7 @@ function LowerGuardHeight() = TriggerPocketHeight()
 //* Vitamins *
 //************
 module Lower_Bolts(boltSpec=LowerBolt(),
-                  length=UnitsMetric(30),
+                  length=Millimeters(30),
                   head=LOWER_BOLT_HEAD, nut=LOWER_BOLT_NUT,
                   cutter=false,
                   clearance=RECEIVER_LUG_BOLTS_CLEARANCE,
@@ -376,8 +376,8 @@ module GripSplitter(clearance=0) {
   cube([20, LowerCenterWidth()+(clearance*2), 20]);
 }
 
-module ReceiverLugRear(width=UnitsImperial(0.5), extraTop=ManifoldGap(),
-                       cutter=false, clearance=UnitsImperial(0.002), clearVertical=false,
+module ReceiverLugRear(width=Inches(0.5), extraTop=ManifoldGap(),
+                       cutter=false, clearance=Inches(0.002), clearVertical=false,
                        chamferCutterHorizontal=false,
                        teardrop=true, teardropAngle=90, hole=true, doRender=false) {
 
@@ -398,8 +398,8 @@ module ReceiverLugRear(width=UnitsImperial(0.5), extraTop=ManifoldGap(),
   }
 }
 
-module ReceiverLugFront(width=UnitsImperial(0.5), extraTop=ManifoldGap(),
-                        cutter=false, clearance=UnitsImperial(0.002), clearVertical=false,
+module ReceiverLugFront(width=Inches(0.5), extraTop=ManifoldGap(),
+                        cutter=false, clearance=Inches(0.002), clearVertical=false,
                         chamferCutterHorizontal=false, doRender=false) {
   color("DarkOrange")
   RenderIf(doRender)

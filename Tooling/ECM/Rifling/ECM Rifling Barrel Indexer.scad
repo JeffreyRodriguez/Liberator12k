@@ -81,8 +81,8 @@ module ECM_Fluting_Guide(outsideDiameter=2.45,
     rotate(45)
     ECM_FlutingWireIterator()
     mirror([0,0,1])
-    translate([0.25,0,-UnitsMetric(24)])
-    Bolt(bolt=CATHODE_SCREW_SPEC, boltLength=UnitsMetric(25), clearance=false);
+    translate([0.25,0,-Millimeters(24)])
+    Bolt(bolt=CATHODE_SCREW_SPEC, boltLength=Millimeters(25), clearance=false);
 
   }
 }

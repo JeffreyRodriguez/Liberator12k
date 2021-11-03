@@ -23,7 +23,7 @@ module ECM_Jacket_Guide_Lugs2d(jacketDiameter=JACKET_OD,
   translate([(jacketDiameter/2)+wall, 0])
   mirror([1,0])
   T_Lug2d(length=0.75,
-          width=UnitsImperial(0.5),
+          width=Inches(0.5),
          height=lugHeight,
          cutter=cutter);
 }

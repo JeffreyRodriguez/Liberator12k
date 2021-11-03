@@ -149,12 +149,12 @@ $fs = UnitsFs()*ResolutionFs();
 
 
 // M5x10 FIXME
-module FlatHeadBolt(diameter=UnitsImperial(0.193),
-                headDiameter=UnitsImperial(0.353),
-                   extraHead=UnitsImperial(1),
-                      length=UnitsImperial(0.3955),
-                        sink=UnitsImperial(0.01),
-                   clearance=UnitsImperial(0.01),
+module FlatHeadBolt(diameter=Inches(0.193),
+                headDiameter=Inches(0.353),
+                   extraHead=Inches(1),
+                      length=Inches(0.3955),
+                        sink=Inches(0.01),
+                   clearance=Inches(0.01),
                     teardrop=true,
                       cutter=false) {
   radius = diameter/2;

@@ -15,13 +15,13 @@ DebugHalf()
 ECM_DrillingCap();
 
 
-translate([-UnitsMetric(3)-height, 0,0])
+translate([-Millimeters(3)-height, 0,0])
 rotate([0,-90,0])
 MandrelPosition()
 rotate($t*360/n2)
 gear(units_per_tooth,n2,thickness,RodDiameter(DEFAULT_MANDREL));
 
-translate([-UnitsMetric(3)-height, 0,0])
+translate([-Millimeters(3)-height, 0,0])
 rotate([0,-90,0])
 DrivescrewPosition()
 rotate(-$t*360/n1)

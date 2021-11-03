@@ -69,7 +69,7 @@ module AR15_ForwardAssist(cutter=true) {
 }
 
 module AR15_LowerBolts(boltSpec=Spec_BoltM4(),
-                      length=UnitsMetric(30),
+                      length=Millimeters(30),
                       cutter=false, teardrop=false, $fn=8) {
 
   capHeightExtra = cutter ? 1 : 0;
@@ -81,7 +81,7 @@ module AR15_LowerBolts(boltSpec=Spec_BoltM4(),
   color("SteelBlue")
   translate([AR15_RearPinX(),0,AR15_PinZ()])
   for (boltXZ = boltsXZ)
-  translate([boltXZ[0],-UnitsMetric(14),boltXZ[1]])
+  translate([boltXZ[0],-Millimeters(14),boltXZ[1]])
   rotate([90,0,0])
   rotate(90)
   NutAndBolt(bolt=boltSpec, boltLength=length,
@@ -92,14 +92,14 @@ module AR15_LowerBolts(boltSpec=Spec_BoltM4(),
 }
 
 module AR15_BufferLugBolt(boltSpec=Spec_BoltM4(),
-                         length=UnitsMetric(30),
+                         length=Millimeters(30),
                          cutter=false, teardrop=false, $fn=8) {
 
   capHeightExtra = cutter ? 1 : 0;
   nutHeightExtra = cutter ? 1 : 0;
 
   color("SteelBlue")
-  translate([AR15_TowerMinX()+(0.75/2),-UnitsMetric(14),AR15_TowerMinZ()+0.5])
+  translate([AR15_TowerMinX()+(0.75/2),-Millimeters(14),AR15_TowerMinZ()+0.5])
   rotate([90,0,0])
   rotate(90)
   NutAndBolt(bolt=boltSpec, boltLength=length,

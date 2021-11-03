@@ -127,49 +127,49 @@ function RecoilPlateBoltOffsetY() = 0.5;
 function HammerSpringSpec() = [
     ["SpringSpec", "Hammer Spring"],
 
-    ["SpringOuterDiameter", UnitsImperial(0.6)],
-    ["SpringPitch", UnitsImperial(0.2139)],
+    ["SpringOuterDiameter", Inches(0.6)],
+    ["SpringPitch", Inches(0.2139)],
 
-    ["SpringFreeLength", UnitsImperial(3.059)],
-    ["SpringSolidHeight", UnitsImperial(0.903)],
+    ["SpringFreeLength", Inches(3.059)],
+    ["SpringSolidHeight", Inches(0.903)],
 
-    ["SpringWireDiameter", UnitsImperial(0.059)]
+    ["SpringWireDiameter", Inches(0.059)]
   ];
 
 function FiringPinSpringSpec() = [
     ["SpringSpec", "Firing Pin Spring"],
 
-    ["SpringOuterDiameter", UnitsImperial(0.22)],
-    ["SpringPitch", UnitsImperial(0.1)],
+    ["SpringOuterDiameter", Inches(0.22)],
+    ["SpringPitch", Inches(0.1)],
 
-    ["SpringFreeLength", UnitsImperial(0.8)],
-    ["SpringSolidHeight", UnitsImperial(0.5)],
+    ["SpringFreeLength", Inches(0.8)],
+    ["SpringSolidHeight", Inches(0.5)],
 
-    ["SpringWireDiameter", UnitsImperial(0.02)]
+    ["SpringWireDiameter", Inches(0.02)]
   ];
 
 function DisconnectorSpringSpec() = [
     ["SpringSpec", "Disconnector Spring"],
 
-    ["SpringOuterDiameter", UnitsImperial(0.23)],
-    ["SpringPitch", UnitsImperial(0.05)],
+    ["SpringOuterDiameter", Inches(0.23)],
+    ["SpringPitch", Inches(0.05)],
 
-    ["SpringFreeLength", UnitsImperial(0.4)],
-    ["SpringSolidHeight", UnitsImperial(0.3125)],
+    ["SpringFreeLength", Inches(0.4)],
+    ["SpringSolidHeight", Inches(0.3125)],
 
-    ["SpringWireDiameter", UnitsImperial(0.025)]
+    ["SpringWireDiameter", Inches(0.025)]
   ];
 
 function SearReturnSpringSpec() = [
     ["SpringSpec", "Sear Return Spring"],
 
-    ["SpringOuterDiameter", UnitsImperial(0.25)],
-    ["SpringPitch", UnitsImperial(0.075)],
+    ["SpringOuterDiameter", Inches(0.25)],
+    ["SpringPitch", Inches(0.075)],
 
-    ["SpringFreeLength", UnitsImperial(1.2)],
-    ["SpringSolidHeight", UnitsImperial(0.3)],
+    ["SpringFreeLength", Inches(1.2)],
+    ["SpringSolidHeight", Inches(0.3)],
 
-    ["SpringWireDiameter", UnitsImperial(0.025)]
+    ["SpringWireDiameter", Inches(0.025)]
   ];
 
 // Settings: Vitamins
@@ -709,7 +709,7 @@ module FCG_ChargingHandleMiddle(clearance=0.005) {
 
   }
 }
-module FCG_Hammer(cutter=false, clearance=UnitsImperial(0.01), cutaway=false, alpha=1) {
+module FCG_Hammer(cutter=false, clearance=Inches(0.01), cutaway=false, alpha=1) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
@@ -772,7 +772,7 @@ module FCG_Hammer(cutter=false, clearance=UnitsImperial(0.01), cutaway=false, al
     FCG_HammerBolt(cutter=true);
   }
 }
-module FCG_HammerTail(clearance=UnitsImperial(0.01), cutaway=false, alpha=1) {
+module FCG_HammerTail(clearance=Inches(0.01), cutaway=false, alpha=1) {
   color("Chocolate", alpha)
   render() Cutaway(cutaway)
   difference() {

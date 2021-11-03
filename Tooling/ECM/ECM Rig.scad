@@ -149,7 +149,7 @@ module ECM_Fluting_WaterFeed(outsideDiameter=2.45,
                NutHexRadius(ANODE_SCREW_SPEC)+wall])
     rotate([0,45+90,0])
     rotate(90)
-    NutAndBolt(bolt=ANODE_SCREW_SPEC, boltLength=UnitsMetric(10),
+    NutAndBolt(bolt=ANODE_SCREW_SPEC, boltLength=Millimeters(10),
                capHeightExtra=1,
                nutHeightExtra=PipeOuterRadius(PIPE_SPEC), nutBackset=0.05,
                clearance=true);
@@ -157,8 +157,8 @@ module ECM_Fluting_WaterFeed(outsideDiameter=2.45,
     // Cathode Terminators
     ECM_FlutingWireIterator()
     mirror([0,0,1])
-    translate([0.375,0,-UnitsMetric(24)])
-    Bolt(bolt=CATHODE_SCREW_SPEC, boltLength=UnitsMetric(25), clearance=false);
+    translate([0.375,0,-Millimeters(24)])
+    Bolt(bolt=CATHODE_SCREW_SPEC, boltLength=Millimeters(25), clearance=false);
 
     // Waterways
     for (r = [-45, 180+45, 90+45])
@@ -237,8 +237,8 @@ module ECM_Fluting_Guide(outsideDiameter=2.45,
     rotate(45)
     ECM_FlutingWireIterator()
     mirror([0,0,1])
-    translate([0.25,0,-UnitsMetric(24)])
-    Bolt(bolt=CATHODE_SCREW_SPEC, boltLength=UnitsMetric(25), clearance=false);
+    translate([0.25,0,-Millimeters(24)])
+    Bolt(bolt=CATHODE_SCREW_SPEC, boltLength=Millimeters(25), clearance=false);
 
   }
 }
@@ -255,7 +255,7 @@ module ECM_Jacket_Guide_Lugs2d(jacketDiameter=JACKET_OD,
   translate([(jacketDiameter/2)+wall, 0])
   mirror([1,0])
   T_Lug2d(length=0.75,
-          width=UnitsImperial(0.5),
+          width=Inches(0.5),
          height=lugHeight,
          cutter=cutter);
 }

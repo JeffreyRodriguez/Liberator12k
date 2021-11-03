@@ -137,7 +137,7 @@ module Receiver_TensionBolts(bolt=TensionBolt(), headType=TENSION_HEAD_TYPE, nut
 module Receiver_MlokBolts(headType="flat", nutType="heatset-long", length=0.5, cutter=false, clearance=0.005, teardrop=false, teardropAngle=180) {
 
   // Top Bolts
-  for (X = [0,UnitsMetric(60)])
+  for (X = [0,Millimeters(60)])
   translate([-0.75-X,0,ReceiverTopSlotHeight()+ReceiverSlotClearance()])
   NutAndBolt(bolt=MlokBolt(),
              boltLength=length+ManifoldGap(2),
@@ -164,7 +164,7 @@ module Receiver_TakedownPin(cutter=false, clearance=0.005, alpha=1, cutaway=fals
 // **********
 // * Shapes *
 // **********
-module ReceiverMlokSlot(length=ReceiverLength(), width = UnitsMetric(7)+0.005, depth=0.0625) {
+module ReceiverMlokSlot(length=ReceiverLength(), width = Millimeters(7)+0.005, depth=0.0625) {
   translate([0, -width/2, ReceiverTopZ()+ManifoldGap()])
   mirror([0,0,1])
   mirror([1,0,0])
@@ -328,7 +328,7 @@ module Receiver(receiverLength=ReceiverLength(), doRender=true, alpha=1, cutaway
       // M-LOK side slot support
       translate([0,-Receiver_MlokSideY(),Receiver_MlokSideZ()-(mlokSupportHeight/2)])
       mirror([1,0,0])
-      ChamferedCube([UnitsMetric((32*2)+8)+1,
+      ChamferedCube([Millimeters((32*2)+8)+1,
                      (Receiver_MlokSideY()*2),
                      mlokSupportHeight], r=1/16,
                      teardropFlip=[true,true,true]);
@@ -338,7 +338,7 @@ module Receiver(receiverLength=ReceiverLength(), doRender=true, alpha=1, cutaway
       for (M = [0, 1]) mirror([0,M,0])
       translate([-CHAMFER_RADIUS,ReceiverOR()-0.001,Receiver_MlokSideZ()+(mlokSupportHeight/2)-ManifoldGap()])
       rotate([90,0,0]) rotate([0,-90,0])
-      Fillet(h=UnitsMetric((32*2)+8)+1-(1/8), r=1/8);
+      Fillet(h=Millimeters((32*2)+8)+1-(1/8), r=1/8);
 
 
       children();

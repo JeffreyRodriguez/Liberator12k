@@ -20,7 +20,7 @@ module ReceiverLugFrontWrench(width=1) {
     translate([ReceiverLugFrontMinX()-WALL,width/2,-ManifoldGap()])
     rotate([90,0,0])
     translate([0,0,-NutHexHeight(BOLT)-ManifoldGap()])
-    NutAndBolt(bolt=BOLT, boltLength=UnitsMetric(30));
+    NutAndBolt(bolt=BOLT, boltLength=Millimeters(30));
   }
 }
 

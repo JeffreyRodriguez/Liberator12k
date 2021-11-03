@@ -85,9 +85,9 @@ module SpringWinderCarriage(height=1, $fn=20) {
       }
 
       translate([wall,wall,0])
-      ChamferedSquareHole(sides=[_tube+UnitsImperial(0.01),_tube+UnitsImperial(0.01)],
+      ChamferedSquareHole(sides=[_tube+Inches(0.01),_tube+Inches(0.01)],
                           chamferRadius=chamferRadius,
-                          cornerRadius=UnitsImperial(0.05),
+                          cornerRadius=Inches(0.05),
                           length=height, center=false);
 
       // Driverod hole
@@ -124,7 +124,7 @@ module MandrelSupport($fn=20) {
       translate([wall,wall,0])
       ChamferedSquareHole(sides=[_tube,_tube],
                           chamferRadius=chamferRadius,
-                          cornerRadius=UnitsImperial(0.05),
+                          cornerRadius=Inches(0.05),
                           length=height, center=false);
 
       // Mandrel hole
@@ -146,7 +146,7 @@ module MandrelSupport($fn=20) {
       rotate([90,0,0])
       linear_extrude(height=wall*3, center=true)
       rotate(90)
-      Teardrop(r=UnitsMetric(4/2));
+      Teardrop(r=Millimeters(4/2));
     }
   }
 }
@@ -180,7 +180,7 @@ module MandrelSupportGearbox($fn=20) {
       translate([wall,wall,0])
       ChamferedSquareHole(sides=[_tube,_tube],
                           chamferRadius=chamferRadius,
-                          cornerRadius=UnitsImperial(0.05),
+                          cornerRadius=Inches(0.05),
                           length=height, center=false);
 
       MandrelPosition()
@@ -207,7 +207,7 @@ module MandrelSupportGearbox($fn=20) {
       rotate([90,0,0])
       linear_extrude(height=wall*3, center=true)
       rotate(90)
-      Teardrop(r=UnitsMetric(4/2));
+      Teardrop(r=Millimeters(4/2));
     }
   }
 }
@@ -224,13 +224,13 @@ translate([1+($t*1/18/gearRatio),0,0])
 rotate([0,-90,0])
 SpringWinderCarriage();
 
-translate([-UnitsMetric(3)-height, 0,0])
+translate([-Millimeters(3)-height, 0,0])
 rotate([0,-90,0])
 MandrelPosition()
 rotate($t*360/n2)
 gear(units_per_tooth,n2,thickness,RodDiameter(DEFAULT_MANDREL));
 
-translate([-UnitsMetric(3)-height, 0,0])
+translate([-Millimeters(3)-height, 0,0])
 rotate([0,-90,0])
 DrivescrewPosition()
 rotate(-$t*360/n1)

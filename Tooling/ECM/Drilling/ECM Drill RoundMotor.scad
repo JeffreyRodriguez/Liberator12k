@@ -59,7 +59,7 @@ module MotorMount() {
     // Bolt holes
     translate([d1+d2,0,0])
     for (r = [0,180]) rotate(r)
-    translate([UnitsMetric(10),0,motorMountHeight-motorMountBoltHeight-ManifoldGap(2)])
+    translate([Millimeters(10),0,motorMountHeight-motorMountBoltHeight-ManifoldGap(2)])
     Bolt(bolt=Spec_BoltM4(), clearance=true, length=thickness);
     
     // Shaft Hole
@@ -88,7 +88,7 @@ module GearboxMotor() {
     
     // Bolts
     for (r = [0,180]) rotate(r)
-    translate([UnitsMetric(10),0,GEARBOX_MOTOR_LENGTH])
+    translate([Millimeters(10),0,GEARBOX_MOTOR_LENGTH])
     *%Bolt(bolt=Spec_BoltM4(), clearance=false, length=thickness);
     
     // Drive gear

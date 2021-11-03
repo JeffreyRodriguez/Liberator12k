@@ -6,9 +6,9 @@ use <../../../Meta/Resolution.scad>;
 use <../../../Vitamins/Nuts And Bolts.scad>;
 
 function AR15_MatingPinSpec() = Spec_RodOneQuarterInch();
-function AR15_PinZ() = -UnitsImperial(0.252);
+function AR15_PinZ() = -Inches(0.252);
 
-function AR15_MatingPinDistance() = UnitsImperial(6.375);
+function AR15_MatingPinDistance() = Inches(6.375);
 function AR15_RearPinX() = 0;
 function AR15_FrontPinX() = AR15_RearPinX() + AR15_MatingPinDistance();
 
@@ -30,10 +30,10 @@ module AR15_MatingPins(length=2, cutter=true) {
 
 }
 
-function AR15_MatingLugWidth() = UnitsImperial(0.49);
+function AR15_MatingLugWidth() = Inches(0.49);
 
 module AR15_MatingLugRear(width = AR15_MatingLugWidth(), cutter=false,
-                          clearance=UnitsImperial(0.004),
+                          clearance=Inches(0.004),
                           extraTop=0) {
   clear = Clearance(clearance, cutter);
   clear2 = clear*2;
@@ -41,14 +41,14 @@ module AR15_MatingLugRear(width = AR15_MatingLugWidth(), cutter=false,
   lengthClear = Clearance(0.01, cutter==false);
   lengthClear2 = lengthClear*2;
 
-  translate([AR15_RearPinX() -UnitsImperial(0.25)+lengthClear-clear,
+  translate([AR15_RearPinX() -Inches(0.25)+lengthClear-clear,
              -(width/2) -clear,
-             AR15_PinZ()-UnitsImperial(0.25)])
-  cube([UnitsImperial(0.5)-lengthClear2+clear2, width+clear2, UnitsImperial(0.5)+extraTop]);
+             AR15_PinZ()-Inches(0.25)])
+  cube([Inches(0.5)-lengthClear2+clear2, width+clear2, Inches(0.5)+extraTop]);
 }
 
 module AR15_MatingLugFront(width = AR15_MatingLugWidth(), cutter=false,
-                           clearance=UnitsImperial(0.00375),
+                           clearance=Inches(0.00375),
                          extraTop=0) {
   clear = Clearance(clearance, cutter);
   clear2 = clear*2;
@@ -56,14 +56,14 @@ module AR15_MatingLugFront(width = AR15_MatingLugWidth(), cutter=false,
   lengthClear = Clearance(0.01, cutter==false);
   lengthClear2 = lengthClear*2;
 
-  translate([AR15_RearPinX() -UnitsImperial(0.25)+lengthClear-clear+AR15_MatingPinDistance(),
+  translate([AR15_RearPinX() -Inches(0.25)+lengthClear-clear+AR15_MatingPinDistance(),
              -(width/2) -clear,
-             AR15_PinZ()-UnitsImperial(0.25)])
-  cube([UnitsImperial(0.5)-lengthClear2+clear2, width+clear2, UnitsImperial(0.5)+extraTop]);
+             AR15_PinZ()-Inches(0.25)])
+  cube([Inches(0.5)-lengthClear2+clear2, width+clear2, Inches(0.5)+extraTop]);
 }
 
 module AR15_MatingLugs(width = AR15_MatingLugWidth(), cutter=false,
-                       clearance=UnitsImperial(0.00375),
+                       clearance=Inches(0.00375),
                        extraTop=0) {
   AR15_MatingLugFront(cutter=cutter, clearance=clearance, extraTop=extraTop);
   AR15_MatingLugRear(cutter=cutter, clearance=clearance, extraTop=extraTop);

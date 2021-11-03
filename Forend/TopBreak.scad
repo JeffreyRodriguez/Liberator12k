@@ -219,13 +219,13 @@ function TopBreak_ForegripLength() = 4.625;
 function ExtractorSpringSpec() = [
         ["SpringSpec", "Extractor Spring"],
 
-        ["SpringOuterDiameter", UnitsImperial(0.625)],
-        ["SpringPitch", UnitsImperial(0.35)],
+        ["SpringOuterDiameter", Inches(0.625)],
+        ["SpringPitch", Inches(0.35)],
 
-        ["SpringFreeLength", UnitsImperial(3.5)],
-        ["SpringSolidHeight", UnitsImperial(1.75)],
+        ["SpringFreeLength", Inches(3.5)],
+        ["SpringSolidHeight", Inches(1.75)],
 
-        ["SpringWireDiameter", UnitsImperial(0.055)]
+        ["SpringWireDiameter", Inches(0.055)]
     ];
 
 // Calculated: Positions

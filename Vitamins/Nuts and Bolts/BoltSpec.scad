@@ -3,25 +3,25 @@ use <../../Meta/slookup.scad>;
 
 function Spec_BoltTemplate() = [ // these are all a total guess
   ["BoltSpec",        "Template"],
-  ["BoltDiameter",    UnitsMetric(1)],
+  ["BoltDiameter",    Millimeters(1)],
 
-  ["BoltHexDiameter", UnitsMetric(2)], // WRONG
-  ["BoltHexHeight",   UnitsMetric(2)],  // WRONG
+  ["BoltHexDiameter", Millimeters(2)], // WRONG
+  ["BoltHexHeight",   Millimeters(2)],  // WRONG
 
-  ["BoltSocketCapDiameter", UnitsMetric(2)], // WRONG
-  ["BoltSocketCapHeight",   UnitsMetric(2)],  // WRONG
+  ["BoltSocketCapDiameter", Millimeters(2)], // WRONG
+  ["BoltSocketCapHeight",   Millimeters(2)],  // WRONG
 
-  ["NutHexDiameter",   UnitsImperial(2)], // WRONG
-  ["NutHexHeight",      UnitsImperial(2)], // WRONG
-  ["NutHexNylonHeight", UnitsMetric(2)], // WRONG
+  ["NutHexDiameter",   Inches(2)], // WRONG
+  ["NutHexHeight",      Inches(2)], // WRONG
+  ["NutHexNylonHeight", Millimeters(2)], // WRONG
 
-  ["NutHeatsetMajorDiameter", UnitsMetric(3)],
-  ["NutHeatsetMinorDiameter", UnitsMetric(2)],
-  ["NutHeatsetHeight",        UnitsMetric(3)],
+  ["NutHeatsetMajorDiameter", Millimeters(3)],
+  ["NutHeatsetMinorDiameter", Millimeters(2)],
+  ["NutHeatsetHeight",        Millimeters(3)],
 
-  ["NutHeatsetLongMajorDiameter", UnitsMetric(3)],
-  ["NutHeatsetLongMinorDiameter", UnitsMetric(2)],
-  ["NutHeatsetLongHeight",        UnitsMetric(4)]
+  ["NutHeatsetLongMajorDiameter", Millimeters(3)],
+  ["NutHeatsetLongMinorDiameter", Millimeters(2)],
+  ["NutHeatsetLongHeight",        Millimeters(4)]
 ];
 
 /**

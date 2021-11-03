@@ -3,12 +3,12 @@ use <../../../Meta/Units.scad>;
 use <../../../Meta/Manifold.scad>;
 use <../../../Shapes/Components/AR15/Trigger Pocket.scad>;
 
-layerHeight = UnitsMetric(0.3063);
+layerHeight = Millimeters(0.3063);
 
-function TriggerPocketRamPlateHeight() = UnitsImperial(0.035)
+function TriggerPocketRamPlateHeight() = Inches(0.035)
                                        + (layerHeight*2);
-function TriggerPocketModifier() = UnitsMetric(2);
-function TriggerPocketRamBumperHeight() = UnitsMetric(2);
+function TriggerPocketModifier() = Millimeters(2);
+function TriggerPocketRamBumperHeight() = Millimeters(2);
 
 module TriggerPocketRamPlate(height=TriggerPocketRamPlateHeight()) {
   translate([0, 0, -AR15_TriggerPocketDepth()-ManifoldGap()])
@@ -17,7 +17,7 @@ module TriggerPocketRamPlate(height=TriggerPocketRamPlateHeight()) {
 }
 
 module TriggerPocketRam(height=AR15_TriggerPocketDepth(),
-                        clearance=UnitsMetric(0.4), cutter=false, alpha=1) {
+                        clearance=Millimeters(0.4), cutter=false, alpha=1) {
 
 
   clear = Clearance(clearance, cutter);
@@ -26,7 +26,7 @@ module TriggerPocketRam(height=AR15_TriggerPocketDepth(),
   // Don't shrink the cutter
   shrinkage = (cutter ? 0 : -clearance);
                           
-  centerOffset = AR15_TriggerPocketX()+AR15_TriggerSelectorLength()+UnitsMetric(18);
+  centerOffset = AR15_TriggerPocketX()+AR15_TriggerSelectorLength()+Millimeters(18);
 
   color("OrangeRed", alpha)
   render()
@@ -40,12 +40,12 @@ module TriggerPocketRam(height=AR15_TriggerPocketDepth(),
       AR15_TriggerPocket2d(clearance=shrinkage, cutter=true);
 
       // Rear stop bumper
-      *for (X = [-shrinkage-UnitsMetric(2), AR15_TriggerPocketLength()-UnitsMetric(10)+shrinkage-clear2])
+      *for (X = [-shrinkage-Millimeters(2), AR15_TriggerPocketLength()-Millimeters(10)+shrinkage-clear2])
       translate([X+AR15_TriggerPocketX()+AR15_TriggerSelectorLength(),
-                 -(AR15_TriggerPocketSelectorWidth()/2)-UnitsMetric(2)-clear,
+                 -(AR15_TriggerPocketSelectorWidth()/2)-Millimeters(2)-clear,
                  0])
-      cube([UnitsMetric(12)+clear2,
-            AR15_TriggerPocketSelectorWidth()+UnitsMetric(4)+clear2,
+      cube([Millimeters(12)+clear2,
+            AR15_TriggerPocketSelectorWidth()+Millimeters(4)+clear2,
             TriggerPocketRamBumperHeight()]);
     }
 
@@ -55,13 +55,13 @@ module TriggerPocketRam(height=AR15_TriggerPocketDepth(),
       
       // Water Hole
       translate([centerOffset,0,-height-ManifoldGap()])
-      cylinder(r=UnitsMetric(10.85)/2,
+      cylinder(r=Millimeters(10.85)/2,
                h=height+TriggerPocketRamBumperHeight()+ManifoldGap(2),
                $fn=12);
 
       // Central water channel, also where wire is soldered on
-      translate([AR15_TriggerPocketX()+AR15_TriggerSelectorLength()-ManifoldGap(),-UnitsMetric(3),-height-ManifoldGap()])
-      cube([AR15_TriggerPocketLength(), UnitsMetric(6), UnitsMetric(5)]);
+      translate([AR15_TriggerPocketX()+AR15_TriggerSelectorLength()-ManifoldGap(),-Millimeters(3),-height-ManifoldGap()])
+      cube([AR15_TriggerPocketLength(), Millimeters(6), Millimeters(5)]);
       
       // Cutouts to improve waterflow in corners
       for (XW = [[0,AR15_TriggerPocketHammerWidth()-(TriggerPocketModifier()*2)],

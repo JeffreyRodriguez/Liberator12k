@@ -11,7 +11,7 @@ function AR15_MagazineBaseLength() = 2.4;
 function AR15_MagCatchZ() = -0.813;
 function AR15_MagCatchX() = -0.058;
 
-function AR15_MagwellDepth() = UnitsImperial(2.375); //UnitsImperial(2);
+function AR15_MagwellDepth() = Inches(2.375); //Inches(2);
 
 module AR15_MagwellTemplate(baseWidth=AR15_MagazineBaseWidth(), baseLength=AR15_MagazineBaseLength(),
                        sideTrackOffset=0.825, sideTrackDepth=0.08, centerY=true,
@@ -42,7 +42,7 @@ module AR15_MagwellTemplate(baseWidth=AR15_MagazineBaseWidth(), baseLength=AR15_
 module AR15_MagazineCatch(magHeight=1,
                      catchOffsetY=0.4,
                      springOffsetY=-0.125,
-                     catchLength=0.265, catchHeight=UnitsImperial(0.131),
+                     catchLength=0.265, catchHeight=Inches(0.131),
                      extraY = 0.25, extraRadius=0.02, $fn=8) {
 
   translate([AR15_MagCatchX(),
@@ -60,14 +60,14 @@ module AR15_MagazineCatch(magHeight=1,
     translate([0,catchOffsetY,0])
     rotate([90,0,0])
     cylinder(r=(0.186/2)+extraRadius,
-             h=UnitsImperial(1.26),
+             h=Inches(1.26),
            $fn=20);
 
     // Spring
     translate([0,springOffsetY,0])
     rotate([90,0,0])
     cylinder(r=(0.3125/2)+extraRadius,
-             h=UnitsImperial(1.26),
+             h=Inches(1.26),
            $fn=20);
 
     // User Interface
@@ -81,7 +81,7 @@ module AR15_MagazineCatch(magHeight=1,
 
 module AR15_MagwellInsert(height=AR15_MagwellDepth(),
                           extraTop=0,
-                     taperHeight=UnitsImperial(0.5),
+                     taperHeight=Inches(0.5),
                           catch=true) {
   union() {
     translate([AR15_MagazineRearTabLength(),0,-height])
@@ -111,11 +111,11 @@ module AR15_MagwellInsert(height=AR15_MagwellDepth(),
   }
 }
 
-module AR15_Magwell(width=UnitsImperial(1.125),
+module AR15_Magwell(width=Inches(1.125),
                   height=AR15_MagwellDepth(),
-                    wall=UnitsImperial(0.125),
-               wallFront=UnitsImperial(0),
-                wallBack=UnitsImperial(0),
+                    wall=Inches(0.125),
+               wallFront=Inches(0),
+                wallBack=Inches(0),
                 tabWidth=0.5, tabHeight = 1, cut=true) {
                   
   length = AR15_MagazineBaseLength()

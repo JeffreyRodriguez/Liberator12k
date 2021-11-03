@@ -36,7 +36,7 @@ module MagwellTemplate(baseWidth=MagazineBaseWidth(), baseLength=MagazineBaseLen
 }
 
 module MagazineCatch(magHeight=1, catchOffsetZ=-1.15, catchOffsetX=1.04,
-                     catchLength=0.265, catchHeight=UnitsImperial(0.131),
+                     catchLength=0.265, catchHeight=Inches(0.131),
                      extraY = 1, extraRadius=0, $fn=8) {
 
   translate([MagazineOffsetX(magHeight)+catchOffsetX,
@@ -50,7 +50,7 @@ module MagazineCatch(magHeight=1, catchOffsetZ=-1.15, catchOffsetX=1.04,
   }
 }
 
-module MagwellInsert(height=UnitsImperial(1.725), taperHeight=UnitsImperial(0.75)) {
+module MagwellInsert(height=Inches(1.725), taperHeight=Inches(0.75)) {
   union() {
     translate([-MagazineOffsetX(height),0,-height])
     multmatrix(m=[[1,0,sin(MagazineAngle()),0], // Here's where the magazine is angled
@@ -77,8 +77,8 @@ module MagwellInsert(height=UnitsImperial(1.725), taperHeight=UnitsImperial(0.75
   }
 }
 
-module Magwell(width=UnitsImperial(1), height=UnitsImperial(1.75),
-               wall=UnitsImperial(0.25), wallFront=UnitsImperial(0.5), magOffsetX=0.90,
+module Magwell(width=Inches(1), height=Inches(1.75),
+               wall=Inches(0.25), wallFront=Inches(0.5), magOffsetX=0.90,
                tabWidth=0.5, tabHeight = 1) {
 
   magwellLength = MagazineBaseLength()+MagazineOffsetX(height)+magOffsetX+wallFront;

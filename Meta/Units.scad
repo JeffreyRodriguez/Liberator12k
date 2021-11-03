@@ -1,13 +1,13 @@
-UnitsMetric = 1;
-UnitsImperial = 2;
+Millimeters = 1;
+Inches = 2;
 
-DEFAULT_UNITS = UnitsImperial;
+DEFAULT_UNITS = Inches;
 
 function Units() = DEFAULT_UNITS;
-function UnitsFs() = Units() == UnitsMetric ? 2 : 2/25.4;
+function UnitsFs() = Units() == Millimeters ? 2 : 2/25.4;
 
-function UnitsImperialToMetric(n) = n * 25.4;
-function UnitsMetricToImperial(n) = n / 25.4;
+function InchesToMetric(n) = n * 25.4;
+function MillimetersToImperial(n) = n / 25.4;
 
-function UnitsMetric(n)   = Units() == UnitsMetric   ? n : UnitsMetricToImperial(n);
-function UnitsImperial(n) = Units() == UnitsImperial ? n : UnitsImperialToMetric(n);
+function Millimeters(n)   = Units() == Millimeters   ? n : MillimetersToImperial(n);
+function Inches(n) = Units() == Inches ? n : InchesToMetric(n);
