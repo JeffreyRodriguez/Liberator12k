@@ -127,13 +127,13 @@ function RecoilPlateBoltOffsetY() = 0.5;
 function HammerSpringSpec() = [
     ["SpringSpec", "Hammer Spring"],
 
-    ["SpringOuterDiameter", UnitsImperial(0.625)],
-    ["SpringPitch", UnitsImperial(0.35)],
+    ["SpringOuterDiameter", UnitsImperial(0.6)],
+    ["SpringPitch", UnitsImperial(0.2139)],
 
-    ["SpringFreeLength", UnitsImperial(3.5)],
-    ["SpringSolidHeight", UnitsImperial(0.93)],
+    ["SpringFreeLength", UnitsImperial(3.059)],
+    ["SpringSolidHeight", UnitsImperial(0.903)],
 
-    ["SpringWireDiameter", UnitsImperial(0.055)]
+    ["SpringWireDiameter", UnitsImperial(0.059)]
   ];
 
 function FiringPinSpringSpec() = [
@@ -231,7 +231,7 @@ FCG_HammerTravelX = abs(FCG_HammerCockedX-FCG_HammerFiredX);
 FCG_HammerOvertravelX = 0.25;
 
 FCG_HammerSpringHammerInsetLength = 11/16;
-FCG_HammerSpringHammerTailInsetLength = 1/8;
+FCG_HammerSpringHammerTailInsetLength = 0.25;
 
 FCG_DisconnectorOffsetY = -0.125;
 FCG_DisconnectorOffset = 0.825;
@@ -392,6 +392,7 @@ module SearPin(cutter=false, clearance=SEAR_PIN_CLEARANCE) {
 
 
 module SearReturnSpring() {
+  color("Silver")
   Spring(spring=SearReturnSpringSpec(), compressed = true, custom_compression_ratio=0.69);
 }
 module FiringPin(radius=FiringPinRadius(), cutter=false, clearance=FIRING_PIN_CLEARANCE, template=false, cutaway=false) {
@@ -420,7 +421,6 @@ module FiringPin(radius=FiringPinRadius(), cutter=false, clearance=FIRING_PIN_CL
     cylinder(r=1/16/2);
   }
 }
-
 module FiringPinSpring(cutter=false, clearance=0.005, cutaway=false) {
   color("Silver")
   Cutaway(cutaway)
@@ -437,7 +437,6 @@ module FiringPinSpring(cutter=false, clearance=0.005, cutaway=false) {
     h=(SpringOuterDiameter(FiringPinSpringSpec())/2)+clearance
   );
 }
-
 module RecoilPlateBolts(bolt=RecoilPlateBolt(), boltLength=1.5, template=false, cutter=false, clearance=RECOIL_PLATE_BOLT_CLEARANCE) {
   RecoilPlateCenterBolts(bolt=bolt, boltLength=boltLength,
                          template=template, cutter=cutter, clearance=clearance);
@@ -460,7 +459,6 @@ module RecoilPlateCenterBolts(bolt=RecoilPlateBolt(), boltLength=1.5, template=f
     children();
   }
 }
-
 module RecoilPlateSideBolts(bolt=RecoilPlateBolt(), boltLength=1.5, template=false, cutter=false, clearance=RECOIL_PLATE_BOLT_CLEARANCE) {
   bolt     = template ? BoltSpec("Template") : bolt;
   boltHead = template ? "none"               : "flat";
@@ -539,7 +537,6 @@ module RecoilPlate(length=RecoilPlateLength(), spindleZ=-1, contoured=true, cutt
     }
   }
 }
-
 module FCG_ChargingHandleBolt(bolt=FCG_ChargingHandleBolt(), boltLength=0.25, cutter=false, clearance=CHARGING_HANDLE_BOLT_CLEARANCE) {
   translate([-0.75,-0.25,ReceiverTopSlotHeight()])
   mirror([0,0,1])
@@ -548,8 +545,6 @@ module FCG_ChargingHandleBolt(bolt=FCG_ChargingHandleBolt(), boltLength=0.25, cu
         clearance=cutter?clearance:0,
         doRender=!cutter);
 }
-
-
 module FCG_ChargingHandleSpring(cutter=false, clearance=0.002) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
@@ -671,7 +666,6 @@ module FCG_ChargingHandle(clearance=0.005, alpha=1) {
     FCG_ChargingHandleBolt(cutter=true);
   }
 }
-
 module FCG_ChargingHandleMiddle(clearance=0.005) {
   clear = clearance;
   clear2 = clear*2;
@@ -715,7 +709,6 @@ module FCG_ChargingHandleMiddle(clearance=0.005) {
 
   }
 }
-
 module FCG_Hammer(cutter=false, clearance=UnitsImperial(0.01), cutaway=false, alpha=1) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
@@ -779,8 +772,6 @@ module FCG_Hammer(cutter=false, clearance=UnitsImperial(0.01), cutaway=false, al
     FCG_HammerBolt(cutter=true);
   }
 }
-
-
 module FCG_HammerTail(clearance=UnitsImperial(0.01), cutaway=false, alpha=1) {
   color("Chocolate", alpha)
   render() Cutaway(cutaway)
@@ -959,7 +950,6 @@ module FCG_Housing(clearance=0.01, cutaway=false, alpha=1) {
     RecoilPlateBolts(cutter=true);
   }
 }
-
 module SearSupportTab(cutter=false, clearance=0.015, searClearance=SEAR_CLEARANCE, alpha=1) {
   clearance2 = clearance*2;
   width = 0.25-clearance*2;
@@ -1019,7 +1009,6 @@ module SearSupportTab(cutter=false, clearance=0.015, searClearance=SEAR_CLEARANC
 
   }
 }
-
 module Trigger(width=0.5, clearance=0.015, alpha=1) {
   sideplateWidth = (TriggerWidth()/2)
                  - (SearWidth(SEAR_CLEARANCE)/2);
@@ -1144,7 +1133,6 @@ module FCG_RecoilPlate_TapGuide(xyz = [0.25,0.25,1.5], holeRadius=0.1770/2, spin
     cylinder(r=holeRadius, h=height);
   }
 }
-
 module FCG_RecoilPlate_Fixture(xyz = [1,0.5,0.5], holeRadius=0.1875, spindleZ=-1, contoured=FCG_RECOIL_PLATE_CONTOURED) {
   width = RecoilPlateWidth() + (xyz.x*2);
   length = RecoilPlateHeight() + (xyz.y*2);
@@ -1177,7 +1165,6 @@ module FCG_RecoilPlate_Fixture(xyz = [1,0.5,0.5], holeRadius=0.1875, spindleZ=-1
 
   }
 }
-
 module FCG_RecoilPlate_GangFixture(xyz = [1,0.375,0.375], gang=[5,2], holeRadius=0.25, spindleZ=-1, contoured=FCG_RECOIL_PLATE_CONTOURED) {
 
   offsetGap = 0.125;
@@ -1245,7 +1232,6 @@ module TriggerGroup(hardware=true, prints=true, animationFactor=TriggerAnimation
   translate([-(TriggerTravel()*animationFactor),0,0])
   Trigger(alpha=alpha);
 }
-
 module SimpleFireControlAssembly(hardware=true, prints=true, actionRod=_SHOW_ACTION_ROD, recoilPlate=_SHOW_RECOIL_PLATE, cutaway=false, alpha=1) {
   disconnectStart = 0.8;
   disconnectLetdown = 0.2;
@@ -1269,7 +1255,7 @@ module SimpleFireControlAssembly(hardware=true, prints=true, actionRod=_SHOW_ACT
   translate([SubAnimate(ANIMATION_STEP_CHARGER_RESET)*(FCG_HammerTravelX+FCG_HammerOvertravelX),0,0]) {
     if (prints)
     FCG_ChargingHandle(alpha=alpha);
-    
+
     if (hardware)
     FCG_ChargingHandleBolt();
   }
@@ -1278,10 +1264,10 @@ module SimpleFireControlAssembly(hardware=true, prints=true, actionRod=_SHOW_ACT
   translate([-chargerTravel*chargeAF,0,0]) {
     if (hardware)
     ActionRod();
-    
+
     if (hardware)
     FCG_DisconnectorTripBolt();
-    
+
     children();
   }
 
@@ -1303,10 +1289,10 @@ module SimpleFireControlAssembly(hardware=true, prints=true, actionRod=_SHOW_ACT
     translate([SubAnimate(ANIMATION_STEP_CHARGER_RESET, start=0.97, end=1)*disconnectDistance,0,0]) {
       if (hardware)
       FCG_HammerBolt();
-      
+
       if (hardware)
       FCG_HammerSpring();
-      
+
       if (prints)
       FCG_Hammer(cutaway=_CUTAWAY_FCG_Hammer, alpha=min(alpha,_ALPHA_FCG_Hammer));
     }
@@ -1315,10 +1301,10 @@ module SimpleFireControlAssembly(hardware=true, prints=true, actionRod=_SHOW_ACT
   if (_SHOW_FIRING_PIN) {
     translate([(3/32)*SubAnimate(ANIMATION_STEP_FIRE, start=0.95),0,0])
     translate([-(3/32)*SubAnimate(ANIMATION_STEP_CHARGE, start=0.07, end=0.2),0,0]) {
-      
+
       if (hardware)
       FiringPin(cutaway=_CUTAWAY_FIRING_PIN);
-      
+
       if (prints)
       FCG_FiringPinCollar(cutaway=_CUTAWAY_FIRING_PIN, alpha=alpha);
     }
