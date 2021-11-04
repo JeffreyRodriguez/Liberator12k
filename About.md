@@ -1,35 +1,26 @@
 # 5. Why
-
 It is the imperative of every living thing to defend itself.
+That means it's up to you to fight back when something tries to eat you.
 
-That means: it's up to you to fight back when something tries to eat you.
 Get help if you can, but sometimes no help is coming.
-
-I hope this project is a light for you in dark times.
+Let this be a light for dark times.
 
 ## No Step
-
+The 2-inch-long Golden Poison Dart Frog's skin contains a toxin so deadly
+it can kill over a dozen adults. But they'd all have to touch it.
 Rosebushes and rattlesnakes get along like hemlock and honeybees.
-The Golden Poison Dart Frog's skin is so deadly it can kill over a dozen adults.
-But they'd all have to touch it.
+Harmless and helpless are worlds apart.
 
-Go in peace and prosper. Lets trade stories, food, goods, and good times.
-
-Don't fuck with me, and I won't fuck with you.
-
-Life is an evolutionary arms race, and it's complicated.
-Do you think it's a good idea to be armed?
+Let us trade stories, good times, food, jeans, and genes.
+Go in peace and prosper. Failing that - leave me alone or else.
 
 ## Bigger Fish to Fry
-States run like mindless machines. Code written by lawyers, run on flawed human
-beings each doing their own small task. Its ultimate tool: violence - to death.
-
 The great [democides](https://en.wikipedia.org/Democide) and
 [wars](https://en.wikipedia.org/wiki/List_of_wars_by_death_toll)
-have shown the need for individuals to be armed.
+in living memory have demonstrated the need for individually held arms.
 
-If it comes to that, you might die complying anyway. So be like a honeybee, and
-fight like hell anyway.
+If history repeats itself, complying might be the death of you.
+So like the honeybee - fight like hell anyway.
 
 ### The "Banality of Evil"
 The second greatest danger to human prosperity and life is the order giver.
@@ -42,21 +33,40 @@ Nothing more than a cog in a machine.
  1. Enforce the current government's current laws, even if they are atrocious.
  2. Fight the current government's enemies, even if manufactured or imagined.
 
+"Befehl ist Befehl" is German for "an order is an order."
+Nazis used this explanation in the Nuremberg trials to excuse their murders.
+"I was just following orders" they said.
+
+Takeaway: You can be murdered by a normal everyday person seeking a promotion.
+That person might be an upstanding volunteer wearing your country's flag and
+enforcing the law; following lawful orders.
+
+#### Murder Machine
+I'm a software engineer, it's a lens through which I see the world.
+I see nation states which run like mindless machines.
+Code written by lawyers running on flawed human beings doing their part.
+Its ultimate tool: violence - to death. And nobody knows this is a machine.
+
 ### What About Mass Shooters?
 Most definitions of "mass shooting" use something along the lines of 3+ people.
 
-States have body counts in the tens of millions, with precedents in living memory.
-When a state is murdering it's own people, that's a Tuesday morning... so
-routine and monotonous that they make up sick games to spice things up.
+Nation states have body counts in the tens of millions,
+with precedents in living memory.
+When a state is murdering it's own people, that's a Tuesday morning in BFE.
+An event so routine and monotonous that they make up games to spice things up.
+
+Don't miss the forest for the trees.
 
 ### What About Terrorists?
 The US Government gave them billions of dollars worth of equipment way better
 than this when it left Afghanistan.
 
-#### What About Tanks and Nukes?
+## What About Tanks and Nukes?
 Read up a bit on [Guerrilla Warfare](https://en.wikipedia.org/wiki/Guerrilla_warfare) tactics.
 
-### Some other thoughts of others
+And 3D printed nukes.
+
+## Some other thoughts of others
 
 > A man's natural rights are his own, against the whole world; and any infringement of them is equally a crime; whether committed by one man, or by millions; whether committed by one man, calling himself a robber, or by millions calling themselves a government.
 
