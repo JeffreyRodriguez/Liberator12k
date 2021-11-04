@@ -182,7 +182,7 @@ module OffsetZigZagRevolver(diameter=4, height=2.75,
 }
 
 // L12k 6-shot 4130 12ga
-//scale(25.4)
+//ScaleToMillimeters()
 OffsetZigZagRevolver(
       diameter=CYLINDER_DIAMETER,
       height=CYLINDER_HEIGHT,

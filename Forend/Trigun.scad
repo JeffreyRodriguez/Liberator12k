@@ -371,7 +371,7 @@ module TrigunForendAssembly(receiverLength=12, pipeAlpha=1, receiverFrontAlpha=1
 }
 
 
-scale(25.4)
+ScaleToMillimeters()
 if ($preview) {
 
   translate([-ReceiverFrontLength(),0,0]) {

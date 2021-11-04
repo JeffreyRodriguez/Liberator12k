@@ -67,7 +67,7 @@ module HoseBarbExtension(wall=0.125, heightExtra=0.5,
 }
 
 
-scale(25.4)
+ScaleToMillimeters()
 render() {
 
   %HoseBarbExtension(cutter=true);

@@ -73,5 +73,5 @@ module ECM_Reamer(majorDiameter=TARGET_ID, length=1.5,
 }
 
 // Plated insert
-scale(25.4)
+ScaleToMillimeters()
 ECM_Reamer();

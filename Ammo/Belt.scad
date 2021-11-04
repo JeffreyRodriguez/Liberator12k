@@ -372,7 +372,7 @@ module Belt(rounds=3, offset=0, expand=0) {
   }
 }
 
-scale(25.4)
+ScaleToMillimeters()
 if ($preview) {
   Belt();
 } else {

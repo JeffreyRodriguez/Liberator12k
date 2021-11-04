@@ -71,6 +71,6 @@ module Bipod(barrelRadius=BARREL_OD/2, bottomDiameter=1,
 
 Bipod();
 
-*!scale(25.4)
+*!ScaleToMillimeters()
 rotate([0,-90,0])
 Bipod();

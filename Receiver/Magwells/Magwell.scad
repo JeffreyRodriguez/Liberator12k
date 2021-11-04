@@ -148,7 +148,7 @@ Magwell();
 
 %Lower();
 
-*!#scale(25.4) {
+*!#ScaleToMillimeters() {
   translate([0,0.1,0])
   rotate([90,0,0])
   PlateMagwell(left=false, right=true);

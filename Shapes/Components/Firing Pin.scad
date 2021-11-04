@@ -158,5 +158,5 @@ translate([0,-2,0])
 FiringPinAssembly(template=true);
 
 // Plated
-*!scale(25.4)
+*!ScaleToMillimeters()
 FiringPinHousing(cutter=false, cutaway=false);

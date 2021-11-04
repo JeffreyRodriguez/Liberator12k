@@ -139,7 +139,7 @@ module PipeSlotDrillingJig(pipeSpec=Spec_TubingZeroPointSevenFive(),
 }
 
 
-scale(25.4)
+ScaleToMillimeters()
 PipeSlotDrillingJig(pipeSpec=Spec_TubingOnePointSixTwoEight(),length=3.5, width=1);
 //PipeSlotDrillingJig(pipeSpec=Spec_TubingOnePointOneTwoFive());
 //PipeSlotDrillingJig(pipeSpec=Spec_TubingZeroPointSevenFive());

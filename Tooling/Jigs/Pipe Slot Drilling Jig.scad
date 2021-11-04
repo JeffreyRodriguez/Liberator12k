@@ -75,6 +75,6 @@ module PipeSlotDrillingJig(pipeSpec=Spec_TubingOnePointOneTwoFive(),
 }
 
 
-scale(25.4)
+ScaleToMillimeters()
 PipeSlotDrillingJig(pipeSpec=Spec_PipeThreeQuarterInch());
 //PipeSlotDrillingJig(pipeSpec=Spec_PipeOneInch());

@@ -1108,7 +1108,7 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
 }
 //
 
-scale(25.4)
+ScaleToMillimeters()
 if ($preview) {
 
   TopBreak_Assembly(pivotFactor=Animate(ANIMATION_STEP_UNLOAD)

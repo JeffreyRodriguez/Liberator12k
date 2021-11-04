@@ -400,7 +400,7 @@ module ReceiverAssembly(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, tensionRod
 }
 ///
 
-scale(25.4) if ($preview) {
+ScaleToMillimeters() if ($preview) {
   if (_SHOW_RECEIVER_BACK)
   ReceiverBackSegment();
 

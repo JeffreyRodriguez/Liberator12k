@@ -274,5 +274,5 @@ module PlatedWinder() {
   gear(units_per_tooth,n1,thickness,RodDiameter(DEFAULT_DRIVESCREW));
 }
 
-*!scale(25.4)
+*!ScaleToMillimeters()
 PlatedWinder();

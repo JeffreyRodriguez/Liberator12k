@@ -91,7 +91,7 @@ module ECM_Chambering_Insert(barrelInnerDiameter = BARREL_ID,
 
 }
 
-scale(25.4) {
+ScaleToMillimeters() {
   ECM_Chambering_Insert(barrelInnerDiameter=0.44,
                         length=1.285,
                         rodWall=0.0625,
@@ -99,4 +99,4 @@ scale(25.4) {
 }
 
 // Plated insert
-*!scale(25.4) ECM_Chambering_Insert();
+*!ScaleToMillimeters() ECM_Chambering_Insert();

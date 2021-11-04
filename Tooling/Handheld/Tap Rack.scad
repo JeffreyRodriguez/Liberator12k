@@ -59,6 +59,6 @@ module RackHoles(slots, gap, squareBack=false, dCut=false, frontCut=false) {
   }
 }
 
-scale(25.4)
+ScaleToMillimeters()
 render()
 TapRack();

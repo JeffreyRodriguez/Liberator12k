@@ -582,7 +582,7 @@ module Lower(hardware=true, prints=true, bolts=_SHOW_LOWER_BOLTS,
   Lower_SidePlates(showLeft=showLeft, showRight=showRight, alpha=alpha);
 }
 
-scale(25.4)
+ScaleToMillimeters()
 if ($preview) {
 
   if (_SHOW_FCG)

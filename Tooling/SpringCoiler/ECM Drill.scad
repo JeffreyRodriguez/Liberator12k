@@ -10,7 +10,7 @@ use <ECM Drilling Cap.scad>;
 
 
 
-scale(25.4) render()
+ScaleToMillimeters() render()
 DebugHalf()
 ECM_DrillingCap();
 

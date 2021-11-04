@@ -304,10 +304,10 @@ module AR15_LiberatedLowerSides(showLeft=true, showRight=true, alpha=1) {
 
 
 
-*!scale(25.4) rotate([-90,0,0]) translate([0,-0.5,0])
+*!ScaleToMillimeters() rotate([-90,0,0]) translate([0,-0.5,0])
 AR15_LiberatedLowerSides(showLeft=true, showRight=false);
 
-*!scale(25.4) rotate([90,0,0]) translate([0,0.5,0])
+*!ScaleToMillimeters() rotate([90,0,0]) translate([0,0.5,0])
 AR15_LiberatedLowerSides(showLeft=false, showRight=true);
 
 module AR15_LiberatedLower() {
@@ -318,12 +318,12 @@ AR15_MagazineCatch();
     //translate([2,0,0])
   AR15_LowerBolts();
 
-  //!scale(25.4) rotate([0,-90,0]) translate([-AR15_TowerMinX(),0,0])
+  //!ScaleToMillimeters() rotate([0,-90,0]) translate([-AR15_TowerMinX(),0,0])
   AR15_BufferTower();
 
   AR15_LiberatedLowerSides();
 
-  //!scale(25.4) rotate([180,0,0])
+  //!ScaleToMillimeters() rotate([180,0,0])
   color("Orange")
   render()
   difference() {
@@ -342,7 +342,7 @@ AR15_MagazineCatch();
 AR15_LiberatedLower();
 
 
-//!scale(25.4) rotate([90,0,0])
+//!ScaleToMillimeters() rotate([90,0,0])
 *color("LightGreen")
 render()
 intersection() {
@@ -353,5 +353,5 @@ intersection() {
   cube([5,1,2]);
 }
 
-//!scale(25.4) rotate([0,90,0]) translate([-AR15_TowerMinX()+2.1,0,0])
+//!ScaleToMillimeters() rotate([0,90,0]) translate([-AR15_TowerMinX()+2.1,0,0])
 *AR15_BufferTowerTapJigSlide();

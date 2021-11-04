@@ -50,6 +50,6 @@ module PumpGrip(r=PumpGripRadius(),
   }
 }
 
-scale(25.4)
+ScaleToMillimeters()
 Cutaway(enabled=false)
 PumpGrip(doRender=true);

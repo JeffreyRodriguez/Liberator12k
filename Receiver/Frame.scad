@@ -262,7 +262,7 @@ module Frame_ReceiverAssembly(hardware=true, prints=true, length=FrameBoltLength
   Frame_Receiver(cutaway=cutaway, alpha=min(alpha,_ALPHA_FRAME));
 }
 
-scale(25.4)
+ScaleToMillimeters()
 if ($preview) {
 
   if (_SHOW_RECEIVER_RODS)

@@ -42,7 +42,7 @@ module BatonTop(chamberDiameter=DEFAULT_CHAMBER_DIAMETER, height=1.5, alpha=1, $
   }
 }
 
-//!scale(25.4)
+//!ScaleToMillimeters()
 Cutaway()
 PATBase(alpha=1);
 
@@ -53,5 +53,5 @@ Primer(primer=Spec_Primer27PAT());
 color("Khaki")
 translate([0,0,1.29])
 Cutaway()
-//*!scale(25.4)
+//*!ScaleToMillimeters()
 BatonTop();

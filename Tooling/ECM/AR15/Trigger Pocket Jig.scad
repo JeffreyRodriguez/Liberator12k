@@ -130,9 +130,9 @@ module AR15_TriggerPocketJig(alpha=1) {
 AR15_TriggerPocketTestJig();
 AR15_TriggerPocketJig();
 
-*!scale(25.4) rotate([0,0,0])
+*!ScaleToMillimeters() rotate([0,0,0])
 AR15_TriggerPocketTestJig();
 
-*!scale(25.4) rotate([180,0,0])
+*!ScaleToMillimeters() rotate([180,0,0])
 AR15_TriggerPocketJigBody();
 

@@ -90,7 +90,7 @@ module Sightpost(height=SightZ(), length=2, radius=SIGHTPOST_DIAMETER/2, wall=0.
   }
 }
 
-scale(25.4)
+ScaleToMillimeters()
 if ($preview) {
   Sightpost();
   SightpostBolts();

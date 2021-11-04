@@ -47,5 +47,5 @@ module RodDrillingJig(rodSpec=Spec_RodOneQuarterInch(),
 Spec_RodOneQuarterInch
 Spec_RodFiveSixteenthInch
 */
-scale(25.4)
+ScaleToMillimeters()
 RodDrillingJig(rodSpec=Spec_RodFiveSixteenthInch());

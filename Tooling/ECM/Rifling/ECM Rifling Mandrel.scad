@@ -114,12 +114,12 @@ module ECM_RiflingMandrel(outsideDiameter = BARREL_ID,
 }
 
 // 0.44 Magnum (Pistol-Length twist rate)
-*!scale(25.4)
+*!ScaleToMillimeters()
 ECM_RiflingMandrel(length=5.75-1.25+0.0625, twistRate=1/20, taper=true);
 
 
 // .22 cal prototype
-*!scale(25.4)
+*!ScaleToMillimeters()
 ECM_RiflingMandrel(length=2.795-0.65+0.0625, twistRate=1/20,
                    taper=true, grooveDepth=0.1,
                    outsideDiameter = 0.225);
@@ -130,7 +130,7 @@ ECM_RiflingMandrel(length=2.795-0.65+0.0625, twistRate=1/20,
                    outsideDiameter = 0.38);
 
 // 0.45 ACP
-scale(25.4)
+ScaleToMillimeters()
 ECM_RiflingMandrel(length=5.5,
                    twistRate=1/16,
                    grooveDepth = 0.07,

@@ -56,7 +56,7 @@ _CUTAWAY_LOWER = false;
 _CUTAWAY_FOREND = false;
 _CUTAWAY_STOCK = false;
 
-scale(25.4)
+ScaleToMillimeters()
 if ($preview) {
 
   if (_SHOW_FOREND)

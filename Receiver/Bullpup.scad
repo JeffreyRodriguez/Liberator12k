@@ -274,7 +274,7 @@ module BullpupAssembly() {
   Bullpup_Front(cutaway=_CUTAWAY_BULLPUP, alpha=_ALPHA_BULLPUP);
 }
 
-scale(25.4)
+ScaleToMillimeters()
 if ($preview) {
 
   if (_SHOW_FOREND)

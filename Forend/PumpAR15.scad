@@ -433,7 +433,7 @@ module PumpAR15ForendAssembly(cutaway=undef) {
   Handguard(cutaway=_CUTAWAY_HANDGUARD, alpha=_ALPHA_HANDGUARD);
 }
 
-scale(25.4)
+ScaleToMillimeters()
 if ($preview) {
 
   if (_SHOW_FCG)

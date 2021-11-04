@@ -243,7 +243,7 @@ module PumpShotgunAssembly(cutaway=false) {
   PumpMagazine(hollow=true, cutaway=false, alpha=0.5);
 }
 
-scale(25.4)
+ScaleToMillimeters()
 if ($preview) {
   PumpShotgunAssembly(cutaway=false);
 } else {

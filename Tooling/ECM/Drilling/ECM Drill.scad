@@ -500,7 +500,7 @@ module ColumnFoot(extension=4, alpha=1, debug=false) {
 }
 
 //mirror([0,0,1])
-//scale(25.4)
+//ScaleToMillimeters()
 //AnimateSpin()
 {
   
@@ -553,26 +553,26 @@ module ColumnFoot(extension=4, alpha=1, debug=false) {
 
 }
 
-*!scale(25.4)
+*!ScaleToMillimeters()
 DrivenGear();
 
-*!scale(25.4)
+*!ScaleToMillimeters()
 DriveGear();
 
-*!scale(25.4)
+*!ScaleToMillimeters()
 ColumnFoot();
 
-*!scale(25.4)
+*!ScaleToMillimeters()
 DrillBase();
 
-*!scale(25.4)
+*!ScaleToMillimeters()
 translate([0,0,-DRILLHEAD_Z_MIN])
 DrillHead();
 
-*!scale(25.4)
+*!ScaleToMillimeters()
 translate([0,0,-CARRIAGE_MIN_X])
 Carriage();
 
-*!scale(25.4)
+*!ScaleToMillimeters()
 translate([0,0,-CARRIAGE_MIN_X])
 ToolHolder();

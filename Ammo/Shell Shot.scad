@@ -59,7 +59,7 @@ module ShellShot(primer=Spec_Primer209(),
 }
 
 
-scale(25.4)
+ScaleToMillimeters()
 //render()
 //Cutaway()
 ShellShot();

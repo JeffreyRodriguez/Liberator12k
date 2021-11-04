@@ -11,3 +11,12 @@ function MillimetersToInches(n) = n / 25.4;
 
 function Millimeters(n)   = Units() == Millimeters   ? n : MillimetersToInches(n);
 function Inches(n) = Units() == Inches ? n : InchesToMillimeters(n);
+
+module ScaleToMillimeters() {
+  if (Units() == Inches) {
+    scale(25.4)
+    children();
+  } else {
+    children();
+  }
+}

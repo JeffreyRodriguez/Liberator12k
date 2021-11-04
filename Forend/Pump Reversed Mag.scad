@@ -191,7 +191,7 @@ module PumpForend(alpha=1, cutaway=false) {
 }
 
 
-scale(25.4)
+ScaleToMillimeters()
 if ($preview) {
   ShellLoadingSupport();
 

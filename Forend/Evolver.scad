@@ -1107,7 +1107,7 @@ module EvolverForendAssembly(hardware=true, prints=true, pipeAlpha=1, cutaway=fa
 }
 //
 
-scale(25.4)
+ScaleToMillimeters()
 if ($preview) {
   translate([-ReceiverFrontLength(),0,0]) {
     if (_SHOW_FCG)

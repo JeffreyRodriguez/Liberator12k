@@ -113,16 +113,16 @@ module ECM_Waterjacket(length=30) {
 }
 
 
-scale(25.4)
+ScaleToMillimeters()
 ECM_Waterjacket();
 
 // Water Jacket Guides
 
 // Plated Bottom Guide
-*!scale(25.4) ECM_Jacket_Guide();
+*!ScaleToMillimeters() ECM_Jacket_Guide();
 
 // Plated Top Guide Lug
-*!scale(25.4) ECM_Jacket_Guide_Lugs(angles=[0]);
+*!ScaleToMillimeters() ECM_Jacket_Guide_Lugs(angles=[0]);
 
 // Plated Bottom Guide Lug
-*!scale(25.4) ECM_Jacket_Guide_Lugs(angles=[0], lugHeight=4.75, bucketCut=true);
+*!ScaleToMillimeters() ECM_Jacket_Guide_Lugs(angles=[0], lugHeight=4.75, bucketCut=true);

@@ -786,7 +786,7 @@ module BreakActionAssembly(receiverLength=12, pipeAlpha=1,
   BreakActionForend(cutaway=cutaway);
 }
 
-scale(25.4)
+ScaleToMillimeters()
 if ($preview) {
   BreakActionAssembly(cutaway=_CUTAWAY_ASSEMBLY,
                       pivotFactor=Animate(ANIMATION_STEP_UNLOAD)

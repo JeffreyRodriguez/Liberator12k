@@ -75,7 +75,7 @@ module AR15_TrunnionAssembly() {
   LowerMount();
 }
 
-scale(25.4) {
+ScaleToMillimeters() {
   if (_RENDER == "Prints/Assembly")
   AR15_TrunnionAssembly();
 

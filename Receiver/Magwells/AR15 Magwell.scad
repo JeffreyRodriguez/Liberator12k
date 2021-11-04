@@ -155,6 +155,6 @@ module AR15_Magwell(width=Inches(1.125),
   }
 }
 
-//scale(25.4) rotate([180,0,0])
+//ScaleToMillimeters() rotate([180,0,0])
 AR15_Magwell();
 %AR15_MagwellInsert();

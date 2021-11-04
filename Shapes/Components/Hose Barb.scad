@@ -54,6 +54,6 @@ module HoseBarb(barbOuterMajorDiameter=0.6,
   }
 }
 
-scale(25.4)
+ScaleToMillimeters()
 color("White", 0.5)
 HoseBarb();

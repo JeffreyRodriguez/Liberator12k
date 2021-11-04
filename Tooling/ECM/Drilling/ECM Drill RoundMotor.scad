@@ -130,7 +130,7 @@ module DrivenGear() {
 }
 
 //mirror([0,0,1])
-*scale(25.4) {
+*ScaleToMillimeters() {
   ECM_DrillingCap();
   
   translate([0,0,.64]) {
@@ -146,14 +146,14 @@ module DrivenGear() {
   cylinder(r=(barrelOD/2),h=4, $fn=50);
 }
 
-scale(25.4)
+ScaleToMillimeters()
 translate([0,d2*2,0])
 DrivenGear();
 
-scale(25.4)
+ScaleToMillimeters()
 DriveGear();
 
-scale(25.4)
+ScaleToMillimeters()
 translate([0,0,motorMountHeight])
 rotate([180,0,0])
 MotorMount();

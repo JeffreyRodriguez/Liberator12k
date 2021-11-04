@@ -1009,7 +1009,7 @@ module AR15_Barrel(pinRadius=0.125/2, pinHeight=0.09, pinDepth=0.162, clearance=
 
 
 
-scale(25.4)
+ScaleToMillimeters()
 if ($preview) {
   translate([0,0,barrelZ])
   rotate([0,90,0])

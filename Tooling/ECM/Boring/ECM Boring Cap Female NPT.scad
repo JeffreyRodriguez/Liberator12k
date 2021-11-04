@@ -76,28 +76,28 @@ module ECM_BoringCap_FemaleNPT(
 }
 
 // Uncomment a preset, or customize
-!scale(25.4)
+!ScaleToMillimeters()
 ECM_BoringCap_FemaleNPT(pipeDiameter=0.750, rodDiameter=0.1875,
   sizeTextSweep=200);
 
-scale(25.4)
+ScaleToMillimeters()
 ECM_BoringCap_FemaleNPT(pipeDiameter=1.000, rodDiameter=0.1875);
 
-scale(25.4)
+ScaleToMillimeters()
 ECM_BoringCap_FemaleNPT(pipeDiameter=1.125, rodDiameter=0.500);
 
-scale(25.4)
+ScaleToMillimeters()
 ECM_BoringCap_FemaleNPT(pipeDiameter=1.628, rodDiameter=0.500,
   brandingTextSweep=200, sizeTextSweep=90);
 
-scale(25.4)
+ScaleToMillimeters()
 ECM_BoringCap_FemaleNPT(pipeDiameter=1.750, rodDiameter=0.500,
   brandingTextSweep=200, sizeTextSweep=90);
 
-scale(25.4)
+ScaleToMillimeters()
 ECM_BoringCap_FemaleNPT(pipeDiameter=2.000, rodDiameter=0.500,
   brandingTextSweep=120, sizeTextSweep=70);
 
-scale(25.4)
+ScaleToMillimeters()
 ECM_BoringCap_FemaleNPT(pipeDiameter=3.000, rodDiameter=0.500,
   brandingTextSweep=90, sizeTextSweep=50, letterSpacing=0.15);

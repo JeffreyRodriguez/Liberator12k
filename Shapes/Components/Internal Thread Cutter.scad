@@ -25,5 +25,5 @@ module InternalThreadCutter(tee=Spec_AnvilForgedSteel_TeeThreeQuarterInch(),
   }
 }
 
-scale(25.4)
+ScaleToMillimeters()
 InternalThreadCutter();

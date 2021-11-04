@@ -320,7 +320,7 @@ module StockAssembly(hardware=true, prints=true, cutaway=undef, alpha=1) {
   Stock(alpha=min(alpha,_ALPHA_STOCK), cutaway=(cutaway == true || _CUTAWAY_STOCK));
 }
 
-scale(25.4)
+ScaleToMillimeters()
 if ($preview) {
   if (_SHOW_RECEIVER)
   ReceiverAssembly(cutaway=_CUTAWAY_RECEIVER);

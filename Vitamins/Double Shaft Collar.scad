@@ -62,7 +62,7 @@ module DoubleShaftCollar(od=1.875+0.02, height=DoubleShaftCollarHeight(),
   }
 }
 
-scale(25.4) rotate([0,90,0])
+ScaleToMillimeters() rotate([0,90,0])
 render()
 difference() {
   scale(1.1)

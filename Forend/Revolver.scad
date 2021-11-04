@@ -921,7 +921,7 @@ module RevolverAssembly(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, stock=true
   RevolverForendAssembly(cutaway=false);
 }
 
-scale(25.4)
+ScaleToMillimeters()
 if ($preview) {
   RevolverAssembly();
 } else {

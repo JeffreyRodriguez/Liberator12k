@@ -68,6 +68,6 @@ module Bipod(bottomDiameter=1, legDiameter=5/16,
 
 Bipod();
 
-*!scale(25.4)
+*!ScaleToMillimeters()
 rotate([0,90,0])
 Bipod();

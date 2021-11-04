@@ -98,8 +98,8 @@ DriveGear(flipZ=false, id=5/16);
 translate([gearDistance,0,0])
 DrivenGear();
 */
-*!scale(25.4)
+*!ScaleToMillimeters()
 DrivenGear();
 
-*!scale(25.4)
+*!ScaleToMillimeters()
 DriveGear();

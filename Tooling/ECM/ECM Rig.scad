@@ -318,7 +318,7 @@ module Bucket5Gal(topDiameter=12.125,
 module LiberatorECM() {
 }
 
-scale(25.4) {
+ScaleToMillimeters() {
 
   translate([0,0,-16.25])
   ECM_Fluting_Guide();
@@ -375,10 +375,10 @@ scale(25.4) {
 // Rifling
 
 // Plated  insert
-*!scale(25.4) ECRT_Insert(length=8, taper=false, insideDiameter=0);
+*!ScaleToMillimeters() ECRT_Insert(length=8, taper=false, insideDiameter=0);
 
 // Plated Water Feed
-*!scale(25.4) ECRT_WaterFeed();
+*!ScaleToMillimeters() ECRT_WaterFeed();
 
 
 
@@ -387,23 +387,23 @@ scale(25.4) {
 // Fluting
 
 // Plated Fluting Guide
-*!scale(25.4) ECM_Fluting_Guide();
+*!ScaleToMillimeters() ECM_Fluting_Guide();
 
 // Plated Fluting Water Feed
-*!scale(25.4) ECM_Fluting_WaterFeed();
+*!ScaleToMillimeters() ECM_Fluting_WaterFeed();
 
 // Plated Fluting Plug
-*!scale(25.4)
+*!ScaleToMillimeters()
 ECM_Fluting_Plug();
 
 
 // Water Jacket Guides
 
 // Plated Bottom Guide
-*!scale(25.4) ECM_Jacket_Guide();
+*!ScaleToMillimeters() ECM_Jacket_Guide();
 
 // Plated Top Guide Lug
-*!scale(25.4) ECM_Jacket_Guide_Lugs(angles=[0]);
+*!ScaleToMillimeters() ECM_Jacket_Guide_Lugs(angles=[0]);
 
 // Plated Bottom Guide Lug
-*!scale(25.4) ECM_Jacket_Guide_Lugs(angles=[0], lugHeight=4.75, bucketCut=true);
+*!ScaleToMillimeters() ECM_Jacket_Guide_Lugs(angles=[0], lugHeight=4.75, bucketCut=true);

@@ -75,5 +75,5 @@ module Spring(spring = Spec_SpringCustomizer(), degrees_per_step = ResolutionFa(
   }
 }
 
-scale(25.4)
+ScaleToMillimeters()
 Spring();

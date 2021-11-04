@@ -12,7 +12,7 @@ augerZ = 0.5;
 spigotLength=1;
 
 rotate([-90,0,0])
-scale(25.4)
+ScaleToMillimeters()
 render()
 difference() {
   union() {

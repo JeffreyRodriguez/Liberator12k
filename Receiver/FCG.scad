@@ -1332,7 +1332,7 @@ module SimpleFireControlAssembly(hardware=true, prints=true, actionRod=_SHOW_ACT
 //*************
 //* Rendering *
 //*************
-scale(25.4)
+ScaleToMillimeters()
 if ($preview) {
 
   SimpleFireControlAssembly();

@@ -39,5 +39,5 @@ module TapHandle(tapWidth=0.765, tapHeight=0.55, tapWall=0.15,
   }
 }
 
-scale(25.4)
+ScaleToMillimeters()
 TapHandle();

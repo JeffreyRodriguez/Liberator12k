@@ -11,7 +11,7 @@ use <ECM Boring Cap Female NPT.scad>;
 //Spec_RodOnePointOneTwoFiveInch()
 
 module ECM_QuickCap(pipeSpec, rodSpec) {
-  scale(25.4)
+  ScaleToMillimeters()
   ECM_BoringCap_FemaleNPT(
       pipeDiameter=PipeOuterDiameter(pipeSpec, undef),
       rodDiameter=RodDiameter(rodSpec, undef),

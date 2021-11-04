@@ -64,7 +64,7 @@ assert(boltSpec, "boltSpec is undefined. Unknown MLOK_BOLT?");
   }
 }
 
-scale(25.4)
+ScaleToMillimeters()
 if ($preview) {
   MlokForegripBolts();
 

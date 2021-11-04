@@ -88,4 +88,4 @@ module ECM_Fluting_Guide(outsideDiameter=2.45,
 }
 
 // Plated Fluting Guide
-*!scale(25.4) ECM_Fluting_Guide();
+*!ScaleToMillimeters() ECM_Fluting_Guide();

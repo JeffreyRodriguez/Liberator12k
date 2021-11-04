@@ -361,7 +361,7 @@ module SPAT37_Whistle(clearance=CLEARANCE, primerOffset=0, cutaway=false, alpha=
   }
 }
 
-scale(25.4)
+ScaleToMillimeters()
 if ($preview) {
   if (_SPIGOT_TYPE == "209") {
     SPAT37_Spigot();
