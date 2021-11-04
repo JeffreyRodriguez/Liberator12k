@@ -23,7 +23,7 @@ If history repeats itself, complying might be the death of you.
 So like the honeybee - fight like hell anyway.
 
 ### The "Banality of Evil"
-The second greatest danger to human prosperity and life is the order giver.
+The *second* greatest danger to human prosperity and life is the order giver.
 Stalin, Hitler, and Mao never personally murdered anyone.
 Neither did Charles Manson or Jim Jones for that matter.
 
