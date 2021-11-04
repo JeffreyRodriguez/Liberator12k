@@ -57,12 +57,12 @@ assert(Stock_ButtpadBolt(), "Stock_ButtpadBolt() is undefined. Unknown BUTTPAD_B
 
 function ButtpadLength() = 3;
 function ButtpadWall() = 0.1875;
-function Stock_BackplateLength() = 1.5;
+function Stock_BackplateLength() = 1;
 
 function StockLength() = TensionBoltLength()-ReceiverLength()-0.125;
 function StockMinX() = -(ReceiverLength()+StockLength());
 function ButtpadX() = StockMinX()-0.5;
-function Stock_TakedownPinX() = StockMinX()+0.75;
+function Stock_TakedownPinX() = -ReceiverLength()-6.5;
 
 // *********
 // * Setup *
@@ -77,7 +77,7 @@ module Stock_ButtpadBolt(cutaway=false, head="flat", nut="heatset", cutter=false
   clear = cutter ? clearance : 0;
 
   for (Z = [0,-1.5])
-  translate([StockMinX()-2, 0, Z])
+  translate([StockMinX()-ButtpadLength()+0.5, 0, Z])
   rotate([0,-90,0])
   NutAndBolt(bolt=Stock_ButtpadBolt(),
              boltLength=3.5, capOrientation=true,
@@ -90,13 +90,18 @@ module Stock_TakedownPin(cutter=false, clearance=0.005, alpha=1, cutaway=false) 
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
-  color("Silver") RenderIf(!cutter) Cutaway(cutaway)
-  translate([Stock_TakedownPinX(),
-             0,
-             Receiver_TakedownPinZ()])
-  rotate([90,0,0])
-  linear_extrude(ReceiverOD(), center=true)
-  Teardrop(r=0.125+clear, enabled=cutter);
+if (cutter) {
+    for (X = [-ReceiverLength()-0.5:-1:Stock_TakedownPinX()])
+    translate([X, 0, Receiver_TakedownPinZ()])
+    rotate([90,0,0])
+    linear_extrude(ReceiverOD(), center=true)
+    Teardrop(r=0.125+clear);
+  } else {
+    color("Silver") render() Cutaway(cutaway)
+    translate([Stock_TakedownPinX(), 0, Receiver_TakedownPinZ()])
+    rotate([90,0,0])
+    ChamferedCylinder(r1=0.125, r2=1/16, h=ReceiverOD(), center=true);
+  }
 }
 
 module Stock_TakedownPinRetainer(cutter=false, clearance=0.005) {
@@ -121,6 +126,8 @@ module Stock_TakedownPinRetainer(cutter=false, clearance=0.005) {
 // * Printed Parts *
 // *****************
 module Stock(length=StockLength(), doRender=true, cutaway=false, alpha=1) {
+  clearance = ReceiverSlotClearance();
+
   color("Tan", alpha=alpha)
   RenderIf(doRender) Cutaway(cutaway)
   difference() {
@@ -132,9 +139,27 @@ module Stock(length=StockLength(), doRender=true, cutaway=false, alpha=1) {
     Receiver_TensionBolts(nutType="none", headType="none", cutter=true);
 
     translate([-ReceiverLength(),0,0]) {
-      ReceiverBottomSlot(length=length);
       Receiver_RoundSlot(length=length);
       Receiver_SideSlot(length=length);
+
+      // Wide Vertical slot
+      translate([0,-(ReceiverBottomSlotWidth()/2)-clearance,0])
+      mirror([0,0,1])
+      rotate([0,-90,0])
+      ChamferedSquareHole(sides=[abs(TensionRodBottomZ())+0.25+clearance,
+                                 ReceiverBottomSlotWidth()+(clearance*2)],
+                           length=length,
+                          chamferBottom=true,
+                          center=false, corners=false, chamferRadius=1/16);
+
+      // Bottom edge curves
+      translate([0,0,ReceiverBottomZ()])
+      rotate([0,-90,0])
+      linear_extrude(length)
+      for (M = [0,1]) mirror([0,M])
+      translate([0,(ReceiverBottomSlotWidth()/2)+clearance])
+      rotate(-90)
+      RoundedBoolean(r=1/16, edgeOffset=0);
     }
 
     Stock_TakedownPin(cutter=true);

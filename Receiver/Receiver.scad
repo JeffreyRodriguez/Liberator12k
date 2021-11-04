@@ -153,14 +153,18 @@ module Receiver_MlokBolts(headType="flat", nutType="heatset-long", length=0.5, c
 module Receiver_TakedownPin(cutter=false, clearance=0.005, alpha=1, cutaway=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
-
-  color("Silver") RenderIf(!cutter) Cutaway(cutaway)
-  translate([Receiver_TakedownPinX(),
-             0,
-             Receiver_TakedownPinZ()])
-  rotate([90,0,180])
-  linear_extrude(ReceiverOD(), center=true)
-  Teardrop(r=0.125+clear, enabled=cutter);
+  
+  if (cutter) {
+    translate([Receiver_TakedownPinX(), 0, Receiver_TakedownPinZ()])
+    rotate([90,0,0])
+    linear_extrude(ReceiverOD(), center=true)
+    Teardrop(r=0.125+clear);
+  } else {
+    color("Silver") render() Cutaway(cutaway)
+    translate([Receiver_TakedownPinX(), 0, Receiver_TakedownPinZ()])
+    rotate([90,0,0])
+    ChamferedCylinder(r1=0.125, r2=1/16, h=ReceiverOD(), center=true);
+  }
 }
 ///
 
