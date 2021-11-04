@@ -108,7 +108,10 @@ function ReceiverTopZ() = TensionRodTopZ()+WallTensionRod()+0.625;
 function Receiver_MlokSideY() = 1.25;
 function Receiver_MlokSideZ() = ReceiverBottomZ()+0.5;
 
+// Misc. Common dimensions
 function SpindleZ() = -1;
+function LogoTextSize() = 11/32;
+function LogoTextDepth() = 1/32;
 
 // ************
 // * Vitamins *
@@ -424,7 +427,7 @@ ScaleToMillimeters() if ($preview) {
     rotate([0,-90,0])
     translate([ReceiverLength()+ReceiverBackLength(),0,0])
     ReceiverBackSegment();
-    
+
   if (_RENDER == "Projections/ReceiverBottomSlotInterface")
   projection()
   rotate([0,90,0])

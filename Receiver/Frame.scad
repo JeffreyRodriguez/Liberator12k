@@ -57,8 +57,6 @@ $fs = UnitsFs()*ResolutionFs();
 // Settings: Lengths
 function FrameBoltLength() = 10;
 function FrameReceiverLength() = FRAME_RECEIVER_LENGTH;
-function LogoTextSize() = 11/32;
-function LogoTextDepth() = 1/32;
 
 // Settings: Walls
 function WallFrameBolt() = FRAME_WALL;
@@ -254,10 +252,10 @@ module Frame_ReceiverAssembly(hardware=true, prints=true, length=FrameBoltLength
 
   if (hardware)
   Receiver_MlokBolts();
-  
+
   if (hardware && frameBolts)
   Frame_Bolts(length=length, cutaway=cutaway, alpha=min(alpha,_ALPHA_FRAME));
-  
+
   if (prints)
   Frame_Receiver(cutaway=cutaway, alpha=min(alpha,_ALPHA_FRAME));
 }
