@@ -91,8 +91,7 @@ module Stock_TakedownPin(cutter=false, clearance=0.005, alpha=1, cutaway=false) 
   clear2 = clear*2;
 
 if (cutter) {
-    for (X = [-ReceiverLength()-0.5:-1:Stock_TakedownPinX()])
-    translate([X, 0, Receiver_TakedownPinZ()])
+    translate([Stock_TakedownPinX(), 0, Receiver_TakedownPinZ()])
     rotate([90,0,0])
     linear_extrude(ReceiverOD(), center=true)
     Teardrop(r=0.125+clear);
@@ -148,7 +147,7 @@ module Stock(length=StockLength(), doRender=true, cutaway=false, alpha=1) {
       rotate([0,-90,0])
       ChamferedSquareHole(sides=[abs(TensionRodBottomZ())+0.25+clearance,
                                  ReceiverBottomSlotWidth()+(clearance*2)],
-                           length=length,
+                          length=length,
                           chamferBottom=true,
                           center=false, corners=false, chamferRadius=1/16);
 
@@ -162,6 +161,8 @@ module Stock(length=StockLength(), doRender=true, cutaway=false, alpha=1) {
       RoundedBoolean(r=1/16, edgeOffset=0);
     }
 
+    for (X = [-ReceiverLength()-0.5:-1:Stock_TakedownPinX()])
+    translate([X-Stock_TakedownPinX(),0,0])
     Stock_TakedownPin(cutter=true);
   }
 }
