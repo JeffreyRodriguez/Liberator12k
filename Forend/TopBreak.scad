@@ -428,7 +428,6 @@ module TopBreak_LatchScrews(head="flat", doMirror=true, cutaway=false, cutter=fa
   Bolt(bolt=GPBolt(),
        length=1+ManifoldGap(), clearance=clear,
        head=head, capHeightExtra=(cutter?1:0), capOrientation=true);
-
 }
 
 module TopBreak_Barrel(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, length=BarrelLength(), clearance=BARREL_CLEARANCE, sleeve=true, cutter=false, alpha=1, cutaway=false) {
@@ -859,6 +858,7 @@ module TopBreak_VerticalForegrip(cutaway=false, alpha=1) {
     TopBreak_GripBolt(cutter=true, teardrop=false);
   }
 }
+
 module TopBreak_Cluster(cutaway=false, alpha=1) {
   topExtension = 0.5;
   forwardExtension = 1.5;
@@ -962,6 +962,7 @@ module TopBreak_Cluster(cutaway=false, alpha=1) {
     TopBreak_GripBolt(cutter=true, teardrop=true);
   }
 }
+
 module TopBreak_Foregrip(length=TopBreak_ForegripLength(), cutaway=false, alpha=1) {
   color("Tan",alpha) render() Cutaway(cutaway)
   difference() {
