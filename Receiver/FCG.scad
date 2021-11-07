@@ -24,7 +24,7 @@ use <Receiver.scad>;
 /* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Prints/FCG__Housing", "Prints/FCG__ChargingHandle", "Prints/FCG__Disconnector", "Prints/FCG__Hammer", "Prints/FCG__HammerTail", "Prints/FCG__FiringPinCollar", "Prints/FCG__Trigger", "Prints/FCG__TriggerMiddle", "Fixtures/FCG__RecoilPlate_Fixture", "Fixtures/FCG__RecoilPlate_GangFixture", "Fixtures/FCG__RecoilPlate_TapGuide", "Fixtures/FCG__SearJig", "Projections/FCG__RecoilPlate_Projection"]
+_RENDER = ""; // ["", "Prints/FCG_Housing", "Prints/FCG_ChargingHandle", "Prints/FCG_Disconnector", "Prints/FCG_Hammer", "Prints/FCG_HammerTail", "Prints/FCG_FiringPinCollar", "Prints/FCG_Trigger", "Prints/FCG_TriggerMiddle", "Fixtures/FCG_RecoilPlate_Fixture", "Fixtures/FCG_RecoilPlate_GangFixture", "Fixtures/FCG_RecoilPlate_TapGuide", "Fixtures/FCG_SearJig", "Projections/FCG_RecoilPlate_Projection"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;
