@@ -35,17 +35,17 @@ STL Files Location: `Forend/TopBreak_CAFE12/Prints/`
 <br/>
 
 ## Vitamins
-| Purpose            | Part                             | Quantity |
-|--------------------|----------------------------------|----------|
-| Extractor Bit      | #2 flat 1/4" Hex Bit             | 1        |
-| Extractor Retainer | 1/4"x1" Dowel Pin                | 1        |
-| Extractor Spring   | TODO: 12lb 5/6" OD 2.75" Long    | 1        |
-| Latch Bars         | 1/4"x3" Square Rod               | 2        |
-| Latch Screws       | #8-32x3/4" Flat Head Screw       | 2        |
-| Latch Springs      | (same as sear spring)            | 2        |
-| Cluster Bolts      | #8-32x1/2" Flat Head Screw       | 2        |
-| Foregrip Bolt      | 1/4"-20x3.5" Flat Head Screw     | 1        |
-| Foregrip Bolt Nut  | 1/4"-20 Heatset Insert           | 1        |
+| Purpose            | Part                                 | Quantity |
+|--------------------|--------------------------------------|----------|
+| Extractor Bit      | #2 flat 1/4" Hex Bit                 | 1        |
+| Extractor Retainer | 1/4"x1" Dowel Pin                    | 1        |
+| Extractor Spring   | TODO: 12lb 5/6" OD 2.75" Long        | 1        |
+| Latch Bars         | 1/4"x3" Square Rod                   | 2        |
+| Latch Screws       | #8-32x3/4" Flat Head Screw           | 2        |
+| Latch Springs      | (same as sear spring)                | 2        |
+| Cluster Bolts      | #8-32x1/2" Flat Head Screw           | 2        |
+| Foregrip Bolt      | 1/4"-20x3.5" Flat Head Screw         | 1        |
+| Foregrip Bolt Nut  | 1/4"-20 Heatset Insert               | 1        |
 | Trunnion           | 1" NPT Schedule 40 Pipe 8" Long      | 1        |
 | Barrel             | 3/4" NPT Schedule 40 Pipe 18.5" Long | 1        |
 <br/>
