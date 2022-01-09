@@ -12,14 +12,6 @@ use <../../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 
-/* [Export] */
-
-// Select a part, Render it (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Prints/ReceiverFront", "Prints/Forend", "Prints/BarrelCollar", "Prints/Extractor", "Prints/Latch", "Prints/LatchTab", "Prints/Foregrip", "Prints/BarrelSleeveFixture"]
-
-// Reorient the part for printing?
-_RENDER_PRINT = true;
-
 /* [Assembly] */
 _SHOW_CLUSTER = true;
 _SHOW_BOLTS = true;

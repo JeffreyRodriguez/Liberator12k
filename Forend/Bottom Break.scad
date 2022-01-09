@@ -55,7 +55,7 @@ $fs = UnitsFs()*ResolutionFs();
 
 // Settings: Vitamins
 function BarrelPipe() = Spec_PipeThreeQuarterInch();
-function BarrelSleevePipe() = Spec_PipeOneInch();
+function TrunnionPipe() = Spec_PipeOneInch();
 function ChamberBolt() = Spec_BoltM3();
 
 function BarrelSetScrew() = BoltSpec(BARREL_SET_SCREW);
@@ -67,7 +67,7 @@ assert(GPBolt(), "GPBolt() is undefined. Unknown GP_BOLT?");
 // Settings: Lengths
 function ReceiverFrontLength() = 0.5;
 function BarrelLength() = 18;
-function BarrelSleeveLength() = 4;
+function TrunnionLength() = 4;
 function WallBarrel() = 0.1875;
 function WallPivot() = (7/16);
 function WallActionRod() = 1/8;
@@ -87,11 +87,11 @@ function BarrelRadius(clearance=undef)
 function BarrelDiameter(clearance=undef)
     = PipeOuterDiameter(BarrelPipe(), clearance);
 
-function BarrelSleeveRadius(clearance=undef)
-    = PipeOuterRadius(BarrelSleevePipe(), clearance);
+function TrunnionRadius(clearance=undef)
+    = PipeOuterRadius(TrunnionPipe(), clearance);
 
-function BarrelSleeveDiameter(clearance=undef)
-    = PipeOuterDiameter(BarrelSleevePipe(), clearance);
+function TrunnionDiameter(clearance=undef)
+    = PipeOuterDiameter(TrunnionPipe(), clearance);
 
 
 // Calculated: Lengths
@@ -121,7 +121,7 @@ function ExtractorLength() = 1;
 function ExtractorWall() = 0.1875;
 function ExtractorTravel() = 0.5;
 function ExtractorGuideLength() = 4;
-function ExtractorGuideZ() = -BarrelSleeveRadius()
+function ExtractorGuideZ() = -TrunnionRadius()
                              -WallBarrel()
                              -(ActionRodWidth()/2);
 
@@ -140,7 +140,7 @@ function LatchRodLength() = ReceiverFrontLength()
                           + 0.625;
 
 function LatchX() = 0.25;
-function LatchZ() = -(BarrelSleeveRadius()+WallBarrel() +LatchSpringRadius());
+function LatchZ() = -(TrunnionRadius()+WallBarrel() +LatchSpringRadius());
 function LatchSupportWidth() = (LatchSpringRadius()+LatchWall())*2;
 function LatchFlatZ() = -(BarrelRadius()+0.5);
 function LatchFlatWidth() = 1.5;
@@ -307,8 +307,8 @@ module Barrel(barrel=BarrelPipe(), length=BarrelLength(),
   difference() {
     rotate([0,90,0])
     union() {
-      Pipe(pipe=BarrelSleevePipe(),
-           length=BarrelSleeveLength(),
+      Pipe(pipe=TrunnionPipe(),
+           length=TrunnionLength(),
            hollow=!cutter, clearance=(cutter?clearance:undef));
 
       Pipe(pipe=barrel, clearance=(cutter?clearance:undef),
@@ -564,7 +564,7 @@ module BarrelLatchCollar(cutaway=false, alpha=1, cutter=false) {
   difference() {
     union() {
 
-      // Around the barrel sleeve
+      // Around the trunnion
       hull() {
 
         rotate([0,90,0])
@@ -573,9 +573,9 @@ module BarrelLatchCollar(cutaway=false, alpha=1, cutter=false) {
                  $fn=60);
 
         // Flat top
-        translate([0, -(BarrelSleeveRadius()), 0])
+        translate([0, -(TrunnionRadius()), 0])
         ChamferedCube([LatchCollarLength(),
-                       (BarrelSleeveRadius())*2,
+                       (TrunnionRadius())*2,
                        FrameBoltZ()
                          -FrameBoltRadius()
                          -WallFrameBolt()],
@@ -591,7 +591,7 @@ module BarrelLatchCollar(cutaway=false, alpha=1, cutter=false) {
                    ExtractorGuideZ()-(ExtractorWidth()/2)-ExtractorWall()])
         ChamferedCube([LatchCollarLength(),
                        (LatchRodRadius()+ExtractorWall())*2,
-                       BarrelSleeveRadius()+0.5],
+                       TrunnionRadius()+0.5],
                        r=1/16);
 
         // Latch support
@@ -605,7 +605,7 @@ module BarrelLatchCollar(cutaway=false, alpha=1, cutter=false) {
 
       // Set screws
       for (R = [90,-90]) rotate([R,0,0])
-      translate([0.5,0,BarrelSleeveRadius()])
+      translate([0.5,0,TrunnionRadius()])
       mirror([1,0,0])
       NutAndBolt(bolt=GPBolt(),
                  boltLength=0.5+ManifoldGap(2),
@@ -643,7 +643,7 @@ module BarrelPivotCollar(length=((PivotRadius()+WallPivot())*2),
       // Around the barrel
       translate([PivotX()-(PivotRadius()+WallPivot()),0,BarrelOffsetZ()])
       rotate([0,90,0])
-      ChamferedCylinder(r1=BarrelSleeveRadius()+WallBarrel(), r2=1/16,
+      ChamferedCylinder(r1=TrunnionRadius()+WallBarrel(), r2=1/16,
                h=length+0.625,
                $fn=60);
 

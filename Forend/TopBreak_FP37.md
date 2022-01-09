@@ -55,8 +55,8 @@ STL Files Location: `Forend/TopBreak_FP37/Prints/`
 1-5/8-in x 1-5/8-in W x 8-ft H Silver Galvanized Steel Line Fence Post
 Lowes has this stuff for $26/8ft. Item #552282Model #58910128
 
-### Barrel Sleeve
-There is no barrel sleeve.
+### Trunnion
+There is no trunnion.
 
 
 <!-- NEW PAGE -->
@@ -79,7 +79,7 @@ Drill and tap the the *Latch Rods* 1" from the end -
 ### Barrel Subassembly
 Install the *Barrel* into the *Cluster* and *Foregrip*.
 The *Foregrip Bolt Nut* and *Cluster Bolts* should act as set screws to secure
-the *Barrel* into the *Barrel Sleeve*.
+the *Barrel* into the *Trunnion*.
 
 ### Barrel Collar: Extractor Subassembly
 1. Insert the *Extractor Bit* into the *Extractor*.

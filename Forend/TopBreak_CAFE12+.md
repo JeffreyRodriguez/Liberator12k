@@ -61,7 +61,7 @@ STL Files Location: `Forend/TopBreak_CAFE12+/Prints/`
 | Foregrip Bolt          | 1/4"-20x3.5" Flat Head Screw     | 1        |
 | Foregrip Bolt Nut      | 1/4"-20 Heatset Insert           | 1        |
 | Barrel Collar Bolts    | #8-32x1/2" Socket Head Screw     | 1        |
-| Barrel Sleeve          | 1.25"x0.125" 4130 Tubing 8" Long | 1        |
+| Trunnion               | 1.25"x0.125" 4130 Tubing 8" Long | 1        |
 | Barrel                 | 1"x0.093" 4130 Tubing 18.5" Long | 1        |
 <br/>
 
@@ -80,12 +80,12 @@ To DIY all the parts yourself, read the Machining section and then come back her
 Install the *Foregrip Bolt Nut* on the inside of the *Cluster*.
 
 #### Barrel Group
-1. Insert the *Barrel Sleeve* into the rear of the *Cluster* and line up the threaded
+1. Insert the *Trunnion* into the rear of the *Cluster* and line up the threaded
 holes on top.
 2. Insert the *Barrel* into the front of the *Cluster*.
 Extractor cutout-side first.
 3. Headspace on a dummy cartridge.
-The *Barrel Sleeve* should be flush and the *Barrel* slightly recessed.
+The *Trunnion* should be flush and the *Barrel* slightly recessed.
 4. Install the *Cluster Bolts*.
 6. Install the *Foregrip Bolt* into the *Foregrip* and screw into the *Cluster*
 from the bottom.
@@ -113,14 +113,14 @@ You can access the top of the extractor from the large round hole for the barrel
 
 ### Machining
 
-#### Drill and Tap the Barrel Sleeve
+#### Drill and Tap the Trunnion
 **DO NOT DRILL THE BARREL**
 
-A fixture located at `Forend/TopBreak_CAFE12+/Fixtures/BarrelSleeveFixture.stl`
-can be used to help you drill and tap your own *Barrel Sleeve*.
+A fixture located at `Forend/TopBreak_CAFE12+/Fixtures/TrunnionFixture.stl`
+can be used to help you drill and tap your own *Trunnion*.
 
 Using a \#8-32 tap, thread the hole in the middle of the fixture.
-Use a 1.5" \#8-32 to hold the *Barrel Sleeve* in place, like a set screw.
+Use a 1.5" \#8-32 to hold the *Trunnion* in place, like a set screw.
 Now you're ready to drill and tap the holes.
 
 **DO NOT DRILL THE BARREL**
@@ -132,7 +132,7 @@ Be sure to clear your chips early and often, use lots of cutting fluid.
 **Tip:** Use a small end mill to put a flat on it first, if you have one.
 This will prevent the drill bit from wandering.
 
-Once you've finished drilling and tapping, ensure the inside of the *Barrel Sleeve* is
+Once you've finished drilling and tapping, ensure the inside of the *Trunnion* is
 clear of chips and debris.
 
 #### Cut the Extractor Slot
@@ -140,7 +140,7 @@ File out a 1/4" wide slot in the 6-O'clock position for the extractor bit.
 Aim for a 45 degree angle 1/8" deep.
 
 File this same notch in a matching location on the barrel. This is easiest to do
-with the *Barrel Sleeve* installed on the barrel so you can do both at once.
+with the *Trunnion* installed on the barrel so you can do both at once.
 A large square-edged file makes quick work of this operation but you can also
 use a Dremel or angle grinder (and a lot of finesse).
 

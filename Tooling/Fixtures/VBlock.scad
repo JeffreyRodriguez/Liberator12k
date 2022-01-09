@@ -233,10 +233,10 @@ if ($preview) {
 
   if (_RENDER == "Fixtures/VBlock_Arm_Sleeve")
     if (!_RENDER_PRINT)
-      Fixture_VBlock_Arm(r=BarrelSleeveRadius());
+      Fixture_VBlock_Arm(r=TrunnionRadius());
     else
       rotate([0,-90,0])
-      Fixture_VBlock_Arm(r=BarrelSleeveRadius());
+      Fixture_VBlock_Arm(r=TrunnionRadius());
 
   // ************
   // * Hardware *

@@ -103,7 +103,7 @@ function BarrelWall() = (BarrelDiameter() - BARREL_INSIDE_DIAMETER)/2;
 
 // Settings: Dimensions
 function BarrelLength() = BARREL_LENGTH;
-function BarrelSleeveLength() = 4;
+function TrunnionLength() = 4;
 function WallBarrel() = 0.125;
 
 function ActionRodLength() = 10;
