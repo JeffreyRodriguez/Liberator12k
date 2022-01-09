@@ -24,7 +24,7 @@ use <Receiver.scad>;
 /* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Prints/FCG_Housing", "Prints/FCG_ChargingHandle", "Prints/FCG_Disconnector", "Prints/FCG_Hammer", "Prints/FCG_HammerTail", "Prints/FCG_FiringPinCollar", "Prints/FCG_Trigger", "Prints/FCG_TriggerMiddle", "Fixtures/FCG_RecoilPlate_Fixture", "Fixtures/FCG_RecoilPlate_GangFixture", "Fixtures/FCG_RecoilPlate_TapGuide", "Fixtures/FCG_SearJig", "Projections/FCG_RecoilPlate_Projection"]
+_RENDER = ""; // ["", "Prints/FCG_Housing", "Prints/FCG_ChargingHandle", "Prints/FCG_Disconnector", "Prints/FCG_Hammer", "Prints/FCG_HammerTail", "Prints/FCG_FiringPinCollar", "Prints/FCG_Trigger", "Prints/FCG_TriggerMiddle", "Fixtures/FCG_RecoilPlate", "Fixtures/FCG_RecoilPlate_GangFixture", "Fixtures/FCG_RecoilPlate_TapGuide", "Fixtures/FCG_SearJig", "Projections/FCG_RecoilPlate"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;
@@ -1165,14 +1165,16 @@ module FCG_RecoilPlate_Fixture(xyz = [1,0.5,0.5], holeRadius=0.1875, spindleZ=-1
 
   }
 }
-module FCG_RecoilPlate_GangFixture(xyz = [1,0.375,0.375], gang=[5,2], holeRadius=0.25, spindleZ=-1, contoured=FCG_RECOIL_PLATE_CONTOURED) {
+module FCG_RecoilPlate_GangFixture(xyz = [0.25,0.75,0.375], gang=[2,3], holeRadius=0.125, spindleZ=-1, contoured=FCG_RECOIL_PLATE_CONTOURED) {
 
-  offsetGap = 0.125;
-  offsetX = RecoilPlateHeight()+offsetGap;
-  offsetY = RecoilPlateWidth()+offsetGap;
+  offsetPlateX = (RecoilPlateHeight()/2)-0.125;
+  offsetGapX = 0.125;
+  offsetGapY = 0.1875;
+  offsetX = RecoilPlateHeight()+offsetGapX;
+  offsetY = Millimeters(59);
 
-  length = (RecoilPlateHeight()*2)+1;
-  width  = (RecoilPlateWidth()*2)+ 1.5;
+  length = (offsetX*gang.x)-offsetGapX+(xyz.x*2);
+  width  = (offsetY*gang.y)-offsetGapY+(xyz.y*2);
   height = xyz.z;
 
 
@@ -1180,30 +1182,43 @@ module FCG_RecoilPlate_GangFixture(xyz = [1,0.375,0.375], gang=[5,2], holeRadius
 
   render()
   difference() {
-    translate([-(length/2)-0.125, -(width/2), 0])
     ChamferedCube([length, width, height], r=1/16);
 
-    translate([offsetX/2, offsetY/2,0])
-    %for (X = [0:gang.x-1]) for (Y = [0:gang.y-1])
+    for (X = [0:gang.x-1]) for (Y = [0:gang.y-1])
     translate([X*offsetX,Y*offsetY,0]) {
 
       // Recoil Plate cutout
-      translate([height-0.5,0,0])
+      translate([xyz.x+offsetPlateX, xyz.y+(RecoilPlateWidth()/2), 0])
       rotate([0,-90,0])
       RecoilPlate(contoured=contoured, cutter=true, clearance=0.005);
 
       // Template holes
+      translate([xyz.x+offsetPlateX, xyz.y+(RecoilPlateWidth()/2), 0])
       for (hole = TemplateHoles)
       translate([-hole.z,hole.y,0])
-      cylinder(r=holeRadius, h=height);
+      ChamferedCircularHole(r1=holeRadius, r2=1/8,  h=height);
+
+      // Spindle hole
+      translate([xyz.x+offsetPlateX, xyz.y+(RecoilPlateWidth()/2), 0])
+      translate([1,0,0])
+      cylinder(r=3/8/2, h=height);
+
+      // Magnet slot
+      for (X = [Inches(-0.1875)+Millimeters(-10),Inches(0.1875)])
+      translate([xyz.x+offsetPlateX+X, xyz.y+(RecoilPlateWidth()/2), 0.25])
+      translate([0,-Millimeters(30),-Millimeters(3)])
+      cube([Millimeters(10), Millimeters(60), xyz.z]);
     }
 
     // Fixture holes
-    for (X = [-5:1:5]) for (Y = [0,-2.5,2.5,3.75]) translate([X+0.375,Y,0])
-    cylinder(r=(0.2010/2)+0.01, h=height);
+    for (X = [0:1:5]) for (Y = [0.25, width-0.25])
+    translate([(length/2)-2+X,Y,xyz.z])
+    NutAndBolt(bolt=RecoilPlateBolt(), boltLength=Inches(1),
+               head="flat", nut="heatset",
+               capOrientation=true);
 
     // Index pin
-    cylinder(r=3/32/2, h=height);
+    *cylinder(r=3/32/2, h=height);
   }
 }
 ///
@@ -1418,7 +1433,7 @@ if ($preview) {
   if (_RENDER == "Fixtures/FCG_SearJig")
   FCG_SearJig();
 
-  if (_RENDER == "Fixtures/FCG_RecoilPlate_Fixture")
+  if (_RENDER == "Fixtures/FCG_RecoilPlate")
   FCG_RecoilPlate_Fixture();
 
   if (_RENDER == "Fixtures/FCG_RecoilPlate_GangFixture")
