@@ -19,7 +19,7 @@ use <../../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 /* [Export] */
 
 // Select a part, Render it (F6), then Export to STL (F7)
-_RENDER = ""; // ["","Fixtures/VBlock","Fixtures/VBlock_End","Fixtures/VBlock_Arm_Barrel","Fixtures/VBlock_Arm_Sleeve"]
+_RENDER = ""; // ["","Fixtures/VBlock","Fixtures/VBlock_Arm","Fixtures/VBlock_Arm_Barrel","Fixtures/VBlock_Arm_Sleeve"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;
@@ -28,7 +28,8 @@ _RENDER_PRINT = true;
 GP_BOLT = "#8-32"; // ["M4", "#8-32"]
 GP_BOLT_CLEARANCE = 0.015;
 
-TUBE_DIAMETER = 1.0001;
+ARM_HOLE_DIAMETER = 1.0001;
+ARM_HOLE_CLEARANCE = 0.0201;
 
 // *********
 // * Setup *
@@ -119,15 +120,15 @@ module Fixture_VBlock() {
   }
 }
 
-module Fixture_VBlock_Arm(r=Inches(TUBE_DIAMETER/2)) {
+module Fixture_VBlock_Arm(r=Inches(ARM_HOLE_DIAMETER/2), clearance=ARM_HOLE_CLEARANCE, vbolt) {
 
+  diameter = r*2;
   width = Inches(0.875);
   armWidth = Inches(0.5);
 
   baseHeight = Inches(0.75);
   height = Inches(0.5)+baseHeight;
   thumbscrewExtension = 0.5;
-  clearance = Inches(0.02);
   CR = Inches(1/16);
 
   vBottomZ = Inches(0.5);
@@ -136,7 +137,7 @@ module Fixture_VBlock_Arm(r=Inches(TUBE_DIAMETER/2)) {
   alignmentArmHeight = Inches(0.375);
 
   armRadius = baseHeight-Inches(1/8)-Inches(0.005);
-  wall = Inches(0.375);
+  wall = Inches(0.25);
 
   difference() {
     hull() {
@@ -164,10 +165,15 @@ module Fixture_VBlock_Arm(r=Inches(TUBE_DIAMETER/2)) {
     rotate([0,90,0])
     ChamferedCircularHole(r1=r+clearance, r2=CR, h=armWidth);
 
-    // Lower cutout section
-    translate([armWidth,-Inches(0.625/2),0])
+    // Bridge cutout section
+    translate([armWidth,-Inches(0.51/2),0])
     rotate([0,-90,0])
-    ChamferedSquareHole([baseHeight+r, Inches(0.625)], chamferRadius=CR, length=armWidth, center=false, corners=false);
+    ChamferedSquareHole([Inches(0.51), Inches(0.51)], chamferRadius=CR, length=armWidth, center=false, corners=false);
+
+    // Lower radius cutout section
+    translate([armWidth,-min(diameter, Inches(0.51))/2,Inches(0.5)])
+    rotate([0,-90,0])
+    ChamferedSquareHole([r, min(diameter, Inches(0.51))], chamferRadius=CR, length=armWidth, center=false, corners=false);
 
     // Clamp Screws
     translate([0,0,vBottomZ+(r*sqrt(2))])
@@ -189,12 +195,13 @@ module Fixture_VBlock_Arm(r=Inches(TUBE_DIAMETER/2)) {
 
 ScaleToMillimeters()
 if ($preview) {
-  r=TUBE_DIAMETER/2;
+  r=ARM_HOLE_DIAMETER/2;
 
-  color("Tan")
-  translate([6,0,0])
-  render()
-  Fixture_VBlock();
+  // Barrel Mockup
+  color("DimGrey")
+  translate([0,0,Inches(0.5)+(r*sqrt(2))])
+  rotate([0,90,0])
+  cylinder(r=r, h=12);
 
   color("Chocolate")
   for (X = [0.755,6.755]) translate([X,0,0])
@@ -205,11 +212,10 @@ if ($preview) {
   render()
   Fixture_VBlock();
 
-  // Barrel Mockup
-  color("DimGrey")
-  translate([0,0,Inches(0.5)+(r*sqrt(2))])
-  rotate([0,90,0])
-  cylinder(r=r, h=12);
+  color("Tan",0.5)
+  translate([6,0,0])
+  render()
+  Fixture_VBlock();
 } else {
 
   echo("Part: ", _RENDER);
@@ -223,6 +229,13 @@ if ($preview) {
       Fixture_VBlock();
     else
       Fixture_VBlock();
+
+  if (_RENDER == "Fixtures/VBlock_Arm")
+    if (!_RENDER_PRINT)
+      Fixture_VBlock_Arm();
+    else
+      rotate([0,-90,0])
+      Fixture_VBlock_Arm();
 
   if (_RENDER == "Fixtures/VBlock_Arm_Barrel")
     if (!_RENDER_PRINT)
