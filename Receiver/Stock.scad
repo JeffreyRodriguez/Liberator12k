@@ -63,6 +63,8 @@ function StockLength() = TensionBoltLength()-ReceiverLength()-0.125;
 function StockMinX() = -(ReceiverLength()+StockLength());
 function ButtpadX() = StockMinX()-0.5;
 function Stock_TakedownPinX() = -ReceiverLength()-6.5;
+function ButtpadMinX() = ButtpadX()-ButtpadLength();
+function Stock_ButtpadBoltZ() = [0,-1.5];
 
 // *********
 // * Setup *
@@ -76,8 +78,8 @@ $fs = UnitsFs()*ResolutionFs();
 module Stock_ButtpadBolt(cutaway=false, head="flat", nut="heatset", cutter=false, teardrop=false, clearance=0.01, teardropAngle=0) {
   clear = cutter ? clearance : 0;
 
-  for (Z = [0,-1.5])
   translate([StockMinX()-ButtpadLength()+0.5, 0, Z])
+  for (Z = Stock_ButtpadBoltZ())
   rotate([0,-90,0])
   NutAndBolt(bolt=Stock_ButtpadBolt(),
              boltLength=3.5, capOrientation=true,
@@ -86,6 +88,7 @@ module Stock_ButtpadBolt(cutaway=false, head="flat", nut="heatset", cutter=false
              clearance=clear, teardrop=cutter&&teardrop,
              doRender=!cutter);
 }
+
 module Stock_TakedownPin(cutter=false, clearance=0.005, alpha=1, cutaway=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
@@ -320,6 +323,12 @@ module Stock_Buttpad(doRender=true, cutaway=false, alpha=1) {
     cylinder(r1=baseRadius/2, r2=0, h=base);
 
     Stock_ButtpadBolt(cutter=true);
+
+    // Chamfered bolt holes
+    for (Z = Stock_ButtpadBoltZ())
+    translate([ButtpadMinX(), 0, Z])
+    rotate([0,90,0])
+    HoleChamfer(r1=BoltFlatHeadRadius(Stock_ButtpadBolt()), r2=Inches(1/8));
   }
 }
 ///
