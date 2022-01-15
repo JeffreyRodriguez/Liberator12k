@@ -1,13 +1,11 @@
 use <../../../Meta/Animation.scad>;
 use <../../../Meta/Cylinder Text.scad>;
-use <../../../Meta/Debug.scad>;
+use <../../../Meta/Cutaway.scad>;
 use <../../../Meta/Manifold.scad>;
 use <../../../Meta/Resolution.scad>;
 use <../../../Shapes/Chamfer.scad>;
 use <../../../Shapes/Teardrop.scad>;
 use <../../../Shapes/Components/ORing.scad>;
-use <../../../Shapes/Components/Pipe/Cap.scad>;
-use <../../../Shapes/Components/FemaleExtensionNPT.scad>;
 
 function BoringCapBase(bottomWall,
                        rodORingSection,
@@ -155,5 +153,5 @@ module ECM_BoringCap(
   }
 }
 
-//DebugHalf()
+//Cutaway()
 ECM_BoringCap(brandingText=true, speedHoles=true, $fn=20);

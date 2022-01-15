@@ -1,5 +1,5 @@
 use <../../../Meta/Animation.scad>;
-use <../../../Meta/Debug.scad>;
+use <../../../Meta/Cutaway.scad>;
 use <../../../Meta/Cylinder Text.scad>;
 use <../../../Meta/Manifold.scad>;
 use <../../../Meta/Units.scad>;
@@ -41,67 +41,67 @@ motorMountBoltGap = 0.05;
 module MotorMount() {
   render()
   difference() {
-    
+
     hull() {
       // Motor mount shell
       translate([d1+d2,0,0])
       cylinder(r=(GEARBOX_MOTOR_DIAMETER/2)+0.125, h=motorMountHeight, $fn=30);
-      
+
       cylinder(r=0.5, h=motorMountHeight, $fn=30);
     }
-    
+
     // Motor
     translate([d1+d2,0,0])
     translate([0,0,-ManifoldGap()])
     cylinder(r=(GEARBOX_MOTOR_DIAMETER/2)+0.02, h=motorMountHeight-motorMountBoltHeight, $fn=30);
-    
-    
+
+
     // Bolt holes
     translate([d1+d2,0,0])
     for (r = [0,180]) rotate(r)
     translate([Millimeters(10),0,motorMountHeight-motorMountBoltHeight-ManifoldGap(2)])
     Bolt(bolt=Spec_BoltM4(), clearance=true, length=thickness);
-    
+
     // Shaft Hole
     translate([d1+d2,0,motorMountHeight])
     mirror([0,0,1])
     cylinder(r=3/16, h=motorMountBoltHeight+ManifoldGap(2), $fn=15);
-    
+
     // Fitting
     translate([0,0,-ManifoldGap()])
     cylinder(r=0.646, h=motorMountHeight+ManifoldGap(2), $fn=60);
-    
+
   }
-  
+
 }
 
 module GearboxMotor() {
   translate([d1+d2,0,0])
   union() {
-    
+
     // Motor
     cylinder(r=GEARBOX_MOTOR_DIAMETER/2, h=GEARBOX_MOTOR_LENGTH, $fn=20);
-    
+
     // Shaft
     translate([0,0,GEARBOX_MOTOR_LENGTH])
     cylinder(r=GEARBOX_MOTOR_SHAFT_DIAMETER/2, h=GEARBOX_MOTOR_SHAFT_LENGTH, $fn=10);
-    
+
     // Bolts
     for (r = [0,180]) rotate(r)
     translate([Millimeters(10),0,GEARBOX_MOTOR_LENGTH])
-    *%Bolt(bolt=Spec_BoltM4(), clearance=false, length=thickness);
-    
+    *%Bolt(bolt=Spec_BoltM4(), length=thickness);
+
     // Drive gear
     translate([0,0,GEARBOX_MOTOR_LENGTH+motorMountBoltHeight+motorMountBoltGap])
     DriveGear();
-  
+
   }
 
   // Driven Gear
   translate([0,0,GEARBOX_MOTOR_LENGTH+motorMountBoltHeight+motorMountBoltGap])
   rotate(360/drivenGearToothCount/2)
   DrivenGear();
-  
+
 }
 
 module DriveGear() {
@@ -109,10 +109,10 @@ module DriveGear() {
   difference() {
     gear(units_per_tooth,driveGearToothCount,thickness,GEARBOX_MOTOR_SHAFT_DIAMETER+0.02,
          clearance=gearClearance);
-    
+
     for (r = [0:3]) rotate((90*r)+(1/driveGearToothCount*360/2))
     rotate([0,-90,0])
-    Bolt(bolt=Spec_BoltM4(), teardrop=true, clearance=false, length=2);
+    Bolt(bolt=Spec_BoltM4(), teardrop=true, length=2);
   }
 }
 
@@ -122,26 +122,26 @@ module DrivenGear() {
   difference() {
     gear(units_per_tooth,drivenGearToothCount,thickness,barrelOD, ,
          clearance=gearClearance);
-    
+
     for (r = [0:3]) rotate((90*r)+(1/drivenGearToothCount*360/2))
     rotate([0,90,0])
-    Bolt(bolt=Spec_BoltM4(), teardrop=true, teardropAngle=180, clearance=false, length=2);
+    Bolt(bolt=Spec_BoltM4(), teardrop=true, teardropAngle=180, length=2);
   }
 }
 
 //mirror([0,0,1])
 *ScaleToMillimeters() {
   ECM_DrillingCap();
-  
+
   translate([0,0,.64]) {
     GearboxMotor();
-    
-    color("Red", alpha=0.5)  
+
+    color("Red", alpha=0.5)
     translate([0,0,GEARBOX_MOTOR_LENGTH-motorMountHeight+0.1])
     MotorMount();
   }
-  
-    
+
+
   %translate([0,0,3])
   cylinder(r=(barrelOD/2),h=4, $fn=50);
 }

@@ -1,13 +1,11 @@
 use <../../../Meta/Animation.scad>;
-use <../../../Meta/Debug.scad>;
+use <../../../Meta/Cutaway.scad>;
 use <../../../Meta/Cylinder Text.scad>;
 use <../../../Meta/Manifold.scad>;
 use <../../../Meta/Resolution.scad>;
 use <../../../Shapes/Chamfer.scad>;
 use <../../../Shapes/Teardrop.scad>;
 use <../../../Shapes/Components/ORing.scad>;
-use <../../../Shapes/Components/Pipe/Cap.scad>;
-use <../../../Shapes/Components/FemaleExtensionNPT.scad>;
 use <../Boring/ECM Boring Cap.scad>;
 
 module ECM_DrillingCap(pipeDiameter=0.75, topExtension=0.25, bottomExtension=0.25, ) {
@@ -18,5 +16,5 @@ module ECM_DrillingCap(pipeDiameter=0.75, topExtension=0.25, bottomExtension=0.2
                 $fn=40);
 }
 
-render() DebugHalf()
+render() Cutaway()
 ECM_DrillingCap();

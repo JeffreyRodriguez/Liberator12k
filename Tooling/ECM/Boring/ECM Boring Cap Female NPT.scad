@@ -1,5 +1,5 @@
 use <../../../Meta/Animation.scad>;
-use <../../../Meta/Debug.scad>;
+use <../../../Meta/Cutaway.scad>;
 use <../../../Meta/Manifold.scad>;
 use <../../../Meta/Resolution.scad>;
 use <../../../Meta/Units.scad>;
@@ -8,9 +8,7 @@ use <../../../Vitamins/Rod.scad>;
 use <../../../Shapes/Chamfer.scad>;
 use <../../../Shapes/Teardrop.scad>;
 use <../../../Shapes/Components/ORing.scad>;
-use <../../../Shapes/Components/Pipe/Cap.scad>;
 use <../../../Shapes/Components/HoseBarbExtension.scad>;
-use <../../../Shapes/Components/FemaleExtensionNPT.scad>;
 use <../../../Shapes/Components/Printable Shaft Collar.scad>;
 
 use <ECM Boring Cap.scad>;
@@ -30,7 +28,7 @@ module ECM_BoringCap_FemaleNPT(
                      brandingTextSweep=250,
                      sizeTextSweep=120,
                      letterSpacing=1/25.4) {
-  
+
   rodRadius  = rodDiameter/2;
   pipeRadius = pipeDiameter/2;
 
@@ -55,7 +53,7 @@ module ECM_BoringCap_FemaleNPT(
                   sizeTextSweep=sizeTextSweep,
                   letterSpacing=letterSpacing,
                   $fn=floor(pipeDiameter*25.4)*2);
-    
+
     translate([pipeRadius,0,0])
     difference() {
       FemaleExtensionNPT(length=pipeORingSection+wall+inletOffsetExtra,
@@ -64,7 +62,7 @@ module ECM_BoringCap_FemaleNPT(
                          inletHeight=inletHeight,
                          height=base,
                          cutter=false);
-  
+
       FemaleExtensionNPT(length=pipeORingSection+wall+inletOffsetExtra,
                          wall=wall,
                          innerDiameter=inletDiameter,

@@ -1,5 +1,5 @@
 use <../../../Meta/Animation.scad>;
-use <../../../Meta/Debug.scad>;
+use <../../../Meta/Cutaway.scad>;
 use <../../../Meta/Cylinder Text.scad>;
 use <../../../Meta/Manifold.scad>;
 use <../../../Meta/Resolution.scad>;
