@@ -33,10 +33,13 @@ SIGHTPOST_BOLT_CLEARANCE = 0.005;
 $fa = ResolutionFa();
 $fs = UnitsFs()*ResolutionFs();
 
+function SightpostLength() = Inches(2);
 function SightpostBolt() = BoltSpec(SIGHTPOST_BOLT);
 assert(SightpostBolt(), "SightpostBolt() is undefined. Unknown SIGHTPOST_BOLT?");
 
-function SightZ() = ReceiverTopZ()+0.5;
+function SightpostWall() = Inches(0.1875);
+function SightZ() = ReceiverTopZ()+Inches(0.5);
+
 
 module SightpostBolts(height=SightZ(), radius=SIGHTPOST_DIAMETER/2, length=2, cutter=false, clearance=SIGHTPOST_BOLT_CLEARANCE) {
 
@@ -63,30 +66,33 @@ module SightpostBolts(height=SightZ(), radius=SIGHTPOST_DIAMETER/2, length=2, cu
              doRender=!cutter);
 }
 
-module Sightpost(height=SightZ(), length=2, radius=SIGHTPOST_DIAMETER/2, wall=0.125, clearance=SIGHTPOST_CLEARANCE, doRender=true) {
+module Sightpost(height=SightZ(), radius=SIGHTPOST_DIAMETER/2, wall=SightpostWall(), clearance=SIGHTPOST_CLEARANCE, doRender=true) {
   CR=1/16;
 
   color("Tan") RenderIf(doRender)
   difference() {
     union() {
       ChamferedCylinder(r1=radius+wall, r2=CR,
-                        h=length);
+                        h=SightpostLength());
 
       translate([0,-0.375/2,0])
-      ChamferedCube([radius+0.5, 0.375, length], r=CR);
+      ChamferedCube([radius+0.5, 0.375, SightpostLength()], r=CR);
 
       hull() {
         translate([0,-0.375/2,0])
         ChamferedCube([height, 0.375, 0.375], r=CR);
 
         ChamferedCylinder(r1=0.375, r2=CR,
-                          h=length);
+                          h=SightpostLength());
       }
+
+      children();
     }
 
-    ChamferedCircularHole(h=length, r1=radius+clearance, r2=CR);
+    ChamferedCircularHole(h=SightpostLength(), r1=radius+clearance, r2=CR);
 
-    SightpostBolts(height=height, radius=radius, length=length, cutter=true);
+    SightpostBolts(height=height, radius=radius, length=SightpostLength(), cutter=true);
+
   }
 }
 

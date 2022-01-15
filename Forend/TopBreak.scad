@@ -7,6 +7,7 @@ use <../Meta/Resolution.scad>;
 use <../Meta/Conditionals/RenderIf.scad>;
 use <../Meta/Conditionals/MirrorIf.scad>;
 
+use <../Shapes/Bearing Surface.scad>;
 use <../Shapes/Chamfer.scad>;
 use <../Shapes/MLOK.scad>;
 use <../Shapes/Teardrop.scad>;
@@ -29,12 +30,12 @@ use <../Receiver/FCG.scad>;
 use <../Receiver/Frame.scad>;
 use <../Receiver/Lower.scad>;
 use <../Receiver/Receiver.scad>;
-use <../Receiver/Stock.scad>;
+use <../Receiver/Stock.scad>;use <../Shapes/Bearing Surface.scad>;
 
 /* [Export] */
 
 // Select a part, Render it (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Prints/ReceiverFront", "Prints/Forend", "Prints/Cluster", "Prints/BarrelCollar", "Prints/Extractor", "Prints/LatchTab", "Prints/VerticalForegrip", "Prints/Sightpost","Jigs/Trunnion"]
+_RENDER = ""; // ["", "Prints/ReceiverFront", "Prints/Forend", "Prints/Cluster", "Prints/BarrelCollar", "Prints/Extractor", "Prints/LatchTab", "Prints/Foregrip", "Prints/VerticalForegrip", "Prints/Sightpost","Jigs/Trunnion"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;
@@ -74,6 +75,7 @@ _ALPHA_RECEIVER = 0.15; // [0:0.1:1]
 _ALPHA_LOWER = 0.15; // [0:0.1:1]
 _ALPHA_STOCK = 0.15; // [0:0.1:1]
 _ALPHA_FCG = 0.15; // [0:0.1:1]
+_ALPHA_SIGHTPOST = 1; // [0:0.1:1]
 
 /* [Cutaway] */
 _CUTAWAY_RECEIVER = false;
@@ -84,6 +86,7 @@ _CUTAWAY_COLLAR = false;
 _CUTAWAY_CLUSTER = false;
 _CUTAWAY_EXTRACTOR = false;
 _CUTAWAY_LATCH = false;
+_CUTAWAY_SIGHTPOST = false;
 
 /* [Vitamins] */
 GP_BOLT = "#8-32"; // ["M4", "#8-32"]
@@ -188,6 +191,9 @@ function BarrelZ() = BARREL_Z; // -0.11 for .22LR rimfire
 function BarrelLength() = BARREL_LENGTH;
 function TrunnionLength() = 8;
 function WallBarrel() = WALL_BARREL;
+function ClusterForwardExtension() = Inches(1);
+function ClusterMaxX() = TrunnionLength()+ClusterForwardExtension();
+function SightpostPinRadius() = Millimeters(2.5)/2;
 
 function WallPivot() = 0.25;
 function PivotAngleBack() = -25;
@@ -267,7 +273,6 @@ function TopBreak_LatchWidth() = LATCH_WIDTH;
 function TopBreak_LatchHeight() = LATCH_WIDTH;
 function TopBreak_LatchTabHeight() = 0.625;
 
-
 function TopBreak_LatchExtension() = 0.25;
 
 function TopBreak_LatchSpringLength() = 1;
@@ -277,6 +282,7 @@ function TopBreak_LatchZ() = -1.625;
 function TopBreak_LatchY() = (TopBreak_ExtractorHousingWidth()/2)
                            + (TopBreak_LatchWidth()/2);
 
+function TopBreak_SightpostX() = ClusterMaxX()+PumpGripLength();
 function VerticalForegripRadius() = 0.625;
 
 // Pivot modules
@@ -495,6 +501,18 @@ module TopBreak_ClusterBolts(bolt=ClusterBolt(), headType=CLUSTER_BOLT_HEAD, nut
              doRender=!cutter);
 }
 
+module TopBreak_ClusterPins(cutter=false, clearance=0.003) {
+  clear = cutter?clearance:0;
+  clear2 = clear*2;
+
+  color("Silver") RenderIf(!cutter)
+  for (R = [0,180]) rotate([R,0,0])
+  for (X = [ClusterMaxX()-Inches(0.25), ClusterMaxX()+PumpGripLength()-Inches(0.25)])
+  translate([X,BarrelRadius()+WallBarrel(),0])
+  rotate([0,90,0])
+  cylinder(r=SightpostPinRadius(), h=Inches(0.5));
+}
+
 module TopBreak_GripBolt(bolt=GripBolt(), headType="flat", nutType="heatset", length=3.5, cutter=false, clearance=0.005, teardrop=true) {
   translate([TrunnionLength()+0.25,0,-BarrelRadius()-length])
   mirror([0,0,1])
@@ -519,6 +537,7 @@ module TopBreak_ReceiverFront(cutaway=false, alpha=1) {
         ReceiverTopSegment(length=1/8);
 
         Frame_Support(length=TopBreak_ReceiverFrontLength(),
+                      extraBottom=FrameBottomZ(),
                      chamferFront=true, teardropFront=true);
       }
 
@@ -588,7 +607,8 @@ module TopBreak_Forend(clearance=0.005, doRender=true, cutaway=false, alpha=1) {
   difference() {
     union() {
       Frame_Support(length=ForendLength(),
-                   chamferBack=true, teardropBack=true);
+                    extraBottom=FrameBottomZ(),
+                    chamferBack=true, teardropBack=true);
 
       hull() {
         translate([PivotX(), 0, PivotZ()])
@@ -606,7 +626,8 @@ module TopBreak_Forend(clearance=0.005, doRender=true, cutaway=false, alpha=1) {
         translate([ForendLength(), 0,0])
         mirror([1,0,0])
         Frame_Support(length=PivotRadius()+(ForendLength()-PivotX())+abs(PivotZ())+FrameTopZ(),
-                     chamferFront=true, teardropFront=true);
+                      extraBottom=FrameBottomZ(),
+                      chamferFront=true, teardropFront=true);
       }
     }
 
@@ -644,6 +665,7 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.005, cut
   clear = cutter?clearance:0;
   clear2 = clear*2;
   clearRear = 1/16;
+  CR = 1/16;
 
   color("Chocolate", alpha) RenderIf(!cutter) Cutaway(cutaway)
   difference() {
@@ -676,7 +698,7 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.005, cut
                    TopBreak_LatchZ()-TopBreak_LatchWall()-clear])
         ChamferedCube([PivotX()-(sqrt(2)/2*PivotRadius())-clearRear+rearExtension+clear2,
                        (TrunnionRadius()+WallBarrel())*2+clear2,
-                       abs(TopBreak_LatchZ())+clear2], r=1/16, teardropFlip=[false,true,true]);
+                       abs(TopBreak_LatchZ())+TopBreak_LatchWall()+CR+clear2], r=1/16, teardropFlip=[false,true,true]);
       }
 
       // Optics Rail Support
@@ -863,12 +885,12 @@ module TopBreak_VerticalForegrip(cutaway=false, alpha=1) {
 }
 
 module TopBreak_Cluster(cutaway=false, alpha=1) {
-  topExtension = 0.5;
-  forwardExtension = 1.5;
-  rearExtension = 2;
-  lowerExtension = 0.75;
-  width = (7/16);
-  mlokOffset = (TrunnionRadius()+0.3125);
+  topExtension = Inches(0.5);
+  rearExtension = Inches(2);
+  lowerExtension = Inches(0.75);
+  width = Inches(7/16);
+  mlokOffset = (TrunnionRadius()+Inches(0.3125));
+  CR = Inches(1/16);
 
   color("Tan", alpha) render() Cutaway(cutaway)
   difference() {
@@ -880,15 +902,22 @@ module TopBreak_Cluster(cutaway=false, alpha=1) {
         // Forward Extension
         translate([TrunnionLength(),0,0])
         rotate([0,90,0])
-        ChamferedCylinder(r1=BarrelRadius()+WallBarrel(), r2=1/16,
-                           h=forwardExtension, teardropTop=true);
+        ChamferedCylinder(r1=BarrelRadius()+WallBarrel(), r2=CR,
+                           h=ClusterForwardExtension(), teardropTop=true);
 
         // Rear Extension
         translate([TrunnionLength(),0,0])
         rotate([0,-90,0])
-        ChamferedCylinder(r1=TrunnionRadius()+WallBarrel(), r2=1/16,
+        ChamferedCylinder(r1=TrunnionRadius()+WallBarrel(), r2=CR,
                            h=rearExtension);
       }
+
+      // Index pin support
+      for (R = [0,180]) rotate([R,0,0])
+      translate([TrunnionLength(),BarrelRadius()+WallBarrel(),0])
+      rotate([0,90,0])
+      ChamferedCylinder(r1=SightpostPinRadius()+Inches(0.125), r2=CR, h=ClusterForwardExtension(),
+                        teardropTop=true);
 
       // Bolt cap
       hull() {
@@ -896,38 +925,39 @@ module TopBreak_Cluster(cutaway=false, alpha=1) {
         // Forward Extension
         translate([TrunnionLength(),0,0])
         rotate([0,90,0])
-        ChamferedCylinder(r1=BarrelRadius(), r2=1/16,
-                           h=forwardExtension, teardropTop=true);
+        ChamferedCylinder(r1=BarrelRadius(), r2=CR,
+                           h=ClusterForwardExtension(), teardropTop=true);
 
         // Rear Extension
         translate([TrunnionLength(),0,0])
         rotate([0,-90,0])
-        ChamferedCylinder(r1=TrunnionRadius(), r2=1/16,
+        ChamferedCylinder(r1=TrunnionRadius(), r2=CR,
                            h=rearExtension);
 
         // Bolt cap
-        translate([TrunnionLength()-2,-(width/2),BarrelRadius()])
-        ChamferedCube([rearExtension, width, topExtension], r=1/16);
+        translate([TrunnionLength()-rearExtension,-(width/2),BarrelRadius()])
+        ChamferedCube([rearExtension, width, topExtension], r=CR);
       }
 
       // MLOK Slots
+      for (R = [0,180]) rotate([R,0,0])
       hull() {
 
           // Forward Extension
           translate([TrunnionLength(),0,0])
           rotate([0,90,0])
-          ChamferedCylinder(r1=BarrelRadius(), r2=1/16,
-                             h=forwardExtension, teardropTop=true);
+          ChamferedCylinder(r1=BarrelRadius(), r2=CR,
+                             h=ClusterForwardExtension(), teardropTop=true);
 
           // Rear Extension
           translate([TrunnionLength(),0,0])
           rotate([0,-90,0])
-          ChamferedCylinder(r1=TrunnionRadius(), r2=1/16,
+          ChamferedCylinder(r1=TrunnionRadius(), r2=CR,
                              h=rearExtension);
 
           // MLOK slot support
           translate([TrunnionLength()-1,-mlokOffset,-0.375])
-          ChamferedCube([2, mlokOffset*2, 0.75], r=1/16);
+          ChamferedCube([2, mlokOffset, 0.75], r=CR, teardropFlip=[true,true,true]);
       }
 
       // Grip Support
@@ -936,24 +966,30 @@ module TopBreak_Cluster(cutaway=false, alpha=1) {
           // Forward Extension
           translate([TrunnionLength(),0,0])
           rotate([0,90,0])
-          ChamferedCylinder(r1=BarrelRadius(), r2=1/16,
-                             h=forwardExtension, teardropTop=true);
+          ChamferedCylinder(r1=BarrelRadius()+WallBarrel(), r2=CR,
+                             h=ClusterForwardExtension(), teardropTop=true);
 
           // Rear Extension
           translate([TrunnionLength(),0,0])
           rotate([0,-90,0])
-          ChamferedCylinder(r1=TrunnionRadius(), r2=1/16,
+          ChamferedCylinder(r1=TrunnionRadius(), r2=CR,
                              h=rearExtension);
 
           // Lower vertical extension
           translate([TrunnionLength()+0.25,0,-BarrelRadius()-lowerExtension])
-          ChamferedCylinder(r1=VerticalForegripRadius(), r2=1/16,
-                             h=lowerExtension);
+          ChamferedCylinder(r1=VerticalForegripRadius()+CR, r2=CR,
+                             h=CR*2);
+
+          // Flat front for lower extension (printability)
+          translate([TrunnionLength()+ClusterForwardExtension(),-(VerticalForegripRadius()+CR),-BarrelRadius()-lowerExtension])
+          mirror([1,0,0])
+          ChamferedCube([0.25, (VerticalForegripRadius()+CR)*2, lowerExtension], r=0.125,
+                        teardropFlip=[false,true,true]);
       }
     }
 
     // MLOK slots
-    for (M = [0,1]) mirror([0,M,0])
+    for (R = [0,180]) rotate([R,0,0])
     translate([TrunnionLength()-1+0.25, -mlokOffset, 0])
     rotate([90,0,0]) {
       MlokSlot(1.5);
@@ -962,18 +998,73 @@ module TopBreak_Cluster(cutaway=false, alpha=1) {
 
     TopBreak_Barrel(cutter=true);
     TopBreak_ClusterBolts(cutter=true);
+    TopBreak_ClusterPins(cutter=true);
     TopBreak_GripBolt(cutter=true, teardrop=true);
   }
 }
 
-module TopBreak_Foregrip(length=TopBreak_ForegripLength(), cutaway=false, alpha=1) {
-  color("Tan",alpha) render() Cutaway(cutaway)
+module TopBreak_Foregrip(length=PumpGripLength(), cutaway=false, alpha=1) {
+  color("Tan", alpha) render() Cutaway(cutaway)
   difference() {
-    translate([TopBreak_ForegripOffsetX()+ChargerTravel(),0,0])
+
+    // Body around the barrel
+    translate([ClusterMaxX(),0,0])
     rotate([0,90,0])
-    PumpGrip(length=length);
+    PumpGrip(h=length);
+
+    translate([ClusterMaxX(),0,0])
+    rotate([0,90,0])
+    BearingSurface(r=BarrelRadius()+0.02,
+                   length=length, center=false,
+                   depth=0.0625, segments=6, taperDepth=0.125);
+
+    /* ActionRod(cutter=true); */
+    TopBreak_ClusterPins(cutter=true);
+
+    translate([ClusterMaxX(),0,0])
+    rotate([0,90,0])
+    TopBreak_ClusterPins(cutter=true);
+  }
+}
+
+module TopBreak_Sightpost(alpha=_ALPHA_SIGHTPOST, cutaway=_CUTAWAY_SIGHTPOST) {
+  CR = Inches(1/16);
+  mlokOffset = BarrelRadius()+Inches(0.3125);
+
+  color("Tan", alpha) render() Cutaway(cutaway)
+  difference() {
+    union() {
+
+      // Forward Extension
+      translate([TopBreak_SightpostX()+SightpostLength(),0,0])
+      rotate([0,-90,0])
+      Sightpost(radius=BarrelRadius()) {
+
+        // MLOK Slots
+        for (R = [0,180,90]) rotate(R)
+        hull() {
+
+            // Around barrel
+            ChamferedCylinder(r1=BarrelRadius(), r2=CR,
+                               h=SightpostLength(), teardropTop=true);
+
+            // MLOK slot support
+            translate([-0.375,0,0])
+            ChamferedCube([Inches(0.75), mlokOffset, SightpostLength()], r=CR);
+        }
+      }
+    }
+
+    // MLOK slots
+    for (R = [0,180,90]) rotate([R,0,0])
+    translate([TopBreak_SightpostX()+Inches(0.25), -mlokOffset, 0])
+    rotate([90,0,0]) {
+      MlokSlot(1.5);
+      MlokSlotBack(1.5);
+    }
 
     TopBreak_Barrel(cutter=true);
+    TopBreak_ClusterPins(cutter=true);
   }
 }
 
@@ -1028,13 +1119,17 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
     if (hardware && _SHOW_BARREL)
     TopBreak_Barrel(cutaway=cutaway == true || _CUTAWAY_BARREL);
 
-    if (_SHOW_SIGHTPOST)
-    translate([BarrelLength()-1,0,0])
-    rotate([0,-90,0]) {
+    if (hardware && _SHOW_CLUSTER) {
+      TopBreak_ClusterPins();
+    }
+
+    if (_SHOW_SIGHTPOST) {
       if (prints)
-      Sightpost(radius=BarrelRadius()+BARREL_CLEARANCE);
+      TopBreak_Sightpost();
 
       if (hardware)
+      translate([TopBreak_SightpostX()+SightpostLength(),0,0])
+      rotate([0,-90,0])
       SightpostBolts(radius=BarrelRadius()+BARREL_CLEARANCE);
     }
 
@@ -1086,6 +1181,9 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
 
     if (prints && _SHOW_CLUSTER)
     TopBreak_Cluster(cutaway=_CUTAWAY_CLUSTER, alpha=_ALPHA_CLUSTER);
+
+    if (prints && _SHOW_FOREGRIP)
+    TopBreak_Foregrip();
 
     if (prints && _SHOW_FOREGRIP)
     TopBreak_VerticalForegrip();
@@ -1171,7 +1269,7 @@ if ($preview) {
       TopBreak_Cluster();
     else
       rotate([0,90,0])
-      translate([-TrunnionLength()-1.5,0,0])
+      translate([-ClusterMaxX(),0,0])
       TopBreak_Cluster();
 
   if (_RENDER == "Prints/VerticalForegrip")
@@ -1182,7 +1280,7 @@ if ($preview) {
       translate([-(TrunnionLength()+0.25),0,-(-BarrelRadius()-0.75)])
       TopBreak_VerticalForegrip();
 
-  if (_RENDER  == "Foregrip")
+  if (_RENDER  == "Prints/Foregrip")
     if (!_RENDER_PRINT)
       TopBreak_Foregrip();
     else
@@ -1207,12 +1305,11 @@ if ($preview) {
 
   if (_RENDER == "Prints/Sightpost")
     if (!_RENDER_PRINT)
-      translate([BarrelLength()-1,0,0])
-      rotate([0,-90,0])
-      Sightpost(radius=BarrelRadius()+BARREL_CLEARANCE);
+      TopBreak_Sightpost(radius=BarrelRadius()+BARREL_CLEARANCE);
     else
-      //translate([-BARREL_LENGTH+2,0,0])
-      Sightpost(radius=BarrelRadius()+BARREL_CLEARANCE);
+      rotate([0,90,0])
+      translate([-(TopBreak_SightpostX()+SightpostLength()),0,0])
+      TopBreak_Sightpost();
 
   // ********************
   // * Fixures and Jigs *
@@ -1247,8 +1344,11 @@ if ($preview) {
   if (_RENDER == "Hardware/LatchScrews")
   TopBreak_LatchScrews();
 
+  if (_RENDER == "Hardware/ClusterIndexPin")
+  TopBreak_ClusterPins();
+
   if (_RENDER == "Hardware/SightpostBolts")
-  translate([BarrelLength()-1,0,0])
+  translate([TopBreak_SightpostX()+SightpostLength(),0,0])
   rotate([0,-90,0])
   SightpostBolts(radius=BarrelRadius());
 }
