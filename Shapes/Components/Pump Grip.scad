@@ -31,7 +31,7 @@ module PumpGrip(r=PumpGripRadius(),
   color("Tan", alpha)
   RenderIf(doRender)
   difference() {
-    ChamferedCylinder(r1=r, r2=CR, h=h);
+    ChamferedCylinder(r1=r, r2=CR, h=h, teardropTop=true);
 
     // Gripping cutout rings
     if (rings)
