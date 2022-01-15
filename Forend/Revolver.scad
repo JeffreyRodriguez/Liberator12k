@@ -9,9 +9,9 @@ use <../Meta/Conditionals/MirrorIf.scad>;
 
 use <../Meta/Math/Triangles.scad>;
 
+use <../Shapes/Bearing Surface.scad>;
 use <../Shapes/Chamfer.scad>;
 use <../Shapes/Helix.scad>;
-use <../Shapes/Bearing Surface.scad>;
 use <../Shapes/Teardrop.scad>;
 use <../Shapes/TeardropTorus.scad>;
 use <../Shapes/Semicircle.scad>;
