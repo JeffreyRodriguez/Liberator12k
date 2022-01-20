@@ -48,7 +48,6 @@ _SHOW_TENSION_RODS = false;
 _SHOW_STOCK = true;
 _SHOW_FCG = false;
 _SHOW_LOWER = true;
-_SHOW_SIGHTPOST = true;
 
 _SHOW_RECEIVER_FRONT = true;
 _SHOW_FOREND = true;
@@ -62,7 +61,9 @@ _SHOW_BARREL = true;
 _SHOW_CLUSTER = true;
 _SHOW_CLUSTER_BOLTS = true;
 _SHOW_FOREGRIP = true;
-_SHOW_GRIP_BOLT=true;
+_SHOW_VERTICAL_GRIP = true;
+_SHOW_GRIP_HARDWARE=true;
+_SHOW_SIGHTPOST = true;
 
 /* [Transparency] */
 _ALPHA_RECEIVER_FRONT=1; // [0:0.1:1]
@@ -76,6 +77,8 @@ _ALPHA_LOWER = 0.15; // [0:0.1:1]
 _ALPHA_STOCK = 0.15; // [0:0.1:1]
 _ALPHA_FCG = 0.15; // [0:0.1:1]
 _ALPHA_SIGHTPOST = 1; // [0:0.1:1]
+_ALPHA_FOREGRIP = 1; // [0:0.1:1]
+_ALPHA_VERTICAL_FOREGRIP = 1; // [0:0.1:1]
 
 /* [Cutaway] */
 _CUTAWAY_RECEIVER = false;
@@ -283,7 +286,8 @@ function TopBreak_LatchY() = (TopBreak_ExtractorHousingWidth()/2)
                            + (TopBreak_LatchWidth()/2);
 
 function TopBreak_SightpostX() = ClusterMaxX()+PumpGripLength();
-function VerticalForegripRadius() = 0.625;
+function TopBreak_VerticalForegripRadius() = 0.625;
+function TopBreak_VerticalForegripX() = TrunnionLength()+Inches(0.25);
 
 // Pivot modules
 module PivotClearanceCut(offsetX=0, cut=true, width=PivotWidth(),
@@ -514,7 +518,7 @@ module TopBreak_ClusterPins(cutter=false, clearance=0.003) {
 }
 
 module TopBreak_GripBolt(bolt=GripBolt(), headType="flat", nutType="heatset", length=3.5, cutter=false, clearance=0.005, teardrop=true) {
-  translate([TrunnionLength()+0.25,0,-BarrelRadius()-length])
+  translate([TopBreak_VerticalForegripX(),0,-BarrelRadius()-length])
   mirror([0,0,1])
   NutAndBolt(bolt=bolt, boltLength=length+ManifoldGap(2),
              capOrientation=true,
@@ -525,6 +529,14 @@ module TopBreak_GripBolt(bolt=GripBolt(), headType="flat", nutType="heatset", le
              doRender=!cutter);
 }
 
+module TopBreak_GripPin(r=SightpostPinRadius(), length=Inches(0.5), cutter=false, clearance=0.005, teardrop=true) {
+  clear = cutter ? clearance : 0;
+
+  color("Silver") RenderIf(!cutter)
+  translate([TopBreak_VerticalForegripX()+Inches(0.375),0,-BarrelRadius()-length])
+  mirror([0,0,1])
+  cylinder(r=r+clear, h=length);
+}
 
 // Printed Parts
 module TopBreak_ReceiverFront(cutaway=false, alpha=1) {
@@ -874,13 +886,17 @@ module TopBreak_LatchTab(cutaway=false, cutter=false, clearance=0.01, alpha=1) {
 }
 
 module TopBreak_VerticalForegrip(cutaway=false, alpha=1) {
+  CR = 1/16;
+
   color("Tan", alpha) render()
   difference() {
     translate([TrunnionLength()+0.25,0,-BarrelRadius()-0.75])
     mirror([0,0,1])
-    PumpGrip(r=VerticalForegripRadius(), h=3, channelRadius=0.125);
+    rotate(360/6/2)
+    PumpGrip(r=TopBreak_VerticalForegripRadius(), h=3, channelRadius=0.125);
 
     TopBreak_GripBolt(cutter=true, teardrop=false);
+    TopBreak_GripPin(cutter=true, teardrop=false);
   }
 }
 
@@ -889,7 +905,7 @@ module TopBreak_Cluster(cutaway=false, alpha=1) {
   rearExtension = Inches(2);
   lowerExtension = Inches(0.75);
   width = Inches(7/16);
-  mlokOffset = (TrunnionRadius()+Inches(0.3125));
+  mlokOffset = (TrunnionRadius()+Inches(0.375));
   CR = Inches(1/16);
 
   color("Tan", alpha) render() Cutaway(cutaway)
@@ -919,7 +935,7 @@ module TopBreak_Cluster(cutaway=false, alpha=1) {
       ChamferedCylinder(r1=SightpostPinRadius()+Inches(0.125), r2=CR, h=ClusterForwardExtension(),
                         teardropTop=true);
 
-      // Bolt cap
+      // Top bolt support
       hull() {
 
         // Forward Extension
@@ -934,12 +950,12 @@ module TopBreak_Cluster(cutaway=false, alpha=1) {
         ChamferedCylinder(r1=TrunnionRadius(), r2=CR,
                            h=rearExtension);
 
-        // Bolt cap
+        // Flat block on top
         translate([TrunnionLength()-rearExtension,-(width/2),BarrelRadius()])
         ChamferedCube([rearExtension, width, topExtension], r=CR);
       }
 
-      // MLOK Slots
+      // MLOK Slot Support
       for (R = [0,180]) rotate([R,0,0])
       hull() {
 
@@ -960,7 +976,7 @@ module TopBreak_Cluster(cutaway=false, alpha=1) {
           ChamferedCube([2, mlokOffset, 0.75], r=CR, teardropFlip=[true,true,true]);
       }
 
-      // Grip Support
+      // Vertical foregrip support
       hull() {
 
           // Forward Extension
@@ -977,13 +993,13 @@ module TopBreak_Cluster(cutaway=false, alpha=1) {
 
           // Lower vertical extension
           translate([TrunnionLength()+0.25,0,-BarrelRadius()-lowerExtension])
-          ChamferedCylinder(r1=VerticalForegripRadius()+CR, r2=CR,
+          ChamferedCylinder(r1=TopBreak_VerticalForegripRadius()+CR, r2=CR,
                              h=CR*2);
 
           // Flat front for lower extension (printability)
-          translate([TrunnionLength()+ClusterForwardExtension(),-(VerticalForegripRadius()+CR),-BarrelRadius()-lowerExtension])
+          translate([TrunnionLength()+ClusterForwardExtension(),-(TopBreak_VerticalForegripRadius()+CR)*(0.705/2),-BarrelRadius()-lowerExtension])
           mirror([1,0,0])
-          ChamferedCube([0.25, (VerticalForegripRadius()+CR)*2, lowerExtension], r=0.125,
+          ChamferedCube([0.25, (TopBreak_VerticalForegripRadius()+CR)*0.705, lowerExtension], r=0.125,
                         teardropFlip=[false,true,true]);
       }
     }
@@ -1000,6 +1016,7 @@ module TopBreak_Cluster(cutaway=false, alpha=1) {
     TopBreak_ClusterBolts(cutter=true);
     TopBreak_ClusterPins(cutter=true);
     TopBreak_GripBolt(cutter=true, teardrop=true);
+    TopBreak_GripPin(cutter=true, teardrop=true);
   }
 }
 
@@ -1029,7 +1046,7 @@ module TopBreak_Foregrip(length=PumpGripLength(), cutaway=false, alpha=1) {
 
 module TopBreak_Sightpost(alpha=_ALPHA_SIGHTPOST, cutaway=_CUTAWAY_SIGHTPOST) {
   CR = Inches(1/16);
-  mlokOffset = BarrelRadius()+Inches(0.3125);
+  mlokOffset = BarrelRadius()+Inches(0.375);
 
   color("Tan", alpha) render() Cutaway(cutaway)
   difference() {
@@ -1113,7 +1130,7 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
   TopBreak_ReceiverFront(cutaway=cutaway==true,
                          alpha=_ALPHA_RECEIVER_FRONT);
 
-  // Pivoting barrel assembly
+  // Everything that pivots with the break
   BreakActionPivot(factor=pivotFactor) {
 
     if (hardware && _SHOW_BARREL)
@@ -1176,17 +1193,19 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
     if (hardware && _SHOW_CLUSTER_BOLTS)
     TopBreak_ClusterBolts();
 
-    if (hardware && _SHOW_GRIP_BOLT)
-    TopBreak_GripBolt();
+    if (hardware && _SHOW_GRIP_HARDWARE) {
+      TopBreak_GripBolt();
+      TopBreak_GripPin();
+    }
 
     if (prints && _SHOW_CLUSTER)
     TopBreak_Cluster(cutaway=_CUTAWAY_CLUSTER, alpha=_ALPHA_CLUSTER);
 
     if (prints && _SHOW_FOREGRIP)
-    TopBreak_Foregrip();
+    TopBreak_Foregrip(alpha=_ALPHA_FOREGRIP);
 
-    if (prints && _SHOW_FOREGRIP)
-    TopBreak_VerticalForegrip();
+    if (prints && _SHOW_VERTICAL_GRIP)
+    TopBreak_VerticalForegrip(alpha=_ALPHA_VERTICAL_FOREGRIP);
 
     children();
 
