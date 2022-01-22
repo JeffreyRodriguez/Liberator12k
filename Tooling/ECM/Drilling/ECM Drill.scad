@@ -23,17 +23,20 @@ _ALPHA_BARREL=0.5; // [0:0.1:1]
 _ALPHA_DRILL_BASE=0.5; // [0:0.1:1]
 _ALPHA_DRILL_HEAD=0.5; // [0:0.1:1]
 
+/* [Vitamins] */
+BARREL_DIAMETER = 0.75;
+BARREL_LENGTH = 6;
+ORING_WIDTH = 0.09375;
+DRIVESCREW_DIAMETER=0.3125;
 ELECTRODE_DIAMETER=0.125;
-ELECTRODE_LENGTH=7;
 
+/* [Chosen Dimensions] */
 BARREL_OFFSET_X = 1.25;
 BARREL_INSET_BOTTOM = 0.5;
 BARREL_INSET_TOP = 0.375; // Unused yet
-BARREL_DIAMETER = 0.75;
-BARREL_RADIUS = BARREL_DIAMETER/2;
-BARREL_LENGTH = 6;
 BARREL_WALL = 0.25;
 
+ELECTRODE_LENGTH=7;
 COLUMNFOOT_HEIGHT=1.75;
 DRILLBASE_HEIGHT = 0.75;
 DRILLBASE_EXTENSION_HEIGHT = 1.5;
@@ -43,21 +46,23 @@ WATER_TAP_OFFSET_Y = 0;
 
 INTERMEDIATE_SHAFT_DIAMETER=5/16;
 
-COLUMN_LENGTH=15;
+COLUMN_LENGTH=17;
 COLUMN_WIDTH=20/25.4;
 COLUMN_WALL=0.25;
-
+DRIVESCREW_MOUNT_HEIGHT = 1;
+CARRIAGE_LENGTH=0.75;
 DRIVE_ANGLE=0;
+
+
+// Derived Values
+
+BARREL_RADIUS = BARREL_DIAMETER/2;
+
 DRIVESCREW_OFFSET_X = -(COLUMN_WIDTH/2);
 DRIVESCREW_OFFSET_Y = (COLUMN_WIDTH/2)+COLUMN_WALL+Millimeters(21);
-DRIVESCREW_DIAMETER=5/16;
-DRIVESCREW_MOUNT_HEIGHT = 1;
 
 BARREL_CONTACT_X = BARREL_OFFSET_X-BARREL_RADIUS-0.25;
 BARREL_CONTACT_Y = BARREL_RADIUS; //-(COLUMN_WIDTH/2)-COLUMN_WALL;
-
-
-CARRIAGE_LENGTH=0.75;
 
 BARREL_Z_MIN = DRILLBASE_HEIGHT-BARREL_INSET_BOTTOM;
 BARREL_Z_MAX = BARREL_Z_MIN+BARREL_LENGTH;
@@ -145,7 +150,7 @@ module DriveNut(cutter=false) {
 
 module Electrode(clearance=0.015, cutter=false) {
   color("Brown")
-  translate([BARREL_OFFSET_X,0,BARREL_LENGTH])
+  translate([BARREL_OFFSET_X,0,BARREL_LENGTH+BARREL_INSET_BOTTOM])
   cylinder(r=(ELECTRODE_DIAMETER/2)+(cutter?clearance:0),
            h=ELECTRODE_LENGTH, $fn=15);
 }
@@ -175,15 +180,16 @@ module DrillHeadBolts(cutter=false) {
   color("SteelBlue") RenderIf(!cutter)
   for (Z = [0.5]) translate([0,0,Z+DRILLHEAD_Z_MIN]) {
     translate([-COLUMN_WIDTH-COLUMN_WALL,0,0])
-    rotate([0,90,0])
-    rotate(180)
+    rotate([0,-90,0])
     Bolt(bolt=BoltSpec("M5"), length=Millimeters(10), head="flat",
+         capOrientation=true,
          teardrop=cutter, clearance=clearance);
 
     translate([-(COLUMN_WIDTH/2),-(COLUMN_WIDTH/2)-COLUMN_WALL,0])
-    rotate([-90,0,0])
-    rotate(-90)
+    rotate([90,0,0])
+    rotate(90)
     Bolt(bolt=BoltSpec("M5"), length=Millimeters(10), head="flat",
+         capOrientation=true,
          teardrop=cutter, clearance=clearance);
   }
 }
@@ -191,14 +197,14 @@ module DrillHeadBolts(cutter=false) {
 module DrillHeadORing(cutter=false) {
 
   // Electrode O-Ring
-  translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MAX-(3/32*sqrt(2))])
-  ORing(innerDiameter=ELECTRODE_DIAMETER, section=3/32, clearance=(cutter?0.01:0), teardrop=cutter, $fn=40);
   color("DimGrey") RenderIf(!cutter)
+  translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MAX-(ORING_WIDTH*sqrt(2))])
+  ORing(innerDiameter=ELECTRODE_DIAMETER, section=ORING_WIDTH, clearance=(cutter?0.01:0), teardrop=cutter, $fn=40);
 
   // Tap O-Ring
-  translate([WATER_TAP_OFFSET_X,WATER_TAP_OFFSET_Y,DRILLHEAD_Z_MAX-(3/32*sqrt(2))])
-  ORing(innerDiameter=ELECTRODE_DIAMETER, section=3/32, clearance=(cutter?0.01:0), teardrop=cutter, $fn=40);
   color("DimGrey") RenderIf(!cutter)
+  translate([WATER_TAP_OFFSET_X,WATER_TAP_OFFSET_Y,DRILLHEAD_Z_MAX-(ORING_WIDTH*sqrt(2))])
+  ORing(innerDiameter=ELECTRODE_DIAMETER, section=ORING_WIDTH, clearance=(cutter?0.01:0), teardrop=cutter, $fn=40);
 
   // Barrel O-Ring
   color("DimGrey") RenderIf(!cutter)
@@ -329,9 +335,10 @@ module DrillBaseBolts(cutter=false) {
   for (Z = [DRILLBASE_HEIGHT/2]) {
 
     translate([-COLUMN_WIDTH-COLUMN_WALL,0,Z])
-    rotate([0,90,0])
-    rotate(180)
-    Bolt(bolt=BoltSpec("M5"), length=Millimeters(10), head="flat", teardrop=cutter, clearance=clear);
+    rotate([0,-90,0])
+    Bolt(bolt=BoltSpec("M5"), length=Millimeters(10), head="flat",
+         capOrientation=true,
+         teardrop=cutter, clearance=clear);
   }
 }
 
@@ -344,8 +351,8 @@ module DrillBaseORing(cutter=false) {
 
   // Electrode O-Ring
   color("DimGrey")
-  translate([BARREL_OFFSET_X,0,DRILLBASE_HEIGHT-BARREL_INSET_BOTTOM-3/32])
-  ORing(innerDiameter=ELECTRODE_DIAMETER, section=3/32,
+  translate([BARREL_OFFSET_X,0,DRILLBASE_HEIGHT-BARREL_INSET_BOTTOM-ORING_WIDTH])
+  ORing(innerDiameter=ELECTRODE_DIAMETER, section=ORING_WIDTH,
         clearance=(cutter?0.01:0), teardrop=cutter, $fn=40);
 }
 module BarrelContact(pivotDiameter=0.125, clearance=0.008, cutter=false) {
@@ -450,6 +457,7 @@ module Carriage(extension=1, alpha=1) {
     }
 
     Column(cutter=true);
+    Electrode(clearance=0.005, cutter=true);
     ElectrodeSetScrew(threaded=true, cutter=true);
     DriveScrew(cutter=true);
     DriveNut(cutter=true);
@@ -503,11 +511,11 @@ module ColumnFoot(extension=4, alpha=1, debug=false) {
     translate([-COLUMN_WIDTH/2,0,0])
     rotate(180)
     translate([(COLUMN_WIDTH/2)+COLUMN_WALL,0,0])
-    rotate([0,-90,0])
-    Bolt(bolt=BoltSpec("M5"), length=Millimeters(10), head="flat", teardrop=true);
+    rotate([0,90,0])
+    Bolt(bolt=BoltSpec("M5"), length=Millimeters(10), head="flat",
+         capOrientation=true, teardrop=true, teardropAngle=180, clearance=0.008);
 
     Column(slots=[0,-90,90], cutter=true);
-
   }
 
 }
