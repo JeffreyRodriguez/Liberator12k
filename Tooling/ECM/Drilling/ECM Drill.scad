@@ -4,6 +4,7 @@ use <../../../Meta/Cylinder Text.scad>;
 use <../../../Meta/Manifold.scad>;
 use <../../../Meta/Units.scad>;
 use <../../../Meta/Resolution.scad>;
+use <../../../Meta/Conditionals/RenderIf.scad>;
 use <../../../Shapes/Chamfer.scad>;
 use <../../../Shapes/Components/ORing.scad>;
 use <../../../Shapes/Gear.scad>;
@@ -143,12 +144,12 @@ module Electrode(clearance=0.015, cutter=false) {
 module DrillHeadTap(clearance=0.015, cutter=false) {
 
   // Outlet (3/16" tube)
-  color("Gold")
+  color("Gold") RenderIf(!cutter)
   translate([WATER_TAP_OFFSET_X,WATER_TAP_OFFSET_Y,BARREL_Z_MAX+0.25])
   cylinder(r=(0.14/2)+(cutter?clearance:0), h=DRILLHEAD_HEIGHT, $fn=15);
 
   // Water passage
-  color("LightBlue")
+  color("LightBlue") RenderIf(!cutter)
   translate([0,0,BARREL_Z_MAX+0.25])
   hull()
   for (XY = [[WATER_TAP_OFFSET_X,WATER_TAP_OFFSET_Y], [BARREL_OFFSET_X,0]])
@@ -161,7 +162,7 @@ module DrillHeadTap(clearance=0.015, cutter=false) {
 module DrillHeadBolts(cutter=false) {
   clearance = cutter ? 0.01 : 0;
 
-  color("SteelBlue")
+  color("SteelBlue") RenderIf(!cutter)
   for (Z = [0.5]) translate([0,0,Z+DRILLHEAD_Z_MIN]) {
     translate([-COLUMN_WIDTH-COLUMN_WALL,0,0])
     rotate([0,90,0])
@@ -180,17 +181,17 @@ module DrillHeadBolts(cutter=false) {
 module DrillHeadORing(cutter=false) {
 
   // Electrode O-Ring
-  color("DimGrey")
   translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MAX-(3/32*sqrt(2))])
   ORing(innerDiameter=ELECTRODE_DIAMETER, section=3/32, clearance=(cutter?0.01:0), teardrop=cutter, $fn=40);
+  color("DimGrey") RenderIf(!cutter)
 
   // Tap O-Ring
-  color("DimGrey")
   translate([WATER_TAP_OFFSET_X,WATER_TAP_OFFSET_Y,DRILLHEAD_Z_MAX-(3/32*sqrt(2))])
   ORing(innerDiameter=ELECTRODE_DIAMETER, section=3/32, clearance=(cutter?0.01:0), teardrop=cutter, $fn=40);
+  color("DimGrey") RenderIf(!cutter)
 
   // Barrel O-Ring
-  color("DimGrey")
+  color("DimGrey") RenderIf(!cutter)
   translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MIN+(1/8)])
   ORing(innerDiameter=BARREL_DIAMETER, section=1/8, clearance=(cutter?0.01:0), teardrop=cutter, $fn=40);
 }
@@ -446,7 +447,7 @@ module Carriage(extension=1, alpha=1) {
 }
 
 module ColumnFoot(extension=4, alpha=1, debug=false) {
-  color("Tan", alpha) Cutaway(enabled=debug)
+  color("Tan", alpha) render() Cutaway(enabled=debug)
   difference() {
     union() {
 
