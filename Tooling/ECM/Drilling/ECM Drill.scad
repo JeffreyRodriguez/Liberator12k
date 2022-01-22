@@ -13,6 +13,16 @@ use <../../../Vitamins/Stepper Motor.scad>;
 use <../../../Vitamins/Nuts And Bolts.scad>;
 include <Gears.scad>;
 
+/* [Export] */
+
+// Select a part, Render it (F6), then Export to STL (F7)
+_RENDER = ""; // ["", "DrivenGear", "DriveGear", "ColumnFoot", "DrillBase", "DrillHead", "Carriage", "ToolHolder"]
+
+/* [Transparency] */
+_ALPHA_BARREL=0.5; // [0:0.1:1]
+_ALPHA_DRILL_BASE=0.5; // [0:0.1:1]
+_ALPHA_DRILL_HEAD=0.5; // [0:0.1:1]
+
 ELECTRODE_DIAMETER=0.125;
 ELECTRODE_LENGTH=7;
 
@@ -501,16 +511,16 @@ module ColumnFoot(extension=4, alpha=1, debug=false) {
   }
 
 }
-
-////mirror([0,0,1])
 ScaleToMillimeters()
-{
+if ($preview) {
 
   // Core Components
   Column();
+
+  translate([0,0,COLUMNFOOT_HEIGHT])
   DriveScrew();
 
-  translate([0,0,-BARREL_LENGTH*$t]) {
+  translate([0,0,COLUMNFOOT_HEIGHT-BARREL_LENGTH*$t]) {
     Electrode();
     ElectrodeSetScrew();
     DriveNut();
@@ -519,62 +529,65 @@ ScaleToMillimeters()
 
   *BarrelContact();
 
-  Barrel();
+  translate([0,0,COLUMNFOOT_HEIGHT]) {
+    Barrel(alpha=_ALPHA_BARREL);
 
-  rotations=3;
+    rotations=3;
 
-  // Barrel drive
-  translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MIN-gearThickness])
-  mirror([0,0,1])
-  rotate(DRIVE_ANGLE) translate([0,gearDistance,0])
-  mirror([0,0,1])
-  rotate(rotations*360*$t)
-  rotate(360/driveGearTeeth*0.45)
-  DriveGear(id=5/16);
+    // Barrel drive
+    translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MIN-gearThickness])
+    mirror([0,0,1])
+    rotate(DRIVE_ANGLE) translate([0,gearDistance,0])
+    mirror([0,0,1])
+    rotate(rotations*360*$t)
+    rotate(360/driveGearTeeth*0.45)
+    DriveGear(id=5/16);
 
-  translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MIN])
-  mirror([0,0,1])
-  rotate(-rotations*360*$t*(driveGearTeeth/drivenGearTeeth))
-  DrivenGear();
-  RotaryStepperTop();
+    translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MIN])
+    mirror([0,0,1])
+    rotate(-rotations*360*$t*(driveGearTeeth/drivenGearTeeth))
+    DrivenGear();
+    RotaryStepperTop();
 
 
-  DrillBaseORing();
-  DrillHeadORing();
-  DrillHeadTap();
+    DrillBaseORing();
+    DrillHeadORing();
+    DrillHeadTap();
 
-  DrillBaseBolts();
-  DrillHeadBolts();
+    DrillBaseBolts();
+    DrillHeadBolts();
 
-  LinearStepper();
+    LinearStepper();
 
-  DrillBase(alpha=1);
-  DrillHead(alpha=1);
+    DrillBase(alpha=_ALPHA_DRILL_BASE);
+    DrillHead(alpha=_ALPHA_DRILL_HEAD);
+  }
 
   ColumnFoot();
 
+} else {
+
+  if (_RENDER == "DrivenGear")
+  DrivenGear();
+
+  if (_RENDER == "DriveGear")
+  DriveGear();
+
+  if (_RENDER == "ColumnFoot")
+  ColumnFoot();
+
+  if (_RENDER == "DrillBase")
+  DrillBase();
+
+  if (_RENDER == "DrillHead")
+  translate([0,0,-DRILLHEAD_Z_MIN])
+  DrillHead();
+
+  if (_RENDER == "Carriage")
+  translate([0,0,-CARRIAGE_MIN_X])
+  Carriage();
+
+  if (_RENDER == "ToolHolder")
+  translate([0,0,-CARRIAGE_MIN_X])
+  ToolHolder();
 }
-
-*!ScaleToMillimeters()
-DrivenGear();
-
-*!ScaleToMillimeters()
-DriveGear();
-
-*!ScaleToMillimeters()
-ColumnFoot();
-
-*!ScaleToMillimeters()
-DrillBase();
-
-*!ScaleToMillimeters()
-translate([0,0,-DRILLHEAD_Z_MIN])
-DrillHead();
-
-*!ScaleToMillimeters()
-translate([0,0,-CARRIAGE_MIN_X])
-Carriage();
-
-*!ScaleToMillimeters()
-translate([0,0,-CARRIAGE_MIN_X])
-ToolHolder();
