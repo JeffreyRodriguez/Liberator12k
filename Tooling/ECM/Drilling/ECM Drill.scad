@@ -16,7 +16,7 @@ include <Gears.scad>;
 /* [Export] */
 
 // Select a part, Render it (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "DrivenGear", "DriveGear", "ColumnFoot", "DrillBase", "DrillHead", "Carriage", "ToolHolder"]
+_RENDER = ""; // ["", "DrivenGear", "DriveGear", "Legs", "Tailstock", "Headstock", "Carriage", "ToolHolder"]
 
 /* [Transparency] */
 _ALPHA_BARREL=0.5; // [0:0.1:1]
@@ -41,8 +41,8 @@ COLUMNFOOT_HEIGHT=1.75;
 DRILLBASE_HEIGHT = 0.75;
 DRILLBASE_EXTENSION_HEIGHT = 1.5;
 DRILLHEAD_HEIGHT = 1.125;
-WATER_TAP_OFFSET_X = 0.5;
-WATER_TAP_OFFSET_Y = 0;
+WATER_TAP_OFFSET_X = BARREL_OFFSET_X;
+WATER_TAP_OFFSET_Y = -1;
 
 INTERMEDIATE_SHAFT_DIAMETER=5/16;
 
@@ -58,8 +58,8 @@ DRIVE_ANGLE=0;
 
 BARREL_RADIUS = BARREL_DIAMETER/2;
 
-DRIVESCREW_OFFSET_X = -(COLUMN_WIDTH/2);
-DRIVESCREW_OFFSET_Y = (COLUMN_WIDTH/2)+COLUMN_WALL+Millimeters(21);
+DRIVESCREW_OFFSET_X = -COLUMN_WIDTH-COLUMN_WALL-Millimeters(21);
+DRIVESCREW_OFFSET_Y = 0;
 
 BARREL_CONTACT_X = BARREL_OFFSET_X-BARREL_RADIUS-0.25;
 BARREL_CONTACT_Y = BARREL_RADIUS; //-(COLUMN_WIDTH/2)-COLUMN_WALL;
@@ -69,10 +69,20 @@ BARREL_Z_MAX = BARREL_Z_MIN+BARREL_LENGTH;
 DRILLHEAD_Z_MIN = BARREL_Z_MAX-BARREL_INSET_TOP;
 DRILLHEAD_Z_MAX = DRILLHEAD_Z_MIN+DRILLHEAD_HEIGHT;
 CARRIAGE_MAX_X = BARREL_LENGTH+ELECTRODE_LENGTH;
-CARRIAGE_MIN_X = CARRIAGE_MAX_X-CARRIAGE_LENGTH;
+CARRIAGE_MIN_Z = CARRIAGE_MAX_X-CARRIAGE_LENGTH;
 
-// Steppers
-module RotaryStepperTop(cutter=false) {
+
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
+
+
+// ************
+// * Vitamins *
+// ************
+module RotaryStepper(cutter=false) {
   translate([BARREL_OFFSET_X, 0, DRILLHEAD_Z_MIN+0.5625])
   rotate(DRIVE_ANGLE) translate([0,driveGearPitchRadius+drivenGearPitchRadius,0])
   rotate(-DRIVE_ANGLE) {
@@ -80,17 +90,48 @@ module RotaryStepperTop(cutter=false) {
 
     if (cutter)
     mirror([0,0,1])
-    cylinder(r=0.375,h=1, $fn=30);
+    cylinder(r=0.375,h=1);
   }
 }
 
+// Linear Motion
 module LinearStepper(cutter=false) {
   translate([DRIVESCREW_OFFSET_X,DRIVESCREW_OFFSET_Y,DRILLHEAD_Z_MIN])
   rotate([180,0,0])
   NEMA17(cutter=cutter);
 }
 
-// Core components
+module DriveScrew(cutter=false) {
+
+  // Screw
+  color("SteelBlue")
+  translate([DRIVESCREW_OFFSET_X,DRIVESCREW_OFFSET_Y,DRILLHEAD_Z_MAX])
+  cylinder(r=(DRIVESCREW_DIAMETER/2)+(cutter?0.01:0),
+           h=ELECTRODE_LENGTH+1.5);
+}
+
+module DriveNut(cutter=false) {
+  translate([0,0,-Millimeters(3)]) {
+
+    // T8 Nut Cap
+    color("Gold")
+    translate([DRIVESCREW_OFFSET_X,DRIVESCREW_OFFSET_Y, CARRIAGE_MAX_X+ManifoldGap()])
+    cylinder(r=22/2/25.4, h=3.5/25.4);
+
+    // T8 Nut Body
+    color("Gold")
+    translate([DRIVESCREW_OFFSET_X,DRIVESCREW_OFFSET_Y, CARRIAGE_MAX_X+ManifoldGap()-(10/25.4)])
+    cylinder(r=11/2/25.4, h=15/25.4);
+
+    // T8 Bolts
+    color("DimGrey")
+    translate([DRIVESCREW_OFFSET_X,DRIVESCREW_OFFSET_Y, CARRIAGE_MAX_X])
+    for (R = [0:90:360]) rotate(R+45)
+    translate([8/25.4, 0,-10/25.4])
+    cylinder(r=3/64, h=15/25.4);
+  }
+}
+
 module Column(slots=[0,90,-90,180], cutter=false, clearance=0.01) {
   color("Silver") render()
   difference() {
@@ -110,58 +151,30 @@ module Column(slots=[0,90,-90,180], cutter=false, clearance=0.01) {
   }
 }
 
-module Barrel(clearance=0.015, cutter=false,alpha=1) {
-  color("Silver", alpha)
-  translate([BARREL_OFFSET_X,0,BARREL_Z_MIN])
-  cylinder(r=(BARREL_DIAMETER/2)+(cutter?clearance:0),
-           h=BARREL_LENGTH, $fn=50);
-}
-
-module DriveScrew(cutter=false) {
-
-  // Screw
-  color("SteelBlue")
-  translate([DRIVESCREW_OFFSET_X,DRIVESCREW_OFFSET_Y,DRILLHEAD_Z_MAX])
-  cylinder(r=(DRIVESCREW_DIAMETER/2)+(cutter?0.01:0),
-           h=ELECTRODE_LENGTH+1.5, $fn=15);
-}
-
-module DriveNut(cutter=false) {
-  translate([0,0,-Millimeters(3)]) {
-
-    // T8 Nut Cap
-    color("Gold")
-    translate([DRIVESCREW_OFFSET_X,DRIVESCREW_OFFSET_Y, CARRIAGE_MAX_X+ManifoldGap()])
-    cylinder(r=22/2/25.4, h=3.5/25.4, $fn=30);
-
-    // T8 Nut Body
-    color("Gold")
-    translate([DRIVESCREW_OFFSET_X,DRIVESCREW_OFFSET_Y, CARRIAGE_MAX_X+ManifoldGap()-(10/25.4)])
-    cylinder(r=11/2/25.4, h=15/25.4, $fn=50);
-
-    // T8 Bolts
-    color("DimGrey")
-    translate([DRIVESCREW_OFFSET_X,DRIVESCREW_OFFSET_Y, CARRIAGE_MAX_X])
-    for (R = [0:90:360]) rotate(R+45)
-    translate([8/25.4, 0,-10/25.4])
-    cylinder(r=3/64, h=15/25.4, $fn=20);
-  }
-}
-
 module Electrode(clearance=0.015, cutter=false) {
   color("Brown")
   translate([BARREL_OFFSET_X,0,BARREL_LENGTH+BARREL_INSET_BOTTOM])
   cylinder(r=(ELECTRODE_DIAMETER/2)+(cutter?clearance:0),
-           h=ELECTRODE_LENGTH, $fn=15);
+           h=ELECTRODE_LENGTH);
 }
 
-// Drill Head
-module DrillHeadTap(clearance=0.015, cutter=false) {
+module ElectrodeSetScrew(threaded=false, clearance=true, cutter=false) {
+  color("SteelBlue")
+  translate([BARREL_OFFSET_X,0,CARRIAGE_MIN_Z+(CARRIAGE_LENGTH/2)])
+  rotate([0,90,0])
+  Bolt(bolt=BoltSpec("M4"), head="none",
+       teardrop=cutter, teardropAngle=180,
+       clearance=(cutter&&clearance) ? 0.002 : 0, length=0.5);
+}
+
+// Headstock hardware
+module HeadstockTap(clearance=0.015, cutter=false) {
+  passageRadius = 0.1875;
 
   // Outlet (3/16" tube)
   color("Gold") RenderIf(!cutter)
   translate([WATER_TAP_OFFSET_X,WATER_TAP_OFFSET_Y,BARREL_Z_MAX+0.25])
-  cylinder(r=(0.14/2)+(cutter?clearance:0), h=DRILLHEAD_HEIGHT, $fn=15);
+  cylinder(r=(0.14/2)+(cutter?clearance:0), h=DRILLHEAD_HEIGHT);
 
   // Water passage
   color("LightBlue") RenderIf(!cutter)
@@ -169,166 +182,43 @@ module DrillHeadTap(clearance=0.015, cutter=false) {
   hull()
   for (XY = [[WATER_TAP_OFFSET_X,WATER_TAP_OFFSET_Y], [BARREL_OFFSET_X,0]])
   translate([XY[0], XY[1],0]) {
-    cylinder(r1=1/8, r2=0, h=1/8*sqrt(2), $fn=30);
-    sphere(r=1/8, $fn=30);
+    cylinder(r1=passageRadius, r2=0, h=passageRadius*sqrt(2));
+    sphere(r=passageRadius);
   }
 }
 
-module DrillHeadBolts(cutter=false) {
+module HeadstockBolts(cutter=false) {
   clearance = cutter ? 0.01 : 0;
 
   color("SteelBlue") RenderIf(!cutter)
-  for (Z = [0.5]) translate([0,0,Z+DRILLHEAD_Z_MIN]) {
-    translate([-COLUMN_WIDTH-COLUMN_WALL,0,0])
-    rotate([0,-90,0])
-    Bolt(bolt=BoltSpec("M5"), length=Millimeters(10), head="flat",
-         capOrientation=true,
-         teardrop=cutter, clearance=clearance);
-
-    translate([-(COLUMN_WIDTH/2),-(COLUMN_WIDTH/2)-COLUMN_WALL,0])
-    rotate([90,0,0])
-    rotate(90)
-    Bolt(bolt=BoltSpec("M5"), length=Millimeters(10), head="flat",
-         capOrientation=true,
-         teardrop=cutter, clearance=clearance);
-  }
+  translate([0,0,DRILLHEAD_Z_MIN+0.825])
+  translate([-COLUMN_WIDTH-COLUMN_WALL,0,0])
+  rotate([0,-90,0])
+  Bolt(bolt=BoltSpec("M5"), length=Millimeters(10), head="flat",
+       capOrientation=true,
+       teardrop=cutter, clearance=clearance);
 }
 
-module DrillHeadORing(cutter=false) {
+module HeadstockORing(cutter=false) {
 
   // Electrode O-Ring
   color("DimGrey") RenderIf(!cutter)
   translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MAX-(ORING_WIDTH*sqrt(2))])
-  ORing(innerDiameter=ELECTRODE_DIAMETER, section=ORING_WIDTH, clearance=(cutter?0.01:0), teardrop=cutter, $fn=40);
+  ORing(innerDiameter=ELECTRODE_DIAMETER, section=ORING_WIDTH, clearance=(cutter?0.01:0), teardrop=cutter);
 
   // Tap O-Ring
   color("DimGrey") RenderIf(!cutter)
   translate([WATER_TAP_OFFSET_X,WATER_TAP_OFFSET_Y,DRILLHEAD_Z_MAX-(ORING_WIDTH*sqrt(2))])
-  ORing(innerDiameter=ELECTRODE_DIAMETER, section=ORING_WIDTH, clearance=(cutter?0.01:0), teardrop=cutter, $fn=40);
+  ORing(innerDiameter=ELECTRODE_DIAMETER, section=ORING_WIDTH, clearance=(cutter?0.01:0), teardrop=cutter);
 
   // Barrel O-Ring
   color("DimGrey") RenderIf(!cutter)
   translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MIN+(1/8)])
-  ORing(innerDiameter=BARREL_DIAMETER, section=1/8, clearance=(cutter?0.01:0), teardrop=cutter, $fn=40);
+  ORing(innerDiameter=BARREL_DIAMETER, section=1/8, clearance=(cutter?0.01:0), teardrop=cutter);
 }
 
-module DrillHead(debug=false, alpha=1) {
-  color("Tan", alpha) render() Cutaway(enabled=debug)
-  difference() {
-    union() {
-
-      hull() {
-
-        // Column sleeve
-        translate([0,0,DRILLHEAD_Z_MIN])
-        translate([-COLUMN_WIDTH-COLUMN_WALL,
-                   -(COLUMN_WIDTH/2)-COLUMN_WALL,
-                   0])
-        ChamferedCube([COLUMN_WIDTH+(COLUMN_WALL*2),
-                       COLUMN_WIDTH+(COLUMN_WALL*2),
-                       DRILLHEAD_HEIGHT], r=1/16,
-                       $fn=40);
-
-        // Barrel Sleeve
-        translate([0,0,DRILLHEAD_Z_MIN])
-        translate([BARREL_OFFSET_X,0,0])
-        ChamferedCylinder(r1=(COLUMN_WIDTH/2)+COLUMN_WALL, r2=1/16,
-                          h=DRILLHEAD_HEIGHT,
-                          $fn=40);
-
-        // Column sleeve
-        translate([0,0,DRILLHEAD_Z_MIN])
-        translate([-COLUMN_WIDTH-COLUMN_WALL,
-                   0,
-                   0])
-        ChamferedCube([COLUMN_WIDTH+COLUMN_WALL+BARREL_OFFSET_X+((COLUMN_WIDTH/2)+COLUMN_WALL)+0.125,
-                       ((COLUMN_WIDTH/2)+COLUMN_WALL),
-                       DRILLHEAD_HEIGHT], r=1/16,
-                       $fn=40);
-      }
-
-      // Splash barrier for motors
-      translate([0,0,DRILLHEAD_Z_MIN])
-      translate([-COLUMN_WIDTH-COLUMN_WALL,
-                 (COLUMN_WIDTH/2),
-                 0])
-      ChamferedCube([COLUMN_WIDTH+COLUMN_WALL+BARREL_OFFSET_X+((COLUMN_WIDTH/2)+COLUMN_WALL)+0.25,
-                     COLUMN_WALL,
-                     DRILLHEAD_HEIGHT+0.25], r=1/16,
-                     $fn=40);
-
-
-      // Splash barrier for column
-      translate([0,0,DRILLHEAD_Z_MIN])
-      translate([-COLUMN_WIDTH-COLUMN_WALL,
-                 -(COLUMN_WIDTH/2)-COLUMN_WALL,
-                 0])
-      ChamferedCube([COLUMN_WIDTH+(COLUMN_WALL*2),
-                     COLUMN_WIDTH+(COLUMN_WALL*2),
-                     DRILLHEAD_HEIGHT+0.25], r=1/16,
-                     $fn=40);
-
-      // Motor mounts
-      difference() {
-        hull() {
-
-          // Linear Motor Mount
-          translate([DRIVESCREW_OFFSET_X,DRIVESCREW_OFFSET_Y,DRILLHEAD_Z_MIN])
-          translate([-1.66/2, -1.66/2,0])
-          ChamferedCube([1.66, 1.66, 0.5625], r=1/16);
-
-          // Mounting plate, same size as the gear
-          translate([BARREL_OFFSET_X, 0, DRILLHEAD_Z_MIN])
-          rotate(DRIVE_ANGLE)
-          translate([0,driveGearPitchRadius+drivenGearPitchRadius,0])
-          rotate(-DRIVE_ANGLE)
-          ChamferedCylinder(r1=0.75, r2=1/16, h=0.5625, $fn=40);
-
-          // Water tap
-          translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MIN])
-          ChamferedCylinder(r1=(COLUMN_WIDTH/2)+COLUMN_WALL, r2=1/16,
-                            h=0.5625,
-                            $fn=40);
-        }
-
-        // Drive-Gear Set-Screw Access Hole
-        translate([BARREL_OFFSET_X, 0, DRILLHEAD_Z_MIN-ManifoldGap()])
-        rotate(DRIVE_ANGLE)
-        translate([0,driveGearPitchRadius+drivenGearPitchRadius,0])
-        rotate(-DRIVE_ANGLE)
-        translate([-0.25/2, 0, 0])
-        cube([0.25, 1.66, 0.5625+ManifoldGap(2)]);
-
-        // Linear-Motion-Coupler Set-Screw Access Hole
-        translate([DRIVESCREW_OFFSET_X,DRIVESCREW_OFFSET_Y, DRILLHEAD_Z_MIN-ManifoldGap()])
-        translate([-0.25/2, 0, 0])
-        cube([0.25, 1.66, 0.5625+ManifoldGap(2)]);
-      }
-    }
-
-    translate([0,0,-ManifoldGap()])
-    LinearStepper(cutter=true);
-
-    translate([0,0,ManifoldGap()])
-    RotaryStepperTop(cutter=true);
-
-    DrillHeadTap(cutter=true);
-    DrillHeadBolts(cutter=true);
-    DrillHeadORing(cutter=true);
-
-    Column(slots=[0, 90,-90], cutter=true);
-    Barrel(cutter=true);
-    Electrode(clearance=0.025, cutter=true);
-    DriveScrew(cutter=true);
-
-    // Barrel taper
-    translate([BARREL_OFFSET_X,0,BARREL_Z_MAX-ManifoldGap()])
-    cylinder(r1=(BARREL_DIAMETER+0.03)/2, r2=0,  h=(BARREL_DIAMETER/2), $fn=50);
-  }
-}
-
-// Drill Base
-module DrillBaseBolts(cutter=false) {
+// Tailstock Hardware
+module TailstockBolts(cutter=false) {
   clear = cutter ? 0.01 : 0;
 
   color("SteelBlue")
@@ -342,37 +232,166 @@ module DrillBaseBolts(cutter=false) {
   }
 }
 
-module DrillBaseORing(cutter=false) {
+module TailstockORing(cutter=false) {
 
   // Barrel
   color("DimGrey")
   translate([BARREL_OFFSET_X,0,DRILLBASE_HEIGHT-BARREL_INSET_BOTTOM+0.25])
-  ORing(innerDiameter=BARREL_DIAMETER, section=1/8, clearance=0.01, teardrop=cutter, $fn=40);
+  ORing(innerDiameter=BARREL_DIAMETER, section=1/8, clearance=0.01, teardrop=cutter);
 
   // Electrode O-Ring
   color("DimGrey")
   translate([BARREL_OFFSET_X,0,DRILLBASE_HEIGHT-BARREL_INSET_BOTTOM-ORING_WIDTH])
   ORing(innerDiameter=ELECTRODE_DIAMETER, section=ORING_WIDTH,
-        clearance=(cutter?0.01:0), teardrop=cutter, $fn=40);
+        clearance=(cutter?0.01:0), teardrop=cutter);
 }
-module BarrelContact(pivotDiameter=0.125, clearance=0.008, cutter=false) {
-  pivotRadius = pivotDiameter/2;
 
-  clear = cutter ? clearance : 0;
-  clear2 = clear*2;
+// Leg Hardware
+module LegBolts(cutter=false) {
+  clear = cutter ? 0.01 : 0;
 
-  color("Gold")
-  translate([BARREL_CONTACT_X,BARREL_CONTACT_Y,0])
-  rotate(-90)
-  union() {
-    cylinder(r=pivotRadius+clear, h=DRILLBASE_HEIGHT+0.75, $fn=10);
+  color("SteelBlue")
+  for (Z = [0, 20/25.4])
+  translate([0,0,0.5+Z])
+  translate([-COLUMN_WIDTH-COLUMN_WALL-ManifoldGap(2),0,0])
+  rotate([0,-90,0])
+  Bolt(bolt=BoltSpec("M5"), length=Millimeters(10), head="flat",
+       capOrientation=true, teardrop=cutter, clearance=clear);
 
-    translate([-pivotRadius-0.0625,-0.125,DRILLBASE_HEIGHT+ManifoldGap()])
-    cube([BARREL_DIAMETER+0.25, 0.25, 0.75]);
+}
+
+// Workpiece
+module Barrel(clearance=0.015, cutter=false,alpha=1) {
+  color("Silver", alpha)
+  translate([BARREL_OFFSET_X,0,BARREL_Z_MIN])
+  cylinder(r=(BARREL_DIAMETER/2)+(cutter?clearance:0),
+           h=BARREL_LENGTH);
+}
+
+// **********
+// * Prints *
+// **********
+module Headstock(debug=false, alpha=1) {
+  color("Tan", alpha) render() Cutaway(enabled=debug)
+  difference() {
+    union() {
+
+      // Drill head
+      hull() {
+
+        // Column sleeve
+        translate([0,0,DRILLHEAD_Z_MIN])
+        translate([-COLUMN_WIDTH-COLUMN_WALL,
+                   -(COLUMN_WIDTH/2)-COLUMN_WALL,
+                   0])
+        ChamferedCube([COLUMN_WIDTH+(COLUMN_WALL*2),
+                       COLUMN_WIDTH+(COLUMN_WALL*2),
+                       DRILLHEAD_HEIGHT], r=1/16);
+
+        // Barrel Sleeve
+        translate([0,0,DRILLHEAD_Z_MIN])
+        translate([BARREL_OFFSET_X,0,0])
+        ChamferedCylinder(r1=(COLUMN_WIDTH/2)+COLUMN_WALL, r2=1/16,
+                          h=DRILLHEAD_HEIGHT);
+      }
+
+      // Water Tap Extension
+      hull() {
+        translate([WATER_TAP_OFFSET_X,WATER_TAP_OFFSET_Y,DRILLHEAD_Z_MIN])
+        ChamferedCylinder(r1=0.375, r2=1/16, h=DRILLHEAD_HEIGHT);
+
+        translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MIN])
+        ChamferedCylinder(r1=0.375, r2=1/16, h=DRILLHEAD_HEIGHT);
+      }
+
+      // Splash guard: Rotary motor
+      translate([0,0,DRILLHEAD_Z_MIN])
+      translate([-COLUMN_WIDTH-COLUMN_WALL,
+                 (COLUMN_WIDTH/2),
+                 0])
+      ChamferedCube([COLUMN_WIDTH+COLUMN_WALL+BARREL_OFFSET_X+((COLUMN_WIDTH/2)+COLUMN_WALL)+0.25,
+                     COLUMN_WALL,
+                     DRILLHEAD_HEIGHT+0.25], r=1/16);
+
+      // Splash guard: Column
+      translate([0,0,DRILLHEAD_Z_MIN])
+      translate([-COLUMN_WIDTH-COLUMN_WALL,
+                 -(COLUMN_WIDTH/2)-COLUMN_WALL,
+                 0])
+      ChamferedCube([COLUMN_WIDTH+(COLUMN_WALL*2),
+                     COLUMN_WIDTH+(COLUMN_WALL*2),
+                     DRILLHEAD_HEIGHT+0.25], r=1/16);
+
+      // Linear Motor Mount
+      hull() {
+
+        // Linear Motor Mount
+        translate([DRIVESCREW_OFFSET_X,DRIVESCREW_OFFSET_Y,DRILLHEAD_Z_MIN])
+        translate([-1.66/2, -1.66/2,0])
+        ChamferedCube([1.66, 1.66, 0.5625], r=1/16);
+
+        // Column sleeve
+        translate([0,0,DRILLHEAD_Z_MIN])
+        translate([-COLUMN_WIDTH-COLUMN_WALL,
+                   -(COLUMN_WIDTH/2)-COLUMN_WALL,
+                   0])
+        ChamferedCube([COLUMN_WALL,
+                       COLUMN_WIDTH+(COLUMN_WALL*2),
+                       0.5625], r=1/16);
+      }
+
+      // Rotary motor mount
+      hull() {
+
+        // Mounting plate, same size as the gear
+        translate([BARREL_OFFSET_X, 0, DRILLHEAD_Z_MIN])
+        rotate(DRIVE_ANGLE)
+        translate([0,driveGearPitchRadius+drivenGearPitchRadius,0])
+        rotate(-DRIVE_ANGLE)
+        ChamferedCylinder(r1=0.75, r2=1/16, h=0.5625);
+
+        // Hull to barrel area
+        translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MIN])
+        ChamferedCylinder(r1=(COLUMN_WIDTH/2)+COLUMN_WALL, r2=1/16,
+                          h=0.5625);
+      }
+    }
+
+    translate([0,0,-ManifoldGap()])
+    LinearStepper(cutter=true);
+
+    translate([0,0,ManifoldGap()])
+    RotaryStepper(cutter=true);
+
+    HeadstockTap(cutter=true);
+    HeadstockBolts(cutter=true);
+    HeadstockORing(cutter=true);
+
+    Column(slots=[0, 90,-90], cutter=true);
+    Barrel(cutter=true);
+    Electrode(clearance=0.025, cutter=true);
+    DriveScrew(cutter=true);
+
+    // Barrel taper
+    translate([BARREL_OFFSET_X,0,BARREL_Z_MAX-ManifoldGap()])
+    cylinder(r1=(BARREL_DIAMETER+0.03)/2, r2=0,  h=(BARREL_DIAMETER/2));
+
+    // Coupler Set-Screw Access Hole
+    translate([DRIVESCREW_OFFSET_X,DRIVESCREW_OFFSET_Y, DRILLHEAD_Z_MIN-ManifoldGap()])
+    translate([-1.66, -0.5/2, 0])
+    cube([1.66, 0.5, 0.5625+ManifoldGap(2)]);
+
+    // Drive-Gear Set-Screw Access Hole
+    translate([BARREL_OFFSET_X, 0, DRILLHEAD_Z_MIN-ManifoldGap()])
+    rotate(DRIVE_ANGLE)
+    translate([0,driveGearPitchRadius+drivenGearPitchRadius,0])
+    rotate(-DRIVE_ANGLE)
+    translate([-0.25/2, 0, 0])
+    cube([0.25, 1.66, 0.5625+ManifoldGap(2)]);
   }
 }
 
-module DrillBase(debug=false, alpha=1) {
+module Tailstock(debug=false, alpha=1) {
   color("Tan", alpha) render() Cutaway(enabled=debug)
   difference() {
     union() {
@@ -381,14 +400,12 @@ module DrillBase(debug=false, alpha=1) {
       translate([-COLUMN_WIDTH-COLUMN_WALL,-(COLUMN_WIDTH/2)-COLUMN_WALL,0])
       ChamferedCube([COLUMN_WIDTH+(COLUMN_WALL*2),
                      COLUMN_WIDTH+(COLUMN_WALL*2),
-                     DRILLBASE_EXTENSION_HEIGHT], r=1/16,
-                     $fn=10);
+                     DRILLBASE_EXTENSION_HEIGHT], r=1/16);
 
       // Contact supports
       translate([BARREL_CONTACT_X,BARREL_CONTACT_Y,0])
       ChamferedCylinder(r1=COLUMN_WALL, r2=1/16,
-                        h=DRILLBASE_HEIGHT,
-                        $fn=40);
+                        h=DRILLBASE_HEIGHT);
 
       hull() {
 
@@ -396,21 +413,19 @@ module DrillBase(debug=false, alpha=1) {
         translate([-COLUMN_WIDTH-COLUMN_WALL,-(COLUMN_WIDTH/2)-COLUMN_WALL,0])
         ChamferedCube([COLUMN_WIDTH+(COLUMN_WALL*2),
                        COLUMN_WIDTH+(COLUMN_WALL*2),
-                       DRILLBASE_HEIGHT], r=1/16,
-                       $fn=10);
+                       DRILLBASE_HEIGHT], r=1/16);
 
         // Barrel Sleeve
         translate([BARREL_OFFSET_X,0,0])
         ChamferedCylinder(r1=(COLUMN_WIDTH/2)+COLUMN_WALL, r2=1/16,
-                          h=DRILLBASE_HEIGHT,
-                          $fn=60);
+                          h=DRILLBASE_HEIGHT);
       }
 
     }
 
     BarrelContact(cutter=true);
-    DrillBaseBolts(cutter=true);
-    DrillBaseORing(cutter=true);
+    TailstockBolts(cutter=true);
+    TailstockORing(cutter=true);
     Column(slots=[0,90,-90], cutter=true);
     Barrel(cutter=true);
 
@@ -419,41 +434,38 @@ module DrillBase(debug=false, alpha=1) {
   }
 }
 
-// Linear Motion
-module ElectrodeSetScrew(threaded=false, clearance=true, cutter=false) {
-  color("SteelBlue")
-  translate([BARREL_OFFSET_X,0,CARRIAGE_MIN_X+(CARRIAGE_LENGTH/2)])
-  rotate([0,90,0])
-  Bolt(bolt=BoltSpec("M4"), head="none",
-       teardrop=cutter, teardropAngle=180,
-       clearance=(cutter&&clearance) ? 0.002 : 0, length=0.5);
-}
-
 module Carriage(extension=1, alpha=1) {
   color("Tomato", alpha) render()
   difference() {
 
     union() {
-
-      // Drivenut Extension
-      translate([-COLUMN_WIDTH-COLUMN_WALL,-(COLUMN_WIDTH/2)-COLUMN_WALL,CARRIAGE_MIN_X])
+      // Extension
+      translate([-COLUMN_WIDTH-COLUMN_WALL,-(COLUMN_WIDTH/2)-COLUMN_WALL,CARRIAGE_MIN_Z])
       ChamferedCube([COLUMN_WIDTH+(COLUMN_WALL*2),
-                     COLUMN_WIDTH+(COLUMN_WALL*2)+DRIVESCREW_OFFSET_Y,
-                     CARRIAGE_LENGTH], r=1/16,
-                     $fn=10);
+                     COLUMN_WIDTH+(COLUMN_WALL*2),
+                     CARRIAGE_LENGTH+extension], r=1/16);
+
+      // Linear Drive Nut
+      hull() {
+        translate([-COLUMN_WIDTH-COLUMN_WALL,-(COLUMN_WIDTH/2)-COLUMN_WALL,CARRIAGE_MIN_Z])
+        ChamferedCube([COLUMN_WIDTH+(COLUMN_WALL*2),
+                       COLUMN_WIDTH+(COLUMN_WALL*2)+DRIVESCREW_OFFSET_Y,
+                       CARRIAGE_LENGTH], r=1/16);
+
+        translate([DRIVESCREW_OFFSET_X,DRIVESCREW_OFFSET_Y,CARRIAGE_MIN_Z])
+        ChamferedCylinder(r1=0.625, r2=1/16, h=CARRIAGE_LENGTH);
+      }
 
       // Electrode Extension
-      translate([-COLUMN_WIDTH-COLUMN_WALL,-(COLUMN_WIDTH/2)-COLUMN_WALL,CARRIAGE_MIN_X])
-      ChamferedCube([COLUMN_WIDTH+(COLUMN_WALL*2)+BARREL_OFFSET_X,
-                     COLUMN_WIDTH+(COLUMN_WALL*2),
-                     CARRIAGE_LENGTH], r=1/16,
-                     $fn=10);
+      hull() {
+        translate([-COLUMN_WIDTH-COLUMN_WALL,-(COLUMN_WIDTH/2)-COLUMN_WALL,CARRIAGE_MIN_Z])
+        ChamferedCube([COLUMN_WIDTH+(COLUMN_WALL*2),
+                       COLUMN_WIDTH+(COLUMN_WALL*2)+DRIVESCREW_OFFSET_Y,
+                       CARRIAGE_LENGTH], r=1/16);
 
-      translate([-COLUMN_WIDTH-COLUMN_WALL,-(COLUMN_WIDTH/2)-COLUMN_WALL,CARRIAGE_MIN_X])
-      ChamferedCube([COLUMN_WIDTH+(COLUMN_WALL*2),
-                     COLUMN_WIDTH+(COLUMN_WALL*2),
-                     CARRIAGE_LENGTH+extension], r=1/16,
-                     $fn=10);
+        translate([BARREL_OFFSET_X,0,CARRIAGE_MIN_Z])
+        ChamferedCylinder(r1=0.375, r2=1/16, h=CARRIAGE_LENGTH);
+      }
     }
 
     Column(cutter=true);
@@ -464,7 +476,7 @@ module Carriage(extension=1, alpha=1) {
   }
 }
 
-module ColumnFoot(extension=4, alpha=1, debug=false) {
+module Legs(extension=4, alpha=1, debug=false) {
   color("Tan", alpha) render() Cutaway(enabled=debug)
   difference() {
     union() {
@@ -473,8 +485,7 @@ module ColumnFoot(extension=4, alpha=1, debug=false) {
       translate([-COLUMN_WIDTH-COLUMN_WALL,-(COLUMN_WIDTH/2)-COLUMN_WALL,0])
       ChamferedCube([COLUMN_WIDTH+(COLUMN_WALL*2),
                      COLUMN_WIDTH+(COLUMN_WALL*2),
-                     COLUMNFOOT_HEIGHT], r=1/16,
-                     $fn=10);
+                     COLUMNFOOT_HEIGHT], r=1/16);
 
       // Leg
       translate([-(COLUMN_WIDTH/2),0,0])
@@ -485,14 +496,13 @@ module ColumnFoot(extension=4, alpha=1, debug=false) {
 
           // Vertical segment
           translate([((COLUMN_WIDTH/2))+COLUMN_WALL,0,0])
-          ChamferedCylinder(r1=COLUMN_WALL, r2=1/32, h=COLUMNFOOT_HEIGHT, $fn=20);
+          ChamferedCylinder(r1=COLUMN_WALL, r2=1/32, h=COLUMNFOOT_HEIGHT);
 
           // Horizontal segment
           translate([(COLUMN_WIDTH/2),-(0.25/2),0])
           ChamferedCube([COLUMN_WALL+extension,
                          0.25,
-                         0.1875], r=1/32,
-                         $fn=10);
+                         0.1875], r=1/32);
         }
 
         // Foot
@@ -500,25 +510,36 @@ module ColumnFoot(extension=4, alpha=1, debug=false) {
         mirror([1,0,0])
         ChamferedCube([0.8,
                        0.8,
-                       0.125], r=1/32,
-                       $fn=10);
+                       0.125], r=1/32);
       }
 
     }
 
-    for (Z = [0, 20/25.4])
-    translate([0,0,0.5+Z])
-    translate([-COLUMN_WIDTH/2,0,0])
-    rotate(180)
-    translate([(COLUMN_WIDTH/2)+COLUMN_WALL,0,0])
-    rotate([0,90,0])
-    Bolt(bolt=BoltSpec("M5"), length=Millimeters(10), head="flat",
-         capOrientation=true, teardrop=true, teardropAngle=180, clearance=0.008);
-
+    LegBolts(cutter=true);
     Column(slots=[0,-90,90], cutter=true);
   }
-
 }
+//
+
+
+module BarrelContact(pivotDiameter=0.125, clearance=0.008, cutter=false) {
+  pivotRadius = pivotDiameter/2;
+
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
+
+  color("Gold")
+  translate([BARREL_CONTACT_X,BARREL_CONTACT_Y,0])
+  rotate(-90)
+  union() {
+    cylinder(r=pivotRadius+clear, h=DRILLBASE_HEIGHT+0.75);
+
+    translate([-pivotRadius-0.0625,-0.125,DRILLBASE_HEIGHT+ManifoldGap()])
+    cube([BARREL_DIAMETER+0.25, 0.25, 0.75]);
+  }
+}
+
+
 ScaleToMillimeters()
 if ($preview) {
 
@@ -555,23 +576,24 @@ if ($preview) {
     mirror([0,0,1])
     rotate(-rotations*360*$t*(driveGearTeeth/drivenGearTeeth))
     DrivenGear();
-    RotaryStepperTop();
+    RotaryStepper();
 
 
-    DrillBaseORing();
-    DrillHeadORing();
-    DrillHeadTap();
+    TailstockORing();
+    HeadstockORing();
+    HeadstockTap();
 
-    DrillBaseBolts();
-    DrillHeadBolts();
+    TailstockBolts();
+    HeadstockBolts();
 
     LinearStepper();
 
-    DrillBase(alpha=_ALPHA_DRILL_BASE);
-    DrillHead(alpha=_ALPHA_DRILL_HEAD);
+    Tailstock(alpha=_ALPHA_DRILL_BASE);
+    Headstock(alpha=_ALPHA_DRILL_HEAD);
   }
 
-  ColumnFoot();
+  LegBolts();
+  Legs();
 
 } else {
 
@@ -581,21 +603,21 @@ if ($preview) {
   if (_RENDER == "DriveGear")
   DriveGear();
 
-  if (_RENDER == "ColumnFoot")
-  ColumnFoot();
+  if (_RENDER == "Legs")
+  Legs();
 
-  if (_RENDER == "DrillBase")
-  DrillBase();
+  if (_RENDER == "Tailstock")
+  Tailstock();
 
-  if (_RENDER == "DrillHead")
+  if (_RENDER == "Headstock")
   translate([0,0,-DRILLHEAD_Z_MIN])
-  DrillHead();
+  Headstock();
 
   if (_RENDER == "Carriage")
-  translate([0,0,-CARRIAGE_MIN_X])
+  translate([0,0,-CARRIAGE_MIN_Z])
   Carriage();
 
   if (_RENDER == "ToolHolder")
-  translate([0,0,-CARRIAGE_MIN_X])
+  translate([0,0,-CARRIAGE_MIN_Z])
   ToolHolder();
 }
