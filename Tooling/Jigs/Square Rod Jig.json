@@ -1,0 +1,19 @@
+{
+    "parameterSets": {
+        "Sear": {
+            "BASE_EXTENSION": "1.5001",
+            "BASE_HEIGHT": "0.2501",
+            "CHAMFER_RADIUS": "0.0625",
+            "CLEARANCE": "0.0051",
+            "DRILL_DIAMETER": "0.25",
+            "HOLE_OFFSET": "1.0001",
+            "PUNCH_DIAMETER": "0.0984",
+            "SQUARE_WIDTH": "0.2501",
+            "TYPE": "Centerpunch"
+        }
+    },
+    "parameterSets": "",
+    "fileFormatVersion": "1",
+    "parameterSets": "",
+    "parameterSets": ""
+}

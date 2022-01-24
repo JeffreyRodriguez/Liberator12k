@@ -1,0 +1,21 @@
+{
+    "parameterSets": {
+        "design default values": {
+            "CHAMFER_RADIUS": "0.0625",
+            "CLEARANCE": "0.0041",
+            "HEIGHT": "0.5",
+            "HOLE_DIAMETER": "0.25",
+            "INNER_DIAMETER": "1.0001",
+            "ORING_WIDTH": "0.1251"
+        },
+        "Barrel": {
+            "CHAMFER_RADIUS": "0.0625",
+            "CLEARANCE": "0.0041",
+            "HEIGHT": "1.5",
+            "HOLE_DIAMETER": "0.25",
+            "INNER_DIAMETER": "0.8",
+            "ORING_WIDTH": "0.1251"
+        }
+    },
+    "fileFormatVersion": "1"
+}

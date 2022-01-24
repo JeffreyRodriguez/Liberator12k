@@ -1,4 +1,13 @@
+use <../Meta/Resolution.scad>;
+use <../Meta/Units.scad>;
 use <Teardrop.scad>;
+
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
+
 
 module TeardropTorus(majorRadius=3/8, minorRadius=1/16) {
   rotate_extrude()
