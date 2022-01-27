@@ -1324,7 +1324,7 @@ if ($preview) {
 
   if (_RENDER == "Prints/Sightpost")
     if (!_RENDER_PRINT)
-      TopBreak_Sightpost(radius=BarrelRadius()+BARREL_CLEARANCE);
+      TopBreak_Sightpost();
     else
       rotate([0,90,0])
       translate([-(TopBreak_SightpostX()+SightpostLength()),0,0])
