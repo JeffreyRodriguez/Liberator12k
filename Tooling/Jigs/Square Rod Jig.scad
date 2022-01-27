@@ -76,8 +76,8 @@ module SquareRodJig(width=SQUARE_WIDTH, r=PUNCH_DIAMETER/2, drillRadius=DRILL_DI
     cylinder(r=r+clear, h=centerpunchHeight);
 
     // Punch square rod cutout
-    translate([0, wall-clear, BASE_HEIGHT])
-    cube([length, width+clear2, width+clear2]);
+    translate([-length, wall-clear, BASE_HEIGHT])
+    cube([length*3, width+clear2, width+clear2]);
 
     // Drill hole
     translate([offset,offsetSide+(width/2),0])
