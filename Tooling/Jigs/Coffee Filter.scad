@@ -16,16 +16,10 @@ use <../../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 MAJOR_DIAMETER = 5.25;
 MINOR_DIAMETER = 3.875;
 FILTER_HEIGHT = 3;
-FILTER_WALL = 0.0625;
+FILTER_WALL = 0.03;
 TAPER_HEIGHT = 0.25;
-RIB_WIDTH = 0.0625;
+RIB_WIDTH = 0.06;
 
-SQUARE_WIDTH = 0.2501;
-PUNCH_DIAMETER = 0.0984;
-DRILL_DIAMETER = 0.25;
-HOLE_OFFSET = 1.0001;
-BASE_HEIGHT = 0.2501;
-BASE_EXTENSION = 1.0001;
 
 /* [Fine Tuning] */
 CLEARANCE = 0.0051;
@@ -52,18 +46,17 @@ difference() {
       // Inner wall cutaway
       difference() {
         translate([0,0,FILTER_WALL+TAPER_HEIGHT])
-        cylinder(r1=(MINOR_DIAMETER/2)-FILTER_WALL,
-                 r2=(MAJOR_DIAMETER/2)-FILTER_WALL,
+        cylinder(r1=(MINOR_DIAMETER/2),
+                 r2=(MAJOR_DIAMETER/2),
                   h=FILTER_HEIGHT+FILTER_WALL+TAPER_HEIGHT);
         
         // Ribs
         for (R = [0:15:360]) rotate(R)
-        translate([-RIB_WIDTH/2,-(MINOR_DIAMETER/2)+(FILTER_WALL*3),0])
+        translate([-RIB_WIDTH/2,(MINOR_DIAMETER/2)-(FILTER_WALL*3),TAPER_HEIGHT])
         multmatrix([[1,0,0,0],
-                    [0,1,-0.22,0],
+                    [0,1,0.22,0],
                     [0,0,1,0],
                     [0,0,0,1]])
-        mirror([0,1,0])
         cube([RIB_WIDTH,1,FILTER_HEIGHT+FILTER_WALL+TAPER_HEIGHT]);
       }
       
