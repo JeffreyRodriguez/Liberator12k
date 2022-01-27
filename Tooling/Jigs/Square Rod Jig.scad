@@ -68,7 +68,7 @@ module SquareRodJig(width=SQUARE_WIDTH, r=PUNCH_DIAMETER/2, drillRadius=DRILL_DI
 
       // Hold-down support
       translate([0,-0.5,0])
-      ChamferedCube([wall+offset+(r*2), 2.5, BASE_HEIGHT], r=CHAMFER_RADIUS);
+      ChamferedCube([1, 2.5, BASE_HEIGHT], r=CHAMFER_RADIUS);
     }
 
     // Punch hole
