@@ -10,6 +10,8 @@ use <../Shapes/Teardrop.scad>;
 use <../Shapes/Chamfer.scad>;
 use <../Shapes/Components/Pivot.scad>;
 
+use <../Tooling/Jigs/Square Rod Jig.scad>;
+
 use <../Vitamins/Bearing.scad>;
 use <../Vitamins/Nuts And Bolts.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec.scad>;
@@ -260,7 +262,7 @@ function SearRadius(clearance=0)   = SearWidth(clearance)/2;
 function SearPinDiameter(clearance=0) = SEAR_PIN_DIAMETER+(clearance*2);
 function SearPinRadius(clearance=0) = SearPinDiameter(clearance)/2;
 
-function SearPinOffsetZ() = -0.25-SearPinRadius();
+function SearPinOffsetZ() = -0.25;
 function SearBottomOffset() = 0.25;
 
 
@@ -275,7 +277,7 @@ function TriggerHeight() = GripCeiling()+TriggerFingerDiameter();
 function TriggerWidth() = 0.50;
 function SearTravel() = 0.25;
 function TriggerTravel() = SearTravel()*1.5;
-function SearLength() = 1.67188;// abs(SearPinOffsetZ()) + SearTravel();
+function SearLength() = 1.625;// abs(SearPinOffsetZ()) + SearTravel();
 
 function TriggerAnimationFactor() = SubAnimate(ANIMATION_STEP_TRIGGER)-SubAnimate(ANIMATION_STEP_CHARGER_RESET, end=0.1);
 
@@ -1084,29 +1086,7 @@ module Trigger(width=0.5, clearance=0.015, alpha=1) {
 //* Fixtures and Jigs *
 //*********************
 module FCG_SearJig(width=0.75, height=1) {
-  translate([0,0,SearPinOffsetZ()-SearBottomOffset()])
-  difference() {
-    translate([-(SearWidth()/2)-0.125,-width/2,0])
-    ChamferedCube([height,width,SearLength()], r=1/16);
-
-    // Sear Pin Hole
-    translate([-1,0,SearBottomOffset()])
-    rotate([0,90,0])
-    cylinder(r=SearPinRadius()+SEAR_PIN_CLEARANCE, h=3);
-
-    // Sear Rod Hole
-    translate([0,0,-ManifoldGap()])
-    cube([0.25+SEAR_CLEARANCE, 0.25+SEAR_CLEARANCE, SearLength()*2]);
-
-    // Set screw hole
-    translate([0,0,SearLength()-0.5])
-    rotate([0,90,0])
-    NutAndBolt(bolt=Spec_BoltM3(),
-            teardrop=true, teardropAngle=180,
-            nutBackset=(SearWidth()/2),
-            nutHeightExtra=(SearWidth()/2),
-            boltLength=3);
-  }
+  SquareRodJig(offset=abs(SearPinOffsetZ()));
 }
 module FCG_RecoilPlate_TapGuide(xyz = [0.25,0.25,1.5], holeRadius=0.1770/2, spindleZ=-1, contoured=FCG_RECOIL_PLATE_CONTOURED) {
   width = RecoilPlateWidth() + (xyz.x*2);

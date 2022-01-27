@@ -96,6 +96,6 @@ module SquareRodJig(width=SQUARE_WIDTH, r=PUNCH_DIAMETER/2, drillRadius=DRILL_DI
 }
 
 ScaleToMillimeters() {
-  color("Tan", alpha=0.5) render()
+  color("Tan") render()
   SquareRodJig();
 }
