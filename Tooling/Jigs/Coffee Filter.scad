@@ -15,7 +15,7 @@ use <../../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 /* [Jig Dimensions] */
 MAJOR_DIAMETER = 5.25;
 MINOR_DIAMETER = 3.875;
-FILTER_HEIGHT = 3;
+FILTER_HEIGHT = 2.5;
 FILTER_WALL = 0.03;
 TAPER_HEIGHT = 0.25;
 RIB_WIDTH = 0.06;
@@ -31,54 +31,58 @@ CHAMFER_RADIUS = 0.0625;
 $fa = ResolutionFa();
 $fs = UnitsFs()*ResolutionFs();
 
-render()
-difference() {
-  union() {
-    
-    // Filter cup
-    difference() {
+
+module CoffeeFilterCup() {
+  difference() {
+    union() {
       
-      // Outer wall
-      cylinder(r1=MINOR_DIAMETER/2,
-               r2=MAJOR_DIAMETER/2,
-                h=FILTER_HEIGHT+FILTER_WALL+TAPER_HEIGHT);
-      
-      // Inner wall cutaway
+      // Filter cup
       difference() {
-        translate([0,0,FILTER_WALL+TAPER_HEIGHT])
-        cylinder(r1=(MINOR_DIAMETER/2),
-                 r2=(MAJOR_DIAMETER/2),
+        
+        // Outer wall
+        cylinder(r1=MINOR_DIAMETER/2,
+                 r2=MAJOR_DIAMETER/2,
                   h=FILTER_HEIGHT+FILTER_WALL+TAPER_HEIGHT);
         
-        // Ribs
-        for (R = [0:15:360]) rotate(R)
-        translate([-RIB_WIDTH/2,(MINOR_DIAMETER/2)-(FILTER_WALL*3),TAPER_HEIGHT])
-        multmatrix([[1,0,0,0],
-                    [0,1,0.22,0],
-                    [0,0,1,0],
-                    [0,0,0,1]])
-        cube([RIB_WIDTH,1,FILTER_HEIGHT+FILTER_WALL+TAPER_HEIGHT]);
+        // Inner wall cutaway
+        difference() {
+          translate([0,0,FILTER_WALL+TAPER_HEIGHT])
+          cylinder(r1=(MINOR_DIAMETER/2),
+                   r2=(MAJOR_DIAMETER/2),
+                    h=FILTER_HEIGHT+FILTER_WALL+TAPER_HEIGHT);
+          
+          // Ribs
+          for (R = [0:15:360]) rotate(R)
+          translate([-RIB_WIDTH/2,(MINOR_DIAMETER/2)-(FILTER_WALL*3),TAPER_HEIGHT])
+          multmatrix([[1,0,0,0],
+                      [0,1,0.22,0],
+                      [0,0,1,0],
+                      [0,0,0,1]])
+          cube([RIB_WIDTH,1,FILTER_HEIGHT+FILTER_WALL+TAPER_HEIGHT]);
+        }
+        
+        // Bottom Taper
+        translate([0,0,FILTER_WALL])
+        cylinder(r1=0,
+                 r2=(MINOR_DIAMETER/2)-FILTER_WALL,
+                  h=TAPER_HEIGHT);
+        
       }
       
-      // Bottom Taper
-      translate([0,0,FILTER_WALL])
-      cylinder(r1=0,
-               r2=(MINOR_DIAMETER/2)-FILTER_WALL,
-                h=TAPER_HEIGHT);
+      // Long bottom ribs
+      for (R = [0:30:360]) rotate(15+R)
+      translate([-RIB_WIDTH/2,0.375,FILTER_WALL])
+      cube([RIB_WIDTH,(MINOR_DIAMETER/2)-0.375,RIB_WIDTH+TAPER_HEIGHT]);
       
+      // Short bottom ribs
+      for (R = [0:30:360]) rotate(R)
+      translate([-RIB_WIDTH/2,0.75,FILTER_WALL])
+      cube([RIB_WIDTH,(MINOR_DIAMETER/2)-0.75,TAPER_HEIGHT]);
     }
     
-    // Long bottom ribs
-    for (R = [0:30:360]) rotate(15+R)
-    translate([-RIB_WIDTH/2,0.375,FILTER_WALL])
-    cube([RIB_WIDTH,(MINOR_DIAMETER/2)-0.375,RIB_WIDTH+TAPER_HEIGHT]);
-    
-    // Short bottom ribs
-    for (R = [0:30:360]) rotate(R)
-    translate([-RIB_WIDTH/2,0.75,FILTER_WALL])
-    cube([RIB_WIDTH,(MINOR_DIAMETER/2)-0.75,TAPER_HEIGHT]);
+    // Hole taper
+    cylinder(r1=0.125, r2=0.5,h=0.5);
   }
-  
-  // Hole taper
-  cylinder(r1=0.125, r2=0.5,h=0.5);
 }
+
+render() CoffeeFilterCup();
