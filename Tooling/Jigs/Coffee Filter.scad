@@ -55,7 +55,7 @@ module CoffeeFilterCup() {
           for (R = [0:15:360]) rotate(R)
           translate([-RIB_WIDTH/2,(MINOR_DIAMETER/2)-(FILTER_WALL*3),TAPER_HEIGHT])
           multmatrix([[1,0,0,0],
-                      [0,1,0.22,0],
+                      [0,1,0.25,0],
                       [0,0,1,0],
                       [0,0,0,1]])
           cube([RIB_WIDTH,1,FILTER_HEIGHT+FILTER_WALL+TAPER_HEIGHT]);
@@ -85,4 +85,48 @@ module CoffeeFilterCup() {
   }
 }
 
-render() CoffeeFilterCup();
+
+module CoffeeFilterBase() {
+  difference() {
+    union() {
+      
+      // Main funnel base
+      mirror([0,0,1])
+      cylinder(r1=0.5, r2=0.1875, h=0.625);
+      
+      // Bottom Plate
+      mirror([0,0,1])
+      cylinder(r=(3.25/2), h=0.0625);
+      
+      // Breather ribs
+      for (R = [0:30:360]) rotate(R)
+      translate([-RIB_WIDTH/2,0,0])
+      mirror([0,0,1])
+      cube([RIB_WIDTH,(3.25/2),0.125]);
+      
+      // Wide mouth breather ribs
+      for (R = [0:30:360]) rotate(R)
+      translate([-RIB_WIDTH/2,0,0])
+      mirror([0,0,1])
+      cube([RIB_WIDTH,(2.875/2),0.25]);
+      
+      // Regular mouth breather ribs
+      for (R = [0:30:360]) rotate(R)
+      translate([-RIB_WIDTH/2,0,0])
+      mirror([0,0,1])
+      cube([RIB_WIDTH,(2.25/2),0.5]);
+    }
+    
+    // Drain hole
+    mirror([0,0,1])
+    cylinder(r=0.125, h=1);
+  }
+}
+
+ScaleToMillimeters()
+render()
+CoffeeFilterCup();
+
+ScaleToMillimeters()
+render()
+CoffeeFilterBase();
