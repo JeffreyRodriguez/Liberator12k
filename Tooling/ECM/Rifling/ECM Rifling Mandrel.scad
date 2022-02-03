@@ -5,16 +5,30 @@ use <../../../Meta/Units.scad>;
 // Length of the barrel to be rifled
 BARREL_LENGTH = 2;
 
-// 0.44 Magnum
+// Internal diameter (top of the lands)
 BARREL_ID = 0.429;
-TWIST_RATE = 0.05; // 1 in 20
-twistRate = TWIST_RATE;
+
+// i.e. 1 over 20
+twistRate = 0.05;
+
+// Left or right twist
 twistSign = -1;
+
+// Number of grooves
 grooveCount = 6;
+
+// Groove water channel depth
 grooveDepth = 0.06;
+
+// Electrode wire diameter
 wireDiameter= 0.045;
+
+// Length to protect from ECM cutting
 chamberLength = 0.898;
+
+// Diameter of the chamber / case OD
 chamberDiameter = 0.476;
+
 baseWidth = 0.125;
 base = 0.0625;
 
@@ -58,7 +72,7 @@ module ECM_RiflingChannel(outsideDiameter = BARREL_ID,
 
 
 module ECM_RiflingMandrel(outsideDiameter = BARREL_ID,
-                                length = 1,
+                                length = BARREL_LENGTH,
                                    $fn = 60) {
 
   outsideRadius = outsideDiameter/2;
@@ -105,20 +119,18 @@ module ECM_RiflingMandrel(outsideDiameter = BARREL_ID,
 
 // 0.44 Magnum (Pistol-Length twist rate)
 *!ScaleToMillimeters()
-ECM_RiflingMandrel(length=5.75-1.25+0.0625, taper=true);
+ECM_RiflingMandrel(taper=true);
 
 
 // .22 cal prototype
 *!ScaleToMillimeters()
-ECM_RiflingMandrel(length=2.795-0.65+0.0625,
-                   taper=true, grooveDepth=0.1,
+ECM_RiflingMandrel(taper=true, grooveDepth=0.1,
                    outsideDiameter = 0.225);
 
 // 38 Prototype
-*ECM_RiflingMandrel(length=1,
-                   taper=true, grooveDepth=0.06,
+*ECM_RiflingMandrel(taper=true, grooveDepth=0.06,
                    outsideDiameter = 0.38);
 
 // 0.45 ACP
 ScaleToMillimeters()
-ECM_RiflingMandrel(length=5.5);
+ECM_RiflingMandrel();
