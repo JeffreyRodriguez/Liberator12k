@@ -4,9 +4,6 @@ Full hardware list for the Minuteman receiver
 
 | Parts Kit              | Purpose                   | Part                                                 | Quantity |
 |------------------------|---------------------------|------------------------------------------------------|----------|
-| Frame Bolts            | Frame Bolt                | 1/2-13x10 Hex Bolt                                   | 2        |
-| Frame Bolts            | Frame Nut                 | 1/2-13 Hex Nut                                       | 2        |
-| Threaded Rods          | Tension Bolt              | #8-32x12 Threaded Rod                                | 4        |
 | Receiver               | Tension Bolt Nut          | #8-32 Heatset Nut (Long)                             | 4        |
 | Receiver               | Tension Bolt Washer       | #8-32 Washer                                         | 4        |
 | Receiver               | Tension Bolt Acorn Nut    | #8-32 Acorn Nut                                      | 4        |
@@ -33,6 +30,9 @@ Full hardware list for the Minuteman receiver
 | Fire Control           | Disconnector Spring       | 0.22" OD 0.625" Long (0.02" wire)                    | 1        |
 | Fire Control           | Firing Pin                | 6Dx2" Box Nail, cut flush to 1.54" OAL               | 1        |
 | Fire Control           | Firing Pin Spring         | 0.22" OD 0.625" Long (0.02" wire)                    | 1        |
-| Fire Control           | Recoil Plate              | #Liberator12k Recoil Plate                           | 1        |
 | Fire Control           | Recoil Plate Center Bolts | #8-32x1.5 SS Flat-Head Bolt                          | 2        |
 | Fire Control           | Recoil Plate Side Bolts   | #8-32x0.5 SS Flat-Head Bolt                          | 4        |
+| Frame Bolts            | Frame Bolt                | 1/2-13x10 Hex Bolt                                   | 2        |
+| Frame Bolts            | Frame Nut                 | 1/2-13 Hex Nut                                       | 2        |
+| Threaded Rods          | Tension Bolt              | #8-32x12 Threaded Rod                                | 4        |
+| Recoil Plate           | Recoil Plate              | #Liberator12k Recoil Plate                           | 1        |

@@ -4,9 +4,6 @@ Full hardware list for the Minuteman receiver.
 
 | Component              | Purpose                   | Part                                                 | Quantity |
 |------------------------|---------------------------|------------------------------------------------------|----------|
-| Frame Bolts            | Frame Bolt                | **DIN931** M12x260 Hex Head Bolt                     | 2        |
-| Frame Bolts            | Frame Nut                 | **DIN934** M12 Hex Nut                               | 4        |
-| Threaded Rods          | Tension Bolt              | **DIN795** M4x305 Threaded Rod                       | 4        |
 | Receiver               | Tension Bolt Nut          | M4 Heatset Nut (**M4xD7xL8**)                        | 4        |
 | Receiver               | Tension Bolt Washer       | **DIN125** M4 Washer                                 | 4        |
 | Receiver               | Tension Bolt Acorn Nut    | **DIN1587** M4 Domed Hex Cap Nut                     | 4        |
@@ -33,6 +30,9 @@ Full hardware list for the Minuteman receiver.
 | Fire Control           | Disconnector Spring       | 0.5mm Wire, 6mm OD, 20mm Length Spring (Cut to 16mm) | 1        |
 | Fire Control           | Firing Pin                | 2.5x50mm Nail, , cut flush to 40mm OAL               | 1        |
 | Fire Control           | Firing Pin Spring         | 0.5mm Wire, 6mm OD, 20mm Length Spring (Cut to 16mm) | 1        |
-| Fire Control           | Recoil Plate              | 6mm Thickness 50.80x60.325mm AISI 4140 Steel Plate   | 1        |
 | Fire Control           | Recoil Plate Center Bolts | **DIN7991** M4x40 A2/A4 Countersunk Bolt             | 2        |
 | Fire Control           | Recoil Plate Side Bolts   | **DIN7991** M4x40 A2/A4 Countersunk Bolt             | 4        |
+| Frame Bolts            | Frame Bolt                | **DIN931** M12x260 Hex Head Bolt                     | 2        |
+| Frame Bolts            | Frame Nut                 | **DIN934** M12 Hex Nut                               | 4        |
+| Threaded Rods          | Tension Bolt              | **DIN795** M4x305 Threaded Rod                       | 4        |
+| Recoil Plate           | Recoil Plate              | 6mm Thickness 50.80x60.325mm AISI 4140 Steel Plate   | 1        |
