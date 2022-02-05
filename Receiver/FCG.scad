@@ -26,7 +26,7 @@ use <Receiver.scad>;
 /* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Prints/FCG_Housing", "Prints/FCG_ChargingHandle", "Prints/FCG_Disconnector", "Prints/FCG_Hammer", "Prints/FCG_HammerTail", "Prints/FCG_FiringPinCollar", "Prints/FCG_Trigger", "Prints/FCG_TriggerMiddle", "Jigs/FCG_FiringPin", "Jigs/FCG_Sear", "Fixtures/FCG_RecoilPlate", "Fixtures/FCG_RecoilPlate_GangFixture", "Fixtures/FCG_RecoilPlate_TapGuide", "Projections/FCG_RecoilPlate"]
+_RENDER = ""; // ["", "Prints/FCG_Housing", "Prints/FCG_ChargingHandle", "Prints/FCG_Disconnector", "Prints/FCG_Hammer", "Prints/FCG_HammerTail", "Prints/FCG_FiringPinCollar", "Prints/FCG_Trigger", "Prints/FCG_TriggerMiddle", "Jigs/FCG_FiringPin", "Jigs/FCG_Sear", "Jigs/FCG_HammerSleeve", "Fixtures/FCG_RecoilPlate", "Fixtures/FCG_RecoilPlate_GangFixture", "Fixtures/FCG_RecoilPlate_TapGuide", "Projections/FCG_RecoilPlate"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;
@@ -1086,6 +1086,8 @@ module Trigger(width=0.5, clearance=0.015, alpha=1) {
 //* Fixtures and Jigs *
 //*********************
 module FCG_FiringPinJig(width=0.75, height=1.45, clearance=0.005) {
+  radius = FiringPinRadius();
+  
   // Insert nail, cut flush with Knipex 71 32 200
   // Grind flat and smooth over
   
@@ -1095,7 +1097,7 @@ module FCG_FiringPinJig(width=0.75, height=1.45, clearance=0.005) {
     
     // Straight hole
     translate([width/2,width/2,0])
-    ChamferedCircularHole(r1=FiringPinRadius()+clearance,
+    ChamferedCircularHole(r1=radius+clearance,
                           r2=1/32, h=height,
                           chamferBottom=false);
     
@@ -1104,6 +1106,27 @@ module FCG_FiringPinJig(width=0.75, height=1.45, clearance=0.005) {
     cylinder(r1=FiringPinRadius()*2,
              r2=FiringPinRadius(),
               h=height*0.75);
+    
+  }
+}
+module FCG_HammerSleeveJig(width=1, height=2, clearance=0.005) {
+   radius = (HAMMER_BOLT_SLEEVE_DIAMETER/2)+clearance;
+  
+  render()
+  difference() {
+    ChamferedCube([width,width,height], r=1/16);
+    
+    // Straight hole
+    translate([width/2,width/2,0])
+    ChamferedCircularHole(r1=radius+clearance,
+                          r2=1/32, h=height,
+                          chamferBottom=false);
+    
+    // Taper hole
+    translate([width/2,width/2,0])
+    cylinder(r1=radius*2,
+             r2=radius,
+              h=radius*2);
     
   }
 }
@@ -1438,6 +1461,9 @@ if ($preview) {
   
   if (_RENDER == "Jigs/FCG_Sear")
   FCG_SearJig();
+  
+  if (_RENDER == "Jigs/FCG_HammerSleeve")
+  FCG_HammerSleeveJig();
 
   if (_RENDER == "Fixtures/FCG_RecoilPlate")
   FCG_RecoilPlate_Fixture();
