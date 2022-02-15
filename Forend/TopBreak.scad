@@ -43,6 +43,7 @@ _RENDER_PRINT = true;
 /* [Assembly] */
 _SHOW_PRINTS = true;
 _SHOW_HARDWARE = true;
+_SHOW_RECEIVER_HARDWARE = false;
 _SHOW_RECEIVER = true;
 _SHOW_TENSION_RODS = false;
 _SHOW_STOCK = true;
@@ -1242,7 +1243,7 @@ if ($preview) {
 
     if (_SHOW_RECEIVER)
     Frame_ReceiverAssembly(
-      hardware=false,
+      hardware=_SHOW_RECEIVER_HARDWARE,
       length=FRAME_BOLT_LENGTH-0.5,
       cutaway=_CUTAWAY_RECEIVER,
       alpha=_ALPHA_RECEIVER);
