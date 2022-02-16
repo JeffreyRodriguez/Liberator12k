@@ -1191,7 +1191,7 @@ module FCG_RecoilPlate_Fixture(xyz = [1,0.5,0.5], holeRadius=0.1875, spindleZ=-1
 
   }
 }
-module FCG_RecoilPlate_GangFixture(xyz = [0.25,0.75,0.375], gang=[2,3], holeRadius=0.125, spindleZ=-1, contoured=FCG_RECOIL_PLATE_CONTOURED) {
+module FCG_RecoilPlate_GangFixture(xyz = [0.25,0.75,0.375], gang=[1,1], holeRadius=0.1, spindleZ=-1, contoured=FCG_RECOIL_PLATE_CONTOURED) {
 
   offsetPlateX = (RecoilPlateHeight()/2)-0.125;
   offsetGapX = 0.125;
@@ -1217,23 +1217,24 @@ module FCG_RecoilPlate_GangFixture(xyz = [0.25,0.75,0.375], gang=[2,3], holeRadi
       translate([xyz.x+offsetPlateX, xyz.y+(RecoilPlateWidth()/2), 0])
       rotate([0,-90,0])
       RecoilPlate(contoured=contoured, cutter=true, clearance=0.005);
-
-      // Template holes
+      
+      // Hold-down bolts
       translate([xyz.x+offsetPlateX, xyz.y+(RecoilPlateWidth()/2), 0])
+      for (hole = [1,-1])
+      translate([0,hole*0.5,0])
+      NutAndBolt(BoltSpec("M3"), boltLength=height, nut="hex",
+                 clearance=0.005);
+      
+      // Template holes
+      translate([xyz.x+offsetPlateX, xyz.y+(RecoilPlateWidth()/2), 0.1875])
       for (hole = TemplateHoles)
       translate([-hole.z,hole.y,0])
-      ChamferedCircularHole(r1=holeRadius, r2=1/8,  h=height);
+      cylinder(r=holeRadius, h=height);
 
       // Spindle hole
       translate([xyz.x+offsetPlateX, xyz.y+(RecoilPlateWidth()/2), 0])
       translate([1,0,0])
       cylinder(r=3/8/2, h=height);
-
-      // Magnet slot
-      for (X = [Inches(-0.1875)+Millimeters(-10),Inches(0.1875)])
-      translate([xyz.x+offsetPlateX+X, xyz.y+(RecoilPlateWidth()/2), 0.25])
-      translate([0,-Millimeters(30),-Millimeters(3)])
-      cube([Millimeters(10), Millimeters(60), xyz.z]);
     }
 
     // Fixture holes
@@ -1273,6 +1274,7 @@ module TriggerGroup(hardware=true, prints=true, animationFactor=TriggerAnimation
   translate([-(TriggerTravel()*animationFactor),0,0])
   Trigger(alpha=alpha);
 }
+
 module SimpleFireControlAssembly(hardware=true, prints=true, actionRod=_SHOW_ACTION_ROD, recoilPlate=_SHOW_RECOIL_PLATE, cutaway=false, alpha=1) {
   disconnectStart = 0.8;
   disconnectLetdown = 0.2;
