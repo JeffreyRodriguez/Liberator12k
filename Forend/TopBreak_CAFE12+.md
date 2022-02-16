@@ -48,6 +48,7 @@ STL Files Location: `Forend/TopBreak_CAFE12+/Prints/`
 | **Total**         | 420g          |           2d08h09m |
 <br/>
 
+<!-- NEW PAGE -->
 ## Vitamins
 
 | Component        | Purpose                | Part                             | Quantity |
