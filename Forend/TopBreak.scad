@@ -35,7 +35,7 @@ use <../Receiver/Stock.scad>;use <../Shapes/Bearing Surface.scad>;
 /* [Export] */
 
 // Select a part, Render it (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Prints/ReceiverFront", "Prints/Forend", "Prints/Cluster", "Prints/BarrelCollar", "Prints/Extractor", "Prints/LatchTab", "Prints/Foregrip", "Prints/VerticalForegrip", "Prints/Sightpost","Jigs/Trunnion"]
+_RENDER = ""; // ["", "Prints/ReceiverFront", "Prints/Forend", "Prints/Cluster", "Prints/BarrelCollar", "Prints/Extractor", "Prints/LatchTab", "Prints/Foregrip", "Prints/VerticalForegrip", "Prints/Sightpost","Jigs/Trunnion", "Fixtures/ExtractorGang_Bottom", "Fixtures/ExtractorGang_Top"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;
