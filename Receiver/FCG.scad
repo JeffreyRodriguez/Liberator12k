@@ -1087,47 +1087,47 @@ module Trigger(width=0.5, clearance=0.015, alpha=1) {
 //*********************
 module FCG_FiringPinJig(width=0.75, height=1.45, clearance=0.005) {
   radius = FiringPinRadius();
-  
+
   // Insert nail, cut flush with Knipex 71 32 200
   // Grind flat and smooth over
-  
+
   render()
   difference() {
     ChamferedCube([width,width,height], r=1/16);
-    
+
     // Straight hole
     translate([width/2,width/2,0])
     ChamferedCircularHole(r1=radius+clearance,
                           r2=1/32, h=height,
                           chamferBottom=false);
-    
+
     // Taper hole
     translate([width/2,width/2,0])
     cylinder(r1=FiringPinRadius()*2,
              r2=FiringPinRadius(),
               h=height*0.75);
-    
+
   }
 }
 module FCG_HammerSleeveJig(width=1, height=2, clearance=0.005) {
    radius = (HAMMER_BOLT_SLEEVE_DIAMETER/2)+clearance;
-  
+
   render()
   difference() {
     ChamferedCube([width,width,height], r=1/16);
-    
+
     // Straight hole
     translate([width/2,width/2,0])
     ChamferedCircularHole(r1=radius+clearance,
                           r2=1/32, h=height,
                           chamferBottom=false);
-    
+
     // Taper hole
     translate([width/2,width/2,0])
     cylinder(r1=radius*2,
              r2=radius,
               h=radius*2);
-    
+
   }
 }
 
@@ -1217,14 +1217,14 @@ module FCG_RecoilPlate_GangFixture(xyz = [0.25,0.75,0.375], gang=[1,1], holeRadi
       translate([xyz.x+offsetPlateX, xyz.y+(RecoilPlateWidth()/2), 0])
       rotate([0,-90,0])
       RecoilPlate(contoured=contoured, cutter=true, clearance=0.005);
-      
+
       // Hold-down bolts
       translate([xyz.x+offsetPlateX, xyz.y+(RecoilPlateWidth()/2), 0])
       for (hole = [1,-1])
       translate([0,hole*0.5,0])
       NutAndBolt(BoltSpec("M3"), boltLength=height, nut="hex",
                  clearance=0.005);
-      
+
       // Template holes
       translate([xyz.x+offsetPlateX, xyz.y+(RecoilPlateWidth()/2), 0.1875])
       for (hole = TemplateHoles)
@@ -1457,13 +1457,13 @@ if ($preview) {
 
   // *********************
   // * Fixtures and Jigs *
-  // *********************  
+  // *********************
   if (_RENDER == "Jigs/FCG_FiringPin")
   FCG_FiringPinJig();
-  
+
   if (_RENDER == "Jigs/FCG_Sear")
   FCG_SearJig();
-  
+
   if (_RENDER == "Jigs/FCG_HammerSleeve")
   FCG_HammerSleeveJig();
 
