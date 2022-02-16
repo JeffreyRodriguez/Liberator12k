@@ -242,6 +242,7 @@ function ExtractorSpringSpec() = [
 //function ActionRodZ() = FrameBoltZ()-WallFrameBolt()-(ActionRodWidth()/2);
 function BarrelOffsetZ() = 0; // -0.11 for .22LR rimfire
 
+function TopBreak_ExtractorAngle() = 155;
 function TopBreak_ExtractorWall() = 0.125;
 function TopBreak_ExtractorWallBottom() = 0.1875;
 function TopBreak_ExtractorWidth() = 0.65;
@@ -364,7 +365,7 @@ module TopBreak_ExtractorBit(cutter=false, clearance=0.003) {
   color("DimGrey") RenderIf(!cutter)
   translate([RIM_WIDTH,0,0])
   translate([TopBreak_ExtractorBitWidth()/8,0,TopBreak_ExtractorBitZ()])
-  rotate([0,155,0])
+  rotate([0,TopBreak_ExtractorAngle(),0])
   difference() {
     rotate(30)
     cylinder(r=((TopBreak_ExtractorBitWidth()/2)/cos(30))+clear,
@@ -1086,7 +1087,7 @@ module TopBreak_Sightpost(alpha=_ALPHA_SIGHTPOST, cutaway=_CUTAWAY_SIGHTPOST) {
   }
 }
 
-// Fixtures
+// Fixtures and Jigs
 module TopBreak_Jig_Trunnion() {
   wall = 0.1875;
   guideExtra= 0;
@@ -1119,8 +1120,145 @@ module TopBreak_Jig_Trunnion() {
   }
 }
 
+module TopBreak_Fixture_Extractor(top=false, bottom=false, clearance=Inches(0.003)) {
+  clear = clearance;
+  clear2 = clearance*2;
+
+  base = 0.25;
+  height=0.75;
+  topHeight=0.5;
+  width = 1;
+  length = 4;
+  mountingBlockX = abs(TopBreak_ExtractorBitZ())+0.125;
+  offsetY = -width/2;
+  offsetZ = 0.5;
+  bitWidth = (TopBreak_ExtractorBitWidth()/cos(30));
+  gangAngle = 45;
+
+  module TSlotBolts(cutter=false) {
+    for (R = [0,90]) rotate(R)
+    for (X = [0,3]) translate([-1.5+X,0,base+0.01])
+    NutAndBolt(bolt=BoltSpec(GP_BOLT), boltLength=1, capOrientation=true,
+               head="flat");
+  }
+
+  module Bolts(cutter=false) {
+    for (R = [0:gangAngle:360]) rotate((R*gangAngle)+(gangAngle/2))
+    translate([abs(TopBreak_ExtractorBitZ())+0.125+0.5,0,0.01])
+    NutAndBolt(bolt=BoltSpec(GP_BOLT), boltLength=1,
+               head="flat", nut="heatset-long",
+               nutHeightExtra=(cutter?1:0),
+               clearance=(cutter?clear2:0));
+  }
+
+  module Bits(cutter=false) {
+    for (R = [0:gangAngle:360]) rotate(R)
+    translate([0,0,base+offsetZ])
+    rotate(180)
+    rotate([0,90,0])
+    TopBreak_ExtractorBit(cutter=cutter);
+  };
+
+  %Bits();
+  %Bolts();
+  %TSlotBolts();
+
+  // Top plate
+  if (top)
+  color("Tan") render()
+  difference() {
+    union() {
+
+      // Mounting block
+      hull()
+      for (R = [0:gangAngle:360]) rotate(R)
+      translate([mountingBlockX+0.25,offsetY,(base+offsetZ-0.25)])
+      ChamferedCube([0.5, width, topHeight], r=1/16);
+
+      // Clamping tab
+      for (R = [0:gangAngle:360]) rotate(R)
+      translate([mountingBlockX+0.25,-(1/8/2),base])
+      ChamferedCube([0.5, (1/8), topHeight], r=1/32);
+    }
+
+    Bolts(cutter=true);
+
+    // Extractor bit
+    for (R = [0:gangAngle:360]) rotate(R)
+    translate([0,0,base+offsetZ-clearance])
+    rotate(180)
+    rotate([0,90,0]) {
+
+      TopBreak_ExtractorBit(cutter=true, clearance=0.001);
+
+      // Flat sides
+      translate([RIM_WIDTH,0,0])
+      translate([TopBreak_ExtractorBitWidth()/8,0,TopBreak_ExtractorBitZ()])
+      rotate([0,TopBreak_ExtractorAngle(),0])
+      translate([-(TopBreak_ExtractorBitWidth()+clear2),-(bitWidth/2)-clear,0])
+      cube([TopBreak_ExtractorBitWidth()+clear2, bitWidth+clear2, TopBreak_ExtractorBitLength()]);
+    }
+
+    // Cutout access
+    translate([0,0,base])
+    cylinder(r=mountingBlockX+0.125, h=base+height+topHeight);
+  }
+
+  // Bottom plate
+  if (bottom)
+  color("Tan") render()
+  difference() {
+    union() {
+
+      // Baseplate
+      hull()
+      for (R = [0,90,-90,180]) rotate(R)
+      translate([1.5,0,0])
+      ChamferedCylinder(r1=0.25, r2=CR(), h=base);
+
+      // Mounting block
+      hull()
+      for (R = [0:gangAngle:360]) rotate(R)
+      translate([mountingBlockX,offsetY,0])
+      ChamferedCube([0.825, width, base+offsetZ-0.25], r=1/16);
+    }
+
+    // Extractor bit
+    for (R = [0:gangAngle:360]) rotate(R)
+    translate([0,0,base+offsetZ])
+    rotate(180)
+    rotate([0,90,0]) {
+
+      TopBreak_ExtractorBit(cutter=true, clearance=clearance);
+
+      // Flat sides
+      translate([RIM_WIDTH,0,0])
+      translate([TopBreak_ExtractorBitWidth()/8,0,TopBreak_ExtractorBitZ()])
+      rotate([0,TopBreak_ExtractorAngle(),0])
+      translate([0,-(bitWidth/2)-clear,0])
+      cube([TopBreak_ExtractorBitWidth()+clear2, bitWidth+clear2, TopBreak_ExtractorBitLength()]);
+    }
+
+    // T-slot bolts
+    TSlotBolts(cutter=true);
+
+    Bolts(cutter=true);
+
+    // Index pin
+    translate([0,0,0])
+    cylinder(r=Inches(3/32/2)+clearance, h=base+height);
+
+    // Cutout access
+    translate([0,0,base+height])
+    cylinder(r=mountingBlockX, h=base+height);
+  }
+}
+
 // Assembly
 module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontAlpha=1, pivotFactor=0, extractFactor=0, chargeFactor=0, lockFactor=0, fcg=_SHOW_FCG, stock=true, tailcap=false, cutaway=undef, hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS) {
+
+  if (hardware)
+  TopBreak_ForendBolts();
 
   if (fcg)
   translate([-TopBreak_ReceiverFrontLength(),0,0]) {
@@ -1339,6 +1477,20 @@ if ($preview) {
       TopBreak_Jig_Trunnion();
     else
       TopBreak_Jig_Trunnion();
+
+  if (_RENDER == "Fixtures/ExtractorGang_Bottom")
+    if (!_RENDER_PRINT)
+      TopBreak_Fixture_Extractor(bottom=true);
+    else
+      TopBreak_Fixture_Extractor(bottom=true);
+
+  if (_RENDER == "Fixtures/ExtractorGang_Top")
+    if (!_RENDER_PRINT)
+      TopBreak_Fixture_Extractor(top=true);
+    else
+      translate([0,0,1])
+      rotate([180,0,0])
+      TopBreak_Fixture_Extractor(top=true);
 
   // ************
   // * Hardware *
