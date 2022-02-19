@@ -46,7 +46,7 @@ module DrivenGear(id=0.75+0.02, extension=0.375) {
              clearance=gearClearance);
       }
 
-      ChamferedCylinder(r1=0.75, r2=1/16, h=gearThickness+extension, $fn=50);
+      ChamferedCylinder(r1=driveGearPitchRadius+units_per_tooth, r2=1/16, h=gearThickness+extension, $fn=50);
     }
 
     ChamferedCircularHole(r1=id/2,
@@ -59,7 +59,7 @@ module DrivenGear(id=0.75+0.02, extension=0.375) {
     Bolt(bolt=BoltSpec("M4"), teardrop=true, teardropAngle=180, length=2);
   }
 }
-module DriveGear(id=5/16, extension=0.375, flipZ=false) {
+module DriveGear(id=Millimeters(5), extension=0.375, flipZ=false) {
   translate([0,0,flipZ?gearThickness+extension:0]) mirror([0,0,flipZ?1:0])
   color("DarkCyan") render()
   difference() {
@@ -76,7 +76,7 @@ module DriveGear(id=5/16, extension=0.375, flipZ=false) {
       ChamferedCylinder(r1=0.36, r2=1/16,
                         chamferBottom=false, h=gearThickness+extension, $fn=50);
     }
-
+    echo("ID: ", id)
     ChamferedCircularHole(r1=(id/2)+0.005,
                           r2=1/32,
                            h=gearThickness+extension, $fn=40);
@@ -90,7 +90,7 @@ module DriveGear(id=5/16, extension=0.375, flipZ=false) {
 
 
 *rotate(360/driveGearTeeth/2)
-DriveGear(flipZ=false, id=5/16);
+DriveGear(flipZ=false);
 
 *translate([gearDistance,0,0])
 DrivenGear();

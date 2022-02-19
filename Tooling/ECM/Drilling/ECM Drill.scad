@@ -29,6 +29,7 @@ BARREL_LENGTH = 6;
 ORING_WIDTH = 0.09375;
 DRIVESCREW_DIAMETER=0.3125;
 ELECTRODE_DIAMETER=0.125;
+TAP_DIAMETER=0.125;
 
 /* [Chosen Dimensions] */
 BARREL_OFFSET_X = 1.25;
@@ -51,12 +52,13 @@ COLUMN_WIDTH=20/25.4;
 COLUMN_WALL=0.25;
 DRIVESCREW_MOUNT_HEIGHT = 1;
 CARRIAGE_LENGTH=0.75;
-DRIVE_ANGLE=0;
 
 
 // Derived Values
 
 BARREL_RADIUS = BARREL_DIAMETER/2;
+ELECTRODE_RADIUS = ELECTRODE_DIAMETER/2;
+TAP_RADIUS=TAP_DIAMETER/2;
 
 DRIVESCREW_OFFSET_X = -COLUMN_WIDTH-COLUMN_WALL-Millimeters(21);
 DRIVESCREW_OFFSET_Y = 0;
@@ -84,9 +86,8 @@ $fs = UnitsFs()*ResolutionFs();
 // ************
 module RotaryStepper(cutter=false) {
   translate([BARREL_OFFSET_X, 0, DRILLHEAD_Z_MIN+0.5625])
-  rotate(DRIVE_ANGLE) translate([0,driveGearPitchRadius+drivenGearPitchRadius,0])
-  rotate(-DRIVE_ANGLE) {
-    PlanetaryNEMA17(cutter=cutter);
+  translate([0,driveGearPitchRadius+drivenGearPitchRadius,0]) {
+    NEMA17(cutter=cutter);
 
     if (cutter)
     mirror([0,0,1])
@@ -169,12 +170,10 @@ module ElectrodeSetScrew(threaded=false, clearance=true, cutter=false) {
 
 // Headstock hardware
 module HeadstockTap(clearance=0.015, cutter=false) {
-  passageRadius = 0.1875;
-
-  // Outlet (3/16" tube)
+  // Outlet tube
   color("Gold") RenderIf(!cutter)
   translate([WATER_TAP_OFFSET_X,WATER_TAP_OFFSET_Y,BARREL_Z_MAX+0.25])
-  cylinder(r=(0.14/2)+(cutter?clearance:0), h=DRILLHEAD_HEIGHT);
+  cylinder(r=TAP_RADIUS+(cutter?clearance:0), h=DRILLHEAD_HEIGHT);
 
   // Water passage
   color("LightBlue") RenderIf(!cutter)
@@ -182,8 +181,8 @@ module HeadstockTap(clearance=0.015, cutter=false) {
   hull()
   for (XY = [[WATER_TAP_OFFSET_X,WATER_TAP_OFFSET_Y], [BARREL_OFFSET_X,0]])
   translate([XY[0], XY[1],0]) {
-    cylinder(r1=passageRadius, r2=0, h=passageRadius*sqrt(2));
-    sphere(r=passageRadius);
+    cylinder(r1=max(TAP_RADIUS, ELECTRODE_RADIUS), r2=0, h=TAP_RADIUS*sqrt(2));
+    sphere(r=max(TAP_RADIUS, ELECTRODE_RADIUS));
   }
 }
 
@@ -209,7 +208,7 @@ module HeadstockORing(cutter=false) {
   // Tap O-Ring
   color("DimGrey") RenderIf(!cutter)
   translate([WATER_TAP_OFFSET_X,WATER_TAP_OFFSET_Y,DRILLHEAD_Z_MAX-(ORING_WIDTH*sqrt(2))])
-  ORing(innerDiameter=ELECTRODE_DIAMETER, section=ORING_WIDTH, clearance=(cutter?0.01:0), teardrop=cutter);
+  ORing(innerDiameter=TAP_DIAMETER, section=ORING_WIDTH, clearance=(cutter?0.01:0), teardrop=cutter);
 
   // Barrel O-Ring
   color("DimGrey") RenderIf(!cutter)
@@ -276,32 +275,52 @@ module Headstock(debug=false, alpha=1) {
   difference() {
     union() {
 
-      // Drill head
-      hull() {
+      // Column sleeve
+      translate([0,0,DRILLHEAD_Z_MIN])
+      translate([-COLUMN_WIDTH-COLUMN_WALL,
+                 -(COLUMN_WIDTH/2)-COLUMN_WALL,
+                 0])
+      ChamferedCube([COLUMN_WIDTH+(COLUMN_WALL*2),
+                     COLUMN_WIDTH+(COLUMN_WALL*2),
+                     DRILLHEAD_HEIGHT], r=1/16);
 
-        // Column sleeve
-        translate([0,0,DRILLHEAD_Z_MIN])
-        translate([-COLUMN_WIDTH-COLUMN_WALL,
-                   -(COLUMN_WIDTH/2)-COLUMN_WALL,
+       // Column sleeve extended to barrel sleeve
+       translate([0,
+                  -(COLUMN_WIDTH/2)-COLUMN_WALL,
+                  DRILLHEAD_Z_MIN])
+       ChamferedCube([BARREL_OFFSET_X+BARREL_RADIUS,
+                      COLUMN_WIDTH+(COLUMN_WALL*2),
+                      DRILLHEAD_HEIGHT], r=1/16);
+
+      union() {
+
+
+        // Splash guard: Rotary motor
+        *translate([0,0,DRILLHEAD_Z_MIN])
+        translate([-COLUMN_WIDTH-COLUMN_WALL-4,
+                   (COLUMN_WIDTH/2),
                    0])
-        ChamferedCube([COLUMN_WIDTH+(COLUMN_WALL*2),
-                       COLUMN_WIDTH+(COLUMN_WALL*2),
-                       DRILLHEAD_HEIGHT], r=1/16);
+        ChamferedCube([COLUMN_WIDTH+COLUMN_WALL+BARREL_OFFSET_X+((COLUMN_WIDTH/2)+COLUMN_WALL)+0.25,
+                       COLUMN_WALL+4,
+                       DRILLHEAD_HEIGHT+0.25], r=1/16);
 
-        // Barrel Sleeve
-        translate([0,0,DRILLHEAD_Z_MIN])
-        translate([BARREL_OFFSET_X,0,0])
-        ChamferedCylinder(r1=(COLUMN_WIDTH/2)+COLUMN_WALL, r2=1/16,
-                          h=DRILLHEAD_HEIGHT);
-      }
 
-      // Water Tap Extension
-      hull() {
-        translate([WATER_TAP_OFFSET_X,WATER_TAP_OFFSET_Y,DRILLHEAD_Z_MIN])
-        ChamferedCylinder(r1=0.375, r2=1/16, h=DRILLHEAD_HEIGHT);
+       // Barrel Sleeve
+       translate([0,0,DRILLHEAD_Z_MIN])
+       translate([BARREL_OFFSET_X,0,0])
+       ChamferedCylinder(r1=BARREL_RADIUS+ORING_WIDTH+COLUMN_WALL, r2=1/16,
+                         h=0.5625);
 
-        translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MIN])
-        ChamferedCylinder(r1=0.375, r2=1/16, h=DRILLHEAD_HEIGHT);
+       // Water Tap Extension
+       hull() {
+         translate([WATER_TAP_OFFSET_X,WATER_TAP_OFFSET_Y,DRILLHEAD_Z_MIN])
+         ChamferedCylinder(r1=TAP_RADIUS+ORING_WIDTH+0.125, r2=1/16, h=DRILLHEAD_HEIGHT);
+
+         // Electrode entry hole
+         translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MIN])
+         ChamferedCylinder(r1=ELECTRODE_RADIUS+ORING_WIDTH+0.125, r2=1/16, h=DRILLHEAD_HEIGHT);
+       }
+
       }
 
       // Splash guard: Rotary motor
@@ -345,14 +364,13 @@ module Headstock(debug=false, alpha=1) {
 
         // Mounting plate, same size as the gear
         translate([BARREL_OFFSET_X, 0, DRILLHEAD_Z_MIN])
-        rotate(DRIVE_ANGLE)
         translate([0,driveGearPitchRadius+drivenGearPitchRadius,0])
-        rotate(-DRIVE_ANGLE)
-        ChamferedCylinder(r1=0.75, r2=1/16, h=0.5625);
+        translate([-1.66/2, -1.66/2,0])
+        ChamferedCube([1.66, 1.66, 0.5625], r=1/16);
 
         // Hull to barrel area
         translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MIN])
-        ChamferedCylinder(r1=(COLUMN_WIDTH/2)+COLUMN_WALL, r2=1/16,
+        ChamferedCylinder(r1=1.66/2, r2=1/16,
                           h=0.5625);
       }
     }
@@ -383,9 +401,7 @@ module Headstock(debug=false, alpha=1) {
 
     // Drive-Gear Set-Screw Access Hole
     translate([BARREL_OFFSET_X, 0, DRILLHEAD_Z_MIN-ManifoldGap()])
-    rotate(DRIVE_ANGLE)
     translate([0,driveGearPitchRadius+drivenGearPitchRadius,0])
-    rotate(-DRIVE_ANGLE)
     translate([-0.25/2, 0, 0])
     cube([0.25, 1.66, 0.5625+ManifoldGap(2)]);
   }
@@ -407,19 +423,16 @@ module Tailstock(debug=false, alpha=1) {
       ChamferedCylinder(r1=COLUMN_WALL, r2=1/16,
                         h=DRILLBASE_HEIGHT);
 
-      hull() {
+      // Barrel Sleeve
+      translate([BARREL_OFFSET_X,0,0])
+      ChamferedCylinder(r1=BARREL_RADIUS+ORING_WIDTH+COLUMN_WALL, r2=1/16,
+                       h=DRILLBASE_HEIGHT);
 
-        // Column sleeve
-        translate([-COLUMN_WIDTH-COLUMN_WALL,-(COLUMN_WIDTH/2)-COLUMN_WALL,0])
-        ChamferedCube([COLUMN_WIDTH+(COLUMN_WALL*2),
-                       COLUMN_WIDTH+(COLUMN_WALL*2),
-                       DRILLBASE_HEIGHT], r=1/16);
-
-        // Barrel Sleeve
-        translate([BARREL_OFFSET_X,0,0])
-        ChamferedCylinder(r1=(COLUMN_WIDTH/2)+COLUMN_WALL, r2=1/16,
-                          h=DRILLBASE_HEIGHT);
-      }
+      // Column sleeve extended to barrel sleeve
+      translate([0,-(COLUMN_WIDTH/2)-COLUMN_WALL,0])
+      ChamferedCube([BARREL_OFFSET_X,
+                     COLUMN_WIDTH+(COLUMN_WALL*2),
+                     DRILLBASE_HEIGHT], r=1/16);
 
     }
 
@@ -566,11 +579,11 @@ if ($preview) {
     // Barrel drive
     translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MIN-gearThickness])
     mirror([0,0,1])
-    rotate(DRIVE_ANGLE) translate([0,gearDistance,0])
+    translate([0,gearDistance,0])
     mirror([0,0,1])
     rotate(rotations*360*$t)
     rotate(360/driveGearTeeth*0.45)
-    DriveGear(id=5/16);
+    DriveGear();
 
     translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MIN])
     mirror([0,0,1])
