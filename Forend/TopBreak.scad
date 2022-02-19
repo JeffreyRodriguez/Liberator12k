@@ -224,6 +224,7 @@ function ChargerTravel() = 1.75;
 // Calculated: Lengths
 function TopBreak_ForegripOffsetX() = 6+ChargerTravel();
 function TopBreak_ForegripLength() = 4.625;
+function ClusterRearLength() = Inches(2);
 
 // Calculated: Springs
 function ExtractorSpringSpec() = [
@@ -904,7 +905,7 @@ module TopBreak_VerticalForegrip(cutaway=false, alpha=1) {
 
 module TopBreak_Cluster(cutaway=false, alpha=1) {
   topExtension = Inches(0.5);
-  rearExtension = Inches(2);
+  rearExtension = ClusterRearLength();
   lowerExtension = Inches(0.75);
   width = Inches(7/16);
   mlokOffset = (TrunnionRadius()+Inches(0.375));
