@@ -108,6 +108,9 @@ CLUSTER_BOLT_CLEARANCE = 0.015;
 CLUSTER_BOLT_HEAD = "flat"; // ["flat", "socket"]
 CLUSTER_BOLT_NUT = "none"; // ["none", "heatset"]
 
+FOREND_BOLT = "#8-32"; // ["M4", "#8-32"]
+FOREND_BOLT_CLEARANCE = -0.05;
+
 GRIP_BOLT = "1/4\"-20"; // ["M6", "1/4\"-20"]
 GRIP_BOLT_CLEARANCE = -0.05;
 
@@ -159,6 +162,9 @@ assert(GPBolt(), "GPBolt() is undefined. Unknown GP_BOLT?");
 
 function BarrelCollarBolt() = BoltSpec(BARREL_COLLAR_BOLT);
 assert(BarrelCollarBolt(), "BarrelCollarBolt() is undefined. Unknown BARREL_COLLAR_BOLT?");
+
+function ForendBolt() = BoltSpec(FOREND_BOLT);
+assert(ForendBolt(), "ForendBolt() is undefined. Unknown FOREND_BOLT?");
 
 function ClusterBolt() = BoltSpec(CLUSTER_BOLT);
 assert(ClusterBolt(), "ClusterBolt() is undefined. Unknown CLUSTER_BOLT?");
@@ -224,6 +230,7 @@ function ChargerTravel() = 1.75;
 // Calculated: Lengths
 function TopBreak_ForegripOffsetX() = 6+ChargerTravel();
 function TopBreak_ForegripLength() = 4.625;
+function TopBreak_ForendBoltY() = FrameBoltY();
 function ClusterRearLength() = Inches(2);
 
 // Calculated: Springs
@@ -495,6 +502,19 @@ module TopBreak_BarrelCollarBolts(headType="flat", nutType=BARREL_COLLAR_BOLT_NU
              clearance=cutter?clearance:0, doRender=!cutter);
 }
 
+
+module TopBreak_ForendBolts(headType="flat", nutType="none", length=Inches(3), cutter=false, clearance=0.005, teardrop=false) {
+  for (Y = [1,-1])
+  translate([PivotX()+PivotRadius()+0.125,Y*TopBreak_ForendBoltY(),PivotZ()])
+  rotate([0,90+22.5,0])
+  NutAndBolt(bolt=ForendBolt(),
+             boltLength=length+ManifoldGap(2),
+             head=headType, capHeightExtra=(cutter?1:0),
+             nut=nutType, nutHeightExtra=(cutter?BarrelRadius():0),
+             teardrop=false, teardropAngle=180, capOrientation=true,
+             clearance=cutter?clearance:0, doRender=!cutter);
+}
+
 module TopBreak_ClusterBolts(bolt=ClusterBolt(), headType=CLUSTER_BOLT_HEAD, nutType=CLUSTER_BOLT_NUT, length=0.5, cutter=false, clearance=0.005, teardrop=false) {
   color("Silver") RenderIf(!cutter)
   for (X = [-0.5,-1.5])
@@ -673,6 +693,8 @@ module TopBreak_Forend(clearance=0.005, doRender=true, cutaway=false, alpha=1) {
                 teardrop=true);
 
     Frame_Bolts(cutter=true);
+
+    TopBreak_ForendBolts(cutter=true);
   }
 }
 
