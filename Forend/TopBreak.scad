@@ -222,7 +222,7 @@ function FrameBoltLength() = FRAME_BOLT_LENGTH;
 function TopBreak_ReceiverFrontLength() = 0.5;
 function FrameBackLength() = 0.75+0.5;
 function ForendLength() = FrameExtension(length=FRAME_BOLT_LENGTH)
-                        - 0.5
+                        - 0.375
                         -TopBreak_ReceiverFrontLength();
 
 function ChargerTravel() = 1.75;
@@ -504,9 +504,13 @@ module TopBreak_BarrelCollarBolts(headType="flat", nutType=BARREL_COLLAR_BOLT_NU
 
 
 module TopBreak_ForendBolts(headType="flat", nutType="none", length=Inches(3), cutter=false, clearance=0.005, teardrop=false) {
-  for (Y = [1,-1])
-  translate([PivotX()+PivotRadius()+0.125,Y*TopBreak_ForendBoltY(),PivotZ()])
-  rotate([0,90+22.5,0])
+  theAngles = [0,90+27,-5];
+  offsetY = -0.125;
+
+  for (Y = [1,0]) mirror([0,Y,0])
+  translate([PivotX()+PivotRadius(),(TopBreak_ForendBoltY()+offsetY),PivotZ()])
+  rotate(theAngles.z)
+  rotate([0,theAngles.y,0])
   NutAndBolt(bolt=ForendBolt(),
              boltLength=length+ManifoldGap(2),
              head=headType, capHeightExtra=(cutter?1:0),
@@ -655,7 +659,7 @@ module TopBreak_Forend(clearance=0.005, doRender=true, cutaway=false, alpha=1) {
         translate([ForendLength(), 0,0])
         mirror([1,0,0])
         Frame_Support(length=1/8,
-                     extraBottom=FrameBottomZ()+abs(PivotZ()),
+                     extraBottom=FrameBottomZ()+(TrunnionRadius()*(sqrt(2)/2)),
                      chamferFront=true, teardropFront=true);
 
         translate([ForendLength(), 0,0])
