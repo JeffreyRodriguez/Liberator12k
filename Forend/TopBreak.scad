@@ -1541,6 +1541,9 @@ if ($preview) {
 
   if (_RENDER == "Hardware/ClusterIndexPin")
   TopBreak_ClusterPins();
+  if (_RENDER == "Hardware/ForendBolts")
+  TopBreak_ForegripBolts();
+
 
   if (_RENDER == "Hardware/SightpostBolts")
   translate([TopBreak_SightpostX()+SightpostLength(),0,0])
