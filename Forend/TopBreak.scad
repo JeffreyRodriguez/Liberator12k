@@ -504,11 +504,11 @@ module TopBreak_BarrelCollarBolts(headType="flat", nutType=BARREL_COLLAR_BOLT_NU
 
 
 module TopBreak_ForendBolts(headType="flat", nutType="none", length=Inches(3), cutter=false, clearance=0.005, teardrop=false) {
-  theAngles = [0,90+27,-5];
-  offsetY = -0.125;
+  theAngles = [0,90+25,-5];
+  theOffsets = [0,-0.125,-0.125];
 
   for (Y = [1,0]) mirror([0,Y,0])
-  translate([PivotX()+PivotRadius(),(TopBreak_ForendBoltY()+offsetY),PivotZ()])
+  translate([PivotX()+PivotRadius(),(TopBreak_ForendBoltY()+theOffsets.y),PivotZ()+theOffsets.z])
   rotate(theAngles.z)
   rotate([0,theAngles.y,0])
   NutAndBolt(bolt=ForendBolt(),
