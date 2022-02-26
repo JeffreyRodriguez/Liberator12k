@@ -114,6 +114,7 @@ FOREND_BOLT_CLEARANCE = -0.05;
 GRIP_BOLT = "1/4\"-20"; // ["M6", "1/4\"-20"]
 GRIP_BOLT_CLEARANCE = -0.05;
 
+EXTRACTOR_RETAINER_LENGTH = 0.7501;
 EXTRACTOR_RETAINER_DIAMETER = 0.2501;
 EXTRACTOR_RETAINER_CLEARANCE = 0.008;
 
@@ -400,8 +401,8 @@ module TopBreak_ExtractorRetainer(cutaway=false, cutter=false, teardrop=false, c
   color("Silver") RenderIf(!cutter)
   translate([TopBreak_ExtractorWidth()+TopBreak_ExtractorTravel()+0.5,
              0,
-             -TrunnionRadius()-1-clear2])
-  cylinder(r=TopBreak_ExtractorRetainerRadius()+clear, h=1+clear2+(cutter?BarrelRadius():0));
+             -TrunnionRadius()-EXTRACTOR_RETAINER_LENGTH-clear2])
+  cylinder(r=TopBreak_ExtractorRetainerRadius()+clear, h=EXTRACTOR_RETAINER_LENGTH+clear2+(cutter?BarrelRadius():0));
 }
 
 module TopBreak_LatchBars(doMirror=true, cutaway=false, cutter=false, clearance=LATCH_CLEARANCE, alpha=1) {
@@ -502,7 +503,6 @@ module TopBreak_BarrelCollarBolts(headType="flat", nutType=BARREL_COLLAR_BOLT_NU
              clearance=cutter?clearance:0, doRender=!cutter);
 }
 
-
 module TopBreak_ForendBolts(headType="flat", nutType="none", length=Inches(3), cutter=false, clearance=0.005, teardrop=false) {
   theAngles = [0,90+25,-5];
   theOffsets = [0,-0.125,-0.125];
@@ -576,7 +576,6 @@ module TopBreak_ReceiverFront(cutaway=false, alpha=1) {
         ReceiverTopSegment(length=1/8);
 
         Frame_Support(length=TopBreak_ReceiverFrontLength(),
-                      extraBottom=FrameBottomZ(),
                      chamferFront=true, teardropFront=true);
       }
 
@@ -644,30 +643,26 @@ module TopBreak_Forend(clearance=0.005, doRender=true, cutaway=false, alpha=1) {
   color("Tan", alpha)
   RenderIf(doRender) Cutaway(cutaway)
   difference() {
-    union() {
+    hull() {
+
+      // Pivot support
+      translate([PivotX(), 0, PivotZ()])
+      rotate([90,0,0])
+      ChamferedCylinder(r1=PivotRadius()-0.01, r2=1/4, h=3,
+                        teardropTop=false, teardropBottom=false, center=true);
+
+      // Front face
+      translate([ForendLength(), 0,0])
+      mirror([1,0,0])
+      Frame_Support(length=1/8,
+                   extraBottom=FrameBottomZ()+(TrunnionRadius()*(sqrt(2)/2)),
+                   chamferFront=true, teardropFront=true);
+
+      // Extended section
+      translate([ForendLength(), 0,0])
+      mirror([1,0,0])
       Frame_Support(length=ForendLength(),
-                    extraBottom=FrameBottomZ(),
-                    chamferBack=true, teardropBack=true);
-
-      hull() {
-        translate([PivotX(), 0, PivotZ()])
-        rotate([90,0,0])
-        ChamferedCylinder(r1=PivotRadius()-0.01, r2=1/4, h=3,
-                          teardropTop=false, teardropBottom=false, center=true);
-
-        // Front face
-        translate([ForendLength(), 0,0])
-        mirror([1,0,0])
-        Frame_Support(length=1/8,
-                     extraBottom=FrameBottomZ()+(TrunnionRadius()*(sqrt(2)/2)),
-                     chamferFront=true, teardropFront=true);
-
-        translate([ForendLength(), 0,0])
-        mirror([1,0,0])
-        Frame_Support(length=PivotRadius()+(ForendLength()-PivotX())+abs(PivotZ())+FrameTopZ(),
-                      extraBottom=FrameBottomZ(),
-                      chamferFront=true, teardropFront=true);
-      }
+                    chamferFront=true, teardropFront=true);
     }
 
     // Cutout the pivot track for the barrel collar to pass
@@ -686,7 +681,7 @@ module TopBreak_Forend(clearance=0.005, doRender=true, cutaway=false, alpha=1) {
              h=ForendLength()-PivotX());
 
     // Cut a path through the full range of motion (Collar)
-    for (A = [0, PivotAngle()])
+    for (A = [0, PivotAngle(), PivotAngleBack()])
     Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1)
     TopBreak_BarrelCollar(rearExtension=2, cutter=true);
 
@@ -716,13 +711,21 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.005, cut
       PivotClearanceCut(cut=!cutter,
                         width=(TrunnionRadius()+WallBarrel())*2) {
 
-        // Around the barrel
-        translate([clearRear,0,BarrelZ()])
-        rotate([0,90,0])
-        ChamferedCylinder(r1=TrunnionRadius()+WallBarrel()+clear,
-                          h=PivotX()-clearRear+clear,
-                          teardropTop=true,
-                          r2=1/16);
+        hull() {
+
+          // Around the trunnion
+          translate([clearRear-rearExtension,0,BarrelZ()])
+          rotate([0,90,0])
+          ChamferedCylinder(r1=TrunnionRadius()+WallBarrel()+clear,
+                            h=PivotX()-(sqrt(2)/2*PivotRadius())-clearRear+rearExtension,
+                            teardropTop=true,
+                            r2=1/16);
+
+          // Trunnion bolt support
+          translate([clearRear,-0.375,0])
+          ChamferedCube([3,0.75, TrunnionRadius()+0.5],
+                         r=1/16,teardropFlip=[true,true,true]);
+        }
 
         // Extractor support
         translate([clearRear-rearExtension,
@@ -740,17 +743,6 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.005, cut
         ChamferedCube([PivotX()-(sqrt(2)/2*PivotRadius())-clearRear+rearExtension+clear2,
                        (TrunnionRadius()+WallBarrel())*2+clear2,
                        abs(TopBreak_LatchZ())+TopBreak_LatchWall()+CR+clear2], r=1/16, teardropFlip=[false,true,true]);
-      }
-
-      // Optics Rail Support
-      hull() {
-        translate([clearRear,-0.375,0])
-        ChamferedCube([3,0.75, ReceiverTopZ()],
-                       r=1/16,teardropFlip=[true,true,true]);
-
-        translate([clearRear,-TrunnionRadius(),0])
-        ChamferedCube([1,TrunnionDiameter(), TrunnionRadius()],
-                       r=1/16,teardropFlip=[true,true,true]);
       }
     }
 
