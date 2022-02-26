@@ -37,7 +37,7 @@ function Spec_Primer209() = [
 function Spec_Primer22PAT() = [
   [PrimerRimDiameter,   0.275],
   [PrimerRimHeight,     0.036],
-  [PrimerHeight,        0.375],
+  [PrimerHeight,        0.564],
   [PrimerMajorDiameter, 0.226],
   [PrimerMinorDiameter, 0.225],
   [PrimerClearance,     0.015],
