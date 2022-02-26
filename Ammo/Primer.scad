@@ -66,6 +66,17 @@ function Spec_Primer12gCO2() = [
   [PrimerFn,            12]
 ];
 
+// 6.8/11 cal Ramset
+function Spec_Primer6_8x11PAT() = [
+  [PrimerRimDiameter,   8.44 / 25.4],
+  [PrimerRimHeight,     1.5 / 25.4],
+  [PrimerHeight,        11.11 / 25.4],
+  [PrimerMajorDiameter, 6.8 / 25.4],
+  [PrimerMinorDiameter, 6.8 / 25.4],
+  [PrimerClearance,     0.015],
+  [PrimerFn,            36]
+];
+
 function PrimerRimDiameter(primer=undef)   = lookup(PrimerRimDiameter, primer);
 function PrimerRimRadius(primer=undef)     = lookup(PrimerRimDiameter, primer)/2;
 function PrimerRimHeight(primer=undef)     = lookup(PrimerRimHeight, primer);
