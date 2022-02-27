@@ -35,7 +35,7 @@ use <../Receiver/Stock.scad>;use <../Shapes/Bearing Surface.scad>;
 /* [Export] */
 
 // Select a part, Render it (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Prints/ReceiverFront", "Prints/Forend", "Prints/Cluster", "Prints/BarrelCollar", "Prints/Extractor", "Prints/LatchTab", "Prints/Foregrip", "Prints/VerticalForegrip", "Prints/Sightpost","Jigs/Trunnion", "Fixtures/ExtractorGang_Bottom", "Fixtures/ExtractorGang_Top"]
+_RENDER = ""; // ["", "Prints/ReceiverFront", "Prints/Forend", "Prints/Cluster", "Prints/BarrelCollar", "Prints/Extractor", "Prints/LatchTab", "Prints/Foregrip", "Prints/VerticalForegrip", "Prints/Sightpost","Fixtures/Trunnion", "Fixtures/ExtractorGang_Bottom", "Fixtures/ExtractorGang_Top"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;
@@ -1106,8 +1106,8 @@ module TopBreak_Sightpost(alpha=_ALPHA_SIGHTPOST, cutaway=_CUTAWAY_SIGHTPOST) {
   }
 }
 
-// Fixtures and Jigs
-module TopBreak_Jig_Trunnion() {
+// Fixtures
+module TopBreak_Fixture_Trunnion() {
   wall = 0.1875;
   guideExtra= 0;
   guideWidth = 7/8;
@@ -1488,14 +1488,14 @@ if ($preview) {
       translate([-(TopBreak_SightpostX()+SightpostLength()),0,0])
       TopBreak_Sightpost();
 
-  // ********************
-  // * Fixures and Jigs *
-  // ********************
-  if (_RENDER == "Jigs/Trunnion")
+  // ***********
+  // * Fixures *
+  // ***********
+  if (_RENDER == "Fixtures/Trunnion")
     if (!_RENDER_PRINT)
-      TopBreak_Jig_Trunnion();
+      TopBreak_Fixture_Trunnion();
     else
-      TopBreak_Jig_Trunnion();
+      TopBreak_Fixture_Trunnion();
 
   if (_RENDER == "Fixtures/ExtractorGang_Bottom")
     if (!_RENDER_PRINT)
