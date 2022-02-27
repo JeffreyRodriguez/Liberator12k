@@ -105,8 +105,8 @@ if ($preview) {
     StockAssembly(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, cutaway=_CUTAWAY_STOCK);
 
     if (_SHOW_LOWER) {
-      LowerMount(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS);
-      Lower(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS);
+      LowerMount(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, cutaway=_CUTAWAY_LOWER);
+      Lower(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, cutaway=_CUTAWAY_LOWER);
     }
   } else if (_CONFIGURATION == "Bullpup") {
     BullpupAssembly();
@@ -114,8 +114,8 @@ if ($preview) {
     ReceiverBackSegment();
 
     if (_SHOW_LOWER) {
-      LowerMount();
-      Lower();
+      LowerMount(cutaway=_CUTAWAY_LOWER);
+      Lower(cutaway=_CUTAWAY_LOWER);
     }
   }
 }

@@ -560,10 +560,10 @@ module LowerMount(hardware=true, prints=true, alpha=1, cutaway=false) {
   Receiver_TakedownPin();
 
   if (prints && _SHOW_LOWER_MOUNT_FRONT)
-  Lower_MountFront(alpha=alpha);
+  Lower_MountFront(alpha=alpha, cutaway=cutaway);
 
   if (prints && _SHOW_LOWER_MOUNT_REAR)
-  Lower_MountRear(alpha=alpha);
+  Lower_MountRear(alpha=alpha, cutaway=cutaway);
 }
 
 module Lower(hardware=true, prints=true, bolts=_SHOW_LOWER_BOLTS,
