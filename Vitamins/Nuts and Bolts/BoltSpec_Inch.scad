@@ -50,6 +50,9 @@ function Spec_Bolt8_32() = [
   ["BoltDiameter",    Inches(0.1640)],
   ["BoltTappingDrillSize",  Inches(0.1360)],
 
+  ["BoltCarriageDiameter", Inches(0.328)],
+  ["BoltCarriageHeight",   Inches(0.164)],
+
   ["BoltSocketCapDiameter", Inches(0.270)],
   ["BoltSocketCapHeight",   Inches(0.164)],
 
@@ -75,6 +78,9 @@ function Spec_Bolt10_24() = [
   ["BoltDiameter",    Inches(0.1900)],
   ["BoltTappingDrillSize",  Inches(0.1470)],
 
+  ["BoltCarriageDiameter", Inches(0.436)],
+  ["BoltCarriageHeight",   Inches(0.19)],
+
   ["BoltSocketCapDiameter", Inches(0.270)],
   ["BoltSocketCapHeight",   Inches(0.164)],
 
@@ -96,6 +102,10 @@ function Spec_Bolt10_24() = [
 function Spec_BoltOneHalf() = [
   ["BoltDiameter",    Inches(0.5)],
   ["BoltTappingDrillSize",  Inches(0.4219)],
+
+  ["BoltCarriageDiameter", Inches(1.094)],
+  ["BoltCarriageHeight",   Inches(0.5)],
+
   ["BoltHexDiameter", Inches(0.85)], // WRONG
   ["BoltHexHeight",   Inches(0.325)],  // WRONG
 
@@ -109,6 +119,9 @@ function Spec_BoltOneHalf() = [
 function Spec_BoltOneQuarter() = [
   ["BoltDiameter",    Inches(0.25)],
   ["BoltTappingDrillSize",  Inches(0.2010)],
+
+  ["BoltCarriageDiameter", Inches(0.594)],
+  ["BoltCarriageHeight",   Inches(0.25)],
 
   ["BoltSocketCapDiameter", Inches(0.375)],
   ["BoltSocketCapHeight",   Inches(0.25)],
@@ -134,6 +147,9 @@ function Spec_BoltOneQuarter() = [
 function Spec_BoltFiveSixteenths() = [
   ["BoltDiameter",    Inches(0.3125)],
   ["BoltTappingDrillSize",  Inches(0.2570)],
+
+  ["BoltCarriageDiameter", Inches(0.719)],
+  ["BoltCarriageHeight",   Inches(0.3125)],
 
   ["BoltHexDiameter", Inches(0.565)],
   ["BoltHexHeight",   Inches(0.203)],
@@ -163,6 +179,10 @@ function Spec_BoltFiveSixteenths() = [
 function Spec_BoltThreeEighths() = [
   ["BoltDiameter",    Inches(3/8)],
   ["BoltTappingDrillSize",  Inches(0.3125)],
+
+  ["BoltCarriageDiameter", Inches(0.8440)],
+  ["BoltCarriageHeight",   Inches(0.3750)],
+
   ["BoltSocketCapDiameter", Inches(0.5625)], // Verify?
   ["BoltSocketCapHeight",   Inches(0.25)],// Verify?
   ["NutHexDiameter", Inches(0.5625)],

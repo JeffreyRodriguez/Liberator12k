@@ -15,7 +15,7 @@ use <Nuts and Bolts/BoltSpec_Metric.scad>;
 BOLT = "#8-32"; // ["#4-40", "#6-32", "#8-32", "#10-24", "1/4\"-20", "5/16\"-18", "1/2\"-13"]
 
 // Bolt Head Type
-HEAD = "flat"; // ["", "flat", "hex", "socket"]
+HEAD = "flat"; // ["", "flat", "hex", "socket", "carriage"]
 CAP_HEIGHT_EXTRA = 1;
 
 // Nut Type
@@ -108,6 +108,9 @@ module Bolt(bolt=Spec_BoltTemplate(), length=1,
     } else if (head == "hex") {
       BoltHeadHex(bolt=bolt, clearance=clearance,
                   capHeightExtra=capHeightExtra);
+    } else if (head == "carriage") {
+      BoltHeadCarriage(bolt=bolt, clearance=clearance,
+                  capHeightExtra=capHeightExtra);
     }
   }
 
@@ -160,6 +163,12 @@ module BoltHeadHex(bolt, clearance=0, capHeightExtra=0) {
   cylinder(r=BoltHexRadius(bolt, clearance),
           h=BoltHexHeight(bolt)+capHeightExtra,
           $fn=6);
+}
+
+module BoltHeadCarriage(bolt, clearance=0, capHeightExtra=0) {
+  cylinder(r1=BoltCarriageDiameter(bolt, clearance),
+           r2=BoltDiameter(bolt, clearance),
+            h=BoltCarriageHeight(bolt)+capHeightExtra);
 }
 
 module NutHex(spec,
