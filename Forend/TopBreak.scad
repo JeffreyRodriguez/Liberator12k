@@ -1108,27 +1108,36 @@ module TopBreak_Sightpost(alpha=_ALPHA_SIGHTPOST, cutaway=_CUTAWAY_SIGHTPOST) {
 
 // Fixtures
 module TopBreak_Fixture_Trunnion() {
-  wall = 0.1875;
-  guideExtra= 0;
-  guideWidth = 7/8;
+  wall = 0.125;
+  guideExtra=0.25;
+  guideWidth = 0.375;
+  flatWidth = 3/4;
   width = TrunnionDiameter()+(wall*2);
   holeDepth = (width/2)+guideExtra;
 
   difference() {
 
     // Tube body
-    hull()
-    for (R = [0:360/3:360]) rotate(R)
-    translate([-(width/2)-guideExtra, -(guideWidth/2),0])
-    ChamferedCube([width+(guideExtra*2), guideWidth, TrunnionLength()], r=1/16);
+    union() {
+      ChamferedCylinder(r1=TrunnionRadius()+wall, r2=CR(), h=TrunnionLength());
 
+      // Top Guide
+      translate([-(width/2), -(guideWidth/2),0])
+      ChamferedCube([width+guideExtra, guideWidth, TrunnionLength()], r=CR());
+
+      // Bottom Flat
+      translate([-(width/2), -(flatWidth/2),0])
+      ChamferedCube([width/2, flatWidth, TrunnionLength()], r=CR());
+
+      // Side flats
+      translate([-(flatWidth/2),-(width/2), 0])
+      ChamferedCube([flatWidth, width, TrunnionLength()], r=CR());
+    }
+
+    // Main trunnion hole
     ChamferedCircularHole(r1=TrunnionRadius(BARREL_CLEARANCE),
                           r2=1/16,
                           h=TrunnionLength());
-
-    // Stand the barrel up
-    rotate([0,-90,0])
-    TopBreak_Barrel(cutter=true);
 
     // Holes
     for (Z = [0.5:0.5:TrunnionLength()-0.5])
