@@ -118,6 +118,8 @@ EXTRACTOR_RETAINER_LENGTH = 0.7501;
 EXTRACTOR_RETAINER_DIAMETER = 0.2501;
 EXTRACTOR_RETAINER_CLEARANCE = 0.008;
 
+EXTRACTOR_EXTRA_OFFSET = 0;
+
 LATCH_WIDTH = 0.25;
 LATCH_CLEARANCE = 0.003;
 
@@ -272,7 +274,8 @@ function TopBreak_ExtractorBitZ() = BarrelZ()
 function TopBreak_ExtractorZ() = BarrelZ()
                                - TrunnionRadius()
                                - TopBreak_ExtractorHeight()
-                               - max(TopBreak_ExtractorWall(),0.1875);
+                               - max(TopBreak_ExtractorWall(),0.1875)
+                               - EXTRACTOR_EXTRA_OFFSET;
 
 function TopBreak_ExtractorHousingWidth() = TopBreak_ExtractorWidth()
                                           + (TopBreak_ExtractorWall()*2);
