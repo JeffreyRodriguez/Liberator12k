@@ -128,7 +128,7 @@ module Fixture_VBlock_Arm(r=Inches(ARM_HOLE_DIAMETER/2), clearance=ARM_HOLE_CLEA
 
   baseHeight = Inches(0.75);
   height = Inches(0.5)+baseHeight;
-  thumbscrewExtension = 0.5;
+  thumbscrewExtension = 0.4375;
   CR = Inches(1/16);
 
   vBottomZ = Inches(0.5);
@@ -157,7 +157,7 @@ module Fixture_VBlock_Arm(r=Inches(ARM_HOLE_DIAMETER/2), clearance=ARM_HOLE_CLEA
         translate([0,0,vBottomZ+(r*sqrt(2))])
         for (R = [-1,1]) rotate([R*45,0,0])
         translate([0,-Inches(0.25), r])
-        ChamferedCube([armWidth, Inches(0.5), Inches(0.5)], r=CR);
+        ChamferedCube([armWidth, Inches(0.5), thumbscrewExtension], r=CR);
     }
 
     // Tube Cutout
