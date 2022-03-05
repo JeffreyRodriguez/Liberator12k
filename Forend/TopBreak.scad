@@ -142,6 +142,10 @@ PIVOT_WIDTH = 2;
 FRAME_BOLT_LENGTH = 10;
 WALL_BARREL = 0.1875;
 
+FOREND_BOLT_OFFSET_Y = -0.12501;
+FOREND_BOLT_ANGLE_Y = 0;
+FOREND_BOLT_ANGLE_Z = -5;
+
 /* [Branding] */
 BRANDING_MODEL_NAME = "CAFE12+";
 
@@ -507,8 +511,8 @@ module TopBreak_BarrelCollarBolts(headType="flat", nutType=BARREL_COLLAR_BOLT_NU
 }
 
 module TopBreak_ForendBolts(headType="flat", nutType="none", length=Inches(3), cutter=false, clearance=0.005, teardrop=false) {
-  theAngles = [0,90+25,-5];
-  theOffsets = [0,-0.125,-0.125];
+  theAngles = [0,90+25,FOREND_BOLT_ANGLE_Z];
+  theOffsets = [0,FOREND_BOLT_OFFSET_Y,-0.125];
 
   for (Y = [1,0]) mirror([0,Y,0])
   translate([PivotX()+PivotRadius(),(TopBreak_ForendBoltY()+theOffsets.y),PivotZ()+theOffsets.z])

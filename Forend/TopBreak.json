@@ -59,6 +59,8 @@
             "CLUSTER_BOLT_NUT": "heatset",
             "EXTRACTOR_EXTRA_OFFSET": "0.0625",
             "FRAME_BOLT_LENGTH": "10",
+            "FOREND_BOLT_OFFSET_Y": "-0.0625",
+            "FOREND_BOLT_ANGLE_Z": "-3",
             "GP_BOLT": "#8-32",
             "GP_BOLT_CLEARANCE": "0.015",
             "GRIP_BOLT": "1/4\"-20",
