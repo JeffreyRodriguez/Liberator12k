@@ -116,7 +116,7 @@ module Frame_Bolts(length=FrameBoltLength(), nut="hex", cutaway=false, cutter=fa
 // **********
 // * Shapes *
 // **********
-module Frame_Support(length=1, extraBottom=0, chamferFront=false, chamferBack=false, chamferRadius=CHAMFER_RADIUS, , teardropFront=false, teardropBack=false) {
+module Frame_Support(length=1, extraBottom=0, chamferFront=false, chamferBack=false, chamferRadius=CHAMFER_RADIUS, teardropFront=false, teardropBack=false) {
   cr = 1/4;
   height = (FrameBoltRadius()+WallFrameBolt())*2;
   width=(FrameBoltY()+FrameBoltRadius()+WallFrameBolt())*2;
