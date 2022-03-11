@@ -326,11 +326,9 @@ module Receiver(receiverLength=ReceiverLength(), doRender=true, alpha=1, cutaway
   Cutaway(cutaway)
   difference() {
     union() {
-      Receiver_Segment(length=ReceiverLength(), highTop=false,
-                      chamferFront=true);
-
-      Receiver_Segment(length=ReceiverLength()-ReceiverBackLength(),
-                      chamferFront=true);
+      for (highChamfer = [true,false])
+      Receiver_Segment(length=ReceiverLength(), highTop=highChamfer,
+                      chamferFront=true, chamferBack=highChamfer);
 
       // M-LOK side slot support
       translate([0,-Receiver_MlokSideY(),Receiver_MlokSideZ()-(mlokSupportHeight/2)])
