@@ -33,7 +33,7 @@ SIGHTPOST_BOLT_CLEARANCE = 0.005;
 $fa = ResolutionFa();
 $fs = UnitsFs()*ResolutionFs();
 
-function SightpostLength() = Inches(4-0.25);
+function SightpostLength() = Inches(3.5);
 function SightpostBolt() = BoltSpec(SIGHTPOST_BOLT);
 assert(SightpostBolt(), "SightpostBolt() is undefined. Unknown SIGHTPOST_BOLT?");
 

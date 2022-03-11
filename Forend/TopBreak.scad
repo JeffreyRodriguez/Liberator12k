@@ -549,7 +549,7 @@ module TopBreak_ClusterBolts(bolt=ClusterBolt(), headType=CLUSTER_BOLT_HEAD, nut
              doRender=!cutter);
 }
 
-module TopBreak_ForegripBolts(headType="flat", nutType="heatset", length=12, cutter=false, clearance=0.005, teardrop=false) {
+module TopBreak_ForegripBolts(headType="flat", nutType="heatset", length=11.75, cutter=false, clearance=0.005, teardrop=false) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
 
