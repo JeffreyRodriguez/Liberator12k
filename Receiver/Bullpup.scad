@@ -138,8 +138,7 @@ module Bullpup_Front(length=Bullpup_FrontLength(), cutaway=false, alpha=1) {
       rotate([0,90,0])
       ChamferedCylinder(r1=Bullpup_BoltWall(), r2=1/16, h=length);
 
-      translate([Bullpup_LowerX(),0,Bullpup_LowerZ()])
-      translate([-LowerMaxX(),0,ReceiverBottomZ()]) {
+      translate([Bullpup_LowerX(),0,Bullpup_LowerZ()]) {
         ReceiverLugFront(extraTop=0.25);
         ReceiverLugRear(extraTop=0.25);
       }
