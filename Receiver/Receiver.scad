@@ -140,7 +140,7 @@ module Receiver_TensionBolts(bolt=TensionBolt(), headType=TENSION_HEAD_TYPE, nut
 module Receiver_MlokBolts(headType="flat", nutType="heatset-long", length=0.5, cutter=false, clearance=0.005, teardrop=false, teardropAngle=180) {
 
   // Top Bolts
-  for (X = [0,Millimeters(60)])
+  for (X = [0,Millimeters(100)])
   translate([-0.75-X,0,ReceiverTopSlotHeight()+ReceiverSlotClearance()])
   NutAndBolt(bolt=MlokBolt(),
              boltLength=length+ManifoldGap(2),
@@ -153,7 +153,7 @@ module Receiver_MlokBolts(headType="flat", nutType="heatset-long", length=0.5, c
 module Receiver_TakedownPin(cutter=false, clearance=0.005, alpha=1, cutaway=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
-  
+
   if (cutter) {
     translate([Receiver_TakedownPinX(), 0, Receiver_TakedownPinZ()])
     rotate([90,0,0])
