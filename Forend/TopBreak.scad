@@ -65,7 +65,7 @@ _SHOW_FOREGRIP = true;
 _SHOW_VERTICAL_GRIP = true;
 _SHOW_GRIP_HARDWARE=true;
 _SHOW_SIGHTPOST = true;
-_SHOW_FOREGRIP_BOLTS = true;
+_SHOW_HANDGUARD_BOLTS = true;
 
 /* [Transparency] */
 _ALPHA_RECEIVER_FRONT=1; // [0:0.1:1]
@@ -112,8 +112,8 @@ CLUSTER_BOLT_NUT = "none"; // ["none", "heatset"]
 FOREND_BOLT = "#8-32"; // ["M4", "#8-32"]
 FOREND_BOLT_CLEARANCE = -0.05;
 
-FOREGRIP_BOLT = "#8-32"; // ["#8-32", "M4"]
-FOREGRIP_BOLT_CLEARANCE = -0.05;
+HANDGUARD_BOLT = "#8-32"; // ["#8-32", "M4"]
+HANDGUARD_BOLT_CLEARANCE = -0.05;
 
 GRIP_BOLT = "1/4\"-20"; // ["M6", "1/4\"-20"]
 GRIP_BOLT_CLEARANCE = -0.05;
@@ -177,8 +177,8 @@ assert(BarrelCollarBolt(), "BarrelCollarBolt() is undefined. Unknown BARREL_COLL
 function ForendBolt() = BoltSpec(FOREND_BOLT);
 assert(ForendBolt(), "ForendBolt() is undefined. Unknown FOREND_BOLT?");
 
-function ForegripBolt() = BoltSpec(FOREGRIP_BOLT);
-assert(ForegripBolt(), "ForegripBolt() is undefined. Unknown FOREGRIP_BOLT?");
+function HandguardBolt() = BoltSpec(HANDGUARD_BOLT);
+assert(HandguardBolt(), "HandguardBolt() is undefined. Unknown HANDGUARD_BOLT?");
 
 function ClusterBolt() = BoltSpec(CLUSTER_BOLT);
 assert(ClusterBolt(), "ClusterBolt() is undefined. Unknown CLUSTER_BOLT?");
@@ -248,7 +248,7 @@ function TopBreak_ForegripLength() = 4.625;
 function TopBreak_ForegripMlokOffset() = (TrunnionRadius()+Inches(0.375));
 function TopBreak_ForegripMlokOffsetZ() = Inches(0.375);
 function TopBreak_ForendBoltY() = FrameBoltY();
-function TopBreak_ForegripBoltOffsetY() = BarrelRadius()+0.25;
+function TopBreak_HandguardBoltOffsetY() = TrunnionRadius()+0.125;
 function ClusterRearLength() = Inches(2);
 
 // Calculated: Springs
@@ -550,15 +550,15 @@ module TopBreak_ClusterBolts(bolt=ClusterBolt(), headType=CLUSTER_BOLT_HEAD, nut
              doRender=!cutter);
 }
 
-module TopBreak_ForegripBolts(headType="flat", nutType="heatset", length=11.75, cutter=false, clearance=0.005, teardrop=false) {
+module TopBreak_HandguardBolts(headType="flat", nutType="heatset", length=11.75, cutter=false, clearance=0.005, teardrop=false) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
 
   color("Silver") RenderIf(!cutter)
   for (Y = [1,-1])
-  translate([TrunnionLength()-ClusterRearLength()+length,Y*TopBreak_ForegripBoltOffsetY(),0])
+  translate([TrunnionLength()-ClusterRearLength()+length,Y*TopBreak_HandguardBoltOffsetY(),0])
   rotate([0,90,0])
-  NutAndBolt(bolt=ForegripBolt(),
+  NutAndBolt(bolt=HandguardBolt(),
              boltLength=length+ManifoldGap(2),
              head="hex", capHeightExtra=(cutter?1:0),
              nut=nutType, nutHeightExtra=(cutter?BarrelRadius():0),
@@ -956,7 +956,7 @@ module TopBreak_Cluster(cutaway=false, alpha=1) {
 
       // Side Bolt support
       for (Y = [1,-1])
-      translate([TrunnionLength()-ClusterRearLength(),Y*TopBreak_ForegripBoltOffsetY(),0])
+      translate([TrunnionLength()-ClusterRearLength(),Y*TopBreak_HandguardBoltOffsetY(),0])
       rotate([0,90,0])
       ChamferedCylinder(r1=0.25, r2=CR,
                h=ClusterForwardExtension()+ClusterRearLength(), teardropTop=true);
@@ -1065,7 +1065,7 @@ module TopBreak_Cluster(cutaway=false, alpha=1) {
 
     TopBreak_Barrel(cutter=true);
     TopBreak_ClusterBolts(cutter=true);
-    TopBreak_ForegripBolts(cutter=true);
+    TopBreak_HandguardBolts(cutter=true);
     TopBreak_GripBolt(cutter=true, teardrop=true);
     TopBreak_GripPin(cutter=true, teardrop=true);
   }
@@ -1095,7 +1095,7 @@ module TopBreak_Foregrip(length=PumpGripLength(), cutaway=false, alpha=1) {
                    length=length, center=false,
                    depth=0.0625, segments=6, taperDepth=0.125);
 
-    TopBreak_ForegripBolts(cutter=true);
+    TopBreak_HandguardBolts(cutter=true);
 
     // MLOK slots
     for (M = [0,1]) mirror([0,M,0])
@@ -1149,7 +1149,7 @@ module TopBreak_Sightpost(alpha=_ALPHA_SIGHTPOST, cutaway=_CUTAWAY_SIGHTPOST) {
         // Side Bolt support
         hull()
         for (Y = [1,-1])
-        translate([0,Y*TopBreak_ForegripBoltOffsetY(),0])
+        translate([0,Y*TopBreak_HandguardBoltOffsetY(),0])
         ChamferedCylinder(r1=0.25, r2=CR,
                  h=SightpostLength(), teardropTop=true);
       }
@@ -1171,7 +1171,7 @@ module TopBreak_Sightpost(alpha=_ALPHA_SIGHTPOST, cutaway=_CUTAWAY_SIGHTPOST) {
     }
 
     TopBreak_Barrel(cutter=true);
-    TopBreak_ForegripBolts(cutter=true);
+    TopBreak_HandguardBolts(cutter=true);
   }
 }
 
@@ -1373,8 +1373,8 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
     if (hardware && _SHOW_BARREL)
     TopBreak_Barrel(cutaway=cutaway == true || _CUTAWAY_BARREL);
 
-    if (hardware && _SHOW_FOREGRIP_BOLTS) {
-      TopBreak_ForegripBolts();
+    if (hardware && _SHOW_HANDGUARD_BOLTS) {
+      TopBreak_HandguardBolts();
     }
 
     if (_SHOW_SIGHTPOST) {
@@ -1614,10 +1614,10 @@ if ($preview) {
   TopBreak_LatchScrews();
 
   if (_RENDER == "Hardware/ForendBolts")
-  TopBreak_ForegripBolts();
+  TopBreak_HandguardBolts();
 
-  if (_RENDER == "Hardware/ForegripBolts")
-  TopBreak_ForegripBolts();
+  if (_RENDER == "Hardware/HandguardBolts")
+  TopBreak_HandguardBolts();
 
   if (_RENDER == "Hardware/SightpostBolts")
   translate([TopBreak_SightpostX()+SightpostLength(),0,0])
