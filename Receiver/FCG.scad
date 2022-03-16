@@ -1275,7 +1275,7 @@ module TriggerGroup(hardware=true, prints=true, animationFactor=TriggerAnimation
   Trigger(alpha=alpha);
 }
 
-module SimpleFireControlAssembly(hardware=true, prints=true, actionRod=_SHOW_ACTION_ROD, recoilPlate=_SHOW_RECOIL_PLATE, cutaway=false, alpha=1) {
+module SimpleFireControlAssembly(recoilPlateLength=RecoilPlateLength(), hardware=true, prints=true, actionRod=_SHOW_ACTION_ROD, recoilPlate=_SHOW_RECOIL_PLATE, cutaway=false, alpha=1) {
   disconnectStart = 0.8;
   disconnectLetdown = 0.2;
   connectStart = 0.99;
@@ -1368,7 +1368,7 @@ module SimpleFireControlAssembly(hardware=true, prints=true, actionRod=_SHOW_ACT
   FCG_Housing(alpha=min(alpha,_ALPHA_FIRING_PIN_HOUSING), cutaway=_CUTAWAY_FIRING_PIN_HOUSING);
 
   if (hardware && recoilPlate)
-  RecoilPlate(contoured=FCG_RECOIL_PLATE_CONTOURED, cutaway=_CUTAWAY_RECOIL_PLATE, alpha=min(alpha,_ALPHA_RECOIL_PLATE));
+  RecoilPlate(length=recoilPlateLength, contoured=FCG_RECOIL_PLATE_CONTOURED, cutaway=_CUTAWAY_RECOIL_PLATE, alpha=min(alpha,_ALPHA_RECOIL_PLATE));
 }
 ///
 

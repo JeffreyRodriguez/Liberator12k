@@ -1358,7 +1358,8 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
 
   if (fcg)
   translate([-TopBreak_ReceiverFrontLength(),0,0]) {
-    SimpleFireControlAssembly(hardware=hardware, prints=prints, actionRod=false, alpha=_ALPHA_FCG);
+    SimpleFireControlAssembly(hardware=hardware, prints=prints, actionRod=false,
+                              recoilPlateLength=RECOIL_PLATE_LENGTH, alpha=_ALPHA_FCG);
   }
 
   if (prints && _SHOW_RECEIVER_FRONT)
