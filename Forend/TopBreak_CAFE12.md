@@ -36,18 +36,29 @@ STL Files Location: `Forend/TopBreak_CAFE12/Prints/`
 
 ## Vitamins
 | Purpose            | Part                                 | Quantity |
-|--------------------|--------------------------------------|----------|
-| Extractor Bit      | #2 flat 1/4" Hex Bit                 | 1        |
-| Extractor Retainer | 1/4"x1" Dowel Pin                    | 1        |
-| Extractor Spring   | TODO: 12lb 5/6" OD 2.75" Long        | 1        |
-| Latch Bars         | 1/4"x3" Square Rod                   | 2        |
-| Latch Screws       | #8-32x3/4" Flat Head Screw           | 2        |
-| Latch Springs      | (same as sear spring)                | 2        |
-| Cluster Bolts      | #8-32x1/2" Flat Head Screw           | 2        |
-| Foregrip Bolt      | 1/4"-20x3.5" Flat Head Screw         | 1        |
-| Foregrip Bolt Nut  | 1/4"-20 Heatset Insert               | 1        |
-| Trunnion           | 1" NPT Schedule 40 Pipe 8" Long      | 1        |
-| Barrel             | 3/4" NPT Schedule 40 Pipe 18.5" Long | 1        |
+
+| Component                | Purpose                | Part                                 | Quantity |
+|--------------------------|------------------------|--------------------------------------|----------|
+| Forend                   | Reinforcement Screws   | #10x3" Bugle Head Deck Screws        | 2        |
+| Forend/Extractor         | Extractor Bit          | #2 flat 1/4" Hex Bit                 | 1        |
+| Forend/Extractor         | Extractor Retainer     | 1/4"x3/4" Dowel Pin                  | 1        |
+| Forend/Extractor         | Extractor Spring       | 12lb 5/6" OD 2.75" Long              | 1        |
+| Forend/Latch             | Latch Bars             | 1/4"x3" Square Rod                   | 2        |
+| Forend/Latch             | Latch Screws           | #8-32x1" Flat Head Screw             | 2        |
+| Forend/Latch             | Latch Springs          | 0.22" OD x 0.02" Wire x 1.6" Long    | 2        |
+| Forend/Handguard         | Handguard Bolts        | #8-32x12" Threaded Rod               | 2        |
+| Forend/Handguard         | Handguard Bolt Nuts    | #8-32 Heatset Insert                 | 2        |
+| Forend/Handguard         | Handguard Bolt Caps    | #8-32 Acorn Nut                      | 2        |
+| Forend/Handguard         | Handguard Bolt Washers | #8-32 Washer                         | 2        |
+| Forend/Handguard         | Cluster Bolts          | #8-32x1/2" Flat Head Screw           | 2        |
+| Forend/Vertical Foregrip | Vertical Foregrip Bolt | 1/4"-20x3.5" Flat Head Screw         | 1        |
+| Forend/Vertical Foregrip | Vertical Foregrip Nut  | 1/4"-20 Heatset Insert               | 1        |
+| Forend/Sightpost         | Sightpost Bead Screw   | #8-32x1-1/2" Socket Cap Screw        | 1        |
+| Forend/Sightpost         | Sightpost Nut          | #8-32 Heatset Insert                 | 1        |
+| Forend/Barrel            | Trunnion Bolts         | #8-32x1/2" Socket Head Screw         | 3        |
+| Forend/Barrel            | Trunnion Set Screws    | #8-32x1/8" Grub Screw                | 8        |
+| Forend/Barrel            | Trunnion               | 1" NPT Schedule 40 Pipe 8" Long      | 1        |
+| Forend/Barrel            | Barrel                 | 3/4" NPT Schedule 40 Pipe 18.5" Long | 1        |
 <br/>
 
 ### Schedule 40 Pipe

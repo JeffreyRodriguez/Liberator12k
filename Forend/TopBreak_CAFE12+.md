@@ -51,26 +51,29 @@ STL Files Location: `Forend/TopBreak_CAFE12+/Prints/`
 <!-- NEW PAGE -->
 ## Vitamins
 
-| Component        | Purpose                | Part                             | Quantity |
-|------------------|------------------------|----------------------------------|----------|
-| Forend/Extractor | Extractor Bit          | #2 flat 1/4" Hex Bit             | 1        |
-| Forend/Extractor | Extractor Retainer     | 1/4"x1" Dowel Pin                | 1        |
-| Forend/Extractor | Extractor Spring       | 12lb 5/6" OD 2.75" Long          | 1        |
-| Forend/Latch     | Latch Bars             | 1/4"x3" Square Rod               | 2        |
-| Forend/Latch     | Latch Screws           | #8-32x1" Flat Head Screw         | 2        |
-| Forend/Latch     | Latch Springs          | (same as sear spring)            | 2        |
-| Forend/Handguard | Alignment Pins         | 2.5x10mm Dowel Pin               | 5        |
-| Forend/Handguard | Cluster Bolts          | #8-32x1/2" Flat Head Screw       | 2        |
-| Forend/Handguard | Vertical Foregrip Bolt | 1/4"-20x3.5" Flat Head Screw     | 1        |
-| Forend/Handguard | Vertical Foregrip Nut  | 1/4"-20 Heatset Insert           | 1        |
-| Forend/Handguard | Sightpost Bead Screw   | #8-32x1-1/2" Socket Cap Screw    | 1        |
-| Forend/Handguard | Sightpost Set Screw    | #8-32x1/2" Grub Screw            | 1        |
-| Forend/Handguard | Sightpost Nuts         | #8-32 Heatset Insert             | 2        |
-| Forend/Barrel    | Barrel Collar Bolts    | #8-32x1/2" Socket Head Screw     | 3        |
-| Forend/Barrel    | Trunnion Set Screws    | #8-32x1/8" Grub Screw            | 8        |
-| Forend/Barrel    | Trunnion               | 1.25"x0.125" 4130 Tubing 8" Long | 1        |
-| Forend/Barrel    | Barrel                 | 1"x0.093" 4130 Tubing 18.5" Long | 1        |
-| Forend/Barrel    | Barrel / Trunnion Shim | 3x6" 0.002" Shim Stock           | 1        |
+| Component                | Purpose                | Part                              | Quantity |
+|--------------------------|------------------------|-----------------------------------|----------|
+| Forend                   | Reinforcement Screws   | #10x3" Bugle Head Deck Screws     | 2        |
+| Forend/Extractor         | Extractor Bit          | #2 flat 1/4" Hex Bit              | 1        |
+| Forend/Extractor         | Extractor Retainer     | 1/4"x3/4" Dowel Pin               | 1        |
+| Forend/Extractor         | Extractor Spring       | 12lb 5/6" OD 2.75" Long           | 1        |
+| Forend/Latch             | Latch Bars             | 1/4"x3" Square Rod                | 2        |
+| Forend/Latch             | Latch Screws           | #8-32x1" Flat Head Screw          | 2        |
+| Forend/Latch             | Latch Springs          | 0.22" OD x 0.02" Wire x 1.6" Long | 2        |
+| Forend/Handguard         | Handguard Bolts        | #8-32x12" Threaded Rod            | 2        |
+| Forend/Handguard         | Handguard Bolt Nuts    | #8-32 Heatset Insert              | 2        |
+| Forend/Handguard         | Handguard Bolt Caps    | #8-32 Acorn Nut                   | 2        |
+| Forend/Handguard         | Handguard Bolt Washers | #8-32 Washer                      | 2        |
+| Forend/Handguard         | Cluster Bolts          | #8-32x1/2" Flat Head Screw        | 2        |
+| Forend/Vertical Foregrip | Vertical Foregrip Bolt | 1/4"-20x3.5" Flat Head Screw      | 1        |
+| Forend/Vertical Foregrip | Vertical Foregrip Nut  | 1/4"-20 Heatset Insert            | 1        |
+| Forend/Sightpost         | Sightpost Bead Screw   | #8-32x1-1/2" Socket Cap Screw     | 1        |
+| Forend/Sightpost         | Sightpost Nut          | #8-32 Heatset Insert              | 1        |
+| Forend/Barrel            | Trunnion Bolts         | #8-32x1/2" Socket Head Screw      | 3        |
+| Forend/Barrel            | Trunnion Set Screws    | #8-32x1/8" Grub Screw             | 8        |
+| Forend/Barrel            | Trunnion               | 1.25"x0.125" 4130 Tubing 8" Long  | 1        |
+| Forend/Barrel            | Barrel                 | 1"x0.093" 4130 Tubing 20" Long    | 1        |
+| Forend/Barrel            | Barrel Shim            | 3x6" 0.002" Shim Stock            | 1        |
 <br/>
 
 ### Metric BOM
