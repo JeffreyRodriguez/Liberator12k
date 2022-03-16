@@ -162,9 +162,6 @@ $fs = UnitsFs()*ResolutionFs();
 
 
 // Settings: Vitamins
-function BarrelSetScrew() = BoltSpec(BARREL_SET_SCREW);
-assert(BarrelSetScrew(), "BarrelSetScrew() is undefined. Unknown BARREL_SET_SCERW?");
-
 function GripBolt() = BoltSpec(GRIP_BOLT);
 assert(GripBolt(), "GripBolt() is undefined. Unknown GRIP_BOLT?");
 
