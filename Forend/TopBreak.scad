@@ -218,12 +218,13 @@ function WallBarrel() = WALL_BARREL;
 function ClusterForwardExtension() = Inches(1);
 function ClusterMaxX() = TrunnionLength()+ClusterForwardExtension();
 function SightpostPinRadius() = Millimeters(2.5)/2;
+function TopBreak_MinRadius() = max(1.325/2, TrunnionRadius()); // Enable cross-compatibility by setting a size floor.
 
 function WallPivot() = 0.25;
 function PivotAngleBack() = -25;
 function PivotAngle() = PIVOT_ANGLE;
 function PivotX() = PIVOT_X;
-function PivotZ() = BarrelZ()-max(1.325/2, TrunnionRadius()); // Use 1" sch40 as the floor and everything smaller can use the same forend. Anything bigger will need a custom forend.
+function PivotZ() = BarrelZ()-TopBreak_MinRadius(); // Use 1" sch40 as the floor and everything smaller can use the same forend. Anything bigger will need a custom forend.
 function PivotWidth() = PIVOT_WIDTH;
 function PivotRadius() = PIVOT_RADIUS;
 function PivotDiameter() = PivotRadius()*2;
@@ -698,7 +699,7 @@ module TopBreak_Forend(clearance=0.005, doRender=true, cutaway=false, alpha=1) {
     Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1)
     translate([PivotX(),0,0])
     rotate([0,90*flip,0])
-    cylinder(r=TrunnionRadius()+BARREL_CLEARANCE,
+    cylinder(r=TopBreak_MinRadius()+BARREL_CLEARANCE,
              h=ForendLength()-PivotX());
 
     // Cut a path through the full range of motion (Collar)
@@ -730,21 +731,21 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.005, cut
       PivotOuterBearing(cutter=cutter);
 
       PivotClearanceCut(cut=!cutter,
-                        width=(TrunnionRadius()+WallBarrel())*2) {
+                        width=(TopBreak_MinRadius()+WallBarrel())*2) {
 
         hull() {
 
           // Around the trunnion
           translate([clearRear-rearExtension,0,BarrelZ()])
           rotate([0,90,0])
-          ChamferedCylinder(r1=TrunnionRadius()+WallBarrel()+clear,
+          ChamferedCylinder(r1=TopBreak_MinRadius()+WallBarrel()+clear,
                             h=PivotX()-clearRear+rearExtension,
                             teardropTop=true,
                             r2=1/16);
 
           // Trunnion bolt support
           translate([clearRear,-0.375,0])
-          ChamferedCube([3,0.75, TrunnionRadius()+0.5],
+          ChamferedCube([3,0.75, TopBreak_MinRadius()+0.5],
                          r=1/16,teardropFlip=[true,true,true]);
         }
 
@@ -759,10 +760,10 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.005, cut
 
         // Latch support
         translate([clearRear-rearExtension-clear,
-                   -((TrunnionRadius()+WallBarrel()))-clear,
+                   -((TopBreak_MinRadius()+WallBarrel()))-clear,
                    TopBreak_LatchZ()-TopBreak_LatchWall()-clear])
         ChamferedCube([PivotX()-(sqrt(2)/2*PivotRadius())-clearRear+rearExtension+clear2,
-                       (TrunnionRadius()+WallBarrel())*2+clear2,
+                       (TopBreak_MinRadius()+WallBarrel())*2+clear2,
                        abs(TopBreak_LatchZ())+TopBreak_LatchWall()+CR+clear2], r=1/16, teardropFlip=[false,true,true]);
       }
     }
@@ -874,7 +875,7 @@ module TopBreak_LatchTab(cutaway=false, cutter=false, clearance=0.01, alpha=1) {
   clear2 = clear*2;
   clearCR = cutter?CR:0;
 
-  width = (TrunnionRadius()+WallBarrel())*2;
+  width = (TopBreak_MinRadius()+WallBarrel())*2;
   bottomZ = TopBreak_LatchZ()-TopBreak_LatchWall()-TopBreak_LatchTabHeight()-clearance;
 
   color("Olive", alpha) RenderIf(!cutter) Cutaway(cutaway)
@@ -906,7 +907,7 @@ module TopBreak_LatchTab(cutaway=false, cutter=false, clearance=0.01, alpha=1) {
     if (!cutter)
     translate([-0.3125,0, TopBreak_LatchZ()-TopBreak_LatchWall()-clearance])
     rotate([90,0,0])
-    linear_extrude((TrunnionRadius()+WallBarrel()+ManifoldGap())*2, center=true) {
+    linear_extrude((TopBreak_MinRadius()+WallBarrel()+ManifoldGap())*2, center=true) {
       RoundedBoolean(r=0.0625, teardrop=false, angle=180);
 
       translate([-0.1875,-1])
