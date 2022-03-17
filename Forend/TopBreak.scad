@@ -151,7 +151,7 @@ FOREND_BOLT_ANGLE_Y = 0;
 FOREND_BOLT_ANGLE_Z = -5;
 
 /* [Branding] */
-BRANDING_MODEL_NAME = "CAFE12+";
+BRANDING_MODEL_NAME = "CAFE";
 
 // *********
 // * Setup *
