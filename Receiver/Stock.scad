@@ -57,13 +57,13 @@ assert(Stock_ButtpadBolt(), "Stock_ButtpadBolt() is undefined. Unknown BUTTPAD_B
 
 function ButtpadLength() = 3;
 function ButtpadWall() = 0.1875;
-function Stock_BackplateLength() = 1;
+function Stock_BackplateLength() = 1.25;
 
 function StockLength() = TensionBoltLength()-ReceiverLength()-0.125;
 function StockMinX() = -(ReceiverLength()+StockLength());
 function ButtpadX() = StockMinX()-0.5;
-function Stock_TakedownPinX() = -ReceiverLength()-6.5;
 function ButtpadMinX() = ButtpadX()-ButtpadLength();
+function Stock_TakedownPinX() = StockMinX()+0.75;
 function Stock_ButtpadBoltZ() = [0,-1.5];
 
 // *********
@@ -78,8 +78,8 @@ $fs = UnitsFs()*ResolutionFs();
 module Stock_ButtpadBolt(cutaway=false, head="flat", nut="heatset", cutter=false, teardrop=false, clearance=0.01, teardropAngle=0) {
   clear = cutter ? clearance : 0;
 
-  translate([StockMinX()-ButtpadLength()+0.5, 0, Z])
   for (Z = Stock_ButtpadBoltZ())
+  translate([StockMinX()-ButtpadLength()+0.5, 0, Z])
   rotate([0,-90,0])
   NutAndBolt(bolt=Stock_ButtpadBolt(),
              boltLength=3.5, capOrientation=true,
@@ -164,8 +164,7 @@ module Stock(length=StockLength(), doRender=true, cutaway=false, alpha=1) {
       RoundedBoolean(r=1/16, edgeOffset=0);
     }
 
-    for (X = [-ReceiverLength()-0.5:-1:Stock_TakedownPinX()])
-    translate([X-Stock_TakedownPinX(),0,0])
+    translate([Stock_TakedownPinX(),0,0])
     Stock_TakedownPin(cutter=true);
   }
 }
