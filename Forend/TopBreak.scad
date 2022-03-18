@@ -43,12 +43,15 @@ _RENDER_PRINT = true;
 /* [Assembly] */
 _SHOW_PRINTS = true;
 _SHOW_HARDWARE = true;
-_SHOW_RECEIVER_HARDWARE = false;
 _SHOW_RECEIVER = true;
-_SHOW_TENSION_RODS = false;
+_SHOW_RECEIVER_HARDWARE = false;
 _SHOW_STOCK = true;
+_SHOW_STOCK_HARDWARE = false;
 _SHOW_FCG = false;
+_SHOW_FCG_HARDWARE = false;
 _SHOW_LOWER = true;
+_SHOW_LOWER_HARDWARE = true;
+_SHOW_TENSION_RODS = false;
 
 _SHOW_RECEIVER_FRONT = true;
 _SHOW_FOREND = true;
@@ -420,6 +423,13 @@ module TopBreak_ExtractorRetainer(cutaway=false, cutter=false, teardrop=false, c
   cylinder(r=TopBreak_ExtractorRetainerRadius()+clear, h=EXTRACTOR_RETAINER_LENGTH+clear2+(cutter?BarrelRadius():0));
 }
 
+module TopBreak_ExtractorSpring() {
+  color("Silver") render()
+  translate([PivotX()-PivotRadius()-WallPivot(),0,TopBreak_ExtractorZ()+SpringOuterRadius(spring=ExtractorSpringSpec())])
+  rotate([0,-90,0])
+  Spring(spring=ExtractorSpringSpec(), compressed=true);
+}
+
 module TopBreak_LatchBars(doMirror=true, cutaway=false, cutter=false, clearance=LATCH_CLEARANCE, alpha=1) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
@@ -551,7 +561,6 @@ module TopBreak_HandguardBolts(headType="flat", nutType="heatset", length=11.75,
   clear = cutter?clearance:0;
   clear2 = clear*2;
 
-  color("Silver") RenderIf(!cutter)
   for (Y = [1,-1])
   translate([TrunnionLength()-ClusterRearLength()+length,Y*TopBreak_HandguardBoltOffsetY(),0])
   rotate([0,90,0])
@@ -1356,7 +1365,7 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
 
   if (fcg)
   translate([-TopBreak_ReceiverFrontLength(),0,0]) {
-    SimpleFireControlAssembly(hardware=hardware, prints=prints, actionRod=false,
+    SimpleFireControlAssembly(hardware=hardware && _SHOW_FCG_HARDWARE, prints=prints, actionRod=false,
                               recoilPlateLength=RECOIL_PLATE_LENGTH, alpha=_ALPHA_FCG);
   }
 
@@ -1375,20 +1384,19 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
     }
 
     if (_SHOW_SIGHTPOST) {
-      if (prints)
-      TopBreak_Sightpost();
 
       if (hardware)
       translate([TopBreak_SightpostX()+SightpostLength(),0,0])
       rotate([0,-90,0])
       SightpostBolts(radius=BarrelRadius()+BARREL_CLEARANCE);
+
+      if (prints)
+      TopBreak_Sightpost();
     }
 
     // TopBreak_Extractor Spring
     if (hardware && _SHOW_EXTRACTOR_HARDWARE)
-    %translate([PivotX()-PivotRadius()-WallPivot(),0,TopBreak_ExtractorZ()+SpringOuterRadius(spring=ExtractorSpringSpec())])
-    rotate([0,-90,0])
-    Spring(spring=ExtractorSpringSpec(), compressed=true);
+    TopBreak_ExtractorSpring();
 
     translate([-TopBreak_ExtractorTravel()*extractFactor,0,0]) {
 
@@ -1464,8 +1472,8 @@ if ($preview) {
 
   translate([-TopBreak_ReceiverFrontLength(),0,0])
   if (_SHOW_LOWER) {
-    Lower(bolts=false, showLeft=!_CUTAWAY_LOWER, alpha=_ALPHA_LOWER);
-    LowerMount(hardware=false, cutaway=_CUTAWAY_LOWER, alpha=_ALPHA_LOWER);
+    Lower(bolts=_SHOW_LOWER_HARDWARE, showLeft=!_CUTAWAY_LOWER, alpha=_ALPHA_LOWER);
+    LowerMount(hardware=_SHOW_LOWER_HARDWARE, cutaway=_CUTAWAY_LOWER, alpha=_ALPHA_LOWER);
   }
 
   translate([-TopBreak_ReceiverFrontLength(),0,0]) {
@@ -1483,7 +1491,7 @@ if ($preview) {
 
   if (_SHOW_STOCK)
   translate([-TopBreak_ReceiverFrontLength(),0,0])
-  StockAssembly(hardware=false, alpha=_ALPHA_STOCK);
+  StockAssembly(hardware=_SHOW_STOCK_HARDWARE, alpha=_ALPHA_STOCK);
 } else {
 
   echo("Part: ", _RENDER);
