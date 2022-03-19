@@ -709,7 +709,7 @@ module TopBreak_Forend(clearance=0.005, doRender=true, cutaway=false, alpha=1) {
              h=ForendLength()-PivotX());
 
     // Cut a path through the full range of motion (Collar)
-    for (A = [0, PivotAngle(), PivotAngleBack()])
+    for (A = [0, PivotAngle(), PivotAngle()/2, PivotAngleBack(), PivotAngleBack()/2])
     Pivot(pivotX=PivotX(), pivotZ=PivotZ(), angle=A, factor=1)
     TopBreak_BarrelCollar(rearExtension=2, cutter=true);
 
