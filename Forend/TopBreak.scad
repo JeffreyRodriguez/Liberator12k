@@ -253,16 +253,27 @@ function ClusterRearLength() = Inches(2);
 
 // Calculated: Springs
 function ExtractorSpringSpec() = [
-        ["SpringSpec", "Extractor Spring"],
+  ["SpringSpec", "Extractor Spring"],
 
-        ["SpringOuterDiameter", Inches(0.625)],
-        ["SpringPitch", Inches(0.35)],
+  ["SpringOuterDiameter", Inches(0.625)],
+  ["SpringPitch", Inches(0.35)],
 
-        ["SpringFreeLength", Inches(3.5)],
-        ["SpringSolidHeight", Inches(1.75)],
+  ["SpringFreeLength", Inches(3.5)],
+  ["SpringSolidHeight", Inches(1.75)],
 
-        ["SpringWireDiameter", Inches(0.055)]
-    ];
+  ["SpringWireDiameter", Inches(0.055)]
+];
+function LatchSpringSpec() = [
+  ["SpringSpec", "Latch Spring"],
+
+  ["SpringOuterDiameter", Inches(0.25)],
+  ["SpringPitch", Inches(0.115)],
+
+  ["SpringFreeLength", Inches(1)],
+  ["SpringSolidHeight", Inches(0.375)],
+
+  ["SpringWireDiameter", Inches(0.02)]
+];
 
 // Calculated: Positions
 //function ActionRodZ() = FrameBoltZ()-WallFrameBolt()-(ActionRodWidth()/2);
@@ -300,15 +311,8 @@ function TopBreak_BarrelCollarBottomZ() = TopBreak_ExtractorZ()
 function TopBreak_LatchTravel() = 0.5;
 function TopBreak_LatchWall() = 0.125;
 
-function TopBreak_LatchLength() = 3;
-function TopBreak_LatchWidth() = LATCH_WIDTH;
-function TopBreak_LatchHeight() = LATCH_WIDTH;
-function TopBreak_LatchTabHeight() = 0.625;
+function TopBreak_LatchTabGap() = 0.0625;
 
-function TopBreak_LatchExtension() = 0.25;
-
-function TopBreak_LatchSpringLength() = 1;
-function TopBreak_LatchSpringRadius() = 0.25/2;
 
 function TopBreak_LatchZ() = -1.625;
 function TopBreak_LatchY() = (TopBreak_ExtractorHousingWidth()/2)
@@ -440,10 +444,10 @@ module TopBreak_LatchBars(doMirror=true, cutaway=false, cutter=false, clearance=
   difference() {
 
     // Latch Body
-    translate([-0.25-(cutter?0.5:0)-clear,
+    translate([-0.25+(cutter?-0.5:0)-clear,
                TopBreak_LatchY()-(TopBreak_LatchWidth()/2)-clear,
                TopBreak_LatchZ()-clear])
-    cube([TopBreak_LatchLength()+(cutter?TopBreak_LatchTravel()+0.5+clear:0),
+    cube([TopBreak_LatchLength()+(cutter?+0.5+TopBreak_LatchTravel()+0.5+clear:0),
           TopBreak_LatchWidth()+clear2,
           TopBreak_LatchHeight()+clear2]);
 
@@ -453,15 +457,14 @@ module TopBreak_LatchBars(doMirror=true, cutaway=false, cutter=false, clearance=
   }
 }
 
-module TopBreak_LatchSpring(length=TopBreak_LatchSpringLength(), compress=0, doMirror=true, cutter=false, clearance=0.015, alpha=1) {
+module TopBreak_LatchSpring(compress=0, doMirror=true, cutter=false, clearance=0.015, alpha=1) {
   clear = cutter?clearance:0;
 
   color("Silver", alpha) RenderIf(!cutter)
   MirrorIf(doMirror, [0,1,0], both=true)
-  translate([-0.25+TopBreak_LatchLength()+TopBreak_LatchSpringLength()+clear, TopBreak_LatchY(), TopBreak_LatchZ()+(TopBreak_LatchHeight()/2)])
+  translate([-0.25+TopBreak_LatchLength()+SpringFreeLength(LatchSpringSpec())+clear, TopBreak_LatchY(), TopBreak_LatchZ()+(TopBreak_LatchHeight()/2)])
   rotate([0,-90,0])
-  cylinder(r=TopBreak_LatchSpringRadius()+clear,
-           h=length-compress);
+  Spring(spring=LatchSpringSpec(), compressed=false, custom_compression_ratio=-1, cutter=cutter);
 }
 
 module TopBreak_LatchScrews(head="flat", doMirror=true, cutaway=false, cutter=false, clearance=0.01) {
@@ -471,10 +474,10 @@ module TopBreak_LatchScrews(head="flat", doMirror=true, cutaway=false, cutter=fa
   // Secure the TopBreak_Latch block to the TopBreak_Latch rod
   color("Silver") RenderIf(!cutter)
   MirrorIf(doMirror, [0,1,0], both=true)
-  translate([0.75,TopBreak_LatchY(),TopBreak_LatchZ()-TopBreak_LatchWall()-TopBreak_LatchTabHeight()-0.01])
+  translate([0.75,TopBreak_LatchY(),TopBreak_LatchZ()-TopBreak_LatchWall()-TopBreak_LatchTabHeight()-TopBreak_LatchTabGap()])
   rotate([0,180,0])
   Bolt(bolt=GPBolt(),
-       length=1+ManifoldGap(), clearance=clear,
+       length=TopBreak_LatchScrewLength()+ManifoldGap(), clearance=clear,
        head=head, capHeightExtra=(cutter?1:0), capOrientation=true);
 }
 
@@ -780,7 +783,6 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.005, cut
 
       TopBreak_LatchBars(cutter=true);
       TopBreak_LatchTab(cutter=true);
-      TopBreak_LatchSpring(cutter=true);
 
       for (M = [0,1]) mirror([0,M,0])
       hull()
