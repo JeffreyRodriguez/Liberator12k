@@ -148,6 +148,8 @@ PIVOT_ANGLE = 30;
 PIVOT_WIDTH = 2;
 FRAME_BOLT_LENGTH = 10;
 WALL_BARREL = 0.1875;
+LATCH_TAB_GAP = 0.0625;
+FOREGRIP_RADIUS = 1.0001;
 
 FOREND_BOLT_OFFSET_Y = -0.12501;
 FOREND_BOLT_ANGLE_Y = 0;
@@ -204,14 +206,20 @@ function BarrelDiameter(clearance=0)
 function BarrelWall() = (BarrelDiameter() - BARREL_INSIDE_DIAMETER)/2;
 function TrunnionWall() = (TrunnionDiameter() - BarrelDiameter())/2;
 
-
+// Measured: Vitamins
+function TopBreak_FrameBoltLength() = FRAME_BOLT_LENGTH;
 function TopBreak_ExtractorRetainerRadius() = EXTRACTOR_RETAINER_DIAMETER/2;
 
-// Calculated: Positions
-//function ActionRodZ() = FrameBoltZ()-WallFrameBolt()-(ActionRodWidth()/2);
-function BarrelZ() = BARREL_Z; // -0.11 for .22LR rimfire
+function TopBreak_LatchLength() = Inches(3);
+function TopBreak_LatchWidth() = LATCH_WIDTH;
+function TopBreak_LatchHeight() = LATCH_WIDTH;
+
+function TopBreak_LatchScrewLength() = 1;
+function TopBreak_LatchTabHeight() = 0.625;
+
 
 // Settings: Dimensions
+function BarrelZ() = BARREL_Z; // -0.11 for .22LR rimfire
 function BarrelLength() = BARREL_LENGTH;
 function TrunnionLength() = 8;
 function WallBarrel() = WALL_BARREL;
@@ -220,6 +228,10 @@ function ClusterMaxX() = TrunnionLength()+ClusterForwardExtension();
 function SightpostPinRadius() = Millimeters(2.5)/2;
 function TopBreak_MinRadius() = max(1.325/2, TrunnionRadius()); // Enable cross-compatibility by setting a size floor.
 
+function TopBreak_LatchExtension() = 0.25;
+function TopBreak_LatchTabGap() = Inches(0.0625);
+
+// Calculated: Positions
 function WallPivot() = 0.25;
 function PivotAngleBack() = -25;
 function PivotAngle() = PIVOT_ANGLE;
@@ -231,12 +243,9 @@ function PivotDiameter() = PivotRadius()*2;
 function PivotClearance() = 0.01;
 function PivotOuterRadius() = abs(PivotZ())+FrameBoltZ();
 
-function ActionRodLength() = 10;
-function FrameBoltLength() = FRAME_BOLT_LENGTH;
-
 function TopBreak_ReceiverFrontLength() = 0.5;
 function FrameBackLength() = 0.75+0.5;
-function ForendLength() = FrameExtension(length=FRAME_BOLT_LENGTH)
+function ForendLength() = FrameExtension(length=TopBreak_FrameBoltLength())
                         - 0.375
                         -TopBreak_ReceiverFrontLength();
 
@@ -311,7 +320,7 @@ function TopBreak_BarrelCollarBottomZ() = TopBreak_ExtractorZ()
 function TopBreak_LatchTravel() = 0.5;
 function TopBreak_LatchWall() = 0.125;
 
-function TopBreak_LatchTabGap() = 0.0625;
+function TopBreak_LatchTabGap() = LATCH_TAB_GAP;
 
 
 function TopBreak_LatchZ() = -1.625;
@@ -883,8 +892,11 @@ module TopBreak_LatchTab(cutaway=false, cutter=false, clearance=0.01, alpha=1) {
   clear2 = clear*2;
   clearCR = cutter?CR:0;
 
+  gap = 1/16;
   width = (TopBreak_MinRadius()+WallBarrel())*2;
-  bottomZ = TopBreak_LatchZ()-TopBreak_LatchWall()-TopBreak_LatchTabHeight()-clearance;
+  bottomZ = TopBreak_LatchZ()-TopBreak_LatchWall()-TopBreak_LatchTabHeight()-TopBreak_LatchTabGap();
+  height = abs(bottomZ) - abs(TopBreak_BarrelCollarBottomZ()) - gap; // abs(TopBreak_BarrelCollarBottomZ())+clearance
+  towerHeight = abs(bottomZ) - abs(TopBreak_LatchZ()); //(TopBreak_LatchWall()+TopBreak_LatchTabHeight()+0.06)
 
   color("Olive", alpha) RenderIf(!cutter) Cutaway(cutaway)
   difference() {
@@ -904,10 +916,10 @@ module TopBreak_LatchTab(cutaway=false, cutter=false, clearance=0.01, alpha=1) {
       for (M = [0,1]) mirror([0,M,0])
       translate([0.5-clear,
                  TopBreak_LatchY()-(TopBreak_LatchWidth()/2)-clear,
-                 TopBreak_LatchZ()-(TopBreak_LatchWall()+TopBreak_LatchTabHeight())-clear])
+                 bottomZ])
       ChamferedCube([1+(cutter?TopBreak_LatchTravel():0),
                      TopBreak_LatchWidth()+clear2,
-                     (TopBreak_LatchWall()+TopBreak_LatchTabHeight()+0.06)+clear2],
+                     towerHeight+clear],
                      r=1/16);
     }
 
@@ -921,15 +933,6 @@ module TopBreak_LatchTab(cutaway=false, cutter=false, clearance=0.01, alpha=1) {
       translate([-0.1875,-1])
       square([0.1875, 1]);
     }
-
-    // Extractor support clearance
-    translate([-0.5-clearance,
-               -(TopBreak_ExtractorHousingWidth()/2)-clearance,
-               TopBreak_BarrelCollarBottomZ()-clearance])
-    ChamferedCube([PivotX()-(sqrt(2)/2*PivotRadius())+(clearance*2),
-                   TopBreak_ExtractorHousingWidth()+(clearance*2),
-                   abs(TopBreak_BarrelCollarBottomZ())+clearance],
-                   r=1/16, teardropFlip=[false,true,true]);
 
     if (!cutter)
     TopBreak_LatchScrews(cutter=true);
@@ -1087,18 +1090,28 @@ module TopBreak_Foregrip(length=PumpGripLength(), cutaway=false, alpha=1) {
       // Body around the barrel
       translate([ClusterMaxX(),0,0])
       rotate([0,90,0])
-      PumpGrip(h=length);
+      PumpGrip(r=FOREGRIP_RADIUS, h=length);
 
-      // MLOK slot support
-      hull()
-      for (M = [0,1]) mirror([0,M,0])
-      translate([ClusterMaxX(),-TopBreak_ForegripMlokOffset(),TopBreak_ForegripMlokOffsetZ()-0.375])
-      ChamferedCube([length, TopBreak_ForegripMlokOffset(), Inches(0.75)],
-                    r=CR());
+      hull() {
+
+        // MLOK slot support
+        for (M = [0,1]) mirror([0,M,0])
+        translate([ClusterMaxX(),-TopBreak_ForegripMlokOffset(),TopBreak_ForegripMlokOffsetZ()-0.375])
+        ChamferedCube([length, TopBreak_ForegripMlokOffset(), Inches(0.75)],
+                      r=CR());
+
+        // Side Bolt support
+        for (Y = [1,-1])
+        translate([ClusterMaxX(),Y*TopBreak_HandguardBoltOffsetY(),0])
+        rotate([0,90,0])
+        ChamferedCylinder(r1=0.25, r2=CR(),
+                 h=length, teardropTop=true);
+       }
     }
 
     translate([ClusterMaxX(),0,0])
     rotate([0,90,0])
+    rotate(360/6/2)
     BearingSurface(r=BarrelRadius()+0.02,
                    length=length, center=false,
                    depth=0.0625, segments=6, taperDepth=0.125);
@@ -1486,7 +1499,7 @@ if ($preview) {
     if (_SHOW_RECEIVER)
     Frame_ReceiverAssembly(
       hardware=_SHOW_RECEIVER_HARDWARE,
-      length=FRAME_BOLT_LENGTH-0.5,
+      length=TopBreak_FrameBoltLength()-0.5,
       cutaway=_CUTAWAY_RECEIVER,
       alpha=_ALPHA_RECEIVER);
   }
