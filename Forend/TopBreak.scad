@@ -1141,17 +1141,23 @@ module TopBreak_Sightpost(alpha=_ALPHA_SIGHTPOST, cutaway=_CUTAWAY_SIGHTPOST) {
       rotate([0,-90,0])
       Sightpost(radius=BarrelRadius()) {
 
+        // Around barrel
+        ChamferedCylinder(r1=BarrelRadius(), r2=CR,
+                           h=SightpostLength(), teardropTop=true);
+
         // Side MLOK Slots
-        for (M = [0,1]) mirror([0,M,0])
         hull() {
 
-            // Around barrel
-            ChamferedCylinder(r1=BarrelRadius(), r2=CR,
-                               h=SightpostLength(), teardropTop=true);
-
             // MLOK slot support
+            for (M = [0,1]) mirror([0,M,0])
             translate([TopBreak_ForegripMlokOffsetZ()-0.375,0,0])
             ChamferedCube([Inches(0.75), mlokOffset, SightpostLength()], r=CR);
+
+            // Side Bolt support
+            for (Y = [1,-1])
+            translate([0,Y*TopBreak_HandguardBoltOffsetY(),0])
+            ChamferedCylinder(r1=0.25, r2=CR,
+                     h=SightpostLength(), teardropTop=true);
         }
 
         // Bottom MLOK Slot
@@ -1166,13 +1172,6 @@ module TopBreak_Sightpost(alpha=_ALPHA_SIGHTPOST, cutaway=_CUTAWAY_SIGHTPOST) {
             mirror([1,0,0])
             ChamferedCube([Inches(0.5), Inches(0.75), SightpostLength()], r=CR);
         }
-
-        // Side Bolt support
-        hull()
-        for (Y = [1,-1])
-        translate([0,Y*TopBreak_HandguardBoltOffsetY(),0])
-        ChamferedCylinder(r1=0.25, r2=CR,
-                 h=SightpostLength(), teardropTop=true);
       }
     }
 
