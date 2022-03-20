@@ -965,13 +965,6 @@ module TopBreak_Cluster(cutaway=false, alpha=1) {
   difference() {
     union() {
 
-      // Side Bolt support
-      for (Y = [1,-1])
-      translate([TrunnionLength()-ClusterRearLength(),Y*TopBreak_HandguardBoltOffsetY(),0])
-      rotate([0,90,0])
-      ChamferedCylinder(r1=0.25, r2=CR,
-               h=ClusterForwardExtension()+ClusterRearLength(), teardropTop=true);
-
       // Extension
       hull() {
 
@@ -1016,22 +1009,17 @@ module TopBreak_Cluster(cutaway=false, alpha=1) {
       }
 
       // MLOK Slot Support
-      hull()
-      for (M = [0,1]) mirror([0,M,0]) {
+      hull() {
 
-          // Forward Extension
-          translate([TrunnionLength(),0,0])
+          // Side Bolt support
+          for (Y = [1,-1])
+          translate([TrunnionLength()-ClusterRearLength(),Y*TopBreak_HandguardBoltOffsetY(),0])
           rotate([0,90,0])
-          ChamferedCylinder(r1=BarrelRadius(), r2=CR,
-                             h=ClusterForwardExtension(), teardropTop=true);
-
-          // Rear Extension
-          translate([TrunnionLength(),0,0])
-          rotate([0,-90,0])
-          ChamferedCylinder(r1=TrunnionRadius(), r2=CR,
-                             h=ClusterRearLength());
+          ChamferedCylinder(r1=0.25, r2=CR,
+                   h=ClusterForwardExtension()+ClusterRearLength(), teardropTop=true);
 
           // MLOK slot support
+          for (M = [0,1]) mirror([0,M,0])
           translate([TrunnionLength()-ClusterRearLength(),-mlokOffset,TopBreak_ForegripMlokOffsetZ()-0.375])
           ChamferedCube([ClusterForwardExtension()+ClusterRearLength(), mlokOffset, 0.75],
                         r=CR, teardropFlip=[true,true,true]);
