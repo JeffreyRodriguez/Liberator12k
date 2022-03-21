@@ -164,7 +164,6 @@ module Stock(length=StockLength(), doRender=true, cutaway=false, alpha=1) {
       RoundedBoolean(r=1/16, edgeOffset=0);
     }
 
-    translate([Stock_TakedownPinX(),0,0])
     Stock_TakedownPin(cutter=true);
   }
 }
