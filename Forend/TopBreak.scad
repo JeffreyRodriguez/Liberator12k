@@ -424,7 +424,7 @@ module TopBreak_ExtractorBit(cutter=false, clearance=0.003) {
   }
 }
 
-module TopBreak_ExtractorRetainer(cutaway=false, cutter=false, teardrop=false, clearance=EXTRACTOR_RETAINER_CLEARANCE) {
+module TopBreak_ExtractorRetainer(radius=TopBreak_ExtractorRetainerRadius(), cutaway=false, cutter=false, teardrop=false, clearance=EXTRACTOR_RETAINER_CLEARANCE) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
 
@@ -433,7 +433,7 @@ module TopBreak_ExtractorRetainer(cutaway=false, cutter=false, teardrop=false, c
   translate([TopBreak_ExtractorWidth()+TopBreak_ExtractorTravel()+0.5,
              0,
              -TrunnionRadius()-EXTRACTOR_RETAINER_LENGTH-clear2])
-  cylinder(r=TopBreak_ExtractorRetainerRadius()+clear, h=EXTRACTOR_RETAINER_LENGTH+clear2+(cutter?BarrelRadius():0));
+  cylinder(r=radius+clear, h=EXTRACTOR_RETAINER_LENGTH+clear2+(cutter?BarrelRadius():0));
 }
 
 module TopBreak_ExtractorSpring() {
@@ -815,10 +815,15 @@ module TopBreak_BarrelCollar(rearExtension=0, cutter=false, clearance=0.005, cut
       translate([X,0,0])
       TopBreak_Extractor(cutter=true);
 
+      // Extractor retainer travel
       hull()
       for (X = [0,-TopBreak_ExtractorTravel()])
       translate([X,0,0])
       TopBreak_ExtractorRetainer(cutter=true, teardrop=true);
+
+      // Extractor retainer removal punch hole
+      translate([0,0,-0.5])
+      TopBreak_ExtractorRetainer(radius=Millimeters(2), cutter=true);
 
       TopBreak_Barrel(cutter=true);
     }
@@ -875,6 +880,10 @@ module TopBreak_Extractor(cutter=false, clearance=0.005, chamferRadius=1/16, cut
 
       TopBreak_ExtractorBit(cutter=true);
       TopBreak_ExtractorRetainer(cutter=true);
+
+      // Extractor retainer removal punch hole
+      translate([0,0,-0.5])
+      TopBreak_ExtractorRetainer(radius=Millimeters(2), cutter=true);
 
       // Chamfer the back edge for smooth operation
       translate([0, 0, TopBreak_ExtractorZ()])
