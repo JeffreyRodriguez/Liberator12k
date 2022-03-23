@@ -254,10 +254,10 @@ function ChargerTravel() = 1.75;
 // Calculated: Lengths
 function TopBreak_ForegripOffsetX() = 6+ChargerTravel();
 function TopBreak_ForegripLength() = 4.625;
-function TopBreak_ForegripMlokOffset() = (TrunnionRadius()+Inches(0.375));
+function TopBreak_ForegripMlokOffset() = (TrunnionRadius()+Inches(0.4375));
 function TopBreak_ForegripMlokOffsetZ() = Inches(0.375);
 function TopBreak_ForendBoltY() = FrameBoltY();
-function TopBreak_HandguardBoltOffsetY() = TrunnionRadius()+0.125;
+function TopBreak_HandguardBoltOffsetY() = TrunnionRadius()+0.1875;
 function ClusterRearLength() = Inches(2);
 
 // Calculated: Springs
