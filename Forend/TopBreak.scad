@@ -128,7 +128,7 @@ EXTRACTOR_RETAINER_CLEARANCE = 0.008;
 EXTRACTOR_EXTRA_OFFSET = 0;
 
 LATCH_WIDTH = 0.25;
-LATCH_CLEARANCE = 0.003;
+LATCH_CLEARANCE = 0.006;
 
 BARREL_SLEEVE_DIAMETER = 1.2501;
 BARREL_OUTSIDE_DIAMETER = 1.0001;
@@ -1425,7 +1425,8 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
       TopBreak_LatchSpring();
 
       if (prints && _SHOW_LATCH)
-      TopBreak_LatchTab(cutaway=cutaway == true || _CUTAWAY_LATCH);
+      TopBreak_LatchTab(cutaway=cutaway == true || _CUTAWAY_LATCH,
+                        alpha=_ALPHA_LATCH);
     }
 
     if (hardware && _SHOW_COLLAR_HARDWARE)
