@@ -905,7 +905,7 @@ module TopBreak_LatchTab(cutaway=false, cutter=false, clearance=0.01, alpha=1) {
   width = (TopBreak_MinRadius()+WallBarrel())*2;
   bottomZ = TopBreak_LatchZ()-TopBreak_LatchWall()-TopBreak_LatchTabHeight()-TopBreak_LatchTabGap();
   height = abs(bottomZ) - abs(TopBreak_BarrelCollarBottomZ()) - gap; // abs(TopBreak_BarrelCollarBottomZ())+clearance
-  towerHeight = abs(bottomZ) - abs(TopBreak_LatchZ()); //(TopBreak_LatchWall()+TopBreak_LatchTabHeight()+0.06)
+  towerHeight = abs(bottomZ) - abs(TopBreak_LatchZ()) + (cutter?clearCR/2:0); //(TopBreak_LatchWall()+TopBreak_LatchTabHeight()+0.06)
 
   color("Olive", alpha) RenderIf(!cutter) Cutaway(cutaway)
   difference() {
