@@ -158,6 +158,7 @@ module Receiver_TakedownPin(cutter=false, clearance=0.005, alpha=1, cutaway=fals
     translate([Receiver_TakedownPinX(), 0, Receiver_TakedownPinZ()])
     rotate([90,0,0])
     linear_extrude(ReceiverOD(), center=true)
+    rotate(180)
     Teardrop(r=0.125+clear);
   } else {
     color("Silver") render() Cutaway(cutaway)
