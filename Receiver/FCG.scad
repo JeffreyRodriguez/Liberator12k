@@ -1368,7 +1368,7 @@ module SimpleFireControlAssembly(recoilPlateLength=RecoilPlateLength(), hardware
   FCG_Housing(alpha=min(alpha,_ALPHA_FIRING_PIN_HOUSING), cutaway=_CUTAWAY_FIRING_PIN_HOUSING);
 
   if (hardware && recoilPlate)
-  RecoilPlate(length=recoilPlateLength, contoured=FCG_RECOIL_PLATE_CONTOURED, cutaway=_CUTAWAY_RECOIL_PLATE, alpha=min(alpha,_ALPHA_RECOIL_PLATE));
+  RecoilPlate(length=recoilPlateLength, contoured=FCG_RECOIL_PLATE_CONTOURED, cutaway=_CUTAWAY_RECOIL_PLATE, alpha=_ALPHA_RECOIL_PLATE);
 }
 ///
 
