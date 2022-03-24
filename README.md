@@ -118,6 +118,26 @@ butane torch.
 Reaming holes in the prints is recommended. A drill bit will work, but reamers
 are a lot better. The cheap Chinese ones from Amazon are fine, buy a whole set.
 
+### Required Tools
+* Slip-Joint Pliers
+
+#### Files
+* 3/4" Half-Round File
+* Needle File Set
+
+#### Drill Bits
+* 5/16"
+* \#29 - \#8-32 Tap Drill
+* 11/64" or 4.5mm Long - \#8-32 Clearance Drill
+* \#39 or 2.5mm
+
+#### Reamers
+* 11/64" or 4.5mm - Small Screw Clearance
+* 1/4" - Medium Screw Clearance
+* 5/16" - Pivot Pin Clearance
+* 1/2" - Large Screw Clearance
+* \#39 or 2.5mm
+
 ### "Close Enough"
 All the parts are inch-standard (or all-metric), but there are "close enough"
 metric equivalents that are readily available even if you live in the US.
@@ -168,18 +188,19 @@ In general, here's how things go between inch and mm in this project:
 
 ### Drill Bits
  * 5/16"
- * \#29
+ * \#29 - \#8-32 Tap Drill
+ * 11/64" or 4.5mm Long - \#8-32 Clearance Drill
  * \#39 or 2.5mm
 
 ### Reamers
- * 11/64" - \#8-32 Clearance
- * 1/4"
- * 5/16"
- * 1/2"
+ * 11/64" or 4.5mm - Small Screw Clearance
+ * 1/4" - Medium Screw Clearance
+ * 5/16" - Pivot Pin Clearance
+ * 1/2" - Large Screw Clearance
  * \#39 or 2.5mm
 
 ### Taps
- * \#8-32
+ * \#8-32 - Spiral Flute
 
 <!-- NEW PAGE -->
 ## How to Read the Manual
@@ -213,3 +234,6 @@ Explains why certain decisions were made, what's important to consider when
 building or before altering the component.
 
 May discuss alternate hardware.
+
+<!-- NEW PAGE -->
+## Assembly Guidelines
