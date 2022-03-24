@@ -36,19 +36,16 @@ STL Files Location: `Forend/TopBreak_FP37/Prints/`
 <br/>
 
 ## Vitamins
-| Purpose                | Part                             | Quantity |
-|------------------------|----------------------------------|----------|
-| Extractor Bit          | #2 flat 1/4" Hex Bit             | 1        |
-| Extractor Retainer     | 1/4"x1" Dowel Pin                | 1        |
-| Extractor Spring       | TODO: 12lb 5/6" OD 2.75" Long    | 1        |
-| Latch Bars             | 1/4"x3" Square Rod               | 2        |
-| Latch Screws           | #8-32x3/4" Flat Head Screw       | 2        |
-| Latch Springs          | (same as sear spring)            | 2        |
-| Cluster Bolts          | #8-32x1/2" Flat Head Screw       | 2        |
-| Cluster Bolt Nuts      | #8-32x3/4" Heat Set Short        | 2        |
-| Foregrip Bolt          | 1/4"-20x3.5" Flat Head Screw     | 1        |
-| Foregrip Bolt Nut      | 1/4"-20 Heatset Insert           | 1        |
-| Barrel             | 1-5/8-in fence post 18.5" Long       | 1        |
+### Inch BOM
+This build uses the [Top-Break Common BOM](TopBreak_BOM.md) in addition to the following components.
+
+| Component | Purpose            | Part                 | Quantity |
+|-----------|--------------------|----------------------|----------|
+| FP37      | Trunnion Adhesive  | 2-part Epoxy         | 1        |
+| FP37      | Cluster Bolt Nuts  | #8-32 Heat Set Short | 2        |
+| FP37      | Trunnion Bolt Nuts | #8-32 Heat Set Short | 2        |
+| FP37      | Barrel             | 1-5/8x19" Fence Post | 1        |
+
 <br/>
 
 ### Fence Post Barrel
