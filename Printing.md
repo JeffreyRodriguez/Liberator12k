@@ -20,7 +20,7 @@ These are the only vital Cura settings to override.
 
 **Shell**
 * Wall Thickness: 3mm
-* Top/Bottom Thickness: 4mm
+* Top/Bottom Thickness: 3.2mm
 * Filter Out Tiny Gaps: Yes *(reduces large-nozzle drool)*
 * Z Seam Alignment: Sharpest Corner
 
