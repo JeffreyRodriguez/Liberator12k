@@ -968,6 +968,8 @@ module TopBreak_Cluster(cutaway=false, alpha=1) {
   lowerExtension = Inches(0.75);
   width = Inches(7/16);
   mlokOffset = TopBreak_ForegripMlokOffset();
+  length = ClusterRearLength()+ClusterForwardExtension();
+  clusterMinX = TrunnionLength()-ClusterRearLength();
   CR = Inches(1/16);
 
   color("Tan", alpha) render() Cutaway(cutaway)
@@ -1022,15 +1024,15 @@ module TopBreak_Cluster(cutaway=false, alpha=1) {
 
           // Side Bolt support
           for (Y = [1,-1])
-          translate([TrunnionLength()-ClusterRearLength(),Y*TopBreak_HandguardBoltOffsetY(),0])
+          translate([clusterMinX,Y*TopBreak_HandguardBoltOffsetY(),0])
           rotate([0,90,0])
           ChamferedCylinder(r1=0.25, r2=CR,
-                   h=ClusterForwardExtension()+ClusterRearLength(), teardropTop=true);
+                   h=length, teardropTop=true);
 
           // MLOK slot support
           for (M = [0,1]) mirror([0,M,0])
-          translate([TrunnionLength()-ClusterRearLength(),-mlokOffset,TopBreak_ForegripMlokOffsetZ()-0.375])
-          ChamferedCube([ClusterForwardExtension()+ClusterRearLength(), mlokOffset, 0.75],
+          translate([clusterMinX,-mlokOffset,TopBreak_ForegripMlokOffsetZ()-0.375])
+          ChamferedCube([length, mlokOffset, 0.75],
                         r=CR, teardropFlip=[true,true,true]);
 
       }
@@ -1063,12 +1065,20 @@ module TopBreak_Cluster(cutaway=false, alpha=1) {
       }
     }
 
+    // Bearing surface
+    translate([clusterMinX,0,0])
+    rotate([0,90,0])
+    rotate(360/6/2)
+    BearingSurface(r=BarrelRadius()+BARREL_CLEARANCE,
+                   length=length, center=false,
+                   depth=0.03125, segments=6, taperDepth=0.03125);
+
     // MLOK slots
     for (M = [0,1]) mirror([0,M,0])
-    translate([TrunnionLength()-ClusterRearLength()+0.25, -mlokOffset, TopBreak_ForegripMlokOffsetZ()])
+    translate([clusterMinX+0.25, -mlokOffset, TopBreak_ForegripMlokOffsetZ()])
     rotate([90,0,0]) {
-      MlokSlot(ClusterForwardExtension()+ClusterRearLength()-0.5);
-      MlokSlotBack(ClusterForwardExtension()+ClusterRearLength()-0.5);
+      MlokSlot(length-0.5);
+      MlokSlotBack(length-0.5);
     }
 
     TopBreak_Barrel(cutter=true);
@@ -1109,9 +1119,9 @@ module TopBreak_Foregrip(length=PumpGripLength(), cutaway=false, alpha=1) {
     translate([ClusterMaxX(),0,0])
     rotate([0,90,0])
     rotate(360/6/2)
-    BearingSurface(r=BarrelRadius()+0.02,
+    BearingSurface(r=BarrelRadius()+BARREL_CLEARANCE,
                    length=length, center=false,
-                   depth=0.0625, segments=6, taperDepth=0.125);
+                   depth=0.03125, segments=6, taperDepth=0.03125);
 
     TopBreak_HandguardBolts(cutter=true);
 
@@ -1186,6 +1196,13 @@ module TopBreak_Sightpost(alpha=_ALPHA_SIGHTPOST, cutaway=_CUTAWAY_SIGHTPOST) {
       MlokSlot(SightpostLength()-Inches(0.5));
       MlokSlotBack(SightpostLength()-Inches(0.5));
     }
+
+    // Bearing surface
+    translate([TopBreak_SightpostX(),0,0])
+    rotate([0,90,0])
+    BearingSurface(r=BarrelRadius()+BARREL_CLEARANCE,
+                   length=SightpostLength(), center=false,
+                   depth=0.03125, segments=6, taperDepth=0.03125);
 
     TopBreak_Barrel(cutter=true);
     TopBreak_HandguardBolts(cutter=true);
