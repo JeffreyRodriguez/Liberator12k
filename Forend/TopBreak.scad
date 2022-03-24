@@ -982,19 +982,19 @@ module TopBreak_Cluster(cutaway=false, alpha=1) {
         // Forward Extension
         translate([TrunnionLength(),0,0])
         rotate([0,90,0])
-        ChamferedCylinder(r1=BarrelRadius()+WallBarrel(), r2=CR,
+        ChamferedCylinder(r1=BarrelRadius()+SightpostWall(), r2=CR,
                            h=ClusterForwardExtension(), teardropTop=true);
 
         // Rear Extension
         translate([TrunnionLength(),0,0])
         rotate([0,-90,0])
-        ChamferedCylinder(r1=TrunnionRadius()+WallBarrel(), r2=CR,
+        ChamferedCylinder(r1=TrunnionRadius()+SightpostWall(), r2=CR,
                            h=ClusterRearLength());
       }
 
       // Index pin support
       for (R = [0,180]) rotate([R,0,0])
-      translate([TrunnionLength(),BarrelRadius()+WallBarrel(),0])
+      translate([TrunnionLength(),BarrelRadius()+SightpostWall(),0])
       rotate([0,90,0])
       ChamferedCylinder(r1=SightpostPinRadius()+Inches(0.125), r2=CR, h=ClusterForwardExtension(),
                         teardropTop=true);
@@ -1043,7 +1043,7 @@ module TopBreak_Cluster(cutaway=false, alpha=1) {
           // Forward Extension
           translate([TrunnionLength(),0,0])
           rotate([0,90,0])
-          ChamferedCylinder(r1=BarrelRadius()+WallBarrel(), r2=CR,
+          ChamferedCylinder(r1=BarrelRadius()+SightpostWall(), r2=CR,
                              h=ClusterForwardExtension(), teardropTop=true);
 
           // Rear Extension
