@@ -40,6 +40,8 @@ function BarrelLength() = 18;
 function UpperLength() = 6.75;
 function MagazineCenterZ() = 1.5;
 
+function MagazineSquareTube() = Spec_SquareTubeOneInch();
+
 // Vitamins
 module Barrel(od=BARREL_OUTSIDE_DIAMETER, id=BARREL_INSIDE_DIAMETER, length=BarrelLength(), clearance=BARREL_CLEARANCE, cartridgeRimThickness=RIM_WIDTH, cutter=false, alpha=1, cutaway=false) {
 
@@ -139,7 +141,9 @@ module PumpForend(alpha=1, cutaway=false) {
   difference() {
     union() {
       hull() {
-        translate([ForendLength,0,0])Receiver_Segment(length=ForendLengthExtra);
+
+        translate([ForendLength,0,0])
+        Receiver_Segment(length=ForendLengthExtra+ForendLength);
 
 
         *translate([+6.75,0,0])
@@ -151,7 +155,7 @@ module PumpForend(alpha=1, cutaway=false) {
 
       hull() {
 
-        rotate([0,90,0])
+        *rotate([0,90,0])
         intersection() {
 
           ChamferedCylinder(r1=PipeCapRadius(StockPipe())+ForendWall,
