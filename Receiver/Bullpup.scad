@@ -32,7 +32,7 @@ use <Stock.scad>;
 /* [Print] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Prints/Stock", "Prints/Stock_Backplate", "Prints/Stock_Buttpad"]
+_RENDER = ""; // ["", "Prints/Bullpup_Front", "Prints/Bullpup_Rear", "Prints/Bullpup_TriggerBar"]
 
 /* [Assembly] */
 _FOREND = ""; // ["", "TopBreak", "Trigun", "Revolver", "Evolver", "AR15", "Pump"]
@@ -46,6 +46,7 @@ _SHOW_BUTTPAD = true;
 _SHOW_BULLPUP_BOLT = true;
 
 _ALPHA_BULLPUP = 1; // [0:0.1:1]
+_ALPHA_BULLPUP_TRIGGER_BAR = 1; // [0:0.1:1]
 _ALPHA_BUTTPAD = 1; // [0:0.1:1]
 
 
@@ -72,7 +73,7 @@ function BullpupBolt() = BoltSpec(BULLPUP_BOLT);
 assert(BullpupBolt(), "BullpupBolt() is undefined. Unknown BULLPUP_BOLT?");
 
 function Bullpup_BackplateLength() = 0.5;
-function Bullpup_RearLength() = ReceiverLength();
+function Bullpup_RearLength() = ReceiverLength()+0.5;
 function Bullpup_MinX() = - ReceiverFrontLength()
                           - Bullpup_RearLength();
 
@@ -80,13 +81,13 @@ function Bullpup_BoltX() = Bullpup_MinX();
 function Bullpup_BoltY() = 0.625;
 function Bullpup_BoltZ() = -2.5;
 function Bullpup_BoltWall() = 0.3125;
-function Bullpup_BoltLength() = 12;
+function Bullpup_BoltLength() = 11.75;
 
 function Bullpup_BottomZ() = Bullpup_BoltZ()-Bullpup_BoltWall();
 
 function Bullpup_FrontLength() = Bullpup_BoltLength() - Bullpup_RearLength();
 
-function Bullpup_LowerX() = 7;
+function Bullpup_LowerX() = Bullpup_BoltLength()-7;
 function Bullpup_LowerZ() = (Bullpup_BoltZ() - Bullpup_BoltWall())
                           - ReceiverBottomZ();
 echo("Bullpup_BoltLength", Bullpup_BoltLength());
@@ -106,21 +107,6 @@ module Bullpup_Bolts(cutaway=false, head="hex", nut="heatset", cutter=false, tea
              nut=nut, nutHeightExtra=(cutter?1:0),
              clearance=clear, teardrop=cutter&&teardrop);
 }
-module Bullpup_TakedownPinRetainer(cutter=false, clearance=0.005) {
-  clear = cutter ? clearance : 0;
-  clear2 = clear*2;
-
-  color("Silver") RenderIf(!cutter)
-  translate([Bullpup_MinX(), 0, Receiver_TakedownPinZ()-0.125])
-  rotate([0,90,0])
-  cylinder(r=(3/32/2)+clear, h=2);
-
-  if (cutter)
-  translate([Bullpup_MinX(), 0, Receiver_TakedownPinZ()-0.125])
-  rotate([0,90,0])
-  cylinder(r=0.125, h=2);
-
-}
 ///
 
 // *****************
@@ -137,20 +123,21 @@ module Bullpup_Front(length=Bullpup_FrontLength(), cutaway=false, alpha=1) {
       translate([-0.5, Y*Bullpup_BoltY(), Bullpup_BoltZ()])
       rotate([0,90,0])
       ChamferedCylinder(r1=Bullpup_BoltWall(), r2=1/16, h=length);
-
-      translate([Bullpup_LowerX(),0,Bullpup_LowerZ()]) {
-        ReceiverLugFront(extraTop=0.25);
-        ReceiverLugRear(extraTop=0.25);
-      }
     }
 
     Bullpup_TriggerBar(cutter=true);
 
     Bullpup_Bolts(cutter=true);
+
+    translate([Bullpup_LowerX(),0,Bullpup_LowerZ()]) {
+      ReceiverLugFront(cutter=true, extraTop=-ReceiverBottomZ());
+
+      ReceiverLugRear(cutter=true, extraTop=-ReceiverBottomZ());
+    }
   }
 }
 module Bullpup_Rear(length=ReceiverLength()+Bullpup_BackplateLength(), cutaway=false, alpha=1) {
-  color("Chocolate", alpha) render() Cutaway(cutaway)
+  color("Bisque", alpha) render() Cutaway(cutaway)
   difference() {
 
     union() {
@@ -163,37 +150,37 @@ module Bullpup_Rear(length=ReceiverLength()+Bullpup_BackplateLength(), cutaway=f
       ChamferedCylinder(r1=Bullpup_BoltWall(), r2=1/16, h=length);
 
       // Hammer Guide
-      translate([Bullpup_MinX(),-0.3125/2,-ReceiverIR()-0.375])
+      *translate([Bullpup_MinX(),-0.3125/2,-ReceiverIR()-0.375])
       ChamferedCube([1, 0.3125, ReceiverIR()], r=1/16, teardropFlip=[true,true,true]);
 
       // Receiver Bottom Body
       translate([Bullpup_MinX(), -(1.25/2), Bullpup_BoltZ()-0.125])
-      ChamferedCube([length-0.5, 1.25, 2+ReceiverBottomZ()+0.125],
+      ChamferedCube([length, 1.25, ReceiverBottomZ()-Bullpup_BoltZ()+0.125],
                     r=1/16, teardropFlip=[true, true, true]);
 
       // Bottom Slot Section
       difference() {
 
         translate([-1,0,0])
-        ReceiverBottomSlotInterface(length=ReceiverLength()-0.5);
+        ReceiverBottomSlotInterface(length=ReceiverLength(), extension=CR());
 
         // Receiver ID
         translate([Bullpup_MinX(),0,0])
         rotate([0,90,0])
-        ChamferedCircularHole(r1=ReceiverIR(), r2=1/8, h=ReceiverLength()-0.5,
+        ChamferedCircularHole(r1=ReceiverIR(), r2=1/8, h=ReceiverLength(),
                               teardropBottom=true,
                               teardropTop=true);
       }
-      //
 
       // Backplate
-      *difference() {
+      difference() {
         translate([Bullpup_MinX(),0,0])
+        mirror([1,0,0])
         Receiver_Segment(length=0.5, highTop=false,
                         chamferFront=true, chamferBack=true);
 
         // Clearance for the tension bolts
-        translate([Bullpup_MinX()+ManifoldGap(),0,0])
+        translate([Bullpup_MinX()+0.5,0,0])
         TensionBoltIterator() {
           ChamferedCircularHole(r1=WallTensionRod(), r2=1/16, h=0.5);
 
@@ -206,32 +193,35 @@ module Bullpup_Rear(length=ReceiverLength()+Bullpup_BackplateLength(), cutaway=f
                               corners=false, center=false);
         }
       }
-      //
     }
 
-    translate([-LowerMaxX()-0.5,0,0])
-    translate([-0.01,0,ReceiverBottomZ()])
-    Sear(length=SearLength()+abs(ReceiverBottomZ()), cutter=true);
+    Bullpup_Bolts(cutter=true);
 
-    Bullpup_TriggerBar(cutter=true);
+    translate([-0.5,0,0]) {
 
-    translate([-ReceiverFrontLength(),0,0])
-    Receiver_TakedownPin(cutter=true);
+      Sear(cutter=true);
 
-    Bullpup_TakedownPinRetainer(cutter=true);
+      Receiver_TakedownPin(cutter=true);
 
-    Stock_ButtpadBolt(cutter=true, teardrop=false);
+      Bullpup_TriggerBar(cutter=true);
+
+      Stock_ButtpadBolt(cutter=true, teardrop=false);
+    }
   }
 }
 
-module Bullpup_TriggerBar(cutter=false, cutaway=false, alpha=1) {
+module Bullpup_TriggerBar(cutter=false, clearance=0.005, cutaway=false, alpha=1) {
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
+
   color("Olive", alpha) RenderIf(!cutter) Cutaway(cutaway)
 
-  //translate([Bullpup_LowerX(),0,Bullpup_LowerZ()])
-  //translate([-LowerMaxX(),0,ReceiverBottomZ()])
+  translate([Bullpup_LowerX(),0,Bullpup_LowerZ()])
+  Trigger();
 
-  translate([-LowerMaxX()-0.125-TriggerTravel(), -(0.51/2), -2])
-  cube([LowerMaxX()+1.5,0.51,1.26]);
+  translate([-LowerMaxX()-0.125-TriggerTravel(), -(0.5/2)-clear, Bullpup_BoltZ()-0.125-clear])
+  cube([LowerMaxX()+1.5,0.5+clear2,0.25+clear2]);
+
 }
 ///
 
@@ -240,22 +230,26 @@ module Bullpup_TriggerBar(cutter=false, cutaway=false, alpha=1) {
 // **************
 module BullpupAssembly() {
 
-  Bullpup_TakedownPinRetainer();
-
   if (_SHOW_BULLPUP_BOLT)
   Bullpup_Bolts();
 
   if (_SHOW_FCG)
-  translate([-LowerMaxX()-0.5,0,LowerOffsetZ()]){
-    Sear(length=SearLength()+abs(ReceiverBottomZ()));
+  translate([-0.5,0,0]){
+    Sear();
     SearPin();
+    SimpleFireControlAssembly(actionRod=false);
   }
 
-  Bullpup_TriggerBar(cutaway=_CUTAWAY_BULLPUP, alpha=_ALPHA_BULLPUP);
+  translate([Bullpup_LowerX(),0,Bullpup_LowerZ()]) {
+    ReceiverLugFront(extraTop=0.25);
+    ReceiverLugRear(extraTop=0.25);
+  }
 
-  translate([StockLength()-0.5-1,0,0]) {
+  Bullpup_TriggerBar(cutaway=_CUTAWAY_BULLPUP, alpha=_ALPHA_BULLPUP_TRIGGER_BAR);
 
-    if (_SHOW_STOCK_BACKPLATE)
+  translate([StockLength()-0.5,0,0]) {
+
+    *if (_SHOW_STOCK_BACKPLATE)
     Stock_Backplate();
 
     if (_SHOW_BUTTPAD) {
@@ -315,18 +309,18 @@ if ($preview) {
   BullpupAssembly();
 } else {
 
-  if (_RENDER == "Prints/Stock")
+  if (_RENDER == "Prints/Bullpup_TriggerBar")
   rotate([0,-90,0])
   translate([ReceiverLength()+StockLength(),0,0])
-  Stock();
+  Bullpup_TriggerBar();
 
-  if (_RENDER == "Prints/Stock_Buttpad")
+  if (_RENDER == "Prints/Bullpup_Front")
   rotate([0,-90,0])
-  translate([StockLength()+ReceiverLength()+ButtpadLength(),0,0])
-  Stock_Buttpad();
+  translate([0,0,0])
+  Bullpup_Front();
 
-  if (_RENDER == "Prints/Stock_Backplate")
+  if (_RENDER == "Prints/Bullpup_Rear")
   rotate([0,-90,0])
-  translate([-ButtpadX(),0,0])
-  Stock_Backplate();
+  translate([-Bullpup_MinX(),0,0])
+  Bullpup_Rear();
 }
