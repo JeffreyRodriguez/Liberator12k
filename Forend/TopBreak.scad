@@ -1031,8 +1031,8 @@ module TopBreak_Cluster(cutaway=false, alpha=1) {
 
           // MLOK slot support
           for (M = [0,1]) mirror([0,M,0])
-          translate([clusterMinX,-mlokOffset,TopBreak_ForegripMlokOffsetZ()-0.375])
-          ChamferedCube([length, mlokOffset, 0.75],
+          translate([clusterMinX+1,-mlokOffset,TopBreak_ForegripMlokOffsetZ()-0.375])
+          ChamferedCube([length-1, mlokOffset, 0.75],
                         r=CR, teardropFlip=[true,true,true]);
 
       }
@@ -1075,10 +1075,10 @@ module TopBreak_Cluster(cutaway=false, alpha=1) {
 
     // MLOK slots
     for (M = [0,1]) mirror([0,M,0])
-    translate([clusterMinX+0.25, -mlokOffset, TopBreak_ForegripMlokOffsetZ()])
+    translate([clusterMinX+1.25, -mlokOffset, TopBreak_ForegripMlokOffsetZ()])
     rotate([90,0,0]) {
-      MlokSlot(length-0.5);
-      MlokSlotBack(length-0.5);
+      MlokSlot(length-1.5);
+      MlokSlotBack(length-1.5);
     }
 
     TopBreak_Barrel(cutter=true);
