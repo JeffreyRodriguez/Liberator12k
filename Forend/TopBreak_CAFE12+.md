@@ -3,23 +3,14 @@
 
 A 12ga Top Break variant inspired by the venerable pipe shotgun.
 
-The gun I set out to make when I started the project.
-Since it's built with \#Liberator12k platform components it features:
-
-* Optics-ready Picatinny Rail
-* QD Sling
-* Modular components
-* Ambidextrous
-
 ## The Easy Way
-You can buy a kit from the [\#Liberator12k store](https://liberator12k.com/store/)
-for the CAFE12+, which includes everything you need for the
-better, faster, stronger 4130 alloy steel tubing version of the gun.
+You can buy a CAFE kit from the [\#Liberator12k store](https://liberator12k.com/store/).
 
-## CAFE12 or CAFE2+
+## CAFE12 or CAFE12+
 This is the documentation for the **Plus Version** using 4130 tube instead of
 Schedule 40 pipe. 3/4" Schedule 40 pipes and 4130 tube are different sizes,
-so the CAFE12 and CAFE12+ forends do not share parts.
+so the CAFE12 and CAFE12+ have different *Barrel Collars*.
+
 See [Chapter 2b: CAFE12 Forend](TopBreak_CAFE12.md) if you're sourcing your
 own barrel from pipe.
 

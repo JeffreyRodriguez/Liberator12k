@@ -3,13 +3,13 @@
 ### Your First Build
 
 Your first build should be a CAFE12 break-action 12ga.
-Even if there's another design that caught your eye: The CAFE12 is training
+Even if there's another design that caught your eye, the CAFE12 is training
 wheels for the project and a great way to kick the tires on your receiver build.
 
 ### CAFE12 or CAFE12+
 The **Plus** version uses 4130 tube instead of Schedule 40 pipe.
 3/4" Schedule 40 pipes and 4130 tube are different sizes, so the
-CAFE12 and CAFE12+ forends do not share parts.
+CAFE12 and CAFE12+ forends do not share all parts.
 
 The CAFE12 will be slightly cheaper, and you can easily source the parts from
 your local hardware stores.
@@ -57,7 +57,8 @@ about what pipes you need to buy and tips for how to prepare them.
 
 ### FP37
 The FP37 was mostly "For Fun" and because it was an easy demonstration of how
-flexible the \#Liberator12k platform can be.
+flexible the \#Liberator12k platform can be. The parts list is almost identical
+to the CAFE.
 
 [2c: FP37 Forend](TopBreak_FP37.md) will put a flare launcher
 in your hands.

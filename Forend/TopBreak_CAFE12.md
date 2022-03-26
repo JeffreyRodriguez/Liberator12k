@@ -7,6 +7,12 @@ This version uses Schedule 40 3/4" and 1" pipe.
 Read the [Chapter 2a: CAFE12+ Forend](TopBreak_CAFE12+.md) for the
 better, faster, stronger 4130 tube forend.
 
+## Partial Kit
+You can still buy a Partial CAFE kit from the [\#Liberator12k store](https://liberator12k.com/store/).
+
+It has all the nuts, bolts, and custom parts already completed for you, just no barrel.
+If you want to DIY everything, see [Appendix: Top-Break Common - Machining](TopBreak_Machining.md).
+
 <!-- NEW PAGE -->
 ## Prints
 STL Files Location: `Forend/TopBreak_CAFE12/Prints/`
