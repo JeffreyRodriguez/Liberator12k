@@ -7,6 +7,7 @@ use <../Meta/Resolution.scad>;
 use <../Meta/Conditionals/RenderIf.scad>;
 use <../Meta/Conditionals/MirrorIf.scad>;
 
+use <../Meta/Math/Circles.scad>;
 use <../Meta/Math/Triangles.scad>;
 
 use <../Shapes/Chamfer.scad>;
@@ -835,6 +836,7 @@ module Evolver_ActuatorToggle(AF=0, stopTab=true, cutter=false, clearance=0.01, 
   height = 0.125;
   wall = 0.125;
   angle=-15;
+  helixOverAngle = SegmentAngle((width/4), BarrelCollarRadius()+0.1875);
   tabOffsetX = Evolver_ActuatorMinX()+0.5-clear;
   length = 1-ActuatorTabLength();
   innerRadius = BarrelRadius();
@@ -893,7 +895,7 @@ module Evolver_ActuatorToggle(AF=0, stopTab=true, cutter=false, clearance=0.01, 
         difference() {
           HelixSegment(radius=BarrelCollarRadius(),
                        depth=Evolver_PumpRodToggleExtension(), width=0.25+clear2,
-                       angle=abs(angle),
+                       angle=abs(angle)+helixOverAngle,
                        verbose=false);
 
           cylinder(r=BarrelCollarRadius()-Evolver_PumpRodToggleExtension(), h=length);
