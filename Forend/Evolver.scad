@@ -438,6 +438,7 @@ module Evolver_ForendSpacer(length=ForendSpacerLength(), doRender=true, cutaway=
 
 module Evolver_BarrelSupport(length=Evolver_BarrelSupportLength(), doRender=true, cutaway=false, alpha=_ALPHA_FOREND_SPACER) {
   extraBottom=0;
+  internalCR = 1/8;
 
   offsetX = ForendSpacerLength();
 
@@ -520,6 +521,19 @@ module Evolver_BarrelSupport(length=Evolver_BarrelSupportLength(), doRender=true
 
     Evolver_Actuator(cutter=true);
     Evolver_ActuatorToggle(cutter=true);
+
+    // Actuator hole chamfer
+    translate([offsetX+length,0,0])
+    rotate([0,-90,0])
+    HoleChamfer(r1=BarrelCollarRadius(), r2=internalCR, teardrop=true);
+
+    // Actuator screw chamfers
+    for (R = [Evolver_ActuatorScrewAngle(),-Evolver_ActuatorScrewAngle()]) rotate([R,0,0])
+    translate([offsetX+length,0, Evolver_ActuatorScrewZ()])
+    rotate([0,-90,0])
+    HoleChamfer(r1=0.25, r2=internalCR, teardrop=true);
+
+
   }
 }
 module Evolver_Extractor(length=0.5, cutter=false, clearance=0.002, cutaway=false, alpha=1) {
@@ -757,7 +771,7 @@ module Evolver_ZigZag(length=Evolver_ZigZagLength(), cutter=false, clearance=0.0
 module Evolver_Actuator(cutter=false, clearance=0.01, cutaway=false, alpha=1) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
-  CR = 1/16;
+  CR = 1/8;
   clearCR = cutter ? CR : 0;
 
 
@@ -791,7 +805,7 @@ module Evolver_Actuator(cutter=false, clearance=0.01, cutaway=false, alpha=1) {
         rotate([60,0,0])
         translate([-clearCR-clear,-(width/2)-clear, 0.5-clear])
             ChamferedCube([tabLength+(cutter?Evolver_ActuatorTravel():0)+clearCR+clear,
-                           width+clear2, height+clear2], r=1/16);
+                           width+clear2, height+clear2], r=1/16, teardropFlip=[true,true,true]);
 
         // Body
         translate([Evolver_ActuatorMinX(),0,0])
@@ -808,19 +822,25 @@ module Evolver_Actuator(cutter=false, clearance=0.01, cutaway=false, alpha=1) {
     for(X = [0,-Evolver_ActuatorTravel()]) translate([X,0,0])
     Evolver_ZigZag(cutter=true);
 
-    if (!cutter)
-    Evolver_ActuatorScrews(cutter=true);
-
-    if (!cutter)
-    Evolver_ActuatorPin(cutter=true);
-
-    if (!cutter)
-    Evolver_ActuatorToggle(stopTab=false, cutter=true);
 
     if (!cutter) {
       Evolver_Barrel(cutter=true);
       Evolver_BarrelCollar(cutter=true);
+      Evolver_ActuatorToggle(stopTab=false, cutter=true);
+      Evolver_ActuatorPin(cutter=true);
+      Evolver_ActuatorScrews(cutter=true);
+
+      // Zigzag hole chamfer
+      translate([Evolver_ActuatorMinX(),0,SpindleZ()])
+      rotate([0,90,0])
+      HoleChamfer(r1=0.5, r2=CR, teardrop=true);
+
+      // Barrel hole chamfer
+      translate([Evolver_ActuatorMinX(),0,0])
+      rotate([0,90,0])
+      HoleChamfer(r1=BarrelRadius(), r2=CR, teardrop=true);
     }
+
   }
 }
 
@@ -835,42 +855,50 @@ module Evolver_ActuatorToggle(AF=0, stopTab=true, cutter=false, clearance=0.01, 
   width = 0.25;
   height = 0.125;
   wall = 0.125;
-  angle=-15;
+  toggleAngle=-15;
   helixOverAngle = SegmentAngle((width/4), BarrelCollarRadius()+0.1875);
   tabOffsetX = Evolver_ActuatorMinX()+0.5-clear;
   length = 1-ActuatorTabLength();
+  camBodyAngle = 60;
+  camBodyLength = 2;
+  bodyUndercutLength = 0.125;
+  bodyLength = camBodyLength+bodyUndercutLength;
   innerRadius = BarrelRadius();
-  extensionRadius = BarrelCollarRadius()-Evolver_PumpRodToggleExtension();//(BarrelRadius()+(1/16)+clear);
-  bodyAngle = 60;
-  extensionAngle = bodyAngle+abs(angle*3);
+  extensionRadius = BarrelRadius()+(1/16)+clear;
+  extensionAngle = camBodyAngle+abs(toggleAngle*3);
   helixOffsetX = tabOffsetX+ActuatorTabLength();
 
   color("CornflowerBlue", alpha)
   RenderIf(!cutter) Cutaway(cutaway)
   for (M = [0,1]) mirror([0,M,0])
-  rotate([angle*AF,0,0])
+  rotate([toggleAngle*AF,0,0])
   difference() {
     union() {
 
-      // Pump Rod Cam Channel (and tab)
+      // Cam channel for pump rods..
+      // and the stop tab.
       difference() {
         union() {
 
-          // Body
+          // Cam body
           translate([tabOffsetX-clear,0,0])
-          rotate([-70+angle+(cutter?angle:0),0,0])
+          rotate([-70+toggleAngle+(cutter?toggleAngle:0),0,0])
           rotate([0,90,0])
           mirror([1,0])
-          linear_extrude(2+clear2)
-          semidonut(major=(BarrelCollarRadius()+clear)*2,
-                    minor=(innerRadius-clear)*2,
-                    angle=bodyAngle+(cutter?abs(angle):0));
+          linear_extrude(camBodyLength+clear2)
+          hull() {
+            semidonut(major=(BarrelCollarRadius()+clear)*2,
+                      minor=(innerRadius-clear)*2,
+                      angle=camBodyAngle+(cutter?abs(toggleAngle):0));
+
+            circle(r=ArcLength(camBodyAngle)/4);
+          }
 
           // Stop tab
           if (stopTab)
           intersection()  {
             translate([(cutter?0:tabOffsetX)-clear,0,0])
-            rotate([-60-angle,0,0])
+            rotate([-60-toggleAngle,0,0])
             translate([0,-(width/2)+(cutter?clearance*2:clearance), 0])
             ChamferedCube([stopLength+(cutter?tabOffsetX:0),
                            width+(cutter?clearance*2:-(clearance*2)),
@@ -885,7 +913,7 @@ module Evolver_ActuatorToggle(AF=0, stopTab=true, cutter=false, clearance=0.01, 
 
         }
 
-        // Helix
+        // Cam helix cut
         if (!cutter)
         for (X = [0:width/2:1-(width/2)])
         translate([helixOffsetX+X,0,0])
@@ -895,7 +923,7 @@ module Evolver_ActuatorToggle(AF=0, stopTab=true, cutter=false, clearance=0.01, 
         difference() {
           HelixSegment(radius=BarrelCollarRadius(),
                        depth=Evolver_PumpRodToggleExtension(), width=0.25+clear2,
-                       angle=abs(angle)+helixOverAngle,
+                       angle=abs(toggleAngle)+helixOverAngle,
                        verbose=false);
 
           cylinder(r=BarrelCollarRadius()-Evolver_PumpRodToggleExtension(), h=length);
@@ -917,17 +945,15 @@ module Evolver_ActuatorToggle(AF=0, stopTab=true, cutter=false, clearance=0.01, 
         }
       }
 
-      // Baseplate around barrel
+      // Captured baseplate around barrel
       translate([tabOffsetX-clear,0,0])
-      rotate([-60+(angle*3)+(cutter?angle:0),0,0])
+      rotate([-60+(toggleAngle*3)+(cutter?toggleAngle:0),0,0])
       rotate([0,90,0])
       mirror([1,0])
       intersection() {
-        linear_extrude(2+clear2)
-        semicircle(od=extensionRadius*2,
-                  angle=extensionAngle+(cutter?abs(angle):0));
-
-
+        linear_extrude(bodyLength+clear2)
+        semicircle(od=(extensionRadius+clear)*2,
+                  angle=extensionAngle+(cutter?abs(toggleAngle):0));
       }
 
     }
