@@ -43,7 +43,7 @@ use <../Receiver/FCG.scad>;
 /* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "ReceiverFront", "Spindle", "ZigZag", "Ratchet", "RatchetPawl","Actuator", "ActuatorToggle", "BarrelSupport", "ForendSpacer", "PumpRod", "PumpCollar"]
+_RENDER = ""; // ["", "Prints/ReceiverFront", "Prints/Spindle", "Prints/ZigZag", "Prints/Ratchet", "Prints/RatchetPawl","Prints/Actuator", "Prints/ActuatorToggle", "Prints/BarrelSupport", "Prints/ForendSpacer", "Prints/PumpRod", "Prints/PumpCollar"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;
