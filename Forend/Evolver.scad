@@ -189,6 +189,8 @@ function ForendBoltY() = 1;
 
 function Evolver_PumpRodToggleExtension() = 0.1875;
 function Evolver_ActuatorMinX() = ForendSpacerLength()-0.25;
+function Evolver_ActuatorScrewZ() = BarrelRadius()+0.25;
+function Evolver_ActuatorScrewAngle() = 120;
 function Evolver_BarrelTravel() = ForendSpacerLength();
 function Evolver_ActuatorTravel() = Evolver_ZigZagLength()-ActuatorPinDiameter();
 function Evolver_BarrelSupportLength() = ForendLength()-ForendSpacerLength();
@@ -276,8 +278,6 @@ module Evolver_SpindlePins(cutter=false, clearance=0.003) {
   cylinder(r=(Millimeters(2.5)/2)+clear, h=3/4+(cutter?2:0)+clear2);
 }
 
-
-
 module Evolver_RatchetPawlPin(cutter=false, clearance=0.003) {
   clear = cutter? clearance : 0;
   clear2 = clear*2;
@@ -297,8 +297,8 @@ module Evolver_ActuatorScrews(cutter=false, clearance=0.003, cutaway=false, alph
   color("Silver")
   RenderIf(!cutter)
   /* for (M = [0,1]) mirror([0,M,0]) */
-  for (R = [90+30,-90-30]) rotate([R,0,0])
-  translate([Evolver_ActuatorMinX(),0, BarrelRadius()+0.25])
+  for (R = [Evolver_ActuatorScrewAngle(),-Evolver_ActuatorScrewAngle()]) rotate([R,0,0])
+  translate([Evolver_ActuatorMinX(),0, Evolver_ActuatorScrewZ()])
   rotate([0,-90,0])
   NutAndBolt(bolt=ActuatorBolt(), boltLength=3, head="flat", capOrientation=true);
 }
@@ -776,8 +776,8 @@ module Evolver_Actuator(cutter=false, clearance=0.01, cutaway=false, alpha=1) {
                          h=length+clearCR+(cutter?Evolver_ActuatorTravel():0));
 
       // Screw support
-      for (R = [90+30,-90-30]) rotate([R,0,0])
-      translate([Evolver_ActuatorMinX(),0, BarrelRadius()+0.25])
+      for (R = [Evolver_ActuatorScrewAngle(),-Evolver_ActuatorScrewAngle()]) rotate([R,0,0])
+      translate([Evolver_ActuatorMinX(),0, Evolver_ActuatorScrewZ()])
       rotate([0,90,0])
       ChamferedCylinder(r1=0.25+clear,r2=CR,
                          h=length+clearCR+(cutter?Evolver_ActuatorTravel():0));
