@@ -64,10 +64,6 @@ assert(MlokBolt(), "MlokBolt() is undefined. Unknown MLOK_BOLT?");
 // Settings: Lengths
 function ReceiverLength() = 5;
 function ReceiverBackLength() = 0.5;
-function ReceiverStockLength() = 12
-                               - ReceiverLength()
-                               - ReceiverBackLength()
-                               - 0.1875;
 
 function ReceiverBottomSlotWidth() = 1;
 
