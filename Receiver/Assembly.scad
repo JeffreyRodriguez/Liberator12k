@@ -56,6 +56,9 @@ _CUTAWAY_LOWER = false;
 _CUTAWAY_FOREND = false;
 _CUTAWAY_STOCK = false;
 
+/* [Transparency] */
+_ALPHA=1; // [0:0.1:1]
+
 ScaleToMillimeters() {
 
   if (_SHOW_FOREND)
@@ -69,7 +72,8 @@ ScaleToMillimeters() {
                         extractFactor=Animate(ANIMATION_STEP_UNLOAD)
                                    -SubAnimate(ANIMATION_STEP_LOAD, end=0.25),
                         hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS,
-                        cutaway=_CUTAWAY_FOREND);
+                        cutaway=_CUTAWAY_FOREND,
+                        alpha=_ALPHA);
   } else if (_FOREND == "Revolver") {
     RevolverForendAssembly(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, cutaway=_CUTAWAY_FOREND);
   } else if (_FOREND == "Evolver") {
@@ -85,7 +89,7 @@ ScaleToMillimeters() {
 
   if (_SHOW_FCG)
   translate([-0.5,0,0])
-  SimpleFireControlAssembly(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, actionRod=false);
+  SimpleFireControlAssembly(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, actionRod=false, alpha=_ALPHA);
 
 
   if (_SHOW_RECEIVER)
@@ -93,19 +97,19 @@ ScaleToMillimeters() {
     //Receiver_TensionBolts(cutaway=_CUTAWAY_RECEIVER, headType="socket");
 
     if (_RECEIVER_SIZE == "Framed") {
-      Frame_ReceiverAssembly(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, cutaway=_CUTAWAY_RECEIVER);
+      Frame_ReceiverAssembly(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, cutaway=_CUTAWAY_RECEIVER, alpha=_ALPHA);
     } else {
-      Receiver(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, cutaway=_CUTAWAY_RECEIVER);
+      Receiver(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, cutaway=_CUTAWAY_RECEIVER, alpha=_ALPHA);
     }
   }
 
   if (_CONFIGURATION == "Stocked") translate([-0.5,0,0]) {
     if (_SHOW_STOCK)
-    StockAssembly(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, cutaway=_CUTAWAY_STOCK);
+    StockAssembly(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, cutaway=_CUTAWAY_STOCK, alpha=_ALPHA);
 
     if (_SHOW_LOWER) {
-      LowerMount(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, cutaway=_CUTAWAY_LOWER);
-      Lower(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, cutaway=_CUTAWAY_LOWER);
+      LowerMount(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, cutaway=_CUTAWAY_LOWER, alpha=_ALPHA);
+      Lower(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, cutaway=_CUTAWAY_LOWER, alpha=_ALPHA);
     }
   } else if (_CONFIGURATION == "Bullpup") {
     BullpupAssembly();
@@ -113,8 +117,8 @@ ScaleToMillimeters() {
     ReceiverBackSegment();
 
     if (_SHOW_LOWER) {
-      LowerMount(cutaway=_CUTAWAY_LOWER);
-      Lower(cutaway=_CUTAWAY_LOWER);
+      LowerMount(cutaway=_CUTAWAY_LOWER, alpha=_ALPHA);
+      Lower(cutaway=_CUTAWAY_LOWER, alpha=_ALPHA);
     }
   }
 }

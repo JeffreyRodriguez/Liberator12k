@@ -1386,7 +1386,7 @@ module TopBreak_Fixture_Extractor(top=false, bottom=false, clearance=Inches(0.00
 }
 
 // Assembly
-module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontAlpha=1, pivotFactor=0, extractFactor=0, chargeFactor=0, lockFactor=0, fcg=_SHOW_FCG, stock=true, tailcap=false, cutaway=undef, hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS) {
+module TopBreak_Assembly(receiverLength=12, pivotFactor=0, extractFactor=0, chargeFactor=0, lockFactor=0, fcg=_SHOW_FCG, stock=true, tailcap=false, cutaway=undef, alpha=1, hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS) {
 
   if (hardware)
   TopBreak_ForendBolts();
@@ -1394,7 +1394,7 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
   if (fcg)
   translate([-TopBreak_ReceiverFrontLength(),0,0]) {
     SimpleFireControlAssembly(hardware=hardware && _SHOW_FCG_HARDWARE, prints=prints, actionRod=false,
-                              recoilPlateLength=RECOIL_PLATE_LENGTH, alpha=_ALPHA_FCG);
+                              recoilPlateLength=RECOIL_PLATE_LENGTH, alpha=min(alpha, _ALPHA_FCG));
   }
 
   if (prints && _SHOW_RECEIVER_FRONT)
@@ -1419,7 +1419,7 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
       SightpostBolts(radius=BarrelRadius()+BARREL_CLEARANCE);
 
       if (prints)
-      TopBreak_Sightpost();
+      TopBreak_Sightpost(alpha=min(alpha, _ALPHA_SIGHTPOST));
     }
 
     // TopBreak_Extractor Spring
@@ -1436,7 +1436,7 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
 
       if (prints && _SHOW_EXTRACTOR)
       TopBreak_Extractor(cutaway=cutaway == true || _CUTAWAY_EXTRACTOR,
-                         alpha=_ALPHA_EXTRACTOR);
+                         alpha=min(alpha, _ALPHA_EXTRACTOR));
     }
 
     translate([-TopBreak_ExtractorTravel()*extractFactor,0,0]) {
@@ -1452,14 +1452,15 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
 
       if (prints && _SHOW_LATCH)
       TopBreak_LatchTab(cutaway=cutaway == true || _CUTAWAY_LATCH,
-                        alpha=_ALPHA_LATCH);
+                        alpha=min(alpha, _ALPHA_LATCH));
     }
 
     if (hardware && _SHOW_COLLAR_HARDWARE)
     TopBreak_BarrelCollarBolts();
 
     if (prints && _SHOW_COLLAR)
-    TopBreak_BarrelCollar(cutaway=cutaway == true || _CUTAWAY_COLLAR, alpha=_ALPHA_COLLAR);
+    TopBreak_BarrelCollar(cutaway=cutaway == true || _CUTAWAY_COLLAR,
+                          alpha=min(alpha, _ALPHA_COLLAR));
 
     if (hardware && _SHOW_CLUSTER_BOLTS)
     TopBreak_ClusterBolts();
@@ -1470,20 +1471,20 @@ module TopBreak_Assembly(receiverLength=12, pipeAlpha=1, TopBreak_ReceiverFrontA
     }
 
     if (prints && _SHOW_CLUSTER)
-    TopBreak_Cluster(cutaway=_CUTAWAY_CLUSTER, alpha=_ALPHA_CLUSTER);
+    TopBreak_Cluster(cutaway=_CUTAWAY_CLUSTER, alpha=min(alpha, _ALPHA_CLUSTER));
 
     if (prints && _SHOW_FOREGRIP)
-    TopBreak_Foregrip(alpha=_ALPHA_FOREGRIP);
+    TopBreak_Foregrip(cutaway=_CUTAWAY_CLUSTER, alpha=min(alpha, _ALPHA_FOREGRIP));
 
     if (prints && _SHOW_VERTICAL_GRIP)
-    TopBreak_VerticalForegrip(alpha=_ALPHA_VERTICAL_FOREGRIP);
+    TopBreak_VerticalForegrip(alpha=min(alpha, _ALPHA_VERTICAL_FOREGRIP));
 
     children();
 
   }
 
   if (prints && _SHOW_FOREND)
-  TopBreak_Forend(cutaway=cutaway == true || _CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
+  TopBreak_Forend(cutaway=cutaway == true || _CUTAWAY_FOREND, alpha=min(alpha, _ALPHA_FOREND));
 }
 //
 
