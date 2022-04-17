@@ -154,15 +154,15 @@ function RecoilPlateWidth() = 2;
 function RecoilSpreaderThickness() = 0.5;
 
 function Revolver_ForendSpindlePinLength() = 1.5;
-function Revolver_ForendSpindlePinRadius() = 3/32/2;
+function Revolver_ForendSpindlePinRadius() = 1/8/2;
 function Revolver_ForendSpindlePinClearance() = 0.005;
 
 function Revolver_ForendSpindleTogglePinLength() = 1.5;
-function Revolver_ForendSpindleTogglePinRadius() = 3/32/2;
+function Revolver_ForendSpindleTogglePinRadius() = 1/8/2;
 function Revolver_ForendSpindleTogglePinClearance() = 0.005;
 
 function Revolver_ForendSpindleLinkagePinLength() = 1.5;
-function Revolver_ForendSpindleLinkagePinRadius() = 3/32/2;
+function Revolver_ForendSpindleLinkagePinRadius() = 1/8/2;
 function Revolver_ForendSpindleLinkagePinClearance() = 0.005;
 
 // Settings: Vitamins
