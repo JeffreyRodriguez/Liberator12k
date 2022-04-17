@@ -34,10 +34,11 @@ modification.
 
 | Model    | Class               | Status    |
 |----------|-------------------- |-----------|
-| CAFE12+  | Top Break           | Alpha     |
-| CAFE12   | Top Break           | Alpha     |
-| FP37     | Top Break           | Alpha     |
+| CAFE12+  | Top Break           | Beta      |
+| CAFE12   | Top Break           | Beta      |
+| FP37     | Top Break           | Beta      |
 | ZZR 6x12 | Zig Zag Revolver    | Prototype |
+| EVOLver  | Belt-Fed Pump       | Prototype |
 | BARBB    | Bolt-Action Bullpup | Prototype |
 <br/>
 
@@ -66,3 +67,7 @@ in your hands.
 ### ZZR6x12
 Still a work-in-progress, but there's enough here that you could run a set of
 prints. No guarantees that any of it'll work or even go together properly.
+
+
+### EVOLver
+Very early in the design process. Reverse-pump belt-fed.

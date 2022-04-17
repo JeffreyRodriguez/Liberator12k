@@ -10,7 +10,7 @@ This is a good starting point - a simple, safe, affordable firearm.
 The Minuteman receiver is reusable in several other configurations similar
 to how you might swap AR15 uppers.
 
-### Supporting the Project
+## Supporting the Project
 This has been an ambitious one-man pro-bono operation from the start.
 The project has cost tens of thousands of dollars and years of my time.
 Now we have a modular weapons platform, ammunition, and a suite of ECM tooling.
@@ -111,15 +111,27 @@ The power to create weapons and project lethal force hundreds of yards
 is now in your hands, use it responsibly.
 
 <!-- NEW PAGE -->
-## Tools and Equipment
-You can print and assemble an official kit with a couple wrenches and a
-butane torch.
+### Metric and/or Inch
+In general, here's how things go between inch and mm in this project.
 
-Reaming holes in the prints is recommended. A drill bit will work, but reamers
-are a lot better. The cheap Chinese ones from Amazon are fine, buy a whole set.
+| Purpose       | Inch    | Metric |
+|---------------|---------|--------|
+| Small Pins    | 3/32"   | 2.5mm  |
+| Medium Pins   | 1/4"    | 6mm    |
+| Small Screws  | \#8-32  | M4     |
+| Medium Screws | 1/4"-20 | M6     |
+| Large Screws  | 1/2"-13 | 12mm   |
+| Square Rods   | 1/4"    | 6mm    |
+<br/>
 
-### Required Tools
+All the parts, at least in the official kits, are inch-standard except a few 2.5mm pins.
+3/32" is just under 2.5mm, and a \#39 drill bit is just over 2.5mm.
+
+#### Wrenches, Pliers, Drivers
 * Slip-Joint Pliers
+* 3/4" Wrench
+* 5/16" Socket Driver
+* Adjustable Wrench (in a pinch)
 
 #### Files
 * 3/4" Half-Round File
@@ -128,23 +140,69 @@ are a lot better. The cheap Chinese ones from Amazon are fine, buy a whole set.
 #### Drill Bits
 * 5/16"
 * \#29 - \#8-32 Tap Drill
-* 11/64" or 4.5mm Long - \#8-32 Clearance Drill
+* 11/64" or 4.5mm - Long
 * \#39 or 2.5mm
 
 #### Reamers
-* 11/64" or 4.5mm - Small Screw Clearance
 * 1/4" - Medium Screw Clearance
 * 5/16" - Pivot Pin Clearance
 * 1/2" - Large Screw Clearance
-* \#39 or 2.5mm
 
-### "Close Enough"
-All the parts are inch-standard (or all-metric), but there are "close enough"
-metric equivalents that are readily available even if you live in the US.
+#### Taps
+* \#8-32 - Spiral Flute
 
-Sometimes it's easier and *much* cheaper to find certain parts in metric, that's
-especially true for little stainless pins.
-3/32" is just under 2.5mm, and a \#39 drill bit is just over 2.5mm.
+#### Miscellaneous
+* Butane Torch for heatset inserts. Pen and cigar-size torch lighters work best.
+* Cordless Drill
+
+
+
+<!-- NEW PAGE -->
+## General Assembly Notes
+
+### Tools and Equipment
+You can print and assemble an official kit with a couple wrenches and a
+butane torch.
+
+Reaming holes in the prints is recommended. A drill bit will work, but reamers
+are a lot better. The cheap Chinese ones from Amazon are fine, buy a whole set.
+
+### Finishing bolt holes
+Bolts should freely slide through their holes.
+
+Drill/ream bolt holes *before* installing any heatset inserts.
+
+### Heatset Technique
+This project uses heatset inserts liberally.
+The preformed pockets are designed for the "turbine type" of inserts.
+Other varieties will likely work, but you'll need to do more hole clearing.
+
+Watch some videos on these before you dive in to this. TODO: Add my own video :)
+
+#### Process
+1. Predrill the bolt hole so the bolt slides smoothly.
+2. Put the bolt through the hole, then thread the insert on half-way.
+3. Position the insert away from any neighboring plastic. Orient any parts so the heat can rise up and away.
+4. Using a butane torch, heat the tip of insert until it *just* starts to darken.
+  * ~10 seconds for #8-32
+  * ~18sec for 1/4"-20
+5. Pull the insert into the plastic pocket until it bottoms out, usually flush.
+6. Let cool completely.
+7. Unscrew the bolt.
+  * If the long 8-32 threaded rods get stuck, you can chuck them up in a drill.
+8. Oil in the insert.
+9. Drive the screw in from the opposite side. This will help clear out the hole.
+
+#### Plastic Overflow
+There will likely be some plastic overflow into the bolt passageway while installing the insert.
+If you let the bolt cool completely, that plastic will be threaded and may not present an assembly problem.
+
+#### Overflow Removal
+Run the screw in a drill counter-clockwise, "unscrewing". Press the screw into the hole at full speed.
+This will heat the plastic, extruding any chips through the insert hole. Don't push too hard.
+
+Oil the insert, then thread in from the opposite side to clear any chips. Compressed air can help clear the hole.
+
 
 ### You Can DIY Everything
 You can fabricate all the required parts yourself - the documentation, jigs, and
@@ -171,36 +229,6 @@ in the first place.
 
 Spend a few bucks on a Spiral Point or Spiral Flute tap.
 I like spiral point, myself. You only need one, but buy two just in case.
-
-<!-- NEW PAGE -->
-### Metric and/or Inch
-In general, here's how things go between inch and mm in this project:
-
-| Purpose       | Inch    | Metric |
-|---------------|---------|--------|
-| Small Pins    | 3/32"   | 2.5mm  |
-| Medium Pins   | 1/4"    | 6mm    |
-| Small Screws  | \#8-32  | M4     |
-| Medium Screws | 1/4"-20 | M6     |
-| Large Screws  | 1/2"-13 | 12mm   |
-| Square Rods   | 1/4"    | 6mm    |
-<br/>
-
-### Drill Bits
- * 5/16"
- * \#29 - \#8-32 Tap Drill
- * 11/64" or 4.5mm Long - \#8-32 Clearance Drill
- * \#39 or 2.5mm
-
-### Reamers
- * 11/64" or 4.5mm - Small Screw Clearance
- * 1/4" - Medium Screw Clearance
- * 5/16" - Pivot Pin Clearance
- * 1/2" - Large Screw Clearance
- * \#39 or 2.5mm
-
-### Taps
- * \#8-32 - Spiral Flute
 
 <!-- NEW PAGE -->
 ## How to Read the Manual
