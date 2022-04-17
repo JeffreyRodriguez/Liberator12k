@@ -23,7 +23,7 @@ Assembly_htmldoc=$(addsuffix /Assembly_htmldoc.jpg, $(Components))
 Assembly: $(Assembly_STL) $(Assembly_JPG) $(Assembly_htmldoc)
 
 # Special previews, specific configurations
-Preview=Minuteman Frame Stock Lower FCG CAFE12 FP37
+Preview=Minuteman Frame Stock Lower FCG CAFE12 FP37 ZZR EVOLver
 Preview_PNG=$(addprefix Preview_,$(addsuffix .png, $(Preview)))
 Preview_JPG=$(addprefix Preview_,$(addsuffix .jpg, $(Preview)))
 
