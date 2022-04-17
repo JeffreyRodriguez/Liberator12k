@@ -7,6 +7,7 @@ use <../Meta/Resolution.scad>;
 use <../Meta/Conditionals/RenderIf.scad>;
 use <../Meta/Conditionals/MirrorIf.scad>;
 
+use <../Meta/CAM.scad>;
 use <../Meta/Math/Circles.scad>;
 use <../Meta/Math/Triangles.scad>;
 
@@ -175,7 +176,7 @@ function ForendLength() = FrameExtension(length=FRAME_BOLT_LENGTH)
 function SpindleLength() = 2.75;//3.25;
 function Evolver_ZigZagLength() = 1.375;
 function Evolver_RatchetLength() = 0.5;
-function ActuatorTabLength() = 0.5;
+function ActuatorTabLength() = 0.75;
 
 // Calculated: Positions
 function BarrelMinX() = ShellRimLength();
@@ -189,11 +190,12 @@ function ForendBoltY() = 1;
 
 function Evolver_PumpRodToggleExtension() = 0.1875;
 function Evolver_ActuatorMinX() = ForendSpacerLength()-0.25;
-function Evolver_ActuatorScrewZ() = BarrelRadius()+0.25;
+function Evolver_ActuatorScrewZ() = BarrelRadius()+0.375;
 function Evolver_ActuatorScrewAngle() = 120;
 function Evolver_BarrelTravel() = ForendSpacerLength();
 function Evolver_ActuatorTravel() = Evolver_ZigZagLength()-ActuatorPinDiameter();
-function Evolver_BarrelSupportLength() = ForendLength()-ForendSpacerLength();
+function Evolver_BarrelSupportMinX() = ForendSpacerLength();
+function Evolver_BarrelSupportLength() = ForendLength()-Evolver_BarrelSupportMinX();
 
 beltOffsetX = 0.0625;
 ratchetRadius = 0.375;
@@ -439,8 +441,7 @@ module Evolver_ForendSpacer(length=ForendSpacerLength(), doRender=true, cutaway=
 module Evolver_BarrelSupport(length=Evolver_BarrelSupportLength(), doRender=true, cutaway=false, alpha=_ALPHA_FOREND_SPACER) {
   extraBottom=0;
   internalCR = 1/8;
-
-  offsetX = ForendSpacerLength();
+  CR=1/8;
 
   // Branding text
   color("DimGrey", alpha)
@@ -466,7 +467,7 @@ module Evolver_BarrelSupport(length=Evolver_BarrelSupportLength(), doRender=true
   RenderIf(doRender) Cutaway(cutaway)
   difference() {
     union() {
-      translate([offsetX,0,0])
+      translate([Evolver_BarrelSupportMinX(),0,0])
       Frame_Receiver_Segment(length=length,
                             highTop=true, chamferFront=false);
 
@@ -474,20 +475,20 @@ module Evolver_BarrelSupport(length=Evolver_BarrelSupportLength(), doRender=true
       hull() {
 
         // Spindle support
-        translate([offsetX,0,SpindleZ()])
+        translate([Evolver_BarrelSupportMinX(),0,SpindleZ()])
         rotate([0,90,0])
-        ChamferedCylinder(r1=0.5+0.125, r2=1/8, h=length,
+        ChamferedCylinder(r1=0.5+0.125, r2=CR, h=length,
                           teardropTop=true);
 
         // Spindle Interlock support
-        *translate([offsetX,0,SpindleZ()])
+        *translate([Evolver_BarrelSupportMinX(),0,SpindleZ()])
         rotate([0,90,0])
         ChamferedCylinder(r1=SpindleInterlockRadius()+0.125, r2=1/16,
                           h=SpindleInterlockLength(),
                           teardropBottom=false);
 
         // Pawl Pivot Support
-        translate([offsetX,0,pawlPivotZ])
+        translate([Evolver_BarrelSupportMinX(),0,pawlPivotZ])
         rotate([0,90,0])
         ChamferedCylinder(r1=0.1875,
                           r2=1/32,
@@ -495,9 +496,15 @@ module Evolver_BarrelSupport(length=Evolver_BarrelSupportLength(), doRender=true
                           teardropTop=true);
 
         // Flatten the pivot support
-        translate([offsetX,-(1/2), pawlPivotZ+0.1875])
+        translate([Evolver_BarrelSupportMinX(),-(1/2), pawlPivotZ+0.1875])
         ChamferedCube([1, 1, 0.5], r=1/16);
       }
+
+      // Screw support
+      for (R = [Evolver_ActuatorScrewAngle(),-Evolver_ActuatorScrewAngle()]) rotate([R,0,0])
+      translate([Evolver_BarrelSupportMinX(),0, Evolver_ActuatorScrewZ()])
+      rotate([0,90,0])
+      ChamferedCylinder(r1=0.5,r2=1/16, h=length);
     }
 
 
@@ -523,13 +530,13 @@ module Evolver_BarrelSupport(length=Evolver_BarrelSupportLength(), doRender=true
     Evolver_ActuatorToggle(cutter=true);
 
     // Actuator hole chamfer
-    translate([offsetX+length,0,0])
+    translate([Evolver_BarrelSupportMinX()+length,0,0])
     rotate([0,-90,0])
     HoleChamfer(r1=BarrelCollarRadius(), r2=internalCR, teardrop=true);
 
     // Actuator screw chamfers
     for (R = [Evolver_ActuatorScrewAngle(),-Evolver_ActuatorScrewAngle()]) rotate([R,0,0])
-    translate([offsetX+length,0, Evolver_ActuatorScrewZ()])
+    translate([Evolver_BarrelSupportMinX()+length,0, Evolver_ActuatorScrewZ()])
     rotate([0,-90,0])
     HoleChamfer(r1=0.25, r2=internalCR, teardrop=true);
 
@@ -790,6 +797,7 @@ module Evolver_Actuator(cutter=false, clearance=0.01, cutaway=false, alpha=1) {
                          h=length+clearCR+(cutter?Evolver_ActuatorTravel():0));
 
       // Screw support
+      hull()
       for (R = [Evolver_ActuatorScrewAngle(),-Evolver_ActuatorScrewAngle()]) rotate([R,0,0])
       translate([Evolver_ActuatorMinX(),0, Evolver_ActuatorScrewZ()])
       rotate([0,90,0])
@@ -851,21 +859,20 @@ module Evolver_ActuatorToggle(AF=0, stopTab=true, cutter=false, clearance=0.01, 
   clearCR = cutter ? CR : 0;
 
 
-  stopLength = 0.5;
+  stopLength = 0.5+0.125;
   width = 0.25;
   height = 0.125;
-  wall = 0.125;
+  wall = NozzleMultiple(6);
   toggleAngle=-15;
   helixOverAngle = SegmentAngle((width/4), BarrelCollarRadius()+0.1875);
-  tabOffsetX = Evolver_ActuatorMinX()+0.5-clear;
-  length = 1-ActuatorTabLength();
+  tabOffsetX = Evolver_ActuatorMinX()+0.5-clear;// Evolver_BarrelSupportMinX
+  length = ActuatorTabLength();
   camBodyAngle = 60;
   camBodyLength = 2;
-  bodyUndercutLength = 0.125;
-  bodyLength = camBodyLength+bodyUndercutLength;
+  bodyLength = camBodyLength;
   innerRadius = BarrelRadius();
-  extensionRadius = BarrelRadius()+(1/16)+clear;
-  extensionAngle = camBodyAngle+abs(toggleAngle*3);
+  extensionRadius = BarrelRadius()+wall+clear;
+  extensionAngle = 180-abs(cutter?toggleAngle*6:toggleAngle*4);
   helixOffsetX = tabOffsetX+ActuatorTabLength();
 
   color("CornflowerBlue", alpha)
@@ -898,24 +905,23 @@ module Evolver_ActuatorToggle(AF=0, stopTab=true, cutter=false, clearance=0.01, 
           if (stopTab)
           intersection()  {
             translate([(cutter?0:tabOffsetX)-clear,0,0])
-            rotate([-60-toggleAngle,0,0])
+            rotate([-60-toggleAngle+(cutter?2:0),0,0])
             translate([0,-(width/2)+(cutter?clearance*2:clearance), 0])
-            ChamferedCube([stopLength+(cutter?tabOffsetX:0),
+            ChamferedCube([stopLength+(cutter?tabOffsetX:0)+clear2,
                            width+(cutter?clearance*2:-(clearance*2)),
-                          BarrelCollarRadius()+Evolver_PumpRodToggleExtension()+(1/8)+clear],
+                           BarrelCollarRadius()+Evolver_PumpRodToggleExtension()+(cutter?1/8:0)+clear],
                           teardropFlip=[true,true,true],
-                          r=(1/8));
+                          r=(1/8), disabled=cutter||ResolutionIsLow());
 
             translate([(cutter?0:tabOffsetX)-clear,0,0])
             rotate([0,90,0])
-            cylinder(r=BarrelCollarRadius()+0.1875, h=length);
+            cylinder(r=BarrelCollarRadius()+0.1875+clear, h=stopLength+(cutter?tabOffsetX:0)+clear2);
           }
-
         }
 
         // Cam helix cut
         if (!cutter)
-        for (X = [0:width/2:1-(width/2)])
+        for (X = [0:width/2:ActuatorTabLength()-(width/2)])
         translate([helixOffsetX+X,0,0])
         rotate([-60,0,0])
         rotate([0,90,0])
@@ -934,9 +940,9 @@ module Evolver_ActuatorToggle(AF=0, stopTab=true, cutter=false, clearance=0.01, 
         translate([Evolver_ActuatorMinX()-clear,0,0])
         difference() {
           rotate([-60,0,0])
-          translate([0,-(width/2), 0])
+          translate([0,-(width/2)-clearance, 0])
           cube([length+1-0.0625,
-                width,
+                width+(clearance*2),
                 BarrelCollarRadius()+Evolver_PumpRodToggleExtension()+clear]);
 
           rotate([0,90,0])
@@ -947,13 +953,12 @@ module Evolver_ActuatorToggle(AF=0, stopTab=true, cutter=false, clearance=0.01, 
 
       // Captured baseplate around barrel
       translate([tabOffsetX-clear,0,0])
-      rotate([-60+(toggleAngle*3)+(cutter?toggleAngle:0),0,0])
       rotate([0,90,0])
-      mirror([1,0])
       intersection() {
         linear_extrude(bodyLength+clear2)
+        rotate(180)
         semicircle(od=(extensionRadius+clear)*2,
-                  angle=extensionAngle+(cutter?abs(toggleAngle):0));
+                  angle=extensionAngle+(cutter?abs(toggleAngle*3):0), center=false);
       }
 
     }
@@ -991,8 +996,8 @@ module Evolver_PumpRods(doMirror=true, cutter=false, innerCut=false, clearance=0
     union() {
 
       // Long rod
-      translate([pumpPinX-(width*2)-clear,-(width/2)-clear, (innerCut?0:BarrelCollarRadius())-clear])
-      ChamferedCube([length+(width*2)+CR*2+clear2, width+clear2, (innerCut?+BarrelCollarRadius():0)+height+clear2],
+      translate([pumpPinX-ActuatorTabLength()-clear,-(width/2)-clear, (innerCut?0:BarrelCollarRadius())-clear])
+      ChamferedCube([length+ActuatorTabLength()+CR*2+clear2, width+clear2, (innerCut?+BarrelCollarRadius():0)+height+clear2],
                     r=1/16, teardropFlip=[true,true,true]);
 
       // Actuator tab
@@ -1079,8 +1084,8 @@ module EvolverForendAssembly(hardware=true, prints=true, pipeAlpha=1, cutaway=fa
   animateBarrel2 = SubAnimate(ANIMATION_STEP_EXTRACT, end=0.5)
                  - SubAnimate(ANIMATION_STEP_EXTRACT, start=0.5);
 
-  animateActuatorLatch = SubAnimate(ANIMATION_STEP_EXTRACT, end=0.05)
-                       - SubAnimate(ANIMATION_STEP_LOAD, start=0.15, end=0.2);
+  animateActuatorToggle = SubAnimate(ANIMATION_STEP_EXTRACT, end=0.05)
+                        - SubAnimate(ANIMATION_STEP_LOAD, start=0.15, end=0.2);
 
   Evolver_SpindleRod();
 
@@ -1145,7 +1150,7 @@ module EvolverForendAssembly(hardware=true, prints=true, pipeAlpha=1, cutaway=fa
   translate([Evolver_ActuatorTravel()*animateBarrel2,0,0]) {
 
     if (prints && _SHOW_ACTUATOR_TOGGLE)
-    Evolver_ActuatorToggle(AF=animateActuatorLatch);
+    Evolver_ActuatorToggle(AF=animateActuatorToggle);
 
     if (hardware && _SHOW_ACTUATOR)
     Evolver_ActuatorScrews();
@@ -1220,11 +1225,13 @@ if ($preview) {
 
   if (_RENDER == "Prints/BarrelSupport")
     if (!_RENDER_PRINT)
+      render()
       Evolver_BarrelSupport();
     else
+      render()
       rotate([0,90,0])
       translate([-ForendSpacerLength()-Evolver_BarrelSupportLength(),0,0])
-      Evolver_BarrelSupport();
+      Evolver_BarrelSupport(doRender=false);
 
   if (_RENDER == "Prints/ForendSpacer")
     if (!_RENDER_PRINT)
