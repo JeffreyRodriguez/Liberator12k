@@ -56,8 +56,7 @@ _CUTAWAY_LOWER = false;
 _CUTAWAY_FOREND = false;
 _CUTAWAY_STOCK = false;
 
-ScaleToMillimeters()
-if ($preview) {
+ScaleToMillimeters() {
 
   if (_SHOW_FOREND)
   if (_FOREND == "TopBreak") {
