@@ -184,19 +184,22 @@ module ChamferedSquare(xy=[1,1], r=0.25,
 }
 
 module ChamferedCube(xyz=[1,2,3], r=0.25, center=false,
+                     chamfer=[true,true,true],
                      teardropFlip=[false,false,false],
                      teardropXYZ=[true, true, true],
-                     teardropTopXYZ=[true, true, true]) {
+                     teardropTopXYZ=[true, true, true],
+                     disabled=ResolutionIsLow()) {
 
   translate([center ? -xyz[0]/2 : 0,
               center ? -xyz[1]/2 : 0,
               center ? -xyz[2]/2 : 0])
-  if (ResolutionIsLow()) {
+  if (disabled) {
     cube(xyz);
   } else
   intersection() {
 
     // X
+    if (chamfer.x)
     rotate([90,0,90])
     linear_extrude(height=xyz[0])
     ChamferedSquare(xy=[xyz[1], xyz[2]], r=r,
@@ -205,6 +208,7 @@ module ChamferedCube(xyz=[1,2,3], r=0.25, center=false,
                     teardropTop=teardropTopXYZ[0]);
 
     // Y
+    if (chamfer.y)
     mirror([0,1,0])
     rotate([90,0,0])
     linear_extrude(height=xyz[1])
@@ -214,6 +218,7 @@ module ChamferedCube(xyz=[1,2,3], r=0.25, center=false,
                     teardropTop=teardropTopXYZ[1]);
 
     // Z
+    if (chamfer.z)
     linear_extrude(height=xyz[2])
     ChamferedSquare(xy=[xyz[0], xyz[1]], r=r,
                     teardropFlip=teardropFlip[2],
