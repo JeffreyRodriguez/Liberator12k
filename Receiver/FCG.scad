@@ -256,6 +256,8 @@ FCG_DisconnectorSpringY = FCG_DisconnectorOffsetY
 
 
 // Shorthand: Measurements
+function FCG_HammerTravel(overtravel=false) = FCG_HammerTravelX + (overtravel?FCG_HammerOvertravelX:0);
+
 function SearWidth(clearance=0) = SEAR_WIDTH+(clearance*2);
 function SearRadius(clearance=0)   = SearWidth(clearance)/2;
 
