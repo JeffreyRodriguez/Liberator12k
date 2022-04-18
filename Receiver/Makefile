@@ -98,6 +98,17 @@ Preview_FP37.png: Assembly.scad
 		-D _FOREND='"TopBreak"' \
 		-p ../Forend/TopBreak.json -P "FP37" \
 		$<
+Preview_ZZR.png: Assembly.scad
+	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_LOW) -o $@ \
+		--projection=p --camera=200,1500,200,0,0,0 \
+		-D _FOREND='"Revolver"' \
+		$<
+Preview_EVOLver.png: Assembly.scad
+	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_LOW) -o $@ \
+		--projection=p --camera=200,1500,200,0,0,0 \
+		-D _FOREND='"Evolver"' \
+		$<
+
 
 clean-dir:
 	rm -rf $(TARGETS) Assembly $(Components)
