@@ -254,7 +254,7 @@ module Frame_ReceiverAssembly(hardware=true, prints=true, length=FrameBoltLength
   Receiver_MlokBolts();
 
   if (hardware && frameBolts)
-  Frame_Bolts(length=length, cutaway=cutaway, alpha=min(alpha,_ALPHA_FRAME));
+  Frame_Bolts(length=length, cutaway=cutaway, alpha=_ALPHA_FRAME);
 
   if (prints)
   Frame_Receiver(cutaway=cutaway, alpha=min(alpha,_ALPHA_FRAME));

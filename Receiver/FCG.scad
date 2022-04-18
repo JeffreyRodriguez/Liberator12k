@@ -1305,6 +1305,8 @@ module SimpleFireControlAssembly(recoilPlateLength=RecoilPlateLength(), hardware
     FCG_ChargingHandleBolt();
   }
 
+  TriggerGroup(hardware=hardware, prints=prints, searLength=1.67188, alpha=alpha);
+
   if (actionRod)
   translate([-chargerTravel*chargeAF,0,0]) {
     if (hardware)
@@ -1358,19 +1360,17 @@ module SimpleFireControlAssembly(recoilPlateLength=RecoilPlateLength(), hardware
     FiringPinSpring();
   }
 
-  TriggerGroup(hardware=hardware, prints=prints, searLength=1.67188, alpha=alpha);
+  if (hardware && _SHOW_RECOIL_PLATE_BOLTS)
+  RecoilPlateBolts();
+
+  if (hardware && recoilPlate)
+  RecoilPlate(length=recoilPlateLength, contoured=FCG_RECOIL_PLATE_CONTOURED, cutaway=_CUTAWAY_RECOIL_PLATE, alpha=_ALPHA_RECOIL_PLATE);
 
   if(prints && _SHOW_HAMMER_TAIL)
   FCG_HammerTail(cutaway=_CUTAWAY_FCG_Hammer, alpha=min(alpha,_ALPHA_FCG_Hammer));
 
-  if (hardware && _SHOW_RECOIL_PLATE_BOLTS)
-  RecoilPlateBolts();
-
   if (prints && _SHOW_FIRE_CONTROL_HOUSING)
   FCG_Housing(alpha=min(alpha,_ALPHA_FIRING_PIN_HOUSING), cutaway=_CUTAWAY_FIRING_PIN_HOUSING);
-
-  if (hardware && recoilPlate)
-  RecoilPlate(length=recoilPlateLength, contoured=FCG_RECOIL_PLATE_CONTOURED, cutaway=_CUTAWAY_RECOIL_PLATE, alpha=_ALPHA_RECOIL_PLATE);
 }
 ///
 
