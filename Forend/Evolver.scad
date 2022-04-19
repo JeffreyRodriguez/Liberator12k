@@ -1102,6 +1102,7 @@ module Evolver_BarrelRack(clearance=0.008, cutter=false) {
   teeth=ceil(Evolver_ChargerTravel()/Evolver_ChargerGearPitch())+1;
   rackMinX = Evolver_ChargerPinionX()-Evolver_ChargerTravel();
   modVal = module_value(Evolver_ChargerGearPitch());
+  cutTravel = cutter ? ForendLength() : 0;
 
   color("Olive") RenderIf(!cutter)
   union() {
@@ -1120,16 +1121,16 @@ module Evolver_BarrelRack(clearance=0.008, cutter=false) {
         translate([rackMinX-Evolver_ChargerGearPitch(),thickness+Evolver_ChargerPinionPitchRadius()+clear,
                    Evolver_ChargerZ()-clear])
         mirror([0,1,0])
-        ChamferedCube([Evolver_ChargerTravel()+(Evolver_ChargerPinionPitchRadius()*2),
+        ChamferedCube([Evolver_ChargerTravel()+(Evolver_ChargerPinionPitchRadius()*2)+cutTravel,
                        thickness+(cutter?modVal*2:-modVal)+clear2,
-                      height], r=cr);
+                      height], r=cr, disabled=cutter||ResolutionIsLow());
 
         // Forward extension
         translate([Evolver_ChargerPinionX(),thickness+Evolver_ChargerPinionPitchRadius()+clear,Evolver_ChargerZ()-clear])
         mirror([0,1,0])
         ChamferedCube([ForendLength()+BarrelCollarOffset()-Evolver_ChargerPinionX()+1,
-                       thickness+clear2,
-                      height+clear2], r=cr);
+                       thickness+modVal+clear2,
+                      height+clear2], r=cr, disabled=cutter||ResolutionIsLow());
       }
 
       if (!cutter)
@@ -1147,6 +1148,9 @@ module Evolver_ChargerRack(clearance=0.008, cutter=false) {
   cutTravel = cutter ? Evolver_ChargerTravel() : 0;
   overcut = cutter ? Evolver_ChargerPinionPitchRadius() : 0;
   cr = 1/32;
+  modVal = module_value(Evolver_ChargerGearPitch());
+  rackOffsetY = -Evolver_ChargerPinionPitchRadius()-thickness;
+
 
   color("Olive") RenderIf(!cutter) {
 
@@ -1168,18 +1172,18 @@ module Evolver_ChargerRack(clearance=0.008, cutter=false) {
                       height+clear2], r=cr, disabled=cutter||ResolutionIsLow());
 
         // Rack support
-        translate([Evolver_ChargerPinionX()-cutTravel,-(thickness*1.5)-module_value(Evolver_ChargerGearPitch()*2)-clear,Evolver_ChargerZ()-clear])
+        translate([Evolver_ChargerPinionX()-cutTravel,rackOffsetY-clear,Evolver_ChargerZ()-clear])
         ChamferedCube([Evolver_ChargerTravel()+cutTravel+overcut,
-                      thickness+clear2,
+                      thickness+(cutter?(modVal):0)+clear2,
                       height+clear2], r=cr, disabled=cutter||ResolutionIsLow());
 
         // Join the pushrod and rack
         hull() {
 
           // Rack section
-          translate([Evolver_ChargerPinionX()-0.625-cutTravel,-(thickness*1.5)-module_value(Evolver_ChargerGearPitch()*2)-clear,Evolver_ChargerZ()-clear])
+          translate([Evolver_ChargerPinionX()-0.625-cutTravel,rackOffsetY-clear,Evolver_ChargerZ()-clear])
           ChamferedCube([Evolver_ChargerGearPitch()+0.625+cutTravel+overcut,
-                        (thickness*1)+clear2,
+                        thickness+clear2,
                         height+clear2], r=cr, disabled=cutter||ResolutionIsLow());
 
           // Pushrod section
@@ -1239,7 +1243,7 @@ module Evolver_ChargerCassette(clearance=0.008, cutter=false, alpha=_ALPHA_CASSE
 
 
     // Central channel
-    translate([wall,-(width/2)+wall-clear,1.1875-clearance])
+    translate([wall,-(width/2)+wall-clear,1.25-clearance])
     cube([ForendLength()-(wall*2), width-(wall*2)+clear2, height-clearance]);
 
     Evolver_ChargerPinion(cutter=true);
