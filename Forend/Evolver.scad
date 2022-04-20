@@ -45,7 +45,7 @@ use <../Receiver/FCG.scad>;
 /* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Prints/ReceiverFront", "Prints/Spindle", "Prints/ZigZag", "Prints/Ratchet", "Prints/RatchetPawl","Prints/Actuator", "Prints/ActuatorToggle", "Prints/BarrelSupport", "Prints/ForendSpacer", "Prints/PumpRod", "Prints/PumpCollar", "Prints/BarrelRack", "Prints/ChargerRack", "Prints/ChargerPinion", "Prints/ChargerCassette"]
+_RENDER = ""; // ["", "Prints/ReceiverFront", "Prints/Spindle", "Prints/ZigZag", "Prints/Ratchet", "Prints/RatchetPawl","Prints/Actuator", "Prints/ActuatorToggle", "Prints/BarrelSupport", "Prints/ForendSpacer", "Prints/PumpRod", "Prints/PumpCollar", "Prints/BarrelRack", "Prints/ChargerRack", "Prints/ChargerPinion", "Prints/ChargerCassette", "Prints/ChargerCassetteTop", "Prints/ChargerPreloader"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;
@@ -70,6 +70,7 @@ _SHOW_SPINDLE = true;
 _SHOW_EXTRACTOR = true;
 _SHOW_CHARGER = true;
 _SHOW_CASSETTE = true;
+_SHOW_CASSETTE_TOP = true;
 _SHOW_BELT = true;
 
 /* [Transparency] */
@@ -215,6 +216,7 @@ actuatorPinDepth = 0.125;
 actuatorPinX = ForendSpacerLength()+ActuatorPinRadius();
 pumpPinX = 2;
 
+function Evolver_ChargerHeight() = 0.25;
 function Evolver_ChargerTravel() = FCG_HammerTravel(overtravel=true);
 function Evolver_ChargerZ() = 1;
 function Evolver_ChargerPinionX() = 2.5;
@@ -223,6 +225,7 @@ function Evolver_ChargerPinionTeeth() = 11;
 function Evolver_ChargerPinionOutsideRadius(clearance=0) = outer_radius(Evolver_ChargerGearPitch(), Evolver_ChargerPinionTeeth(), clearance);
 function Evolver_ChargerPinionPitchRadius() = pitch_radius(Evolver_ChargerPinionTeeth(), Evolver_ChargerGearPitch());
 function Evolver_ChargerPinionPitchCircumference() = Circumference(Evolver_ChargerPinionPitchRadius());
+function Evolver_CassetteLength() = ForendLength()-0.25;
 
 //************
 //* Vitamins *
@@ -475,6 +478,7 @@ module Evolver_ForendSpacer(length=ForendSpacerLength(), doRender=true, cutaway=
     cylinder(r=(3.6875/2), h=length+ManifoldGap());
 
     Frame_Bolts(cutter=true);
+    Evolver_ChargerCassette(cutter=true);
   }
 }
 
@@ -577,7 +581,8 @@ module Evolver_BarrelSupport(length=Evolver_BarrelSupportLength(), doRender=true
     rotate([0,-90,0])
     HoleChamfer(r1=0.25, r2=internalCR, teardrop=true);
 
-
+    Evolver_ChargerCassette(cutter=true);
+    Evolver_BarrelRack(cutter=true);
   }
 }
 
@@ -931,7 +936,7 @@ module Evolver_ActuatorToggle(AF=0, stopTab=true, cutter=false, clearance=0.01, 
                            width+(cutter?clearance*2:-(clearance*2)),
                            BarrelCollarRadius()+Evolver_PumpRodToggleExtension()+(cutter?1/8:0)+clear],
                           teardropFlip=[true,true,true],
-                          r=(1/8), disabled=cutter||ResolutionIsLow());
+                          r=(1/8), disabled=cutter);
 
             translate([(cutter?0:tabOffsetX)-clear,0,0])
             rotate([0,90,0])
@@ -1091,13 +1096,12 @@ module Evolver_PumpCollar() {
   }
 }
 
-
 module Evolver_BarrelRack(clearance=0.008, cutter=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
   cr = 1/32;
 
-  height = 0.25;
+  height = Evolver_ChargerHeight();
   thickness = 0.25;
   teeth=ceil(Evolver_ChargerTravel()/Evolver_ChargerGearPitch())+1;
   rackMinX = Evolver_ChargerPinionX()-Evolver_ChargerTravel();
@@ -1123,14 +1127,14 @@ module Evolver_BarrelRack(clearance=0.008, cutter=false) {
         mirror([0,1,0])
         ChamferedCube([Evolver_ChargerTravel()+(Evolver_ChargerPinionPitchRadius()*2)+cutTravel,
                        thickness+(cutter?modVal*2:-modVal)+clear2,
-                      height], r=cr, disabled=cutter||ResolutionIsLow());
+                      height+clear2], r=cr, disabled=cutter);
 
         // Forward extension
         translate([Evolver_ChargerPinionX(),thickness+Evolver_ChargerPinionPitchRadius()+clear,Evolver_ChargerZ()-clear])
         mirror([0,1,0])
         ChamferedCube([ForendLength()+BarrelCollarOffset()-Evolver_ChargerPinionX()+1,
                        thickness+modVal+clear2,
-                      height+clear2], r=cr, disabled=cutter||ResolutionIsLow());
+                      height+clear2], r=cr, disabled=cutter);
       }
 
       if (!cutter)
@@ -1142,7 +1146,7 @@ module Evolver_BarrelRack(clearance=0.008, cutter=false) {
 module Evolver_ChargerRack(clearance=0.008, cutter=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
-  height = 0.25;
+  height = Evolver_ChargerHeight();
   thickness = 0.25;
   teeth=ceil(Evolver_ChargerTravel()/Evolver_ChargerGearPitch())-1;
   cutTravel = cutter ? Evolver_ChargerTravel() : 0;
@@ -1169,13 +1173,13 @@ module Evolver_ChargerRack(clearance=0.008, cutter=false) {
         translate([-ReceiverFrontLength(),-(thickness/2)-clear,Evolver_ChargerZ()-clear])
         ChamferedCube([Evolver_ChargerPinionX()+ReceiverFrontLength()-Evolver_ChargerPinionOutsideRadius(),
                       thickness+clear2,
-                      height+clear2], r=cr, disabled=cutter||ResolutionIsLow());
+                      height+clear2], r=cr, disabled=cutter);
 
         // Rack support
         translate([Evolver_ChargerPinionX()-cutTravel,rackOffsetY-clear,Evolver_ChargerZ()-clear])
         ChamferedCube([Evolver_ChargerTravel()+cutTravel+overcut,
                       thickness+(cutter?(modVal):0)+clear2,
-                      height+clear2], r=cr, disabled=cutter||ResolutionIsLow());
+                      height+clear2], r=cr, disabled=cutter);
 
         // Join the pushrod and rack
         hull() {
@@ -1184,13 +1188,13 @@ module Evolver_ChargerRack(clearance=0.008, cutter=false) {
           translate([Evolver_ChargerPinionX()-0.625-cutTravel,rackOffsetY-clear,Evolver_ChargerZ()-clear])
           ChamferedCube([Evolver_ChargerGearPitch()+0.625+cutTravel+overcut,
                         thickness+clear2,
-                        height+clear2], r=cr, disabled=cutter||ResolutionIsLow());
+                        height+clear2], r=cr, disabled=cutter);
 
           // Pushrod section
           translate([Evolver_ChargerPinionX()-0.875-cutTravel,-(thickness/2)-clear,Evolver_ChargerZ()-clear])
           ChamferedCube([thickness+Evolver_ChargerPinionPitchRadius()+0.25+cutTravel+overcut,
                         thickness+clear2,
-                        height+clear2], r=cr, disabled=cutter||ResolutionIsLow());
+                        height+clear2], r=cr, disabled=cutter);
         }
       }
 
@@ -1208,48 +1212,97 @@ module Evolver_ChargerRack(clearance=0.008, cutter=false) {
 module Evolver_ChargerPinion(af=0, clearance=0.008, cutter=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
-  thickness = 0.25;
+  thickness = Evolver_ChargerHeight();
   teeth=Evolver_ChargerPinionTeeth();
   hole_diameter = Millimeters(2.5);
+  cr = (3/32);
 
   color("CornflowerBlue") render()
   if (cutter) {
-    translate([Evolver_ChargerPinionX(),0,Evolver_ChargerZ()])
-    cylinder(r=Evolver_ChargerPinionOutsideRadius()+clearance, h=0.25);
+    translate([Evolver_ChargerPinionX(),0,Evolver_ChargerZ()-clear])
+    cylinder(r=Evolver_ChargerPinionOutsideRadius()+clearance, h=thickness+clear2);
   } else {
-    translate([Evolver_ChargerPinionX(),0,(thickness/2)+1])
-    rotate(360/teeth/2)
-    rotate(-(360*Evolver_ChargerTravel()/Evolver_ChargerPinionPitchCircumference())*af)
-    gear (mm_per_tooth    = Evolver_ChargerGearPitch(),
-          number_of_teeth = teeth,
-          thickness       = thickness,
-          hole_diameter   = hole_diameter);
+    intersection() {
+      translate([Evolver_ChargerPinionX(),0,(thickness/2)+1])
+      rotate(360/teeth/2)
+      rotate(-(360*Evolver_ChargerTravel()/Evolver_ChargerPinionPitchCircumference())*af)
+      gear (mm_per_tooth    = Evolver_ChargerGearPitch(),
+            number_of_teeth = teeth,
+            thickness       = thickness,
+            hole_diameter   = hole_diameter,
+            clearance = clearance);
+
+      translate([Evolver_ChargerPinionX(),0,Evolver_ChargerZ()-clear])
+      ChamferedCylinder(r1=Evolver_ChargerPinionOutsideRadius()+clearance, r2=cr, h=thickness+clear2);
+    }
   }
 }
 
-module Evolver_ChargerCassette(clearance=0.008, cutter=false, alpha=_ALPHA_CASSETTE) {
+module Evolver_ChargerPreloader(af=0, clearance=0.008, cutter=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
-  CR = 1/32;
+  thickness =Evolver_ChargerHeight();
+  teeth=Evolver_ChargerPinionTeeth();
+  hole_diameter = Millimeters(2.5);
+  cutTravel = (cutter?0.25:0);
+  cr = 1/16;
+
+  color("CornflowerBlue") render()
+  union() {
+
+    // Pusher
+    translate([Evolver_ChargerPinionX()+Evolver_ChargerTravel(),-Evolver_ChargerPinionPitchRadius()+clear,1-clear])
+    mirror([0,1,0])
+    ChamferedCube([1.25+(cutter?0.25:0)+cutTravel, thickness+clear2, thickness+clear2], r=cr, disabled=cutter);
+
+    // Captured tab
+    translate([Evolver_ChargerPinionX()+Evolver_ChargerTravel()+0.3125-Evolver_ChargerGearPitch()-clear,clear,1-clear])
+    mirror([0,1,0])
+    ChamferedCube([0.125+cutTravel+clear2, thickness+Evolver_ChargerPinionPitchRadius()+clear2, thickness+clear2], r=cr, disabled=cutter);
+  }
+}
+
+module Evolver_ChargerCassette(clearance=Inches(0.01), cutter=false, alpha=_ALPHA_CASSETTE) {
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
+  CR = Inches(1/32);
 
   wall = Inches(1/16);
   width = Inches(1.125);
-  height = Inches(0.5);
+  height = Inches(0.5)+clearance;
 
   color("Orange", alpha=alpha) RenderIf(!cutter)
   difference() {
-    translate([0,-(width/2)-clear,1-0.125-clear])
-    ChamferedCube([ForendLength(), width+clear2, height-clear2], r=CR, disabled=cutter||ResolutionIsLow());
+    translate([0,-(width/2)-clear,Inches(1-0.125)-clear])
+    ChamferedCube([Evolver_CassetteLength(), width+clear2, height+clear2], r=CR, disabled=cutter);
 
+    if (!cutter) {
+      Evolver_ChargerPinion(cutter=true);
+      Evolver_ChargerPinionPin(cutter=true);
+      Evolver_BarrelRack(cutter=true);
+      Evolver_ChargerRack(cutter=true);
+      Evolver_ChargerPreloader(cutter=true);
+      Evolver_ChargerCassetteTop(cutter=true);
+    }
+  }
+}
+module Evolver_ChargerCassetteTop(clearance=Inches(0.01), cutter=false, alpha=_ALPHA_CASSETTE) {
+  clear = cutter ? clearance : 0;
+  clear2 = clear*2;
+  CR = Inches(1/32);
 
-    // Central channel
-    translate([wall,-(width/2)+wall-clear,1.25-clearance])
-    cube([ForendLength()-(wall*2), width-(wall*2)+clear2, height-clearance]);
+  wall = Inches(1/16);
+  width = Inches(1.125)-(wall*2);
+  height = Inches(0.125);
+  offsetZ = Inches(0.375);
+  cutHeight = cutter ? wall : 0;
 
-    Evolver_ChargerPinion(cutter=true);
+  color("Chocolate", alpha=alpha) RenderIf(!cutter)
+  difference() {
+    translate([wall,-(width/2)-clear,offsetZ+Inches(1-0.125)-clear])
+    ChamferedCube([Evolver_CassetteLength()-(wall*2), width+clear2, height+cutHeight+clear2], r=CR, disabled=cutter);
+
     Evolver_ChargerPinionPin(cutter=true);
-    Evolver_BarrelRack(cutter=true);
-    Evolver_ChargerRack(cutter=true);
   }
 }
 
@@ -1340,6 +1393,7 @@ module EvolverForendAssembly(hardware=true, prints=true, pipeAlpha=1, cutaway=fa
   }
 
   Evolver_ChargerPinion(af=animateCharger/*todo*/);
+  Evolver_ChargerPreloader(af=animateCharger);
 
   translate([(-Evolver_ChargerTravel()*animateCharger),0,0])
   Evolver_ChargerRack();
@@ -1370,7 +1424,10 @@ module EvolverForendAssembly(hardware=true, prints=true, pipeAlpha=1, cutaway=fa
   }
 
   if (prints && _SHOW_CASSETTE)
-  Evolver_ChargerCassette();
+  Evolver_ChargerCassette(alpha=_ALPHA_CASSETTE);
+
+  if (prints && _SHOW_CASSETTE_TOP)
+  Evolver_ChargerCassetteTop(alpha=_ALPHA_CASSETTE);
 
   if (prints && _SHOW_FOREND_SPACER)
   Evolver_ForendSpacer(cutaway=_CUTAWAY_FOREND_SPACER, alpha=_ALPHA_FOREND_SPACER);
@@ -1519,12 +1576,28 @@ if ($preview) {
       Evolver_ChargerPinion();
 
 
+  if (_RENDER == "Prints/ChargerPreloader")
+    if (!_RENDER_PRINT)
+      Evolver_ChargerPreloader();
+    else
+      translate([-Evolver_ChargerPinionX(),0,-Evolver_ChargerZ()])
+      Evolver_ChargerPreloader();
+
+
   if (_RENDER == "Prints/ChargerCassette")
     if (!_RENDER_PRINT)
       Evolver_ChargerCassette();
     else
       translate([0,0,-Evolver_ChargerZ()])
       Evolver_ChargerCassette();
+
+
+  if (_RENDER == "Prints/ChargerCassetteTop")
+    if (!_RENDER_PRINT)
+      Evolver_ChargerCassetteTop();
+    else
+      translate([0,0,-Evolver_ChargerZ()])
+      Evolver_ChargerCassetteTop();
 
 
 
