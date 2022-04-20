@@ -188,12 +188,12 @@ module ChamferedCube(xyz=[1,2,3], r=0.25, center=false,
                      teardropFlip=[false,false,false],
                      teardropXYZ=[true, true, true],
                      teardropTopXYZ=[true, true, true],
-                     disabled=ResolutionIsLow()) {
+                     disabled=false) {
 
   translate([center ? -xyz[0]/2 : 0,
               center ? -xyz[1]/2 : 0,
               center ? -xyz[2]/2 : 0])
-  if (disabled) {
+  if (disabled || ResolutionIsLow()) {
     cube(xyz);
   } else
   intersection() {
