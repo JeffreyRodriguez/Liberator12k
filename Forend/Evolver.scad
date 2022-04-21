@@ -23,6 +23,7 @@ use <../Shapes/ZigZag.scad>;
 use <../Shapes/Components/Pivot.scad>;
 use <../Shapes/Components/Cylinder Redux.scad>;
 use <../Shapes/Components/Pump Grip.scad>;
+use <../Shapes/Components/VerticalGrip.scad>;
 
 use <../Vitamins/Bearing.scad>;
 use <../Vitamins/Nuts And Bolts.scad>;
@@ -72,6 +73,7 @@ _SHOW_CHARGER = true;
 _SHOW_CASSETTE = true;
 _SHOW_CASSETTE_TOP = true;
 _SHOW_BELT = true;
+_SHOW_VERTICAL_GRIP = true;
 
 /* [Transparency] */
 _ALPHA_BARREL_SUPPORT = 1;     // [0:0.1:1]
@@ -95,6 +97,7 @@ _CUTAWAY_FOREND_SPACER = false;
 _CUTAWAY_FCG = false;
 _CUTAWAY_SPINDLE = false;
 _CUTAWAY_ACTUATOR = false;
+_CUTAWAY_PUMP_COLLAR = false;
 
 /* [Vitamins] */
 SPINDLE_DIAMETER = 0.31251;
@@ -201,6 +204,7 @@ function Evolver_ActuatorTravel() = Evolver_ZigZagLength()-ActuatorPinDiameter()
 function Evolver_BarrelSupportMinX() = ForendSpacerLength();
 function Evolver_BarrelSupportLength() = ForendLength()-Evolver_BarrelSupportMinX();
 
+function Evolver_PumpVerticalGripX() = ForendLength()+BarrelCollarOffset()+0.875;
 
 
 
@@ -1050,14 +1054,17 @@ module Evolver_PumpRods(doMirror=true, cutter=false, innerCut=false, clearance=0
   }
 }
 
-module Evolver_PumpCollar() {
+module Evolver_PumpCollar(cutaway=false, alpha=1) {
   length = 0.5+BarrelCollarLength();
   width = 0.5;
   offsetX = ForendLength()+BarrelCollarOffset();
 
-  color("Chocolate") render()
+  color("Chocolate", alpha) render()
+  Cutaway(cutaway)
   difference() {
     union() {
+
+      // Collar body
       hull() {
 
         // Around the collar
@@ -1070,9 +1077,14 @@ module Evolver_PumpCollar() {
         translate([offsetX,0,0])
         rotate([0,90,0])
         ChamferedCylinder(r1=BarrelRadius()+0.125,r2=1/16,
-                           h=length+0.5);
+                           h=length+0.5+0.5);
+
+        // Vertical Grip Support
+        translate([Evolver_PumpVerticalGripX(),0,-BarrelRadius()])
+        VerticalGripSupport(forwardExtension=1.125);
       }
 
+      // Pump rod support
       for (R = [60,-60]) rotate([R,0,0])
       hull()
       translate([offsetX,0,0])
@@ -1087,12 +1099,40 @@ module Evolver_PumpCollar() {
                        BarrelRadius()+0.125],
                       r=1/16);
       }
+
+      // Barrel rack support
+      translate([offsetX,0,0])
+      hull() {
+        ChamferedCube([length,
+                       0.75,
+                       BarrelCollarRadius()+0.5],
+                      r=1/16);
+
+        ChamferedCube([length,
+                       BarrelRadius(),
+                       BarrelRadius()+0.125],
+                      r=1/16);
+      }
     }
 
     Evolver_Barrel(cutter=true);
     Evolver_BarrelCollar(cutter=true);
     Evolver_PumpRods(cutter=true, clearance=0.005);
     Evolver_PumpCollarBolts(cutter=true);
+    Evolver_BarrelRack(cutter=true);
+    Evolver_PumpVerticalGripHardware(cutter=true);
+  }
+}
+
+module Evolver_PumpVerticalGrip(cutaway=false, alpha=1) {
+  translate([Evolver_PumpVerticalGripX(),0,-BarrelRadius()])
+  VerticalGrip(cutaway=cutaway, alpha=alpha);
+}
+
+module Evolver_PumpVerticalGripHardware(cutter=false, cutaway=false, alpha=1) {
+  translate([Evolver_PumpVerticalGripX(),0,-BarrelRadius()]) {
+    VerticalGripBolt(cutter=cutter);
+    VerticalGripPin(cutter=cutter);
   }
 }
 
@@ -1385,7 +1425,13 @@ module EvolverForendAssembly(hardware=true, prints=true, pipeAlpha=1, cutaway=fa
     Evolver_Barrel(cutaway=_CUTAWAY_BARREL);
 
     if (prints && _SHOW_PUMP_COLLAR)
-    Evolver_PumpCollar();
+    Evolver_PumpCollar(cutaway=_CUTAWAY_PUMP_COLLAR);
+
+    if (hardware && _SHOW_VERTICAL_GRIP)
+    Evolver_PumpVerticalGripHardware();
+
+    if (prints && _SHOW_VERTICAL_GRIP)
+    Evolver_PumpVerticalGrip();
 
     if (prints && _SHOW_CHARGER) {
       Evolver_BarrelRack();
