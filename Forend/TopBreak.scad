@@ -16,6 +16,7 @@ use <../Shapes/Semicircle.scad>;
 use <../Shapes/ZigZag.scad>;
 
 use <../Shapes/Components/Pivot.scad>;
+use <../Shapes/Components/VerticalGrip.scad>;
 use <../Shapes/Components/Pump Grip.scad>;
 
 use <../Vitamins/Nuts And Bolts.scad>;
@@ -35,7 +36,7 @@ use <../Receiver/Stock.scad>;use <../Shapes/Bearing Surface.scad>;
 /* [Export] */
 
 // Select a part, Render it (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Prints/ReceiverFront", "Prints/Forend", "Prints/Cluster", "Prints/BarrelCollar", "Prints/Extractor", "Prints/LatchTab", "Prints/Foregrip", "Prints/VerticalForegrip", "Prints/Sightpost","Fixtures/Trunnion", "Fixtures/ExtractorGang_Bottom", "Fixtures/ExtractorGang_Top"]
+_RENDER = ""; // ["", "Prints/ReceiverFront", "Prints/Forend", "Prints/Cluster", "Prints/BarrelCollar", "Prints/Extractor", "Prints/LatchTab", "Prints/Foregrip", "Prints/VerticalGrip", "Prints/Sightpost","Fixtures/Trunnion", "Fixtures/ExtractorGang_Bottom", "Fixtures/ExtractorGang_Top"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;
@@ -118,9 +119,6 @@ FOREND_BOLT_CLEARANCE = -0.05;
 HANDGUARD_BOLT = "#8-32"; // ["#8-32", "M4"]
 HANDGUARD_BOLT_CLEARANCE = -0.05;
 
-GRIP_BOLT = "1/4\"-20"; // ["M6", "1/4\"-20"]
-GRIP_BOLT_CLEARANCE = -0.05;
-
 EXTRACTOR_RETAINER_LENGTH = 0.7501;
 EXTRACTOR_RETAINER_DIAMETER = 0.2501;
 EXTRACTOR_RETAINER_CLEARANCE = 0.008;
@@ -167,9 +165,6 @@ $fs = UnitsFs()*ResolutionFs();
 
 
 // Settings: Vitamins
-function GripBolt() = BoltSpec(GRIP_BOLT);
-assert(GripBolt(), "GripBolt() is undefined. Unknown GRIP_BOLT?");
-
 function GPBolt() = BoltSpec(GP_BOLT);
 assert(GPBolt(), "GPBolt() is undefined. Unknown GP_BOLT?");
 
@@ -216,7 +211,6 @@ function TopBreak_LatchHeight() = LATCH_WIDTH;
 
 function TopBreak_LatchScrewLength() = 1;
 function TopBreak_LatchTabHeight() = 0.625;
-
 
 // Settings: Dimensions
 function BarrelZ() = BARREL_Z; // -0.11 for .22LR rimfire
@@ -328,8 +322,7 @@ function TopBreak_LatchY() = (TopBreak_ExtractorHousingWidth()/2)
                            + (TopBreak_LatchWidth()/2);
 
 function TopBreak_SightpostX() = ClusterMaxX()+PumpGripLength();
-function TopBreak_VerticalForegripRadius() = 0.625;
-function TopBreak_VerticalForegripX() = TrunnionLength()+Inches(0.25);
+function TopBreak_VerticalGripX() = TrunnionLength()+Inches(0.25);
 
 // Pivot modules
 module PivotClearanceCut(offsetX=0, cut=true, width=PivotWidth(),
@@ -584,25 +577,9 @@ module TopBreak_HandguardBolts(headType="flat", nutType="heatset", length=11.75,
              clearance=cutter?clearance:0, doRender=!cutter);
 }
 
-module TopBreak_GripBolt(bolt=GripBolt(), headType="flat", nutType="heatset", length=3.5, cutter=false, clearance=0.005, teardrop=true) {
-  translate([TopBreak_VerticalForegripX(),0,-BarrelRadius()-length])
-  mirror([0,0,1])
-  NutAndBolt(bolt=bolt, boltLength=length+ManifoldGap(2),
-             capOrientation=true,
-             head=headType, capHeightExtra=(cutter?1:0),
-             nut=nutType, nutHeightExtra=(cutter?0.5:0),
-             teardrop=cutter && teardrop, teardropAngle=180,
-             clearance=cutter?clearance:0,
-             doRender=!cutter);
-}
-
-module TopBreak_GripPin(r=SightpostPinRadius(), length=Inches(0.5), cutter=false, clearance=0.005, teardrop=true) {
-  clear = cutter ? clearance : 0;
-
-  color("Silver") RenderIf(!cutter)
-  translate([TopBreak_VerticalForegripX()+Inches(0.375),0,-BarrelRadius()-length])
-  mirror([0,0,1])
-  cylinder(r=r+clear, h=length);
+module TopBreak_VerticalGripHardware(cutter=false) {
+  VerticalGripBolt(cutter=cutter, teardrop=cutter);
+  VerticalGripPin(cutter=cutter, teardrop=cutter);
 }
 
 // Printed Parts
@@ -948,21 +925,6 @@ module TopBreak_LatchTab(cutaway=false, cutter=false, clearance=0.01, alpha=1) {
   }
 }
 
-module TopBreak_VerticalForegrip(cutaway=false, alpha=1) {
-  CR = 1/16;
-
-  color("Tan", alpha) render()
-  difference() {
-    translate([TrunnionLength()+0.25,0,-BarrelRadius()-0.75])
-    mirror([0,0,1])
-    rotate(360/6/2)
-    PumpGrip(r=TopBreak_VerticalForegripRadius(), h=3, channelRadius=0.125);
-
-    TopBreak_GripBolt(cutter=true, teardrop=false);
-    TopBreak_GripPin(cutter=true, teardrop=false);
-  }
-}
-
 module TopBreak_Cluster(cutaway=false, alpha=1) {
   topExtension = Inches(0.5);
   lowerExtension = Inches(0.75);
@@ -1054,13 +1016,13 @@ module TopBreak_Cluster(cutaway=false, alpha=1) {
 
           // Lower vertical extension
           translate([TrunnionLength()+0.25,0,-BarrelRadius()-lowerExtension])
-          ChamferedCylinder(r1=TopBreak_VerticalForegripRadius()+CR, r2=CR,
+          ChamferedCylinder(r1=VerticalGripRadius()+CR, r2=CR,
                              h=CR*2);
 
           // Flat front for lower extension (printability)
-          translate([TrunnionLength()+ClusterForwardExtension(),-(TopBreak_VerticalForegripRadius()+CR)*(0.705/2),-BarrelRadius()-lowerExtension])
+          translate([TrunnionLength()+ClusterForwardExtension(),-(VerticalGripRadius()+CR)*(0.705/2),-BarrelRadius()-lowerExtension])
           mirror([1,0,0])
-          ChamferedCube([0.25, (TopBreak_VerticalForegripRadius()+CR)*0.705, lowerExtension], r=0.125,
+          ChamferedCube([0.25, (VerticalGripRadius()+CR)*0.705, lowerExtension], r=0.125,
                         teardropFlip=[false,true,true]);
       }
     }
@@ -1084,8 +1046,7 @@ module TopBreak_Cluster(cutaway=false, alpha=1) {
     TopBreak_Barrel(cutter=true);
     TopBreak_ClusterBolts(cutter=true);
     TopBreak_HandguardBolts(cutter=true);
-    TopBreak_GripBolt(cutter=true, teardrop=true);
-    TopBreak_GripPin(cutter=true, teardrop=true);
+    TopBreak_VerticalGripHardware(cutter=true);
   }
 }
 
@@ -1133,6 +1094,11 @@ module TopBreak_Foregrip(length=PumpGripLength(), cutaway=false, alpha=1) {
       MlokSlotBack(length-0.5);
     }
   }
+}
+
+module TopBreak_VerticalGrip(cutaway=false, alpha=1) {
+  translate([TopBreak_VerticalGripX(),0,-BarrelRadius()])
+  VerticalGrip(cutaway=cutaway, alpha=alpha);
 }
 
 module TopBreak_Sightpost(alpha=_ALPHA_SIGHTPOST, cutaway=_CUTAWAY_SIGHTPOST) {
@@ -1466,8 +1432,7 @@ module TopBreak_Assembly(receiverLength=12, pivotFactor=0, extractFactor=0, char
     TopBreak_ClusterBolts();
 
     if (hardware && _SHOW_GRIP_HARDWARE) {
-      TopBreak_GripBolt();
-      TopBreak_GripPin();
+      TopBreak_VerticalGripHardware();
     }
 
     if (prints && _SHOW_CLUSTER)
@@ -1477,7 +1442,7 @@ module TopBreak_Assembly(receiverLength=12, pivotFactor=0, extractFactor=0, char
     TopBreak_Foregrip(cutaway=_CUTAWAY_CLUSTER, alpha=min(alpha, _ALPHA_FOREGRIP));
 
     if (prints && _SHOW_VERTICAL_GRIP)
-    TopBreak_VerticalForegrip(alpha=min(alpha, _ALPHA_VERTICAL_FOREGRIP));
+    TopBreak_VerticalGrip(alpha=min(alpha, _ALPHA_VERTICAL_FOREGRIP));
 
     children();
 
@@ -1562,13 +1527,13 @@ if ($preview) {
       translate([-ClusterMaxX(),0,0])
       TopBreak_Cluster();
 
-  if (_RENDER == "Prints/VerticalForegrip")
+  if (_RENDER == "Prints/VerticalGrip")
     if (!_RENDER_PRINT)
-      TopBreak_VerticalForegrip();
+      TopBreak_VerticalGrip();
     else
       mirror([0,0,1])
       translate([-(TrunnionLength()+0.25),0,-(-BarrelRadius()-0.75)])
-      TopBreak_VerticalForegrip();
+      TopBreak_VerticalGrip();
 
   if (_RENDER  == "Prints/Foregrip")
     if (!_RENDER_PRINT)
@@ -1653,6 +1618,9 @@ if ($preview) {
 
   if (_RENDER == "Hardware/HandguardBolts")
   TopBreak_HandguardBolts();
+
+  if (_RENDER == "Hardware/VerticalGripHardware")
+  TopBreak_VerticalGripHardware();
 
   if (_RENDER == "Hardware/SightpostBolts")
   translate([TopBreak_SightpostX()+SightpostLength(),0,0])
