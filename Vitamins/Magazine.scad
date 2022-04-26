@@ -6,6 +6,8 @@ use <../Meta/slookup.scad>;
 use <../Shapes/Chamfer.scad>;
 
 MAGAZINE = "Glock 9mm"; // ["Glock 9mm", "1911 9mm"]
+MAGWELL_WALL = Millimeters(4);
+CLEARANCE = Millimeters(0.15);
 
 _CUTAWAY_MAGWELL = true;
 
@@ -39,7 +41,6 @@ function MagazineSpec(name) = slookup(name, MAGAZINES);
 //
 // Magazine Spec Lookup Functions
 //
-
 function MagazineName(spec=undef)       = slookup("Name", spec);
 function MagazineAngle(spec=undef)      = slookup("Angle", spec);
 function MagazineWidth(spec=undef)      = slookup("Width", spec);
@@ -51,19 +52,18 @@ function MagwellRadiusBack(spec=undef)  = slookup("RadiusBack", spec);
 //
 // Magazine Spec Derived Functions
 //
+function MagazineSin(spec=undef) = sin(MagazineAngle(spec));
+function MagazineCos(spec=undef) = cos(MagazineAngle(spec));
 
-function MagazineOffsetX(spec=undef) = sin(MagazineAngle(spec))
+function MagazineOffsetX(spec=undef) = MagazineSin(spec)
                                      * MagwellDepth(spec);
 function MagwellLength(spec=undef) = MagazineLength(spec)
-                                  + MagazineOffsetX(spec);
+                                   + MagazineOffsetX(spec);
 
 //
 // Magazine Modules
 //
-
-module Magazine_2D(spec=undef,
-                         radius=Millimeters(4),
-                         clearance=0) {
+module Magazine_2D(spec=undef, clearance=0) {
   clear = clearance;
   clear2 = clear*2;
   difference() {
@@ -75,33 +75,28 @@ module Magazine_2D(spec=undef,
     // Curved front
     for (Y = [0,1]) mirror([0,Y,0])
     translate([MagazineLength(spec)+clear,-(MagazineWidth(spec)/2)-clear])
-    RoundedBoolean(edgeOffset=0, r=radius);
+    RoundedBoolean(edgeOffset=0, r=MagwellRadiusFront(spec));
 
     // Curved back
     for (Y = [0,1]) mirror([0,Y,0])
     translate([-clear,-(MagazineWidth(spec)/2)-clear])
     rotate(-90)
-    RoundedBoolean(edgeOffset=0, r=Millimeters(1));
+    RoundedBoolean(edgeOffset=0, r=MagwellRadiusBack(spec));
   }
 }
 
-module Magazine(spec=undef, taperHeight=Inches(0.75), taper=true) {
-  multmatrix(m=[[1,0,sin(MagazineAngle(spec)),0], // Here's where the magazine angle is applied
+module Magazine(spec=undef, taperHeight=Inches(0.75), taper=true, clearance=0) {
+  multmatrix(m=[[1+MagazineSin(spec),0,MagazineSin(spec),0], // Here's where the magazine angle is applied
                 [0,1,0,0],
                 [0,0,1,0],
                 [0,0,0,1]]) {
 
     // Main magazine cutter
     linear_extrude(height=MagwellDepth(spec)+ManifoldGap())
-    Magazine_2D(spec);
+    Magazine_2D(spec, clearance=clearance);
 
     // Magazine tapered opening cutter
     if (taper)
-    multmatrix(m=[[1,0,sin(MagazineAngle(spec)),0], // Here's where the magazine is angled
-                 [0,1,0,0],
-                 [0,0,1,0],
-                 [0,0,0,1]])
-    translate([-taperHeight*sin(MagazineAngle(spec))*0.5,0,-ManifoldGap()])
     linear_extrude(height=taperHeight+ManifoldGap(), scale=0.5)
     scale([1.2,1.3,1])
     Magazine_2D(spec);
@@ -123,29 +118,50 @@ module MagazineCatch(spec=undef, magHeight=1, catchOffsetZ=1.15, catchOffsetX=1,
   }
 }
 
-module Magwell(spec=undef, wallSide=Millimeters(8),
+module Magwell(spec=undef, height=undef, wallSide=Millimeters(8),
                wallBack=Millimeters(8), wallFront=Millimeters(8),
-               doRender=true) {
+               clearance=0, doRender=true) {
   CR = Inches(1/16);
+  height = height == undef ? MagwellDepth(spec) : height;
 
   color("Orange") RenderIf(doRender)
   difference() {
+    union() {
       hull() {
 
         // Magwell Body Top
-        translate([-wallBack, -(MagazineWidth(spec)/2)-wallSide,MagwellDepth(spec)-Inches(0.25)])
-        ChamferedCube([MagwellLength(spec)+wallBack+wallFront,
+        translate([-wallBack, -(MagazineWidth(spec)/2)-wallSide,height-Inches(0.25)])
+        ChamferedCube([MagazineOffsetX(spec)+(MagazineLength(spec)*(1+MagazineSin(spec)))+wallBack+wallFront,
                        MagazineWidth(spec)+(wallSide*2),
                        Inches(0.25)-ManifoldGap()],
                       r=CR);
 
         // Magwell Body Bottom
         translate([-wallBack, -(MagazineWidth(spec)/2)-wallSide, ManifoldGap()])
-        ChamferedCube([MagazineLength(spec)+wallBack+wallFront,
+        ChamferedCube([(MagazineLength(spec)*(1+MagazineSin(spec)))+wallBack+wallFront,
                        MagazineWidth(spec)+(wallSide*2),
                        Inches(0.25)-ManifoldGap()],
                       r=CR);
       }
+
+      // Flared Bottom
+      hull() {
+
+        // Magwell Body Bottom
+        translate([-wallBack, -(MagazineWidth(spec)/2)-wallSide, ManifoldGap()])
+        ChamferedCube([(MagazineLength(spec)*(1+MagazineSin(spec)))+wallBack+wallFront,
+         MagazineWidth(spec)+(wallSide*2),
+         Inches(1)-ManifoldGap()],
+        r=CR);
+
+        // Magwell Body Bottom
+        translate([-wallBack, -(MagazineWidth(spec)/2)-wallSide, ManifoldGap()])
+        ChamferedCube([(MagazineLength(spec)*(1.25+MagazineSin(spec)))+wallBack+wallFront,
+         MagazineWidth(spec)+(wallSide*2),
+         Inches(0.25)-ManifoldGap()],
+        r=CR);
+      }
+    }
 
       // TODO: Magazine Catch
       //MagazineCatch(magHeight=MagwellDepth(spec), extraRadius=0.1, extraY=wall+0.25);
@@ -153,7 +169,7 @@ module Magwell(spec=undef, wallSide=Millimeters(8),
     // TODO: Bolt Catch / Slide Stop
     //translate([MagazineLength(spec)+MagazineOffsetX(spec)-0.25,0,0]) cube([0.25, 0.25, 0.25]);
 
-    Magazine(spec);
+    Magazine(spec, clearance=clearance);
     MagazineCatch(spec);
   }
 }
@@ -161,4 +177,10 @@ module Magwell(spec=undef, wallSide=Millimeters(8),
 ScaleToMillimeters()
 render()
 Cutaway(_CUTAWAY_MAGWELL)
-Magwell(spec=MagazineSpec(MAGAZINE), doRender=false);
+difference() {
+  Magwell(spec=MagazineSpec(MAGAZINE), clearance=CLEARANCE, doRender=false,
+          wallBack=MAGWELL_WALL, wallFront=MAGWELL_WALL, wallSide=MAGWELL_WALL);
+
+  translate([-MAGWELL_WALL, -Millimeters(50),Millimeters(25)])
+  cube(Millimeters(100));
+}
