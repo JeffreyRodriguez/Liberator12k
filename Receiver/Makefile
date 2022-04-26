@@ -29,6 +29,12 @@ Preview_JPG=$(addprefix Preview_,$(addsuffix .jpg, $(Preview)))
 
 Previews: $(Preview_JPG)
 
+XRay=Minuteman
+XRay_PNG=$(addprefix XRay_,$(addsuffix .png, $(XRay)))
+XRay_JPG=$(addprefix XRay_,$(addsuffix .jpg, $(XRay)))
+
+XRays: $(XRay_JPG)
+
 TARGETS = README.html $(Components_HTML) \
           $(Preview_PNG) $(Preview_JPG) Preview_Minuteman_htmldoc.jpg \
           $(Prints_STL) $(Prints_PNG) $(Prints_STL_thumbs) \
@@ -39,6 +45,9 @@ TARGETS = README.html $(Components_HTML) \
 $(Assembly_htmldoc): %/Assembly_htmldoc.jpg : %/Assembly.png
 
 Preview_%_htmldoc.jpg: Preview_%.png
+	convert -trim -resize 1600x900^ $^ -quality 90 $@
+
+XRay_%_htmldoc.jpg: Preview_%.png
 	convert -trim -resize 1600x900^ $^ -quality 90 $@
 
 Preview_Minuteman.png: Assembly.scad
@@ -109,6 +118,18 @@ Preview_EVOLver.png: Assembly.scad
 		-D _FOREND='"Evolver"' \
 		$<
 
+XRay_Minuteman.png: *.scad
+	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_LOW) -o $@ \
+		--projection=p --camera=-400,300,-75,-125,0,0 \
+		-D _ALPHA=0.1 \
+		-D _CONFIGURATION='"Stocked"' \
+		-D _RECEIVER_SIZE='"Framed"' \
+		-D _SHOW_RECEIVER=true \
+		-D _SHOW_FCG=true \
+		-D _SHOW_LOWER=true \
+		-D _SHOW_FOREND=true \
+		-D _SHOW_STOCK=true \
+		$<
 
 clean-dir:
 	rm -rf $(TARGETS) Assembly $(Components)
