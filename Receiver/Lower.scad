@@ -167,8 +167,17 @@ module Lower_MountTakedownPinRetainer(cutter=false, clearance=0.005) {
 
   color("Silver") RenderIf(!cutter)
   translate([-LowerMaxX()+ReceiverLugRearMaxX(), 0, Receiver_TakedownPinZ()-0.125])
-  rotate([0,-90,0])
-  cylinder(r=(3/32/2)+clear, h=ReceiverLugRearMaxX()-Receiver_TakedownPinX()-LowerMaxX()+0.125);
+  rotate([0,-90,0]) {
+
+      // Body
+      cylinder(r=(3/32/2)+clear,
+               h=ReceiverLugRearMaxX()-Receiver_TakedownPinX()-LowerMaxX()+0.125);
+
+      // Head
+      mirror([0,0,1])
+      cylinder(r=(0.3/2)+clear,
+               h=0.025);
+   }
 
   if (cutter)
   translate([-LowerMaxX()+ReceiverLugRearMinX(), 0, Receiver_TakedownPinZ()-0.125])
