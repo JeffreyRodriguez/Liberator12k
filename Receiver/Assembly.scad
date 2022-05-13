@@ -31,6 +31,8 @@ use <Frame.scad>;
 use <Receiver.scad>
 use <Stock.scad>;
 
+// POV 200,1500,200,0,0,0
+
 /* [Assembly] */
 _SHOW_PRINTS = true;
 _SHOW_HARDWARE = true;

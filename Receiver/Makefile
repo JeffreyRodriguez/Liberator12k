@@ -92,35 +92,35 @@ Preview_FCG.png: Assembly.scad
 		$<
 Preview_CAFE12+.png: Assembly.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_LOW) -o $@ \
-		--projection=p --camera=200,1500,200,0,0,0 \
+		--projection=p --camera=$(call scad_pov,$<) \
 		-D _FOREND='"TopBreak"' \
 		$<
 Preview_CAFE12.png: Assembly.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_LOW) -o $@ \
-		--projection=p --camera=200,1500,200,0,0,0 \
+		--projection=p --camera=$(call scad_pov,$<) \
 		-D _FOREND='"TopBreak"' \
 		-p ../Forend/TopBreak.json -P "CAFE12" \
 		$<
 Preview_FP37.png: Assembly.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_LOW) -o $@ \
-		--projection=p --camera=200,1500,200,0,0,0 \
+		--projection=p --camera=$(call scad_pov,$<) \
 		-D _FOREND='"TopBreak"' \
 		-p ../Forend/TopBreak.json -P "FP37" \
 		$<
 Preview_ZZR.png: Assembly.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_LOW) -o $@ \
-		--projection=p --camera=200,1500,200,0,0,0 \
+		--projection=p --camera=$(call scad_pov,$<) \
 		-D _FOREND='"Revolver"' \
 		$<
 Preview_EVOLver.png: Assembly.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_LOW) -o $@ \
-		--projection=p --camera=200,1500,200,0,0,0 \
+		--projection=p --camera=$(call scad_pov,$<) \
 		-D _FOREND='"Evolver"' \
 		$<
 
 XRay_Minuteman.png: *.scad
 	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_LOW) -o $@ \
-		--projection=p --camera=-400,300,-75,-125,0,0 \
+		--projection=p --camera=$(call scad_pov,$<) \
 		-D _ALPHA=0.1 \
 		-D _CONFIGURATION='"Stocked"' \
 		-D _RECEIVER_SIZE='"Framed"' \

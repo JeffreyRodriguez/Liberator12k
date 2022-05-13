@@ -56,6 +56,8 @@ render_source       = $(addsuffix .scad, $(call render_class,$(1)))
 
 preset_class_name = $(shell echo $(1) | awk -F _ '{ print $$1 }')
 
+scad_pov          = $(shell grep POV $(1) | awk '{ print $$3 }')
+
 %/Assembly: Assembly/
 	$(MAKE) -C $(subst /Assembly,,$@) Assembly
 
@@ -113,6 +115,22 @@ Assembly/:
 		-s:v 640:360 -c:v libx264 -crf 20 -pix_fmt yuv420p \
 		"$@"
 	rm -rf $(FRAMES_DIR)
+
+%.mp4: %.scad
+	$(eval FRAMES_DIR=.frames/$(basename $@))
+	$(eval POV=$(call scad_pov,$<))
+	mkdir -p $(FRAMES_DIR)
+	for i in `seq 0 $(SLOW_FRAME_COUNT)`; do \
+	  echo openscad --imgsize=1920,1080 --quiet \
+		  -o `printf '$(FRAMES_DIR)/frame%05d.png' $$i` \
+		  -D \'\$$t=1/$(SLOW_FRAME_COUNT)*$$i\' \
+			--projection=p --camera=$(POV) \
+			$^; \
+  done | nice parallel
+	nice ffmpeg -y -loglevel quiet \
+		-i "$(FRAMES_DIR)/frame%05d.png" -framerate 10 \
+		-s:v 1920:1080 -c:v libx264 -crf 20 -pix_fmt yuv420p \
+		"$@"
 
 # Downsampled for HTMLDoc PDF
 %/Assembly_htmldoc.jpg: %/Assembly.png

@@ -23,6 +23,8 @@ use <../Vitamins/Springs/SpringSpec.scad>;
 use <Lower.scad>;
 use <Receiver.scad>;
 
+// POV -150,350,150,-50,0,-30
+
 /* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
