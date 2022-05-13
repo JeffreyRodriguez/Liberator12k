@@ -95,7 +95,7 @@ Assembly/:
 		-D _RENDER_PRINT=$(RENDER_PRINT)\
 		$(CLASS).scad
 
-%.stl.mp4:
+%.stl.mp4: %.stl
 	$(eval PART=$(basename $(notdir $@)))
 	$(eval FRAMES_DIR=$(basename $@)_frames)
 	$(eval STL=$(notdir $(basename $@)))
