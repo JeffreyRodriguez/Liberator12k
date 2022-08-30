@@ -107,7 +107,7 @@ module Frame_Bolts(length=FrameBoltLength(), nut="hex", cutaway=false, cutter=fa
     rotate([0,-90,0])
     rotate(-11)
     NutAndBolt(bolt=FrameBolt(), boltLength=length,
-         head="hex",
+         head="hex", capHeightExtra=(cutter?1:0),
          nut=nut, clearance=clear,
          capOrientation=true);
   }
