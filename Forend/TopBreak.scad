@@ -31,7 +31,7 @@ use <../Receiver/FCG.scad>;
 use <../Receiver/Frame.scad>;
 use <../Receiver/Lower.scad>;
 use <../Receiver/Receiver.scad>;
-use <../Receiver/Stock.scad>;use <../Shapes/Bearing Surface.scad>;
+use <../Receiver/Stock.scad>;
 
 /* [Export] */
 

@@ -18,6 +18,8 @@ use <../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 use <FCG.scad>;
 use <Receiver.scad>;
 
+// POV -175,320,35,-60,0,-75
+
 /* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
@@ -41,10 +43,10 @@ _SHOW_TAKEDOWN_PIN_RETAINER = true;
 /* [Transparency] */
 _ALPHA_LOWER =  1;    // [0:0.1:1]
 _ALPHA_RECEIVER = 0.1; // [0:0.1:1]
+_ALPHA_LOWER_MOUNT = 0.5; // [0:0.1:1]
 
 /* [Cutaway] */
-_CUTAWAY_LOWERMOUNT_FRONT = false;
-_CUTAWAY_LOWERMOUNT_REAR = false;
+_CUTAWAY_LOWER_MOUNT = false;
 _CUTAWAY_RECEIVER = false;
 
 /* [Vitamins] */
@@ -594,12 +596,14 @@ module Lower(hardware=true, prints=true, bolts=_SHOW_LOWER_BOLTS,
 ScaleToMillimeters()
 if ($preview) {
 
+  Lower_Bolts();
+
   if (_SHOW_FCG)
   SimpleFireControlAssembly();
 
-  LowerMount();
+  LowerMount(cutaway=_CUTAWAY_LOWER_MOUNT, alpha=_ALPHA_LOWER_MOUNT);
 
-  Lower(bolts=_SHOW_LOWER_BOLTS,
+  Lower(bolts=false,
          showLeft=_SHOW_LOWER_LEFT, showRight=_SHOW_LOWER_RIGHT,
          showMiddle=_SHOW_LOWER_MIDDLE,
          alpha=_ALPHA_LOWER);

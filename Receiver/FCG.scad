@@ -49,6 +49,7 @@ _SHOW_RECOIL_PLATE = true;
 _SHOW_RECOIL_PLATE_BOLTS = true;
 _SHOW_RECEIVER      = true;
 _SHOW_LOWER         = true;
+_SHOW_LOWER_HARDWARE = false;
 
 /* [Transparency] */
 _ALPHA_RECEIVER = 0.15; // [0:0.1:1]
@@ -56,6 +57,7 @@ _ALPHA_LOWER = 0.15; // [0:0.1:1]
 _ALPHA_FIRING_PIN_HOUSING = 1; // [0:0.1:1]
 _ALPHA_RECOIL_PLATE = 1; // [0:0.1:1]
 _ALPHA_FCG_Hammer = 1; // [0:0.1:1]
+_ALPHA_FCG_TRIGGER = 0.15; // [0:0.1:1]
 
 /* [Cutaway] */
 _CUTAWAY_FIRING_PIN_HOUSING = false;
@@ -255,6 +257,10 @@ FCG_DisconnectorSpringY = FCG_DisconnectorOffsetY
                         + SpringOuterDiameter(spring=DisconnectorSpringSpec())
                         + (1/16);
 
+
+
+// Animation timing
+FCG_HammerChargeStart = 0.25;
 
 
 // Shorthand: Measurements
@@ -1279,11 +1285,16 @@ module TriggerGroup(hardware=true, prints=true, animationFactor=TriggerAnimation
   Trigger(alpha=alpha);
 }
 
+module FCG_Animate_ChargingHandle() {
+  translate([SubAnimate(ANIMATION_STEP_CHARGE, start=FCG_HammerChargeStart)*-(FCG_HammerTravelX+FCG_HammerOvertravelX),0,0])
+  translate([SubAnimate(ANIMATION_STEP_CHARGER_RESET)*(FCG_HammerTravelX+FCG_HammerOvertravelX),0,0])
+  children();
+}
+
 module SimpleFireControlAssembly(recoilPlateLength=RecoilPlateLength(), hardware=true, prints=true, actionRod=_SHOW_ACTION_ROD, recoilPlate=_SHOW_RECOIL_PLATE, cutaway=false, alpha=1) {
   disconnectStart = 0.8;
   disconnectLetdown = 0.2;
   connectStart = 0.99;
-  FCG_HammerChargeStart = 0.25;
 
   FCG_DisconnectorTripAF = SubAnimate(ANIMATION_STEP_CHARGE, start=0.0, end=0.2)
                      - SubAnimate(ANIMATION_STEP_CHARGER_RESET,
@@ -1297,14 +1308,14 @@ module SimpleFireControlAssembly(recoilPlateLength=RecoilPlateLength(), hardware
 
   *FCG_ChargingHandleSpring();
 
-  if (_SHOW_CHARGING_HANDLE)
-  translate([SubAnimate(ANIMATION_STEP_CHARGE, start=FCG_HammerChargeStart)*-(FCG_HammerTravelX+FCG_HammerOvertravelX),0,0])
-  translate([SubAnimate(ANIMATION_STEP_CHARGER_RESET)*(FCG_HammerTravelX+FCG_HammerOvertravelX),0,0]) {
-    if (prints)
-    FCG_ChargingHandle(alpha=alpha);
-
+  if (_SHOW_CHARGING_HANDLE){
     if (hardware)
+    FCG_Animate_ChargingHandle()
     FCG_ChargingHandleBolt();
+
+    if (prints)
+    FCG_Animate_ChargingHandle()
+    FCG_ChargingHandle(alpha=alpha);
   }
 
   TriggerGroup(hardware=hardware, prints=prints, searLength=1.67188, alpha=alpha);
@@ -1382,11 +1393,11 @@ module SimpleFireControlAssembly(recoilPlateLength=RecoilPlateLength(), hardware
 ScaleToMillimeters()
 if ($preview) {
 
-  SimpleFireControlAssembly();
+  SimpleFireControlAssembly(alpha=_ALPHA_FCG_TRIGGER);
 
   if (_SHOW_LOWER) {
-    LowerMount(hardware=false, cutaway=_CUTAWAY_LOWER, alpha=_ALPHA_LOWER);
-    Lower(hardware=false, cutaway=_CUTAWAY_LOWER, alpha=_ALPHA_LOWER);
+    LowerMount(hardware=_SHOW_LOWER_HARDWARE, cutaway=_CUTAWAY_LOWER, alpha=_ALPHA_LOWER);
+    Lower(hardware=_SHOW_LOWER_HARDWARE, cutaway=_CUTAWAY_LOWER, alpha=_ALPHA_LOWER);
   }
 
   if (_SHOW_RECEIVER)
