@@ -1,0 +1,34 @@
+== Common Dimensions
+
+.General Dimension Guidelines
+[cols="1,1,1"]
+|===
+|Purpose|Inch|Metric
+
+|Small Pins
+|3/32"
+|2.5mm
+
+|Medium Pins
+|1/4"
+|6mm
+
+|Small Screws
+|#8-32
+|M4
+
+|Medium Screws
+|1/4"-20
+|M6
+
+|Large Screws
+|1/2"-13
+|12mm
+
+|Square Rods
+|1/4"
+|6mm
+|===
+
+Official kits are inch-standard except small pins are 2.5mm.
+3/32" is just under 2.5mm, and a #39 drill bit is just over 2.5mm.

@@ -1,0 +1,52 @@
+=== Hardware Kit
+If you purchased a kit, all the machining is already done for you.
+
+To DIY all the parts yourself, read the <TopBreak DIY Machining> section.
+
+=== Post-Processing
+
+==== Forend
+. Ream the frame bolt holes.
+. Lightly apply permanent adhesive or epoxy to the *Reinforcement Screws*.
+. Screw the *Reinforcement Screws* into the forend and wipe off any excess.
+. Optional: sand the pivot surfaces smooth.
+. Oil the pivot surfaces.
+
+==== Barrel Collar
+. Using pliers, peel off the supports from the pivot area.
+. Flush cutters can be used to clean up the flat portion.
+. Using a 3/4" half-round file, file the rounded inner pivot area smooth.
+. If there is any elephant's foot, file it off now.
+. Sand the inner curve of the pivot smooth with progressively finer grits.
+. Test fit by rotating the *Barrel Collar* up into the *Forend*.
+. Sand the inner and outer curves of the *Barrel Collar* pivot smooth.
+. If the pivoting action feels tight or sticks, it's probably elephant foot. Clean that up.
+
+==== Extractor
+. Ream the *Extractor Retainer* hole to 1/4".
+. Insert the *Extractor Bit* into the *Extractor*, shim and add superglue if loose.
+. File/sand the extractor's top/bottom/sides smooth.
+. Drop the *Extractor Spring* into the *Barrel Collar*'s large rectangular hole.
+. Insert the *Extractor* into the hole.
+. With the *Extractor* pressed inwards, install the *Extractor Retainer* through the barrel hole.
+
+==== Foregrip Cluster
+. Ream the *Cluster Bolts* holes.
+. Ream the *Handguard Bolt* hole.
+. Ream the *Vertical Foregrip Pin*.
+. Heatset the *Foregrip Nut* on the inside of the *Cluster*.
+. Heatset the *Handguard Bolt Nuts* in the sides at the back of the *Cluster*
+
+==== Latch
+. Insert the *Latch Springs* into the small square holes in the *Barrel Collar*.
+. Insert the *Latch Bars* into the square holes in the *Barrel Collar*.
+. Ensure the *Latch Bars* slide smoothly - file the holes if necessary.
+. Insert the two rectangular tabs of the *Latch* into the underside of the *Barrel Collar
+. Depress the *Latch Bars* while you install the *Latch Screws*.
+. Lube the slots and bars.
+
+==== Forend
+. Rotate the *Barrel Collar* up into the *Forend*.
+. Holding the *Barrel Collar*, install the *Barrel Group* from the front.
+. Secure the *Barrel Collar Bolts*
+

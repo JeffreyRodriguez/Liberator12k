@@ -1,0 +1,119 @@
+{
+    "Preview_Minuteman": {
+        "source": "Assembly.scad",
+        "args": [
+            "--projection=p",
+            "--camera=200,800,200,-100,0,0"
+        ]
+    },
+    "Preview_Lower": {
+        "source": "Assembly.scad",
+        "args": [
+            "_SHOW_RECEIVER=false",
+            "_SHOW_FCG=true",
+            "_ALPHA_LOWER=1",
+            "_ALPHA_LOWER_MOUNT=1"
+        ]
+    },
+    "Preview_Frame": {
+        "source": "Assembly.scad",
+        "args": [
+            "--projection=p",
+            "--camera=200,800,200,-100,0,0",
+            "-D _SHOW_RECEIVER=true",
+            "-D _SHOW_FCG=false",
+            "-D _SHOW_LOWER=false",
+            "-D _SHOW_FOREND=false",
+            "-D _SHOW_STOCK=false"
+        ]
+    },
+    "Preview_Stock": {
+        "source": "Assembly.scad",
+        "args": [
+            "--projection=p",
+            "--camera=-100,500,100,-250,0,0",
+            "-D _SHOW_RECEIVER=false",
+            "-D _SHOW_FCG=false",
+            "-D _SHOW_LOWER=false",
+            "-D _SHOW_FOREND=false",
+            "-D _SHOW_STOCK=true"
+        ]
+    },
+    "Preview_Lower": {
+        "source": "Assembly.scad",
+        "args": [
+            "--projection=p",
+            "--camera=-175,320,35,-60,0,-75",
+            "-D _SHOW_RECEIVER=false",
+            "-D _SHOW_FCG=false",
+            "-D _SHOW_LOWER=true",
+            "-D _SHOW_FOREND=false",
+            "-D _SHOW_STOCK=false"
+        ]
+    },
+    "Preview_FCG": {
+        "source": "Assembly.scad",
+        "args": [
+            "--projection=p",
+            "--camera=-150,350,150,-50,0,-30",
+            "-D _SHOW_RECEIVER=false",
+            "-D _SHOW_FCG=true",
+            "-D _SHOW_LOWER=false",
+            "-D _SHOW_FOREND=false",
+            "-D _SHOW_STOCK=false"
+        ]
+    },
+    "Preview_CAFE12+": {
+        "source": "Assembly.scad",
+        "args": [
+            "--projection=p",
+            "-D _FOREND='\"TopBreak\"'"
+        ]
+    },
+    "Preview_CAFE12": {
+        "source": "Assembly.scad",
+        "args": [
+            "--projection=p",
+            "-D _FOREND='\"TopBreak\"'",
+            "-p ../Forend/TopBreak.json",
+            "-P \"CAFE12\""
+        ]
+    },
+    "Preview_FP37": {
+        "source": "Assembly.scad",
+        "args": [
+            "--projection=p",
+            "-D _FOREND='\"TopBreak\"'",
+            "-p ../Forend/TopBreak.json",
+            "-P \"CAFE12\""
+        ]
+    },
+    "Preview_ZZR": {
+        "source": "Assembly.scad",
+        "args": [
+            "--projection=p",
+            "-D _FOREND='\"Revolver\"'"
+        ]
+    },
+    "Preview_EVOLver": {
+        "source": "Assembly.scad",
+        "args": [
+            "--projection=p",
+            "-D _FOREND='\"Evolver\"'"
+        ]
+    },
+    "XRay_Minuteman": {
+        "source": "Assembly.scad",
+        "args": [
+            "--projection=p",
+            "-D _ALPHA=0.1",
+            "-D _CONFIGURATION='\"Stocked\"'",
+            "-D _RECEIVER_SIZE='\"Framed\"'",
+            "-D _SHOW_RECEIVER=true",
+            "-D _SHOW_FCG=true",
+            "-D _SHOW_LOWER=true",
+            "-D _SHOW_FOREND=true",
+            "-D _SHOW_STOCK=true"
+        ]
+    }
+}

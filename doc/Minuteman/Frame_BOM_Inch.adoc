@@ -1,0 +1,33 @@
+.Frame Bill of Materials (Inch)
+[cols="1,1,1"]
+|===
+|Purpose|Part|Quantity
+
+|Frame Bolt
+|1/2-13x10 Hex Bolt
+|2
+
+|Frame Nut
+|1/2-13 Hex Nut
+|4
+
+|Rail Nuts
+|#8-32 Heatset Nut (Long)
+|2
+
+|Tension Bolt
+|#8-32x12 Threaded Rod
+|4
+
+|Tension Bolt Nut
+|#8-32 Heatset Nut (Long)
+|4
+
+|Tension Bolt Washer
+|#8-32 Washer
+|4
+
+|Tension Bolt Acorn Nut
+|#8-32 Acorn Nut
+|4
+|===

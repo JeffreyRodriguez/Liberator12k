@@ -4,6 +4,7 @@ MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 .ONESHELL:
 .DELETE_ON_ERROR:
+MAKEFILE_IN=true
 
 FRAME_COUNT:=100
 FRAMES:=$(shell seq 0 $(FRAME_COUNT))
@@ -21,6 +22,9 @@ GIT_DATE:=$(shell git log -1 --date=format:"%Y-%m-%d" --format="%ad")
 DATE:=$(shell date +'%Y-%m-%d')
 SUBDIRS:= $(filter-out Liberator12k-source/,$(dir $(wildcard */Makefile)))
 SCADS:= $(wildcard *.scad)
+STL_DIR:=.stl
+ASSEMBLY_DIR:=.assembly
+VIEWS_DIR:=.views
 
 .DEFAULT_GOAL:= all
 .PHONY: FORCE $(SUBDIRS) clean clean-dir
@@ -29,9 +33,7 @@ SCADS:= $(wildcard *.scad)
 $(SUBDIRS): FORCE
 	$(MAKE) -C $@
 
-
 # OpenSCAD helpers
-
 list_renders    = $(shell grep -oP '_RENDER == "(.+)"' '$(strip $(1))' | cut -d \" -f 2 | sort)
 filter_renders  = $(filter $(2),$(call list_renders,$(1)))
 list_prints     = $(call filter_renders,$(1),Prints/%)
@@ -40,14 +42,14 @@ list_fixtures   = $(call filter_renders,$(1),Fixtures/%)
 list_projections = $(call filter_renders,$(1),Projections/%)
 
 # Filename-to-render Conventions:
-# Assembly/Class_Preset/Assembly.png
+# Assembly/Class_Preset.png
 # Assembly/Class_Preset/Prints/Part.png
 # Assembly/Class_Preset/Prints/Part.stl
-# Class_Preset/Assembly.png
+# Class_Preset.png
 # Class_Preset/Prints/Part.png
 # Class_Preset/Prints/Part.stl
 # Class_Preset/Projections/Name.dxf
-render_name         = $(subst Assembly/,,$(basename $(1)))
+render_name         = $(subst $(STL_DIR)/,,$(subst $(ASSEMBLY_DIR)/,,$(basename $(1))))
 render_class_preset = $(firstword $(subst /, ,$(call render_name,$(1))))
 render_class        = $(shell echo $(call render_class_preset,$(1)) | awk -F _ '{ print $$1 }')
 render_preset       = $(shell echo $(call render_class_preset,$(1)) | awk -F _ '{ print $$2 }')
@@ -56,105 +58,13 @@ render_source       = $(addsuffix .scad, $(call render_class,$(1)))
 
 preset_class_name = $(shell echo $(1) | awk -F _ '{ print $$1 }')
 
-scad_pov          = $(shell grep POV $(1) | awk '{ print $$3 }')
-
-%/Assembly: Assembly/
-	$(MAKE) -C $(subst /Assembly,,$@) Assembly
-
-Assembly/:
-	mkdir -p Assembly
+# Extract the // POV entry
+scad_pov          = $(shell grep '// POV ' $(1) | awk '{ print $$3 }')
+scad_view         = $(shell awk '{ print "-D ",$$1 }' $(basename $(1)).view)
 
 %.parts: %.scad
 	@# Search for all the _RENDER == "*" lines and extract the part names
 	echo $(call list_renders,$<) > $@
-
-%.dxf %.png %.stl:
-	$(eval NAME=$(call render_name,$@))
-	$(eval CLASS_PRESET=$(call render_class_preset,$@))
-	$(eval CLASS=$(call render_class,$@))
-	$(eval PRESET=$(call render_preset,$@))
-	$(eval PART=$(call render_part,$@))
-	$(eval RENDER_MODE=$(if $(findstring Assembly.png,$@),--preview,--render))
-	$(eval RENDER_PRINT=$(if $(findstring Assembly,$@),false,true) )
-	$(eval VIEWPORT=$(if $(findstring Assembly.png,$@),$(OS_CAM_ASSEMBLY),$(OS_CAM_STL)) )
-	$(eval IMAGE_SIZE=$(if $(findstring Assembly,$@),--imgsize $(OS_RES_HIGH),--imgsize $(OS_RES_LOW)))
-	@echo Target: $@
-	@echo Target Dir: $(dir $@)
-	@echo Deps: $^
-	@echo Name: $(NAME)
-	@echo Class_Preset: $(CLASS_PRESET)
-	@echo Class: $(CLASS)
-	@echo Preset: $(PRESET)
-	@echo Part: $(PART)
-	@echo Render for Print: $(RENDER_PRINT)
-	@echo Render Mode: $(RENDER_MODE)
-	mkdir -p $(dir $@) && \
-	$(OSBIN) $(OSOPTS) -o $@ \
-		$(RENDER_MODE) $(IMAGE_SIZE) --projection=p \
-		$(VIEWPORT) \
-		$(if $(PRESET),-p $(CLASS).json -P $(PRESET),) \
-		-D _RENDER=\"$(PART)\" \
-		-D _RENDER_PRINT=$(RENDER_PRINT)\
-		$(CLASS).scad
-
-%.stl.mp4: %.stl
-	$(eval PART=$(basename $(notdir $@)))
-	$(eval FRAMES_DIR=$(basename $@)_frames)
-	$(eval STL=$(notdir $(basename $@)))
-	mkdir -p $(FRAMES_DIR)
-	echo "rotate([0,0,360*\$$t]) import(\"../$(STL)\");" > $(FRAMES_DIR)/Spin.scad
-	for i in `seq 0 $(SLOW_FRAME_COUNT)`; do \
-	  echo openscad --imgsize=1920,1080 --quiet \
-		  -o `printf '$(FRAMES_DIR)/frame%05d.png' $$i` \
-		  -D \'\$$t=1/$(SLOW_FRAME_COUNT)*$$i\' \
-			--projection=p --camera=0,500,600,0,0,100 \
-			$(FRAMES_DIR)/Spin.scad; \
-  done | nice parallel
-	nice ffmpeg -y -loglevel quiet \
-		-i "$(FRAMES_DIR)/frame%05d.png" -framerate 10 \
-		-s:v 640:360 -c:v libx264 -crf 20 -pix_fmt yuv420p \
-		"$@"
-	rm -rf $(FRAMES_DIR)
-
-%.mp4: %.scad
-	$(eval FRAMES_DIR=.frames/$(basename $@))
-	$(eval POV=$(call scad_pov,$<))
-	mkdir -p $(FRAMES_DIR)
-	for i in `seq 0 $(SLOW_FRAME_COUNT)`; do \
-	  echo openscad --imgsize=1920,1080 --quiet \
-		  -o `printf '$(FRAMES_DIR)/frame%05d.png' $$i` \
-		  -D \'\$$t=1/$(SLOW_FRAME_COUNT)*$$i\' \
-			--projection=p --camera=$(POV) \
-			$^; \
-  done | nice parallel
-	nice ffmpeg -y -loglevel quiet \
-		-i "$(FRAMES_DIR)/frame%05d.png" -framerate 10 \
-		-s:v 1920:1080 -c:v libx264 -crf 20 -pix_fmt yuv420p \
-		"$@"
-
-# Downsampled for HTMLDoc PDF
-%/Assembly_htmldoc.jpg: %/Assembly.png
-	convert -trim \
-	  -resize 1920x900 \
-		-background "#fafafa" \
-		-gravity center -extent 1920x900 \
-		$^ -quality 90 $@
-
-%.jpg: %.png
-	convert $(basename $@).png -quality 90 $@
-
-%_alpha.png: %.png
-	convert -fuzz 4% -transparent "#fafafa" $< $@
-
-%_thumb.jpg: %.png
-	@# HACK: The dep isn't working and I haven't been able to sort out why
-	$(MAKE) $^ && \
-	convert -thumbnail 450 $< $@
-
-%.html: %.md
-	$(MDBIN) $(basename $@).md \
-	  | sed 's/<table>/<table border="1">/g' \
-	  | sed 's/.md/.html/' > $@
 
 clean: FORCE clean-dir
 	for DIR in $(SUBDIRS); do \

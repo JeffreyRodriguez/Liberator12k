@@ -1,0 +1,11 @@
+
+.Frame Bill of Materials (Metric)
+| Purpose                   | Part                             | Quantity |
+|---------------------------|----------------------------------|----------|
+| Frame Bolt                | **DIN931** M12x260 Hex Head Bolt | 2        |
+| Frame Nut                 | **DIN934** M12 Hex Nut           | 4        |
+| Rail Nuts                 | M4 Heatset Nut (TODO: Long)      | 2        |
+| Tension Bolt              | **DIN795** M4x305 Threaded Rod   | 4        |
+| Tension Bolt Nut          | M4 Heatset Nut (**M4xD7xL8**)    | 4        |
+| Tension Bolt Washer       | **DIN125** M4 Washer             | 4        |
+| Tension Bolt Acorn Nut    | **DIN1587** M4 Domed Hex Cap Nut | 4        |

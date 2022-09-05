@@ -1,0 +1,7 @@
+.Stock Bill of Materials (Metric)
+| Purpose                   | Part                               | Quantity |
+|---------------------------|----------------------------------- |----------|
+| Stock Pin                 | None                               | 1        |
+| Stock Pin Retaining Pin   | 2.5x50mm Nail                      | 1        |
+| Stock Backplate Nut       | M6 Heatset Nut (**M6xD9.5xL6**)    | 2        |
+| Stock Buttpad Bolt        | **DIN7991** M6x90 Countersunk Bolt | 2        |

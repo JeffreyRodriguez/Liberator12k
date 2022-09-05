@@ -1,0 +1,47 @@
+<<<
+=== Large Frame Receiver
+
+.Large Frame Receiver
+image::../src/Receiver/.assembly/Frame.png[]
+
+This is the core of the gun. In the United States it's the receiver.
+Legally-speaking it's a gun. If you need to dispose of it, burn it to ash.
+Don't make one for a stranger - that's a Fed, especially if they're offering
+money in exchange. Screenshot it and ridicule them online.
+
+The *Large Frame Receiver* is the same as the standard *Receiver*, but with
+two large (1/2") bolts support heavy forends.
+
+<<<
+.Frame Prints
+STL Files Location: `Receiver/Frame/Prints/`
+
+| Frame_Receiver |
+|-|
+|![](Frame/Prints/Frame_Receiver_thumb.jpg)|
+<br/>
+
+include::Frame_BOM_Inch.adoc[]
+
+<<<
+==== Post-Processing
+
+===== Install Tension Nuts
+These four threaded inserts are installed in the front of the receiver.
+
+Insert a threaded rod through the receiver from the rear and screw on the
+threaded insert while you install the threaded inserts, this will help keep
+them aligned.
+
+===== Install Rail Nuts
+Insert a threaded rod through the receiver from the top and screw on the
+threaded insert while you install the insert.
+
+===== Epoxy Acorn Nuts
+The acorn nuts need to be permanently secured to the threaded rods
+so you can actually unscrew them from the back.
+Red threadlocker or 2-part epoxy are both good options.
+
+===== File/Sand Internal Surfaces
+The smoother these surfaces, the nicer the gun will run. Mostly optional, print
+at 0.1mm for better overall quality.

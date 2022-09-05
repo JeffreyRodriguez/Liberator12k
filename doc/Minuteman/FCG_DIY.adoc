@@ -1,0 +1,37 @@
+
+## DIY Hardware
+If you don't want to purchase a kit from the
+[Liberator12k.com Store](https://liberator12k.com/store/),
+you can make your own. It won't be faster or cheaper, but all the information
+you need is freely available and the hardware is available at your local
+hardware store or metal supplier.
+
+### Sear
+ * 1/8" hole 5/16" from the bottom for the sear cross-pin
+ * This hole should be drilled under-size and reamed if possible.
+ * Filing any burrs is Good Enough
+
+### Sear Cross-Pin
+ * 3/32" Music Wire
+ * 1/2" long
+ * Ends should be slightly rounded and smooth.
+
+### Firing Pin
+Prepare the firing pin by cutting the 6D box nail to 1.535" in length. Cut generously, file flush and gently round the
+outer edge of the end. Sand smooth with 220 grit or finer.
+
+
+### Recoil Plate
+| Required Tool    | Metric Alternative |
+|------------------|--------------------|
+| #8-32 Tap        | M4 Tap             |
+| #29 Drill Bit    | 3.5mm Drill Bit    |
+| 5/16" Drill Bit  | 8mm Drill Bit      |
+| 2.5mm Drill Bit  | N/A                |
+
+#### Instructions
+The full How To is incomplete, but at a high level:
+
+1. Print a Recoil Plate template (TODO).
+2. Mark the holes with a punch and drill to specified size.
+3. Tap the holes for the tension rods and FCG Housing holes with #8-32.

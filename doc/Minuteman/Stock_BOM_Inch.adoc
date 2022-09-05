@@ -1,0 +1,21 @@
+.Stock Bill of Materials (Inch)
+[cols="1,1,1"]
+|===
+|Purpose|Part|Qty
+
+|Stock Pin
+|Universal Clevis Pin 1/4x2"
+|1
+
+|Stock Pin Retaining Pin
+|6Dx2" **Box** Nail
+|1
+
+|Stock Backplate Nut
+|1/4-20 Heatset Nut (Short)
+|2
+
+|Stock Buttpad Bolt
+|1/4-20x3-1/2" Flat Head Screw
+|2
+|===

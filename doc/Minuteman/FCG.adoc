@@ -1,0 +1,65 @@
+<<<
+=== Fire Control Group
+
+.Fire Control Group
+image::../src/Receiver/.assembly/FCG.png[]
+
+A fire control group for fixed recoil plate designs. Trigger is based on
+https://www.youtube.com/channel/UCNR0HGw5airGKkiPcquS0TA[The Unknown Cat's]
+design.
+
+The sear is a square rod with a cross-pin near the bottom.
+An inclined slot in each side of the trigger forces the cross-pin and
+sear downward when the trigger is pulled. A central support tab
+keeps the sear and its return spring (not pictured) oriented vertically.
+
+A compression spring located below the sear pushes the sear into the upward
+position, driving the trigger forward via the sear pin.
+
+A linear hammer strikes the firing pin, which protrudes through the recoil plate.
+
+NOTE: STL Files Location: `Receiver/FCG/Prints/`
+
+.FCG Printed Parts
+[cols="^1,^1,^1,^1"]
+|===
+|image:../src/Receiver/.stl/FCG/Prints/FCG_Housing.png[] FCG_Housing
+|image:../src/Receiver/.stl/FCG/Prints/FCG_FiringPinCollar.png[] FCG_FiringPinCollar
+|image:../src/Receiver/.stl/FCG/Prints/FCG_ChargingHandle.png[] FCG_ChargingHandle
+|image:../src/Receiver/.stl/FCG/Prints/FCG_Disconnector.png[] FCG_Disconnector
+
+|image:../src/Receiver/.stl/FCG/Prints/FCG_Hammer.png[] FCG_Hammer
+|image:../src/Receiver/.stl/FCG/Prints/FCG_HammerTail.png[] FCG_HammerTail
+|image:../src/Receiver/.stl/FCG/Prints/FCG_TriggerMiddle.png[] FCG_TriggerMiddle
+|image:../src/Receiver/.stl/FCG/Prints/FCG_Trigger.png[] FCG_Trigger
+|===
+
+WARNING: Disregard the disconnector for single-shot designs.
+
+<<<
+==== Post-Processing
+
+===== Trigger Subassembly
+
+. Insert the _TriggerMiddle_ into the _Trigger_. It should slide freely.
+. Drop the _Sear Return Spring_ into the _TriggerMiddle_.
+. Insert the _Sear_ and compress the _Sear Return Spring_.
+. Insert _SearPin_ through the inclined slot in the _Trigger_, and through the _Sear_.
+. Verify the trigger moves freely.
+. Lube the cross-pin hole, both sides of the slot, front and rear of the sear.
+
+===== Hammer Subassembly
+. Heatset the _Hammer Nut_ into the rear of the _Hammer_.
+. Install the _Hammer Bolt_.
+. Slip the _Hammer Bolt Sleeve_ over the extended portion.
+. Add the _Hammer Spring_ and _Hammer Tail_.
+. Install the _Hammer Cap Nut_ with threadlocker.
+
+===== Firing Pin Subassembly
+. Ream the _Firing Pin Collar* hole to 2.5mm.
+. Install the _Firing Pin_ into the round end of the _FiringPinCollar_.
+
+===== Charging Handle
+. Heatset the _Charging Handle Nut_ into the _ChagingHandle_.
+. Chuck the _Charging Handle Bolt_ in a drill and file/sand the bolt cap smooth.
+. Install the _Charging Handle Bolt_ into the bottom of the _ChargingHandle_.

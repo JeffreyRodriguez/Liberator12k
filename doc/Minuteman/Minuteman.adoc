@@ -1,0 +1,192 @@
+== The "Minuteman" Receiver
+
+.Minuteman Receiver Assembly
+image::../.views/Preview_Minuteman.png[]
+
+To get very technical this is a *Large Frame Receiver with a Stock*.
+That's a mouthful, so I call it the
+https://en.wikipedia.org/wiki/Minutemen[Minuteman].
+It works with most of the designs in the project.
+There are other ways to configure the receiver,
+but we'll save that for a future build.
+
+=== Components
+Each of the following components has its own subsection.
+Familiarize yourself with figures 1-5, this is your map.
+
+You can complete these components in any order and assemble them all at the end.
+The trigger must be assembled before the lower, since it's "captured".
+
+* Large Framed Receiver
+* Fire Control Group (FCG)
+* Lower
+* Stock
+
+.Large Framed Receiver
+image::../src/Receiver/.assembly/Frame.png[]
+This is "the gun" in the US. I can sell you everything **except** one of these.
+It's just one marathon print - almost two days at 0.4mm or just 20h at 1.0mm.
+
+.Fire Control Group
+image::../src/Receiver/.assembly/FCG.png[]
+Abbreviated "FCG" - the most involved of all the components.
+Literally all the moving parts are here.
+
+.Lower
+image::../src/Receiver/.assembly/Lower.png[]
+The grip for the gun, also holds the trigger from the FCG.
+
+.Stock
+image::../src/Receiver/.assembly/Stock.png[]
+A spacer and buttpad for your receiver. Another of the major prints that will
+benefit greatly from a large nozzle.
+
+<<<
+=== Preparing to Print
+
+Pick Your Colors. Two-tone is canon - that means it's official.
+
+==== Spool 1: Base Color
+We'll be using a full 1kg spool for the base color. Most of the "big" parts will
+be printed with this filament.
+
+==== Spool 2: Accent Color
+The accent prints will take about 500g of plastic, or half a typical spool.
+Accent parts are often smaller and bear some kind of load, so if you want to
+splurge - do it here.
+
+==== Spool 3: TPU For Your Buttpad
+You can print the buttpad in any filament, but it may be more punishing than
+necessary. TPU will absorb some recoil.
+
+==== Configure Cura and Preheat
+Configure Cura according to the <<General Printing Guidelines>> in the
+Introduction and slice each part for printing.
+
+The models are already in the proper orientation for printing, so leave the
+bottom side down.
+You are free to position them on the build plate however you like.
+
+Printing one part at a time will produce higher quality prints,
+but it will take longer.
+
+<<<
+=== Prints and BOM
+[IMPORTANT]
+.FCG Print Settings
+====
+* Infill: 100%
+* Layer Height: 0.1mm
+====
+
+.Minuteman Printed Parts
+[cols="1,2,1,1"]
+|===
+|Color|Part|Filament|Time
+
+|Accent
+|FCG_FiringPinCollar
+|1g
+|0h48m
+
+|Accent
+|FCG_Trigger
+|14g
+|1h55m
+
+|Accent
+|FCG_Housing
+|16g
+|2h12m
+
+|Accent
+|FCG_Disconnector
+|4g
+|29m
+
+|Accent
+|FCG_Hammer
+|34g
+|4h37m
+
+|Accent
+|FCG_HammerTail
+|13g
+|1h38m
+
+|Accent
+|FCG_TriggerMiddle
+|11g
+|1h23m
+
+|Accent
+|FCG_ChargingHandle
+|34g
+|4h07m
+
+|Accent
+|Lower_MountRear
+|23g
+|2h21m
+
+|Accent
+|Lower_MountFront
+|22g
+|2h09m
+
+|Accent
+|Lower_Middle
+|68g
+|5h20m
+
+|Base
+|Lower_Left
+|66g
+|5h52m
+
+|Base
+|Lower_Right
+|66g
+|5h52m
+
+|Base
+|Frame_Receiver
+|272g
+|1d18h01m
+
+|Base
+|Stock
+|243g
+|1d08h52
+
+|Base
+|Stock_Backplate
+|95g
+|12h05m
+
+|TPU
+|Stock_Buttpad
+|181g
+|19h31m
+
+4+|**Totals**
+
+2+|Base Color
+|?g
+|?d?h?m
+
+2+|Accent Color
+|?g
+|?d?h?m
+
+|===
+
+include::BOM_Inch.adoc[]
+
+include::FCG.adoc[]
+
+include::Frame.adoc[]
+
+include::Stock.adoc[]
+
+include::Lower.adoc[]

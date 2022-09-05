@@ -1,0 +1,20 @@
+.Lower Bill of Materials (Metric)
+|Purpose|Part|Quantity
+
+|Lower Nut
+|M4 Heatset Nut (**M4xD7xL5**)
+|5
+
+|Lower Bolt
+|**DIN7991** M4x35 A2/A4 Countersunk Bolt
+|5
+
+|Lower Pin
+|None
+|1
+
+|Lower Pin Retaining Pin
+|2.5x50mm Nail
+|1
+|===
+

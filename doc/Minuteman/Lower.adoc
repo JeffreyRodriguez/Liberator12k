@@ -1,0 +1,60 @@
+=== Lower Receiver
+
+.Lower Receiver
+image::../src/Receiver/.assembly/Lower.png[]
+
+Provides a grip, trigger guard, means of attachment via T-lugs.
+The printed parts are sandwiched and bolted together.
+The mount is sandwiched in with the lower side plates.
+The T-lug tabs secure the mount into the lower.
+The lower mount couples the lower to the receiver.
+
+<<<
+==== Prints and BOM
+
+NOTE: STL Files Location: `Receiver/Lower/Prints/`
+
+.Lower Receiver Printed Parts
+[cols="^1,^1,^1"]
+|===
+
+|image:../src/Receiver/.stl/Lower/Prints/Lower_Left.png[] Lower_Left
+|image:../src/Receiver/.stl/Lower/Prints/Lower_Middle.png[] Lower_Middle
+|image:../src/Receiver/.stl/Lower/Prints/Lower_Right.png[] Lower_Right
+
+|image:../src/Receiver/.stl/Lower/Prints/Lower_MountFront.png[] Lower_MountFront
+|image:../src/Receiver/.stl/Lower/Prints/Lower_MountRear.png[] Lower_MountRear
+|
+|===
+
+include::Lower_BOM_Inch.adoc[]
+
+<<<
+==== Post-Processing
+
+===== Install Heatset Nuts
+Install the heatset nuts into Lower_Left.
+
+===== Pin Retainer
+Locate the small hole in the Lower_MountRear.
+Insert Lower Pin Retaining Pin, press it into the mount until flush.
+
+===== Subassembly
+Requires the trigger from the [Fire Control Group](../FCG.md).
+
+. Lay Lower_Left flat-side up.
+. Install Lower_MountFront - the extended portion points left.
+. Install Lower_MountRear - the extended portion points left.
+. Tuck the trigger up between the two LowerMounts.
+. Add Lower_Middle to the stack.
+. Add Lower_Right, it should seat on the LowerMount tabs.
+. Gently compress the stack by hand.
+
+If there are large gaps in the stack, light tapping with a rubber mallet should
+close them. If you need a lot of force, there's probably something binding.
+Figure out what's bulging, and file it down. Needle files are great for this.
+
+==== Technical Notes
+
+===== Trigger Pull
+File, sand smooth, and lube any friction surfaces that are dragging.

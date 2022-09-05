@@ -1,0 +1,94 @@
+=== Liberator12k.com Store
+The https://liberator12k.com/store/[Liberator12k.com Store] has complete
+hardware kits. The hardware can be sourced and fabricated yourself if you have
+the equipment.
+
+I'm asking the community to support the project by buying directly, or from
+official vendors - check the website.
+It's all public domain, so I'm counting on you to do the "encouraging".
+
+Manufacturing is not my field and my time would be better spent in R&D.
+Contact me via email mailto:jeff@liberator12k.com[jeff@liberator12k.com]
+for vendor royalty agreements.
+
+== Community
+Chat with me and other builders!
+*#liberator12k:matrix.org* on https://element.io[Element]
+
+=== Supporting the Project
+This has been an ambitious one-man pro-bono operation from the start.
+The project has cost tens of thousands of dollars and years of my time.
+Now we have a modular weapons platform, ammunition, and a suite of ECM tooling.
+I dedicate it to the public domain to secure self-defense for everyone, forever.
+
+I didn't start this to get rich, but I wouldn't mind help.
+Research and Development (R&D) doesn't pay the bills, it only comes with them.
+Making new guns and ECM machines full-time is the dream - so if you want to show
+your appreciation and help continue this work there are a few ways you can help.
+
+==== Donations
+The https://liberator12k.com/donate.html[Donation page] on the website
+has info on how to donate with crypto and more.
+
+I also have a https://patreon.com/liberator12k[Patreon].
+
+==== Code Contributions
+The first code contributions were received June 2021, after the Alpha release.
+We were able to get the Metric version of the CAFE12 setup as a result.
+Code contributions are priceless, they just need to be public domain/Unlicensed.
+Bug reports and improvement requests on GitHub are also a great way to help
+out if you're not comfortable in OpenSCAD/Bash/Web.
+
+=== Thank YOU
+Prints are the greatest encouragement of all.
+
+I also love https://liberator12k.com/social.html[likes, shares, and comments]
+and even hatred - if you're a hater.
+It's fun doing this, but it's also nice to know other people appreciate it.
+Thank you so much for joining me on this journey.
+
+=== International Builders
+This is a US-based operation. I won't knowingly ship internationally or to a
+forwarder either, sorry!
+
+There's a metric version but it's less well documented and the STLs
+are not included in the release. You can render them, but it's a bit hacky
+and manual.
+
+Join the chat, there's other builders around the world who can help out.
+
+== How to Laugh at Danger
+How do you laugh at danger? From behind a solid barrier - don't be stupid.
+Everyone's a tough guy until they take a piece of shrapnel to the beanbag.
+
+=== Make at Your Own Risk
+Any experienced printer can complete this build if they buy a kit from the
+https://liberator12k.com/store/[Liberator12k.com Store].
+I have done my best to make sure the designs included here are safe to the user
+and bystanders, but ultimately you're the one building your own gun at your own
+risk. Pre-release designs *may not be safe*.
+
+=== Bystander Care
+It's one thing if you hurt yourself, it's another if you hurt someone else.
+Keep bystanders behind your back and maintain a safe "180 degree" field of fire.
+Insist on eye and ear protection for bystanders.
+
+=== Basic Firearms Safety
+. All guns are always loaded.
+. Never point the gun at anything you are not willing to destroy.
+. Keep your finger off the trigger until your sights are on target and you have made the decision to shoot.
+. Be sure of your target and what is beyond it.
+
+=== DIY Gun Safety
+DIY guns require special precautions and procedures that
+*are not fully documented here*.
+
+* Use a secure test rig to hold the gun pointed in a **safe direction**.
+* Stand behind a bulletproof barrier, such as several feet of dirt, concrete blocks, or very large tree.
+* Ensure there is no direct path from the gun to anyone or anything of value.
+* Use a long string to pull the trigger from behind cover.
+* Test with birdshot, then buckshot, then slugs.
+
+=== Gut Check
+The power to create weapons and project lethal force hundreds of yards
+is now in your hands, use it responsibly.

@@ -1,0 +1,21 @@
+.Lower Bill of Materials (Inch)
+[cols="1,1,1"]
+|===
+|Purpose|Part|Quantity
+
+|Lower Nut
+|#8-32 Heatset Nut (Short)
+|5
+
+|Lower Bolt
+|#8-32x1.25 SS Flat-Head Bolt
+|5
+
+|Lower Pin
+|Universal Clevis Pin 1/4x2"
+|1
+
+|Lower Pin Retaining Pin
+|6Dx2" Box Nail
+|1
+|===

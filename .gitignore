@@ -9,7 +9,8 @@
 *.zip
 *.parts
 *.dep
-Version.md
+*.pdf
+Version.adoc
 animation.gif
 animation.mp4
 changelog.txt
@@ -18,5 +19,5 @@ Manual.pdf
 Liberator12k-source/
 Legal/
 Media/
-Toys/
+src/Toys/
 PRIVATE/

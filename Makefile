@@ -1,39 +1,22 @@
 include Makefile.in
 
-MANUAL_HTML:=$(shell tail -n +3 Manual.book)
-MANUAL_IMAGES=$(wildcard .manual/*.jpg) \
-              $(shell find Receiver -name \*.jpg)
-
 Assembly = Receiver/Assembly Forend/Assembly
 Components = Frame Receiver Stock Lower FCG
 
-Minuteman = $(foreach Component,$(Components),$(wildcard Receiver/$(Component)/Prints/*.stl)) \
-                $(foreach Component,$(Components),$(wildcard Receiver/$(Component)/Fixtures/*.stl)) \
-                $(foreach Component,$(Components),$(wildcard Receiver/$(Component)/Projections/))
+Minuteman = $(foreach Component,$(Components),$(wildcard src/Receiver/$(Component)/Prints/*.stl)) \
+                $(foreach Component,$(Components),$(wildcard src/Receiver/$(Component)/Fixtures/*.stl)) \
+                $(foreach Component,$(Components),$(wildcard src/Receiver/$(Component)/Projections/))
 
-Forends = $(filter-out Forend/Assembly/%, \
-            $(shell find Forend/ -ipath '*_*/Prints/*.stl' ) \
-						$(shell find Forend/ -ipath '*_*/Fixtures/*.stl' ) \
-					  $(shell find Forend/ -ipath '*_*/Projections/*.dxf'))
+Forends = $(filter-out src/Forend/Assembly/%, \
+            $(shell find src/Forend/ -ipath '*_*/Prints/*.stl' ) \
+						$(shell find src/Forend/ -ipath '*_*/Fixtures/*.stl' ) \
+					  $(shell find src/Forend/ -ipath '*_*/Projections/*.dxf'))
 
-ZIP_TARGETS:=changelog.txt Manual.pdf Liberator12k-source/
+ZIP_TARGETS:=changelog.txt Liberator12k-source/
 TARGETS:=$(ZIP_TARGETS) Liberator12k.zip Liberator12k-source.zip Liberator12k-assembly.zip
 
 changelog.txt:
 	git log --oneline > changelog.txt
-
-Version.md:
-	@echo "---" > $@ && \
-	echo "title: #Liberator12k Manual" >> $@ && \
-	echo "author: Jeff Rodriguez" >> $@ && \
-	echo "copyright: Unlicensed" >> $@ && \
-	echo "version: $(GIT_DATE) $(GIT_VERSION)" >> $@ && \
-	echo "language: en-US" >> $@ && \
-	echo "subject: How-To" >> $@ && \
-	echo "---" >> $@
-
-Manual.pdf: $(SUBDIRS) Version.md $(MANUAL_HTML) $(MANUAL_IMAGES)
-	htmldoc --batch Manual.book
 
 Liberator12k-source/: .git
 	rm -rf $@ && \
@@ -54,7 +37,11 @@ dist: $(TARGETS) $(ZIP_TARGETS)
 	mkdir -p dist/
 	cp -r *.zip $@/
 
+.views: Views.mk
+	mkdir -p $@
+	$(MAKE) -f Views.mk all
+
 clean-dir:
-	rm -rf $(MARKDOWN_HTML) $(TARGETS) Version.md changelog.txt Liberator12k-source/ dist/
+	rm -rf $(TARGETS) changelog.txt Liberator12k-source/ dist/
 
 all: $(SUBDIRS) $(TARGETS) dist
