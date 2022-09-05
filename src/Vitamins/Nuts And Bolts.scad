@@ -190,6 +190,19 @@ module NutHex(spec,
     }
 };
 
+module NutAcorn(spec,
+              nutRadiusExtra=0, nutHeightExtra=0, nutBackset=0,
+              clearance=0) {
+    translate([0,0,-(clearance?nutHeightExtra:0)+nutBackset]) {
+      cylinder(r=NutHexRadius(spec, clearance)+(clearance?nutRadiusExtra:0),
+               h=NutHexHeight(spec)+(clearance?nutHeightExtra:0), $fn=6);
+      
+      translate([0,0,NutHexHeight(spec)])
+      sphere(r=NutHexRadius(spec, clearance)*0.8);
+    }
+};
+
+!NutAcorn(BoltSpec("1/4\"-20"));
 
 module NutHeatset(spec, teardrop=false, teardropAngle=0, extraLength=0) {
   if (teardrop) {

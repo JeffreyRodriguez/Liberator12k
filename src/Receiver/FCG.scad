@@ -38,9 +38,9 @@ _SHOW_TRIGGER = true;
 _SHOW_TRIGGER_MIDDLE = true;
 _SHOW_SEAR = true;
 _SHOW_FIRE_CONTROL_HOUSING = true;
-_SHOW_FCG_Disconnector = true;
-_SHOW_FCG_DISCONNECTOR_HARDWARE = true;
-_SHOW_FCG_Hammer = true;
+_SHOW_DISCONNECTOR = true;
+_SHOW_DISCONNECTOR_HARDWARE = true;
+_SHOW_HAMMER = true;
 _SHOW_CHARGING_HANDLE = true;
 _SHOW_HAMMER_TAIL = true;
 _SHOW_ACTION_ROD = false;
@@ -351,7 +351,7 @@ module FCG_DisconnectorSpring(cutaway=false, cutter=false, clearance=FCG_Disconn
              FCG_DisconnectorPivotZ-0.125-0.125])
   Spring(spring=DisconnectorSpringSpec(), compressed=true, cutter=cutter, clearance=clearance);
 }
-module FCG_HammerBolt(clearance=FCG_Hammer_BOLT_CLEARANCE, head=HAMMER_BOLT_HEAD, nut=HAMMER_BOLT_NUT, cutter=false, cutaway=false) {
+module FCG_HammerBolt(clearance=FCG_Hammer_BOLT_CLEARANCE, head=HAMMER_BOLT_HEAD, nut=HAMMER_BOLT_NUT, boltLength=4.5, cutter=false, cutaway=false) {
   boltHeadAdjustment = head == "hex"    ? BoltHexHeight(FCG_HammerBolt())
                      : head == "socket" ? BoltSocketCapHeight(FCG_HammerBolt())
                      : 0;
@@ -360,14 +360,28 @@ module FCG_HammerBolt(clearance=FCG_Hammer_BOLT_CLEARANCE, head=HAMMER_BOLT_HEAD
              -boltHeadAdjustment,0,0])
   rotate([0,90,0])
   rotate(30)
-  NutAndBolt(bolt=FCG_HammerBolt(), boltLength=4.5+ManifoldGap(2),
+  NutAndBolt(bolt=FCG_HammerBolt(), boltLength=boltLength+ManifoldGap(2),
              head=head, nut=nut,
              nutBackset=3.25+boltHeadAdjustment,
              nutHeightExtra=(cutter?1:0),
              capOrientation=true,
              clearance=(cutter?clearance:0),
              doRender=!cutter);
+  
+  translate([FCG_HammerCockedX-boltLength+NutHexHeight(FCG_HammerBolt())+ManifoldGap()
+             -boltHeadAdjustment,0,0])
+  rotate([0,-90,0])
+  color("Silver")
+  RenderIf(!cutter)
+  NutAcorn(spec=FCG_HammerBolt());
 }
+module FCG_HammerBoltSleeve(alpha=1) {
+  translate([FCG_HammerCockedX-1.25,0,0])
+  rotate([0,-90,0])
+  color("Goldenrod", alpha)
+  cylinder(r=9/32/2, h=3);
+}
+
 module FCG_HammerSpring() {
   color("Silver")
   translate([FCG_HammerCockedX-FCG_HammerLength + 11/16,0,0])
@@ -1295,7 +1309,7 @@ module SimpleFireControlAssembly(recoilPlateLength=RecoilPlateLength(), hardware
   disconnectStart = 0.8;
   disconnectLetdown = 0.2;
   connectStart = 0.99;
-
+  
   FCG_DisconnectorTripAF = SubAnimate(ANIMATION_STEP_CHARGE, start=0.0, end=0.2)
                      - SubAnimate(ANIMATION_STEP_CHARGER_RESET,
                                   start=connectStart);
@@ -1331,17 +1345,17 @@ module SimpleFireControlAssembly(recoilPlateLength=RecoilPlateLength(), hardware
     children();
   }
 
-  if (hardware && _SHOW_FCG_DISCONNECTOR_HARDWARE)
+  if (hardware && _SHOW_DISCONNECTOR_HARDWARE)
   FCG_DisconnectorSpring();
 
-  if (hardware && _SHOW_FCG_DISCONNECTOR_HARDWARE)
+  if (hardware && _SHOW_DISCONNECTOR_HARDWARE)
   FCG_DisconnectorPivotPin();
 
-  if (prints && _SHOW_FCG_Disconnector)
+  if (prints && _SHOW_DISCONNECTOR)
   FCG_Disconnector(pivotFactor=FCG_DisconnectorAF, alpha=alpha);
 
   // Linear FCG_Hammer
-  if (_SHOW_FCG_Hammer) {
+  if (_SHOW_HAMMER) {
 
     translate([Animate(ANIMATION_STEP_FIRE)*FCG_HammerTravelX,0,0])
     translate([SubAnimate(ANIMATION_STEP_CHARGE, start=FCG_HammerChargeStart)*-(FCG_HammerTravelX+FCG_HammerOvertravelX),0,0])
@@ -1352,6 +1366,9 @@ module SimpleFireControlAssembly(recoilPlateLength=RecoilPlateLength(), hardware
 
       if (hardware)
       FCG_HammerSpring();
+      
+      if (hardware)
+      FCG_HammerBoltSleeve();
 
       if (prints)
       FCG_Hammer(cutaway=_CUTAWAY_FCG_Hammer, alpha=min(alpha,_ALPHA_FCG_Hammer));
