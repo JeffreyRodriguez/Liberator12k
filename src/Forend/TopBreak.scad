@@ -44,6 +44,7 @@ _RENDER_PRINT = true;
 /* [Assembly] */
 _SHOW_PRINTS = true;
 _SHOW_HARDWARE = true;
+_SHOW_BRANDING = true;
 _SHOW_RECEIVER = true;
 _SHOW_RECEIVER_HARDWARE = false;
 _SHOW_STOCK = true;
@@ -56,6 +57,7 @@ _SHOW_TENSION_RODS = false;
 
 _SHOW_RECEIVER_FRONT = true;
 _SHOW_FOREND = true;
+_SHOW_FOREND_HARDWARE = true;
 _SHOW_COLLAR = true;
 _SHOW_COLLAR_HARDWARE = true;
 _SHOW_EXTRACTOR = true;
@@ -155,6 +157,8 @@ FOREND_BOLT_ANGLE_Z = -5;
 
 /* [Branding] */
 BRANDING_MODEL_NAME = "CAFE";
+
+// POV 200,1500,200,0,0,0
 
 // *********
 // * Setup *
@@ -578,8 +582,10 @@ module TopBreak_HandguardBolts(headType="flat", nutType="heatset", length=11.75,
 }
 
 module TopBreak_VerticalGripHardware(cutter=false) {
-  VerticalGripBolt(cutter=cutter, teardrop=cutter);
-  VerticalGripPin(cutter=cutter, teardrop=cutter);
+  translate([TopBreak_VerticalGripX(),0,-BarrelRadius()]) {
+    VerticalGripBolt(cutter=cutter, teardrop=cutter);
+    VerticalGripPin(cutter=cutter, teardrop=cutter);
+  }
 }
 
 // Printed Parts
@@ -638,6 +644,7 @@ module TopBreak_ReceiverFront(cutaway=false, alpha=1) {
 module TopBreak_Forend(clearance=0.005, doRender=true, cutaway=false, alpha=1) {
 
   // Branding text
+  if (_SHOW_BRANDING)
   color("DimGrey", alpha)
   RenderIf(doRender) Cutaway(cutaway) {
 
@@ -1354,7 +1361,7 @@ module TopBreak_Fixture_Extractor(top=false, bottom=false, clearance=Inches(0.00
 // Assembly
 module TopBreak_Assembly(receiverLength=12, pivotFactor=0, extractFactor=0, chargeFactor=0, lockFactor=0, fcg=_SHOW_FCG, stock=true, tailcap=false, cutaway=undef, alpha=1, hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS) {
 
-  if (hardware)
+  if (hardware && _SHOW_FOREND_HARDWARE)
   TopBreak_ForendBolts();
 
   if (fcg)
