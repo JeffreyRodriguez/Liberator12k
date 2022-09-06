@@ -6,13 +6,14 @@ ASSEMBLY_SRC=src/Assembly.scad
 
 $(VIEWS_DIR)/Preview_Minuteman.png: $(ASSEMBLY_SRC)
 	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_LOW) -o $@ \
-	  --projection=p --camera=200,800,200,-100,0,0 \
+	  --projection=p --camera=225,750,200,-100,0,-50 \
 	  $< && \
 	  convert -fuzz 4% -transparent "#fafafa" $@ $@
 $(VIEWS_DIR)/Preview_Frame.png: $(ASSEMBLY_SRC)
 	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_LOW) -o $@ \
-		--projection=p --camera=200,800,200,-100,0,0 \
+		--projection=p --camera=25,250,75,-75,0,0 \
 		-D _SHOW_RECEIVER=true \
+		-D _SHOW_HARDWARE=true \
 		-D _SHOW_FCG=false \
 		-D _SHOW_LOWER=false \
 		-D _SHOW_FOREND=false \
@@ -21,7 +22,7 @@ $(VIEWS_DIR)/Preview_Frame.png: $(ASSEMBLY_SRC)
 	  convert -fuzz 4% -transparent "#fafafa" $@ $@
 $(VIEWS_DIR)/Preview_Stock.png: $(ASSEMBLY_SRC)
 	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_LOW) -o $@ \
-		--projection=p --camera=-100,500,100,-250,0,0 \
+		--projection=p --camera=-175,400,75,-260,0,-25 \
 		-D _SHOW_RECEIVER=false \
 		-D _SHOW_FCG=false \
 		-D _SHOW_LOWER=false \
@@ -29,15 +30,19 @@ $(VIEWS_DIR)/Preview_Stock.png: $(ASSEMBLY_SRC)
 		-D _SHOW_STOCK=true \
 		$< && \
 	  convert -fuzz 4% -transparent "#fafafa" $@ $@
-$(VIEWS_DIR)/Preview_Lower.png: Lower.scad
+$(VIEWS_DIR)/Preview_Lower.png: $(ASSEMBLY_SRC)
 	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_LOW) -o $@ \
-		--projection=p --camera=$(call scad_pov,$<) \
-		$(call scad_view,$<) \
+		--projection=p --camera=25,300,25,-75,0,-65 \
+		-D _SHOW_RECEIVER=false \
+		-D _SHOW_FCG=false \
+		-D _SHOW_LOWER=true \
+		-D _SHOW_FOREND=false \
+		-D _SHOW_STOCK=false \
 		$< && \
 	  convert -fuzz 4% -transparent "#fafafa" $@ $@
 $(VIEWS_DIR)/Preview_FCG.png: $(ASSEMBLY_SRC)
 	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_LOW) -o $@ \
-		--projection=p --camera=100,400,200,-100,0,0 \
+		--projection=p --camera=-50,350,125,-75,0,-10 \
 		-D _SHOW_RECEIVER=false \
 		-D _SHOW_FCG=true \
 		-D _SHOW_LOWER=false \
@@ -111,8 +116,120 @@ $(VIEWS_DIR)/XRay_FCG.png: $(ASSEMBLY_SRC) src/Receiver/FCG.scad
 		-D _ALPHA_FCG_TRIGGER=0.1 \
 		-D _ALPHA_LOWER=0.2 \
 		-D _CUTAWAY_RECEIVER=0.1 \
-		-D _SHOW_LOWER_HARDWARE=true \
+		-D _SHOW_RECEIVER=false \
+		-D _SHOW_FCG=true \
+		-D _SHOW_LOWER=false \
+		-D _SHOW_FOREND=false \
+		-D _SHOW_STOCK=false \
 		-D _SHOW_RECOIL_PLATE_BOLTS=false \
+		$< && \
+	  convert -fuzz 4% -transparent "#fafafa" $@ $@
+
+$(VIEWS_DIR)/XRay_Trigger.png: src/Receiver/FCG.scad
+	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_LOW) -o $@ \
+		--projection=p --camera=0,200,50,-55,0,-35 \
+		-D _ALPHA_FCG_TRIGGER=0.3 \
+		-D _SHOW_RECEIVER=false \
+		-D _SHOW_STOCK=false \
+		-D _SHOW_LOWER=false \
+		-D _SHOW_FIRE_CONTROL_HOUSING=false \
+		-D _SHOW_FIRING_PIN=false \
+		-D _SHOW_HAMMER=false \
+		-D _SHOW_HAMMER_TAIL=false \
+		-D _SHOW_CHARGING_HANDLE=false \
+		-D _SHOW_DISCONNECTOR=false \
+		-D _SHOW_DISCONNECTOR_HARDWARE=false \
+		-D _SHOW_RECOIL_PLATE=false \
+		-D _SHOW_RECOIL_PLATE_BOLTS=false \
+		-D _SHOW_TRIGGER=true \
+		$< && \
+	  convert -fuzz 4% -transparent "#fafafa" $@ $@
+
+$(VIEWS_DIR)/XRay_Hammer.png: src/Receiver/FCG.scad
+	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_LOW) -o $@ \
+		--projection=p --camera=-60,200,50,-110,0,0 \
+		-D _ALPHA_FCG_TRIGGER=0.3 \
+		-D _SHOW_RECEIVER=false \
+		-D _SHOW_STOCK=false \
+		-D _SHOW_LOWER=false \
+		-D _SHOW_FIRE_CONTROL_HOUSING=false \
+		-D _SHOW_FIRING_PIN=false \
+		-D _SHOW_HAMMER=true \
+		-D _SHOW_HAMMER_TAIL=true \
+		-D _SHOW_CHARGING_HANDLE=false \
+		-D _SHOW_DISCONNECTOR=false \
+		-D _SHOW_DISCONNECTOR_HARDWARE=false \
+		-D _SHOW_RECOIL_PLATE=false \
+		-D _SHOW_RECOIL_PLATE_BOLTS=false \
+		-D _SHOW_SEAR=false \
+		-D _SHOW_TRIGGER=false \
+		-D _SHOW_TRIGGER_MIDDLE=false \
+		$< && \
+	  convert -fuzz 4% -transparent "#fafafa" $@ $@
+
+$(VIEWS_DIR)/XRay_FiringPin.png: src/Receiver/FCG.scad
+	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_LOW) -o $@ \
+		--projection=p --camera=10,75,25,-10,0,0 \
+		-D _ALPHA_FCG_TRIGGER=0.3 \
+		-D _SHOW_RECEIVER=false \
+		-D _SHOW_STOCK=false \
+		-D _SHOW_LOWER=false \
+		-D _SHOW_FIRE_CONTROL_HOUSING=false \
+		-D _SHOW_FIRING_PIN=true \
+		-D _SHOW_HAMMER=false \
+		-D _SHOW_HAMMER_TAIL=false \
+		-D _SHOW_CHARGING_HANDLE=false \
+		-D _SHOW_DISCONNECTOR=false \
+		-D _SHOW_DISCONNECTOR_HARDWARE=false \
+		-D _SHOW_RECOIL_PLATE=false \
+		-D _SHOW_RECOIL_PLATE_BOLTS=false \
+		-D _SHOW_SEAR=false \
+		-D _SHOW_TRIGGER=false \
+		-D _SHOW_TRIGGER_MIDDLE=false \
+		$< && \
+	  convert -fuzz 4% -transparent "#fafafa" $@ $@
+
+$(VIEWS_DIR)/XRay_ChargingHandle.png: src/Receiver/FCG.scad
+	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_LOW) -o $@ \
+		--projection=p --camera=-70,250,75,-80,0,25 \
+		-D _ALPHA_FCG_TRIGGER=0.3 \
+		-D _SHOW_RECEIVER=false \
+		-D _SHOW_STOCK=false \
+		-D _SHOW_LOWER=false \
+		-D _SHOW_FIRE_CONTROL_HOUSING=false \
+		-D _SHOW_FIRING_PIN=false \
+		-D _SHOW_HAMMER=false \
+		-D _SHOW_HAMMER_TAIL=false \
+		-D _SHOW_CHARGING_HANDLE=true \
+		-D _SHOW_DISCONNECTOR=false \
+		-D _SHOW_DISCONNECTOR_HARDWARE=false \
+		-D _SHOW_RECOIL_PLATE=false \
+		-D _SHOW_RECOIL_PLATE_BOLTS=false \
+		-D _SHOW_SEAR=false \
+		-D _SHOW_TRIGGER=false \
+		-D _SHOW_TRIGGER_MIDDLE=false \
+		$< && \
+	  convert -fuzz 4% -transparent "#fafafa" $@ $@
+
+$(VIEWS_DIR)/XRay_Frame.png: src/Receiver/Frame.scad
+	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_LOW) -o $@ \
+		--projection=p --camera=25,250,75,-75,0,0 \
+		-D _ALPHA_FRAME=0.3 \
+		-D _SHOW_RECEIVER=true \
+		-D _SHOW_FRAME_BOLTS=false \
+		-D _SHOW_BRANDING=false \
+		$< && \
+	  convert -fuzz 4% -transparent "#fafafa" $@ $@
+
+$(VIEWS_DIR)/XRay_Stock.png: src/Receiver/Stock.scad
+	$(OSBIN) $(OSOPTS) --preview --imgsize=$(OS_RES_LOW) -o $@ \
+		--projection=p --camera=-175,400,75,-260,0,-25 \
+		-D _ALPHA_STOCK=0.3 \
+		-D _ALPHA_STOCK_BACKPLATE=0.3 \
+		-D _ALPHA_BUTTPAD=0.3 \
+		-D _SHOW_RECEIVER=false \
+		-D _SHOW_STOCK_TAKEDOWN_PIN=false \
+		-D _SHOW_LOWER=false \
 		$< && \
 	  convert -fuzz 4% -transparent "#fafafa" $@ $@
 
@@ -133,7 +250,7 @@ $(VIEWS_DIR)/XRay_CAFE.png: $(ASSEMBLY_SRC)
 	  convert -fuzz 4% -transparent "#fafafa" $@ $@
 
 # Special previews, specific configurations
-Preview=Minuteman CAFE12 FP37 ZZR EVOLver
+Preview=Minuteman CAFE12 FP37 ZZR EVOLver FCG
 Preview_PNG=$(addprefix Preview_,$(addsuffix .png, $(Preview)))
 
 XRay=Minuteman CAFE

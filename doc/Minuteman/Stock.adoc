@@ -1,7 +1,8 @@
+<<<
 === Stock
 
 .Stock Assembly
-images::../src/Receiver/.stl/Stock.png[]
+image::../.views/Preview_Stock.png[]
 
 A stock and buttpad designed to fit the standard receiver.
 
@@ -24,26 +25,29 @@ NOTE: STL Files Location: `Receiver/Stock/Prints/`
 <<<
 include::Stock_BOM_Inch.adoc[]
 
-
 <<<
-=== Post-Processing
+==== Post-Processing
 
-==== Stock Backplate
-Insert the *Stock Pin Retaining Pin* into the back of the _Stock_Backplate_.
+.Stock X-Ray
+image::../.views/XRay_Stock.png[]
 
-==== Buttstock
-Insert the _Stock Buttpad Bolts_ through the _Stock_Buttpad_, and screw
-into the back of the _Stock_Backplate_.
+===== Stock Backplate
+. Heatset the _Stock Buttpad Nuts_ into the _Stock_Backplate_.
+. Insert the *Stock Pin Retaining Pin* into the back of the _Stock_Backplate_.
 
-=== Technical Notes
+===== Buttstock
+. Insert the _Stock Buttpad Bolts_ through the _Stock_Buttpad_
+. Assemble with the _Stock_Backplate_ and tighten bolts. Do not overtighten.
 
-==== Stock Pin
+==== Technical Notes
+
+===== Stock Pin
 The Universal Clevis Pin is simply an off-the-shelf item that works for the job.
 A better, purpose-made pin can be easily made: 2x1/4" round rod.
 Cut a small groove cut around the center to act as a detent for the
  *Stock Pin Retaining Pin*. This secures the pin in place.
 
-==== Stock Pin Retaining Pin
+===== Stock Pin Retaining Pin
 I've used 3/32" music wire, 6D box nails, 2.5mm stainless wire.
 It just needs to be about that size and about 2" long.
 

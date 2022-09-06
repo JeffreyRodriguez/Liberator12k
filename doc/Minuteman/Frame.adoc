@@ -2,7 +2,7 @@
 === Large Frame Receiver
 
 .Large Frame Receiver
-image::../src/Receiver/.assembly/Frame.png[]
+image::../.views/Preview_Frame.png[]
 
 This is the core of the gun. In the United States it's the receiver.
 Legally-speaking it's a gun. If you need to dispose of it, burn it to ash.
@@ -26,7 +26,11 @@ include::Frame_BOM_Inch.adoc[]
 <<<
 ==== Post-Processing
 
+.Frame Heatset Nuts
+image::../.views/XRay_Frame.png[]
+
 ===== Install Tension Nuts
+
 These four threaded inserts are installed in the front of the receiver.
 
 Insert a threaded rod through the receiver from the rear and screw on the
@@ -44,4 +48,4 @@ Red threadlocker or 2-part epoxy are both good options.
 
 ===== File/Sand Internal Surfaces
 The smoother these surfaces, the nicer the gun will run. Mostly optional, print
-at 0.1mm for better overall quality.
+at 0.1mm layer height for better overall quality.

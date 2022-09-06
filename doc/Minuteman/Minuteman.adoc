@@ -7,39 +7,18 @@ To get very technical this is a *Large Frame Receiver with a Stock*.
 That's a mouthful, so I call it the
 https://en.wikipedia.org/wiki/Minutemen[Minuteman].
 It works with most of the designs in the project.
-There are other ways to configure the receiver,
-but we'll save that for a future build.
 
-=== Components
-Each of the following components has its own subsection.
-Familiarize yourself with figures 1-5, this is your map.
+Each Minuteman component has its own subsection, print them in order.
 
-You can complete these components in any order and assemble them all at the end.
-The trigger must be assembled before the lower, since it's "captured".
+[cols="^1,^1"]
+|===
 
-* Large Framed Receiver
-* Fire Control Group (FCG)
-* Lower
-* Stock
+|image:../.views/Preview_FCG.png[] Fire Control Group (FCG)
+|image:../.views/Preview_Frame.png[] Large Frame Receiver
 
-.Large Framed Receiver
-image::../src/Receiver/.assembly/Frame.png[]
-This is "the gun" in the US. I can sell you everything **except** one of these.
-It's just one marathon print - almost two days at 0.4mm or just 20h at 1.0mm.
-
-.Fire Control Group
-image::../src/Receiver/.assembly/FCG.png[]
-Abbreviated "FCG" - the most involved of all the components.
-Literally all the moving parts are here.
-
-.Lower
-image::../src/Receiver/.assembly/Lower.png[]
-The grip for the gun, also holds the trigger from the FCG.
-
-.Stock
-image::../src/Receiver/.assembly/Stock.png[]
-A spacer and buttpad for your receiver. Another of the major prints that will
-benefit greatly from a large nozzle.
+|image:../.views/Preview_Lower.png[] Lower Receiver
+|image:../.views/Preview_Stock.png[] Stock
+|===
 
 <<<
 === Preparing to Print
@@ -72,6 +51,7 @@ but it will take longer.
 
 <<<
 === Prints and BOM
+
 [IMPORTANT]
 .FCG Print Settings
 ====

@@ -29,6 +29,7 @@ _SHOW_LOWER = true;
 _SHOW_STOCK = true;
 _SHOW_STOCK_BACKPLATE = true;
 _SHOW_STOCK_TAKEDOWN_PIN = true;
+_SHOW_STOCK_TAKEDOWN_PIN_RETAINER = true;
 _SHOW_BUTTPAD = true;
 _SHOW_BUTTPAD_BOLT = true;
 
@@ -112,8 +113,16 @@ module Stock_TakedownPinRetainer(cutter=false, clearance=0.005) {
 
   color("Silver") RenderIf(!cutter)
   translate([ButtpadX(), 0, Receiver_TakedownPinZ()-0.125])
-  rotate([0,90,0])
-  cylinder(r=(3/32/2)+clear, h=2);
+  rotate([0,90,0]) {
+    
+    // Pin
+    cylinder(r=(3/32/2)+clear, h=2);
+    
+    // Head
+    mirror([0,0,1])
+    cylinder(r=(0.3/2)+clear,
+             h=0.025);
+  }
 
   if (cutter)
   translate([StockMinX(), 0, Receiver_TakedownPinZ()-0.125])
@@ -338,10 +347,11 @@ module StockAssembly(hardware=true, prints=true, cutaway=undef, alpha=1) {
   if (hardware && _SHOW_BUTTPAD_BOLT)
   Stock_ButtpadBolt();
 
-  if (hardware && _SHOW_STOCK_TAKEDOWN_PIN) {
-    Stock_TakedownPin();
-    Stock_TakedownPinRetainer();
-  }
+  if (hardware && _SHOW_STOCK_TAKEDOWN_PIN)
+  Stock_TakedownPin();
+  
+  if (hardware && _SHOW_STOCK_TAKEDOWN_PIN_RETAINER)
+  Stock_TakedownPinRetainer();
 
   if (prints && _SHOW_STOCK_BACKPLATE)
   Stock_Backplate(alpha=min(alpha,_ALPHA_STOCK_BACKPLATE), cutaway=(cutaway == true || _CUTAWAY_STOCK_BACKPLATE));

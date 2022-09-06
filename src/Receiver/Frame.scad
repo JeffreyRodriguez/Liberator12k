@@ -28,6 +28,7 @@ _RENDER_PRINT = true;
 _SHOW_RECEIVER = true;
 _SHOW_RECEIVER_RODS = true;
 _SHOW_FRAME_BOLTS = true;
+_SHOW_BRANDING = true;
 
 _CUTAWAY_RECEIVER = false;
 
@@ -194,6 +195,7 @@ module Frame_Receiver(doRender=true, cutaway=false, alpha=1) {
   topCoverHeight = 1;
 
   // Branding text
+  if (_SHOW_BRANDING)
   color("DimGrey", alpha)
   RenderIf(doRender) Cutaway(cutaway)
   FlipMirror([-FrameReceiverLength()/2, (FrameWidth()/2), FrameBoltZ()])

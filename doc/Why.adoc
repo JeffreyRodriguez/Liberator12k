@@ -15,8 +15,8 @@ Let us trade stories, good times, food, jeans, and genes.
 Go in peace and prosper. Failing that - leave me alone or else.
 
 === Bigger Fish to Fry
-The great [democides](https://en.wikipedia.org/Democide) and
-[wars](https://en.wikipedia.org/wiki/List_of_wars_by_death_toll)
+The great https://en.wikipedia.org/Democide[democides] and
+https://en.wikipedia.org/wiki/List_of_wars_by_death_toll[wars]
 in living memory have demonstrated the need for individually held arms.
 
 If history repeats itself, complying might be the death of you.
@@ -41,7 +41,7 @@ Nazis used this explanation in the Nuremberg trials to excuse their murders.
 That person might be an upstanding patriot wearing your country's flag and
 enforcing the law - following lawful orders to murder you.
 
-See also: [Hannah Arendt](https://en.wikipedia.org/wiki/Hannah_Arendt)
+See also: https://en.wikipedia.org/wiki/Hannah_Arendt[Hannah Arendt]
 
 ===== Murder Machine
 I'm a software engineer, it's a lens through which I see the world.
@@ -64,7 +64,7 @@ The US Government gave them billions of dollars worth of equipment way better
 than this when it left Afghanistan.
 
 ==== What About Tanks and Nukes?
-Read up a bit on [Guerrilla Warfare](https://en.wikipedia.org/wiki/Guerrilla_warfare) tactics.
+Read up a bit on https://en.wikipedia.org/wiki/Guerrilla_warfare[Guerrilla Warfare] tactics.
 
 And 3D printed nukes.
 

@@ -1,7 +1,7 @@
 === Lower Receiver
 
 .Lower Receiver
-image::../src/Receiver/.assembly/Lower.png[]
+image::../.views/Preview_Lower.png[]
 
 Provides a grip, trigger guard, means of attachment via T-lugs.
 The printed parts are sandwiched and bolted together.
