@@ -39,12 +39,8 @@ image::../.views/XRay_Stock.png[]
 . Insert the _Stock Buttpad Bolts_ through the _Stock_Buttpad_
 . Assemble with the _Stock_Backplate_ and tighten bolts. Do not overtighten.
 
-==== Technical Notes
-
 ===== Stock Pin
-The Universal Clevis Pin is simply an off-the-shelf item that works for the job.
-A better, purpose-made pin can be easily made: 2x1/4" round rod.
-Cut a small groove cut around the center to act as a detent for the
+Cut a small groove cut around the center of the pin to act as a detent for the
  *Stock Pin Retaining Pin*. This secures the pin in place.
 
 ===== Stock Pin Retaining Pin
@@ -52,4 +48,4 @@ I've used 3/32" music wire, 6D box nails, 2.5mm stainless wire.
 It just needs to be about that size and about 2" long.
 
 Drill out the hole in the *Stock_Backplate* to size, and hammer in your pin.
-Add superglue to the last bit before you hammer it all the way in.
+Add superglue near the head before you hammer it all the way in.

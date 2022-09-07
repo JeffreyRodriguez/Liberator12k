@@ -12,7 +12,7 @@
 |5
 
 |Lower Pin
-|Universal Clevis Pin 1/4x2"
+|1/4x2" Steel Dowel Pin
 |1
 
 |Lower Pin Retaining Pin
