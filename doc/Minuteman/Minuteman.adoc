@@ -1,4 +1,4 @@
-== The "Minuteman" Receiver
+== "Minuteman" Receiver
 
 .Minuteman Receiver Assembly
 image::../.views/Preview_Minuteman.png[]

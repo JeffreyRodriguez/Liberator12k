@@ -11,7 +11,7 @@ Manufacturing is not my field and my time would be better spent in R&D.
 Contact me via email mailto:jeff@liberator12k.com[jeff@liberator12k.com]
 for vendor royalty agreements.
 
-== Community
+=== Community
 Chat with me and other builders!
 *#liberator12k:matrix.org* on https://element.io[Element]
 
@@ -39,7 +39,7 @@ Code contributions are priceless, they just need to be public domain/Unlicensed.
 Bug reports and improvement requests on GitHub are also a great way to help
 out if you're not comfortable in OpenSCAD/Bash/Web.
 
-=== Thank YOU
+==== Thank YOU
 Prints are the greatest encouragement of all.
 
 I also love https://liberator12k.com/social.html[likes, shares, and comments]

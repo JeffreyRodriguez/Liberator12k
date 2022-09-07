@@ -38,6 +38,7 @@ _SHOW_TRIGGER = true;
 _SHOW_TRIGGER_MIDDLE = true;
 _SHOW_SEAR = true;
 _SHOW_FIRE_CONTROL_HOUSING = true;
+_SHOW_HOUSING_BOLTS = true;
 _SHOW_DISCONNECTOR = true;
 _SHOW_DISCONNECTOR_HARDWARE = true;
 _SHOW_HAMMER = true;
@@ -464,12 +465,12 @@ module FiringPinSpring(cutter=false, clearance=0.005, cutaway=false) {
   );
 }
 module RecoilPlateBolts(bolt=RecoilPlateBolt(), boltLength=1.5, template=false, cutter=false, clearance=RECOIL_PLATE_BOLT_CLEARANCE) {
-  RecoilPlateCenterBolts(bolt=bolt, boltLength=boltLength,
+  HousingBolts(bolt=bolt, boltLength=boltLength,
                          template=template, cutter=cutter, clearance=clearance);
   RecoilPlateSideBolts(bolt=bolt, boltLength=boltLength,
                          template=template, cutter=cutter, clearance=clearance);
 }
-module RecoilPlateCenterBolts(bolt=RecoilPlateBolt(), boltLength=1.5, template=false, cutter=false, clearance=RECOIL_PLATE_BOLT_CLEARANCE) {
+module HousingBolts(bolt=RecoilPlateBolt(), boltLength=1.5, template=false, cutter=false, clearance=RECOIL_PLATE_BOLT_CLEARANCE) {
   bolt     = template ? BoltSpec("Template") : bolt;
   boltHead = template ? "none"               : "flat";
 
@@ -1391,7 +1392,10 @@ module SimpleFireControlAssembly(recoilPlateLength=RecoilPlateLength(), hardware
   }
 
   if (hardware && _SHOW_RECOIL_PLATE_BOLTS)
-  RecoilPlateBolts();
+  RecoilPlateSideBolts();
+  
+  if (hardware && _SHOW_HOUSING_BOLTS)
+  HousingBolts();
 
   if (hardware && recoilPlate)
   RecoilPlate(length=recoilPlateLength, contoured=FCG_RECOIL_PLATE_CONTOURED, cutaway=_CUTAWAY_RECOIL_PLATE, alpha=_ALPHA_RECOIL_PLATE);

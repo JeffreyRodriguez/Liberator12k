@@ -1,8 +1,14 @@
-== Why
+[appendix]
+== Why 3D Print Weapons
 It is the imperative of every living thing to defend itself.
 That means it's up to you to fight back when something tries to eat you.
+It's nobody else's responsibility, and even if it were - YOU are your own
+first responder. Get help if you can, but sometimes no help is coming.
 
-Get help if you can, but sometimes no help is coming.
+Weapons are the means by which we can defend ourselves.
+They are force multipliers, it's how a 95lb grandmother can fight off a
+300lb linebacker.
+
 Let this be a light for dark times.
 
 === No Step
@@ -11,16 +17,47 @@ it can kill over a dozen adults. But they'd all have to touch it.
 Rosebushes and rattlesnakes get along like hemlock and honeybees.
 Harmless and helpless are worlds apart.
 
+Ultimately, self-defense is an individual imperative.
+I mean no harm to anyone who would leave me alone; I'm live-and-let-live.
+But I choose not to be a subject, an easy target, or a helpless victim.
 Let us trade stories, good times, food, jeans, and genes.
 Go in peace and prosper. Failing that - leave me alone or else.
 
+=== What About Murderers?
+It should go without saying that I find murder detestable.
+It's my desire to arm those intent on self-defense, not murderers.
+
+Weapons are tools, and it is for the user to use them responsibly. On balance,
+I expect far more non-murderers to make these weapons than murderers.
+
+==== What About Terrorists?
+The US Government gave them billions of dollars worth of state-of-the-art
+weapons and equipment when it left Afghanistan. Most of the world's terrorists
+were armed by governments to fight proxy wars and yesterday's terrorists.
+
+That's not who's going to be building these weapons.
+
+==== What About Mass Shooters?
+
+Most definitions of "mass shooting" use something along the lines of 3+ people.
+My objections to this definition notwithstanding,
+don't miss the forest for the trees.
+
+Nation states have body counts in the tens of millions,
+with precedents in living memory.
+Mass murderers don't hold a candle to the murderous capacity of a state.
+When a state is murdering it's own people, that's a Tuesday.
+
 === Bigger Fish to Fry
+I do this to spread the capacity for self-defense. My greatest concern is 
+states that murder their own people, and civilian disarmament only helps them.
+
 The great https://en.wikipedia.org/Democide[democides] and
 https://en.wikipedia.org/wiki/List_of_wars_by_death_toll[wars]
 in living memory have demonstrated the need for individually held arms.
 
-If history repeats itself, complying might be the death of you.
-So like the honeybee - fight like hell anyway.
+You might die fighting, fight like hell anyway.
+Compliance might be the death of you.
 
 ==== The "Banality of Evil"
 The *second* greatest danger to human prosperity and life is the order giver.
@@ -37,48 +74,33 @@ Nothing more than a cog in a machine.
 Nazis used this explanation in the Nuremberg trials to excuse their murders.
 "I was just following orders" they said.
 
-**Takeaway**: You can be murdered by a normal person just going about their day.
-That person might be an upstanding patriot wearing your country's flag and
-enforcing the law - following lawful orders to murder you.
+You can be murdered by a normal person just doing their job.
+That person might be an upstanding patriot wearing their (or your) country's
+flag and enforcing the law - following lawful orders to murder you.
 
 See also: https://en.wikipedia.org/wiki/Hannah_Arendt[Hannah Arendt]
 
-===== Murder Machine
-I'm a software engineer, it's a lens through which I see the world.
-I see nation states which run like mindless machines.
-Code written by lawyers running on flawed human beings doing their part.
-Its ultimate tool: violence - to death. And nobody knows this is a machine.
+==== What About Drones, Jets, Tanks, and Nukes?
+The idea that a government would nuke its own territory is laughable.
+I think the spirit of this question boils down to "but you're outgunned."
 
-===== What About Mass Shooters?
-Most definitions of "mass shooting" use something along the lines of 3+ people.
+My short answer to that is "maybe."
+If I _am_ outgunned, that's hardly an argument to just lie down and take it.
+I refuse to put myself at the mercy of anyone who would threaten me with
+destruction for having the audacity to fight back and protect myself.
 
-Nation states have body counts in the tens of millions,
-with precedents in living memory.
-When a state is murdering it's own people, that's a Tuesday morning in BFE.
-An event so routine and monotonous that they make up games to spice things up.
+The other side of that coin is "maybe not."
+The greatest military superpower in the history of the world has a notoriously
+hard time dealing with insurgencies. I don't have to fight a tank if I can run
+away from it, and kill the driver when he comes out to eat or sleep.
+Read up a bit on https://en.wikipedia.org/wiki/Guerrilla_warfare[Guerrilla Warfare].
 
-Don't miss the forest for the trees.
-
-===== What About Terrorists?
-The US Government gave them billions of dollars worth of equipment way better
-than this when it left Afghanistan.
-
-==== What About Tanks and Nukes?
-Read up a bit on https://en.wikipedia.org/wiki/Guerrilla_warfare[Guerrilla Warfare] tactics.
-
-And 3D printed nukes.
-
-=== Some other thoughts of others
+<<<
+=== Selected Quotes
 
 > A man's natural rights are his own, against the whole world; and any infringement of them is equally a crime; whether committed by one man, or by millions; whether committed by one man, calling himself a robber, or by millions calling themselves a government.
 
 Lysander Spooner, No Treason: The Constitution of No Authority
-
----
-
-> My political opinions lean more and more to Anarchy (philosophically understood, meaning abolition of control not whiskered men with bombs) - or to 'unconstitutional' Monarchy. I would arrest anybody who uses the word State (in any sense other than the inanimate realm of England and its inhabitants, a thing that has neither power, rights nor mind); and after a chance of recantation, execute them if they remained obstinate! If we could get back to personal names, it would do a lot of good. Government is an abstract noun meaning the art and process of governing and it should be an offence to write it with a capital G or so as to refer to people. If people were in the habit of referring to 'King George's council, Winston and his gang', it would go a long way to clearing thought, and reducing the frightful landslide into Theyocracy.
-
-The Letters of J.R.R. Tolkien, pg. 74, Letter 52.
 
 ---
 

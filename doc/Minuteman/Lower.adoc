@@ -1,6 +1,6 @@
 === Lower Receiver
 
-.Lower Receiver
+.Lower Receiver Assembly
 image::../.views/Preview_Lower.png[]
 
 Provides a grip, trigger guard, means of attachment via T-lugs.
@@ -31,6 +31,9 @@ include::Lower_BOM_Inch.adoc[]
 
 <<<
 ==== Post-Processing
+
+.Lower Receiver X-Ray
+image::../.views/XRay_Lower.png[]
 
 ===== Install Heatset Nuts
 Install the heatset nuts into Lower_Left.

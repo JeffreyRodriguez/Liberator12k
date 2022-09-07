@@ -1,8 +1,9 @@
 include ../../Makefile.in
+include ../STL.mk
+include ../Animation.mk
 
 # Forend Classes
 Classes := TopBreak Revolver Evolver
-Classes_HTML=$(addsuffix .html, $(Classes))
 
 TopBreak_Presets := CAFE12 CAFE12+ FP37
 Revolver_Presets := ZZR6x12
@@ -21,15 +22,11 @@ Projections_DXF=$(addsuffix .dxf, $(Projections))
 
 Assembly_STL=$(addprefix Assembly/, $(Prints_STL) $(Hardware_STL))
 Assembly_PNG=$(addsuffix /Assembly.png,$(Presets))
-Assembly_JPG=$(addsuffix /Assembly.jpg,$(Presets)) $(addsuffix /Assembly_htmldoc.jpg, $(Presets))
 Assembly_htmldoc=$(addsuffix /Assembly_htmldoc.jpg, $(Presets))
-Assembly: $(Assembly_STL) $(Assembly_JPG) $(Assembly_htmldoc)
 
 Preset_STLS := $(Prints_STL)
 Preset_PNG := $(addsuffix .png,$(basename $(Prints)))
-Preset_Thumbs := $(addsuffix _thumb.jpg,$(basename $(Preset_STLS)))
 Preset_Assembly_PNG := $(addsuffix /Assembly.png,$(Presets))
-Preset_Assembly := $(addsuffix /Assembly.jpg,$(Presets))
 Preset_MP4 := $(addsuffix .mp4, $(Preset_STLS))
 
 Assembly/%_*: %.scad Assembly/
@@ -41,9 +38,6 @@ Assembly/%_*: %.scad Assembly/
 	  -D _RENDER=\"$(PART)\"  -D _RENDER_PRINT=false \
 	  $(CLASS).scad
 
-# Preview_htmldoc.jpg - Downsampled 800px
-$(Assembly_htmldoc): %/Assembly_htmldoc.jpg : %/Assembly.png
-
 .SECONDEXPANSION:
 
 # Class/Preset dirs depend on their respective source
@@ -52,9 +46,9 @@ $(Classes) $(Presets): $$(addsuffix .scad,$$(firstword $$(subst _, ,$$@)))
 	touch $@
 
 TARGETS=README.html Assembly $(Assembly_STL) $(Assembly_PNG) \
-					$(Preset_Assembly_PNG) $(Preset_Assembly) \
-          $(Preset_STLS) $(Preset_Thumbs) \
-					$(Fixtures_STL) $(Projections_DXF)
+	  $(Preset_Assembly_PNG) \
+          $(Preset_STLS) $(Preset_PNG) \
+	  $(Fixtures_STL) $(Projections_DXF)
 
 
 clean-dir:

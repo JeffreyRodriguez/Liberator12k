@@ -1,7 +1,7 @@
 <<<
 === Fire Control Group
 
-.Fire Control Group
+.Fire Control Group Assembly
 image::../.views/Preview_FCG.png[]
 
 The sear is a square rod with a cross-pin.
@@ -11,21 +11,26 @@ When the charging handle is pulled a return spring pushes the sear upward.
 
 NOTE: STL Files Location: `Receiver/FCG/Prints/`
 
+
+// Only show the disconnector if the fcg-disconnector attribute is set
+:fcg-disconnector-stl:
+ifdef::fcg-disconnector[]
+:fcg-disconnector-stl: image:../src/Receiver/.stl/FCG/Prints/FCG_Disconnector.png[] FCG_Disconnector
+endif::[]
+
 .FCG Printed Parts
 [cols="^1,^1,^1,^1"]
 |===
 |image:../src/Receiver/.stl/FCG/Prints/FCG_Housing.png[] FCG_Housing
 |image:../src/Receiver/.stl/FCG/Prints/FCG_FiringPinCollar.png[] FCG_FiringPinCollar
 |image:../src/Receiver/.stl/FCG/Prints/FCG_ChargingHandle.png[] FCG_ChargingHandle
-|image:../src/Receiver/.stl/FCG/Prints/FCG_Disconnector.png[] FCG_Disconnector
+|{fcg-disconnector-stl}
 
 |image:../src/Receiver/.stl/FCG/Prints/FCG_Hammer.png[] FCG_Hammer
 |image:../src/Receiver/.stl/FCG/Prints/FCG_HammerTail.png[] FCG_HammerTail
 |image:../src/Receiver/.stl/FCG/Prints/FCG_TriggerMiddle.png[] FCG_TriggerMiddle
 |image:../src/Receiver/.stl/FCG/Prints/FCG_Trigger.png[] FCG_Trigger
 |===
-
-WARNING: Disregard the disconnector for single-shot designs.
 
 <<<
 ==== Post-Processing
@@ -62,6 +67,29 @@ image::../.views/XRay_FiringPin.png[]
 
 . Ream the _Firing Pin Collar_ hole to 2.5mm.
 . Install the _Firing Pin_ into the round end of the _FiringPinCollar_.
+
+
+<<<
+===== Firing Pin Housing
+.Firing Pin Housing X-Ray
+ifdef::fcg-disconnector[]
+image::../.views/XRay_FiringPinHousing.png[]
+endif::[]
+
+ifndef::fcg-disconnector[]
+image::../.views/XRay_FiringPinHousing_NoDisconnector.png[]
+endif::[]
+
+TIP: Do not assemble this component yet, you will be directed how in the
+model-specific documentation.
+
+The firing pin housing screws into the back of the recoil plate, through a
+_ReceiverFront_ part.
+
+ifndef::fcg-disconnector[]
+The {model} does not use the disconnector,
+it is mentioned here for reference only.
+endif::[]
 
 <<<
 ===== Charging Handle Subassembly

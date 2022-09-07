@@ -36,7 +36,7 @@ use <../Receiver/Stock.scad>;
 /* [Export] */
 
 // Select a part, Render it (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Prints/ReceiverFront", "Prints/Forend", "Prints/Cluster", "Prints/BarrelCollar", "Prints/Extractor", "Prints/LatchTab", "Prints/Foregrip", "Prints/VerticalGrip", "Prints/Sightpost","Fixtures/Trunnion", "Fixtures/ExtractorGang_Bottom", "Fixtures/ExtractorGang_Top"]
+_RENDER = ""; // ["", "Prints/ReceiverFront", "Prints/Forend", "Prints/Cluster", "Prints/BarrelCollar", "Prints/Extractor", "Prints/LatchTab", "Prints/Foregrip", "Prints/VerticalGrip", "Prints/TopBreak_Foregrip", "Prints/Sightpost","Fixtures/Trunnion", "Fixtures/ExtractorGang_Bottom", "Fixtures/ExtractorGang_Top"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;
@@ -566,19 +566,24 @@ module TopBreak_ClusterBolts(bolt=ClusterBolt(), headType=CLUSTER_BOLT_HEAD, nut
              doRender=!cutter);
 }
 
-module TopBreak_HandguardBolts(headType="flat", nutType="heatset", length=11.75, cutter=false, clearance=0.005, teardrop=false) {
+module TopBreak_HandguardBolts(nutType="heatset", length=11.75, cutter=false, clearance=0.005, teardrop=false) {
   clear = cutter?clearance:0;
   clear2 = clear*2;
 
   for (Y = [1,-1])
   translate([TrunnionLength()-ClusterRearLength()+length,Y*TopBreak_HandguardBoltOffsetY(),0])
-  rotate([0,90,0])
-  NutAndBolt(bolt=HandguardBolt(),
-             boltLength=length+ManifoldGap(2),
-             head="hex", capHeightExtra=(cutter?1:0),
-             nut=nutType, nutHeightExtra=(cutter?BarrelRadius():0),
-             teardrop=false, teardropAngle=180, capOrientation=true,
-             clearance=cutter?clearance:0, doRender=!cutter);
+  rotate([0,90,0]) {
+    NutAndBolt(bolt=HandguardBolt(),
+               boltLength=length+ManifoldGap(2),
+               head="none", capHeightExtra=(cutter?1:0),
+               nut=nutType, nutHeightExtra=(cutter?BarrelRadius():0),
+               teardrop=false, teardropAngle=180, capOrientation=true,
+               clearance=cutter?clearance:0, doRender=!cutter);
+    
+    color("Silver")
+    RenderIf(!cutter)
+    NutAcorn(spec=HandguardBolt());
+  }
 }
 
 module TopBreak_VerticalGripHardware(cutter=false) {

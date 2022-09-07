@@ -1,4 +1,4 @@
-.Lower Bill of Materials (Inch)
+.Lower Receiver Bill of Materials (Inch)
 [cols="1,1,1"]
 |===
 |Purpose|Part|Quantity

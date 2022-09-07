@@ -1,52 +1,188 @@
-=== Hardware Kit
-If you purchased a kit, all the machining is already done for you.
+<<<
+=== Forend
+.{model} Forend X-Ray
+image::../.views/Preview_Forend_{model}_Forend.png[]
 
-To DIY all the parts yourself, read the <TopBreak DIY Machining> section.
-
-=== Post-Processing
-
-==== Forend
 . Ream the frame bolt holes.
-. Lightly apply permanent adhesive or epoxy to the *Reinforcement Screws*.
-. Screw the *Reinforcement Screws* into the forend and wipe off any excess.
+. Lightly apply permanent adhesive or epoxy to the _Reinforcement Screws_.
+. Screw the _Reinforcement Screws_ into the forend and wipe off any excess adhesive.
 . Optional: sand the pivot surfaces smooth.
 . Oil the pivot surfaces.
 
-==== Barrel Collar
+<<<
+=== Barrel Collar
+.{model} Barrel Collar X-Ray
+image::../.views/Preview_Forend_{model}_BarrelCollar.png[]
+
 . Using pliers, peel off the supports from the pivot area.
 . Flush cutters can be used to clean up the flat portion.
 . Using a 3/4" half-round file, file the rounded inner pivot area smooth.
 . If there is any elephant's foot, file it off now.
 . Sand the inner curve of the pivot smooth with progressively finer grits.
-. Test fit by rotating the *Barrel Collar* up into the *Forend*.
-. Sand the inner and outer curves of the *Barrel Collar* pivot smooth.
+. Test fit by rotating the _BarrelCollar_ up into the _Forend_.
+. Sand the inner and outer curves of the _Barrel Collar_ pivot smooth.
 . If the pivoting action feels tight or sticks, it's probably elephant foot. Clean that up.
 
-==== Extractor
-. Ream the *Extractor Retainer* hole to 1/4".
-. Insert the *Extractor Bit* into the *Extractor*, shim and add superglue if loose.
+<<<
+=== Extractor
+.{model} Extractor X-Ray
+image::../.views/Preview_Forend_{model}_Extractor.png[]
+
+. Ream the _Extractor Retainer_ hole in the _Extractor_ to 1/4".
+. Insert the _Extractor Bit_ into the _Extractor_.
+.. If the hole is too loose, shim with paper and add adhesive.
+.. If too snug, hold the _Extractor Bit_ with pliers and apply heat with a torch.
 . File/sand the extractor's top/bottom/sides smooth.
-. Drop the *Extractor Spring* into the *Barrel Collar*'s large rectangular hole.
-. Insert the *Extractor* into the hole.
-. With the *Extractor* pressed inwards, install the *Extractor Retainer* through the barrel hole.
+.. Apply oil to these surfaces.
+. Drop the _Extractor Spring_ into the _BarrelCollar_'s large rectangular hole.
+. Insert the _Extractor_ into the hole.
+. With the _Extractor_ pressed inwards, install the _Extractor Retainer_ through the barrel hole.
 
-==== Foregrip Cluster
-. Ream the *Cluster Bolts* holes.
-. Ream the *Handguard Bolt* hole.
-. Ream the *Vertical Foregrip Pin*.
-. Heatset the *Foregrip Nut* on the inside of the *Cluster*.
-. Heatset the *Handguard Bolt Nuts* in the sides at the back of the *Cluster*
+<<<
+=== Latch
+.{model} Latch X-Ray
+image::../.views/Preview_Forend_{model}_Latch.png[]
 
-==== Latch
-. Insert the *Latch Springs* into the small square holes in the *Barrel Collar*.
-. Insert the *Latch Bars* into the square holes in the *Barrel Collar*.
-. Ensure the *Latch Bars* slide smoothly - file the holes if necessary.
-. Insert the two rectangular tabs of the *Latch* into the underside of the *Barrel Collar
-. Depress the *Latch Bars* while you install the *Latch Screws*.
+. Insert the _Latch Springs_ into the small square holes in the _Barrel Collar_.
+. Insert the _Latch Bars_ into the square holes in the _Barrel Collar_.
+. Ensure the _Latch Bars_ slide smoothly - file the holes if necessary.
+. Insert the two rectangular tabs of the _Latch_ into the underside of the _Barrel Collar
+. Depress the _Latch Bars_ while you install the _Latch Screws_.
 . Lube the slots and bars.
 
-==== Forend
-. Rotate the *Barrel Collar* up into the *Forend*.
-. Holding the *Barrel Collar*, install the *Barrel Group* from the front.
-. Secure the *Barrel Collar Bolts*
+<<<
+=== Cluster
+.{model} Cluster
+image::../.views/Preview_Forend_{model}_Cluster.png[]
 
+. Ream the _Cluster Bolts_ holes (top)
+. Ream the _Handguard Bolt_ holes (sides).
+. Ream the _Vertical Foregrip Bolt_ hole (bottom).
+. Ream the _Vertical Foregrip Pin_ hole (bottom).
+. Heatset the _Foregrip Nut_ on the inside of the _Cluster_.
+. Heatset the _Handguard Bolt Nuts_ in the sides at the back of the _Cluster_
+
+<<<
+=== Sightpost
+
+.{model} Sightpost
+image::../.views/Preview_Forend_{model}_Sightpost.png[]
+
+. Ream the _Handguard Bolt_ holes (sides).
+. Ream the _Sightpost Bolt_ hole (top).
+. Heatset the _Sightpost Nut_.
+. Install the _Sightpost Bolt_.
+
+<<<
+=== Handguard Assembly
+
+.{model} Handguard Assembly
+image::../.views/Preview_Forend_{model}_Handguard.png[]
+
+. Screw the _Cluster_ to the _Barrel Trunnion_.
+. Slip the Handguard over the barrel.
+. Slip the Sightpost over the barrel.
+. Epoxy the _Handguard Bolt Caps_ onto the _Handguard Bolts_
+. Place the _Handguard Bolt Washers_ onto the _Handguard Bolts_.
+. Insert the _Handguard Bolts_ through the _Sightpost_, _Foregrip_, and screw into the _Cluster_.
+
+<<<
+=== Forend and Barrel
+
+.{model} Forend and Barrel Assembly
+image::../.views/Preview_Forend_{model}_ForendAndBarrel.png[]
+
+. Rotate the _BarrelCollar_ up into the _Forend_ from the bottom.
+. Insert the _Barrel and Handguard Assembly_ into the front of the _BarrelCollar_.
+. Secure the _Barrel Collar Bolts_ into the _Barrel Trunnion_.
+
+<<<
+=== Receiver Front
+
+.{model} Receiver Front
+image::../.views/Preview_Forend_{model}_ReceiverFront.png[]
+
+. Ream the _Frame Bolt_ holes.
+. Ensure the _Latch Rods_ can pass freely through the square holes in the _ReceiverFront_.
+.. File them out to fit if there are any fitment problems, particularly Elephant's Foot.
+. Ream the holes in the _ReceiverFront_.
+. Insert the _Recoil Plate_ into the _ReceiverFront_.
+. Install the _Recoil Plate Bolts_ from the rear of the _ReceiverFront_.
+
+.Firing Pin Housing
+image::../.views/XRay_FiringPinHousing_NoDisconnector.png[]
+
+. Remove the _Disconnector_, pin, and spring if installed. They are not used in the {model}.
+. Install the _Firing Pin_ into the _FiringPinHousing_.
+. Insert the _Firing Pin_ through the hole in the center hole of the _Recoil Plate_.
+. While compressing the _Firing Pin Spring_, install the _Firing Pin Housing Bolts_ on either side.
+.. The "bump" on the _FiringPinHousing_ should be oriented upwards.
+
+<<<
+=== Final Assembly
+
+.{model} Final Assembly
+image::../.views/Preview_{model}.png[]
+
+. Install the _ReceiverFront_ over the _Frame Bolts_, seat flush with the _Frame_.
+. Install the _Forend_ over the _Frame Bolts_, seat flush with the _ReceiverFront_.
+. Install the _Frame Bolt Nuts_ and tighten snugly. Do not over-tighten.
+
+<<<
+==== Dry Function Test
+WARNING: DO NOT LOAD THE WEAPON
+
+TIP: The {model} is fairly heavy, the weight helps absorb recoil.
+You will find it helpful to have a sling installed.
+I suggest something with quick disconnects.
+
+TIP: When discharged, the firing pin protrudes from the recoil plate.
+You must charge the hammer before breaking the action.
+Failure to do so will make the action harder or impossible to break open.
+It may also damage the firing pin.
+
+. Pull the charging handle back, the trigger should pop forward.
+.. Now you should only feel stiff spring pressure at the final 1/4" of the charging handle travel.
+.. This indicates the hammer is captured by the sear.
+. Release the charging handle, then move it to the full forward position.
+. With your dominant hand on the lower, press forward on the latch with that hand's pointer finger.
+.. You may have to move your grip slightly out of position if you have small hands.
+.. The latch should slide freely forward and back with only spring pressure holding it back.
+.. This will unlatch the barrel.
+. Rock the barrel down to break the action open.
+.. The extractor will exert some pressure against breaking open the action.
+.. You should not have to fight it.
+. With your dominant hand on the lower, and your non-dominant hand on the vertical foregrip, close the action swiftly.
+.. The latch bars should lock into the receiver front, securing the action closed.
+. Pull the trigger, this will allow the hammer to drop.
+
+WARNING: If there is any indication the sear is not *securely* capturing the
+hammer, *do not proceed*. This is a dangerous condition.
+
+<<<
+==== Live Fire Test
+
+WARNING: Keep the weapon pointed downrange while loading and testing.
+
+. Charge the hammer
+. Break the action open.
+. Load a birdshot cartridge.
+. Close the action.
+. Aim in a safe direction, know what is behind your target.
+. Fire the weapon.
+.. If the shell does not go off, keep it pointed in a safe direction.
+. Eject the spent shell.
+. Inspect the weapon for damage.
+.. Ensure the barrel has not moved relative to the trunnion - they should be flush.
+. Repeat 4 more times with birdshot.
+. Repeat this process with 00 buckshot, then slugs.
+
+<<<
+== Troubleshooting
+TODO
+
+=== Latching
+
+=== Headspace
+
+=== Firing Pin

@@ -1,0 +1,164 @@
+<<<
+== Required Tools
+.Wrenches, Pliers
+* Slip-Joint Pliers
+* 3/4" Wrench
+* Adjustable Wrench (in a pinch)
+
+.Drivers
+* Cordless Drill/Driver
+* 5/16" Socket Driver
+* #2 Square Drive Bit
+
+.Files
+* 3/4" Half-Round File
+* Needle File Set
+
+.Drill Bits
+* 5/16"
+* #29 - #8-32 Tap Drill
+* 11/64" or 4.5mm - Long
+* #39 or 2.5mm
+
+.Reamers
+* 11/64" - Small Screw Clearance
+* 1/4" - Medium Screw Clearance
+* 5/16" - Spindle Pin Clearance
+* 1/2" - Large Screw Clearance
+
+.Taps
+* #8-32 - Spiral Flute
+
+.Miscellaneous
+* Butane Torch - Pen and cigar-size torch lighters work best
+* Sandpaper, ~100-300
+* Superglue
+* 2-part epoxy, or other permanent adhesive
+
+<<<
+== Post-Processing Operations
+A few of the same operations are widely used in the project.
+Review these guidelines, as the manual will require you to use them during
+post-processing or primary machining (if applicable).
+
+Wear safety glasses.
+I buy them in bulk because I'm constantly losing or moving them. They're cheap.
+
+=== Reaming
+When possible, use a purpose-made reamer.
+If you only buy one reamer, get one for the frame bolt holes.
+If you've never used a reamer, beware they can "catch" if misaligned - go slow.
+Hold onto the print tightly in case it catches and tries to spin.
+
+You can substitute a drill bit if you don't own the appropriate size reamer.
+Long reamers are harder to come by than long drill bits. This is primarily
+relevant for things like the receiver, stock, and handguards which all have very
+long holes for threaded rods, and they're small diameter.
+Drill bits are usually much cheaper as well.
+
+When reaming with a drill bit, running it in reverse will prevent over-cutting.
+Personally, I drill out the threaded rod holes with a long 11/64" drill bit.
+This will not compromise the integrity of the final part, although it will
+permit very slight misalignment of the parts. Be sure to remove the drill bit
+frequently to clear any chips or you'll feel it start to bog down.
+
+=== Torch Operations
+Some parts of the assembly call for applying heat with a butane torch.
+During these operations, ensure your work area won't melt or burn if you drop
+the hot component. A ceramic dinner plate works well in a pinch.
+
+Outside, over concrete is best.
+Don't melt a hole in your carpet, or worse, start a fire.
+
+=== Heatset Inserts
+There are a few tips and gotchas to heatset inserts.
+
+Some heatsets are installed from the inside of a print.
+These are a little tricky to prepare and heat, but the same procedures apply.
+
+The taper of the insert *always* goes into the hole narrow-end first.
+
+Heatset inserts are brass, so cross-threading the small ones is easy if you try.
+Don't do that.
+
+==== Insert Type
+To start with, I only use the "turbine-type" threaded inserts.
+Another type looks like a spur gear, that kind doesn't hold as well.
+
+==== Heating Tool
+Some people install them with a soldering iron.
+I find torching them is faster, easier, and more reliable.
+These are my tips for the torch method, which is what I use exclusively.
+
+==== Torch Adjustment
+This is very torch specific. Some torches have huge flames.
+You don't want a blasting flamethrower, something more for lighting a cigarette.
+Adjust the torch accordingly.
+
+==== Alignment
+To ensure proper alignment, screw the threaded insert onto a bolt or threaded
+rod.
+If it's a through-hole, and they usually are,
+insert the bolt into the hole as it would normally be installed.
+
+Thread the heatset insert onto the tip of the bolt;
+you only need two full turns to hold it.
+This will keep the bolt from soaking up all the heat you're about to apply.
+
+You want to avoid heating the bolt because it will deform the hole walls
+and tend to glue itself in place tenaciously.
+
+==== Temperature
+Threaded inserts need to be hot enough to seat fully in one go,
+but not so hot that they liquify all the surrounding plastic.
+The small #8-32 inserts only take a few seconds of torching to heat up.
+The 1/4"-20 inserts are much larger and take longer.
+Look for the color change, they will darken slightly from oxidation when they
+reach the right temperature.
+
+For best results, aim for the wide end of the insert.
+Rotate the bolt+insert as you torch it. Sometimes it can feel
+like you need 3 hands for this. Some torches will have an on/off toggle switch,
+some have a stand, some have a momentary switch.
+There are ups and downs to both.
+
+Whatever you do, try not to let the threaded insert fall off.
+
+Oh, and remember the tip of the torch will be hot. Have a safe place to put it
+down quickly after heating.
+
+==== Insertion
+Most of the inserts are designed to sit flush, a few are recessed.
+
+Work quickly. Once the threaded insert comes up to temperature,
+use the bolt to swiftly pull it down into the tapered hole.
+
+If the plastic boils or worse - smokes, the insert is way too hot.
+Heat the next one less. Hopefully this hasn't ruined the print.
+
+If lots of plastic squishes out of the hole, it's probably a little too hot and
+you pulled it too far into the hole. Apply less force next time.
+
+Let the insert cool off until the plastic solidifies.
+You can blow on the insert to speed up the cooling.
+
+==== Removing the Bolt
+Once the insert has cooled off, you may find the bolt has glued itself in place.
+If the bolt uses a hex key, use that to remove the bolt.
+Threaded rods can be chucked tightly into a cordless drill for removal.
+
+==== Finishing the Hole
+More often than not, particularly when the bolt gets stuck,
+you will have deformed plastic in the hole.
+
+Repeating the following steps will clear it out; this is easiest with a drill:
+
+. Spin the bolt backwards and push it down into the hole with moderate pressure.
+.. This will cause the plastic to be forced out through the insert.
+. Remove this excess plastic.
+. Remove the bolt and gently screw it into the opposite side.
+. Remove the bolt and gently try to screw it in from the normal side.
+
+Remove any flashing (raised ring) that has squished up out of the hole.
+The flush cutters that came with your 3D printer are perfect for this.
+Using a file, remove any remaining raised plastic.

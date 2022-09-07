@@ -120,6 +120,8 @@ CHAMBER_ID = 0.8101;
 /* [Branding] */
 BRANDING_MODEL_NAME = "EVOLver";
 
+// POV 200,1500,200,0,0,0
+
 /*
  * Setup
  */

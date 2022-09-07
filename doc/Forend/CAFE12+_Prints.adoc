@@ -1,0 +1,54 @@
+.CAFE12 Forend Printed Parts
+[cols="1,1,1"]
+|===
+|Part|Filament Used|Print Time @ 0.4mm
+
+|ReceiverFront
+|57g
+|07h17m
+
+|Forend
+|189g
+|1d01h10m
+
+|BarrelCollar
+|114g
+|15h00m
+
+|Extractor
+|14g
+|1h55m
+
+|LatchBlock
+|114g
+|15h00m
+
+|Cluster
+|?g
+|?h?m
+
+|Vertical Foregrip
+|?g
+|?h?m
+
+|**Total**
+|420g
+|2d08h09m
+|===
+
+[cols="^1,^1,^1"]
+|===
+
+|image:../src/Forend/TopBreak_CAFE12+/Prints/ReceiverFront.png[] Receiver_Front
+|image:../src/Forend/TopBreak_CAFE12+/Prints/Forend.png[] Forend
+|image:../src/Forend/TopBreak_CAFE12+/Prints/BarrelCollar.png[] BarrelCollar
+
+|image:../src/Forend/TopBreak_CAFE12+/Prints/Extractor.png[]Extractor
+|image:../src/Forend/TopBreak_CAFE12+/Prints/LatchTab.png[] LatchTab
+|image:../src/Forend/TopBreak_CAFE12+/Prints/VerticalForegrip.png[] VerticalForegrip
+
+|image:../src/Forend/TopBreak_CAFE12+/Prints/Cluster.png[] Cluster
+|image:../src/Forend/.stl/TopBreak_CAFE12+/Prints/Foregrip.png[] Foregrip
+|image:../src/Forend/TopBreak_CAFE12+/Prints/Sightpost.png[] Sightpost
+
+|===

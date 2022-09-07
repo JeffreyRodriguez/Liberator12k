@@ -1,7 +1,7 @@
 <<<
 === Large Frame Receiver
 
-.Large Frame Receiver
+.Large Frame Receiver Assembly
 image::../.views/Preview_Frame.png[]
 
 This is the core of the gun. In the United States it's the receiver.
@@ -13,13 +13,13 @@ The *Large Frame Receiver* is the same as the standard *Receiver*, but with
 two large (1/2") bolts support heavy forends.
 
 <<<
-.Frame Prints
-STL Files Location: `Receiver/Frame/Prints/`
+.Large Frame Receiver Printed Parts
+NOTE: STL Files Location: `Receiver/Frame/Prints/`
 
-| Frame_Receiver |
-|-|
-|![](Frame/Prints/Frame_Receiver_thumb.jpg)|
-<br/>
+[cols="^1"]
+|===
+|image:../src/Receiver/.stl/Frame/Prints/Frame_Receiver.png[] Frame Receiver
+|===
 
 include::Frame_BOM_Inch.adoc[]
 
