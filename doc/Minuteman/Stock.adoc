@@ -22,7 +22,6 @@ NOTE: STL Files Location: `Receiver/Stock/Prints/`
 |image:../src/Receiver/.stl/Stock/Prints/Stock_Buttpad.png[] Stock Buttpad
 |===
 
-<<<
 include::Stock_BOM_Inch.adoc[]
 
 <<<
@@ -40,8 +39,8 @@ image::../.views/XRay_Stock.png[]
 . Assemble with the _Stock_Backplate_ and tighten bolts. Do not overtighten.
 
 ===== Stock Pin
-Cut a small groove cut around the center of the pin to act as a detent for the
- *Stock Pin Retaining Pin*. This secures the pin in place.
+Grind a small groove around the center of the pin to act as a detent.
+This secures the pin in place.
 
 ===== Stock Pin Retaining Pin
 I've used 3/32" music wire, 6D box nails, 2.5mm stainless wire.

@@ -66,8 +66,8 @@ image::../.views/XRay_Hammer.png[]
 image::../.views/XRay_FiringPin.png[]
 
 . Ream the _Firing Pin Collar_ hole to 2.5mm.
+. Add superglue near the nail head.
 . Install the _Firing Pin_ into the round end of the _FiringPinCollar_.
-
 
 <<<
 ===== Firing Pin Housing
