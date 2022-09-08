@@ -1,7 +1,7 @@
 = Liberator12k | CAFE12+
 Jeff Rodriguez <jeff@liberator12k.com>
 :title-logo-image: image:../.views/Preview_CAFE12+.png[top=5%,align=center,pdfwidth=8in]
-include::Version.adoc[]
+include::.build/Version.adoc[]
 :reproducible:
 :listing-caption: Listing
 :source-highlighter: rouge

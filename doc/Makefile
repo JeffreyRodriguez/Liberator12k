@@ -1,20 +1,20 @@
 include ../Makefile.in
 
-MANUAL_IMAGES=$(wildcard doc/.manual/*.jpg)
+PDFS:=$(addsuffix .pdf,$(basename $(wildcard *.adoc)))
+TARGETS:=$(PDFS) .build/changelog.txt .build/Version.adoc
 
-TARGETS:=CAFE12.pdf
+.build/changelog.txt:
+	git log --oneline > $@
 
-changelog.txt:
-	git log --oneline > changelog.txt
+.build/Version.adoc:
+	mkdir -p .build && \
+	echo :revdate: $(GIT_DATE) > $@ && \
+	echo :revnumber: $(GIT_VERSION) >> $@
 
-Version.adoc:
-	:revdate: $(GIT_DATE)
-	:revnumber: $(GIT_VERSION)
-
-%.pdf: %.adoc
-	asciidoctor-pdf $^
+%.pdf: %.adoc .build/Version.adoc
+	asciidoctor-pdf --warnings --failure-level=WARN $<
 
 clean-dir:
-	rm -rf $(TARGETS) Version.adoc changelog.txt 
+	rm -rf $(TARGETS)
 
 all: $(TARGETS)
