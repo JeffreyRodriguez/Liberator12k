@@ -19,12 +19,12 @@ NOTE: STL Files Location: `Receiver/Lower/Prints/`
 [cols="^1,^1,^1"]
 |===
 
-|image:../src/Receiver/.stl/Lower/Prints/Lower_Left.png[] Lower_Left
-|image:../src/Receiver/.stl/Lower/Prints/Lower_Middle.png[] Lower_Middle
-|image:../src/Receiver/.stl/Lower/Prints/Lower_Right.png[] Lower_Right
+|image:../src/Receiver/.export/Lower/Prints/Lower_Left.png[] Lower_Left
+|image:../src/Receiver/.export/Lower/Prints/Lower_Middle.png[] Lower_Middle
+|image:../src/Receiver/.export/Lower/Prints/Lower_Right.png[] Lower_Right
 
-|image:../src/Receiver/.stl/Lower/Prints/Lower_MountFront.png[] Lower_MountFront
-|image:../src/Receiver/.stl/Lower/Prints/Lower_MountRear.png[] Lower_MountRear
+|image:../src/Receiver/.export/Lower/Prints/Lower_MountFront.png[] Lower_MountFront
+|image:../src/Receiver/.export/Lower/Prints/Lower_MountRear.png[] Lower_MountRear
 |
 |===
 

@@ -22,9 +22,18 @@ GIT_DATE:=$(shell git log -1 --date=format:"%Y-%m-%d" --format="%ad")
 DATE:=$(shell date +'%Y-%m-%d')
 SUBDIRS:= $(filter-out Liberator12k-source/,$(dir $(wildcard */Makefile)))
 SCADS:= $(wildcard *.scad)
-STL_DIR:=.stl
+EXPORT_DIR:=.export
 ASSEMBLY_DIR:=.assembly
 VIEWS_DIR:=.views
+
+# Utility vars for subst
+comma:= ,
+empty:=
+space:= $(empty) $(empty)
+define \n
+
+
+endef
 
 .DEFAULT_GOAL:= all
 .PHONY: FORCE $(SUBDIRS) clean clean-dir
@@ -34,7 +43,7 @@ $(SUBDIRS): FORCE
 	$(MAKE) -C $@
 
 # OpenSCAD helpers
-list_renders    = $(shell grep -oP '_RENDER == "(.+)"' '$(strip $(1))' | cut -d \" -f 2 | sort)
+list_renders    = $(shell grep -oP '_RENDER +== +"(.+)"' '$(strip $(1))' | cut -d \" -f 2 | sort)
 filter_renders  = $(filter $(2),$(call list_renders,$(1)))
 list_prints     = $(call filter_renders,$(1),Prints/%)
 list_hardware   = $(call filter_renders,$(1),Hardware/%)
@@ -49,7 +58,7 @@ list_projections = $(call filter_renders,$(1),Projections/%)
 # Class_Preset/Prints/Part.png
 # Class_Preset/Prints/Part.stl
 # Class_Preset/Projections/Name.dxf
-render_name         = $(subst $(STL_DIR)/,,$(subst $(ASSEMBLY_DIR)/,,$(basename $(1))))
+render_name         = $(subst $(EXPORT_DIR)/,,$(subst $(ASSEMBLY_DIR)/,,$(basename $(1))))
 render_class_preset = $(firstword $(subst /, ,$(call render_name,$(1))))
 render_class        = $(shell echo $(call render_class_preset,$(1)) | awk -F _ '{ print $$1 }')
 render_preset       = $(shell echo $(call render_class_preset,$(1)) | awk -F _ '{ print $$2 }')

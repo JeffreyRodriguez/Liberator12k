@@ -18,8 +18,8 @@ NOTE: STL Files Location: `Receiver/Stock/Prints/`
 .Stock Printed Parts
 [cols="^1,^1"]
 |===
-|image:../src/Receiver/.stl/Stock/Prints/Stock_Backplate.png[] Stock Backplate
-|image:../src/Receiver/.stl/Stock/Prints/Stock_Buttpad.png[] Stock Buttpad
+|image:../src/Receiver/.export/Stock/Prints/Stock_Backplate.png[] Stock Backplate
+|image:../src/Receiver/.export/Stock/Prints/Stock_Buttpad.png[] Stock Buttpad
 |===
 
 include::Stock_BOM_Inch.adoc[]

@@ -31,7 +31,7 @@ endif
 		$(VIEWPORT) \
 		$(if $(PRESET),-p $(CLASS).json -P $(PRESET),) \
 		-D _RENDER=\"$(PART)\" \
-		-D _RENDER_PRINT=$(RENDER_PRINT)\
+		-D _RENDER_PRINT=$(RENDER_PRINT) \
 		$(CLASS).scad && \
 	if  [ "$(suffix $@)" == ".png" ]; then
 	  convert -fuzz 4% -transparent "#fafafa" $@ $@

@@ -11,7 +11,7 @@
 *.dep
 *.pdf
 **/.assembly
-**/.stl
+**/.export
 Version.adoc
 animation.gif
 animation.mp4

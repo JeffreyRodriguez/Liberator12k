@@ -1,7 +1,7 @@
 # Small Receiver
 
 .Small Receiver
-image::../src/.stl/Receiver/Receiver.png[]
+image::../src/.export/Receiver/Receiver.png[]
 
 The universal receiver in its base configuration. Note: You probably want the Frame, not this.
 
