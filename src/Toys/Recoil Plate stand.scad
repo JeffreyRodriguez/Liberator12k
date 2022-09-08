@@ -25,12 +25,12 @@ module RecoilPlateStand() {
                      r=1/16, teardropFlip=[true,true,true]);
     }
 
-    RecoilPlateCenterBolts(cutter=true, boltLength=0.5);
+    HousingBolts(cutter=true, boltLength=0.5);
   }
 }
 
 if ($preview) {
-  RecoilPlateCenterBolts(boltLength=0.5);
+  HousingBolts(boltLength=0.5);
   RecoilPlateStand();
   RecoilPlate(alpha=0.5);
 } else {

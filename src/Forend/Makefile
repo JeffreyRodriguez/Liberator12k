@@ -20,23 +20,13 @@ Hardware_STL= $(addsuffix .stl, $(Hardware))
 Fixtures_STL=$(addsuffix .stl, $(Fixtures))
 Projections_DXF=$(addsuffix .dxf, $(Projections))
 
-Assembly_STL=$(addprefix Assembly/, $(Prints_STL) $(Hardware_STL))
-Assembly_PNG=$(addsuffix /Assembly.png,$(Presets))
-Assembly_htmldoc=$(addsuffix /Assembly_htmldoc.jpg, $(Presets))
+Assembly_STL=$(addprefix .assembly/, $(Prints_STL) $(Hardware_STL))
+Assembly_PNG=$(addprefix .assembly/, $(addsuffix .png,$(Presets)))
 
 Preset_STLS := $(Prints_STL)
 Preset_PNG := $(addsuffix .png,$(basename $(Prints)))
-Preset_Assembly_PNG := $(addsuffix /Assembly.png,$(Presets))
-Preset_MP4 := $(addsuffix .mp4, $(Preset_STLS))
-
-Assembly/%_*: %.scad Assembly/
-	$(eval CLASS_Preset=$(firstword $(subst /, , $(subst Assembly/,, $@))))
-	$(eval CLASS=$(shell echo $(CLASS_Preset) | awk -F _ '{ print $$1 }'))
-	$(eval Preset=$(shell echo $(CLASS_Preset) | awk -F _ '{ print $$2 }'))
-	$(eval PART=$(basename $(notdir $@)))
-	$(OSBIN) $(OSOPTS) -o $@ --render \
-	  -D _RENDER=\"$(PART)\"  -D _RENDER_PRINT=false \
-	  $(CLASS).scad
+Preset_Assembly_PNG := $(addprefix .assembly/, $(addsuffix .png,$(Presets)))
+Preset_MP4 := $(addprefix .animations, $(addsuffix .mp4, $(Presets)))
 
 .SECONDEXPANSION:
 
@@ -45,7 +35,7 @@ $(Classes) $(Presets): $$(addsuffix .scad,$$(firstword $$(subst _, ,$$@)))
 	mkdir -p $@
 	touch $@
 
-TARGETS=README.html Assembly $(Assembly_STL) $(Assembly_PNG) \
+TARGETS=$(Assembly_STL) $(Assembly_PNG) \
 	  $(Preset_Assembly_PNG) \
           $(Preset_STLS) $(Preset_PNG) \
 	  $(Fixtures_STL) $(Projections_DXF)

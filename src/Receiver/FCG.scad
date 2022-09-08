@@ -1552,8 +1552,8 @@ if ($preview) {
   if (_RENDER == "Hardware/FCG_FiringPinSpring")
   FiringPinSpring();
 
-  if (_RENDER == "Hardware/FCG_RecoilPlateCenterBolts")
-  RecoilPlateCenterBolts();
+  if (_RENDER == "Hardware/FCG_HousingBolts")
+  HousingBolts();
 
   if (_RENDER == "Hardware/FCG_RecoilPlateSideBolts")
   RecoilPlateSideBolts();

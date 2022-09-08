@@ -446,7 +446,7 @@ module Evolver_ReceiverFront(contoured=true, cutaway=_CUTAWAY_RECEIVER_FRONT, al
     }
 
     RecoilPlateSideBolts(cutter=true);
-    RecoilPlateCenterBolts(cutter=true);
+    HousingBolts(cutter=true);
 
     RecoilPlate(contoured=contoured, spindleZ=CylinderZ(), cutter=true);
     FiringPin(cutter=true);
