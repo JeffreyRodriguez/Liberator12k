@@ -1,6 +1,4 @@
-ifndef MAKEFILE_IN
 include Makefile.in
-endif
 
 ASSEMBLY_SRC=src/Assembly.scad
 
@@ -250,18 +248,18 @@ $(VIEWS_DIR)/Preview_Forend_CAFE12+_Handguard.png: src/Forend/TopBreak.scad
 		-D _SHOW_COLLAR=false \
 		-D _SHOW_COLLAR_HARDWARE=false \
 		-D _SHOW_EXTRACTOR=false \
-		-D _SHOW_EXTRACTOR_HARDWARE=false\
+		-D _SHOW_EXTRACTOR_HARDWARE=false \
 		-D _SHOW_LATCH=false \
-		-D _SHOW_LATCH_HARDWARE=false\
+		-D _SHOW_LATCH_HARDWARE=false \
 		-D _SHOW_CLUSTER=true \
-		-D _SHOW_CLUSTER_BOLTS=true\
+		-D _SHOW_CLUSTER_BOLTS=true \
 		-D _SHOW_FOREND=false \
 		-D _SHOW_FOREND_HARDWARE=false \
 		-D _SHOW_FOREGRIP=true \
 		-D _SHOW_VERTICAL_GRIP=true \
 		-D _SHOW_GRIP_HARDWARE=true \
 		-D _SHOW_SIGHTPOST=true \
-		-D _SHOW_HANDGUARD_BOLTS=true\
+		-D _SHOW_HANDGUARD_BOLTS=true \
 		-D _SHOW_BARREL=true \
 		-D _ALPHA_COLLAR=0.3 \
 		-D _ALPHA_CLUSTER=0.3 \
@@ -282,7 +280,7 @@ $(VIEWS_DIR)/Preview_Forend_CAFE12+_ForendAndBarrel.png: src/Forend/TopBreak.sca
 		-D _SHOW_COLLAR=true \
 		-D _SHOW_COLLAR_HARDWARE=true \
 		-D _SHOW_EXTRACTOR=false \
-		-D _SHOW_EXTRACTOR_HARDWARE=false\
+		-D _SHOW_EXTRACTOR_HARDWARE=false \
 		-D _SHOW_LATCH=false \
 		-D _SHOW_LATCH_HARDWARE=false\
 		-D _SHOW_CLUSTER=true \
@@ -312,7 +310,7 @@ $(VIEWS_DIR)/Preview_Forend_CAFE12+_ReceiverFront.png: src/Forend/TopBreak.scad
 		-D _SHOW_COLLAR=false \
 		-D _SHOW_COLLAR_HARDWARE=false \
 		-D _SHOW_EXTRACTOR=false \
-		-D _SHOW_EXTRACTOR_HARDWARE=false\
+		-D _SHOW_EXTRACTOR_HARDWARE=false \
 		-D _SHOW_LATCH=false \
 		-D _SHOW_LATCH_HARDWARE=false\
 		-D _SHOW_CLUSTER=false \

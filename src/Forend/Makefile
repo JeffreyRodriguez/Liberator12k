@@ -34,13 +34,23 @@ Preset_Projections_DXF := $(addprefix $(EXPORT_DIR)/, $(Fixtures_STL))
 Preset_Assembly_STL := $(addprefix $(ASSEMBLY_DIR)/, $(addsuffix .png,$(Presets)))
 Preset_Assembly_PNG := $(addprefix $(ASSEMBLY_DIR)/, $(addsuffix .png,$(Presets)))
 
-$(addsuffix .parts, $(Presets)):
-	echo "$(subst ${space},${\n},$(filter .export/$(basename $@)%, $(Preset_STL)))" > $@
 
 .SECONDEXPANSION:
-
 # Class/Preset dirs depend on their respective source
-$(addprefix .export/, $(Presets)): $$(addsuffix .scad,$$(firstword $$(subst _, ,$$@)))
+#$(Preset_Assembly_STL): $$(render_class $$@).scad $$(render_class $$@).d
+#$(Preset_Assembly_PNG): $$(render_class $$@).scad
+
+#.build/$(basename $(Preset_STL)).d:
+
+# Print-specific dependencies
+.build/%.d: $$(call render_class,$$@).d
+	echo $@
+	echo .build/$(call render_class,$*).d
+	mkdir -p $(dir $@) && \
+	echo -n ".export/$*.stl:" > $@ && \
+	sed -e ':x /\\$$/ { N; s/\\\n//g ; bx }' .build/$(call render_class,$*).d >> $@
+   
+.export/%.stl: .build/$$*.d
 
 TARGETS=$(Assembly_STL) $(Assembly_PNG) \
 	  $(Preset_Assembly_STL) $(Preset_Assembly_PNG) \
@@ -52,3 +62,5 @@ clean-dir:
 	rm -rf $(TARGETS) $(EXPORT_DIR) $(ASSEMBLY_DIR) $(Presets)
 
 all: $(SUBDIRS) $(TARGETS)
+
+#include $(Preset_STL:.export/%.stl=.build/%.d)

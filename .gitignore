@@ -12,6 +12,7 @@
 *.pdf
 **/.assembly
 **/.export
+**/.build
 Version.adoc
 animation.gif
 animation.mp4

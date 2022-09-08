@@ -23,7 +23,7 @@ Assembly: $(Assembly_STL) $(Assembly_PNG)
 
 Animations_MP4=.animations/FCG.mp4
 
-TARGETS = $(addprefix $(STL_DIR)/, $(Prints_STL)) $(addprefix $(STL_DIR)/, $(Prints_PNG)) \
+TARGETS = $(addprefix $(EXPORT_DIR)/, $(Prints_STL)) $(addprefix $(EXPORT_DIR)/, $(Prints_PNG)) \
           $(Assembly_STL) $(Assembly_PNG) \
           $(Animations_MP4)
 

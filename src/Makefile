@@ -8,9 +8,9 @@ Minuteman = $(foreach Component,$(Components),$(wildcard Receiver/$(Component)/P
                 $(foreach Component,$(Components),$(wildcard Receiver/$(Component)/Projections/))
 
 Forends = $(filter-out Forend/Assembly/%, \
-            $(shell find Forend/ -ipath '*_*/Prints/*.stl' ) \
-						$(shell find Forend/ -ipath '*_*/Fixtures/*.stl' ) \
-					  $(shell find Forend/ -ipath '*_*/Projections/*.dxf'))
+          $(shell find Forend/ -ipath '*_*/Prints/*.stl' ) \
+	  $(shell find Forend/ -ipath '*_*/Fixtures/*.stl' ) \
+	  $(shell find Forend/ -ipath '*_*/Projections/*.dxf'))
 
 TARGETS:=$(SUBDIRS)
 

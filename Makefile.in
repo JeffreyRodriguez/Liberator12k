@@ -1,3 +1,4 @@
+ifndef MAKEFILE_IN
 SHELL := bash
 .SHELLFLAGS := -eu -o pipefail -c
 MAKEFLAGS += --warn-undefined-variables
@@ -12,7 +13,7 @@ SLOW_FRAME_COUNT:=300
 SLOW_FRAMES:=$(shell seq 0 $(SLOW_FRAME_COUNT))
 MDBIN:=cmark-gfm -e table --unsafe
 OSBIN:=nice openscad
-OSOPTS:=--hardwarnings --colorscheme=Nature
+OSOPTS:=--hardwarnings --check-parameters=true --check-parameter-ranges=true --colorscheme=Nature
 OS_RES_LOW:=1920,1080
 OS_RES_HIGH:=4096,2160
 OS_CAM_STL:=--autocenter --viewall --view scales
@@ -22,9 +23,11 @@ GIT_DATE:=$(shell git log -1 --date=format:"%Y-%m-%d" --format="%ad")
 DATE:=$(shell date +'%Y-%m-%d')
 SUBDIRS:= $(filter-out Liberator12k-source/,$(dir $(wildcard */Makefile)))
 SCADS:= $(wildcard *.scad)
+
 EXPORT_DIR:=.export
 ASSEMBLY_DIR:=.assembly
 VIEWS_DIR:=.views
+BUILD_DIR:=.build
 
 # Utility vars for subst
 comma:= ,
@@ -58,6 +61,7 @@ list_projections = $(call filter_renders,$(1),Projections/%)
 # Class_Preset/Prints/Part.png
 # Class_Preset/Prints/Part.stl
 # Class_Preset/Projections/Name.dxf
+render_name         = $(pasubst .%/,,$(basename $(1)))
 render_name         = $(subst $(EXPORT_DIR)/,,$(subst $(ASSEMBLY_DIR)/,,$(basename $(1))))
 render_class_preset = $(firstword $(subst /, ,$(call render_name,$(1))))
 render_class        = $(shell echo $(call render_class_preset,$(1)) | awk -F _ '{ print $$1 }')
@@ -71,11 +75,8 @@ preset_class_name = $(shell echo $(1) | awk -F _ '{ print $$1 }')
 scad_pov          = $(shell grep '// POV ' $(1) | awk '{ print $$3 }')
 scad_view         = $(shell awk '{ print "-D ",$$1 }' $(basename $(1)).view)
 
-%.parts: %.scad
-	@# Search for all the _RENDER == "*" lines and extract the part names
-	echo $(call list_renders,$<) > $@
-
 clean: FORCE clean-dir
 	for DIR in $(SUBDIRS); do \
 	  $(MAKE) -C $$DIR clean clean-dir; \
 	done
+endif
