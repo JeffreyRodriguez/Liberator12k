@@ -1,3 +1,0 @@
-:revdate: 2022-03-26
-:revnumber: 58dac62
-:version-label!: beta2
