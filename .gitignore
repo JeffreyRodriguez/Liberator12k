@@ -11,16 +11,8 @@
 *.dep
 *.pdf
 **/.assembly
+**/.animations
 **/.export
 **/.build
-Version.adoc
-animation.gif
-animation.mp4
-changelog.txt
-build.log
-Manual.pdf
-Liberator12k-source/
-Legal/
-Media/
 src/Toys/
 PRIVATE/

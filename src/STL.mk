@@ -48,7 +48,7 @@ $(BUILD_DIR)/%.d $(BUILD_DIR)/%.png : %.scad
 	@echo Render for Print: $(RENDER_PRINT)
 	@echo Render Mode: $(RENDER_MODE)
 	mkdir -p $(dir $@) && \
-	$(OSBIN) $(OSOPTS) -o $@ -d $(CLASS).d \
+	$(OSBIN) $(OSOPTS) -o $@ \
 		$(RENDER_MODE) --imgsize $(IMAGE_SIZE) --projection=p \
 		$(VIEWPORT) \
 		$(if $(PRESET),-p $(CLASS).json -P $(PRESET),) \

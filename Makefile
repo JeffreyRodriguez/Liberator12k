@@ -1,41 +1,39 @@
 include Makefile.in
 
-Assembly = Receiver/Assembly Forend/Assembly
+Assembly = src/Receiver/.assembly src/Forend/.assembly
 Components = Frame Receiver Stock Lower FCG
 
-Minuteman = $(foreach Component,$(Components),$(wildcard src/Receiver/$(Component)/Prints/*.stl)) \
-                $(foreach Component,$(Components),$(wildcard src/Receiver/$(Component)/Fixtures/*.stl)) \
-                $(foreach Component,$(Components),$(wildcard src/Receiver/$(Component)/Projections/))
+Minuteman = $(foreach Component,$(Components),$(wildcard src/Receiver/$(STL_DIR)/$(Component)/Prints/*.stl)) \
+                $(foreach Component,$(Components),$(wildcard src/Receiver/$(STL_DIR)/$(Component)/Fixtures/*.stl)) \
+                $(foreach Component,$(Components),$(wildcard src/Receiver/$(STL_DIR)/$(Component)/Projections/))
 
 Forends = $(filter-out src/Forend/Assembly/%, \
             $(shell find src/Forend/ -ipath '*_*/Prints/*.stl' ) \
-						$(shell find src/Forend/ -ipath '*_*/Fixtures/*.stl' ) \
-					  $(shell find src/Forend/ -ipath '*_*/Projections/*.dxf'))
+	    $(shell find src/Forend/ -ipath '*_*/Fixtures/*.stl' ) \
+	    $(shell find src/Forend/ -ipath '*_*/Projections/*.dxf'))
 
-ZIP_TARGETS:=changelog.txt Liberator12k-source/
-TARGETS:=$(ZIP_TARGETS) Liberator12k.zip Liberator12k-source.zip Liberator12k-assembly.zip
+ZIP_TARGETS:=changelog.txt .build/Liberator12k-source/
+DIST:=dist/Liberator12k.zip dist/Liberator12k-source.zip dist/Liberator12k-assembly.zip
+TARGETS:=$(ZIP_TARGETS) $(DIST)
 
-changelog.txt:
-	git log --oneline > changelog.txt
-
-Liberator12k-source/: .git
+.build/Liberator12k-source/: .git
 	rm -rf $@ && \
 	git clone --depth=1 "file://$(CURDIR)" $@ && \
 	cd $@ && \
 	git remote set-url origin https://github.com/JeffreyRodriguez/Liberator12k.git
 
-Liberator12k.zip: $(SUBDIRS) $(ZIP_TARGETS)
+dist/Liberator12k.zip: $(SUBDIRS) $(ZIP_TARGETS)
 	zip -9r $@ $(ZIP_TARGETS) $(Minuteman) $(Forends)
 
-Liberator12k-source.zip: Liberator12k-source/
+dist/Liberator12k-source.zip: .build/Liberator12k-source/
 	zip -9r $@ $^
 
-Liberator12k-assembly.zip: $(SUBDIRS)
+dist/Liberator12k-assembly.zip: $(SUBDIRS)
 	zip -9r $@ $(Assembly)
 
-dist: $(TARGETS) $(ZIP_TARGETS)
-	mkdir -p dist/
-	cp -r *.zip $@/
+$(DIST): dist/
+dist/:
+	mkdir -p $@
 
 .views: Views.mk
 	mkdir -p $@
@@ -43,7 +41,7 @@ dist: $(TARGETS) $(ZIP_TARGETS)
 
 clean-dir:
 	rm -rf $(ASSEMBLY_DIR) $(BUILD_DIR) $(EXPORT_DIR)
-	rm -rf $(TARGETS) changelog.txt Liberator12k-source/ dist/
+	rm -rf $(TARGETS) changelog.txt .build/Liberator12k-source/ dist/
 clean-dir:
 
-all: $(SUBDIRS) $(TARGETS) dist
+all: $(SUBDIRS) $(TARGETS)

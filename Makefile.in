@@ -24,8 +24,9 @@ DATE:=$(shell date +'%Y-%m-%d')
 SUBDIRS:= $(filter-out Liberator12k-source/,$(dir $(wildcard */Makefile)))
 SCADS:= $(wildcard *.scad)
 
-EXPORT_DIR:=.export
 ASSEMBLY_DIR:=.assembly
+ANIMATIONS_DIR:=.animations
+EXPORT_DIR:=.export
 VIEWS_DIR:=.views
 BUILD_DIR:=.build
 

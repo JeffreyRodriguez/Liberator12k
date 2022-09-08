@@ -1,17 +1,18 @@
 include ../Makefile.in
 
-PDFS:=$(addsuffix .pdf,$(basename $(wildcard *.adoc)))
-TARGETS:=$(PDFS) .build/changelog.txt .build/Version.adoc
+PDFS:=$(addprefix $(EXPORT_DIR)/,$(addsuffix .pdf,$(basename $(wildcard *.adoc))))
+TARGETS:=$(PDFS) $(BUILD_DIR)/changelog.txt $(BUILD_DIR)/Version.adoc
 
-.build/changelog.txt:
+$(BUILD_DIR)/changelog.txt:
 	git log --oneline > $@
 
-.build/Version.adoc:
+$(BUILD_DIR)/Version.adoc:
 	mkdir -p .build && \
 	echo :revdate: $(GIT_DATE) > $@ && \
 	echo :revnumber: $(GIT_VERSION) >> $@
 
-%.pdf: %.adoc .build/Version.adoc
+$(EXPORT_DIR)/%.pdf: %.adoc .build/Version.adoc
+	mkdir -p $(dir $@) && \
 	asciidoctor-pdf --warnings --failure-level=WARN $<
 
 clean-dir:
