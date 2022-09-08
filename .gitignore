@@ -10,6 +10,8 @@
 *.parts
 *.dep
 *.pdf
+**/.assembly
+**/.stl
 Version.adoc
 animation.gif
 animation.mp4
