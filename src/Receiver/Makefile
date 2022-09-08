@@ -28,7 +28,7 @@ TARGETS = $(addprefix $(EXPORT_DIR)/, $(Prints_STL)) $(addprefix $(EXPORT_DIR)/,
           $(Animations_MP4)
 
 clean-dir:
-	rm -rf $(TARGETS) Assembly $(Components)
+	rm -rf $(ASSEMBLY_DIR) $(BUILD_DIR) $(EXPORT_DIR)
 
 all: $(SUBDIRS) $(TARGETS)
 

@@ -15,6 +15,6 @@ Forends = $(filter-out Forend/Assembly/%, \
 TARGETS:=$(SUBDIRS)
 
 clean-dir:
-	rm -rf $(TARGETS)
+	rm -rf $(ASSEMBLY_DIR) $(BUILD_DIR) $(EXPORT_DIR)
 
 all: $(TARGETS)

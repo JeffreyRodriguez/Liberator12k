@@ -42,6 +42,8 @@ dist: $(TARGETS) $(ZIP_TARGETS)
 	$(MAKE) -f Views.mk all
 
 clean-dir:
+	rm -rf $(ASSEMBLY_DIR) $(BUILD_DIR) $(EXPORT_DIR)
 	rm -rf $(TARGETS) changelog.txt Liberator12k-source/ dist/
+clean-dir:
 
 all: $(SUBDIRS) $(TARGETS) dist

@@ -59,7 +59,7 @@ TARGETS=$(Assembly_STL) $(Assembly_PNG) \
           $(Preset_Projections_DXF)
 
 clean-dir:
-	rm -rf $(TARGETS) $(EXPORT_DIR) $(ASSEMBLY_DIR) $(Presets)
+	rm -rf $(ASSEMBLY_DIR) $(BUILD_DIR) $(EXPORT_DIR)
 
 all: $(SUBDIRS) $(TARGETS)
 
