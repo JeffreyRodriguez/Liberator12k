@@ -76,6 +76,26 @@ preset_class_name = $(shell echo $(1) | awk -F _ '{ print $$1 }')
 scad_pov          = $(shell grep '// POV ' $(1) | awk '{ print $$3 }')
 scad_view         = $(shell awk '{ print "-D ",$$1 }' $(basename $(1)).view)
 
+$(EXPORT_DIR)/%.parts: %.scad
+	mkdir -p $(dir $@) && \
+	echo "$(subst ${space},${\n},$(call list_renders,$^))" > $@
+
+# Build Dependency SCAD files, for freshness check
+# OpenSCAD has no way to export just the deps, so this renders a 1x1 pixel..
+# with an empty CSG tree so it renders instantly.
+$(BUILD_DIR)/%.d $(BUILD_DIR)/%.png : %.scad
+	@$(eval NAME=$(notdir $(basename $@)))
+	@$(eval PNG=$(BUILD_DIR)/$(NAME).png)
+	@$(eval SCAD=$(NAME).scad)
+	@$(eval SCAD_POV=$(call scad_pov,$(SCAD)))
+	rm -f $@ && \
+	mkdir -p $(dir $@) && \
+	$(OSBIN) $(OSOPTS) -o $(PNG) -d $@ \
+		--csglimit 0 --render --projection=p \
+		$(SCAD) && \
+	sed -i '1d' $@ &&
+	rm -f $(PNG)
+
 clean: FORCE clean-dir
 	for DIR in $(SUBDIRS); do \
 	  $(MAKE) -C $$DIR clean clean-dir; \

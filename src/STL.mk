@@ -2,26 +2,6 @@ include ../../Makefile.in
 
 #$(@:%=$(call render_class,$@).scad)
 
-$(EXPORT_DIR)/%.parts: %.scad
-	mkdir -p $(dir $@) && \
-	echo "$(subst ${space},${\n},$(call list_renders,$^))" > $@
-
-# Build Dependency SCAD files, for freshness check
-# %.png is a hack. OpenSCAD has no way to export just the build deps
-# So this renders a 1x1 pixel, with an empty CSG tree so it renders instantly.
-$(BUILD_DIR)/%.d $(BUILD_DIR)/%.png : %.scad
-	@$(eval NAME=$(notdir $(basename $@)))
-	@$(eval PNG=$(BUILD_DIR)/$(NAME).png)
-	@$(eval SCAD=$(NAME).scad)
-	@$(eval SCAD_POV=$(call scad_pov,$(SCAD)))
-	rm -f $@ && \
-	mkdir -p $(dir $@) && \
-	$(OSBIN) $(OSOPTS) -o $(PNG) -d $@ \
-		--csglimit 0 --render --projection=p \
-		$(SCAD) && \
-	sed -i '1d' $@ &&
-	rm -f $(PNG)
-
 .SECONDEXPANSION:
 # include $(BUILD_DIR)/$$(call render_class,$$@).d
 %.dxf %.png %.stl: $$(call render_class,$$@).scad $$(BUILD_DIR)/$$(call render_class,$$@).d
