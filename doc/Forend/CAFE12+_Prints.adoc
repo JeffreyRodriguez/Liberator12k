@@ -1,4 +1,4 @@
-.CAFE12 Forend Printed Parts
+.{model} Forend Printed Parts
 [cols="1,1,1"]
 |===
 |Part|Filament Used|Print Time @ 0.4mm
@@ -39,16 +39,16 @@
 [cols="^1,^1,^1"]
 |===
 
-|image:../src/Forend/.export/TopBreak_CAFE12+/Prints/ReceiverFront.png[] Receiver_Front
-|image:../src/Forend/.export/TopBreak_CAFE12+/Prints/Forend.png[] Forend
-|image:../src/Forend/.export/TopBreak_CAFE12+/Prints/BarrelCollar.png[] BarrelCollar
+|image:../src/Forend/.export/TopBreak_{model}/Prints/ReceiverFront.png[] Receiver_Front
+|image:../src/Forend/.export/TopBreak_{model}/Prints/Forend.png[] Forend
+|image:../src/Forend/.export/TopBreak_{model}/Prints/BarrelCollar.png[] BarrelCollar
 
-|image:../src/Forend/.export/TopBreak_CAFE12+/Prints/Extractor.png[]Extractor
-|image:../src/Forend/.export/TopBreak_CAFE12+/Prints/LatchTab.png[] LatchTab
-|image:../src/Forend/.export/TopBreak_CAFE12+/Prints/VerticalGrip.png[] VerticalGrip
+|image:../src/Forend/.export/TopBreak_{model}/Prints/Extractor.png[]Extractor
+|image:../src/Forend/.export/TopBreak_{model}/Prints/LatchTab.png[] LatchTab
+|image:../src/Forend/.export/TopBreak_{model}/Prints/VerticalGrip.png[] VerticalGrip
 
-|image:../src/Forend/.export/TopBreak_CAFE12+/Prints/Cluster.png[] Cluster
-|image:../src/Forend/.export/TopBreak_CAFE12+/Prints/Foregrip.png[] Foregrip
-|image:../src/Forend/.export/TopBreak_CAFE12+/Prints/Sightpost.png[] Sightpost
+|image:../src/Forend/.export/TopBreak_{model}/Prints/Cluster.png[] Cluster
+|image:../src/Forend/.export/TopBreak_{model}/Prints/Foregrip.png[] Foregrip
+|image:../src/Forend/.export/TopBreak_{model}/Prints/Sightpost.png[] Sightpost
 
 |===

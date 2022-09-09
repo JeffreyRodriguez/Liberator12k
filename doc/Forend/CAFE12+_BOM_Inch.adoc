@@ -1,4 +1,4 @@
-.CAFE12+ Forend Bill of Materials
+.{model} Forend Bill of Materials
 [cols="1,2,3,1"]
 |===
 |Component|Purpose|Part|Quantity
@@ -92,24 +92,6 @@
 |Sightpost Nut
 |#8-32 Heatset Insert
 |1
-
-|Barrel
-|Trunnion Set Screws
-|#8-32x1/8" Grub Screw
-|8
-
-|Barrel
-|Trunnion
-|1.25"x0.125" 4130 Tubing 8" Long
-|1
-
-|Barrel
-|Barrel
-|1"x0.093" 4130 Tubing 20" Long
-|1
-
-|Barrel
-|Barrel Shim
-|3x6" 0.002" Shim Stock
-|1
 |===
+
+include::{model}_Barrel_BOM.adoc

@@ -1,0 +1,21 @@
+.{model} Barrel Assembly
+|===
+|Purpose|Part|Quantity
+
+|Trunnion Set Screws
+|#8-32x1/8" Grub Screw
+|8
+
+|Trunnion
+|1.25"x0.125" 4130 Tubing 8" Long
+|1
+
+|Barrel
+|1"x0.093" 4130 Tubing 20" Long
+|1
+
+|Barrel Shim
+|3x6" 0.002" Shim Stock
+|1
+|===
+

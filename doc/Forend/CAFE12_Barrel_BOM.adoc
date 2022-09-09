@@ -1,0 +1,16 @@
+.{model} Barrel Assembly
+|===
+|Purpose|Part|Quantity
+
+|Trunnion Set Screws
+|#8-32x1/8" Grub Screw
+|8
+
+|Trunnion
+|1" NPT Schedule 40 Pipe 8" Long
+|1
+
+|Barrel
+|3/4" NPT Schedule 40 Pipe 18.5" Long
+|1
+|===
