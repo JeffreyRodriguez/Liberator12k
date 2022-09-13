@@ -47,12 +47,12 @@ Use a dummy cartridge.
 Drill and tap (#8-32) the *Latch Bars* 1" from the end
 
 === Barrel Group
-1. Insert the *Trunnion* into the rear of the *Cluster* and line up the threaded
+. Insert the *Trunnion* into the rear of the *Cluster* and line up the threaded
 holes on top.
-2. Insert the *Barrel* into the front of the *Cluster*.
+. Insert the *Barrel* into the front of the *Cluster*.
 Extractor cutout-side first.
-3. Headspace on a dummy cartridge.
+. Headspace on a dummy cartridge.
 The *Trunnion* should be flush and the *Barrel* slightly recessed.
-4. Install the *Cluster Bolts*.
-6. Install the *Foregrip Bolt* into the *Foregrip* and screw into the *Cluster*
+. Install the *Cluster Bolts*.
+. Install the *Foregrip Bolt* into the *Foregrip* and screw into the *Cluster*
 from the bottom.

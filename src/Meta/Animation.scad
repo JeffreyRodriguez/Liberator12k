@@ -40,6 +40,7 @@ ANIMATION_STEPS = [
                    ];
 */
 
+ANIMATION_LOG_LEVEL = 0;
 
 ANIMATION_STEP_TRIGGER       = 0;
 ANIMATION_STEP_FIRE          = 1;
@@ -111,12 +112,17 @@ function AnimationDebug(step, start=0, end=1, T=$t) = AnimationStepStart(step)
 
 
 // General animation debug info
-echo("AnimationStep($t):", AnimationStep($t));
-echo("Animate(AnimationStep($t)):", Animate(AnimationStep($t)));
+if (ANIMATION_LOG_LEVEL > 1) {
+    echo("AnimationStep($t):", AnimationStep($t));
+    echo("Animate(AnimationStep($t)):", Animate(AnimationStep($t)));
+}
 
 // Debug-level logging, show the value of each animation step.
-*for (i = [0 : AnimationStepCount() -1])
-echo("Animate ", i, ":", Animate(i));
+
+if (ANIMATION_LOG_LEVEL > 2) {
+    *for (i = [0 : AnimationStepCount() -1])
+    echo("Animate ", i, ":", Animate(i));
+}
 
 module AnimateSpin(revolutions=1) {
   rotate([0,0,360*revolutions*$t])

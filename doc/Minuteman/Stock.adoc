@@ -2,7 +2,7 @@
 === Stock
 
 .Stock Assembly
-image::../.views/Preview_Stock.png[]
+image::../.views/Receiver/Stock_{units}/Assembly.png[]
 
 A stock and buttpad designed to fit the standard receiver.
 
@@ -28,7 +28,7 @@ include::Stock_BOM_Inch.adoc[]
 ==== Post-Processing
 
 .Stock X-Ray
-image::../.views/XRay_Stock.png[]
+image::../.views/Receiver/Stock_{units}/XRay_Assembly.png[]
 
 ===== Stock Backplate
 . Heatset the _Stock Buttpad Nuts_ into the _Stock_Backplate_.

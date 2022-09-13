@@ -21,7 +21,7 @@ use <../Forend/Revolver.scad>;
 use <../Forend/TopBreak.scad>;
 use <../Forend/Trigun.scad>;
 use <../Forend/Pump.scad>;
-use <../Forend/Pump Reversed Mag.scad>;
+use <../Forend/Pump_Reversed_Mag.scad>;
 
 use <FCG.scad>;
 use <Frame.scad>;

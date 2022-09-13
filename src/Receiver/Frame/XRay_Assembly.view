@@ -1,0 +1,5 @@
+--camera=25,250,75,-75,0,0
+-D _ALPHA_FRAME=0.3
+-D _SHOW_RECEIVER=true
+-D _SHOW_FRAME_BOLTS=false
+-D _SHOW_BRANDING=false

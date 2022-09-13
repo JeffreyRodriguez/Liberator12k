@@ -1,7 +1,7 @@
 <<<
 === Forend
 .{model} Forend X-Ray
-image::../.views/Preview_Forend_{model}_Forend.png[]
+image::../.views/Forend/TopBreak_{model}/XRay_ForendOnly.png[]
 
 . Ream the frame bolt holes.
 . Lightly apply permanent adhesive or epoxy to the _Reinforcement Screws_.
@@ -12,7 +12,7 @@ image::../.views/Preview_Forend_{model}_Forend.png[]
 <<<
 === Barrel Collar
 .{model} Barrel Collar X-Ray
-image::../.views/Preview_Forend_{model}_BarrelCollar.png[]
+image::../.views/Forend/TopBreak_{model}/Preview_BarrelCollar.png[]
 
 . Using pliers, peel off the supports from the pivot area.
 . Flush cutters can be used to clean up the flat portion.
@@ -26,7 +26,7 @@ image::../.views/Preview_Forend_{model}_BarrelCollar.png[]
 <<<
 === Extractor
 .{model} Extractor X-Ray
-image::../.views/Preview_Forend_{model}_Extractor.png[]
+image::../.views/Forend/TopBreak_{model}/Preview_Extractor.png[]
 
 . Ream the _Extractor Retainer_ hole in the _Extractor_ to 1/4".
 . Insert the _Extractor Bit_ into the _Extractor_.
@@ -41,7 +41,7 @@ image::../.views/Preview_Forend_{model}_Extractor.png[]
 <<<
 === Latch
 .{model} Latch X-Ray
-image::../.views/Preview_Forend_{model}_Latch.png[]
+image::../.views/Forend/TopBreak_{model}/Preview_Latch.png[]
 
 . Insert the _Latch Springs_ into the small square holes in the _Barrel Collar_.
 . Insert the _Latch Bars_ into the square holes in the _Barrel Collar_.
@@ -53,7 +53,7 @@ image::../.views/Preview_Forend_{model}_Latch.png[]
 <<<
 === Cluster
 .{model} Cluster
-image::../.views/Preview_Forend_{model}_Cluster.png[]
+image::../.views/Forend/TopBreak_{model}/Preview_Cluster.png[]
 
 . Ream the _Cluster Bolts_ holes (top)
 . Ream the _Handguard Bolt_ holes (sides).
@@ -66,7 +66,7 @@ image::../.views/Preview_Forend_{model}_Cluster.png[]
 === Sightpost
 
 .{model} Sightpost
-image::../.views/Preview_Forend_{model}_Sightpost.png[]
+image::../.views/Forend/TopBreak_{model}/Preview_Sightpost.png[]
 
 . Ream the _Handguard Bolt_ holes (sides).
 . Ream the _Sightpost Bolt_ hole (top).
@@ -77,7 +77,7 @@ image::../.views/Preview_Forend_{model}_Sightpost.png[]
 === Handguard Assembly
 
 .{model} Handguard Assembly
-image::../.views/Preview_Forend_{model}_Handguard.png[]
+image::../.views/Forend/TopBreak_{model}/Preview_Handguard.png[]
 
 . Screw the _Cluster_ to the _Barrel Trunnion_.
 . Slip the Handguard over the barrel.
@@ -90,7 +90,7 @@ image::../.views/Preview_Forend_{model}_Handguard.png[]
 === Forend and Barrel
 
 .{model} Forend and Barrel Assembly
-image::../.views/Preview_Forend_{model}_ForendAndBarrel.png[]
+image::../.views/Forend/TopBreak_{model}/Preview_ForendAndBarrel.png[]
 
 . Rotate the _BarrelCollar_ up into the _Forend_ from the bottom.
 . Insert the _Barrel and Handguard Assembly_ into the front of the _BarrelCollar_.
@@ -100,7 +100,7 @@ image::../.views/Preview_Forend_{model}_ForendAndBarrel.png[]
 === Receiver Front
 
 .{model} Receiver Front
-image::../.views/Preview_Forend_{model}_ReceiverFront.png[]
+image::../.views/Forend/TopBreak_{model}/Preview_ReceiverFront.png[]
 
 . Ream the _Frame Bolt_ holes.
 . Ensure the _Latch Rods_ can pass freely through the square holes in the _ReceiverFront_.
@@ -110,7 +110,7 @@ image::../.views/Preview_Forend_{model}_ReceiverFront.png[]
 . Install the _Recoil Plate Bolts_ from the rear of the _ReceiverFront_.
 
 .Firing Pin Housing
-image::../.views/XRay_FiringPinHousing_NoDisconnector.png[]
+image::../.views/Receiver/FCG_{units}/XRay_FiringPinHousing_NoDisconnector.png[]
 
 . Remove the _Disconnector_, pin, and spring if installed. They are not used in the {model}.
 . Install the _Firing Pin_ into the _FiringPinHousing_.
@@ -122,7 +122,7 @@ image::../.views/XRay_FiringPinHousing_NoDisconnector.png[]
 === Final Assembly
 
 .{model} Final Assembly
-image::../.views/Preview_{model}.png[]
+image::../.views/Forend/TopBreak_{model}/Assembly.png[]
 
 . Install the _ReceiverFront_ over the _Frame Bolts_, seat flush with the _Frame_.
 . Install the _Forend_ over the _Frame Bolts_, seat flush with the _ReceiverFront_.

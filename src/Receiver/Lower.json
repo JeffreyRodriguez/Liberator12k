@@ -1,5 +1,6 @@
 {
     "parameterSets": {
+	"inch": {},
         "metric": {
             "LOWER_BOLT": "M4",
             "LOWER_BOLT_CLEARANCE": "0.015",

@@ -1,7 +1,7 @@
 {
     "parameterSets": {
-	"inch": {},
-	"metric": {}
+	"Minuteman_inch": {},
+        "Minuteman_metric": {}
     },
     "fileFormatVersion": "1"
 }

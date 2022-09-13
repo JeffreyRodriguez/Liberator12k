@@ -1,7 +1,7 @@
 == "Minuteman" Receiver
 
 .Minuteman Receiver Assembly
-image::../.views/Preview_Minuteman.png[]
+image::../.views/Assembly_Minuteman_inch/Assembly.png[]
 
 To get very technical this is a *Large Frame Receiver with a Stock*.
 That's a mouthful, so I call it the
@@ -13,11 +13,11 @@ Each Minuteman component has its own subsection, print them in order.
 [cols="^1,^1"]
 |===
 
-|image:../.views/Preview_FCG.png[] Fire Control Group (FCG)
-|image:../.views/Preview_Frame.png[] Large Frame Receiver
+|image:../.views/Receiver/FCG_{units}/Assembly.png[] Fire Control Group (FCG)
+|image:../.views/Receiver/Frame_{units}/Assembly.png[] Large Frame Receiver
 
-|image:../.views/Preview_Lower.png[] Lower Receiver
-|image:../.views/Preview_Stock.png[] Stock
+|image:../.views/Receiver/Lower_{units}/Assembly.png[] Lower Receiver
+|image:../.views/Receiver/Stock_{units}/Assembly.png[] Stock
 |===
 
 <<<

@@ -17,6 +17,8 @@ include ../../Makefile.in
 	@$(eval CAMERA=$(if $(SCAD_POV),--camera=$(SCAD_POV),$(OS_CAM_ASSEMBLY)))
 	@$(eval VIEWPORT=$(if $(IS_ASSEMBLY),$(CAMERA),$(OS_CAM_STL)))
 	@$(eval IMAGE_SIZE=$(if $(IS_ASSEMBLY),$(OS_RES_HIGH),$(OS_RES_LOW)))
+	@$(eval OUTPUT=$(if $(suffix .png,$@),- --export-format=png, $@))
+	@$(eval CONVERT=$(if $(suffix .png,$@),| convert -fuzz 4% -transparent "\#fafafa" png:- $@,))
 	@echo Target: $@
 	@echo Target Dir: $(dir $@)
 	@echo Deps: $^
@@ -28,13 +30,10 @@ include ../../Makefile.in
 	@echo Render for Print: $(RENDER_PRINT)
 	@echo Render Mode: $(RENDER_MODE)
 	mkdir -p $(dir $@) && \
-	$(OSBIN) $(OSOPTS) -o $@ \
-		$(RENDER_MODE) --imgsize $(IMAGE_SIZE) --projection=p \
-		$(VIEWPORT) \
-		$(if $(PRESET),-p $(CLASS).json -P $(PRESET),) \
-		-D _RENDER=\"$(PART)\" \
-		-D _RENDER_PRINT=$(RENDER_PRINT) \
-		$(CLASS).scad && \
-	if  [ "$(suffix $@)" == ".png" ]; then
-	  convert -fuzz 4% -transparent "#fafafa" $@ $@
-	fi
+	$(OSBIN) $(OSOPTS) -o $(OUTPUT) \
+	  $(RENDER_MODE) --imgsize $(IMAGE_SIZE) --projection=p \
+	  $(VIEWPORT) \
+	  $(if $(PRESET),-p $(CLASS).json -P $(PRESET),) \
+	  -D _RENDER=\"$(PART)\" \
+	  -D _RENDER_PRINT=$(RENDER_PRINT) \
+	  $(CLASS).scad $(CONVERT)

@@ -2,7 +2,7 @@
 === Fire Control Group
 
 .Fire Control Group Assembly
-image::../.views/Preview_FCG.png[]
+image::../.views/Receiver/FCG_{units}/Assembly.png[]
 
 The sear is a square rod with a cross-pin.
 An inclined slot in the trigger forces sear downward when the trigger is pulled.
@@ -38,7 +38,7 @@ endif::[]
 ===== Trigger Subassembly
 
 .Trigger X-Ray
-image::../.views/XRay_Trigger.png[]
+image::../.views/Receiver/FCG_{units}/XRay_Assembly.png[]
 
 . Insert the _TriggerMiddle_ into the _Trigger_. It should slide freely.
 . Drop the _Sear Return Spring_ into the _TriggerMiddle_.
@@ -51,7 +51,7 @@ image::../.views/XRay_Trigger.png[]
 ===== Hammer Subassembly
 
 .Hammer X-Ray
-image::../.views/XRay_Hammer.png[]
+image::../.views/Receiver/FCG_{units}/XRay_Hammer.png[]
 
 . Heatset the _Hammer Nut_ into the rear of the _Hammer_.
 . Install the _Hammer Bolt_.
@@ -63,7 +63,7 @@ image::../.views/XRay_Hammer.png[]
 ===== Firing Pin Subassembly
 
 .Firing Pin X-Ray
-image::../.views/XRay_FiringPin.png[]
+image::../.views/Receiver/FCG_{units}/XRay_FiringPin.png[]
 
 . Ream the _Firing Pin Collar_ hole to 2.5mm.
 . Add superglue near the nail head.
@@ -73,11 +73,11 @@ image::../.views/XRay_FiringPin.png[]
 ===== Firing Pin Housing
 .Firing Pin Housing X-Ray
 ifdef::fcg-disconnector[]
-image::../.views/XRay_FiringPinHousing.png[]
+image::../.views/Receiver/FCG_{units}/XRay_FiringPinHousing.png[]
 endif::[]
 
 ifndef::fcg-disconnector[]
-image::../.views/XRay_FiringPinHousing_NoDisconnector.png[]
+image::../.views/Receiver/FCG_{units}/XRay_FiringPinHousing_NoDisconnector.png[]
 endif::[]
 
 TIP: Do not assemble this component yet, you will be directed how in the
@@ -95,7 +95,7 @@ endif::[]
 ===== Charging Handle Subassembly
 
 .Charging Handle X-Ray
-image::../.views/XRay_ChargingHandle.png[]
+image::../.views/Receiver/FCG_{units}/XRay_ChargingHandle.png[]
 
 . Heatset the _Charging Handle Nut_ into the _ChagingHandle_.
 . Chuck the _Charging Handle Bolt_ in a drill and file/sand the bolt cap smooth.

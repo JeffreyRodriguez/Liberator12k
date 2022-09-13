@@ -2,7 +2,7 @@
 === Large Frame Receiver
 
 .Large Frame Receiver Assembly
-image::../.views/Preview_Frame.png[]
+image::../.views/Receiver/Frame_{units}/Assembly.png[]
 
 This is the core of the gun. In the United States it's the receiver.
 Legally-speaking it's a gun. If you need to dispose of it, burn it to ash.
@@ -27,7 +27,7 @@ include::Frame_BOM_Inch.adoc[]
 ==== Post-Processing
 
 .Frame Heatset Nuts
-image::../.views/XRay_Frame.png[]
+image::../.views/Receiver/Frame_{units}/XRay_Assembly.png[]
 
 ===== Install Tension Nuts
 

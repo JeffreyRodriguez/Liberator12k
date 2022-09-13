@@ -1,0 +1,9 @@
+--camera=$(call scad_pov,$<)
+-D _ALPHA_FIRING_PIN_HOUSING=0.2
+-D _ALPHA_RECOIL_PLATE=0.2
+-D _ALPHA_FCG_TRIGGER=0.1
+-D _SHOW_RECEIVER=false
+-D _SHOW_FCG=true
+-D _SHOW_LOWER=false
+-D _SHOW_FOREND=false
+-D _SHOW_STOCK=false

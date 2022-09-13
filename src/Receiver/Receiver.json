@@ -1,5 +1,6 @@
 {
     "parameterSets": {
+	"inch": {},
         "metric": {
             "MLOK_BOLT": "M4",
             "TENSION_BOLT": "M4",

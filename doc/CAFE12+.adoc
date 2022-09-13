@@ -1,6 +1,6 @@
 = Liberator12k | CAFE12+
 Jeff Rodriguez <jeff@liberator12k.com>
-:title-logo-image: image:../.views/Preview_CAFE12+.png[top=5%,align=center,pdfwidth=8in]
+:title-logo-image: image:../.views/Forend/TopBreak_CAFE12+/Assembly.png[top=5%,align=center,pdfwidth=8in]
 include::.build/Version.adoc[]
 :reproducible:
 :listing-caption: Listing
@@ -10,6 +10,7 @@ include::.build/Version.adoc[]
 :doctype: book
 :title-page:
 :model: CAFE12+
+:units: inch
 
 == Introduction
 
@@ -55,7 +56,7 @@ include::Minuteman/Minuteman.adoc[]
 == {model} Forend
 
 .{model} Forend Assembly
-image::../.views/Preview_Forend_{model}.png[]
+image::../.views/Forend/TopBreak_{model}/Forend.png[]
 
 <<<
 === Prints and BOM

@@ -1,5 +1,6 @@
 {
     "parameterSets": {
+	"inch": {},
         "metric": {
             "FRAME_BOLT": "M12",
             "FRAME_BOLT_Y": "1.25",

@@ -1,5 +1,6 @@
 {
     "parameterSets": {
+	"inch": {},
         "metric": {
             "ACTION_ROD_BOLT": "M4",
             "ACTION_ROD_BOLT_CLEARANCE": "0.015",

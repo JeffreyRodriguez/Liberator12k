@@ -1,0 +1,7 @@
+--camera=25,300,25,-75,0,-65
+-D _ALPHA_LOWER_MOUNT=1
+-D _SHOW_RECEIVER=false
+-D _SHOW_FCG=false
+-D _SHOW_LOWER=true
+-D _SHOW_FOREND=false
+-D _SHOW_STOCK=false
