@@ -40,7 +40,7 @@ dist/:
 	$(MAKE) -f Views.mk all
 
 clean-dir:
-	rm -rf $(ASSEMBLY_DIR) $(BUILD_DIR) $(EXPORT_DIR)
+	rm -rf $(ASSEMBLY_DIR) $(BUILD_DIR) $(EXPORT_DIR) $(VIEWS_DIR)
 	rm -rf $(TARGETS) changelog.txt .build/Liberator12k-source/ dist/
 clean-dir:
 
