@@ -23,4 +23,4 @@ include ../../Makefile.in
 	  -D _RENDER=\"$(call render_part,$@)\" \
 	  -D _RENDER_PRINT=$(if $(IS_ASSEMBLY),false,true) \
 	  $(CLASS).scad && \
-	convert -fuzz 4% -transparent "#fafafa" $(PNG) $(PNG),
+	convert -fuzz 4% -transparent "#fafafa" $(PNG) $(PNG)
