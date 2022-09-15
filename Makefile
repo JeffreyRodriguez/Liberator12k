@@ -41,6 +41,6 @@ dist/:
 
 clean-dir:
 	rm -rf $(ASSEMBLY_DIR) $(BUILD_DIR) $(EXPORT_DIR) $(VIEWS_DIR)
-	rm -rf $(TARGETS) changelog.txt .build/Liberator12k-source/ dist/
+	rm -rf $(TARGETS) dist/
 
 all: $(SUBDIRS) $(TARGETS)
