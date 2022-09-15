@@ -12,12 +12,15 @@ $(BUILD_DIR)/Version.adoc:
 	echo :revdate: $(GIT_DATE) > $@ && \
 	echo :revnumber: $(GIT_VERSION) >> $@
 
-$(EXPORT_DIR)/%.pdf: %.adoc .build/Version.adoc $(SRC)/
+$(EXPORT_DIR)/%.pdf: %.adoc .build/Version.adoc $(SRC) ../$(VIEWS_DIR)/
 	mkdir -p $(dir $@) && \
 	asciidoctor-pdf --warnings --failure-level=WARN $<
 
 clean-dir:
 	rm -rf $(TARGETS)
+
+../$(VIEWS_DIR)/: FORCE
+	$(MAKE) -C ../ -f Views.mk
 
 $(SRC)/: FORCE
 	$(MAKE) -C $@

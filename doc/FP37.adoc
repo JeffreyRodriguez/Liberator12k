@@ -1,4 +1,4 @@
-= Liberator12k | CAFE12+
+= Liberator12k | FP37
 Jeff Rodriguez <jeff@liberator12k.com>
 include::.build/Version.adoc[]
 :reproducible:
@@ -8,7 +8,7 @@ include::.build/Version.adoc[]
 :sectnums:
 :doctype: book
 :title-page:
-:model: CAFE12+
+:model: FP37
 :units: inch
 :title-logo-image: image:../.views/Forend/TopBreak_{model}/Assembly.png[top=5%,align=center,pdfwidth=8in]
 
@@ -18,20 +18,16 @@ Welcome to the Liberator12k project. Thank you for your interest.
 
 This document will guide you through the build of a {model} top-break shotgun.
 
-=== CAFE12+ vs CAFE12 Base
-The CAFE12+ is the model I sell on the store, it uses 4130 tubing instead of
-schedule 40 galvanized pipe.
-4130 is a much stronger steel alloy, is seamless, and has tighter tolerances.
-4130 is better, but galvanized pipe works too. The forend prints are not 100%
-compatible since schedule 40 pipe is slightly larger than 4130.
-
-TIP: This document is specific to the {mdoel}.
+=== FP37 - It's not a weapon
+The "Flare Projector" 37mm is a signaling device, not a weapon.
+Depending on what you load into it, it might become a weapon, so take care with
+your ammunition and loadings.
 
 === Hardware Kit vs DIY
 If you purchased a kit, all the machining is already done for you.
 
 To DIY all the parts yourself, refer to the <<Minuteman DIY Machining>> and 
-<<CAFE12 DIY Machining>> appendices.
+<<FP37 DIY Machining>> appendices.
 The project includes several fixtures and jigs to assist you in DIY machining.
 
 A fully outfitted shop with a lathe, mill, and drill press will produce the best
@@ -71,7 +67,7 @@ include::Forend/TopBreak.adoc[]
 
 include::Common/Dimensions.adoc[]
 
-include::Forend/CAFE_DIY_Machining.adoc[]
+include::Forend/FP37_DIY_Machining.adoc[]
 
 include::Common/Developers.adoc[]
 

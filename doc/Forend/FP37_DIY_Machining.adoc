@@ -1,0 +1,23 @@
+[appendix]
+== FP37 DIY Machining
+
+=== Cut the Extractor Slot
+File out a 1/4" wide slot in the 6-O'clock position for the extractor bit.
+Aim for a 45 degree angle 1/8" deep.
+
+File this same notch in a matching location on the barrel. This is easiest to do
+with the *Trunnion* installed on the barrel so you can do both at once.
+A large square-edged file makes quick work of this operation but you can also
+use a Dremel or angle grinder (and a lot of finesse).
+
+**Tip:** Use a vise.
+
+=== Extractor Crescent
+The extractor bit needs a crescent shaped cutout to go around the cartridge.
+If you're making just one or two, check-and-fit until a cartridge chambers snugly without binding.
+
+A Dremel with a cylindrical grinding bit works best for DIY.
+Use a dummy cartridge.
+
+=== Drill and Tap the Latch Bars
+Drill and tap (#8-32) the *Latch Bars* 1" from the end

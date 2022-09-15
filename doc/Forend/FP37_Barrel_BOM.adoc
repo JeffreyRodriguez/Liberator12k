@@ -1,0 +1,23 @@
+.{model} Barrel Assembly
+|===
+|Purpose|Part|Quantity
+
+|Trunnion Adhesive
+|2-part Epoxy
+|1
+
+|Barrel
+|1-5/8x19" Fence Post
+|1
+|===
+
+<br/>
+
+==== Fence Post Barrel
+1-5/8-in x 1-5/8-in W x 8-ft H Silver Galvanized Steel Line Fence Post
+Lowes has this stuff for $26/8ft. Item #552282Model #58910128
+
+==== No Trunnion
+There is no trunnion, unlike other TopBreak designs. There's not enough room
+to fit a trunnion or room for attachment bolts for the cluster.
+Epoxy everything in place.

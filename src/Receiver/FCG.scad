@@ -23,7 +23,7 @@ use <../Vitamins/Springs/SpringSpec.scad>;
 use <Lower.scad>;
 use <Receiver.scad>;
 
-// POV -150,350,150,-50,0,-30
+// POV -50,350,125,-75,0,-10
 
 /* [Export] */
 

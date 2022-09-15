@@ -7,7 +7,8 @@ define make_view =
 @$(eval VIEW_FILE=$(notdir $(basename $@)).view)
 @$(eval CLASS_VIEW_DIR=$(dir $<)/$(CLASS))
 @$(eval VIEW_ARGS=$(shell cat $(CLASS_VIEW_DIR)/$(VIEW_FILE)))
-mkdir -p $(dir $@)
+@echo Target: $@
+mkdir -p $(dir $@) && \
 $(OSBIN) $(OSOPTS) \
   --projection=p --preview \
   --imgsize=$(OS_RES_LOW) -o - --export-format=png \

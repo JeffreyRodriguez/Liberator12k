@@ -14,7 +14,7 @@ Forends = $(filter-out src/Forend/Assembly/%, \
 
 ZIP_TARGETS:=changelog.txt .build/Liberator12k-source/
 DIST:=dist/Liberator12k.zip dist/Liberator12k-source.zip dist/Liberator12k-assembly.zip
-TARGETS:=$(ZIP_TARGETS) $(DIST)
+TARGETS:=$(VIEWS_DIR) $(ZIP_TARGETS) $(DIST)
 
 .build/Liberator12k-source/: .git
 	rm -rf $@ && \
@@ -42,6 +42,5 @@ dist/:
 clean-dir:
 	rm -rf $(ASSEMBLY_DIR) $(BUILD_DIR) $(EXPORT_DIR) $(VIEWS_DIR)
 	rm -rf $(TARGETS) changelog.txt .build/Liberator12k-source/ dist/
-clean-dir:
 
 all: $(SUBDIRS) $(TARGETS)

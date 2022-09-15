@@ -13,7 +13,7 @@ SLOW_FRAME_COUNT:=300
 SLOW_FRAMES:=$(shell seq 0 $(SLOW_FRAME_COUNT))
 MDBIN:=cmark-gfm -e table --unsafe
 OSBIN:=nice openscad
-OSOPTS:=--hardwarnings --check-parameters=true --check-parameter-ranges=true --colorscheme=Nature
+OSOPTS:=--hardwarnings --check-parameters=true --check-parameter-ranges=true --colorscheme=Nature --quiet
 OS_RES_LOW:=1920,1080
 OS_RES_HIGH:=4096,2160
 OS_CAM_STL:=--autocenter --viewall --view scales
@@ -74,12 +74,14 @@ render_preset       = $(shell echo $(call render_class_preset,$(1)) | awk -F _ '
 render_part         = $(subst $(call render_class_preset,$(1))/,,$(call render_name,$(1)))
 render_source       = $(addsuffix .scad, $(call render_class,$(1)))
 
+# Extract the class name from a preset
+# i.e. TopBreak_CAFE12+ = TopBreak
 preset_class_name = $(shell echo $(1) | awk -F _ '{ print $$1 }')
 
 # Extract the // POV entry
 scad_pov          = $(shell grep '// POV ' $(1) | awk '{ print $$3 }')
-scad_view         = $(shell awk '{ print "-D ",$$1 }' $(basename $(1)).view)
 
+# .parts files lists all the renders in a given .scad file.
 $(EXPORT_DIR)/%.parts: %.scad
 	mkdir -p $(dir $@) && \
 	echo "$(subst ${space},${\n},$(call list_renders,$^))" > $@

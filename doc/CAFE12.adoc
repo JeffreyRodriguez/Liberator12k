@@ -1,6 +1,5 @@
 = Liberator12k | CAFE12
 Jeff Rodriguez <jeff@liberator12k.com>
-:title-logo-image: image:../.views/Preview_CAFE12+.png[top=5%,align=center,pdfwidth=8in]
 include::.build/Version.adoc[]
 :reproducible:
 :listing-caption: Listing
@@ -10,6 +9,8 @@ include::.build/Version.adoc[]
 :doctype: book
 :title-page:
 :model: CAFE12
+:units: inch
+:title-logo-image: image:../.views/Forend/TopBreak_{model}/Assembly.png[top=5%,align=center,pdfwidth=8in]
 
 == Introduction
 
@@ -24,7 +25,7 @@ schedule 40 galvanized pipe.
 4130 is better, but galvanized pipe works too. The forend prints are not 100%
 compatible since schedule 40 pipe is slightly larger than 4130.
 
-TIP: This document is specific to the {mdoel}.
+TIP: This document is specific to the {model}.
 
 === Hardware Kit vs DIY
 If you purchased a kit, all the machining is already done for you.
@@ -38,11 +39,11 @@ looking and most functional product.
 But you can get by with hand tools, a drill, and an angle grinder.
 
 === Minuteman Receiver
-The CAFE12 uses the "Minuteman" universal receiver, a core component of many
+The {model} uses the "Minuteman" universal receiver, a core component of many
 designs in the Liberator12k family. Think of it like an AR15 lower receiver.
 The Minuteman receiver is reusable in several other configurations similar
 to how you might swap AR15 uppers. Forends mount on a pair of 1/2"-13 bolts.
-This manual will guide you through building the Minuteman and CAFE12 forend.
+This manual will guide you through building the Minuteman and {model} forend.
 
 include::Common/Introduction.adoc[]
 
@@ -55,16 +56,16 @@ include::Minuteman/Minuteman.adoc[]
 == {model} Forend
 
 .{model} Forend Assembly
-image::../.views/Preview_Forend_{model}.png[]
+image::../.views/Forend/TopBreak_{model}/Forend.png[]
 
 <<<
 === Prints and BOM
-include::Forend/{model}_BOM_Inch.adoc[]
+include::Forend/TopBreak_BOM_{units}.adoc[]
 
 <<<
 NOTE: STL Files Location: `Forend/TopBreak_{model}/Prints/`
 
-include::Forend/{model}_Prints.adoc[]
+include::Forend/TopBreak_Prints.adoc[]
 
 include::Forend/TopBreak.adoc[]
 

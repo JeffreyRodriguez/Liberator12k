@@ -5,35 +5,22 @@ include ../../Makefile.in
 .SECONDEXPANSION:
 # include $(BUILD_DIR)/$$(call render_class,$$@).d
 %.dxf %.png %.stl: $$(call render_class,$$@).scad $$(BUILD_DIR)/$$(call render_class,$$@).d
-	@$(eval NAME=$(call render_name,$@))
-	@$(eval CLASS_PRESET=$(call render_class_preset,$@))
-	@$(eval CLASS=$(call render_class,$@))
-	@$(eval PRESET=$(call render_preset,$@))
-	@$(eval PART=$(call render_part,$@))
-	@$(eval IS_ASSEMBLY=$(findstring $(ASSEMBLY_DIR),$@))
-	@$(eval RENDER_MODE=$(if $(IS_ASSEMBLY),--preview,--render))
-	@$(eval RENDER_PRINT=$(if $(IS_ASSEMBLY),false,true) )
-	@$(eval SCAD_POV=$(call scad_pov,$(CLASS).scad))
-	@$(eval CAMERA=$(if $(SCAD_POV),--camera=$(SCAD_POV),$(OS_CAM_ASSEMBLY)))
-	@$(eval VIEWPORT=$(if $(IS_ASSEMBLY),$(CAMERA),$(OS_CAM_STL)))
-	@$(eval IMAGE_SIZE=$(if $(IS_ASSEMBLY),$(OS_RES_HIGH),$(OS_RES_LOW)))
-	@$(eval OUTPUT=$(if $(suffix .png,$@),- --export-format=png, $@))
-	@$(eval CONVERT=$(if $(suffix .png,$@),| convert -fuzz 4% -transparent "\#fafafa" png:- $@,))
+	$(eval CLASS=$(call render_class,$@))
+	$(eval PRESET=$(call render_preset,$@))
+	$(eval IS_ASSEMBLY=$(findstring $(ASSEMBLY_DIR),$@))
+	$(eval SCAD_POV=$(call scad_pov,$(CLASS).scad))
+	$(eval CAMERA=$(if $(SCAD_POV),--camera=$(SCAD_POV),$(OS_CAM_ASSEMBLY)))
+	$(eval PNG=$(basename $@).png)
 	@echo Target: $@
-	@echo Target Dir: $(dir $@)
-	@echo Deps: $^
-	@echo Name: $(NAME)
-	@echo Class_Preset: $(CLASS_PRESET)
-	@echo Class: $(CLASS)
-	@echo Preset: $(PRESET)
-	@echo Part: $(PART)
-	@echo Render for Print: $(RENDER_PRINT)
-	@echo Render Mode: $(RENDER_MODE)
 	mkdir -p $(dir $@) && \
-	$(OSBIN) $(OSOPTS) -o $(OUTPUT) \
-	  $(RENDER_MODE) --imgsize $(IMAGE_SIZE) --projection=p \
-	  $(VIEWPORT) \
+	$(OSBIN) $(OSOPTS) \
+	  -o $@ -o $(PNG) \
+	  $(if $(IS_ASSEMBLY),--preview,--render) \
+	  --imgsize $(if $(IS_ASSEMBLY),$(OS_RES_HIGH),$(OS_RES_LOW)) \
+	  --projection=p \
+	  $(if $(IS_ASSEMBLY),$(CAMERA),$(OS_CAM_STL)) \
 	  $(if $(PRESET),-p $(CLASS).json -P $(PRESET),) \
-	  -D _RENDER=\"$(PART)\" \
-	  -D _RENDER_PRINT=$(RENDER_PRINT) \
-	  $(CLASS).scad $(CONVERT)
+	  -D _RENDER=\"$(call render_part,$@)\" \
+	  -D _RENDER_PRINT=$(if $(IS_ASSEMBLY),false,true) \
+	  $(CLASS).scad && \
+	convert -fuzz 4% -transparent "#fafafa" $(PNG) $(PNG),
