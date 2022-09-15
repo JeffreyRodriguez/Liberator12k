@@ -1,4 +1,6 @@
 .Lower Bill of Materials (Metric)
+[cols="1,2,1"]
+|===
 |Purpose|Part|Quantity
 
 |Lower Nut

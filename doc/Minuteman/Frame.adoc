@@ -21,7 +21,7 @@ NOTE: STL Files Location: `Receiver/Frame/Prints/`
 |image:../src/Receiver/.export/Frame/Prints/Frame_Receiver.png[] Frame Receiver
 |===
 
-include::Frame_BOM_Inch.adoc[]
+include::Frame_BOM_{units}.adoc[]
 
 <<<
 ==== Post-Processing

@@ -1,0 +1,21 @@
+.{model} Barrel Assembly
+|===
+|Purpose|Part|Quantity
+
+|Trunnion Set Screws
+|M4x3 Grub Screw
+|8
+
+|Trunnion
+|32mm OD x 27mm ID x 200mm Long Stainless 304 Tubing
+|1
+
+|Barrel
+|21.5mm ID x 26.8mm OD x 500mm Long Stainless 304 Tubing
+|1
+
+|Barrel Shim
+|75x150mm 0.05mm Shim Stock
+|1
+|===
+

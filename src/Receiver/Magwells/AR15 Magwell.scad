@@ -2,6 +2,9 @@ use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
 use <../../Shapes/Chamfer.scad>;
 
+_WALL_FRONT=0.125;
+_WALL_BACK=0.5;
+
 function MagazineAngle() = 0;
 
 function AR15_MagazineRearTabLength() = 0.137;
@@ -140,8 +143,7 @@ module AR15_Magwell(width=Inches(1.125),
         translate([0, -(width/2)])
         mirror([1,0])
         rotate(90)
-        ChamferedSquare([width,
-                         length + wallBack], r=1/8);
+        ChamferedSquare([width, length + wallFront], r=1/8);
       }
     }
 
@@ -156,5 +158,5 @@ module AR15_Magwell(width=Inches(1.125),
 }
 
 //ScaleToMillimeters() rotate([180,0,0])
-AR15_Magwell();
+AR15_Magwell(wallFront=_WALL_FRONT, wallBack=_WALL_BACK);
 %AR15_MagwellInsert();

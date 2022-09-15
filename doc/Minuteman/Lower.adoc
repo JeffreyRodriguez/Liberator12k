@@ -28,7 +28,7 @@ NOTE: STL Files Location: `Receiver/Lower/Prints/`
 |
 |===
 
-include::Lower_BOM_Inch.adoc[]
+include::Lower_BOM_{units}.adoc[]
 
 <<<
 ==== Post-Processing

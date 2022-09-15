@@ -1,0 +1,73 @@
+.FCG Bill of Materials (Inch)
+[cols="1,2,1"]
+|===
+|Purpose|Part|Quantity
+
+|Charging Handle Bolt
+|#8-32x1/4" SS Socket Cap Bolt
+|1
+
+|Charging Handle Nut
+|#8-32 Short Heatset Nut
+|1
+
+|Disconnector Pivot Pin
+|2.5x19mm Dowel Pin
+|1
+
+|Disconnector Spring
+|0.22" OD 0.625" Long (0.02" wire)
+|1
+
+|Firing Pin
+|6Dx2" Box Nail, cut flush to 1.54" OAL
+|1
+
+|Firing Pin Spring
+|0.22" OD 0.625" Long (0.02" wire)
+|1
+
+|Hammer Bolt
+|1/4-20x5" Flat Head Bolt
+|1
+
+|Hammer Bolt Sleeve
+|9/32"x3.5" K&S Brass Tube
+|1
+
+|Hammer Cap Nut
+|1/4-20" Acorn Nut
+|1
+
+|Hammer Nut
+|1/4-20" Heatset Nut (Short)
+|1
+
+|Hammer Spring
+|0.052x0.625x3" ~6.3lbs/in Compression Spring
+|1
+
+|Recoil Plate
+|#Liberator12k Recoil Plate
+|1
+
+|Recoil Plate Center Bolts
+|#8-32x1.5 SS Flat-Head Bolt
+|2
+
+|Recoil Plate Side Bolts
+|#8-32x0.5 SS Flat-Head Bolt
+|4
+
+|Sear
+|1/4"x1.67" Steel Square Rod
+|1
+
+|Sear Pin
+|2.5x19mm Dowel Pin
+|1
+
+|Sear Return Spring
+|0.02" Wire, 0.25"x1.25"
+|1
+|===

@@ -22,7 +22,7 @@ NOTE: STL Files Location: `Receiver/Stock/Prints/`
 |image:../src/Receiver/.export/Stock/Prints/Stock_Buttpad.png[] Stock Buttpad
 |===
 
-include::Stock_BOM_Inch.adoc[]
+include::Stock_BOM_{units}.adoc[]
 
 <<<
 ==== Post-Processing

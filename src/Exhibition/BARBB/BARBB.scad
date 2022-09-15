@@ -1076,7 +1076,7 @@ if ($preview) {
   BARBB_Stock();
 
   // Square Tube
-  color("Silver")
+  *color("Silver")
   translate([hammerMaxX, ManifoldGap(), tubeCenterZ])
   //render() Cutaway()
   rotate([0,90,0])

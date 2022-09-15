@@ -1,7 +1,7 @@
 == "Minuteman" Receiver
 
 .Minuteman Receiver Assembly
-image::../.views/Assembly_Minuteman_inch/Assembly.png[]
+image::../.views/Assembly_Minuteman_{units}/Assembly.png[]
 
 To get very technical this is a *Large Frame Receiver with a Stock*.
 That's a mouthful, so I call it the
@@ -161,7 +161,8 @@ but it will take longer.
 
 |===
 
-include::BOM_Inch.adoc[]
+<<<
+include::BOM_{units}.adoc[]
 
 include::FCG.adoc[]
 

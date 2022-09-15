@@ -33,6 +33,9 @@ endif::[]
 |===
 
 <<<
+include::FCG_BOM_{units}.adoc[]
+
+<<<
 ==== Post-Processing
 
 ===== Trigger Subassembly

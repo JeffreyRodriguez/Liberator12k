@@ -1,0 +1,69 @@
+= Liberator12k | CAFE12M
+Jeff Rodriguez <jeff@liberator12k.com>
+include::.build/Version.adoc[]
+:reproducible:
+:listing-caption: Listing
+:source-highlighter: rouge
+:toc:
+:sectnums:
+:doctype: book
+:title-page:
+:model: CAFE12M
+:units: metric
+:title-logo-image: image:../.views/Forend/TopBreak_{model}/Assembly.png[top=5%,align=center,pdfwidth=8in]
+
+== Introduction
+
+Welcome to the Liberator12k project. Thank you for your interest.
+
+This document will guide you through the build of a {model} top-break shotgun.
+
+=== CAFE12M
+Thanks to the parametric nature of the #Liberator12k, building a metric CAFE12
+has proven surprisingly easy. You're going to have to source and fabricate all
+your own hardware, but it's very doable.
+
+TIP: This document is specific to the {model}.
+
+=== Minuteman Receiver
+The {model} uses the "Minuteman" universal receiver, a core component of many
+designs in the Liberator12k family. Think of it like an AR15 lower receiver.
+The Minuteman receiver is reusable in several other configurations similar
+to how you might swap AR15 uppers. Forends mount on a pair of 1/2"-13 bolts.
+This manual will guide you through building the Minuteman and {model} forend.
+
+include::Common/Introduction.adoc[]
+
+include::Common/ToolsAndOperations.adoc[]
+
+include::Common/Printing.adoc[]
+
+include::Minuteman/Minuteman.adoc[]
+
+== {model} Forend
+
+.{model} Forend Assembly
+image::../.views/Forend/TopBreak_{model}/Forend.png[]
+
+<<<
+=== Prints and BOM
+include::Forend/TopBreak_BOM_{units}.adoc[]
+
+<<<
+NOTE: STL Files Location: `Forend/TopBreak_{model}/Prints/`
+
+include::Forend/TopBreak_Prints.adoc[]
+
+include::Forend/TopBreak.adoc[]
+
+include::Common/Dimensions.adoc[]
+
+include::Forend/CAFE_DIY_Machining.adoc[]
+
+include::Common/Developers.adoc[]
+
+include::Common/CONTRIBUTING.adoc[]
+
+include::Common/Unlicense.adoc[]
+
+include::Common/Why.adoc[]
