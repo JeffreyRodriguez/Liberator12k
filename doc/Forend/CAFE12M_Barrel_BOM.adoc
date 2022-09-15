@@ -7,11 +7,11 @@
 |8
 
 |Trunnion
-|32mm OD x 27mm ID x 200mm Long Stainless 304 Tubing
+|32mm OD x 28mm ID x 20cm Long Stainless 304 Tubing
 |1
 
 |Barrel
-|21.5mm ID x 26.8mm OD x 500mm Long Stainless 304 Tubing
+|21mm ID x 27mm OD x 50cm Long Stainless 304 Tubing
 |1
 
 |Barrel Shim
