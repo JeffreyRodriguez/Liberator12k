@@ -5,7 +5,7 @@ include ../Animation.mk
 # Forend Classes
 Classes := TopBreak Revolver Evolver
 
-TopBreak_Presets := CAFE12 CAFE12+ FP37
+TopBreak_Presets := CAFE12 CAFE12+ CAFE12M FP37
 Revolver_Presets := ZZR6x12
 Evolver_Presets := 12GA
 Presets := $(addprefix TopBreak_,$(TopBreak_Presets)) \
