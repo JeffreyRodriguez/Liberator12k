@@ -3,16 +3,14 @@ include Makefile.in
 Assembly = src/Receiver/.assembly src/Forend/.assembly
 Components = Frame Receiver Stock Lower FCG
 
-Minuteman = $(foreach Component,$(Components),$(wildcard src/Receiver/$(STL_DIR)/$(Component)/Prints/*.stl)) \
-                $(foreach Component,$(Components),$(wildcard src/Receiver/$(STL_DIR)/$(Component)/Fixtures/*.stl)) \
-                $(foreach Component,$(Components),$(wildcard src/Receiver/$(STL_DIR)/$(Component)/Projections/))
+Minuteman = $(shell find 'src/Receiver/$(EXPORT_DIR)/' -ipath '*.stl')
 
 Forends = $(filter-out src/Forend/Assembly/%, \
             $(shell find src/Forend/ -ipath '*_*/Prints/*.stl' ) \
 	    $(shell find src/Forend/ -ipath '*_*/Fixtures/*.stl' ) \
 	    $(shell find src/Forend/ -ipath '*_*/Projections/*.dxf'))
 
-ZIP_TARGETS:=changelog.txt .build/Liberator12k-source/
+ZIP_TARGETS:=$(BUILD_DIR)/changelog.txt $(BUILD_DIR)/Liberator12k-source/
 DIST:=dist/Liberator12k.zip dist/Liberator12k-source.zip dist/Liberator12k-assembly.zip
 TARGETS:=$(VIEWS_DIR) $(ZIP_TARGETS) $(DIST)
 
@@ -30,6 +28,9 @@ dist/Liberator12k-source.zip: .build/Liberator12k-source/
 
 dist/Liberator12k-assembly.zip: $(SUBDIRS)
 	zip -9r $@ $(Assembly)
+
+Minuteman:
+	echo $(Minuteman)
 
 $(DIST): dist/
 dist/:
