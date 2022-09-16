@@ -57,49 +57,49 @@ function AR15_FiringPin_ExtensionRadius() = 0.156/2;
 function AR15_FiringPinRetainerOffset() = 0.35; // From the back of the bolt
 
 module AR15_FiringPin(cutter=false, clearance=0.007, extraShoulder=0) {
-  clear2 = clearance *2;
+  clear = cutter ? clearance :0;
 
   color("Silver") RenderIf(!cutter)
   union() {
 
     // Firing Pin Tip
-    cylinder(r=AR15_FiringPin_TipRadius()+clear2,
+    cylinder(r=AR15_FiringPin_TipRadius()+clear,
              h=AR15_FiringPin_TipLength()+ManifoldGap(2));
 
     // Firing Pin Front
     translate([0,0,AR15_BoltLength()-AR15_FiringPin_Length()-ManifoldGap()])
     mirror([0,0,1])
-    cylinder(r=AR15_FiringPin_FrontRadius()+clear2,
+    cylinder(r=AR15_FiringPin_FrontRadius()+clear,
              h=AR15_FiringPin_FrontLength()+ManifoldGap(2));
 
     // Firing Pin Body
     translate([0,0,AR15_BoltLength()-ManifoldGap()])
     mirror([0,0,1])
-    cylinder(r=AR15_FiringPin_Radius()+clear2,
+    cylinder(r=AR15_FiringPin_Radius()+clear,
              h=AR15_FiringPin_Length()+ManifoldGap(2));
 
     // Firing Pin Shoulder
     translate([0,0,AR15_BoltLength()-ManifoldGap()])
-    cylinder(r=AR15_FiringPin_ShoulderRadius()+clear2,
+    cylinder(r=AR15_FiringPin_ShoulderRadius()+clear,
              h=AR15_FiringPin_ShoulderLength()+extraShoulder+ManifoldGap(2));
 
     // Firing Pin Head
     translate([0,0,AR15_BoltLength()+AR15_FiringPin_Extension()])
     mirror([0,0,1])
-    ChamferedCylinder(r1=AR15_FiringPin_HeadRadius()+clear2,
+    ChamferedCylinder(r1=AR15_FiringPin_HeadRadius()+clear,
                       r2=1/16, chamferTop=false, chamferBottom=true, teardropBottom=false,
                       h=AR15_FiringPin_HeadLength()+ManifoldGap(2));
 
     // Firing Pin Extension
     translate([0,0,AR15_BoltLength()-ManifoldGap()])
-    cylinder(r=AR15_FiringPin_ExtensionRadius()+clear2,
+    cylinder(r=AR15_FiringPin_ExtensionRadius()+clear,
              h=AR15_FiringPin_Extension()+ManifoldGap(2));
 
     // Firing Pin-to-bolt-back taper
     if (cutter)
     translate([0,0,AR15_BoltLength()])
     rotate([180,0,0])
-    cylinder(r1=AR15_FiringPin_ShoulderRadius()+clear2, r2=AR15_BoltBackRadius()+clearance,
+    cylinder(r1=AR15_FiringPin_ShoulderRadius()+clear, r2=AR15_BoltBackRadius()+clearance,
             h=AR15_FiringPin_ShoulderRadius()+ManifoldGap());
   }
 }
