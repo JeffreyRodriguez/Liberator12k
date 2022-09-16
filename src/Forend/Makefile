@@ -1,5 +1,5 @@
 include ../../Makefile.in
-include ../../STL.mk
+include ../../Exports.mk
 include ../../Animation.mk
 
 TARGETS=$(EXPORTS) $(ASSEMBLIES)

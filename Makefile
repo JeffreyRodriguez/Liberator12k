@@ -40,6 +40,9 @@ dist/:
 	mkdir -p $@
 	$(MAKE) -f Views.mk all
 
+$(BUILD_DIR)/changelog.txt:
+	git log --oneline > $@
+
 clean-dir:
 	rm -rf $(ASSEMBLY_DIR) $(BUILD_DIR) $(EXPORT_DIR) $(VIEWS_DIR)
 	rm -rf $(TARGETS) dist/

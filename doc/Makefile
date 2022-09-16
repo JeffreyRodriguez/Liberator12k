@@ -4,9 +4,6 @@ SRC:=../src
 PDFS:=$(addprefix $(EXPORT_DIR)/,$(addsuffix .pdf,$(basename $(wildcard *.adoc))))
 TARGETS:=$(PDFS) $(BUILD_DIR)/changelog.txt $(BUILD_DIR)/Version.adoc
 
-$(BUILD_DIR)/changelog.txt:
-	git log --oneline > $@
-
 $(BUILD_DIR)/Version.adoc:
 	mkdir -p .build && \
 	echo :revdate: $(GIT_DATE) > $@ && \
