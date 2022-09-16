@@ -1,6 +1,6 @@
 include ../../Makefile.in
-include ../STL.mk
-include ../Animation.mk
+include ../../STL.mk
+include ../../Animation.mk
 
 ANIMATIONS=.animations/FCG.mp4
 
