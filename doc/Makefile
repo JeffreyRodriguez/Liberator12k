@@ -2,7 +2,7 @@ include ../Makefile.in
 
 SRC:=../src
 PDFS:=$(addprefix $(EXPORT_DIR)/,$(addsuffix .pdf,$(basename $(wildcard *.adoc))))
-TARGETS:=$(PDFS) $(BUILD_DIR)/changelog.txt $(BUILD_DIR)/Version.adoc
+TARGETS:=$(PDFS) $(BUILD_DIR)/Version.adoc
 
 $(BUILD_DIR)/Version.adoc:
 	mkdir -p .build && \
