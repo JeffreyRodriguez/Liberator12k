@@ -21,7 +21,7 @@ OS_CAM_ASSEMBLY:=--camera=200,1200,200,50,0,0
 GIT_VERSION:=$(shell git describe --always)
 GIT_DATE:=$(shell git log -1 --date=format:"%Y-%m-%d" --format="%ad")
 DATE:=$(shell date +'%Y-%m-%d')
-SUBDIRS:= $(filter-out Liberator12k-source/,$(dir $(wildcard */Makefile)))
+SUBDIRS:= $(filter-out .*,$(dir $(wildcard */Makefile)))
 SCADS:= $(wildcard *.scad)
 
 ASSEMBLY_DIR:=.assembly
@@ -33,16 +33,20 @@ BUILD_DIR:=.build
 .DEFAULT_GOAL:= all
 .PHONY: FORCE $(SUBDIRS) clean clean-dir
 .SECONDARY: *.d *.parts
-.PRECIOUS: *.stl *.png *.mp4 *.dxf
+.PRECIOUS: *.stl *.png *.mp4 *.dxf *.pdf
 
 $(SUBDIRS): FORCE
 	$(MAKE) -C $@
+
 #
 # Make helpers
 #
 
+# Filter to words in arg 2 matching the string in arg 1
+filter_string = $(foreach WORD,$2,$(if $(findstring $1,$(WORD)),$(WORD),))
+
 # Filter out words in arg 2 matching the string in arg 1
-filter_out_string = $(foreach WORD,$(2),$(if $(findstring $(1),$(WORD)),,$(WORD)))
+filter_out_string = $(foreach WORD,$2,$(if $(findstring $1,$(WORD)),,$(WORD)))
 
 # Utility vars for subst
 comma:= ,
@@ -56,48 +60,48 @@ endef
 #
 # OpenSCAD helpers
 #
-list_renders      = $(shell grep -oP '_RENDER +== +"(.+)"' '$(strip $(1))' | cut -d \" -f 2 | sort)
-filter_renders    = $(filter $(2),$(call list_renders,$(1)))
-list_prints       = $(call filter_renders,$(1),Prints/%)
-list_hardware     = $(call filter_renders,$(1),Hardware/%)
-list_fixtures     = $(call filter_renders,$(1),Fixtures/%)
-list_projections  = $(call filter_renders,$(1),Projections/%)
-list_views        = $(basename $(notdir $(wildcard $(basename $(1))/*.view)))
-list_presets      = $(shell jq --raw-output '.parameterSets|keys[]'  $(basename $(1)).json | grep -v default)
+list_renders      = $(shell grep -oP '_RENDER +== +"(.+)"' '$(strip $1)' | cut -d \" -f 2 | sort)
+filter_renders    = $(filter $2,$(call list_renders,$1))
+list_prints       = $(call filter_renders,$1,Prints/%)
+list_hardware     = $(call filter_renders,$1,Hardware/%)
+list_fixtures     = $(call filter_renders,$1,Fixtures/%)
+list_projections  = $(call filter_renders,$1,Projections/%)
+list_views        = $(basename $(notdir $(wildcard $(basename $1)/*.view)))
+list_presets      = $(shell jq --raw-output '.parameterSets|keys[]'  $(basename $1).json | grep -v default)
 
 # For each preset, list the views, append the .views/class_preset prefix, and .png suffix
-list_presets_views = $(foreach PRESET,$(call list_presets,$(1)),\
+list_presets_views = $(foreach PRESET,$(call list_presets,$1),\
                       $(subst src/,$(VIEWS_DIR)/,\
                         $(addsuffix .png,\
-                          $(addprefix $(basename $(1))_$(PRESET)/,\
-                            $(call list_views,$(1))))))
+                          $(addprefix $(basename $1)_$(PRESET)/,\
+                            $(call list_views,$1)))))
 
 # For each preset, list the renders; append the class_preset name and appropriate suffix
-list_presets_renders = $(foreach PRESET,$(call list_presets,$(1)),\
-                        $(addprefix $(basename $(1))_$(PRESET)/,\
-                          $(foreach RENDER,$(call list_renders,$(1)),\
+list_presets_renders = $(foreach PRESET,$(call list_presets,$1),\
+                        $(addprefix $(basename $1)_$(PRESET)/,\
+                          $(foreach RENDER,$(call list_renders,$1),\
                             $(addsuffix $(if $(findstring Projections,$(RENDER)),.dxf,.stl),$(RENDER)))))
 
-list_preset_renders_no_hw = $(call filter_out_string,Hardware/,$(call list_presets_renders, $(1)))
+list_preset_renders_no_hw = $(call filter_out_string,Hardware/,$(call list_presets_renders, $1))
 
 
 # Filename-to-render Conventions:
 # .[dir]/Class_Preset.[ext]
 # .[dir]/Class_Preset/Prints/Part.[ext]
 # .[dir]/Class_Preset/Projections/Part.[ext]
-render_name         = $(subst $(VIEWS_DIR)/,,$(subst $(EXPORT_DIR)/,,$(subst $(ASSEMBLY_DIR)/,,$(basename $(1)))))
-render_class_preset = $(firstword $(subst /, ,$(call render_name,$(1))))
-render_class        = $(shell echo $(call render_class_preset,$(1)) | awk -F _ '{ print $$1 }')
-render_preset       = $(shell echo $(call render_class_preset,$(1)) | awk -F _ '{ print $$2 }')
-render_part         = $(subst $(call render_class_preset,$(1))/,,$(call render_name,$(1)))
-render_source       = $(addsuffix .scad, $(call render_class,$(1)))
+render_name         = $(subst $(VIEWS_DIR)/,,$(subst $(EXPORT_DIR)/,,$(subst $(ASSEMBLY_DIR)/,,$(basename $1))))
+render_class_preset = $(firstword $(subst /, ,$(call render_name,$1)))
+render_class        = $(shell echo $(call render_class_preset,$1) | awk -F _ '{ print $$1 }')
+render_preset       = $(shell echo $(call render_class_preset,$1) | awk -F _ '{ print $$2 }')
+render_part         = $(subst $(call render_class_preset,$1)/,,$(call render_name,$1))
+render_source       = $(addsuffix .scad, $(call render_class,$1))
 
 # Extract the class name from a preset
 # i.e. TopBreak_CAFE12+ = TopBreak
-preset_class_name = $(shell echo $(1) | awk -F _ '{ print $$1 }')
+preset_class_name = $(shell echo $1 | awk -F _ '{ print $$1 }')
 
 # Extract the "// POV" entry from a .scad file
-scad_pov          = $(shell grep '// POV ' $(1) | awk '{ print $$3 }')
+scad_pov          = $(shell grep '// POV ' $1 | awk '{ print $$3 }')
 
 # .parts files lists all the renders in a given .scad file.
 $(EXPORT_DIR)/%.parts: %.scad

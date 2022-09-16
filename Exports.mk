@@ -23,13 +23,13 @@ convert -fuzz 4% -transparent "#fafafa" $(PNG) $(PNG)
 endef
 
 define PresetsRenders_template =
-EXPORTS+=$(addprefix $(EXPORT_DIR)/,$(call list_preset_renders_no_hw, $(1)))
-ASSEMBLIES+=$(addprefix $(ASSEMBLY_DIR)/,$(call list_presets_renders, $(1)))
+EXPORTS+=$(addprefix $(EXPORT_DIR)/,$(call list_preset_renders_no_hw, $1))
+ASSEMBLIES+=$(addprefix $(ASSEMBLY_DIR)/,$(call list_presets_renders, $1))
 
-$(addprefix $(EXPORT_DIR)/,$(call list_preset_renders_no_hw, $(1))): $(1)
+$(addprefix $(EXPORT_DIR)/,$(call list_preset_renders_no_hw, $1)): $1
 	$$(make_render)
 
-$(addprefix $(ASSEMBLY_DIR)/,$(call list_presets_renders, $(1))): $(1)
+$(addprefix $(ASSEMBLY_DIR)/,$(call list_presets_renders, $1)): $1
 	$$(make_render)
 endef
 

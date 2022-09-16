@@ -17,8 +17,8 @@ $(OSBIN) $(OSOPTS) \
 endef
 
 define PresetViews_template =
-TARGETS+=$(call list_presets_views, $(1))
-$(call list_presets_views, $(1)): $(1) $(basename $(1).view)
+TARGETS+=$(call list_presets_views, $1)
+$(call list_presets_views, $1): $1 $(basename $1.view)
 	$$(make_view)
 endef
 
