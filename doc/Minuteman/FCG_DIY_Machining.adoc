@@ -1,0 +1,61 @@
+[appendix]
+== FCG DIY Machining
+
+=== You know I sell kits, right?
+You can do this all yourself, but I also sell kits on the 
+https://liberator12k.com/store/[Liberator12k.com Store].
+It won't be faster or cheaper to DIY, but all the information
+you need is freely available and the hardware is available at your local
+hardware store or metal supplier.
+
+DIY-ability is by design, for your benefit. Thanks for considering the store,
+but if you prefer to DIY I understand and fully support your decision.
+At this time DIY hardware is not fully documented.
+
+Check out the https://github.com/JeffreyRodriguez/Liberator12k/wiki/DIY-Machining[GitHub Wiki] page on DIY machining.
+It's a work in progress, but at least gives a place for the community to work on
+helping with documentation.
+
+=== Sear
+* 3/32" hole, 5/16" from the bottom for the sear cross-pin
+* This hole should be drilled under-size and reamed if possible.
+* Filing any burrs is Good Enough
+* Chamfer both sides of the hole for best results.
+
+=== Sear Cross-Pin
+* 3/32" Music Wire
+* 1/2" long
+* Ends should be slightly rounded and smooth.
+* I use 2.5x12mm pins in the official parts kits.
+
+=== Firing Pin
+* Cut the 6D box nail to 1.535" in length
+* * Cut generously, file flush.
+* Gently round the tip with your file.
+* Sand smooth with 220 grit or finer.
+
+
+=== Recoil Plate
+[cols="1,1"]
+|===
+|Inch Tool, Metric Tool
+
+|#8-32 Tap
+|M4 Tap
+
+|#29 Drill Bit
+|3.5mm Drill Bit
+
+|5/16" Drill Bit
+|8mm Drill Bit
+
+|3/32 Drill Bit
+|2.5mm Drill Bit
+|===
+
+==== Instructions
+The full How To is incomplete, but at a high level:
+
+1. Print a Recoil Plate template (TODO).
+2. Mark the holes with a punch and drill to specified size.
+3. Tap the holes for the tension rods and FCG Housing holes with #8-32.

@@ -1,18 +1,6 @@
 {
     "parameterSets": {
-        "Debug": {
-            "BARREL_CLEARANCE": "0.008",
-            "BARREL_DIAMETER": "1.0001",
-            "BARREL_LENGTH": "15.5",
-            "CHAMBER_ID": "0.8101",
-            "CHAMBER_LENGTH": "3",
-            "CYLINDER_CLEARANCE": "0.005",
-            "CYLINDER_DIAMETER": "3.501",
-            "CYLINDER_LENGTH": "2.75",
-            "CYLINDER_OFFSET": "1.001",
-            "GP_BOLT": "#8-32",
-            "GP_BOLT_CLEARANCE": "0.015"
-        },
+        "12ga": {},
         "37mm": {
             "BARREL_CLEARANCE": "0.008",
             "BARREL_DIAMETER": "1.667",

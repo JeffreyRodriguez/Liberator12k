@@ -71,6 +71,8 @@ include::Forend/TopBreak.adoc[]
 
 include::Common/Dimensions.adoc[]
 
+include::Minuteman/FCG_DIY_Machining.adoc[]
+
 include::Forend/CAFE_DIY_Machining.adoc[]
 
 include::Common/Developers.adoc[]
