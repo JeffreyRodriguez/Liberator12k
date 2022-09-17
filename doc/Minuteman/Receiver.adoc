@@ -8,7 +8,7 @@ The universal receiver in its base configuration. Note: You probably want the Fr
 The receiver has an assortment of slots and tabs to support different designs.
 
 ### Prints
-STL Files Location: `Receiver/Receiver/Prints/`
+STL Files Location: `Receiver/Receiver_{units}/Prints/`
 
 | Part                                                                              | Settings              | Filament | Time     |
 |-----------------------------------------------------------------------------------|-----------------------|----------|----------|

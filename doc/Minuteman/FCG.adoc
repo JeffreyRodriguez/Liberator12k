@@ -9,7 +9,7 @@ An inclined slot in the trigger forces sear downward when the trigger is pulled.
 With the sear lowered, the linear hammer can move forward striking the firing pin.
 When the charging handle is pulled a return spring pushes the sear upward.
 
-NOTE: STL Files Location: `Receiver/FCG/Prints/`
+NOTE: STL Files Location: `Receiver/FCG_{units}/Prints/`
 
 
 // Only show the disconnector if the fcg-disconnector attribute is set

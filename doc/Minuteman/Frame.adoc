@@ -14,7 +14,7 @@ two large (1/2") bolts support heavy forends.
 
 <<<
 .Large Frame Receiver Printed Parts
-NOTE: STL Files Location: `Receiver/Frame/Prints/`
+NOTE: STL Files Location: `Receiver/Frame_{units}/Prints/`
 
 [cols="^1"]
 |===

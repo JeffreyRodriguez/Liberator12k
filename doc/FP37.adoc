@@ -59,7 +59,7 @@ image::../.views/Forend/TopBreak_{model}/Forend.png[]
 include::Forend/TopBreak_BOM_{units}.adoc[]
 
 <<<
-NOTE: STL Files Location: `Forend/TopBreak_{model}/Prints/`
+NOTE: STL Files Location: `Forend/Prints/`
 
 include::Forend/TopBreak_Prints.adoc[]
 

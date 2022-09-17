@@ -13,7 +13,7 @@ The lower mount couples the lower to the receiver.
 <<<
 ==== Prints and BOM
 
-NOTE: STL Files Location: `Receiver/Lower/Prints/`
+NOTE: STL Files Location: `Receiver/Lower_{units}/Prints/`
 
 .Lower Receiver Printed Parts
 [cols="^1,^1,^1"]
