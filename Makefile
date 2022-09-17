@@ -8,22 +8,11 @@ FOREND_ASSEMBLY_DIR=src/Forend/$(ASSEMBLY_DIR)/
 FOREND_EXPORT_DIR=src/Forend/$(EXPORT_DIR)/
 
 define Zip_template =
-ZIP_TARGETS+=dist/Liberator12k-$1.zip
+ZIP_TARGETS+=dist/Liberator12k-$1-$(GIT_BRANCH).zip
 $1_UNITS=$(shell grep ':units:' doc/$1.adoc | awk '{ print $$2 }')
-
 $1_FOREND_ASSEMBLY_DIR=$(wildcard src/Forend/$(ASSEMBLY_DIR)/*_$1/)
 $1_FOREND_EXPORT_DIR=$(wildcard src/Forend/$(EXPORT_DIR)/*_$1/)
-
-.PHONY: $1
-$1:
-	@echo Model: $1
-	@echo Units: $$($1_UNITS)
-	@echo Forend Assembly Dir: $$($1_FOREND_ASSEMBLY_DIR)
-	@echo Forend Export Dir:$$($1_FOREND_EXPORT_DIR)
-	@echo Minuteman Assembly Dir: $(MINUTEMAN_ASSEMBLY_DIR)
-	@echo Minuteman Export Dir: $(MINUTEMAN_EXPORT_DIR)
-
-dist/Liberator12k-$1.zip: $(ZIP_EXTRAS) $(VIEWS_DIR) $(SUBDIRS) dist/
+dist/Liberator12k-$1-$(GIT_BRANCH).zip: $(ZIP_EXTRAS) $(VIEWS_DIR) $(SUBDIRS) dist/
 	@echo Target: $$@
 	@mkdir -p dist/Liberator12k-$1/Receiver \
 	          dist/Liberator12k-$1/Forend \
@@ -39,12 +28,12 @@ dist/Liberator12k-$1.zip: $(ZIP_EXTRAS) $(VIEWS_DIR) $(SUBDIRS) dist/
 	  ln --force --symbolic --relative $$($1_FOREND_ASSEMBLY_DIR)$$$$DIR dist/Liberator12k-$1/Assembly/Forend/
 	done && \
 	for DIR in `ls $$($1_FOREND_EXPORT_DIR)`; do
-	  ln --force --symbolic --relative $$($1_FOREND_ASSEMBLY_DIR)$$$$DIR dist/Liberator12k-$1/Forend/
+	  ln --force --symbolic --relative $$($1_FOREND_EXPORT_DIR)$$$$DIR dist/Liberator12k-$1/Forend/
 	done && \
 	cp -r $(ZIP_EXTRAS) dist/Liberator12k-$1/ && \
 	cp doc/$(EXPORT_DIR)/$1.pdf dist/Liberator12k-$1 && \
 	cd dist/Liberator12k-$1 && \
-	zip -9qr ../$$(notdir $$@) .
+	zip -9qr ../$$(notdir $$@) . -i '*.stl' -i '*.dxf' -i '*.pdf'
 endef
 
 MODELS=$(notdir $(basename $(wildcard doc/*.adoc)))
@@ -58,7 +47,7 @@ $(BUILD_DIR)/Source/: .git
 	mkdir -p $@ && \
 	git archive HEAD | tar -x -C $@
 
-dist/Liberator12k-full.zip: $(SUBDIRS) $(ZIP_EXTRAS)
+dist/Liberator12k-full-$(GIT_BRANCH).zip: $(SUBDIRS) $(ZIP_EXTRAS)
 	@echo Target: $@
 	@mkdir -p dist/Liberator12k-full/Receiver \
 	          dist/Liberator12k-full/Forend \
@@ -69,7 +58,7 @@ dist/Liberator12k-full.zip: $(SUBDIRS) $(ZIP_EXTRAS)
 	  ln --force --symbolic --relative $(MINUTEMAN_ASSEMBLY_DIR)$$DIR dist/Liberator12k-full/Assembly/Receiver/
 	done && \
 	for DIR in `ls $(MINUTEMAN_EXPORT_DIR)`; do
-	  ln --force --symbolic --relative $(MINUTEMAN_ASSEMBLY_DIR)$$DIR dist/Liberator12k-full/Receiver/
+	  ln --force --symbolic --relative $(MINUTEMAN_EXPORT_DIR)$$DIR dist/Liberator12k-full/Receiver/
 	done && \
 	for DIR in `ls $(FOREND_ASSEMBLY_DIR)`; do
 	  ln --force --symbolic --relative $(FOREND_ASSEMBLY_DIR)$$DIR dist/Liberator12k-full/Assembly/Forend/
@@ -79,11 +68,8 @@ dist/Liberator12k-full.zip: $(SUBDIRS) $(ZIP_EXTRAS)
 	done && \
 	cp -r $(ZIP_EXTRAS) dist/Liberator12k-full/&& \
 	cp -r doc/$(EXPORT_DIR)/*.pdf dist/Liberator12k-full/Manuals && \
-	cd dist/Liberator12k-full && zip -9qr ../$(notdir $@) .
-
-.PHONY: MODELS
-MODELS:
-	@echo $(MODELS)
+	cd dist/Liberator12k-full && \
+	zip -9qr ../$(notdir $@) . -i '*.stl' -i '*.dxf' -i '*.pdf'
 
 $(DIST): dist/
 dist/:
