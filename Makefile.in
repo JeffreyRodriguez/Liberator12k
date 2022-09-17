@@ -20,6 +20,7 @@ OS_CAM_STL:=--autocenter --viewall --view scales
 OS_CAM_ASSEMBLY:=--camera=200,1200,200,50,0,0
 GIT_VERSION:=$(shell git describe --always)
 GIT_DATE:=$(shell git log -1 --date=format:"%Y-%m-%d" --format="%ad")
+GIT_BRANCH:=$(shell git rev-parse --abbrev-ref HEAD)
 DATE:=$(shell date +'%Y-%m-%d')
 SUBDIRS:= $(filter-out .*,$(dir $(wildcard */Makefile)))
 SCADS:= $(wildcard *.scad)

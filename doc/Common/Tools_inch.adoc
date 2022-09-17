@@ -1,0 +1,19 @@
+=== {units}-specific Tools
+.Wrenches and Drivers
+* 3/4" Wrench
+* 5/16" Socket Driver
+
+.Drill Bits
+* 5/16"
+* #29 - #8-32 Tap Drill
+* 11/64" or 4.5mm - Long
+* #39 or 2.5mm
+
+.Reamers
+* 11/64" - Small Screw Clearance
+* 1/4" - Medium Screw Clearance
+* 5/16" - Spindle Pin Clearance
+* 1/2" - Large Screw Clearance
+
+.Taps
+* #8-32 - Spiral Flute

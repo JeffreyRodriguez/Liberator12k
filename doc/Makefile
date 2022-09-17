@@ -8,7 +8,8 @@ TARGETS:=$(PDFS)
 $(BUILD_DIR)/Version.adoc:
 	mkdir -p $(BUILD_DIR) && \
 	echo :revdate: $(GIT_DATE) > $@ && \
-	echo :revnumber: $(GIT_VERSION) >> $@
+	echo :revnumber: $(GIT_BRANCH) >> $@ && \
+	echo :revremark: $(GIT_VERSION) >> $@
 
 $(EXPORT_DIR)/%.pdf: %.adoc $(BUILD_DIR)/Version.adoc $(SRC) ../$(VIEWS_DIR)
 	mkdir -p $(dir $@) && \
