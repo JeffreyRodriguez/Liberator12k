@@ -10,6 +10,7 @@
 *.parts
 *.dep
 *.pdf
+dist/
 **/.assembly
 **/.animations
 **/.export
