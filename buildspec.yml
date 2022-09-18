@@ -9,7 +9,8 @@ phases:
     commands:
       - add-apt-repository -y ppa:openscad/releases
       - apt-get update
-      - apt install -y xvfb openscad cmark-gfm imagemagick ffmpeg bc parallel jq htmldoc moreutils
+      - apt install -y xvfb openscad cmark-gfm imagemagick ffmpeg bc parallel jq htmldoc moreutils asciidoctor
+      - gem install asciidoctor-pdf
   build:
     on-failure: ABORT
     commands:
@@ -25,4 +26,5 @@ artifacts:
   base-directory: .
 cache:
   paths:
-    - Receiver/**/*
+    - .views/*
+    - src/*
