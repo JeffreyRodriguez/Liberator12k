@@ -11,8 +11,16 @@
 |#8-32 Short Heatset Nut
 |1
 
+|Charging Handle Latch Spring
+|0.22" OD 0.625" Long (0.02" wire)
+|1
+
+|Charging Handle Latch Pin
+|2.5x18mm Dowel Pin
+|1
+
 |Disconnector Pivot Pin
-|2.5x19mm Dowel Pin
+|2.5x18mm Dowel Pin
 |1
 
 |Disconnector Spring
@@ -64,7 +72,7 @@
 |1
 
 |Sear Pin
-|2.5x19mm Dowel Pin
+|2.5x18mm Dowel Pin
 |1
 
 |Sear Return Spring

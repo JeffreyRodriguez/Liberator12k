@@ -8,6 +8,10 @@
 |TODO: **DIN????** M4x1/4" SS Socket Cap Bolt
 |1
 
+|Charging Handle Latch Spring
+|0.5mm Wire, 6mm OD, 20mm Length Spring (Cut to 16mm)
+|1
+
 |Charging Handle Nut
 |M4 Heatset Nut
 |1
@@ -65,7 +69,7 @@
 |1
 
 |Sear Pin
-|2.5x19mm Dowel Pin
+|2.5x18mm Dowel Pin
 |1
 
 |Sear Return Spring

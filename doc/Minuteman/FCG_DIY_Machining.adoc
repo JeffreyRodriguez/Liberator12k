@@ -29,16 +29,23 @@ helping with documentation.
 * I use 2.5x12mm pins in the official parts kits.
 
 === Firing Pin
-* Cut the 6D box nail to 1.535" in length
-* * Cut generously, file flush.
+* Cut the 6D box nail to 1.535" (39mm) overall length
+* Cut generously, file flush.
 * Gently round the tip with your file.
 * Sand smooth with 220 grit or finer.
+
+When fully assembled with recoil plate and receiver front, the firing pin must
+protrude 3/32" or 2.5mm when the firing pin is depressed. It must be recessed
+below the recoil plate when retracted.
+
+If you find primers punctured, shave down the tip a bit at a time until it no
+longer punctures primers. Too short and you will get "light strikes".
 
 
 === Recoil Plate
 [cols="1,1"]
 |===
-|Inch Tool, Metric Tool
+|Inch Tool|Metric Tool
 
 |#8-32 Tap
 |M4 Tap
