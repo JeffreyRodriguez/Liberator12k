@@ -31,6 +31,7 @@
             "BARREL_SLEEVE_DIAMETER": "1.334646",
             "BARREL_Z": "0.001",
             "BRANDING_MODEL_NAME": "CAFE12M",
+            "FRAME_BOLT": "M12",
             "FRAME_BOLT_LENGTH": "10",
             "GP_BOLT": "M4",
             "GP_BOLT_CLEARANCE": "0.015",

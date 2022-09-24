@@ -121,6 +121,8 @@ FOREND_BOLT_CLEARANCE = -0.05;
 HANDGUARD_BOLT = "#8-32"; // ["#8-32", "M4"]
 HANDGUARD_BOLT_CLEARANCE = -0.05;
 
+FRAME_BOLT = "1/2\"-13"; // ["1/2\"-13", "M12"]
+
 EXTRACTOR_RETAINER_LENGTH = 0.7501;
 EXTRACTOR_RETAINER_DIAMETER = 0.2501;
 EXTRACTOR_RETAINER_CLEARANCE = 0.008;
@@ -1491,6 +1493,7 @@ if ($preview) {
     if (_SHOW_RECEIVER)
     Frame_ReceiverAssembly(
       hardware=_SHOW_RECEIVER_HARDWARE,
+      boltSpec=BoltSpec(FRAME_BOLT),
       length=TopBreak_FrameBoltLength()-0.5,
       cutaway=_CUTAWAY_RECEIVER,
       alpha=_ALPHA_RECEIVER);

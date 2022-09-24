@@ -98,7 +98,7 @@ module Frame_BoltIterator() {
     children();
 }
 
-module Frame_Bolts(length=FrameBoltLength(), nut="hex", cutaway=false, cutter=false, clearance=0.01, alpha=1) {
+module Frame_Bolts(spec=FrameBolt(), length=FrameBoltLength(), nut="hex", cutaway=false, cutter=false, clearance=0.01, alpha=1) {
   clear = cutter ? clearance : 0;
 
   color("Silver", alpha) RenderIf(!cutter)
@@ -107,7 +107,7 @@ module Frame_Bolts(length=FrameBoltLength(), nut="hex", cutaway=false, cutter=fa
     Frame_BoltIterator()
     rotate([0,-90,0])
     rotate(-11)
-    NutAndBolt(bolt=FrameBolt(), boltLength=length,
+    NutAndBolt(bolt=spec, boltLength=length,
          head="hex", capHeightExtra=(cutter?1:0),
          nut=nut, clearance=clear,
          capOrientation=true);
@@ -250,13 +250,13 @@ module Frame_Receiver(doRender=true, cutaway=false, alpha=1) {
 // **************
 // * Assemblies *
 // **************
-module Frame_ReceiverAssembly(hardware=true, prints=true, length=FrameBoltLength(), frameBolts=_SHOW_FRAME_BOLTS, cutaway=_CUTAWAY_RECEIVER, alpha=1) {
+module Frame_ReceiverAssembly(hardware=true, prints=true, boltSpec=FrameBolt(), length=FrameBoltLength(), frameBolts=_SHOW_FRAME_BOLTS, cutaway=_CUTAWAY_RECEIVER, alpha=1) {
 
   if (hardware)
   Receiver_MlokBolts();
 
   if (hardware && frameBolts)
-  Frame_Bolts(length=length, cutaway=cutaway, alpha=_ALPHA_FRAME);
+  Frame_Bolts(spec=boltSpec, length=length, cutaway=cutaway, alpha=_ALPHA_FRAME);
 
   if (prints)
   Frame_Receiver(cutaway=cutaway, alpha=min(alpha,_ALPHA_FRAME));
