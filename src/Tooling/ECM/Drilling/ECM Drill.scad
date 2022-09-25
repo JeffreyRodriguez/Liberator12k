@@ -255,9 +255,9 @@ module TailstockBolts(cutter=false) {
 	clear = cutter ? 0.01 : 0;
 	
 	color("SteelBlue")
-	for (Z = [DRILLBASE_HEIGHT/2]) {
-
-		translate([-COLUMN_X_WIDTH - COLUMN_WALL,0,Z])
+	translate([-COLUMN_X_WIDTH - COLUMN_WALL, -COLUMN_Y_WIDTH/2, DRILLBASE_HEIGHT/2])
+	for (Y = [Millimeters(10):Millimeters(20):COLUMN_Y_WIDTH]) {
+		translate([0, Y, 0])
 		rotate([0,-90,0])
 		Bolt(bolt=BoltSpec("M5"), length=Millimeters(10), head="flat", capOrientation=true, teardrop=cutter, clearance=clear);
 	}
