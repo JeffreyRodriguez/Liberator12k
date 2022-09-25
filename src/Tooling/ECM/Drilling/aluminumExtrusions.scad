@@ -40,36 +40,51 @@ difference(){
 	}
 }
 
-module extrusion5SeriesCrude(xSegments, ySegments, zLength, xyClear = 0) //This is intended to have simpler geometry to mimic the old 2020 model more and allow fitment to happen
-scale(1/25.4) //More
-linear_extrude(zLength * 25.4) //Even MORE!
-translate([-xSegments*10 + xyClear*25.4, -ySegments*10 + xyClear*25.4])
-difference(){
-	square([xSegments*20 - xyClear*25.4*2, ySegments*20 - xyClear*25.4*2]);
-	
-	for(i = [0:1:xSegments-1])
-	translate([i*20, 0]){
-		translate([7 - xyClear*25.4, xyClear*25.4])
-		square([6 + xyClear*25.4/2, 3 - xyClear*25.4]);
+module extrusion5SeriesCrude(xSegments, ySegments, zLength, xyClearUS = 0){ //This is intended to have simpler geometry to mimic the old 2020 model more and allow fitment to happen
+	xyClear = xyClearUS * 25.4;
+	scale(1/25.4) //More
+	linear_extrude(zLength * 25.4) //Even MORE
+	translate([-xSegments*10 + xyClear, -ySegments*10 + xyClear])
+	difference(){
+		square([xSegments*20 - xyClear*2, ySegments*20 - xyClear*2]);
 		
-		translate([0, ySegments*20]){
-			translate([7 - xyClear*25.4, -3 + xyClear*25.4])
-			square([6 + xyClear*25.4/2, 3 - xyClear*25.4]);
+		for(i = [0:1:xSegments-1])
+		translate([i*20, 0]){
+			translate([7, 0])
+			square([6 - xyClear*2, 3]);
+			
+			translate([0, ySegments*20]){
+				translate([7, -3])
+				square([6 - xyClear*2, 3]);
+			}
 		}
-	}
-	
-	for(i = [0:1:ySegments-1])
-	translate([0, i*20]){
-		translate([xyClear*25.4, 7 - xyClear*25.4])
-		square([3 - xyClear*25.4, 6 + xyClear*25.4/2]);
 		
-		translate([xSegments*20, 0]){
-			translate([-3 + xyClear*25.4, 7 - xyClear*25.4])
-			square([3 - xyClear*25.4, 6 + xyClear*25.4/2]);
+		for(i = [0:1:ySegments-1])
+		translate([0, i*20]){
+			translate([0, 7])
+			square([3, 6 - xyClear*2]);
+			
+			translate([xSegments*20, 0]){
+				translate([-3, 7])
+				square([3, 6 - xyClear*2]);
+			}
 		}
 	}
 }
-extrusion5Series(1, 2, 5);
 
-translate([4, 0])
-extrusion5SeriesCrude(1, 2, 5);
+extrusion5Series(1, 1, 1);
+
+translate([1, 0])
+extrusion5SeriesCrude(1, 1, 1);
+
+translate([0, 1])
+difference(){
+	extrusion5SeriesCrude(1, 1, 1, 0.01);
+	extrusion5Series(1, 1, 1);
+}
+
+translate([1, 1])
+difference(){
+	extrusion5Series(1, 1, 1);
+	extrusion5SeriesCrude(1, 1, 1, 0.01);
+}
