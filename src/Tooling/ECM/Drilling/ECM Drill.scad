@@ -25,24 +25,34 @@ _ALPHA_DRILL_BASE=0.5; // [0:0.1:1]
 _ALPHA_DRILL_HEAD=0.5; // [0:0.1:1]
 
 /* [Vitamins] */
-Vitamins_Unit_of_Measure = "Inches"; //["Millimeters", "Inches"]
+Barrel_Unit_of_Measure = "Inches"; //["Millimeters", "Inches"]
 Barrel_Diameter_ = 0.75;
 Barrel_Length_ = 6;
+O_Ring_Unit_of_Measure = "Inches"; //["Millimeters", "Inches"]
 Oring_Width_ = 0.09375;
-Leadscrew_Diameter_in_Millimeters = 8;
+Other_Vitamins_Unit_of_Measure = "Inches"; //["Millimeters", "Inches"]
 Electrode_Diameter_ = 0.125;
 Tap_Diameter_ = 0.125;
+
+// Derived Vitamin Values
+VITAMINS_UNIT = UnitType(Other_Vitamins_Unit_of_Measure);
+BARREL_UNIT = UnitType(Barrel_Unit_of_Measure);
+BARREL_DIAMETER = UnitSelect(Barrel_Diameter_, BARREL_UNIT);
+BARREL_LENGTH = UnitSelect(Barrel_Length_, BARREL_UNIT);
+ORING_UNIT = UnitType(O_Ring_Unit_of_Measure);
+ORING_WIDTH = UnitSelect(Oring_Width_, ORING_UNIT);
+ELECTRODE_DIAMETER = UnitSelect(Electrode_Diameter_, VITAMINS_UNIT);
+TAP_DIAMETER = UnitSelect(Tap_Diameter_, VITAMINS_UNIT);
+
+/* [Scrounged Vitamins] */
+Leadscrew_Unit_of_Measure = "Millimeters"; //["Millimeters", "Inches"]
+Leadscrew_Diameter_in_Millimeters = 8;
 Column_Extrusion = "2040"; //["2020", "2040", "4040"]
 Column_Extrusion_Length_in_Millimeters = 400;
 
-// Derived Vitamin Values
-VITAMINS_UNIT = UnitType(Vitamins_Unit_of_Measure);
-BARREL_DIAMETER = UnitSelect(Barrel_Diameter_, VITAMINS_UNIT);
-BARREL_LENGTH = UnitSelect(Barrel_Length_, VITAMINS_UNIT);
-ORING_WIDTH = UnitSelect(Oring_Width_, VITAMINS_UNIT);
-DRIVESCREW_DIAMETER = Millimeters(Leadscrew_Diameter_in_Millimeters);
-ELECTRODE_DIAMETER = UnitSelect(Electrode_Diameter_, VITAMINS_UNIT);
-TAP_DIAMETER = UnitSelect(Tap_Diameter_, VITAMINS_UNIT);
+LEADSCREW_UNIT = UnitType(Leadscrew_Unit_of_Measure);
+DRIVESCREW_DIAMETER = UnitSelect(Leadscrew_Diameter_in_Millimeters, LEADSCREW_UNIT);
+
 
 /* [Chosen Dimensions] */
 Chosen_Dimensions_Unit_of_Measure = "Inches"; //["Millimeters", "Inches"]
