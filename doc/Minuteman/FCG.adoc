@@ -15,21 +15,21 @@ NOTE: STL Files Location: `Receiver/FCG_{units}/Prints/`
 // Only show the disconnector if the fcg-disconnector attribute is set
 :fcg-disconnector-stl:
 ifdef::fcg-disconnector[]
-:fcg-disconnector-stl: image:../src/Receiver/.export/FCG_{units}/Prints/FCG_Disconnector.png[] FCG_Disconnector
+:fcg-disconnector-stl: image:../src/Receiver/.export/FCG_{units}/Prints/Disconnector.png[] Disconnector
 endif::[]
 
 .FCG Printed Parts
 [cols="^1,^1,^1,^1"]
 |===
-|image:../src/Receiver/.export/FCG_{units}/Prints/FCG_Housing.png[] FCG_Housing
-|image:../src/Receiver/.export/FCG_{units}/Prints/FCG_FiringPinCollar.png[] FCG_FiringPinCollar
-|image:../src/Receiver/.export/FCG_{units}/Prints/FCG_ChargingHandle.png[] FCG_ChargingHandle
+|image:../src/Receiver/.export/FCG_{units}/Prints/Housing.png[] Housing
+|image:../src/Receiver/.export/FCG_{units}/Prints/FiringPinCollar.png[] FiringPinCollar
+|image:../src/Receiver/.export/FCG_{units}/Prints/ChargingHandle.png[] ChargingHandle
 |{fcg-disconnector-stl}
 
-|image:../src/Receiver/.export/FCG_{units}/Prints/FCG_Hammer.png[] FCG_Hammer
-|image:../src/Receiver/.export/FCG_{units}/Prints/FCG_HammerTail.png[] FCG_HammerTail
-|image:../src/Receiver/.export/FCG_{units}/Prints/FCG_TriggerMiddle.png[] FCG_TriggerMiddle
-|image:../src/Receiver/.export/FCG_{units}/Prints/FCG_Trigger.png[] FCG_Trigger
+|image:../src/Receiver/.export/FCG_{units}/Prints/Hammer.png[] Hammer
+|image:../src/Receiver/.export/FCG_{units}/Prints/HammerTail.png[] HammerTail
+|image:../src/Receiver/.export/FCG_{units}/Prints/TriggerMiddle.png[] TriggerMiddle
+|image:../src/Receiver/.export/FCG_{units}/Prints/Trigger.png[] Trigger
 |===
 
 <<<
