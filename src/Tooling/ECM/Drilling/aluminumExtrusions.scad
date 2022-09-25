@@ -44,30 +44,25 @@ module extrusion5SeriesCrude(xSegments, ySegments, zLength, xyClearUS = 0){ //Th
 	xyClear = xyClearUS * 25.4;
 	scale(1/25.4) //More
 	linear_extrude(zLength * 25.4) //Even MORE
-	translate([-xSegments*10 + xyClear, -ySegments*10 + xyClear])
+	translate([-xSegments*10 - xyClear, -ySegments*10 - xyClear])
 	difference(){
-		square([xSegments*20 - xyClear*2, ySegments*20 - xyClear*2]);
+		square([xSegments*20 + xyClear*2, ySegments*20 + xyClear*2]);
 		
 		for(i = [0:1:xSegments-1])
 		translate([i*20, 0]){
-			translate([7, 0])
+			translate([7 + xyClear*2, 0])
 			square([6 - xyClear*2, 3]);
 			
-			translate([0, ySegments*20]){
-				translate([7, -3])
-				square([6 - xyClear*2, 3]);
-			}
+			translate([7 + xyClear*2, ySegments*20 - 3 + xyClear*2])
+			square([6 - xyClear*2, 3]);
 		}
 		
 		for(i = [0:1:ySegments-1])
-		translate([0, i*20]){
-			translate([0, 7])
+		translate([0, i*20 + 7 + xyClear*2]){
 			square([3, 6 - xyClear*2]);
 			
-			translate([xSegments*20, 0]){
-				translate([-3, 7])
-				square([3, 6 - xyClear*2]);
-			}
+			translate([xSegments*20 - 3 + xyClear*2, 0])
+			square([3, 6 - xyClear*2]);
 		}
 	}
 }
