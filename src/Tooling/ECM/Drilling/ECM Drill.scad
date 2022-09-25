@@ -228,8 +228,9 @@ module HeadstockBolts(cutter=false) {
 	clearance = cutter ? 0.01 : 0;
 
 	color("SteelBlue") RenderIf(!cutter)
-	translate([0,0,DRILLHEAD_Z_MIN+0.825])
-	translate([-COLUMN_X_WIDTH - COLUMN_WALL, 0, 0])
+	translate([-COLUMN_X_WIDTH - COLUMN_WALL, -COLUMN_Y_WIDTH/2, DRILLHEAD_Z_MIN+0.825])
+	for (Y = [Millimeters(10):Millimeters(20):COLUMN_Y_WIDTH])
+	translate([0, Y, 0])
 	rotate([0,-90,0])
 	Bolt(bolt=BoltSpec("M5"), length=Millimeters(10), head="flat", capOrientation=true, teardrop=cutter, clearance=clearance);
 }
