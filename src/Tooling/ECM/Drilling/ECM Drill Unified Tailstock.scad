@@ -17,7 +17,7 @@ use <aluminumExtrusions.scad>;
 /* [Export] */
 
 // Select a part, Render it (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "DrivenGear", "DriveGear", "Legs", "Tailstock", "Headstock", "Carriage", "ToolHolder"]
+_RENDER = ""; // ["", "DrivenGear", "DriveGear", "Tailstock", "Headstock", "Carriage", "ToolHolder"]
 
 /* [Transparency] */
 _ALPHA_BARREL=0.5; // [0:0.1:1]
@@ -256,7 +256,7 @@ module TailstockBolts(cutter=false) {
 	clear = cutter ? 0.01 : 0;
 	
 	color("SteelBlue")
-	translate([-COLUMN_X_WIDTH - COLUMN_WALL, -COLUMN_Y_WIDTH/2, DRILLBASE_HEIGHT/2])
+	translate([-COLUMN_X_WIDTH - COLUMN_WALL, -COLUMN_Y_WIDTH/2, COLUMNFOOT_HEIGHT/2])
 	for (Y = [Millimeters(10):Millimeters(20):COLUMN_Y_WIDTH]) {
 		translate([0, Y, 0])
 		rotate([0,-90,0])
@@ -406,40 +406,6 @@ module Headstock(debug=false, alpha=1) {
 	}
 }
 
-module Tailstock(debug=false, alpha=1) {
-	color("Tan", alpha) render() Cutaway(enabled=debug)
-	difference() {
-		union() {
-
-			// Column sleeve
-			translate([-COLUMN_X_WIDTH - COLUMN_WALL , -(COLUMN_Y_WIDTH/2) - COLUMN_WALL,0])
-			ChamferedCube([COLUMN_X_WIDTH + (COLUMN_WALL*2), COLUMN_Y_WIDTH + (COLUMN_WALL*2), DRILLBASE_EXTENSION_HEIGHT], r=Inches(1/16));
-
-			// Contact supports
-			translate([BARREL_CONTACT_X, BARREL_CONTACT_Y, 0])
-			ChamferedCylinder(r1=COLUMN_WALL, r2=Inches(1/16), h=DRILLBASE_HEIGHT);
-
-			// Barrel Sleeve
-			translate([BARREL_OFFSET_X, 0, 0])
-			ChamferedCylinder(r1=BARREL_RADIUS + ORING_WIDTH + COLUMN_WALL, r2=Inches(1/16), h=DRILLBASE_HEIGHT);
-
-			// Column sleeve extended to barrel sleeve
-			translate([0, -(COLUMN_Y_WIDTH/2) - COLUMN_WALL, 0])
-			ChamferedCube([BARREL_OFFSET_X, COLUMN_Y_WIDTH+(COLUMN_WALL*2), DRILLBASE_HEIGHT], r=Inches(1/16));
-
-		}
-
-	BarrelContact(cutter=true);
-	TailstockBolts(cutter=true);
-	TailstockORing(cutter=true);
-	Column(slots=[0,90,-90], cutter=true);
-	Barrel(cutter=true);
-
-	translate([0,0,-BARREL_LENGTH + Inches(0.125)])
-	Electrode(clearance=0.05, cutter=true);
-	}
-}
-
 module Carriage(extension=1, alpha=1) {
 	color("Tomato", alpha) render()
 	difference() {
@@ -476,100 +442,120 @@ module Carriage(extension=1, alpha=1) {
 	}
 }
 
-module Legs(extension=4, alpha=1, debug=false) {
+module Tailstock(debug=false, alpha=1, extension=4) {
 	color("Tan", alpha) render() Cutaway(enabled=debug)
 	difference() {
 		union() {
+			union() { //Replaces old legs module
+				// Column sleeve
+				translate([-COLUMN_X_WIDTH-COLUMN_WALL, -(COLUMN_Y_WIDTH/2) - COLUMN_WALL, 0])
+				ChamferedCube([COLUMN_X_WIDTH + (COLUMN_WALL*2), COLUMN_Y_WIDTH + (COLUMN_WALL*2), COLUMNFOOT_HEIGHT], r=Inches(1/16));
 
-			// Column sleeve
-			translate([-COLUMN_X_WIDTH-COLUMN_WALL, -(COLUMN_Y_WIDTH/2) - COLUMN_WALL, 0])
-			ChamferedCube([COLUMN_X_WIDTH + (COLUMN_WALL*2), COLUMN_Y_WIDTH + (COLUMN_WALL*2), COLUMNFOOT_HEIGHT], r=Inches(1/16));
+				// Leg Positive X & Y
+				translate([0, COLUMN_Y_WIDTH/2, 0])
+				rotate(45){
+					hull() {
+						// Vertical segment
+						translate([COLUMN_WALL/2, 0, 0])
+						ChamferedCylinder(r1=COLUMN_WALL, r2=Inches(1/32), h=COLUMNFOOT_HEIGHT);
 
-			// Leg Positive X & Y
-			translate([0, COLUMN_Y_WIDTH/2, 0])
-			rotate(45){
-				hull() {
-					// Vertical segment
-					translate([COLUMN_WALL/2, 0, 0])
-					ChamferedCylinder(r1=COLUMN_WALL, r2=Inches(1/32), h=COLUMNFOOT_HEIGHT);
+						// Horizontal segment
+						translate([0,-Inches(0.25/2),0])
+						ChamferedCube([COLUMN_WALL+extension, Inches(0.25), Inches(0.1875)], r=Inches(1/32));
+					}
 
-					// Horizontal segment
-					translate([0,-Inches(0.25/2),0])
-					ChamferedCube([COLUMN_WALL+extension, Inches(0.25), Inches(0.1875)], r=Inches(1/32));
+					// Foot
+					translate([extension + COLUMN_WALL,-Inches(0.8/2),0])
+					mirror([1,0,0])
+					ChamferedCube([Inches(0.8), Inches(0.8), Inches(0.125)], r=Inches(1/32));
 				}
 
-				// Foot
-				translate([extension + COLUMN_WALL,-Inches(0.8/2),0])
-				mirror([1,0,0])
-				ChamferedCube([Inches(0.8), Inches(0.8), Inches(0.125)], r=Inches(1/32));
+				// Leg Positive X, Negative Y
+				translate([0, -COLUMN_Y_WIDTH/2, 0])
+				rotate(-45){
+					hull() {
+						// Vertical segment
+						translate([COLUMN_WALL/2, 0, 0])
+						ChamferedCylinder(r1=COLUMN_WALL, r2=Inches(1/32), h=COLUMNFOOT_HEIGHT);
+
+						// Horizontal segment
+						translate([0,-Inches(0.25/2),0])
+						ChamferedCube([COLUMN_WALL+extension, Inches(0.25), Inches(0.1875)], r=Inches(1/32));
+					}
+
+					// Foot
+					translate([extension + COLUMN_WALL,-Inches(0.8/2),0])
+					mirror([1,0,0])
+					ChamferedCube([Inches(0.8), Inches(0.8), Inches(0.125)], r=Inches(1/32));
+				}
+
+				// Leg Negative X & Y
+				translate([-COLUMN_X_WIDTH, -COLUMN_Y_WIDTH/2, 0])
+				rotate(-45 - 90){
+					hull() {
+						// Vertical segment
+						translate([COLUMN_WALL/2, 0, 0])
+						ChamferedCylinder(r1=COLUMN_WALL, r2=Inches(1/32), h=COLUMNFOOT_HEIGHT);
+
+						// Horizontal segment
+						translate([0,-Inches(0.25/2),0])
+						ChamferedCube([COLUMN_WALL+extension, Inches(0.25), Inches(0.1875)], r=Inches(1/32));
+					}
+
+					// Foot
+					translate([extension + COLUMN_WALL,-Inches(0.8/2),0])
+					mirror([1,0,0])
+					ChamferedCube([Inches(0.8), Inches(0.8), Inches(0.125)], r=Inches(1/32));
+				}
+
+				// Leg Negative X, Positive Y
+				translate([-COLUMN_X_WIDTH, COLUMN_Y_WIDTH/2, 0])
+				rotate(45 + 90){
+					hull() {
+						// Vertical segment
+						translate([COLUMN_WALL/2, 0, 0])
+						ChamferedCylinder(r1=COLUMN_WALL, r2=Inches(1/32), h=COLUMNFOOT_HEIGHT);
+
+						// Horizontal segment
+						translate([0,-Inches(0.25/2),0])
+						ChamferedCube([COLUMN_WALL+extension, Inches(0.25), Inches(0.1875)], r=Inches(1/32));
+					}
+
+					// Foot
+					translate([extension + COLUMN_WALL,-Inches(0.8/2),0])
+					mirror([1,0,0])
+					ChamferedCube([Inches(0.8), Inches(0.8), Inches(0.125)], r=Inches(1/32));
+				}
 			}
 
-			// Leg Positive X, Negative Y
-			translate([0, -COLUMN_Y_WIDTH/2, 0])
-			rotate(-45){
-				hull() {
-					// Vertical segment
-					translate([COLUMN_WALL/2, 0, 0])
-					ChamferedCylinder(r1=COLUMN_WALL, r2=Inches(1/32), h=COLUMNFOOT_HEIGHT);
+			// Contact supports
+			translate([BARREL_CONTACT_X, BARREL_CONTACT_Y, 0])
+			ChamferedCylinder(r1=COLUMN_WALL, r2=Inches(1/16), h=DRILLBASE_HEIGHT);
 
-					// Horizontal segment
-					translate([0,-Inches(0.25/2),0])
-					ChamferedCube([COLUMN_WALL+extension, Inches(0.25), Inches(0.1875)], r=Inches(1/32));
-				}
+			hull(){
+				// Barrel Sleeve
+				translate([BARREL_OFFSET_X, 0, 0])
+				ChamferedCylinder(r1=BARREL_RADIUS + ORING_WIDTH + COLUMN_WALL, r2=Inches(1/16), h=DRILLBASE_HEIGHT);
 
-				// Foot
-				translate([extension + COLUMN_WALL,-Inches(0.8/2),0])
-				mirror([1,0,0])
-				ChamferedCube([Inches(0.8), Inches(0.8), Inches(0.125)], r=Inches(1/32));
-			}
-
-			// Leg Negative X & Y
-			translate([-COLUMN_X_WIDTH, -COLUMN_Y_WIDTH/2, 0])
-			rotate(-45 - 90){
-				hull() {
-					// Vertical segment
-					translate([COLUMN_WALL/2, 0, 0])
-					ChamferedCylinder(r1=COLUMN_WALL, r2=Inches(1/32), h=COLUMNFOOT_HEIGHT);
-
-					// Horizontal segment
-					translate([0, -Inches(0.25/2), 0])
-					ChamferedCube([COLUMN_WALL+extension, Inches(0.25), Inches(0.1875)], r=Inches(1/32));
-				}
-
-				// Foot
-				translate([extension + COLUMN_WALL,-Inches(0.8/2),0])
-				mirror([1, 0, 0])
-				ChamferedCube([Inches(0.8), Inches(0.8), Inches(0.125)], r=Inches(1/32));
-			}
-
-			// Leg Negative X, Positive Y
-			translate([-COLUMN_X_WIDTH, COLUMN_Y_WIDTH/2, 0])
-			rotate(45 + 90){
-				hull() {
-					// Vertical segment
-					translate([COLUMN_WALL/2, 0, 0])
-					ChamferedCylinder(r1=COLUMN_WALL, r2=Inches(1/32), h=COLUMNFOOT_HEIGHT);
-
-					// Horizontal segment
-					translate([0,-Inches(0.25/2),0])
-					ChamferedCube([COLUMN_WALL+extension, Inches(0.25), Inches(0.1875)], r=Inches(1/32));
-				}
-
-				// Foot
-				translate([extension + COLUMN_WALL,-Inches(0.8/2),0])
-				mirror([1,0,0])
-				ChamferedCube([Inches(0.8), Inches(0.8), Inches(0.125)], r=Inches(1/32));
+				// Column sleeve extended to barrel sleeve
+				translate([0, -(COLUMN_Y_WIDTH/2) - COLUMN_WALL, 0])
+				ChamferedCube([BARREL_OFFSET_X, COLUMN_Y_WIDTH+(COLUMN_WALL*2), DRILLBASE_HEIGHT], r=Inches(1/16));
 			}
 
 		}
 
-		LegBolts(cutter=true);
-		translate([0, 0, 1/2])
-		Column(slots=[0,-90,90], cutter=true);
+	BarrelContact(cutter=true);
+	TailstockBolts(cutter=true);
+	TailstockORing(cutter=true);
+	LegBolts(cutter=true);
+	translate([0, 0, 1/2])
+	Column(slots=[0,-90,90], cutter=true);
+	Barrel(cutter=true);
+
+	translate([0,0,-BARREL_LENGTH + Inches(0.125)])
+	Electrode(clearance=0.05, cutter=true);
 	}
 }
-//
-
 
 module BarrelContact(pivotDiameter=Inches(0.125), clearance=0.008, cutter=false) {
 	pivotRadius = pivotDiameter/2;
@@ -595,10 +581,9 @@ if ($preview) {
 	translate([0, 0, 1/2])
 	Column();
 
-	translate([0,0,COLUMNFOOT_HEIGHT])
 	DriveScrew();
 
-	translate([0,0,COLUMNFOOT_HEIGHT-BARREL_LENGTH*$t]) {
+	translate([0, 0, -BARREL_LENGTH*$t]) {
 		Electrode();
 		ElectrodeSetScrew();
 		DriveNut();
@@ -607,42 +592,39 @@ if ($preview) {
 
 	*BarrelContact();
 
-	translate([0,0,COLUMNFOOT_HEIGHT]) {
-		Barrel(alpha=_ALPHA_BARREL);
+	Barrel(alpha=_ALPHA_BARREL);
 
-		rotations=3;
+	rotations=3;
 
-		// Barrel drive
-		translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MIN-gearThickness])
-		mirror([0,0,1])
-		translate([0,gearDistance,0])
-		mirror([0,0,1])
-		rotate(rotations*360*$t)
-		rotate(360/driveGearTeeth*0.45)
-		DriveGear();
+	// Barrel drive
+	translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MIN-gearThickness])
+	mirror([0,0,1])
+	translate([0,gearDistance,0])
+	mirror([0,0,1])
+	rotate(rotations*360*$t)
+	rotate(360/driveGearTeeth*0.45)
+	DriveGear();
 
-		translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MIN])
-		mirror([0,0,1])
-		rotate(-rotations*360*$t*(driveGearTeeth/drivenGearTeeth))
-		DrivenGear();
-		RotaryStepper();
+	translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MIN])
+	mirror([0,0,1])
+	rotate(-rotations*360*$t*(driveGearTeeth/drivenGearTeeth))
+	DrivenGear();
+	RotaryStepper();
 
 
-		TailstockORing();
-		HeadstockORing();
-		HeadstockTap();
+	TailstockORing();
+	HeadstockORing();
+	HeadstockTap();
 
-		TailstockBolts();
-		HeadstockBolts();
+	TailstockBolts();
+	HeadstockBolts();
 
-		LinearStepper();
+	LinearStepper();
 
-		Tailstock(alpha=_ALPHA_DRILL_BASE);
-		Headstock(alpha=_ALPHA_DRILL_HEAD);
-	}
+	Tailstock(alpha=_ALPHA_DRILL_BASE);
+	Headstock(alpha=_ALPHA_DRILL_HEAD);
 
 	LegBolts();
-	Legs();
 
 } else {
 
@@ -651,9 +633,6 @@ if ($preview) {
 
 	if (_RENDER == "DriveGear")
 	DriveGear();
-
-	if (_RENDER == "Legs")
-	Legs();
 
 	if (_RENDER == "Tailstock")
 	Tailstock();
