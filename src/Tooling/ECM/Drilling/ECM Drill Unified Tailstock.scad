@@ -287,7 +287,7 @@ module LegBolts(cutter=false) {
 	rotate([0, 180, 0])
 	for(Y = [Millimeters(10):Millimeters(20):Millimeters(20)*COLUMN_Y_SEGMENTS])
 	translate([0, Y, 0])
-	Bolt(bolt=BoltSpec("M5"), length=Millimeters(20), head="flat", capOrientation=true, teardrop=cutter, clearance=clear);
+	Bolt(bolt=BoltSpec("M5"), length=Millimeters(20), head="flat", capOrientation=true, teardrop=false, clearance=clear);
 }
 
 // Workpiece

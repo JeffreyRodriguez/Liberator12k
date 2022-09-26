@@ -287,7 +287,7 @@ module LegBolts(cutter=false) {
 	rotate([0, 180, 0])
 	for(Y = [Millimeters(10):Millimeters(20):Millimeters(20)*COLUMN_Y_SEGMENTS])
 	translate([0, Y, 0])
-	Bolt(bolt=BoltSpec("M5"), length=Millimeters(20), head="flat", capOrientation=true, teardrop=cutter, clearance=clear);
+	Bolt(bolt=BoltSpec("M5"), length=Millimeters(20), head="flat", capOrientation=true, teardrop=false, clearance=clear);
 }
 
 // Workpiece
@@ -532,13 +532,13 @@ module Legs(extension=4, alpha=1, debug=false) {
 					ChamferedCylinder(r1=COLUMN_WALL, r2=Inches(1/32), h=COLUMNFOOT_HEIGHT);
 
 					// Horizontal segment
-					translate([0,-Inches(0.25/2),0])
+					translate([0, -Inches(0.25/2), 0])
 					ChamferedCube([COLUMN_WALL+extension, Inches(0.25), Inches(0.1875)], r=Inches(1/32));
 				}
 
 				// Foot
 				translate([extension + COLUMN_WALL,-Inches(0.8/2),0])
-				mirror([1,0,0])
+				mirror([1, 0, 0])
 				ChamferedCube([Inches(0.8), Inches(0.8), Inches(0.125)], r=Inches(1/32));
 			}
 
