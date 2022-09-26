@@ -160,7 +160,6 @@ module DriveScrew(cutter=false) {
 	translate([DRIVESCREW_OFFSET_X, DRIVESCREW_OFFSET_Y, DRILLHEAD_Z_MAX])
 	cylinder(r=(DRIVESCREW_DIAMETER/2) + (cutter?0.01:0), h=ELECTRODE_LENGTH + 1.5);
 }
-
 module DriveNut(cutter=false) {
 	translate([0,0,-Millimeters(3)]) {
 
@@ -181,6 +180,35 @@ module DriveNut(cutter=false) {
 		rotate(R+45)
 		translate([8/25.4, 0,-10/25.4])
 		cylinder(r=3/64, h=15/25.4);
+
+		// Ender 3 compatible Nut Body
+		color("Gold")
+		translate([DRIVESCREW_OFFSET_X, DRIVESCREW_OFFSET_Y, CARRIAGE_MAX_X + ManifoldGap()-(10/25.4)])
+		cylinder(r=11/2/25.4, h=15/25.4);
+		
+		// Ender 3 compatible bolts
+		color("DimGrey")
+		translate([DRIVESCREW_OFFSET_X, DRIVESCREW_OFFSET_Y, CARRIAGE_MIN_Z])
+		for (R = [90: 180: 270])
+		rotate(R)
+		translate([Millimeters(18/2), 0, Millimeters(-1)]) //Why is CARRIAGE_MIN_Z 3mm lower than the bottom of the carriage?
+		cylinder(d=Millimeters(3), h=Millimeters(10));
+
+		// Ender 3 T8 Nut Cap
+		color("Gold")
+		translate([DRIVESCREW_OFFSET_X, DRIVESCREW_OFFSET_Y, CARRIAGE_MIN_Z])
+		linear_extrude(Millimeters(3.5))
+		intersection(){
+			circle(d=Millimeters(28));
+			
+			translate([-Millimeters(13)/2, -Millimeters(28)/2])
+			square([Millimeters(13), Millimeters(28)]);
+		}
+
+		// Ender 3 T8 Nut Body
+		color("Gold")
+		translate([DRIVESCREW_OFFSET_X, DRIVESCREW_OFFSET_Y, CARRIAGE_MIN_Z - Millimeters(2)])
+		cylinder(d=Millimeters(10.5), h=Millimeters(11));
 	}
 }
 
@@ -433,6 +461,14 @@ module Carriage(extension=1, alpha=1) {
 				ChamferedCylinder(r1=Inches(0.375), r2=Inches(1/16), h=CARRIAGE_LENGTH);
 			}
 		}
+		
+		// Ender 3 compatible bolts head access hole
+		translate([DRIVESCREW_OFFSET_X, DRIVESCREW_OFFSET_Y, CARRIAGE_MIN_Z])
+		//rotate([180, 0, 0])
+		for (R = [90: 180: 270])
+		rotate(R)
+		translate([Millimeters(18/2), 0, Millimeters(4)])
+		cylinder(d=Millimeters(6), h=CARRIAGE_LENGTH - Millimeters(4));
 
 		Column(cutter=true);
 		Electrode(clearance=0.005, cutter=true);
