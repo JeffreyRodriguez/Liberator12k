@@ -47,7 +47,7 @@ TAP_DIAMETER = UnitSelect(Tap_Diameter_, VITAMINS_UNIT);
 /* [Scrounged Vitamins] */
 Leadscrew_Unit_of_Measure = "Millimeters"; //["Millimeters", "Inches"]
 Leadscrew_Diameter_in_Millimeters = 8;
-Column_Extrusion = "2040"; //["2020", "2040", "4040"]
+Column_Extrusion = "2040"; //["2020", "2040", "2060", "4040", "4060"]
 Column_Extrusion_Length_in_Millimeters = 400;
 
 LEADSCREW_UNIT = UnitType(Leadscrew_Unit_of_Measure);
@@ -82,8 +82,8 @@ Intermediate_Shaft_Diameter_ = 5/16;
 // Derived other Chosen Dimensions Values
 ELECTRODE_LENGTH = UnitSelect(Electrode_Length_, CHOSEN_DIMENSIONS_UNIT);
 COLUMNFOOT_HEIGHT = UnitSelect(Column_Foot_Height, CHOSEN_DIMENSIONS_UNIT);
-function findExtrusionXSegments(extrusiontext) = extrusiontext == "2020" ? 1 : extrusiontext == "2040" ? 1 : extrusiontext == "4020" ? 2 : extrusiontext == "4040" ? 2 : 0;
-function findExtrusionYSegments(extrusiontext) = extrusiontext == "2020" ? 1 : extrusiontext == "2040" ? 2 : extrusiontext == "4020" ? 1 : extrusiontext == "4040" ? 2 : 0;
+function findExtrusionXSegments(extrusiontext) = extrusiontext == "2020" ? 1 : extrusiontext == "2040" ? 1 : extrusiontext == "2060" ? 1 : extrusiontext == "4020" ? 2 : extrusiontext == "4040" ? 2 : extrusiontext == "4060" ? 2 : 0;
+function findExtrusionYSegments(extrusiontext) = extrusiontext == "2020" ? 1 : extrusiontext == "2040" ? 2 : extrusiontext == "2060" ? 3 : extrusiontext == "4020" ? 1 : extrusiontext == "4040" ? 2 : extrusiontext == "4060" ? 3 : 0;
 COLUMN_X_SEGMENTS= findExtrusionXSegments(Column_Extrusion);
 COLUMN_Y_SEGMENTS= findExtrusionYSegments(Column_Extrusion);
 DRILLBASE_HEIGHT = UnitSelect(Drill_Base_Height_, CHOSEN_DIMENSIONS_UNIT);
@@ -311,10 +311,11 @@ module LegBolts(cutter=false) {
 	color("SteelBlue")
 //	for (Z = [0, 20/25.4])
 //	translate([0,0,0.5+Z])
-	translate([-COLUMN_X_WIDTH/2, -COLUMN_Y_WIDTH/2, 0])
+	translate([0, -COLUMN_Y_WIDTH/2, 0])
 	rotate([0, 180, 0])
 	for(Y = [Millimeters(10):Millimeters(20):Millimeters(20)*COLUMN_Y_SEGMENTS])
-	translate([0, Y, 0])
+	for(X = [Millimeters(10):Millimeters(20):Millimeters(20)*COLUMN_X_SEGMENTS])
+	translate([X, Y, 0])
 	Bolt(bolt=BoltSpec("M5"), length=Millimeters(20), head="flat", capOrientation=true, teardrop=false, clearance=clear);
 }
 
