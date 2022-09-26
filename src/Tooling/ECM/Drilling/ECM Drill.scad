@@ -312,13 +312,12 @@ module Headstock(debug=false, alpha=1) {
 
 			 // Column sleeve extended to barrel sleeve
 			 translate([0, -(COLUMN_X_WIDTH/2)-COLUMN_WALL, DRILLHEAD_Z_MIN])
-			 ChamferedCube([BARREL_OFFSET_X+BARREL_RADIUS, COLUMN_Y_WIDTH+(COLUMN_WALL*2), DRILLHEAD_HEIGHT], r=1/16);
+//			 ChamferedCube([BARREL_OFFSET_X+BARREL_RADIUS, COLUMN_Y_WIDTH+(COLUMN_WALL*2), DRILLHEAD_HEIGHT], r=1/16);
+			 ChamferedCube([BARREL_OFFSET_X+BARREL_RADIUS, Millimeters(20)+(COLUMN_WALL*2), DRILLHEAD_HEIGHT], r=1/16);
 
 			union() {
 				// Splash guard: Rotary motor
-				*translate([0,0,DRILLHEAD_Z_MIN])
-				translate([-COLUMN_X_WIDTH - COLUMN_WALL - Inches(4), (COLUMN_Y_WIDTH/2), 0])
-				ChamferedCube([COLUMN_X_WIDTH + COLUMN_WALL + BARREL_OFFSET_X + ((COLUMN_X_WIDTH/2) + COLUMN_WALL) + Inches(0.25), COLUMN_WALL + Inches(4), DRILLHEAD_HEIGHT+0.25], r=Inches(1/16));
+
 
 			// Barrel Sleeve
 			translate([0, 0, DRILLHEAD_Z_MIN])
@@ -339,7 +338,7 @@ module Headstock(debug=false, alpha=1) {
 
 			// Splash guard: Rotary motor
 			translate([0, 0, DRILLHEAD_Z_MIN])
-			translate([-COLUMN_X_WIDTH - COLUMN_WALL, (COLUMN_Y_WIDTH/2), 0])
+			translate([-COLUMN_X_WIDTH - COLUMN_WALL, Millimeters(10), 0])
 			ChamferedCube([COLUMN_X_WIDTH + COLUMN_WALL + BARREL_OFFSET_X + ((COLUMN_X_WIDTH/2)+COLUMN_WALL) + Inches(0.25), COLUMN_WALL, DRILLHEAD_HEIGHT + Inches(0.25)], r=Inches(1/16));
 
 			// Splash guard: Column
