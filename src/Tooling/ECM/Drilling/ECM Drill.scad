@@ -181,11 +181,6 @@ module DriveNut(cutter=false) {
 		rotate(R+45)
 		translate([8/25.4, 0,-10/25.4])
 		cylinder(r=3/64, h=15/25.4);
-
-		// Ender 3 compatible Nut Body
-		color("Gold")
-		translate([DRIVESCREW_OFFSET_X, DRIVESCREW_OFFSET_Y, CARRIAGE_MAX_X + ManifoldGap()-(10/25.4)])
-		cylinder(r=11/2/25.4, h=15/25.4);
 		
 		// Ender 3 compatible bolts
 		color("DimGrey")
