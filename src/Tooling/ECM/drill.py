@@ -39,4 +39,3 @@ for X in range(0,depth*resolution):
         # Show position
         print('M114');
 
-

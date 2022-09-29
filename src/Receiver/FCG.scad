@@ -247,7 +247,7 @@ function RecoilPlateRearX()  = 0.25;
 
 function ActionRodZ() = 0.75+(ActionRodWidth()/2);
 
-
+/* [Fine Tuning] */
 HammerLength=2;
 
 function HammerTailLength() = 0.625;
