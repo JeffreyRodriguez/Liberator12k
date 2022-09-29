@@ -19,6 +19,17 @@ use <aluminumExtrusions.scad>;
 // Select a part, Render it (F6), then Export to STL (F7)
 _RENDER = ""; // ["", "DrivenGear", "DriveGear", "Legs", "Tailstock", "Headstock", "Carriage", "ToolHolder"]
 
+/* [Assembly] */
+_SHOW_COLUMN = true;
+_SHOW_COLUMNFOOT = true;
+_SHOW_TAILSTOCK = true;
+_SHOW_HEADSTOCK = true;
+_SHOW_ROTARY_MOTOR = true;
+_SHOW_ROTARY_GEARS = true;
+_SHOW_LINEAR_MOTOR = true;
+_SHOW_CARRIAGE = true;
+
+
 /* [Transparency] */
 _ALPHA_BARREL=0.5; // [0:0.1:1]
 _ALPHA_DRILL_BASE=0.5; // [0:0.1:1]
@@ -71,6 +82,8 @@ BARREL_WALL = UnitSelect(Barrel_Wall, CHOSEN_DIMENSIONS_UNIT);
 
 Electrode_Length_=7;
 Column_Foot_Height=1.75;
+Column_Foot_Extension = 4;
+Column_Foot_Pad_Width = 3/4;
 Drill_Base_Height_ = 0.75;
 Drill_Base_Extension_Height_ = 1.5;
 Drill_Head_Height_ = 1.125;
@@ -82,6 +95,8 @@ Intermediate_Shaft_Diameter_ = 5/16;
 // Derived other Chosen Dimensions Values
 ELECTRODE_LENGTH = UnitSelect(Electrode_Length_, CHOSEN_DIMENSIONS_UNIT);
 COLUMNFOOT_HEIGHT = UnitSelect(Column_Foot_Height, CHOSEN_DIMENSIONS_UNIT);
+COLUMNFOOT_EXTENSION = UnitSelect(Column_Foot_Extension, CHOSEN_DIMENSIONS_UNIT);
+COLUMNFOOT_PAD_WIDTH = UnitSelect(Column_Foot_Pad_Width, CHOSEN_DIMENSIONS_UNIT);
 function findExtrusionXSegments(extrusiontext) = extrusiontext == "2020" ? 1 : extrusiontext == "2040" ? 1 : extrusiontext == "2060" ? 1 : extrusiontext == "4020" ? 2 : extrusiontext == "4040" ? 2 : extrusiontext == "4060" ? 2 : 0;
 function findExtrusionYSegments(extrusiontext) = extrusiontext == "2020" ? 1 : extrusiontext == "2040" ? 2 : extrusiontext == "2060" ? 3 : extrusiontext == "4020" ? 1 : extrusiontext == "4040" ? 2 : extrusiontext == "4060" ? 3 : 0;
 COLUMN_X_SEGMENTS= findExtrusionXSegments(Column_Extrusion);
@@ -315,6 +330,27 @@ module LegBolts(cutter=false) {
 	Bolt(bolt=BoltSpec("M5"), length=Millimeters(20), head="flat", capOrientation=true, teardrop=false, clearance=clear);
 }
 
+// Leg Module
+module Leg(extension=COLUMNFOOT_EXTENSION, padWidth=COLUMNFOOT_PAD_WIDTH) {
+  
+  // Leg
+  hull() {
+    
+    // Round top
+    translate([COLUMN_WALL/2,COLUMN_WALL/2,0])
+    ChamferedCylinder(r1=COLUMN_WALL, r2=Inches(1/32), h=COLUMNFOOT_HEIGHT);
+
+    // Square tip
+    translate([0,-(padWidth/4),0])
+    ChamferedCube([padWidth+extension, padWidth/2, Inches(0.1875)],
+                  r=Inches(1/32));
+  }
+
+  // Foot Pad
+  translate([extension,-(padWidth/2),0])
+  ChamferedCube([padWidth, padWidth, Inches(0.125)],
+                r=Inches(1/32));
+}
 // Workpiece
 module Barrel(clearance=0.015, cutter=false,alpha=1) {
 	color("Silver", alpha)
@@ -517,82 +553,12 @@ module Legs(extension=4, alpha=1, debug=false) {
 			translate([-COLUMN_X_WIDTH-COLUMN_WALL, -(COLUMN_Y_WIDTH/2) - COLUMN_WALL, 0])
 			ChamferedCube([COLUMN_X_WIDTH + (COLUMN_WALL*2), COLUMN_Y_WIDTH + (COLUMN_WALL*2), COLUMNFOOT_HEIGHT], r=Inches(1/16));
 
-			// Leg Positive X & Y
-			translate([0, COLUMN_Y_WIDTH/2, 0])
-			rotate(45){
-				hull() {
-					// Vertical segment
-					translate([COLUMN_WALL/2, 0, 0])
-					ChamferedCylinder(r1=COLUMN_WALL, r2=Inches(1/32), h=COLUMNFOOT_HEIGHT);
-
-					// Horizontal segment
-					translate([0,-Inches(0.25/2),0])
-					ChamferedCube([COLUMN_WALL+extension, Inches(0.25), Inches(0.1875)], r=Inches(1/32));
-				}
-
-				// Foot
-				translate([extension + COLUMN_WALL,-Inches(0.8/2),0])
-				mirror([1,0,0])
-				ChamferedCube([Inches(0.8), Inches(0.8), Inches(0.125)], r=Inches(1/32));
-			}
-
-			// Leg Positive X, Negative Y
-			translate([0, -COLUMN_Y_WIDTH/2, 0])
-			rotate(-45){
-				hull() {
-					// Vertical segment
-					translate([COLUMN_WALL/2, 0, 0])
-					ChamferedCylinder(r1=COLUMN_WALL, r2=Inches(1/32), h=COLUMNFOOT_HEIGHT);
-
-					// Horizontal segment
-					translate([0,-Inches(0.25/2),0])
-					ChamferedCube([COLUMN_WALL+extension, Inches(0.25), Inches(0.1875)], r=Inches(1/32));
-				}
-
-				// Foot
-				translate([extension + COLUMN_WALL,-Inches(0.8/2),0])
-				mirror([1,0,0])
-				ChamferedCube([Inches(0.8), Inches(0.8), Inches(0.125)], r=Inches(1/32));
-			}
-
-			// Leg Negative X & Y
-			translate([-COLUMN_X_WIDTH, -COLUMN_Y_WIDTH/2, 0])
-			rotate(-45 - 90){
-				hull() {
-					// Vertical segment
-					translate([COLUMN_WALL/2, 0, 0])
-					ChamferedCylinder(r1=COLUMN_WALL, r2=Inches(1/32), h=COLUMNFOOT_HEIGHT);
-
-					// Horizontal segment
-					translate([0, -Inches(0.25/2), 0])
-					ChamferedCube([COLUMN_WALL+extension, Inches(0.25), Inches(0.1875)], r=Inches(1/32));
-				}
-
-				// Foot
-				translate([extension + COLUMN_WALL,-Inches(0.8/2),0])
-				mirror([1, 0, 0])
-				ChamferedCube([Inches(0.8), Inches(0.8), Inches(0.125)], r=Inches(1/32));
-			}
-
-			// Leg Negative X, Positive Y
-			translate([-COLUMN_X_WIDTH, COLUMN_Y_WIDTH/2, 0])
-			rotate(45 + 90){
-				hull() {
-					// Vertical segment
-					translate([COLUMN_WALL/2, 0, 0])
-					ChamferedCylinder(r1=COLUMN_WALL, r2=Inches(1/32), h=COLUMNFOOT_HEIGHT);
-
-					// Horizontal segment
-					translate([0,-Inches(0.25/2),0])
-					ChamferedCube([COLUMN_WALL+extension, Inches(0.25), Inches(0.1875)], r=Inches(1/32));
-				}
-
-				// Foot
-				translate([extension + COLUMN_WALL,-Inches(0.8/2),0])
-				mirror([1,0,0])
-				ChamferedCube([Inches(0.8), Inches(0.8), Inches(0.125)], r=Inches(1/32));
-			}
-
+			// Legs
+      for (X = [0, -COLUMN_X_WIDTH])
+      for (Y = [1,-1])
+			translate([X, Y*(COLUMN_Y_WIDTH/2), 0])
+      mirror([(X == 0 ? 0 : 1),0,0])
+			rotate(Y*45) Leg();
 		}
 
 		LegBolts(cutter=true);
@@ -624,6 +590,7 @@ ScaleToMillimeters()
 if ($preview) {
 
 	// Core Components
+  if (_SHOW_COLUMN)
 	translate([0, 0, 1/2])
 	Column();
 
@@ -634,6 +601,8 @@ if ($preview) {
 		Electrode();
 		ElectrodeSetScrew();
 		DriveNut();
+    
+    if (_SHOW_CARRIAGE);
 		Carriage();
 	}
 
@@ -645,6 +614,7 @@ if ($preview) {
 		rotations=3;
 
 		// Barrel drive
+    if (_SHOW_ROTARY_GEARS)
 		translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MIN-gearThickness])
 		mirror([0,0,1])
 		translate([0,gearDistance,0])
@@ -653,28 +623,45 @@ if ($preview) {
 		rotate(360/driveGearTeeth*0.45)
 		DriveGear();
 
+    if (_SHOW_ROTARY_GEARS)
 		translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MIN])
 		mirror([0,0,1])
 		rotate(-rotations*360*$t*(driveGearTeeth/drivenGearTeeth))
 		DrivenGear();
+    
+    if (_SHOW_ROTARY_MOTOR)
 		RotaryStepper();
 
-
+    if (_SHOW_TAILSTOCK)
 		TailstockORing();
+    
+    if (_SHOW_HEADSTOCK)
 		HeadstockORing();
+    
+    if (_SHOW_HEADSTOCK)
 		HeadstockTap();
-
+    
+    if (_SHOW_TAILSTOCK)
 		TailstockBolts();
-		HeadstockBolts();
+    
 
-		LinearStepper();
-
+    if (_SHOW_LINEAR_MOTOR) {
+      LinearStepper();
+    }
+    
+    if (_SHOW_TAILSTOCK)
 		Tailstock(alpha=_ALPHA_DRILL_BASE);
-		Headstock(alpha=_ALPHA_DRILL_HEAD);
+    
+    if (_SHOW_HEADSTOCK) {
+      Headstock(alpha=_ALPHA_DRILL_HEAD);
+      HeadstockBolts();
+    }
 	}
 
-	LegBolts();
-	Legs();
+  if (_SHOW_COLUMNFOOT) {
+    LegBolts();
+    Legs();
+  }
 
 } else {
 
