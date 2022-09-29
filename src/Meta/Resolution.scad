@@ -3,7 +3,7 @@ RESOLUTION_LOW = 0;
 RESOLUTION_HIGH = 1;
 
 // Setting
-RESOLUTION = RESOLUTION_LOW;
+RESOLUTION = RESOLUTION_HIGH;
 
 // Utility functions
 function ResolutionIsLow() = RESOLUTION == RESOLUTION_LOW;
