@@ -54,10 +54,10 @@ function PipeFn(pipe=undef, fn) =
            (fn == undef) ? lookup(PipeFn, pipe) : fn;
 
 function PipeOuterCircumference(pipe, clearance, clearanceSign=1) =
-           3.14*PipeOuterDiameter(pipe, clearance, clearanceSign);
+           PI*PipeOuterDiameter(pipe, clearance, clearanceSign);
 
 function PipeInnerCircumference(pipe, clearance, clearanceSign=1) =
-           3.14*PipeInnerDiameter(pipe, clearance, clearanceSign);
+           PI*PipeInnerDiameter(pipe, clearance, clearanceSign);
 
 function PipeCapDiameter(pipe, clearance, clearanceSign=1) = lookup(PipeCapDiameter, pipe) + (PipeClearance(pipe, clearance)*clearanceSign);
 function PipeCapRadius(pipe, clearance, clearanceSign=1) = PipeCapDiameter(pipe, clearance, clearanceSign)/2;
