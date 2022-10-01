@@ -11,7 +11,7 @@ use <../../../Shapes/Gear.scad>;
 use <../../../Shapes/Teardrop.scad>;
 use <../../../Vitamins/Stepper Motor.scad>;
 use <../../../Vitamins/Nuts And Bolts.scad>;
-use <../../../Vitamins/Pipe.scad>;
+use <../../../Vitamins/Pipe Taper.scad>;
 include <Gears.scad>;
 use <aluminumExtrusions.scad>;
 
@@ -44,7 +44,7 @@ O_Ring_Unit_of_Measure = "Inches"; //["Millimeters", "Inches"]
 Oring_Width_ = 0.09375;
 Other_Vitamins_Unit_of_Measure = "Inches"; //["Millimeters", "Inches"]
 Electrode_Diameter_ = 0.125;
-Tap_Diameter_ = 0.125;
+Tap_Diameter_ = 0.1875;
 
 // Derived Vitamin Values
 VITAMINS_UNIT = UnitType(Other_Vitamins_Unit_of_Measure);
@@ -257,8 +257,15 @@ module HeadstockTap(clearance=0.015, cutter=false) {
   
 	// Outlet Pipe Fitting
 	color("Gold") RenderIf(!cutter)
+	translate([WATER_TAP_OFFSET_X,WATER_TAP_OFFSET_Y,DRILLHEAD_Z_MAX])
+	mirror([0,0,1])
+	cylinder(d=0.332, h=0.26);
+	// TODO (scale is wrong): taperNPT("1/8");
+  
+	// Water passage to outlet pipe fitting
+	if (cutter)
 	translate([WATER_TAP_OFFSET_X,WATER_TAP_OFFSET_Y,BARREL_Z_MAX+0.25])
-  Pipe(Spec_PipeOneEighthInch(), length=1, taperBottom=true);
+	cylinder(r1=TAP_RADIUS, d2=0.332, h=DRILLHEAD_HEIGHT);
 
 	// Water passage
 	color("LightBlue") RenderIf(!cutter)
@@ -275,11 +282,11 @@ module HeadstockBolts(cutter=false) {
 	clearance = cutter ? 0.01 : 0;
 
 	color("SteelBlue") RenderIf(!cutter)
-	translate([-COLUMN_X_WIDTH - COLUMN_WALL, -COLUMN_Y_WIDTH/2, DRILLHEAD_Z_MIN+0.825])
-	for (Y = [Millimeters(10):Millimeters(20):COLUMN_Y_WIDTH])
-	translate([0, Y, 0])
-	rotate([0,-90,0])
-	Bolt(bolt=BoltSpec("M5"), length=Millimeters(10), head="flat", capOrientation=true, teardrop=cutter, clearance=clearance);
+	translate([-Millimeters(10), -(COLUMN_Y_WIDTH/2)-COLUMN_WALL, DRILLHEAD_Z_MIN+Millimeters(15)])
+	rotate([90,0,0])
+	rotate(90)
+	Bolt(bolt=BoltSpec("M5"), length=Millimeters(10), head="flat",
+	     capHeightExtra=(cutter?COLUMN_WALL:0), capOrientation=true, teardrop=cutter, clearance=clearance);
 }
 
 module HeadstockORing(cutter=false) {
