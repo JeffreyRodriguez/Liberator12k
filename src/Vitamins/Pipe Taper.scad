@@ -34,18 +34,22 @@ module taperNPT(specName, L1 = 0) {
 	tpi = NPT_ThreadsPerInch(spec);
 	L1 = NPT_L1(spec);
 	
-	taperNPT_(outsideDiameter, tpi, L1);
+	taperNPT_(outsideDiameter, tpi, L1, L3 = 3/tpi);
 }
 
-module taperNPT_(outsideDiameter, tpi, L1 = 0) {
-	if(L1 == 0)
+module taperNPT_(outsideDiameter, tpi, L1 = 0, L3 = 0) {
+	if(L1 == 0 && L3 == 0)
 	cylinder(taperNPT_L2(outsideDiameter, tpi),
 	         taperNPT_E1(taperNPT_E0(outsideDiameter, tpi), taperNPT_L2(outsideDiameter, tpi))/2,
 	         taperNPT_E0(outsideDiameter, tpi)/2);
-	else
+	else if(L3 == 0)
 	cylinder(taperNPT_L2(outsideDiameter, tpi),
 	         taperNPT_E1(taperNPT_E0(outsideDiameter, tpi), L1)/2,
 	         taperNPT_E0(outsideDiameter, tpi)/2);
+	else
+	cylinder(taperNPT_L2(outsideDiameter, tpi) + L3,
+	         taperNPT_E1(taperNPT_E0(outsideDiameter, tpi), L1 + L3)/2,
+	         taperNPT_E1(taperNPT_E0(outsideDiameter, tpi), L3)/2);
 }
 
 // Size Name: [Nominal Size (decimal), Threads Per Inch, OD, L1]
