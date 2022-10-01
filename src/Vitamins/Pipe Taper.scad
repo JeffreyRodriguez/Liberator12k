@@ -25,6 +25,7 @@ function taperNPT_E0(outsideDiameter, tpi) =
 
 //NPT's Pitch diameter at large end of internal thread
 function taperNPT_E1(E0, L1) = E0 + 0.0625*L1;
+function taperNPT_D(E0, V) = E0 - 0.0625*V;
 
 module taperNPT(specName, L1 = 0) {
 	spec = NPT_Spec(specName);
@@ -34,22 +35,22 @@ module taperNPT(specName, L1 = 0) {
 	tpi = NPT_ThreadsPerInch(spec);
 	L1 = NPT_L1(spec);
 	
-	taperNPT_(outsideDiameter, tpi, L1, L3 = 3/tpi);
+	taperNPT_(outsideDiameter, tpi, L1, V = 3/tpi);
 }
 
-module taperNPT_(outsideDiameter, tpi, L1 = 0, L3 = 0) {
-	if(L1 == 0 && L3 == 0)
+module taperNPT_(outsideDiameter, tpi, L1 = 0, V = 0) {
+	if(L1 == 0 && V == 0)
 	cylinder(taperNPT_L2(outsideDiameter, tpi),
 	         taperNPT_E1(taperNPT_E0(outsideDiameter, tpi), taperNPT_L2(outsideDiameter, tpi))/2,
 	         taperNPT_E0(outsideDiameter, tpi)/2);
-	else if(L3 == 0)
+	else if(V == 0)
 	cylinder(taperNPT_L2(outsideDiameter, tpi),
 	         taperNPT_E1(taperNPT_E0(outsideDiameter, tpi), L1)/2,
 	         taperNPT_E0(outsideDiameter, tpi)/2);
 	else
-	cylinder(taperNPT_L2(outsideDiameter, tpi) + L3,
-	         taperNPT_E1(taperNPT_E0(outsideDiameter, tpi), L1 + L3)/2,
-	         taperNPT_E1(taperNPT_E0(outsideDiameter, tpi), L3)/2);
+	cylinder(taperNPT_L2(outsideDiameter, tpi) + V,
+	         taperNPT_E1(taperNPT_E0(outsideDiameter, tpi), L1)/2,
+	         taperNPT_D(taperNPT_E0(outsideDiameter, tpi), V)/2);
 }
 
 // Size Name: [Nominal Size (decimal), Threads Per Inch, OD, L1]
