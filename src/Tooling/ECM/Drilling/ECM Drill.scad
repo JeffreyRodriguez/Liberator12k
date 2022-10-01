@@ -7,6 +7,7 @@ use <../../../Meta/Resolution.scad>;
 use <../../../Meta/Conditionals/RenderIf.scad>;
 use <../../../Shapes/Chamfer.scad>;
 use <../../../Shapes/Components/ORing.scad>;
+use <../../../Shapes/Components/Hose Barb.scad>;
 use <../../../Shapes/Gear.scad>;
 use <../../../Shapes/Teardrop.scad>;
 use <../../../Vitamins/Stepper Motor.scad>;
@@ -35,6 +36,7 @@ _SHOW_CARRIAGE = true;
 _ALPHA_BARREL=0.5; // [0:0.1:1]
 _ALPHA_DRILL_BASE=0.5; // [0:0.1:1]
 _ALPHA_DRILL_HEAD=0.5; // [0:0.1:1]
+_ALPHA_CARRIAGE=0.5; // [0:0.1:1]
 
 /* [Vitamins] */
 Barrel_Unit_of_Measure = "Inches"; //["Millimeters", "Inches"]
@@ -146,6 +148,8 @@ DRILLHEAD_Z_MIN = BARREL_Z_MAX-BARREL_INSET_TOP;
 DRILLHEAD_Z_MAX = DRILLHEAD_Z_MIN+DRILLHEAD_HEIGHT;
 CARRIAGE_MAX_X = BARREL_LENGTH+ELECTRODE_LENGTH;
 CARRIAGE_MIN_Z = CARRIAGE_MAX_X-CARRIAGE_LENGTH;
+ELECTRODE_MIN_Z = BARREL_LENGTH+BARREL_INSET_BOTTOM;
+ELECTRODE_MAX_Z = ELECTRODE_MIN_Z+ELECTRODE_LENGTH;
 
 
 // *********
@@ -178,7 +182,7 @@ module LinearStepper(cutter=false) {
 
 module DriveScrew(cutter=false) {
 	// Screw
-	color("SteelBlue")
+	color("Silver")
 	translate([DRIVESCREW_OFFSET_X, DRIVESCREW_OFFSET_Y, DRILLHEAD_Z_MAX])
 	cylinder(r=(DRIVESCREW_DIAMETER/2) + (cutter?0.01:0), h=ELECTRODE_LENGTH + 1.5);
 }
@@ -230,7 +234,7 @@ module DriveNut(cutter=false) {
 	}
 }
 
-module Column(slots=[0,90,-90,180], cutter=false, clearance=0.01) {
+module Column(slots=[0,90,-90,180], cutter=false, clearance=0.005) {
 	color("Silver") render()
 	translate([-COLUMN_X_WIDTH/2, 0])
 	if(cutter)
@@ -239,28 +243,63 @@ module Column(slots=[0,90,-90,180], cutter=false, clearance=0.01) {
 	extrusion5Series(COLUMN_X_SEGMENTS, COLUMN_Y_SEGMENTS, COLUMN_LENGTH);
 }
 
-module Electrode(clearance=0.015, cutter=false) {
-	color("Brown")
-	translate([BARREL_OFFSET_X,0,BARREL_LENGTH+BARREL_INSET_BOTTOM])
-	cylinder(r=(ELECTRODE_DIAMETER/2) + (cutter?clearance:0), h=ELECTRODE_LENGTH);
+module ColumnBottomChamfer(bevel=Millimeters(2)) {
+	bevel2 = bevel*2;
+	tabLength = Millimeters(4);
+	tabLength2 = tabLength*2;
+	
+	translate([-COLUMN_X_WIDTH,-COLUMN_Y_WIDTH/2,0])
+	hull() {
+		
+		// Extension
+		translate([tabLength,tabLength,0])
+		cube([COLUMN_X_WIDTH-tabLength2, COLUMN_Y_WIDTH-tabLength2, bevel+tabLength]);
+		
+		// Base
+		translate([-bevel, -bevel, 0])
+		cube([COLUMN_X_WIDTH+bevel2, COLUMN_Y_WIDTH+bevel2, ManifoldGap()]);
+	}
 }
 
-module ElectrodeSetScrew(threaded=false, clearance=true, cutter=false) {
-	color("SteelBlue")
-	translate([BARREL_OFFSET_X,0,CARRIAGE_MIN_Z+(CARRIAGE_LENGTH/2)])
-	rotate([0,90,0])
-	Bolt(bolt=BoltSpec("M4"), head="none", teardrop=cutter, teardropAngle=180, clearance=(cutter&&clearance) ? 0.002 : 0, length=0.5);
+module Electrode(clearance=0.015, cutter=false) {
+	
+	color("Gold") RenderIf(!cutter)
+	translate([BARREL_OFFSET_X,0,BARREL_LENGTH+BARREL_INSET_BOTTOM])
+	cylinder(r=(ELECTRODE_DIAMETER/2) + (cutter?clearance:0), h=ELECTRODE_LENGTH);
+	
+	
+	color("Goldenrod") RenderIf(!cutter)
+	union()
+	translate([BARREL_OFFSET_X,0,CARRIAGE_MIN_Z-ManifoldGap()]) {
+		// Hole Cutter
+		cylinder(d=0.332, h=0.26);
+		// TODO (scale is wrong): taperNPT("1/8");
+		
+		// Hex
+		mirror([0,0,1])
+		cylinder(d=0.5, h=0.1875, $fn=6);
+	}
 }
 
 // Headstock hardware
 module HeadstockTap(clearance=0.015, cutter=false) {
   
 	// Outlet Pipe Fitting
-	color("Gold") RenderIf(!cutter)
-	translate([WATER_TAP_OFFSET_X,WATER_TAP_OFFSET_Y,DRILLHEAD_Z_MAX])
-	mirror([0,0,1])
-	cylinder(d=0.332, h=0.26);
-	// TODO (scale is wrong): taperNPT("1/8");
+	color("LightGrey") RenderIf(!cutter)
+	translate([WATER_TAP_OFFSET_X,WATER_TAP_OFFSET_Y,DRILLHEAD_Z_MAX]) {
+		mirror([0,0,1])
+		cylinder(d=0.332, h=0.26);
+		// TODO (scale is wrong): taperNPT("1/8");
+		
+		cylinder(d=0.5, h=0.1875, $fn=6);
+		
+		HoseBarb(barbOuterMajorDiameter=Inches(0.4145),
+                barbOuterMinorDiameter=Inches(0.3720),
+                barbInnerDiameter=Inches(0.2285),
+                barbBottomAngle=60,
+                segments=3, segmentSpacing=0.125,
+                extraTop=0.2, extraBottom=0.3125);
+	}
   
 	// Water passage to outlet pipe fitting
 	if (cutter)
@@ -437,6 +476,7 @@ module Headstock(debug=false, alpha=1) {
 		HeadstockORing(cutter=true);
 
 		Column(slots=[0, 90,-90], cutter=true);
+		translate([0,0,DRILLHEAD_Z_MIN]) ColumnBottomChamfer();
 		Barrel(cutter=true);
 		Electrode(clearance=ELECTRODE_RADIUS, cutter=true);
 		DriveScrew(cutter=true);
@@ -485,7 +525,7 @@ module Tailstock(debug=false, alpha=1) {
 	}
 }
 
-module Carriage(extension=1, alpha=0.5) {
+module Carriage(extension=1, alpha=1) {
 	color("Tomato", alpha) render()
 	difference() {
 
@@ -522,8 +562,8 @@ module Carriage(extension=1, alpha=0.5) {
 		cylinder(d=Millimeters(6), h=CARRIAGE_LENGTH - Millimeters(4));
 
 		Column(cutter=true);
+		translate([0,0,CARRIAGE_MIN_Z]) ColumnBottomChamfer();
 		Electrode(clearance=0.005, cutter=true);
-		ElectrodeSetScrew(threaded=true, cutter=true);
 		DriveScrew(cutter=true);
 		DriveNut(cutter=true);
 	}
@@ -615,11 +655,10 @@ if ($preview) {
 
 	translate([0,0,-BARREL_LENGTH*$t]) {
 		Electrode();
-		ElectrodeSetScrew();
 		DriveNut();
     
     if (_SHOW_CARRIAGE)
-		Carriage();
+		Carriage(alpha=_ALPHA_CARRIAGE);
 	}
 
 	*BarrelContact();

@@ -1,4 +1,12 @@
 use <../../Meta/Manifold.scad>;
+use <../../Meta/Resolution.scad>;
+use <../../Meta/Units.scad>;
+
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
 
 
 module HoseBarb(barbOuterMajorDiameter=0.6,
