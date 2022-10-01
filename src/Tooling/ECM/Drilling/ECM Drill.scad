@@ -35,6 +35,7 @@ _SHOW_CARRIAGE = true;
 _ALPHA_BARREL=0.5; // [0:0.1:1]
 _ALPHA_DRILL_BASE=0.5; // [0:0.1:1]
 _ALPHA_DRILL_HEAD=0.5; // [0:0.1:1]
+_ALPHA_CARRIAGE=0.5; // [0:0.1:1]
 
 /* [Vitamins] */
 Barrel_Unit_of_Measure = "Inches"; //["Millimeters", "Inches"]
@@ -178,7 +179,7 @@ module LinearStepper(cutter=false) {
 
 module DriveScrew(cutter=false) {
 	// Screw
-	color("SteelBlue")
+	color("Silver")
 	translate([DRIVESCREW_OFFSET_X, DRIVESCREW_OFFSET_Y, DRILLHEAD_Z_MAX])
 	cylinder(r=(DRIVESCREW_DIAMETER/2) + (cutter?0.01:0), h=ELECTRODE_LENGTH + 1.5);
 }
@@ -230,7 +231,7 @@ module DriveNut(cutter=false) {
 	}
 }
 
-module Column(slots=[0,90,-90,180], cutter=false, clearance=0.01) {
+module Column(slots=[0,90,-90,180], cutter=false, clearance=0.005) {
 	color("Silver") render()
 	translate([-COLUMN_X_WIDTH/2, 0])
 	if(cutter)
@@ -239,17 +240,28 @@ module Column(slots=[0,90,-90,180], cutter=false, clearance=0.01) {
 	extrusion5Series(COLUMN_X_SEGMENTS, COLUMN_Y_SEGMENTS, COLUMN_LENGTH);
 }
 
-module Electrode(clearance=0.015, cutter=false) {
-	color("Brown")
-	translate([BARREL_OFFSET_X,0,BARREL_LENGTH+BARREL_INSET_BOTTOM])
-	cylinder(r=(ELECTRODE_DIAMETER/2) + (cutter?clearance:0), h=ELECTRODE_LENGTH);
+module ColumnBottomChamfer(bevel=Millimeters(2)) {
+	bevel2 = bevel*2;
+	tabLength = Millimeters(4);
+	tabLength2 = tabLength*2;
+	
+	translate([-COLUMN_X_WIDTH,-COLUMN_Y_WIDTH/2,0])
+	hull() {
+		
+		// Extension
+		translate([tabLength,tabLength,0])
+		cube([COLUMN_X_WIDTH-tabLength2, COLUMN_Y_WIDTH-tabLength2, bevel+tabLength]);
+		
+		// Base
+		translate([-bevel, -bevel, 0])
+		cube([COLUMN_X_WIDTH+bevel2, COLUMN_Y_WIDTH+bevel2, ManifoldGap()]);
+	}
 }
 
-module ElectrodeSetScrew(threaded=false, clearance=true, cutter=false) {
-	color("SteelBlue")
-	translate([BARREL_OFFSET_X,0,CARRIAGE_MIN_Z+(CARRIAGE_LENGTH/2)])
-	rotate([0,90,0])
-	Bolt(bolt=BoltSpec("M4"), head="none", teardrop=cutter, teardropAngle=180, clearance=(cutter&&clearance) ? 0.002 : 0, length=0.5);
+module Electrode(clearance=0.015, cutter=false) {
+	color("Gold")
+	translate([BARREL_OFFSET_X,0,BARREL_LENGTH+BARREL_INSET_BOTTOM])
+	cylinder(r=(ELECTRODE_DIAMETER/2) + (cutter?clearance:0), h=ELECTRODE_LENGTH);
 }
 
 // Headstock hardware
@@ -437,6 +449,7 @@ module Headstock(debug=false, alpha=1) {
 		HeadstockORing(cutter=true);
 
 		Column(slots=[0, 90,-90], cutter=true);
+		translate([0,0,DRILLHEAD_Z_MIN]) ColumnBottomChamfer();
 		Barrel(cutter=true);
 		Electrode(clearance=ELECTRODE_RADIUS, cutter=true);
 		DriveScrew(cutter=true);
@@ -485,7 +498,7 @@ module Tailstock(debug=false, alpha=1) {
 	}
 }
 
-module Carriage(extension=1, alpha=0.5) {
+module Carriage(extension=1, alpha=1) {
 	color("Tomato", alpha) render()
 	difference() {
 
@@ -522,8 +535,8 @@ module Carriage(extension=1, alpha=0.5) {
 		cylinder(d=Millimeters(6), h=CARRIAGE_LENGTH - Millimeters(4));
 
 		Column(cutter=true);
+		translate([0,0,CARRIAGE_MIN_Z]) ColumnBottomChamfer();
 		Electrode(clearance=0.005, cutter=true);
-		ElectrodeSetScrew(threaded=true, cutter=true);
 		DriveScrew(cutter=true);
 		DriveNut(cutter=true);
 	}
@@ -615,11 +628,10 @@ if ($preview) {
 
 	translate([0,0,-BARREL_LENGTH*$t]) {
 		Electrode();
-		ElectrodeSetScrew();
 		DriveNut();
     
     if (_SHOW_CARRIAGE)
-		Carriage();
+		Carriage(alpha=_ALPHA_CARRIAGE);
 	}
 
 	*BarrelContact();
