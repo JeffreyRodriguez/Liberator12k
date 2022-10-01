@@ -7,6 +7,7 @@ use <../../../Meta/Resolution.scad>;
 use <../../../Meta/Conditionals/RenderIf.scad>;
 use <../../../Shapes/Chamfer.scad>;
 use <../../../Shapes/Components/ORing.scad>;
+use <../../../Shapes/Components/Hose Barb.scad>;
 use <../../../Shapes/Gear.scad>;
 use <../../../Shapes/Teardrop.scad>;
 use <../../../Vitamins/Stepper Motor.scad>;
@@ -147,6 +148,8 @@ DRILLHEAD_Z_MIN = BARREL_Z_MAX-BARREL_INSET_TOP;
 DRILLHEAD_Z_MAX = DRILLHEAD_Z_MIN+DRILLHEAD_HEIGHT;
 CARRIAGE_MAX_X = BARREL_LENGTH+ELECTRODE_LENGTH;
 CARRIAGE_MIN_Z = CARRIAGE_MAX_X-CARRIAGE_LENGTH;
+ELECTRODE_MIN_Z = BARREL_LENGTH+BARREL_INSET_BOTTOM;
+ELECTRODE_MAX_Z = ELECTRODE_MIN_Z+ELECTRODE_LENGTH;
 
 
 // *********
@@ -259,20 +262,44 @@ module ColumnBottomChamfer(bevel=Millimeters(2)) {
 }
 
 module Electrode(clearance=0.015, cutter=false) {
-	color("Gold")
+	
+	color("Gold") RenderIf(!cutter)
 	translate([BARREL_OFFSET_X,0,BARREL_LENGTH+BARREL_INSET_BOTTOM])
 	cylinder(r=(ELECTRODE_DIAMETER/2) + (cutter?clearance:0), h=ELECTRODE_LENGTH);
+	
+	
+	color("Goldenrod") RenderIf(!cutter)
+	union()
+	translate([BARREL_OFFSET_X,0,CARRIAGE_MIN_Z-ManifoldGap()]) {
+		// Hole Cutter
+		cylinder(d=0.332, h=0.26);
+		// TODO (scale is wrong): taperNPT("1/8");
+		
+		// Hex
+		mirror([0,0,1])
+		cylinder(d=0.5, h=0.1875, $fn=6);
+	}
 }
 
 // Headstock hardware
 module HeadstockTap(clearance=0.015, cutter=false) {
   
 	// Outlet Pipe Fitting
-	color("Gold") RenderIf(!cutter)
-	translate([WATER_TAP_OFFSET_X,WATER_TAP_OFFSET_Y,DRILLHEAD_Z_MAX])
-	mirror([0,0,1])
-	cylinder(d=0.332, h=0.26);
-	// TODO (scale is wrong): taperNPT("1/8");
+	color("LightGrey") RenderIf(!cutter)
+	translate([WATER_TAP_OFFSET_X,WATER_TAP_OFFSET_Y,DRILLHEAD_Z_MAX]) {
+		mirror([0,0,1])
+		cylinder(d=0.332, h=0.26);
+		// TODO (scale is wrong): taperNPT("1/8");
+		
+		cylinder(d=0.5, h=0.1875, $fn=6);
+		
+		HoseBarb(barbOuterMajorDiameter=Inches(0.4145),
+                barbOuterMinorDiameter=Inches(0.3720),
+                barbInnerDiameter=Inches(0.2285),
+                barbBottomAngle=60,
+                segments=3, segmentSpacing=0.125,
+                extraTop=0.2, extraBottom=0.3125);
+	}
   
 	// Water passage to outlet pipe fitting
 	if (cutter)
