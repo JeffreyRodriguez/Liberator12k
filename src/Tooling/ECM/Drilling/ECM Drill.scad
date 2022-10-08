@@ -264,7 +264,7 @@ module ColumnBottomChamfer(bevel=Millimeters(2)) {
 module Electrode(clearance=0.015, cutter=false) {
 	
 	color("Gold") RenderIf(!cutter)
-	translate([BARREL_OFFSET_X,0,BARREL_LENGTH+BARREL_INSET_BOTTOM])
+	translate([BARREL_OFFSET_X,0,ELECTRODE_MIN_Z])
 	cylinder(r=(ELECTRODE_DIAMETER/2) + (cutter?clearance:0), h=ELECTRODE_LENGTH);
 	
 	
@@ -272,8 +272,10 @@ module Electrode(clearance=0.015, cutter=false) {
 	union()
 	translate([BARREL_OFFSET_X,0,CARRIAGE_MIN_Z-ManifoldGap()]) {
 		// Hole Cutter
-		cylinder(d=0.332, h=0.26);
-		// TODO (scale is wrong): taperNPT("1/8");
+		cylinder(d=0.332, h=0.625);
+		
+		// Hole Taper
+		taperNPT("1/8");
 		
 		// Hex
 		mirror([0,0,1])
@@ -287,9 +289,8 @@ module HeadstockTap(clearance=0.015, cutter=false) {
 	// Outlet Pipe Fitting
 	color("LightGrey") RenderIf(!cutter)
 	translate([WATER_TAP_OFFSET_X,WATER_TAP_OFFSET_Y,DRILLHEAD_Z_MAX]) {
-		mirror([0,0,1])
-		cylinder(d=0.332, h=0.26);
-		// TODO (scale is wrong): taperNPT("1/8");
+		mirror([0,0,1]) taperNPT("1/8");
+		mirror([0,0,1]) cylinder(d=0.332, h=0.625);
 		
 		cylinder(d=0.5, h=0.1875, $fn=6);
 		
@@ -303,7 +304,7 @@ module HeadstockTap(clearance=0.015, cutter=false) {
   
 	// Water passage to outlet pipe fitting
 	if (cutter)
-	translate([WATER_TAP_OFFSET_X,WATER_TAP_OFFSET_Y,BARREL_Z_MAX+0.25])
+	translate([WATER_TAP_OFFSET_X,WATER_TAP_OFFSET_Y,BARREL_Z_MAX+0.125])
 	cylinder(r1=TAP_RADIUS, d2=0.332, h=DRILLHEAD_HEIGHT);
 
 	// Water passage
@@ -453,16 +454,16 @@ module Headstock(debug=false, alpha=1) {
 
 			// Rotary motor mount
 			hull() {
-			// Mounting plate, same size as the gear
-			translate([BARREL_OFFSET_X, 0, DRILLHEAD_Z_MIN])
-			translate([0, driveGearPitchRadius + drivenGearPitchRadius,0])
-			translate([-Inches(1.66/2), -Inches(1.66/2), 0])
-			ChamferedCube([Inches(1.66), Inches(1.66), Inches(0.5625)], r=Inches(1/16));
+				// Mounting plate, same size as the gear
+				translate([BARREL_OFFSET_X, 0, DRILLHEAD_Z_MIN])
+				translate([0, driveGearPitchRadius + drivenGearPitchRadius,0])
+				translate([-Inches(1.66/2), -Inches(1.66/2), 0])
+				ChamferedCube([Inches(1.66), Inches(1.66), Inches(0.5625)], r=Inches(1/16));
 
-			// Hull to barrel area
-			translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MIN])
-			ChamferedCylinder(r1=Inches(1.66/2), r2=Inches(1/16), h=Inches(0.5625));
-		}
+				// Hull to barrel area
+				translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MIN])
+				ChamferedCylinder(r1=Inches(1.66/2), r2=Inches(1/16), h=Inches(0.5625));
+			}
 		}
 
 		translate([0,0,-ManifoldGap()])
