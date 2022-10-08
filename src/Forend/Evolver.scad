@@ -239,7 +239,7 @@ function Evolver_ChargerPinion2OutsideRadius(clearance=0) = outer_radius(Evolver
 function Evolver_ChargerPinion2PitchRadius() = pitch_radius(Evolver_ChargerPinion2Teeth(), Evolver_ChargerGearPitch());
 function Evolver_ChargerPinion2PitchCircumference() = Circumference(Evolver_ChargerPinion2PitchRadius());
 
-function Evolver_ChargerTravel(n = 1) = FCG_HammerTravel(overtravel=true) * n;
+function Evolver_ChargerTravel(n = 1) = HammerTravel(overtravel=true) * n;
 function Evolver_ChargerHeight() = 0.25;
 function Evolver_ChargerZ() = 1;
 

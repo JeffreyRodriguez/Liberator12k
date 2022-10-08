@@ -1,0 +1,80 @@
+= Liberator12k | EVOLver12
+Jeff Rodriguez <jeff@liberator12k.com>
+include::.build/Version.adoc[]
+:reproducible:
+:listing-caption: Listing
+:source-highlighter: rouge
+:toc:
+:sectnums:
+:doctype: book
+:title-page:
+:model: EVOLver12
+:units: inch
+:title-logo-image: image:../.views/Forend/Evolver_{model}/Assembly.png[top=5%,align=center,pdfwidth=8in]
+
+== Introduction
+
+Welcome to the Liberator12k project. Thank you for your interest.
+
+This document will guide you through the build of a {model} top-break shotgun.
+
+=== EVOLver - Belt Fed Pump
+The EVOLver is an _early prototype_, designed to fire 12ga from a printed belt.
+
+Docs are very incomplete, join the chat to help move the ball on this design.
+
+=== Hardware Kit vs DIY
+If you purchased a kit, all the machining is already done for you.
+
+To DIY all the parts yourself, refer to the <<Minuteman DIY Machining>> and 
+<<EVOLver DIY Machining>> appendices.
+The project includes several fixtures and jigs to assist you in DIY machining.
+
+A fully outfitted shop with a lathe, mill, and drill press will produce the best
+looking and most functional product.
+But you can get by with hand tools, a drill, and an angle grinder.
+
+=== Minuteman Receiver
+The {model} uses the "Minuteman" universal receiver, a core component of many
+designs in the Liberator12k family. Think of it like an AR15 lower receiver.
+The Minuteman receiver is reusable in several other configurations similar
+to how you might swap AR15 uppers. Forends mount on a pair of 1/2"-13 bolts.
+This manual will guide you through building the Minuteman and {model} forend.
+
+include::Common/Introduction.adoc[]
+
+include::Common/ToolsAndOperations.adoc[]
+
+include::Common/Printing.adoc[]
+
+include::Minuteman/Minuteman.adoc[]
+
+== {model} Forend
+
+.{model} Forend Assembly
+image::../.views/Forend/Evolver_{model}/Forend.png[]
+
+<<<
+=== Prints and BOM
+include::Forend/TopBreak_BOM_{units}.adoc[]
+
+<<<
+NOTE: STL Files Location: `Forend/Prints/`
+
+include::Forend/Evolver_Prints.adoc[]
+
+include::Forend/Evolver.adoc[]
+
+include::Common/Dimensions.adoc[]
+
+include::Minuteman/FCG_DIY_Machining.adoc[]
+
+include::Forend/EVOLver_DIY_Machining.adoc[]
+
+include::Common/Developers.adoc[]
+
+include::Common/CONTRIBUTING.adoc[]
+
+include::Common/Unlicense.adoc[]
+
+include::Common/Why.adoc[]
