@@ -22,8 +22,7 @@ use <../Shapes/Components/Pump Grip.scad>;
 use <../Vitamins/Nuts And Bolts.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 use <../Vitamins/Pipe.scad>;
-use <../Vitamins/Springs/Springs.scad>;
-use <../Vitamins/Springs/SpringSpec.scad>;
+use <../Vitamins/Springs.scad>;
 
 use <../Receiver/Components/Sightpost.scad>;
 

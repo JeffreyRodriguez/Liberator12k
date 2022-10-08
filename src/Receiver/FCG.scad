@@ -17,8 +17,7 @@ use <../Vitamins/Nuts And Bolts.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
-use <../Vitamins/Springs/Springs.scad>;
-use <../Vitamins/Springs/SpringSpec.scad>;
+use <../Vitamins/Springs.scad>;
 
 use <Lower.scad>;
 use <Receiver.scad>;

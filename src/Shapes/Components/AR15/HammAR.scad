@@ -9,7 +9,7 @@ use <../../../Shapes/Semicircle.scad>;
 use <../../../Shapes/Teardrop.scad>;
 use <../../../Shapes/Components/T Lug.scad>;
 use <../../../Shapes/Chamfer.scad>;
-use <../../../Vitamins/Springs/Springs.scad>;
+use <../../../Vitamins/Springs.scad>;
 use <../../../Vitamins/Nuts And Bolts.scad>;
 use <../../../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 use <../../../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
