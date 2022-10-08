@@ -1,7 +1,7 @@
-use <../../Meta/Resolution.scad>;
-use <../../Meta/Units.scad>;
-use <../../Meta/Manifold.scad>;
-use <../../Meta/slookup.scad>;
+use <../Meta/Resolution.scad>;
+use <../Meta/Units.scad>;
+use <../Meta/Manifold.scad>;
+use <../Meta/slookup.scad>;
 
 SPRING_OD = 0.625;
 SPRING_PITCH = 0.35;
