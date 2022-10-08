@@ -315,7 +315,7 @@ module Receiver_Segment(length=1, chamferFront=false, chamferBack=false, highTop
 // *****************
 // * Printed Parts *
 // *****************
-module Receiver(receiverLength=ReceiverLength(), doRender=true, alpha=1, cutaway=false) {
+module Receiver(receiverLength=ReceiverLength(), mlok=true, highTop=true, doRender=true, alpha=1, cutaway=false) {
   mlokSupportHeight=0.75;
   CHAMFER_RADIUS = 1/16;
 
@@ -324,10 +324,11 @@ module Receiver(receiverLength=ReceiverLength(), doRender=true, alpha=1, cutaway
   difference() {
     union() {
       for (highChamfer = [true,false])
-      Receiver_Segment(length=ReceiverLength(), highTop=highChamfer,
+      Receiver_Segment(length=ReceiverLength(), highTop=(highTop&&highChamfer),
                       chamferFront=true, chamferBack=highChamfer);
 
       // M-LOK side slot support
+      if (mlok)
       translate([0,-Receiver_MlokSideY(),Receiver_MlokSideZ()-(mlokSupportHeight/2)])
       mirror([1,0,0])
       ChamferedCube([Millimeters((32*2)+8)+1,
@@ -337,6 +338,7 @@ module Receiver(receiverLength=ReceiverLength(), doRender=true, alpha=1, cutaway
 
 
       // Fillet M-LOK-to-frame joint
+      if (mlok)
       for (M = [0, 1]) mirror([0,M,0])
       translate([-CHAMFER_RADIUS,ReceiverOR()-0.001,Receiver_MlokSideZ()+(mlokSupportHeight/2)-ManifoldGap()])
       rotate([90,0,0]) rotate([0,-90,0])
@@ -347,6 +349,7 @@ module Receiver(receiverLength=ReceiverLength(), doRender=true, alpha=1, cutaway
     }
 
     // M-LOK Side slots
+    if (mlok)
     for (M = [0,1]) mirror([0,M,0])
     for (X = [0,MlokSlotLength()+MlokSlotSpacing()]) translate([-X,0,0])
     mirror([1,0,0])
@@ -356,14 +359,19 @@ module Receiver(receiverLength=ReceiverLength(), doRender=true, alpha=1, cutaway
       MlokSlotBack();
     }
 
+    if (mlok)
     ReceiverMlokSlot();
+		
+    if (mlok)
     Receiver_MlokBolts(cutter=true, teardrop=true);
 
     translate([-0.5,0,0])
     ReceiverBottomSlot(length=ReceiverLength()-0.5, chamferBottom=false);
     Receiver_RoundSlot();
-    ReceiverTopSlot();
     Receiver_SideSlot();
+		
+		if (highTop)
+    ReceiverTopSlot();
 
     Receiver_TakedownPin(cutter=true);
     Receiver_TensionBolts(cutter=true);
