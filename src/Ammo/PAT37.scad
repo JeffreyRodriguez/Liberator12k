@@ -1,5 +1,6 @@
 use <../Meta/Cutaway.scad>;
 use <../Meta/Units.scad>;
+use <../Meta/Resolution.scad>;
 use <../Meta/Conditionals/RenderIf.scad>;
 use <../Shapes/Chamfer.scad>;
 use <../Shapes/Semicircle.scad>;
@@ -16,46 +17,57 @@ _RENDER = "Smoke"; // ["", "Prints/Base", "Prints/Flare", "Prints/Whistle", "Pri
 
 /* [Assembly] */
 _SHOW_BASE = true;
+_SHOW_INSERT = true;
 _SHOW_PROJECTILE = true;
 _CUTAWAY_BASE = true;
+_CUTAWAY_INSERT=true;
 _CUTAWAY_PROJECTILE = true;
 _ALPHA_BASE = 1; // [0:0.1:1]
+_ALPHA_INSERT = 1; // [0:0.1:1]
 _ALPHA_PROJECTILE = 1; // [0:0.1:1]
 
-_PROJECTILE_TYPE = "Smoke"; // ["", "Flare", "Whistle", "Smoke"]
+_PROJECTILE_TYPE = "Paint"; // ["", "Flare", "Whistle"]
+PAT_LOAD = "PAT22"; // ["PAT22", "PAT27"]
 
 /* [Dimensions] */
-BASE_HEIGHT = 0.6;
-BASE_THICKNESS = 0.6;
+BASE_HEIGHT = 1.125;
+BASE_THICKNESS = 0.375;
 RIM_WIDTH = 0.0972;
 RIM_DIAMETER = 1.625;
 CHAMBER_DIAMETER = 1.5;// 1.508;
-INSERT_DIAMETER = 0.75;
+INNER_DIAMETER = 1.3125;
 CLEARANCE = 0.006;
-WHISTLE_RADIUS = 0.1875;
-SMOKE_OD = 1.2;
-SMOKE_ID = 0.86;
-SMOKE_HEIGHT=4.93;
 OFFSET_22PAT = 0.125;
+OFFSET_27PAT = 0.16625;
 
 
 chamberRadius = CHAMBER_DIAMETER/2;
-insertRadius  = INSERT_DIAMETER/2;
+innerRadius  = INNER_DIAMETER/2;
 rimRadius     = RIM_DIAMETER/2;
+PAT_Insert_Radius = Inches(0.375);
+PAT_Insert_Height = 0.625;
+retainerRingRadius = Inches(1/32);
+retainerRingZ = Inches(1);
+insertRetainerZ = Inches(0.25);
+
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
 
 // ************
 // * Vitamins *
 // ************
-module PAT22(cutter=false, clearance=0.005, $fn=20) {
-  primer = Spec_Primer22PAT();
-
+module PAT22(cutter=false, clearance=0.005) {
   clear = cutter ? clearance : 0;
 
   rimDiameter = 0.275;
   rimRadius = rimDiameter/2;
   rimHeight = 0.036;
+  bodyRadius1 = 0.2240/2;
 
-  render()
+  color("Gold") RenderIf(!cutter)
   union() {
 
     // Rim
@@ -64,65 +76,87 @@ module PAT22(cutter=false, clearance=0.005, $fn=20) {
 
     // Rim Taper
     translate([0,0,rimHeight])
-    cylinder(r1=rimRadius+clear,
+    cylinder(r1=rimRadius-(1/64),
              r2=0,
-             h=rimRadius+clear);
+             h=(rimRadius/2));
 
     // Smaller top portion
     cylinder(r=(0.201/2)+clear,
-             h=0.5940);
+             h=(cutter?PAT_Insert_Height:0.5940));
 
     // Larger bottom portion
-    cylinder(r1=(0.2240/2)+clear,
-             r2=(0.2200/2)+clear, h=0.353);
+    translate([0,0,rimHeight])
+    cylinder(r1=bodyRadius1+clear,
+             r2=(0.2200/2)+clear, h=0.353-rimHeight);
   }
 }
 
-module PAT27(cutter=false, clearance=0.005, $fn=20) {
-  primer = Spec_Primer22PAT();
-
+module PAT27(cutter=false, clearance=0.005) {
   clear = cutter ? clearance : 0;
 
-  rimDiameter = 0.275;
+  rimDiameter = 0.3;
   rimRadius = rimDiameter/2;
   rimHeight = 0.036;
+  bodyDiameter = 0.27;
 
-  render()
+  color("Gold") RenderIf(!cutter)
   union() {
 
     // Rim
     cylinder(r=rimRadius+clear,
              h=rimHeight);
 
-    // Rim Taper
-    translate([0,0,rimHeight])
-    cylinder(r1=rimRadius+clear,
-             r2=0,
-             h=rimRadius+clear);
-
-    // Smaller top portion
-    cylinder(r=(0.201/2)+clear,
-             h=0.5940);
-
     // Larger bottom portion
     cylinder(r1=(0.2240/2)+clear,
              r2=(0.2200/2)+clear, h=0.353);
   }
 }
+///
 
+// **********
+// * Shapes *
+// **********
+module PAT_Insert(alpha=1, cutaway=_CUTAWAY_INSERT, cutter=false, clearance=Inches(0.005)) {
+  clear = cutter ? clearance : 0;
+  CR = Inches(1/32);
 
-
-module SPAT37_SmokePyro(cutter=false) {
-  // TNT-brand "Ammo Smoke"
-  // UPC 027736010950
-  translate([0,0,BASE_HEIGHT+0.1875])
-  cylinder(r=SMOKE_OD/2, h=SMOKE_HEIGHT, $fn=60);
+  color("CornflowerBlue", alpha) RenderIf(!cutter)
+  Cutaway(cutaway)
+  difference() {
+    if (cutter) {
+      ChamferedCircularHole(r1=PAT_Insert_Radius+clear,
+                            r2=CR,
+                            h=PAT_Insert_Height);
+    } else {
+      ChamferedCylinder(r1=PAT_Insert_Radius,
+                        r2=CR,
+                         h=PAT_Insert_Height,
+                        teardropTop=true);
+    }
+    
+    // Retainer Ring
+    translate([0,0,insertRetainerZ])
+    rotate_extrude()
+    translate([PAT_Insert_Radius+clear,0])
+    rotate(-90)
+    Teardrop(r=retainerRingRadius);
+    
+    // Cut away any plastic that might impede a plain round firing pin
+    if (!cutter)
+    cylinder(r=0.125/2, h=0.036);
+    
+    children();
+  }
 }
+///
 
 // **********
 // * Prints *
 // **********
-module SPAT37_Base(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, primerOffset=0, clearance=CLEARANCE, cutaway=false, alpha=1, $fn=60) {
+module PAT37_Base(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, primerOffset=0, clearance=CLEARANCE, cutaway=false, alpha=1, $fn=60) {
+
+  baseTorusRadius = 1/16;
+  CR = 1/32;
 
   color("Chocolate", alpha) render()
   Cutaway(cutaway)
@@ -132,7 +166,7 @@ module SPAT37_Base(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, primerOffset=0,
     union() {
 
       // Body
-      ChamferedCylinder(r1=chamberRadius, r2=1/16,
+      ChamferedCylinder(r1=chamberRadius, r2=CR,
                         h=BASE_HEIGHT);
 
       // Rim/body fillet
@@ -140,222 +174,63 @@ module SPAT37_Base(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, primerOffset=0,
       HoleChamfer(r1=chamberRadius, r2=1/64);
 
       // Rim
-      ChamferedCylinder(r1=rimRadius, r2=1/32, h=rimHeight);
+      ChamferedCylinder(r1=rimRadius, r2=CR, h=rimHeight);
+    }
+    
+    // ID Cutout
+    difference() {
+      translate([0,0,BASE_THICKNESS+CR])
+      ChamferedCircularHole(r1=innerRadius,
+                            r2=CR,
+                            h=BASE_HEIGHT-BASE_THICKNESS-CR,
+                            chamferBottom=false);
+      
+      // Retainer Ring
+      translate([0,0,retainerRingZ])
+      rotate_extrude()
+      translate([innerRadius,0])
+      rotate(-90)
+      Teardrop(r=retainerRingRadius);
     }
 
-    // Insert pocket
+    // Rounded blast base
     translate([0,0,BASE_THICKNESS])
-    ChamferedCylinder(r1=insertRadius,
-                      r2=1/8, h=BASE_HEIGHT,
-                      teardropBottom=false);
+    rotate_extrude()
+    translate([innerRadius-baseTorusRadius,0])
+    rotate(-90)
+    Teardrop(r=baseTorusRadius, truncated=true);
 
-
-    // Extend the PAT hole a bit
-    translate([OFFSET_22PAT,0,0])
-    cylinder(r=0.21/2, h=BASE_HEIGHT, $fn=20);
-
-
-    translate([OFFSET_22PAT,0,0])
-    PAT22(cutter=true);
-
-    // Cut away any plastic that might impede a plain round firing pin
-    cylinder(r=0.125/2, h=0.036, $fn=20);
+    
+      translate([OFFSET_22PAT,0,0])
+      PAT22(cutter=true);
+    
+    // PAT Module Hole
+    PAT_Insert(cutter=true);
   }
 }
-
-module SPAT37_Flare(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, clearance=CLEARANCE, primerOffset=0, cutaway=false, alpha=1, $fn=60) {
-
-  coreLength = 0.75;
-  coreRadius = 0.25;
-  finLength = coreLength;
-
-  color("Olive", alpha) render()
-  Cutaway(cutaway)
-  difference() {
-    union() {
-
-      // Drag tail
-      intersection() {
-        union() {
-
-          // Cone
-          translate([0,0,BASE_HEIGHT+0.125])
-          cylinder(r1=chamberRadius, r2=0, h=chamberRadius);
-
-          // Extended base
-          translate([0,0,BASE_HEIGHT])
-          ChamferedCylinder(r1=chamberRadius, r2=1/16, h=0.125,
-                            chamferTop=false);
-        }
-
-        // Drag tail cutouts
-        for (R = [0:90:360]) rotate(R)
-        translate([0,-0.0625,BASE_HEIGHT])
-        ChamferedCube([chamberRadius, 0.125, finLength], r=1/16);
-      }
-
-      // Core
-      translate([0,0,BASE_HEIGHT])
-      ChamferedCylinder(r1=coreRadius, r2=1/32, h=coreLength);
-    }
-
-    // Core cutout
-    cylinder(r=(5/16/2)+clearance, h=BASE_HEIGHT+coreLength+clearance);
-  }
-}
-
-module SPAT37_SmokeTail(rimHeight=RIM_WIDTH, clearance=CLEARANCE, primerOffset=0, cutaway=false, alpha=1, $fn=60) {
-  color("Olive", alpha) render()
-  Cutaway(cutaway)
-  difference() {
-    union() {
-
-      // Insert
-      translate([0,0,BASE_HEIGHT])
-      ChamferedCylinder(r1=insertRadius-clearance, r2=1/16,
-                        h=BASE_HEIGHT+0.1875);
-
-      translate([0,0,BASE_HEIGHT])
-      ChamferedCylinder(r1=chamberRadius, r2=1/16,
-                        teardropTop=true, h=0.1875);
-    }
-
-    // Fuse hole
-    cylinder(r=0.125/2, h=BASE_HEIGHT+chamberRadius);
-
-    SPAT37_SmokePyro(cutter=true);
-  }
-}
-module SPAT37_SmokeTip(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, clearance=CLEARANCE, primerOffset=0, cutaway=false, alpha=1, $fn=60) {
-  color("Olive", alpha) render()
-  Cutaway(cutaway)
-  difference() {
-    union() {
-
-      translate([0,0,BASE_HEIGHT+SMOKE_HEIGHT])
-      intersection() {
-        hull() {
-
-          // Flared
-          ChamferedCylinder(r1=chamberRadius, r2=1/16,
-                            teardropBottom=false, h=0.5);
-
-          // Tip
-          ChamferedCylinder(r1=chamberRadius/2, r2=1/4,
-                            teardropTop=true, h=1.5);
-        }
-
-        for (R = [0:120:360]) rotate(R)
-        linear_extrude(1.5, twist=90, slices=25, scale=0.5)
-        hull() {
-          circle(r=SMOKE_OD/2);
-
-          semidonut(major=chamberRadius*2, minor=SMOKE_OD, angle=30);
-        }
-      }
-
-      // Insert
-      translate([0,0,BASE_HEIGHT+SMOKE_HEIGHT-0.25])
-      ChamferedCylinder(r1=(SMOKE_ID/2)-clearance, r2=1/16,
-                        h=0.5);
-    }
-  }
-}
-
-module SPAT37_Whistle(clearance=CLEARANCE, primerOffset=0, cutaway=false, alpha=1, $fn=60) {
-
-  color("Olive", alpha) render()
-  Cutaway(cutaway)
-  difference() {
-    union() {
-      hull() {
-
-        // Tip
-        translate([0,0,BASE_HEIGHT+chamberRadius])
-        sphere(r=chamberRadius);
-
-        // Body
-        translate([0,0,BASE_HEIGHT])
-        ChamferedCylinder(r1=chamberRadius, r2=1/4,
-                          teardropTop=true, h=BASE_HEIGHT);
-      }
-
-      // Insert
-      translate([0,0,BASE_HEIGHT])
-      ChamferedCylinder(r1=insertRadius-clearance, r2=1/16,
-                        h=BASE_HEIGHT);
-    }
-
-    // Fuse hole
-    cylinder(r=0.125/2, h=BASE_HEIGHT+chamberRadius);
-
-    // Whistles
-    pocketOffsetX = insertRadius-WHISTLE_RADIUS;
-    pocketOffsetZ = BASE_HEIGHT+chamberRadius;
-    for (R = [0:120:360]) rotate (R) {
-
-      // Air channel
-      difference() {
-        translate([insertRadius,-WHISTLE_RADIUS,BASE_HEIGHT])
-        cube([0.375, WHISTLE_RADIUS*2, BASE_HEIGHT+chamberRadius+chamberRadius]);
-
-        // Proud lip
-        translate([pocketOffsetX,0,pocketOffsetZ])
-        rotate([0,-90,90])
-        sphere(r=WHISTLE_RADIUS+(chamberRadius-insertRadius));
-      }
-
-      // Air pocket
-      translate([pocketOffsetX,0,pocketOffsetZ])
-      rotate([0,-90,90])
-      sphere(r=WHISTLE_RADIUS+(chamberRadius-insertRadius)-0.03125);
-
-      // Air port
-      translate([insertRadius,0,pocketOffsetZ])
-      translate([0,-WHISTLE_RADIUS,0])
-      cube([chamberRadius,(WHISTLE_RADIUS*2),WHISTLE_RADIUS*2]);
-    }
-  }
-}
+///
 
 ScaleToMillimeters()
 if ($preview) {
-  translate([OFFSET_22PAT,0,0])
-  PAT22();
-
-  if (_SHOW_BASE)
-    SPAT37_Base(cutaway=_CUTAWAY_BASE, alpha=_ALPHA_BASE);
-
-  if (_PROJECTILE_TYPE == "Flare")
-    SPAT37_Flare(cutaway=_CUTAWAY_PROJECTILE, alpha=_ALPHA_PROJECTILE);
-
-  else if (_PROJECTILE_TYPE == "Whistle")
-    SPAT37_Whistle(cutaway=_CUTAWAY_PROJECTILE, alpha=_ALPHA_PROJECTILE);
-
-  else if (_PROJECTILE_TYPE == "Smoke") {
-    SPAT37_SmokePyro();
-    SPAT37_SmokeTip(cutaway=_CUTAWAY_PROJECTILE, alpha=_ALPHA_PROJECTILE);
-    SPAT37_SmokeTail(cutaway=_CUTAWAY_PROJECTILE, alpha=_ALPHA_PROJECTILE);
+  if (PAT_LOAD == "PAT22") {
+    translate([OFFSET_22PAT,0,0])
+    PAT22();
+  } else if (PAT_LOAD == "PAT27") {
+    translate([OFFSET_27PAT,0,0])
+    PAT27();
   }
+  
+  if (_SHOW_INSERT)
+    PAT_Insert(alpha=_ALPHA_INSERT) translate([OFFSET_22PAT,0,0]) PAT22(cutter=true);
+  
+  if (_SHOW_BASE)
+    PAT37_Base(cutaway=_CUTAWAY_BASE, alpha=_ALPHA_BASE);
 
 } else {
   if (_RENDER == "Prints/Base")
-  SPAT37_Base();
+  PAT37_Base();
 
   if (_RENDER == "Prints/Flare")
   translate([0,0,-BASE_HEIGHT])
-  SPAT37_Flare();
-
-  if (_RENDER == "Prints/Smoke_Tail")
-  translate([0,0,-BASE_HEIGHT])
-  SPAT37_SmokeTail();
-
-  if (_RENDER == "Prints/Smoke_Tip")
-  rotate([180,0,0])
-  translate([0,0,-BASE_HEIGHT])
-  SPAT37_SmokeTip();
-
-  if (_RENDER == "Prints/Whistle")
-  translate([0,0,-BASE_HEIGHT])
-  SPAT37_Whistle();
+  PAT37_Flare();
 }
