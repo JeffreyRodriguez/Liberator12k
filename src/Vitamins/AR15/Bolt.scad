@@ -88,7 +88,7 @@ module AR15_FiringPin(cutter=false, clearance=0.007, extraShoulder=0) {
     mirror([0,0,1])
     ChamferedCylinder(r1=AR15_FiringPin_HeadRadius()+clear,
                       r2=1/16, chamferTop=false, chamferBottom=true, teardropBottom=false,
-                      h=AR15_FiringPin_HeadLength()+ManifoldGap(2));
+                      h=AR15_FiringPin_HeadLength()+(cutter?AR15_FiringPin_Extension():0)+ManifoldGap(2));
 
     // Firing Pin Extension
     translate([0,0,AR15_BoltLength()-ManifoldGap()])
@@ -104,11 +104,7 @@ module AR15_FiringPin(cutter=false, clearance=0.007, extraShoulder=0) {
   }
 }
 
-module AR15_CamPin(cutter=false, clearance=0.007,
-                   extraCamPinSquareHeight=0,
-                   extraCamPinSquareLength=0,
-                   rectangleTop=true,
-                   teardrop=true, teardropTruncate=true, teardropAngle=0) {
+module AR15_CamPin(cutter=false, clearance=0.007, extraCamPinSquareHeight=0, extraCamPinSquareLength=0, rectangleTop=true, teardrop=true, teardropTruncate=true, teardropAngle=0) {
 
     color("Silver") RenderIf(!cutter)
     translate([0,0,AR15_CamPinOffset()+AR15_CamPinRadius()])
@@ -134,7 +130,7 @@ module AR15_CamPin(cutter=false, clearance=0.007,
 }
 
 module AR15_Bolt(cutter=false, camPin=true, firingPinRetainer=false,
-                 clearance=0.007,
+                 clearance=0.008,
                  teardrop=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;;
@@ -147,18 +143,18 @@ module AR15_Bolt(cutter=false, camPin=true, firingPinRetainer=false,
 
     // Front
     translate([0,0,AR15_BoltLugLength()])
-    cylinder(r=AR15_BoltFrontRadius()+clearance, h=AR15_BoltFrontLength()+ManifoldGap());
+    cylinder(r=AR15_BoltFrontRadius()+clear, h=AR15_BoltFrontLength()+ManifoldGap());
 
     // Front Chamfer
     translate([0,0,AR15_BoltLugLength()])
-    HoleChamfer(r1=AR15_BoltFrontRadius()+clearance, r2=chamferRadius, teardrop=false);
+    HoleChamfer(r1=AR15_BoltFrontRadius()+clear, r2=chamferRadius, teardrop=false);
 
     // Middle
-    cylinder(r=AR15_BoltMiddleRadius()+clearance, h=AR15_BoltMiddleLength()+ManifoldGap(2));
+    cylinder(r=AR15_BoltMiddleRadius()+clear, h=AR15_BoltMiddleLength()+ManifoldGap(2));
 
     // Back
     translate([0,0,-ManifoldGap()])
-    cylinder(r=AR15_BoltBackRadius()+clearance, h=AR15_BoltLength()+ManifoldGap(2));
+    cylinder(r=AR15_BoltBackRadius()+clear, h=AR15_BoltLength()+ManifoldGap(2));
 
     // Firing Pin Retainer
     if (firingPinRetainer)

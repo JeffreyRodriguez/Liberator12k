@@ -20,7 +20,7 @@ function AR15BarrelExtensionPinHeight()   = Inches(0.09);
 function AR15BarrelExtensionPinDepth()    = Inches(0.162);
 
 module AR15_Barrel(length=AR15BarrelLength(),
-                   clearance=Inches(0.007),
+                   clearance=Inches(0.003),
                    cutter=false,
                    $fn=60) {
   color("DimGrey") union() {
