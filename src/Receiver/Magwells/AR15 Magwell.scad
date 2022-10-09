@@ -9,7 +9,7 @@ function AR15_MagazineRearTabLength() = 0.137;
 function AR15_MagazineBaseWidth() = 0.89;
 function AR15_MagazineBaseLength() = 2.4;
 
-function AR15_MagCatchZ() = -0.813;
+function AR15_MagCatchZ() = -0.813-0.25;
 function AR15_MagCatchX() = -0.058;
 
 function AR15_MagwellDepth() = Inches(2.375); //Inches(2);
