@@ -20,7 +20,7 @@ use <../../../Receiver/FCG.scad>;
 /* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Prints/BoltCarrier", "Prints/BoltCarrierBack", "Prints/HammerCompressor"]
+_RENDER = ""; // ["", "Prints/Front", "Prints/Back", "Prints/Compressor"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;
@@ -31,10 +31,11 @@ _SHOW_BOLT_CARRIER=true;
 _SHOW_HAMMER = true;
 _SHOW_HAMMER_SPRING = true;
 _SHOW_SEAR = true;
+_SHOW_CHAMFER = true;
+_SHOW_CUTTER = true;
 
 /* [Transparency] */
 _ALPHA_BOLT_CARRIER = .3; // [0:0.1:1])
-_ALPHA_HAMMER = .5; // [0:0.1:1])
 
 /* [Cutaway] */
 _CUTAWAY_TUBE = false;
@@ -52,7 +53,7 @@ boltCarrierRadius = boltCarrierDiameter/2;
 
 boltCarrierMinX = -(AR15_BoltLockedLength()+AR15_FiringPin_Extension());
 boltCarrierLength = abs(boltCarrierMinX-boltCarrierMaxX);
-boltCarrierBackMinX = boltCarrierMinX-hammerTravel-1.75;
+boltCarrierBackMinX = boltCarrierMinX-hammerTravel-1.5;
 boltCarrierBackLength = abs(boltCarrierBackMinX-boltCarrierMinX);
 
 hammerSpringX = boltCarrierBackMinX+0.25;
@@ -73,7 +74,7 @@ $fs = UnitsFs()*ResolutionFs();
 // * Shapes *
 // **********
 module HammAR_Chamfer(camTrack = true, clearance=0.01) {
-	CR = 1/16;
+	CR = 1/32;
 	
 	screwSupportOR = 0.625+clearance;
 	screwSupportOD = screwSupportOR*2;
@@ -88,9 +89,9 @@ module HammAR_Chamfer(camTrack = true, clearance=0.01) {
 	// Screw Support
 	for (R = [0, -22.5]) rotate([R,0,0])
 	for (Y = [1,0]) mirror([0,Y,0])
-	translate([0,0.375,])
+	translate([0,0.4375,0])
 	rotate([0,90,0])
-	HoleChamfer(r1=0.25+clearance,
+	HoleChamfer(r1=0.1875+clearance,
 	              r2=CR);
 	
 	// Screw Support Pivot Clearance
@@ -115,7 +116,7 @@ module HammAR_Chamfer(camTrack = true, clearance=0.01) {
 }
 
 module HammAR_Cutter(length = HammAR_Length(), camTrack = true, clearance=0.01) {
-	CR = 1/16;
+	CR = 1/32;
 	
 	screwSupportOR = 0.625+clearance;
 	screwSupportOD = screwSupportOR*2;
@@ -155,12 +156,12 @@ module HammAR_Cutter(length = HammAR_Length(), camTrack = true, clearance=0.01) 
 	AR15_BoltCamPinTrack(length=HammAR_Length());
 }
 module HammAR_ScrewSupport(length=1, clearance=0) {
-	CR = 1/16;
+	CR = 1/32;
 	
 	rotate(22.5)
 	for (Y = [1,0]) mirror([0,Y,0])
-	translate([0,0.375,-clearance])
-	ChamferedCylinder(r1=0.25+clearance, r2=CR,
+	translate([0,0.4375,-clearance])
+	ChamferedCylinder(r1=0.1875+clearance, r2=CR,
 	                  h=length+(clearance*2),
 										teardropTop=true);
 }
@@ -181,7 +182,7 @@ module HammAR_Bolt(cutter=false) {
 module HammAR_Screws(cutter=false) {
 	rotate([-22.5,0,0])
   for (Y = [1,0]) mirror([0,Y,0])
-  translate([boltCarrierMaxX,0.375+0.0625,0])
+  translate([boltCarrierMaxX,0.4375,0])
   rotate([0,90,0])
   NutAndBolt(bolt=BoltSpec("#8-32"),
              boltLength=HammAR_Length()+ManifoldGap(2),
@@ -190,7 +191,7 @@ module HammAR_Screws(cutter=false) {
              teardrop=false, teardropAngle=180, capOrientation=true,
              doRender=!cutter);
 }
-module HammAR_HammerSpring(cutter=false, clearance=0.01) {
+module HammAR_Spring(cutter=false, clearance=0.01) {
 	color("Silver") RenderIf(!cutter)
 	translate([hammerSpringX,0,0])
 	rotate([0,90,0])
@@ -198,7 +199,7 @@ module HammAR_HammerSpring(cutter=false, clearance=0.01) {
 	       cutter=cutter, clearance=clearance);
 }
 
-module HammAR_Hammer(cutter=false, clearance=0.01, alpha=_ALPHA_HAMMER) {
+module HammAR_Hammer(cutter=false, clearance=0.01) {
 	clear = cutter ? clearance : 0;
 	clear2 = clear*2;
 
@@ -216,14 +217,14 @@ module HammAR_Hammer(cutter=false, clearance=0.01, alpha=_ALPHA_HAMMER) {
 	
 	translate([hammerX,0,0])
 	rotate([0,-90,0])
-	color("Goldenrod", alpha)
+	color("Goldenrod")
 	cylinder(d=(9/32)+clear2, h=3);
 }
-module HammAR_Sear(pivotFactor=0, cutter=false, clearance=0.01, alpha=_ALPHA_HAMMER) {
+module HammAR_Sear(pivotFactor=0, cutter=false, clearance=0.01) {
 	clear = cutter ? clearance : 0;
 	clear2 = clear*2;
 
-	color("Silver", alpha) RenderIf(!cutter)
+	color("Silver") RenderIf(!cutter)
 	translate([hammerX-clear,-(searWidth/2)-clear,-searLength])
 	cube([searWidth, searWidth+clear2, searLength]);
 }
@@ -233,25 +234,61 @@ module HammAR_Sear(pivotFactor=0, cutter=false, clearance=0.01, alpha=_ALPHA_HAM
 // * Prints *
 // **********
 module HammAR_Front(cutter=false, clearance=0.01, alpha=_ALPHA_BOLT_CARRIER) {
-	CR = 1/16;
+	CR = 1/32;
 
 	color("Olive", alpha) RenderIf(!cutter)
 	difference() {
 
 		union() {
 
-			// Body
+			// Body Top
 			translate([boltCarrierMaxX,0,0])
+			rotate([-90-22.5,0,0])
 			rotate([0,-90,0])
-			ChamferedCylinder(r1=boltCarrierRadius,
-			                  r2=CR,
-			                   h=boltCarrierLength,
-			                   teardropTop=true);
+			intersection() {
+				ChamferedCylinder(r1=boltCarrierRadius,
+													r2=CR,
+													 h=boltCarrierLength,
+													 teardropTop=true);
+				
+				linear_extrude(boltCarrierLength, center=false)
+				semicircle(angle=180, od=boltCarrierRadius*2);
+			}
+
 			
 			translate([boltCarrierMaxX,0,0])
 			rotate([0,-90,0])
 			HammAR_ScrewSupport(boltCarrierLength);
+			
+			hull() {
+				
+				// Body Bottom
+				translate([boltCarrierMaxX,0,0])
+				rotate([0,-90,0])
+				ChamferedCylinder(r1=0.3125,
+													r2=CR,
+													 h=boltCarrierLength,
+													 teardropTop=true);
+					
+				// Round depressor
+				translate([boltCarrierMaxX,0,0])
+				rotate([180-(22.5*1.5),0,0])
+				rotate([0,-90,0])
+				intersection() {
+					ChamferedCylinder(r1=AR15_BoltHeadRadius(),
+														r2=CR,
+														 h=boltCarrierLength,
+														 teardropTop=true);
+					
+					linear_extrude(boltCarrierLength, center=false)
+					semicircle(angle=22.5, od=AR15_BoltHeadRadius()*2);
+				}
+			}
+			
+			
 		}
+		
+		// Feedlip cuts
 
 		// Firing Pin Rear Hole Chamfer
 		translate([boltCarrierMinX,0,0])
@@ -265,7 +302,7 @@ module HammAR_Front(cutter=false, clearance=0.01, alpha=_ALPHA_BOLT_CARRIER) {
 module HammAR_Back(cutter=false, clearance=0.01, alpha=_ALPHA_BOLT_CARRIER) {
 	clear = cutter ? clearance : 0;
 	clear2 = clear*2;
-	CR = 1/16;
+	CR = 1/32;
 
 	color("Chocolate", alpha) RenderIf(!cutter)
 	difference() {
@@ -293,12 +330,12 @@ module HammAR_Back(cutter=false, clearance=0.01, alpha=_ALPHA_BOLT_CARRIER) {
 		HammAR_Bolt(cutter=true);
 		HammAR_Screws(cutter=true);
 		HammAR_Hammer(cutter=true);
-		HammAR_HammerSpring(cutter=true);
+		HammAR_Spring(cutter=true);
 		HammAR_Sear(cutter=true);
 	}
 }
 module HammAR_Compressor(cutter=false, clearance=0.01, alpha=1) {
-	length = 0.5;
+	length = 0.25;
 	CR = 1/32;
 
 	color("Olive", alpha) RenderIf(!cutter)
@@ -340,7 +377,7 @@ module HammAR(hardware=true, prints=true, hammerAF=0, cutter=false) {
 	}
 
 	if (_SHOW_HAMMER_SPRING)
-	HammAR_HammerSpring(cutter=cutter);
+	HammAR_Spring(cutter=cutter);
 	
 	if (_SHOW_BOLT)
 	HammAR_Bolt(cutter=cutter);
@@ -354,9 +391,11 @@ module HammAR(hardware=true, prints=true, hammerAF=0, cutter=false) {
 
 ScaleToMillimeters()
 if ($preview) {
+	if (_SHOW_CUTTER)
 	#render()
 	HammAR_Cutter();
 	
+	if (_SHOW_CHAMFER)
 	#render()
 	translate([boltCarrierMaxX-HammAR_Length(),0,0])
 	HammAR_Chamfer();
@@ -367,7 +406,7 @@ if ($preview) {
   // *****************
   // * Printed Parts *
   // *****************
-	if (_RENDER == "Prints/BoltCarrier")
+	if (_RENDER == "Prints/Front")
 		if (!_RENDER_PRINT)
 			HammAR_Front();
 		else
@@ -375,7 +414,7 @@ if ($preview) {
 			translate([-boltCarrierMinX,0,0])
 			HammAR_Front();
 		
-	if (_RENDER == "Prints/BoltCarrierBack")
+	if (_RENDER == "Prints/Back")
 		if (!_RENDER_PRINT)
 			HammAR_Back();
 		else
@@ -383,7 +422,7 @@ if ($preview) {
 			translate([-boltCarrierMinX,0,0])
 			HammAR_Back();
 		
-	if (_RENDER == "Prints/HammerCompressor")
+	if (_RENDER == "Prints/Compressor")
 		if (!_RENDER_PRINT)
 			HammAR_Compressor();
 		else
@@ -403,11 +442,15 @@ if ($preview) {
 	translate([lowerX,0,0])
 	HammAR_Hammer();
 
-	if (_RENDER == "Hardware/HammerSpring")
+	if (_RENDER == "Hardware/Spring")
 	translate([lowerX,0,0])
-	HammAR_HammerSpring();
+	HammAR_Spring();
 
 	if (_RENDER == "Hardware/HammerScrews")
 	translate([lowerX,0,0])
 	HammAR_HammerScrews();
+
+	if (_RENDER == "Hardware/Sear")
+	translate([lowerX,0,0])
+	HammAR_Sear();
 }
