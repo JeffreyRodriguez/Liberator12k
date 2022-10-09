@@ -31,9 +31,12 @@ _RENDER_PRINT = true;
 
 /* [Assembly] */
 _SHOW_RECEIVER = true;
+_SHOW_TUBE = true;
 
 /* [Transparency] */
 _ALPHA_RECEIVER = 1; // [0:0.1:1])
+_ALPHA_TUBE = 1; // [0:0.1:1])
+_ALPHA_FCG = 1; // [0:0.1:1])
 
 /* [Cutaway] */
 _CUTAWAY_RECEIVER = false;
@@ -106,17 +109,13 @@ firingPinRadius = (0.337/2)+0.01;
 firingPinExtension = 0.55;      // From the back of the bolt
 firingPinRetainerOffset = 0.35; // From the back of the bolt
 
-
-
 // Calculated Values
 boltSleeveDiameter = barrelExtensionDiameter;
 boltSleeveRadius = boltSleeveDiameter/2;
 
-
 tubeCenterZ = tubeWall+(tube_width/2);
 boltLockedMinX = barrelX-boltLockedLength;
 boltLockedMaxX = barrelX+boltLockLengthDiff;
-
 
 barrelZ = tube_width+tubeWall+barrelOffset;
 lowerLength = LowerMaxX()+abs(ReceiverLugRearMinX())+0.25;
@@ -147,55 +146,6 @@ handleMinX = stockMinX;//+stockWall;
 $fa = ResolutionFa();
 $fs = UnitsFs()*ResolutionFs();
 
-
-// M5x10 FIXME
-module FlatHeadBolt(diameter=Inches(0.193),
-                headDiameter=Inches(0.353),
-                   extraHead=Inches(1),
-                      length=Inches(0.3955),
-                        sink=Inches(0.01),
-                   clearance=Inches(0.01),
-                    teardrop=true,
-                      cutter=false) {
-  radius = diameter/2;
-  headRadius = headDiameter/2;
-
-  render()
-  translate([0,0,sink])
-  union() {
-
-    if (teardrop) {
-      linear_extrude(height=length)
-      Teardrop(r=radius+(cutter?clearance:0));
-    } else {
-      cylinder(r=radius+(cutter?clearance:0), h=length);
-    }
-
-    hull() {
-
-      // Taper
-      cylinder(r1=headRadius+(cutter?clearance:0), r2=0,
-                h=headRadius+(cutter?clearance:0));
-
-      // Taper teardrop hack
-      linear_extrude(height=ManifoldGap())
-      if (teardrop) {
-        Teardrop(r=headRadius+(cutter?clearance:0));
-      } else {
-        circle(r=headRadius+(cutter?clearance:0));
-      }
-    }
-
-    if (cutter)
-    translate([0,0,-extraHead])
-    linear_extrude(height=extraHead+ManifoldGap())
-    if (teardrop) {
-      Teardrop(r=headRadius+(cutter?clearance:0));
-    } else {
-      circle(r=headRadius+(cutter?clearance:0));
-    }
-  }
-}
 
 module PicRailBolts() {
   translate([ReceiverLugRearMinX()+(ReceiverLugRearLength()/2),0,
@@ -270,19 +220,20 @@ module BARBB_HammerCutOut(extraX=0) {
   }
 }
 
-module BARBB_ReceiverBolts(angle=0) {
+module BARBB_ReceiverBolts(cutter=false, clearance=0.01, angle=0) {
+	clear = cutter ? clearance : 0;
 
   // Square Tube center axis
   translate([0,0,tubeCenterZ]) {
 
     // Upper
     translate([upperMinX,0,0])
-    for (xrz = [[0.5, 90, 0], [0.5, -90,0],
-                [1.25,90,0], [1.25,-90,0]])
-    rotate([xrz[1],0,0])
-    translate([xrz[0],0,-tubeCenterZ+xrz[2]])
+    for (M = [0,1]) mirror([0,M,0])
+    for (X = [0.5, 1.25]) translate([X,tubeCenterZ,0])
+    rotate([-90,0,0])
     rotate(angle)
-    FlatHeadBolt();
+    NutAndBolt(BoltSpec("M5"), boltLength=Millimeters(10), head="flat",
+               capOrientation=true, clearance=clear);
   }
 
 
@@ -290,14 +241,26 @@ module BARBB_ReceiverBolts(angle=0) {
   for (m = [0,1]) mirror([0,m,0])
   for (x = [0.5, 1.5])
   translate([stockMinX+stockLength-x,tubeCenterZ,tubeCenterZ])
-  rotate([90,0,0])
+  rotate([-90,0,0])
   rotate(angle)
-  FlatHeadBolt();
+  NutAndBolt(BoltSpec("M5"), boltLength=Millimeters(10), head="flat",
+             capOrientation=true, clearance=clear);
+	
+  // Lower
+  translate([lowerX,0,tubeCenterZ])
+  for (m = [0,1]) mirror([0,m,0])
+  for (x = [ReceiverLugFrontMinX()+(ReceiverLugFrontLength()/2),
+            ReceiverLugRearMinX()+(ReceiverLugRearLength()/2)])
+  translate([x,tubeCenterZ,0])
+  rotate([-90,180,0])
+  NutAndBolt(BoltSpec("M5"), boltLength=Millimeters(10), head="flat",
+             capOrientation=true, clearance=clear);
 }
 
 
-module BARBB_LowerReceiver(clearance=0.007, extraFront=0,wall=tubeWall) {
+module BARBB_LowerReceiver(clearance=0.007, extraFront=0,wall=tubeWall, alpha=_ALPHA_RECEIVER) {
 
+  color("Tan", alpha)
   render()
   difference() {
     union() {
@@ -328,9 +291,10 @@ module BARBB_LowerReceiver(clearance=0.007, extraFront=0,wall=tubeWall) {
                        lowerLength], r=chamferRadius, center=false);
       }
 
-      ReceiverLugFront(extraTop=tubeWall);
-
-      ReceiverLugRear(extraTop=tubeWall);
+      translate([LowerMaxX(),0,-ReceiverBottomZ()]) {
+        ReceiverLugFront(extraTop=tubeWall);
+        ReceiverLugRear(extraTop=tubeWall);
+      }
     }
 
     // Square Tube center axis
@@ -348,7 +312,7 @@ module BARBB_LowerReceiver(clearance=0.007, extraFront=0,wall=tubeWall) {
                 ReceiverLugRearMinX()+(ReceiverLugRearLength()/2)])
       translate([x,tubeCenterZ,0])
       rotate([90,180,0])
-      FlatHeadBolt(sink=0.01);
+      NutAndBolt(BoltSpec("M5"), boltLength=Millimeters(10), head="flat", clearance=0.01);
     }
 
     // Barrel center axis
@@ -376,8 +340,9 @@ module BARBB_LowerReceiver(clearance=0.007, extraFront=0,wall=tubeWall) {
   }
 }
 
-module BARBB_UpperReceiver(magwell=false) {
+module BARBB_UpperReceiver(magwell=false, alpha=_ALPHA_RECEIVER) {
 
+  color("Tan", alpha)
   render()
   difference() {
     translate([upperMinX,0,0])
@@ -449,11 +414,12 @@ module BARBB_UpperReceiver(magwell=false) {
   }
 }
 
-module BARBB_Bolt(clearance=0.01) {
+module BARBB_Bolt(clearance=0.01, alpha=_ALPHA_FCG) {
   chamferClearance = 0.01;
 
   echo("barbbBoltLength", barbbBoltLength);
 
+  color("Olive", alpha)
   render()
   difference() {
 
@@ -536,7 +502,7 @@ module BARBB_Bolt(clearance=0.01) {
 }
 
 module BARBB_Hammer() {
-  color("Orange")
+  color("Silver")
   translate([-0.125,0,tubeCenterZ])
   rotate([0,-90,0]) {
 
@@ -552,14 +518,12 @@ module BARBB_Hammer() {
     cylinder(r=(0.575/2), h=0.25, $fn=6);
   }
 
-  color("Red")
-  translate([ReceiverLugFrontMinX()-barrelGasLength+hammerMinX,0,tubeCenterZ])
-  translate([0, -hammerWidth/2, -hammerWidth/2])
-  cube([hammerWidth, hammerWidth, barrelZ-tubeCenterZ+(hammerWidth/2)]);
+  color("Silver")
+  translate([ReceiverLugFrontMinX()-barrelGasLength+hammerMinX,0,tubeCenterZ-(hammerWidth/2)])
+  cylinder(d=hammerWidth, h=barrelZ-tubeCenterZ+(hammerWidth/2));
 }
 
-module BARBB_HammerSpringTrunnion(clearance=0.007) {
-
+module BARBB_HammerSpringTrunnion(clearance=0.007, alpha=_ALPHA_FCG) {
 
   clear2 = clearance*2;
 
@@ -572,6 +536,7 @@ module BARBB_HammerSpringTrunnion(clearance=0.007) {
   rotate([0,90,0])
   cylinder(r=springRadius, h=springLength);
 
+  color("Olive", alpha)
   render()
   difference() {
 
@@ -602,11 +567,12 @@ module BARBB_HammerSpringTrunnion(clearance=0.007) {
   }
 }
 
-module BARBB_HammerGuide(clearance=0.005) {
+module BARBB_HammerGuide(clearance=0.005, alpha=_ALPHA_FCG) {
   clear2=clearance*2;
   hammerGuideLength = abs(ReceiverLugRearMinX());
   cutoutLength = (hammerWidth*1.5)+hammerTravel+hammerOvertravel;
 
+  color("Olive", alpha)
   translate([-0.125,0,0])
   render()
   difference() {
@@ -663,13 +629,14 @@ module BARBB_Receiver_T_Lug(height=1+chamferRadius, cutter=false) {
 }
 
 module BARBB_Stock(topDiameter=tube_width+(tubeWall*2), bottomDiameter=1,
-                  wall=0.25, clearance=0.008) {
+                  wall=0.25, clearance=0.008, alpha=_ALPHA_RECEIVER) {
 
   clear2 = clearance*2;
 
   echo("stockLength = ", stockLength);
                      leverMinX=0;
 
+  color("Tan", alpha)
   render()
   difference() {
     union() {
@@ -740,7 +707,8 @@ module BARBB_Stock(topDiameter=tube_width+(tubeWall*2), bottomDiameter=1,
 }
 
 module BARBB_Buttpad(topDiameter=tube_width+(tubeWall*2), bottomDiameter=1,
-                     length=2, extend=2+stockWall-ManifoldGap()) {
+                     length=2, extend=2+stockWall-ManifoldGap(), alpha=_ALPHA_RECEIVER) {
+  color("Tan", alpha)
   difference() {
     translate([stockMinX,0,0])
     rotate([0,90,0])
@@ -759,7 +727,9 @@ module BARBB_Buttpad(topDiameter=tube_width+(tubeWall*2), bottomDiameter=1,
 
 
 module BARBB_Foregrip(topDiameter=tube_width+(tubeWall*2), bottomDiameter=1,
-                      length=2, extend=2, frontWall=0) {
+                      length=2, extend=2, frontWall=0, alpha=_ALPHA_RECEIVER) {
+
+  color("Tan", alpha)
   translate([0,0,tubeCenterZ])
   rotate([0,90,0])
   render()
@@ -782,16 +752,17 @@ module BARBB_Foregrip(topDiameter=tube_width+(tubeWall*2), bottomDiameter=1,
     for (m = [0,1]) mirror([0,m,0])
     translate([0,tubeCenterZ,1])
     rotate([90,-90,0])
-    FlatHeadBolt();
+    NutAndBolt(BoltSpec("M5"), boltLength=Millimeters(10), head="flat", clearance=0.01);
   }
 }
 
 module BARBB_Bipod(topDiameter=tube_width+(tubeWall*2), bottomDiameter=1,
-                      length=2, extend=1, frontWall=0.25, bipodLegLength=6) {
+                      length=2, extend=1, frontWall=0.25, bipodLegLength=6, alpha=_ALPHA_RECEIVER) {
   bipodLegDiameter = 0.5;
   bipodLegRadius = bipodLegDiameter/2;
   bipodLegAngle = -180+(60/2);
 
+  color("Tan", alpha)
   render()
   translate([26+stockMinX-stockWall+length+frontWall,0,0]) {
 
@@ -848,13 +819,14 @@ module BARBB_Bipod(topDiameter=tube_width+(tubeWall*2), bottomDiameter=1,
       for (m = [0,1]) mirror([0,m,0])
       translate([-tubeCenterZ,tubeCenterZ,-length/2])
       rotate([90,-90,0])
-      FlatHeadBolt();
+      NutAndBolt(BoltSpec("M5"), boltLength=Millimeters(10), clearance=0.01);
     }
   }
 }
 
-module BARBB_RailMount(id=1, clearance=0.003, length=1, height=1, wall=tubeWall) {
-  render()
+module BARBB_RailMount(id=1, clearance=0.003, length=1, height=1, wall=tubeWall, alpha=_ALPHA_RECEIVER) {
+  color("Tan", alpha)
+	render()
   difference() {
     hull() {
 
@@ -905,7 +877,7 @@ module BARBB_RailMount(id=1, clearance=0.003, length=1, height=1, wall=tubeWall)
       for (m = [0,1]) mirror([0,m,0])
       translate([-length/2,tubeCenterZ,0])
       rotate([90,180,0])
-      FlatHeadBolt(sink=0.01);
+      NutAndBolt(BoltSpec("M5"), boltLength=Millimeters(10), head="flat", clearance=0.01);
     }
   }
 }
@@ -915,7 +887,7 @@ module AR15_Bolt(clearance=0.007, camPin=true, firingPinRetainer=true,
                  teardrop=true) {
   clear2 = clearance*2;
 
-  color("Gold")
+  color("Silver")
   render()
   union() {
 
@@ -1017,7 +989,46 @@ if ($preview) {
 
   BARBB_Bipod();
 
-  color("Olive")
+  BARBB_ReceiverBolts();
+
+  // Receiver/Lower/Front-end
+  translate([lowerX,0,0])
+  BARBB_Hammer();
+
+  translate([lowerX,0,0])
+  BARBB_HammerGuide();
+
+  translate([lowerX-0.5,0,0])
+  translate([LowerMaxX()+5,0,0])
+  BARBB_Foregrip();
+
+  color("DimGrey")
+  translate([boltLockedMaxX,0,barrelZ])
+  rotate([0,-90,0])
+  AR15_Bolt(teardrop=false, firingPinRetainer=false, extraFiringPin=0);
+
+  BARBB_Bolt();
+
+  BARBB_HammerSpringTrunnion();
+
+  translate([LowerMaxX()+lowerX,0,-ReceiverBottomZ()]) {
+    TriggerGroup(alpha=_ALPHA_RECEIVER, searLength=1.25);
+		
+    Lower(alpha=_ALPHA_RECEIVER);
+  }
+
+  // Square Tube
+	if (_SHOW_TUBE)
+  color("Silver", _ALPHA_TUBE)
+  translate([hammerMaxX, ManifoldGap(), tubeCenterZ])
+  //render() Cutaway()
+  rotate([0,90,0])
+  linear_extrude(height=26)
+  difference() {
+    square(tube_width, center=true);
+    square(tube_width-0.125, center=true);
+  };
+
   translate([lowerX,0,0])
   translate([ReceiverLugRearMinX()-0.25+12-3.5,0,0])
   BARBB_RailMount();
@@ -1028,63 +1039,19 @@ if ($preview) {
     translate([-1,-0.75/2,barrelZ+1.5])
     cube([12, 0.75, 0.375]);
 
-    color("Olive")
     translate([ReceiverLugRearMinX()-0.25,0,0])
     BARBB_RailMount(id=1);
   }
-
-  // Receiver/Lower/Front-end
-  translate([lowerX,0,0])
-  BARBB_Hammer();
+  
 
   translate([lowerX,0,0])
-  BARBB_HammerGuide();
-
-  color("Tan")
-  translate([lowerX-0.5,0,0])
-  translate([LowerMaxX()+5,0,0])
-  BARBB_Foregrip();
-
-  translate([LowerMaxX()+lowerX,0,-ReceiverBottomZ()])
-  Lower();
-
-  translate([lowerX,0,0])
-  color("Tan")
-  //render() Cutaway()
   BARBB_LowerReceiver();
 
-  color("Black")
-  translate([boltLockedMaxX,0,barrelZ])
-  rotate([0,-90,0])
-  AR15_Bolt(teardrop=false, firingPinRetainer=false, extraFiringPin=0);
-
-  BARBB_HammerSpringTrunnion();
-
-  color("Olive")
-  //render() Cutaway()
-  BARBB_Bolt();
-
-  color("Tan")
-  //render() Cutaway()
   BARBB_UpperReceiver(magwell=false);
 
-  color("Olive")
   BARBB_Buttpad();
 
-  color("Tan")
-  //render() Cutaway()
   BARBB_Stock();
-
-  // Square Tube
-  *color("Silver")
-  translate([hammerMaxX, ManifoldGap(), tubeCenterZ])
-  //render() Cutaway()
-  rotate([0,90,0])
-  linear_extrude(height=26)
-  difference() {
-    square(tube_width, center=true);
-    square(tube_width-0.125, center=true);
-  };
 } else {
 
   // *****************
