@@ -23,32 +23,37 @@ module AR15_Barrel(length=AR15BarrelLength(),
                    clearance=Inches(0.003),
                    cutter=false,
                    $fn=60) {
-  color("DimGrey") union() {
+	clear = cutter ? clearance : 0;
+	clear2 = clear*2;
 
-    // Barrel Extension
-    translate([0,0,-ManifoldGap()])
-    cylinder(r=AR15BarrelExtensionRadius()+clearance,
-             h=AR15BarrelExtensionLength()+ManifoldGap(2));
+	color("DimGrey")
+	union() {
 
-    // Barrel Locating Pin
-    translate([AR15BarrelExtensionRadius()-AR15BarrelExtensionPinHeight(),
-              -AR15BarrelExtensionPinRadius(),
-               AR15BarrelExtensionLength()-AR15BarrelExtensionPinDepth()])
-    cube([AR15BarrelExtensionPinHeight()*2,
-          AR15BarrelExtensionPinDiameter(),
-          AR15BarrelExtensionPinDepth()+ManifoldGap()]);
+		// Barrel Extension
+		translate([0,0,-ManifoldGap()])
+		cylinder(r=AR15BarrelExtensionRadius()+clear,
+		         h=AR15BarrelExtensionLength()+ManifoldGap(2));
 
-    // Barrel Extension Lip
-    translate([0,0,AR15BarrelExtensionLength()])
-    cylinder(r=AR15BarrelExtensionLipRadius()+clearance,
-             h=AR15BarrelExtensionLipLength()+ManifoldGap());
+		// Barrel Locating Pin
+		translate([AR15BarrelExtensionRadius()-AR15BarrelExtensionPinHeight(),
+		           -AR15BarrelExtensionPinRadius(),
+		           AR15BarrelExtensionLength()-AR15BarrelExtensionPinDepth()])
+		cube([AR15BarrelExtensionPinHeight()*2,
+		      AR15BarrelExtensionPinDiameter(),
+		      AR15BarrelExtensionPinDepth()+ManifoldGap()]);
 
-    // Barrel, up to the gas block
-    cylinder(r=AR15BarrelChamberRadius()+clearance, h=AR15BarrelGasLength()+ManifoldGap());
+		// Barrel Extension Lip
+		translate([0,0,AR15BarrelExtensionLength()])
+		cylinder(r=AR15BarrelExtensionLipRadius()+clear,
+		         h=AR15BarrelExtensionLipLength()+ManifoldGap());
 
-    // Barrel, from the gas block on
-    cylinder(r=AR15BarrelGasRadius(), h=length);
-  }
+		// Barrel, up to the gas block
+		cylinder(r=AR15BarrelChamberRadius()+clear,
+		         h=AR15BarrelGasLength()+ManifoldGap());
+
+		// Barrel, from the gas block on
+		cylinder(r=AR15BarrelGasRadius(), h=length);
+	}
 }
 
 AR15_Barrel();
