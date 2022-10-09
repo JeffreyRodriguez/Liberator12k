@@ -278,7 +278,7 @@ module Stock_Backplate(length=Stock_BackplateLength(), clearance=0.008, cutaway=
   }
 }
 
-module Stock_Buttpad(doRender=true, cutaway=false, alpha=1) {
+module Stock_Buttpad(boltHoles=true, doRender=true, cutaway=false, alpha=1) {
   receiverRadius=ReceiverOR();
   outsideRadius = receiverRadius+ButtpadWall();
   chamferRadius = 1/16;
@@ -329,9 +329,11 @@ module Stock_Buttpad(doRender=true, cutaway=false, alpha=1) {
                -ManifoldGap()])
     cylinder(r1=baseRadius/2, r2=0, h=base);
 
+    if (boltHoles)
     Stock_ButtpadBolt(cutter=true);
 
     // Chamfered bolt holes
+    if (boltHoles)
     for (Z = Stock_ButtpadBoltZ())
     translate([ButtpadMinX(), 0, Z])
     rotate([0,90,0])
