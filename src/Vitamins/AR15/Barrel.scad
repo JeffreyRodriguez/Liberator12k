@@ -1,6 +1,13 @@
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
+use <../../Meta/Resolution.scad>;
 use <../../Shapes/Chamfer.scad>;
+
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
 
 function AR15BarrelLength()               = Inches(16);
 function AR15BarrelGasLength()            = Inches(7.8); // Back of the barrel extension to the gas block shelf
@@ -21,8 +28,7 @@ function AR15BarrelExtensionPinDepth()    = Inches(0.162);
 
 module AR15_Barrel(length=AR15BarrelLength(),
                    clearance=Inches(0.003),
-                   cutter=false,
-                   $fn=60) {
+                   cutter=false) {
 	clear = cutter ? clearance : 0;
 	clear2 = clear*2;
 

@@ -5,8 +5,6 @@ use <../../Shapes/Chamfer.scad>;
 _WALL_FRONT=0.125;
 _WALL_BACK=0.5;
 
-function MagazineAngle() = 0;
-
 function AR15_MagazineRearTabLength() = 0.137;
 function AR15_MagazineBaseWidth() = 0.89;
 function AR15_MagazineBaseLength() = 2.4;
@@ -50,7 +48,6 @@ module AR15_MagazineCatch(magHeight=1,
 
   translate([AR15_MagCatchX(),
              catchOffsetY,AR15_MagCatchZ()]) {
-     rotate([0,MagazineAngle(),0])
 
     // Magazine interface
     rotate([-90,0,0])
@@ -87,26 +84,23 @@ module AR15_MagwellInsert(height=AR15_MagwellDepth(),
                      taperHeight=Inches(0.5),
                           catch=true) {
   union() {
-    translate([AR15_MagazineRearTabLength(),0,-height])
-    multmatrix(m=[[1,0,sin(MagazineAngle()),0], // Here's where the magazine is angled
-                  [0,1,0,0],
-                  [0,0,1,0],
-                  [0,0,0,1]]) {
+    translate([AR15_MagazineRearTabLength(),0,-height]) {
 
       // Main magazine cutter
       linear_extrude(height=height+extraTop+ManifoldGap())
       AR15_MagwellTemplate();
 
       // Magazine tapered opening cutter
-      multmatrix(m=[[1,0,0,0],
-                    [0,1,0,0],
-                    [0,0,1,0],
-                    [0,0,0,1]])
-      translate([0,0,taperHeight-ManifoldGap()])
-      mirror([0,0,1])
-      hull()
-      linear_extrude(height=taperHeight+ManifoldGap(), scale=1.5)
-      AR15_MagwellTemplate(showCatch=false, showRearTab=false);
+      hull() {
+				translate([0,0,ManifoldGap()])
+				linear_extrude(height=taperHeight+ManifoldGap())
+				AR15_MagwellTemplate(showCatch=false, showRearTab=false);
+				
+				linear_extrude(height=ManifoldGap())
+				translate([-0.125,0,0])
+				scale([1.5,1.5,1])
+				AR15_MagwellTemplate(showCatch=true, showRearTab=true);
+			}
     }
 
     if (catch)
@@ -158,5 +152,5 @@ module AR15_Magwell(width=Inches(1.125),
 }
 
 //ScaleToMillimeters() rotate([180,0,0])
-AR15_Magwell(wallFront=_WALL_FRONT, wallBack=_WALL_BACK);
+*AR15_Magwell(wallFront=_WALL_FRONT, wallBack=_WALL_BACK);
 %AR15_MagwellInsert();

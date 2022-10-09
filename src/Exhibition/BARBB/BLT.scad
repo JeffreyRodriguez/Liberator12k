@@ -35,19 +35,15 @@ _RENDER = ""; // ["", "Prints/HammerSpringTrunnion", "Prints/GasJournalSpacer", 
 _RENDER_PRINT = true;
 
 /* [Assembly] */
-_SHOW_TRUNNION = true;
+_SHOW_TRUNNION = false;
 _SHOW_TUBE = false;
 _SHOW_STOCK = false;
 _SHOW_BARREL = true;
 _SHOW_BUTTPAD = false;
-_SHOW_RECEIVER = true;
-_SHOW_LOWER = true;
-_SHOW_TENSION_BOLTS = true;
-_SHOW_BOLT = true;
-_SHOW_BOLT_CARRIER=true;
-_SHOW_HAMMER = true;
-_SHOW_HAMMER_SPRING = true;
-_SHOW_SEAR = true;
+_SHOW_RECEIVER = false;
+_SHOW_LOWER = false;
+_SHOW_TENSION_BOLTS = false;
+_SHOW_HAMMAR=true;
 
 /* [Transparency] */
 _ALPHA_TUBE = .1; // [0:0.1:1])
@@ -122,11 +118,7 @@ lowerX = 5.5;
 
 camPinLockedMaxX = boltLockedMaxX -camPinOffset;
 
-//upperLength = AR15BarrelExtensionLength()+abs(camPinLockedMaxX)+AR15BarrelExtensionLipLength()-0.01;
-//upperMinX = -upperLength+AR15BarrelExtensionLength()+AR15BarrelExtensionLipLength();
-
 firingPinMinX  = boltLockedMinX-AR15_FiringPin_Extension();
-hammerMaxX = firingPinMinX + hammerOvertravel;
 hammerMinX = firingPinMinX -hammerTravel;
 
 stockMinX = hammerMinX-stockWall-3.25;
@@ -138,11 +130,6 @@ boltCarrierLength = abs(boltCarrierMinX-boltCarrierMaxX);
 
 ejectionPortLength = abs(magwellX);
 
-searLength = 1.53125;
-searWidth = 0.25;
-searX = firingPinMinX-hammerTravel;
-hammerSpringX = boltCarrierMinX-hammerTravel-1.5;
-
 lowerZ = 0;
 
 // *********
@@ -150,7 +137,7 @@ lowerZ = 0;
 // *********
 $fa = ResolutionFa();
 $fs = UnitsFs()*ResolutionFs();
-//4$t = AnimationDebug(ANIMATION_STEP_FIRE);
+//$t = AnimationDebug(ANIMATION_STEP_FIRE);
 //$t = 0;
 
 // ************
@@ -193,15 +180,15 @@ module EjectionPortCutout() {
     
 
     // Ejection slot
-    rotate([-AR15_CamPinAngle(),0,0])
+    rotate([-AR15_CamPinAngle()*0.75,0,0])
     mirror([0,1,0])
-    translate([-ejectionPortLength,0,-0.5/2])
+    translate([-ejectionPortLength,0,-0.75/2])
     ChamferedCube([ejectionPortLength,
                    AR15BarrelExtensionLipRadius()+barrelWall+1,
-                   0.5], r=1/16);
+                   0.75], r=1/16);
 
     // Ejection slot forward bevel
-    rotate([-AR15_CamPinAngle(),0,0])
+    *rotate([-AR15_CamPinAngle(),0,0])
     translate([-ejectionPortLength-0.25,
                -AR15_BoltHeadRadius(),
                -0.5/2])
@@ -246,31 +233,6 @@ module CamPinCutout(clearance=0.01, chamferBack=false) {
       translate([0,-(camPinSquareWidth/2)-0.01])
       square([camPinSquareOffset+camPinSquareHeight+barrelWall, camPinSquareWidth+0.02]);
     }
-  }
-}
-
-module HammerCutOut(extraX=0) {
-
-  // X-Zero on the firing pin's back face
-  translate([hammerMinX,-searWidth/2,-(searWidth/2)]) {
-
-    // Hammer linear track
-    cube([abs(hammerMaxX-hammerMinX)+extraX,
-                    searWidth,
-                    0-+(searWidth/2)+firingPinRadius]);
-
-
-    // Hammer rotary track
-    rotate([0,90,0])
-    linear_extrude(height=searWidth)
-    rotate(-90)
-    semicircle(od=((0-+(searWidth/2)+firingPinRadius)*2), angle=90);
-
-    // Hammer rotary track, rounded inside corner)
-    translate([searWidth,0,0])
-    linear_extrude(height=0-+(searWidth/2)+firingPinRadius)
-    rotate(180)
-    RoundedBoolean(edgeOffset=0, edgeSign=-1, r=searWidth);
   }
 }
 ///
@@ -326,35 +288,42 @@ module Trunnion(alpha=_ALPHA_TRUNNION, cutaway=_CUTAWAY_TRUNNION) {
 		union() {
 			translate([-length,0,0])
 			mirror([1,0,0])
-			Receiver_Segment(length=(LowerMaxX()+lowerX)-ReceiverLength()+length, highTop=false);
-			
+			Receiver_Segment(length=AR15BarrelExtensionLength()+AR15BarrelExtensionLipLength()+length, /*(LowerMaxX()+lowerX)-ReceiverLength()+*/
+			                 highTop=false);
 			
 			Magwell();
 		}
 
-		// Bolt Head Passage
-		translate([barrelX,0,0])
-		rotate([0,-90,0])
-		cylinder(r=boltHeadRadius+0.01, h=abs(boltCarrierMaxX)+ManifoldGap(2));
+		hull() {
+			// Bolt Head Passage
+			translate([barrelX,0,0])
+			rotate([0,-90,0])
+			cylinder(r=boltHeadRadius+0.01, h=abs(boltCarrierMaxX)+ManifoldGap(2));
+			
+			translate([barrelX-0.375-(1/16),0,0])
+			rotate([0,-90,0])
+			cylinder(r=0.625, h=ManifoldGap());
 
-		// Barrel Extension Rear Support Cone
-		translate([barrelX,0,0])
-		rotate([0,-90,0])
-		cylinder(r1=boltHeadRadius+0.008,
-						 r2=boltCarrierRadius+0.015,
-							h=barrelExtensionLandingHeight);
-		
-		// Barrel Extension Lip
-		translate([AR15BarrelExtensionLength()+AR15BarrelExtensionLipLength(),0,0])
-		rotate([0,90,0])
-		cylinder(d=1.5, h=5);
+			// Barrel Extension Rear Support Cone
+			*translate([barrelX,0,0])
+			rotate([0,-90,0])
+			cylinder(r1=boltHeadRadius+0.008,
+							 r2=boltCarrierRadius+0.015,
+								h=barrelExtensionLandingHeight);
+		}
 		
 		EjectionPortCutout();
 		Barrel(cutter=true);
-		HammAR(cutter=true);
+		HammAR_Cutter();
 		
 		translate([magwellX,0,magwellZ])
-		AR15_MagwellInsert(extraTop=abs(magwellZ));
+		AR15_MagwellInsert(extraTop=abs(magwellZ)-(0.3));
+		
+		translate([-length,0,0])
+		HammAR_Chamfer();
+		
+		translate([barrelX+AR15BarrelExtensionLength()+AR15BarrelExtensionLipLength(),0,0])
+		Receiver_TensionBolts(nutType="none");
 	}
 }
 
@@ -381,7 +350,6 @@ module Stock(topDiameter=tube_width+(tubeWall*2), bottomDiameter=1, wall=0.25, c
     ChamferedCircularHole(r1=boltCarrierRadius+clear2, r2=chamferRadius,
                            h=stockLength+ManifoldGap(2));
 
-    HammerCutOut(extraX=1);
     Magwell(cutter=true);
   }
 }
@@ -436,6 +404,7 @@ translate([8.125+3,0,0]) {
   chargerRotationAF = SubAnimate(ANIMATION_STEP_CHARGE, end=0.1)
                     - Animate(ANIMATION_STEP_CHARGER_RESET);
   
+	if (_SHOW_HAMMAR)
 	translate([-3.25*chargeAF,0,0])
 	rotate([-22.5*chargerRotationAF,0,0])
 	HammAR(hammerAF=hammerAF);
