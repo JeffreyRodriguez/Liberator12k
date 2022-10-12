@@ -57,6 +57,11 @@ LOWER_BOLT_NUT = "heatset"; // ["hex", "heatset", "heatset-long"]
 RECEIVER_LUG_BOLTS = "M4"; // ["#8-32", "M4"]
 RECEIVER_LUG_BOLTS_CLEARANCE = 0.005;
 
+/* [Fine Tuning] */
+MOUNT_SEAR_SUPPORT = true;
+MOUNT_TAKEDOWN_PIN = true;
+MOUNT_HAMMER_GUIDE = true;
+
 
 // *********
 // * Setup *
@@ -423,7 +428,7 @@ module ReceiverLugFront(width=Inches(0.5), extraTop=ManifoldGap(),
 //*****************
 //* Printed Parts *
 //*****************
-module Lower_MountFront(id=ReceiverID(), alpha=1, cutaway=false, doRender=true) {
+module Lower_MountFront(id=ReceiverID(), searSupport=MOUNT_SEAR_SUPPORT, alpha=1, cutaway=false, doRender=true) {
   mountLength = 1.75-0.01;
 
   color("Chocolate", alpha)
@@ -445,6 +450,7 @@ module Lower_MountFront(id=ReceiverID(), alpha=1, cutaway=false, doRender=true) 
                             teardropBottom=true,
                             teardropTop=true);
       // Sear support
+      if (searSupport)
       translate([-LowerMaxX(),0,0])
       hull() {
         translate([0.125,-0.3125/2,-(id/2)-0.3125])
@@ -459,7 +465,7 @@ module Lower_MountFront(id=ReceiverID(), alpha=1, cutaway=false, doRender=true) 
   }
 }
 
-module Lower_MountRear(id=ReceiverID(), alpha=1, cutaway=false, doRender=true) {
+module Lower_MountRear(id=ReceiverID(), hammerGuide=MOUNT_HAMMER_GUIDE, takedownPin=MOUNT_TAKEDOWN_PIN, alpha=1, cutaway=false, doRender=true) {
   mountLength = ReceiverLength()
               - abs(ReceiverLugRearMaxX())
               - LowerMaxX()
@@ -477,9 +483,11 @@ module Lower_MountRear(id=ReceiverID(), alpha=1, cutaway=false, doRender=true) {
       ReceiverBottomSlotInterface(length=mountLength, height=abs(ReceiverBottomZ())-0.26);
     }
 
-    Receiver_TakedownPin(cutter=true);
 
-    Lower_MountTakedownPinRetainer(cutter=true);
+    if (takedownPin) {
+      Receiver_TakedownPin(cutter=true);
+      Lower_MountTakedownPinRetainer(cutter=true);
+    }
 
     difference() {
 
@@ -491,11 +499,13 @@ module Lower_MountRear(id=ReceiverID(), alpha=1, cutaway=false, doRender=true) {
                             teardropTop=true);
 
       // Hammer Guide
+      if (hammerGuide)
       translate([-LowerMaxX()+ReceiverLugRearMaxX(),-0.3125/2,-(id/2)-0.375])
       mirror([1,0,0])
       ChamferedCube([mountLength, 0.3125, id/2], r=1/16, teardropFlip=[true,true,true]);
 
       // Bevel
+      if (takedownPin)
       translate([-ReceiverLength()+00.75,-ReceiverIR(),-ReceiverIR()])
       rotate([0,-90-45,0])
       cube([ReceiverID(), ReceiverID(), ReceiverID()]);
@@ -561,18 +571,18 @@ module Lower_Middle(alpha=1) {
 //**************
 //* Assemblies *
 //**************
-module LowerMount(hardware=true, prints=true, alpha=1, cutaway=false) {
-  if (hardware && _SHOW_TAKEDOWN_PIN_RETAINER)
+module LowerMount(hardware=true, prints=true, searSupport=MOUNT_SEAR_SUPPORT, hammerGuide=MOUNT_HAMMER_GUIDE, takedownPin=MOUNT_TAKEDOWN_PIN, alpha=1, cutaway=false) {
+  if (takedownPin && hardware && _SHOW_TAKEDOWN_PIN_RETAINER)
   Lower_MountTakedownPinRetainer();
 
-  if (hardware && _SHOW_TAKEDOWN_PIN)
+  if (takedownPin && hardware && _SHOW_TAKEDOWN_PIN)
   Receiver_TakedownPin();
 
   if (prints && _SHOW_LOWER_MOUNT_FRONT)
-  Lower_MountFront(alpha=alpha, cutaway=cutaway);
+  Lower_MountFront(searSupport=searSupport, alpha=alpha, cutaway=cutaway);
 
   if (prints && _SHOW_LOWER_MOUNT_REAR)
-  Lower_MountRear(alpha=alpha, cutaway=cutaway);
+  Lower_MountRear(hammerGuide=hammerGuide, takedownPin=takedownPin, alpha=alpha, cutaway=cutaway);
 }
 
 module Lower(hardware=true, prints=true, bolts=_SHOW_LOWER_BOLTS,
