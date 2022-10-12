@@ -35,7 +35,7 @@ _SHOW_CHAMFER = true;
 _SHOW_CUTTER = true;
 
 /* [Transparency] */
-_ALPHA_BOLT_CARRIER = .3; // [0:0.1:1])
+_ALPHA = .3; // [0:0.1:1])
 
 /* [Cutaway] */
 _CUTAWAY_TUBE = false;
@@ -62,7 +62,9 @@ searLength = 1.53125;
 searWidth = 0.25;
 
 // Variable access functions
+function HammAR_X() = boltCarrierMinX + boltCarrierLength;
 function HammAR_Length() = boltCarrierLength+boltCarrierBackLength;
+function HammAR_Travel() = 3;
 
 // *********
 // * Setup *
@@ -73,8 +75,8 @@ $fs = UnitsFs()*ResolutionFs();
 // **********
 // * Shapes *
 // **********
-module HammAR_Chamfer(camTrack = true, clearance=0.01) {
-	CR = 1/32;
+module HammAR_Chamfer(camTrack = true, pivot=true, clearance=0.01) {
+	CR = 1/16;
 	
 	screwSupportOR = 0.625+clearance;
 	screwSupportOD = screwSupportOR*2;
@@ -87,7 +89,8 @@ module HammAR_Chamfer(camTrack = true, clearance=0.01) {
 	              r2=CR);
 	
 	// Screw Support
-	for (R = [0, -22.5]) rotate([R,0,0])
+	angles = pivot ? [0, -22.5] : [0];
+	for (R = angles) rotate([R,0,0])
 	for (Y = [1,0]) mirror([0,Y,0])
 	translate([0,0.4375,0])
 	rotate([0,90,0])
@@ -95,6 +98,7 @@ module HammAR_Chamfer(camTrack = true, clearance=0.01) {
 	              r2=CR);
 	
 	// Screw Support Pivot Clearance
+	if (pivot)
 	intersection() {
 		rotate([-22.5/2,0,0])
 		translate([CR,-screwSupportOR-CR,-screwSin/2])
@@ -115,7 +119,7 @@ module HammAR_Chamfer(camTrack = true, clearance=0.01) {
 	                    chamferRadius=CR, corners=false, chamferTop=false);
 }
 
-module HammAR_Cutter(length = HammAR_Length(), camTrack = true, clearance=0.01) {
+module HammAR_Cutter(length = HammAR_Length(), camTrack = true, pivot=true, clearance=0.01) {
 	CR = 1/32;
 	
 	screwSupportOR = 0.625+clearance;
@@ -131,12 +135,15 @@ module HammAR_Cutter(length = HammAR_Length(), camTrack = true, clearance=0.01) 
 										 chamferTop=false);
 	
 	// Screw Support
-	for (R = [0,22.5]) rotate([R,0,0])
+	angles = pivot ? [0,22.5] : [0];
+	
+	for (R = angles) rotate([R,0,0])
 	translate([boltCarrierMaxX,0,0])
 	rotate([0,-90,0])
 	HammAR_ScrewSupport(HammAR_Length(), clearance);
 	
 	// Screw Support Pivot Clearance
+	if (pivot)
 	intersection() {
 		rotate([-22.5/2,0,0])
 		translate([boltCarrierMaxX+clearance,-screwSupportOR,-(sin(22.5)*screwSupportOR)/2])
@@ -155,6 +162,38 @@ module HammAR_Cutter(length = HammAR_Length(), camTrack = true, clearance=0.01) 
 	rotate([0,-90,0])
 	AR15_BoltCamPinTrack(length=HammAR_Length());
 }
+module HammAR_Cutter2D(camTrack = true, pivot=true, clearance=0.01) {
+	screwSupportOR = 0.625+clearance;
+	screwSupportOD = screwSupportOR*2;
+
+	// Body
+	circle(r=boltCarrierRadius+clearance);
+	
+	// Screw Support
+	angles = pivot ? [0,22.5] : [0];
+	
+	for (R = angles) rotate(R)
+	//rotate(22.5)
+	for (Y = [1,0]) mirror([0,Y,0])
+	translate([0,0.4375])
+	circle(r=0.1875+clearance);
+	
+	// Screw Support Pivot Clearance
+	if (pivot)
+	intersection() {
+		rotate(90+(22.5/2))
+		translate([-screwSupportOR,-(sin(22.5)*screwSupportOR)/2])
+		square([screwSupportOD, sin(22.5)*screwSupportOR]);
+		
+		circle(r=screwSupportOR);
+	}
+	
+	if (camTrack)
+	translate([0, -(AR15_CamPinSquareWidth()/2)-clearance])
+	square([AR15_CamPinSquareOffset()+AR15_CamPinSquareHeight()+clearance,
+	      AR15_CamPinSquareWidth()+(clearance*2)]);
+}
+
 module HammAR_ScrewSupport(length=1, clearance=0) {
 	CR = 1/32;
 	
@@ -206,25 +245,17 @@ module HammAR_Hammer(cutter=false, clearance=0.01) {
 	translate([hammerX+ManifoldGap(),0,0])
 	rotate([0,90,0])
 	rotate(30)
-	NutAndBolt(bolt=HammerBolt(), boltLength=3+ManifoldGap(2),
-						 head="flat", nut="none",
-						 nutBackset=3.25,
-						 nutHeightExtra=(cutter?1:0),
-						 capOrientation=true,
-						 clearance=(cutter?clearance:0),
-						 doRender=!cutter);
-	
-	
-	translate([hammerX,0,0])
-	rotate([0,-90,0])
-	color("Goldenrod")
-	cylinder(d=(9/32)+clear2, h=3);
+	NutAndBolt(bolt=HammerBolt(), boltLength=1.5+ManifoldGap(2),
+	           head="flat", nut="none",
+	           capOrientation=true,
+	           clearance=(cutter?clearance:0),
+	           doRender=!cutter);
 }
 module HammAR_Sear(pivotFactor=0, cutter=false, clearance=0.01) {
 	clear = cutter ? clearance : 0;
 	clear2 = clear*2;
 
-	color("Silver") RenderIf(!cutter)
+	*color("Silver") RenderIf(!cutter)
 	translate([hammerX-clear,-(searWidth/2)-clear,-searLength])
 	cube([searWidth, searWidth+clear2, searLength]);
 }
@@ -233,7 +264,7 @@ module HammAR_Sear(pivotFactor=0, cutter=false, clearance=0.01) {
 // **********
 // * Prints *
 // **********
-module HammAR_Front(cutter=false, clearance=0.01, alpha=_ALPHA_BOLT_CARRIER) {
+module HammAR_Front(cutter=false, clearance=0.01, alpha=1) {
 	CR = 1/32;
 
 	color("Olive", alpha) RenderIf(!cutter)
@@ -299,14 +330,13 @@ module HammAR_Front(cutter=false, clearance=0.01, alpha=_ALPHA_BOLT_CARRIER) {
 		HammAR_Screws(cutter=true);
 	}
 }
-module HammAR_Back(cutter=false, clearance=0.01, alpha=_ALPHA_BOLT_CARRIER) {
+module HammAR_Back(cutter=false, clearance=0.01, alpha=1) {
 	clear = cutter ? clearance : 0;
 	clear2 = clear*2;
 	CR = 1/32;
 
-	color("Chocolate", alpha) RenderIf(!cutter)
+	color("Olive", alpha) RenderIf(!cutter)
 	difference() {
-
 		union() {
 
 			// Body
@@ -321,11 +351,6 @@ module HammAR_Back(cutter=false, clearance=0.01, alpha=_ALPHA_BOLT_CARRIER) {
 			rotate([0,-90,0])
 			HammAR_ScrewSupport(boltCarrierBackLength);
 		}
-
-		// Bolt Rear Hole Chamfer
-		translate([boltCarrierMinX-boltCarrierBackLength,0,0])
-		rotate([0,90,0])
-		HoleChamfer(r1=(9/32/2), r2=CR, teardrop=true);
 
 		HammAR_Bolt(cutter=true);
 		HammAR_Screws(cutter=true);
@@ -366,26 +391,26 @@ module HammAR_Compressor(cutter=false, clearance=0.01, alpha=1) {
 // **************
 // * Assemblies *
 // **************
-module HammAR(hardware=true, prints=true, hammerAF=0, cutter=false) {
+module HammAR(hardware=true, prints=true, hammerAF=0, alpha=_ALPHA) {
 	if (_SHOW_SEAR)
-	HammAR_Sear(cutter=cutter);
+	HammAR_Sear();
 	
 	if (_SHOW_HAMMER)
-	translate([-hammerTravel*hammerAF,0,0]) {
-		HammAR_Hammer(cutter=cutter);
+	translate([hammerTravel*hammerAF,0,0]) {
+		HammAR_Hammer();
 		HammAR_Compressor();
 	}
 
 	if (_SHOW_HAMMER_SPRING)
-	HammAR_Spring(cutter=cutter);
+	HammAR_Spring();
 	
 	if (_SHOW_BOLT)
-	HammAR_Bolt(cutter=cutter);
+	HammAR_Bolt();
 
 	if (_SHOW_BOLT_CARRIER) {
-		HammAR_Screws(cutter=cutter);
-		HammAR_Front(cutter=cutter);
-		HammAR_Back(cutter=cutter);
+		HammAR_Screws();
+		HammAR_Front(alpha=alpha);
+		HammAR_Back(alpha=alpha);
 	}
 }
 
@@ -394,6 +419,16 @@ if ($preview) {
 	if (_SHOW_CUTTER)
 	#render()
 	HammAR_Cutter();
+	
+
+	*rotate([0,-90,0])
+	linear_extrude(0.5)
+	HammAR_Cutter2D();
+	
+	*rotate([0,-90,0])
+	linear_extrude(1)
+	HammAR_Cutter2D(pivot=false);
+	
 	
 	if (_SHOW_CHAMFER)
 	#render()
