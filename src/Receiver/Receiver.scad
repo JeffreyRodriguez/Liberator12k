@@ -47,6 +47,10 @@ TENSION_BOLT_LENGTH    = 12;
 // Picatinny rail mounts on top of receiver w/ M-LOK
 MLOK_BOLT           = "#8-32";   // ["M4", "#8-32", "#10-24", "1/4\"-20"]
 
+/* [Fine Tuning] */
+RECEIVER_HIGH_TOP = true;
+RECEIVER_MLOK = true;
+
 // *********
 // * Setup *
 // *********
@@ -315,7 +319,7 @@ module Receiver_Segment(length=1, chamferFront=false, chamferBack=false, highTop
 // *****************
 // * Printed Parts *
 // *****************
-module Receiver(receiverLength=ReceiverLength(), mlok=true, highTop=true, doRender=true, alpha=1, cutaway=false) {
+module Receiver(receiverLength=ReceiverLength(), mlok=RECEIVER_MLOK, highTop=RECEIVER_HIGH_TOP, doRender=true, alpha=1, cutaway=false) {
   mlokSupportHeight=0.75;
   CHAMFER_RADIUS = 1/16;
 
