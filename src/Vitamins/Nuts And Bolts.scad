@@ -202,7 +202,6 @@ module NutAcorn(spec,
     }
 };
 
-!NutAcorn(BoltSpec("1/4\"-20"));
 
 module NutHeatset(spec, teardrop=false, teardropAngle=0, extraLength=0) {
   if (teardrop) {
