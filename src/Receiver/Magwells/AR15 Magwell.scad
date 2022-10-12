@@ -44,7 +44,7 @@ module AR15_MagazineCatch(magHeight=1,
                      catchOffsetY=0.4,
                      springOffsetY=-0.125,
                      catchLength=0.265, catchHeight=Inches(0.131),
-                     extraY = 0.25, extraRadius=0.02, $fn=8) {
+                     extraY = 0.25, extraRadius=0.01, $fn=8) {
 
   translate([AR15_MagCatchX(),
              catchOffsetY,AR15_MagCatchZ()]) {
