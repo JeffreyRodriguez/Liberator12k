@@ -429,13 +429,14 @@ module ReceiverLugFront(width=Inches(0.5), extraTop=ManifoldGap(),
 //* Printed Parts *
 //*****************
 module Lower_MountFront(id=ReceiverID(), searSupport=MOUNT_SEAR_SUPPORT, alpha=1, cutaway=false, doRender=true) {
-  mountLength = 1.75-0.01;
+  mountLength = searSupport ? 1.75-0.01 : ReceiverLugFrontLength();
 
   color("Chocolate", alpha)
   RenderIf(doRender) Cutaway(cutaway)
   difference() {
     union() {
       ReceiverLugFront(doRender=false, extraTop=-ReceiverBottomZ());
+
 
       translate([ReceiverLugFrontMaxX()-LowerMaxX(),0,0])
       ReceiverBottomSlotInterface(length=mountLength, height=abs(ReceiverBottomZ()));
