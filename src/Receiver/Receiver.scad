@@ -41,7 +41,7 @@ _CUTAWAY_RECEIVER = false;
 TENSION_BOLT           = "#8-32";   // ["M4", "#8-32", "#10-24", "1/4\"-20"]
 TENSION_NUT_TYPE       = "heatset-long"; // ["none", "hex", "heatset", "heatset-long"]
 TENSION_HEAD_TYPE      = "none"; // ["none", "hex", "socket", "flat"]
-TENSION_BOLT_CLEARANCE = 0.01;
+TENSION_BOLT_CLEARANCE = 0.015;
 TENSION_BOLT_LENGTH    = 12;
 
 // Picatinny rail mounts on top of receiver w/ M-LOK
@@ -50,6 +50,7 @@ MLOK_BOLT           = "#8-32";   // ["M4", "#8-32", "#10-24", "1/4\"-20"]
 /* [Fine Tuning] */
 RECEIVER_HIGH_TOP = true;
 RECEIVER_MLOK = true;
+RECEIVER_TAKEDOWN_PIN = true;
 
 // *********
 // * Setup *
@@ -113,6 +114,8 @@ function SpindleZ() = -1;
 function LogoTextSize() = 11/32;
 function LogoTextDepth() = 1/32;
 
+mlokBoltHoles = [0,Millimeters(80),Millimeters(100)];
+
 // ************
 // * Vitamins *
 // ************
@@ -137,10 +140,10 @@ module Receiver_TensionBolts(bolt=TensionBolt(), headType=TENSION_HEAD_TYPE, nut
 }
 
 
-module Receiver_MlokBolts(headType="flat", nutType="heatset-long", length=0.5, cutter=false, clearance=0.005, teardrop=false, teardropAngle=180) {
+module Receiver_MlokBolts(holes=mlokBoltHoles, headType="flat", nutType="heatset-long", length=0.5, cutter=false, clearance=0.005, teardrop=false, teardropAngle=180) {
 
   // Top Bolts
-  for (X = [0,Millimeters(100)])
+  for (X = holes)
   translate([-0.75-X,0,ReceiverTopSlotHeight()+ReceiverSlotClearance()])
   NutAndBolt(bolt=MlokBolt(),
              boltLength=length+ManifoldGap(2),
@@ -232,7 +235,7 @@ module ReceiverBottomSlot(length=ReceiverLength(), clearance=ReceiverSlotClearan
   RoundedBoolean(r=1/32, edgeOffset=0);
 }
 
-module ReceiverTopSlot(length=ReceiverLength(), width=ReceiverTopSlotWidth(), height=ReceiverTopSlotHeight(), clearance=ReceiverSlotClearance()) {
+module ReceiverTopSlot(verticalSlot=true, length=ReceiverLength(), width=ReceiverTopSlotWidth(), height=ReceiverTopSlotHeight(), clearance=ReceiverSlotClearance()) {
   chamferRadius = 1/16;
   horizontalWidth = ReceiverTopSlotHorizontalWidth();
   horizontalHeight = ReceiverTopSlotHorizontalHeight();
@@ -240,6 +243,7 @@ module ReceiverTopSlot(length=ReceiverLength(), width=ReceiverTopSlotWidth(), he
   rotate([0,-90,0]) {
 
     // Vertical slot
+		if (verticalSlot)
     translate([0,-(width/2)-clearance])
     ChamferedSquareHole(sides=[height+clearance,width+(clearance*2)], length=length,
                         center=false, corners=false, chamferRadius=chamferRadius);
@@ -319,7 +323,7 @@ module Receiver_Segment(length=1, chamferFront=false, chamferBack=false, highTop
 // *****************
 // * Printed Parts *
 // *****************
-module Receiver(receiverLength=ReceiverLength(), mlok=RECEIVER_MLOK, highTop=RECEIVER_HIGH_TOP, doRender=true, alpha=1, cutaway=false) {
+module Receiver(receiverLength=ReceiverLength(), mlok=RECEIVER_MLOK, highTop=RECEIVER_HIGH_TOP, takedownPin=RECEIVER_TAKEDOWN_PIN, doRender=true, alpha=1, cutaway=false) {
   mlokSupportHeight=0.75;
   CHAMFER_RADIUS = 1/16;
 
@@ -329,7 +333,7 @@ module Receiver(receiverLength=ReceiverLength(), mlok=RECEIVER_MLOK, highTop=REC
     union() {
       for (highChamfer = [true,false])
       Receiver_Segment(length=ReceiverLength(), highTop=(highTop&&highChamfer),
-                      chamferFront=true, chamferBack=highChamfer);
+                      chamferFront=true, chamferBack=true);
 
       // M-LOK side slot support
       if (mlok)
@@ -363,10 +367,7 @@ module Receiver(receiverLength=ReceiverLength(), mlok=RECEIVER_MLOK, highTop=REC
       MlokSlotBack();
     }
 
-    if (mlok)
     ReceiverMlokSlot();
-		
-    if (mlok)
     Receiver_MlokBolts(cutter=true, teardrop=true);
 
     translate([-0.5,0,0])
@@ -377,7 +378,9 @@ module Receiver(receiverLength=ReceiverLength(), mlok=RECEIVER_MLOK, highTop=REC
 		if (highTop)
     ReceiverTopSlot();
 
+		if (takedownPin)
     Receiver_TakedownPin(cutter=true);
+		
     Receiver_TensionBolts(cutter=true);
   }
 }
