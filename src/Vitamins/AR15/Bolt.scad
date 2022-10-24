@@ -105,6 +105,8 @@ module AR15_FiringPin(cutter=false, clearance=0.007, extraShoulder=0) {
 }
 
 module AR15_CamPin(cutter=false, clearance=0.007, extraCamPinSquareHeight=0, extraCamPinSquareLength=0, rectangleTop=true, teardrop=true, teardropTruncate=true, teardropAngle=0) {
+	clear = cutter ? clearance : 0;
+	clear2 = clear*2;
 
 	color("Silver") RenderIf(!cutter)
 	translate([0,0,AR15_CamPinOffset()+AR15_CamPinRadius()])
@@ -112,20 +114,20 @@ module AR15_CamPin(cutter=false, clearance=0.007, extraCamPinSquareHeight=0, ext
 
 		// Rectangular potion
 		if (rectangleTop)
-		translate([-AR15_CamPinRadius()-clearance,
-		           -(AR15_CamPinSquareWidth()/2)-clearance,
+		translate([-AR15_CamPinRadius()-clear,
+		           -(AR15_CamPinSquareWidth()/2)-clear,
 		           AR15_CamPinSquareOffset()])
-		cube([AR15_CamPinDiameter()+extraCamPinSquareLength+(clearance*2),
-		      AR15_CamPinSquareWidth()+(clearance*2),
-		      AR15_CamPinSquareHeight()+clearance+extraCamPinSquareHeight]);
+		cube([AR15_CamPinDiameter()+extraCamPinSquareLength+clear2,
+		      AR15_CamPinSquareWidth()+clear2,
+		      AR15_CamPinSquareHeight()+clear+extraCamPinSquareHeight]);
 
 
 		linear_extrude(height=AR15_CamPinSquareOffset()+AR15_CamPinSquareHeight()+ManifoldGap())
 		if (teardrop)
 			rotate(teardropAngle)
-			Teardrop(r=AR15_CamPinRadius()+clearance, truncated=teardropTruncate);
+			Teardrop(r=AR15_CamPinRadius()+clear, truncated=teardropTruncate);
 		else
-			circle(r=AR15_CamPinRadius()+clearance);
+			circle(r=AR15_CamPinRadius()+clear);
 	}
 }
 
@@ -167,13 +169,13 @@ module AR15_Bolt(cutter=false, camPin=true, firingPinRetainer=false, clearance=0
   }
 }
 
-module AR15_BoltCamPinTrack(length=2, clearance=0.01) {
+module AR15_BoltCamPinTrack(extraFront=0, length=2, clearance=0.01) {
 	camTrackRadius = (AR15_CamPinSquareOffset()
 	                 +AR15_CamPinSquareHeight()+0.05);
 
 	// Rectangular portion rotation
-	translate([0,0,AR15_CamPinOffset()-clearance])
-	linear_extrude(height=AR15_CamPinDiameter()+(clearance*2))
+	translate([0,0,AR15_CamPinOffset()-extraFront-clearance])
+	linear_extrude(height=AR15_CamPinDiameter()+extraFront+(clearance*2))
 	rotate(AR15_CamPinAngle()/2)
 	hull() {
 		semicircle(od=(AR15_CamPinSquareOffset()
@@ -183,7 +185,8 @@ module AR15_BoltCamPinTrack(length=2, clearance=0.01) {
 		circle(r=AR15_CamPinSquareWidth()/2);
 	}
 
-	translate([0,0,AR15_CamPinOffset()-camTrackRadius-clearance])
+	// Tapered rotation
+	translate([0,0,AR15_CamPinOffset()-extraFront-camTrackRadius-clearance])
 	intersection() {
 
 		// Rectangular portion rotation
