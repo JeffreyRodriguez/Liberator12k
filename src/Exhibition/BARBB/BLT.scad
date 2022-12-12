@@ -29,25 +29,28 @@ use <../../Receiver/Stock.scad>;
 /* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Prints/BarrelRetainer", "Prints/Forend", "Prints/HammerCompressor", "Prints/BoltCarrier", "Prints/BoltCarrierBack", "Prints/LowerAttachment", "Prints/Trunnion", "Prints/SearSupport", "Prints/TriggerGuide", "Prints/TriggerBar", "Prints/Trigger", "Prints/Stock", "Prints/Buttpad"]
+_RENDER = ""; // ["", "Prints/BarrelRetainer", "Prints/Forend", "Prints/HammerCompressor", "Prints/BoltCarrier", "Prints/BoltCarrierBack", "Prints/LowerAttachment", "Prints/Trunnion", "Prints/SearSupport", "Prints/TriggerGuide", "Prints/TriggerBar", "Prints/Trigger", "Prints/TriggerPlunger", "Prints/Stock", "Prints/Buttpad"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;
 
 /* [Assembly] */
-_SHOW_TRUNNION = true;
-_SHOW_STOCK = true;
 _SHOW_BARREL = true;
 _SHOW_BARREL_RETAINER = true;
-_SHOW_BUTTPAD = true;
+_SHOW_TENSION_BOLTS = true;
 _SHOW_RECEIVER = true;
 _SHOW_LOWER = true;
-_SHOW_TENSION_BOLTS = true;
-_SHOW_HAMMAR=true;
+_SHOW_TRUNNION = true;
+_SHOW_STOCK = true;
+_SHOW_BUTTPAD = true;
 _SHOW_FOREND=true;
-_SHOW_TRIGGER_GUIDE=true;
-_SHOW_TRIGGER=true;
 _SHOW_SEAR_SUPPORT=true;
+_SHOW_SEAR=true;
+_SHOW_HAMMAR=true;
+_SHOW_HAMMAR_SCREWS=true;
+_SHOW_TRIGGER=true;
+_SHOW_TRIGGER_BAR=true;
+_SHOW_TRIGGER_GUIDE=true;
 
 /* [Transparency] */
 _ALPHA_RECEIVER = 1; // [0:0.1:1])
@@ -121,8 +124,16 @@ stockMinX = trunnionMinX-stockLength;
 receiverMaxX = LowerMaxX()+lowerX;
 ForendLength = 3;
 
-/* [Animation] **/
+triggerReturnX = lowerX+ReceiverLugRearMaxX();
+triggerReturnZ = ReceiverBottomZ()-0.75;
+
+searSpringX = -2;
+searSpringZ = 1;
+
+/* [Animation] */
+DEBUG_ANIMATION = false;
 T = 0; // [0:0.05:1]
+
 
 
 // *********
@@ -130,7 +141,7 @@ T = 0; // [0:0.05:1]
 // *********
 $fa = ResolutionFa();
 $fs = UnitsFs()*ResolutionFs();
-//$t = AnimationDebug(ANIMATION_STEP_CHARGER_RESET, T=T);
+$t = DEBUG_ANIMATION ? AnimationDebug(ANIMATION_STEP_CHARGE, T=T) : $t;
 //$t = 0;
 
 // ************
@@ -161,6 +172,24 @@ module TriggerBarPin(cutter=false, clearance=0.008) {
 	rotate([90,0,0])
 	cylinder(d=Millimeters(2.5)+clear, h=Millimeters(20), center=true);
 }
+module TriggerSpring(cutter=false, clearance=0.01) {
+	color("Silver") RenderIf(!cutter)
+	translate([triggerReturnX+0.375,0,triggerReturnZ])
+	rotate([0,90,0])
+	Spring(CommonSmallLongSpringSpec(),
+	       compressed=false,
+	       cutter=cutter, clearance=clearance);
+}
+module SearReturnSpring(cutter=false, clearance=0.01) {
+	color("Silver") RenderIf(!cutter)
+	translate([searSpringX+0.375,0,searSpringZ])
+	rotate([0,90,0])
+	Spring(CommonSmallShortSpringSpec(),
+	       compressed=false,
+	       cutter=cutter, clearance=clearance);
+}
+///
+
 // **********
 // * Shapes *
 // **********
@@ -260,6 +289,7 @@ module SearSupport(cutter=false, clearance=0.01, alpha=_ALPHA_SEAR_SUPPORT, cuta
 		
 		HammAR_Cutter();
 		
+		translate([-TriggerTravel(),0,0])
 		TriggerBar(cutter=true);
 	}
 }
@@ -416,11 +446,11 @@ module Buttpad(clearance=0.008, alpha=1) {
 		translate([HammAR_X()-HammAR_Length()-clearance,0,0])
 		rotate([0,-90,0])
 		linear_extrude(stockLength+clearance, center=false)
-		HammAR_Cutter2D(camTrack=false, pivot=false);
+		HammAR_Cutter2D(camTrack=false, pivot=false, clearance=0.02);
 		
 		translate([stockMinX,0,0])
 		mirror([1,0,0])
-		HammAR_Chamfer(camTrack=false, pivot=false);
+		HammAR_Chamfer(camTrack=false, pivot=false, clearance=0.02);
 		
 		TensionBolts(cutter=true);
 		
@@ -565,16 +595,18 @@ module TriggerBar(cutter=false, clearance=0.008) {
 	color("Olive") RenderIf(!cutter)
 	difference() {
 		union() {
+			
 			hull() {
-				translate([-0.1875,-(width/2)-clear,1-clear])
+				translate([-0.25,-(width/2)-clear,1-clear])
 				ChamferedCube([lowerX, width+clear2, width+clearCR+clear2],
 				              r=CR,
 				              teardropFlip=[true,true,false]);
 				
-				translate([-0.5,-(width/2)-clear,1.25-clear])
+				// Angled tip (long)
+				translate([-0.625,-(width/2)-clear,1.25+clearCR+clear])
 				mirror([0,0,1])
 				ChamferedCube([1, width+clear2, (1/16)+clearCR+clear2],
-				              r=CR,
+				              r=(1/32),
 				              teardropFlip=[true,true,false]);
 			}
 			
@@ -611,7 +643,37 @@ module Trigger(cutter=false, clearance=0.015, alpha=_ALPHA_TRIGGER) {
 										 TriggerHeight()+0.5+clear2],
 										 r=1/16);
 		}
+		
+		TriggerSpring(cutter=true);
+		TriggerPlunger(cutter=true);
 	}
+}
+module TriggerPlunger(cutter=false, clearance=0.01, alpha=0.5) {
+	CR = 1/32;
+	clear = cutter ? clearance : 0;
+	clear2 = clear*2;
+	clearCR = cutter ? CR : 0;
+	width = 0.3125;
+	
+	travelCut = cutter ? 0.375 : 0;
+	
+	color("Chocolate", alpha) RenderIf(!cutter)
+	difference() {
+		union() {
+			
+			// Body
+			translate([triggerReturnX,0,triggerReturnZ])
+			rotate([0,90,0])
+			ChamferedCylinder(r1=(width/2)+clear, r2=CR, h=1.125+travelCut);
+			
+			// Key
+			*translate([triggerReturnX+0.375-clearCR,-(1/8/2)-clear,triggerReturnZ])
+			ChamferedCube([0.125+clearCR+travelCut, (1/8)+clear2, (width/2)+(1/16)+clear], r=CR);
+		}
+		
+		TriggerSpring(cutter=true);
+	}
+	
 }
 ///
 
@@ -620,23 +682,35 @@ ScaleToMillimeters()
 if ($preview) {
 	
 
-	searAF = SubAnimate(ANIMATION_STEP_FIRE, end=0.1)
+  triggerAF = SubAnimate(ANIMATION_STEP_FIRE, end=0.5)
+	          - SubAnimate(ANIMATION_STEP_CHARGE);
+	searAF = SubAnimate(ANIMATION_STEP_FIRE, end=0.5)
 	       - SubAnimate(ANIMATION_STEP_LOAD, start=0.35, end=0.8);
-	hammerAF = SubAnimate(ANIMATION_STEP_FIRE, start=0.11, end=0.2)
-	         - SubAnimate(ANIMATION_STEP_UNLOAD, start=0.75, end=0.91);
+	hammerAF = SubAnimate(ANIMATION_STEP_FIRE, start=0.5)
+	         - SubAnimate(ANIMATION_STEP_LOAD, start=0.84);
 	chargeAF = SubAnimate(ANIMATION_STEP_UNLOAD)
 	         - SubAnimate(ANIMATION_STEP_LOAD);
 	chargerRotationAF = SubAnimate(ANIMATION_STEP_UNLOCK)
 	                  - SubAnimate(ANIMATION_STEP_LOCK);
+	disconnectorAF = SubAnimate(ANIMATION_STEP_LOAD, start=0.84, end=0.9)
+	               - SubAnimate(ANIMATION_STEP_LOCK);
+	echo("Disconnector AF: ", disconnectorAF);
 	
 	if (_SHOW_BARREL)
 	Barrel();
 	
-	translate([-TriggerTravel()*searAF,0,0]) {
-		
-		TriggerBarPin();
+	translate([-TriggerTravel()*triggerAF,0,0]) {
 		
 		if (_SHOW_TRIGGER)
+		TriggerSpring();
+		
+		if (_SHOW_TRIGGER)
+		TriggerPlunger();
+		
+		if (_SHOW_TRIGGER_BAR)
+		TriggerBarPin();
+		
+		if (_SHOW_TRIGGER_BAR)
 		TriggerBar();
 		
 		if (_SHOW_TRIGGER)
@@ -654,11 +728,15 @@ if ($preview) {
 	
 	if (_SHOW_TENSION_BOLTS)
 	TensionBolts();
+	
 	if (_SHOW_HAMMAR)
 	HammAR(rotationAF=chargerRotationAF,
 	       travelAF=chargeAF,
 	       searAF=searAF,
 	       hammerAF=hammerAF,
+	       disconnectorAF=disconnectorAF,
+	       screws=_SHOW_HAMMAR_SCREWS,
+	       sear=_SHOW_SEAR,
 	       alpha=_ALPHA_BOLT_CARRIER);
 	
 	if (_SHOW_SEAR_SUPPORT)
@@ -759,8 +837,17 @@ if ($preview) {
 		if (!_RENDER_PRINT)
 			Trigger();
 		else
-			rotate([90,0,0])
+			rotate([0,-90,0])
+		  translate([-lowerX,0,-lowerZ])
 			Trigger();
+
+	if (_RENDER == "Prints/TriggerPlunger")
+		if (!_RENDER_PRINT)
+			TriggerPlunger();
+		else
+			rotate([0,-90,0])
+		  translate([-lowerX,0,-lowerZ])
+			TriggerPlunger();
 
 	if (_RENDER == "Prints/TriggerBar")
 		if (!_RENDER_PRINT)

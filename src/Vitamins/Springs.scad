@@ -39,6 +39,30 @@ function CommonHammerSpringSpec() = [
 	["SpringWireDiameter", Inches(0.059)]
 ];
 
+function CommonSmallShortSpringSpec() = [
+    ["SpringSpec", "Disconnector Spring"],
+
+    ["SpringOuterDiameter", Inches(0.23)],
+    ["SpringPitch", Inches(0.05)],
+
+    ["SpringFreeLength", Inches(0.4)],
+    ["SpringSolidHeight", Inches(0.3125)],
+
+    ["SpringWireDiameter", Inches(0.025)]
+  ];
+
+function CommonSmallLongSpringSpec() = [
+    ["SpringSpec", "Sear Return Spring"],
+
+    ["SpringOuterDiameter", Inches(0.25)],
+    ["SpringPitch", Inches(0.075)],
+
+    ["SpringFreeLength", Inches(1.2)],
+    ["SpringSolidHeight", Inches(0.3)],
+
+    ["SpringWireDiameter", Inches(0.025)]
+  ];
+
 // *************************
 // * Spring Spec Accessors *
 // *************************

@@ -8,6 +8,7 @@ use <../../../Meta/Conditionals/RenderIf.scad>;
 use <../../../Shapes/Semicircle.scad>;
 use <../../../Shapes/Teardrop.scad>;
 use <../../../Shapes/Components/T Lug.scad>;
+use <../../../Shapes/Components/Pivot.scad>;
 use <../../../Shapes/Chamfer.scad>;
 use <../../../Vitamins/Springs.scad>;
 use <../../../Vitamins/Nuts And Bolts.scad>;
@@ -20,23 +21,26 @@ use <../../../Receiver/FCG.scad>;
 /* [Export] */
 
 // Select a part, Render (F6), then Export to STL (F7)
-_RENDER = ""; // ["", "Prints/Front", "Prints/Back", "Prints/Compressor"]
+_RENDER = ""; // ["", "Prints/Front", "Prints/Back", "Prints/Compressor", "Prints/Disconnector"]
 
 // Reorient the part for printing?
 _RENDER_PRINT = true;
 
 /* [Assembly] */
 _SHOW_BOLT = true;
-_SHOW_BOLT_CARRIER=true;
 _SHOW_HAMMER = true;
 _SHOW_HAMMER_SPRING = true;
+_SHOW_SCREWS = true;
 _SHOW_SEAR = true;
 _SHOW_COMPRESSOR = true;
+_SHOW_FRONT=true;
+_SHOW_BACK=true;
 _SHOW_CHAMFER = true;
 _SHOW_CUTTER = true;
 
 /* [Transparency] */
 _ALPHA = .3; // [0:0.1:1])
+_COMPRESSOR_ALPHA = .3; // [0:0.1:1])
 
 /* [Cutaway] */
 _CUTAWAY_COMPRESSOR = false;
@@ -52,6 +56,8 @@ boltCarrierMaxX = -0.125;
 travelFactor = 0; // [0:0.1:1]
 hammerFactor = 0; // [0:0.1:1]
 searPivotFactor = 0; // [0:0.1:1]
+rotateFactor = 0; // [0:0.1:1]
+disconnectorAF = 0; // [0:0.1:1]
 
 // Derived values
 boltCarrierRadius = boltCarrierDiameter/2;
@@ -60,6 +66,7 @@ boltCarrierMinX = -(AR15_BoltLockedLength()+AR15_FiringPin_Extension());
 boltCarrierLength = abs(boltCarrierMinX-boltCarrierMaxX);
 boltCarrierBackMinX = boltCarrierMinX-hammerTravel-1.5;
 boltCarrierBackLength = abs(boltCarrierBackMinX-boltCarrierMinX);
+boltCarrierBackMaxX = boltCarrierBackMinX + boltCarrierBackLength;
 
 hammerSpringX = boltCarrierBackMinX+0.25;
 hammerX  = boltCarrierMinX-hammerTravel;
@@ -68,6 +75,8 @@ searExtension = Inches(1.3125);
 searWidth = Inches(0.25);
 searPinX = hammerX+2.125;
 searPinZ = (7/8);
+disconnectorPinY = 0;
+disconnectorPinZ = -(7/16);
 
 // Variable access functions
 function HammAR_X() = boltCarrierMinX + boltCarrierLength;
@@ -79,6 +88,14 @@ function HammAR_Travel() = 3;
 // *********
 $fa = ResolutionFa();
 $fs = UnitsFs()*ResolutionFs();
+
+// **************
+// * Operations *
+// **************
+module HammAR_DisconnectorPivot(factor=0) {
+	Pivot2([0,disconnectorPinY, disconnectorPinZ], [-22.5,0,0], factor)
+	children();
+}
 
 // **********
 // * Shapes *
@@ -314,6 +331,46 @@ module HammAR_Handle(cutter=false, clearance=0.01) {
 	translate([0,0.25,-0.3125])
 	cylinder(r=(1/4/2)+clear, h=2);
 }
+module HammAR_DisconnectorPin(cutter=false, clearance=0.008) {
+	
+	clear = cutter ? clearance : 0;
+	clear2 = clear*2;
+	
+	color("Silver") RenderIf(!cutter)
+	rotate([-22.5,0,0])
+	translate([boltCarrierBackMaxX,disconnectorPinY,disconnectorPinZ])
+	rotate([0,-90,0])
+	cylinder(d=Millimeters(2.5)+clear, h=Millimeters(19));
+}
+module Hammar_DisconnectorSpring(cutter=false, clearance=0.005) {
+	clear = cutter ? clearance : 0;
+	clear2 = clear*2;
+	
+	diameter = Inches(1/16);
+	radius = diameter/2;
+	
+	pinBaseY = sin(90+45+22.5)*0.375;
+	pinBaseZ = cos(90+45+22.5)*0.375;
+	
+	color("Silver") RenderIf(!cutter) {
+		
+		// Pin
+		translate([boltCarrierBackMinX,0,0])
+		translate([0,pinBaseY,pinBaseZ])
+		rotate([-22.5,0,0])
+		rotate([0,90+6,0])
+		cylinder(r=radius+clear, h=boltCarrierBackLength);
+	}
+	
+	// Travel Slot
+	if (cutter)
+	translate([boltCarrierBackMinX+0.5,0,0])
+	translate([0,pinBaseY,pinBaseZ])
+	mirror([0,0,1])
+	rotate([22.5,0,0])
+	translate([0,-radius-clear,0])
+	cube([boltCarrierBackLength, diameter+clear2, 0.25]);
+}
 ///
 
 // **********
@@ -425,6 +482,15 @@ module HammAR_Back(cutter=false, clearance=0.01, alpha=1) {
 			                   h=boltCarrierBackLength,
 			                   teardropTop=true);
 			
+			// Disconnector pivot support
+			rotate([-22.5,0,0])
+			translate([boltCarrierBackMaxX,disconnectorPinY,disconnectorPinZ])
+			rotate([0,-90,0])
+			hull() {
+				ChamferedCylinder(r1=0.125,r2=CR,h=0.5);
+				ChamferedCylinder(r1=0.125,r2=0.125,h=1);
+			}
+			
 			translate([boltCarrierMinX,0,0])
 			rotate([0,-90,0])
 			HammAR_ScrewSupport(boltCarrierBackLength);
@@ -436,11 +502,16 @@ module HammAR_Back(cutter=false, clearance=0.01, alpha=1) {
 		ChamferedCircularHole(r1=0.15, r2=(1/16), h=0.25);
 		
 
+		HammAR_SearSlot();
 		HammAR_Bolt(cutter=true);
 		HammAR_Screws(cutter=true);
 		HammAR_Hammer(cutter=true);
 		HammAR_Spring(cutter=true);
-		HammAR_SearSlot();
+		HammAR_DisconnectorPin(cutter=true);
+		Hammar_DisconnectorSpring(cutter=true);
+		
+		// TODO: Dehackify this
+		for (P = [0:0.1:1]) HammAR_Disconnector(pivot=P, cutter=true);
 	}
 }
 module HammAR_Compressor(cutter=false, clearance=0.01, alpha=1) {
@@ -478,21 +549,100 @@ module HammAR_Compressor(cutter=false, clearance=0.01, alpha=1) {
 		HammAR_Hammer(cutter=true);
 	}
 }
+module HammAR_Disconnector(pivot=0, cutter=false, clearance=0.01, alpha=1) {
+	CR=1/32;
+	
+	clear = cutter ? clearance : 0;
+	clear2 = clear*2;
+	
+	dcLength = 0.25;
+	dcTabLength = 0.5;
+	pivotRadius = 0.125;
+	
+	ringWidth = 0.125;
+	
+	color("Tan") RenderIf(!cutter)
+	rotate([-22.5,0,0])
+	HammAR_DisconnectorPivot(pivot)
+	difference() {
+		union() {
+			
+			hull() {
+				// Pivot support
+				translate([boltCarrierBackMaxX+clear,0,disconnectorPinZ])
+				rotate([0,-90,0])
+				ChamferedCylinder(r1=pivotRadius+clear, h=dcLength+clear2,
+				                  r2=CR,teardropTop=true);
+				
+				// Pivot arm
+				translate([boltCarrierBackMaxX+clear,0,disconnectorPinZ-0.125])
+				mirror([1,0,0])
+				ChamferedCube([0.25+clear2,dcTabLength,pivotRadius*2],
+				              r=CR);
+			}
+			
+			// Disconnector block
+			difference() {
+				intersection() {
+					
+					// Hammer block
+					hull() {
+						
+						// Blocker ring
+						translate([boltCarrierBackMaxX+clear,0,0])
+						rotate([0,-90,0])
+						ChamferedCylinder(r1=boltCarrierRadius+clear,
+															h=ringWidth+clear2, r2=CR, teardropTop=true);
+						
+						// Pivot support
+						translate([boltCarrierBackMaxX+clear,0,disconnectorPinZ])
+						rotate([0,-90,0])
+						ChamferedCylinder(r1=pivotRadius+clear, r2=CR, h=ringWidth+clear2);
+					}
+					
+					// Only part of the ring
+					translate([boltCarrierBackMaxX+clear,
+											disconnectorPinY+CR,
+											disconnectorPinZ-(1/8)-clear])
+					mirror([1,0,0])
+					mirror([0,1,0])
+					ChamferedCube([ringWidth+clear2,
+												 SpringOuterRadius(CommonHammerSpringSpec())+0.0625+CR+clear,
+												 -disconnectorPinZ-pivotRadius+(1/16)+clear2],
+												r=CR);
+				}
+				
+				// Hammer cutout
+				translate([boltCarrierBackMaxX+clear,0,0])
+				rotate([0,-90,0])
+				ChamferedCircularHole(r1=SpringOuterRadius(CommonHammerSpringSpec())+clearance,
+															r2=CR, h=ringWidth);
+			}
+		}
+	
+		if (!cutter)
+		rotate([22.5,0,0])
+		HammAR_DisconnectorPin(cutter=true);
+	}
+}
 ///
 
 // **************
 // * Assemblies *
 // **************
-module HammAR(hardware=true, prints=true, sear=true, rotationAF=0, travelAF=0, hammerAF=0, searAF=0, alpha=_ALPHA) {
+module HammAR(hardware=true, prints=true, sear=true, screws=true, disconnectorAF=0, rotationAF=0, travelAF=0, hammerAF=0, searAF=0, alpha=_ALPHA) {
 	if (_SHOW_SEAR && sear) {
 		HammAR_Sear(pivot=searAF);
 		HammAR_SearPin();
 	}
 	
-	HammAR_Handle();
-	
 	translate([-HammAR_Travel()*travelAF,0,0])
 	rotate([22.5*rotationAF,0,0]) {
+		
+		HammAR_DisconnectorPin();
+		Hammar_DisconnectorSpring();
+	
+		HammAR_Disconnector(pivot=disconnectorAF);
 		
 		if (_SHOW_BOLT)
 		HammAR_Bolt();
@@ -502,19 +652,23 @@ module HammAR(hardware=true, prints=true, sear=true, rotationAF=0, travelAF=0, h
 			HammAR_Hammer();
 			
 			if (_SHOW_COMPRESSOR)
-			HammAR_Compressor();
+			HammAR_Compressor(alpha=_COMPRESSOR_ALPHA);
 		}
 
 		if (_SHOW_HAMMER_SPRING)
 		HammAR_Spring();
+		
+		if (_SHOW_SCREWS && screws)
+		HammAR_Screws();
 
-		if (_SHOW_BOLT_CARRIER) {
-			HammAR_Screws();
-			HammAR_Front(alpha=alpha);
-			HammAR_Back(alpha=alpha);
-		}
+		if (_SHOW_FRONT)
+		HammAR_Front(alpha=alpha);
+		
+		if (_SHOW_BACK)
+		HammAR_Back(alpha=alpha);
 	}
 }
+///
 
 ScaleToMillimeters()
 if ($preview) {
@@ -540,7 +694,11 @@ if ($preview) {
 	translate([boltCarrierMaxX-HammAR_Length(),0,0])
 	HammAR_Chamfer();
 	
-	HammAR(travelAF=travelFactor, hammerAF=hammerFactor, searAF=searPivotFactor);
+	HammAR(rotationAF=rotateFactor,
+	       travelAF=travelFactor,
+	       hammerAF=hammerFactor,
+	       searAF=searPivotFactor,
+	       disconnectorAF=disconnectorAF);
 } else {
 
   // *****************
@@ -569,6 +727,14 @@ if ($preview) {
 			rotate([0,90,0])
 			translate([-hammerX,0,0])
 			HammAR_Compressor();
+		
+	if (_RENDER == "Prints/Disconnector")
+		if (!_RENDER_PRINT)
+			HammAR_Disconnector();
+		else
+			rotate([0,90,0])
+			translate([-hammerX,0,0])
+			HammAR_Disconnector();
 
 	// ************
 	// * Hardware *
