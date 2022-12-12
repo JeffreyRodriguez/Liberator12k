@@ -607,6 +607,55 @@ module ChargingHandleSpring(cutter=false, clearance=0.002) {
 }
 ///
 
+//**********
+//* Shapes *
+//**********
+module TriggerBase(clearance=0.015, frontLeg=true, backLeg=true) {
+  frontExtra = 0.3125;
+  backHeight = 0.375;
+	
+	difference() {
+		union() {
+
+			// Front Leg
+			if (frontLeg)
+			translate([-LowerMaxX()+ReceiverLugRearMaxX()+TriggerTravel()+clearance,
+			           -(TriggerWidth()/2),
+			           LowerOffsetZ()-TriggerHeight()+clearance])
+			ChamferedCube([ReceiverLugFrontMinX()-ReceiverLugRearMaxX()-TriggerTravel()-(clearance*2),
+			               TriggerWidth(),
+			               TriggerHeight()-(clearance*2)], r=1/16);
+
+			// Body
+			translate([-LowerMaxX(),
+			           -(TriggerWidth()/2),
+			           LowerOffsetZ()-TriggerHeight()+clearance])
+			ChamferedCube([ReceiverLugFrontMinX()+frontExtra,
+			               TriggerWidth(),
+			               TriggerHeight()-abs(ReceiverLugFrontZ())-clearance], r=1/16);
+
+
+			// Back Leg
+			if (backLeg)
+			translate([-LowerMaxX()+ReceiverLugRearMaxX()-TriggerTravel()-clearance,
+			           -(TriggerWidth()/2),
+			           LowerOffsetZ()-TriggerHeight()+clearance])
+			ChamferedCube([abs(ReceiverLugRearMinX()),
+			               TriggerWidth(),
+			               backHeight-clearance], r=1/16);
+		}
+		
+
+		// Trigger finger chamfer
+		translate([-LowerMaxX()+TriggerFingerRadius()+TriggerTravel()+SearWidth()+0.5-0.15,
+							 -TriggerWidth()/2, LowerOffsetZ()-GripCeiling()-TriggerFingerRadius()])
+		rotate([-90,0,0])
+		ChamferedCircularHole(r1=TriggerFingerRadius(), r2=1/16,
+													h=TriggerWidth());
+	}
+}
+///
+
 //*****************
 //* Printed Parts *
 //*****************
@@ -1058,43 +1107,13 @@ module SearSupportTab(cutter=false, clearance=0.015, searClearance=SEAR_CLEARANC
 
   }
 }
-module Trigger(width=0.5, clearance=0.015, alpha=1) {
-  sideplateWidth = (TriggerWidth()/2)
-                 - (SearWidth(SEAR_CLEARANCE)/2);
+module Trigger(clearance=0.015, alpha=1) {
   clearance2 = clearance*2;
-  width = TriggerWidth();
-
-  frontExtra = 0.3125;
-  backHeight = 0.375;
 
   color("Olive", alpha)
   render()
   difference() {
-    union() {
-
-      // Body
-      translate([-LowerMaxX()+ReceiverLugRearMaxX()+TriggerTravel()+clearance,-(width/2), LowerOffsetZ()-TriggerHeight()+clearance])
-      ChamferedCube([ReceiverLugFrontMinX()-ReceiverLugRearMaxX()-TriggerTravel()-(clearance*2),
-            width,
-            TriggerHeight()-(clearance*2)], r=1/16);
-
-      // Front Leg
-      translate([-LowerMaxX(),
-                  -(width/2),
-                   LowerOffsetZ()-TriggerHeight()+clearance])
-      ChamferedCube([ReceiverLugFrontMinX()+frontExtra,
-            width,
-            TriggerHeight()-abs(ReceiverLugFrontZ())-clearance], r=1/16);
-
-
-      // Back Leg
-      translate([-LowerMaxX()+ReceiverLugRearMaxX()-TriggerTravel()-clearance,
-                  -(width/2),
-                   LowerOffsetZ()-TriggerHeight()+clearance])
-      ChamferedCube([abs(ReceiverLugRearMinX()),
-            width,
-            backHeight-clearance], r=1/16);
-    }
+		TriggerBase();
 
     // Trigger finger chamfer
     translate([-LowerMaxX()+TriggerFingerRadius()+TriggerTravel()+SearWidth()+0.5-0.15,
