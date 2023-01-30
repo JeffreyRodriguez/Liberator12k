@@ -24,7 +24,7 @@
             "HAMMER_BOLT_SLEEVE_DIAMETER_": "7.14375",
             "HAMMER_BOLT_SLEEVE_CLEARANCE_": "0.254",
             "RECOIL_PLATE_CONTOURED": "true",
-            "FIRING_PIN_BODY_DIAMETER_": "2.38125",
+            "FIRING_PIN_BODY_DIAMETER_": "7.9375",
             "FIRING_PIN_BODY_LENGTH_": "25.4",
             "FIRING_PIN_CLEARANCE_": "0.254",
             "FIRING_PIN_DIAMETER_": "2.413",
@@ -37,7 +37,6 @@
             "SEAR_CLEARANCE_": "0.127",
             "SEAR_PIN_DIAMETER_": "2.5",
             "SEAR_PIN_CLEARANCE_": "0.254"
-            
         }
     },
     "fileFormatVersion": "1"
