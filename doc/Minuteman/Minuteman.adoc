@@ -162,10 +162,10 @@ but it will take longer.
 |===
 
 <<<
-include::FCG_BOM_{units}.adoc
-include::Frame_BOM_{units}.adoc
-include::Lower_BOM_{units}.adoc
-include::Stock_BOM_{units}.adoc
+include::FCG_BOM_{units}.adoc[]
+include::Frame_BOM_{units}.adoc[]
+include::Lower_BOM_{units}.adoc[]
+include::Stock_BOM_{units}.adoc[]
 
 include::FCG.adoc[]
 
