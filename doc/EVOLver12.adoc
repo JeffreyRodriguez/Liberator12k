@@ -26,7 +26,7 @@ Docs are very incomplete, join the chat to help move the ball on this design.
 === Hardware Kit vs DIY
 If you purchased a kit, all the machining is already done for you.
 
-To DIY all the parts yourself, refer to the <<Minuteman DIY Machining>> and 
+To DIY all the parts yourself, refer to the <<Minuteman DIY Machining>> and
 <<EVOLver DIY Machining>> appendices.
 The project includes several fixtures and jigs to assist you in DIY machining.
 
@@ -52,18 +52,18 @@ include::Minuteman/Minuteman.adoc[]
 == {model} Forend
 
 .{model} Forend Assembly
-image::../.views/Forend/Evolver_{model}/Forend.png[]
+image::../.views/Forend/Evolver_{model}/ForendOnly.png[]
 
 <<<
 === Prints and BOM
-include::Forend/TopBreak_BOM_{units}.adoc[]
+include::Forend/EVOLver_BOM_{units}.adoc[]
 
 <<<
 NOTE: STL Files Location: `Forend/Prints/`
 
-include::Forend/Evolver_Prints.adoc[]
+include::Forend/EVOLver_Prints.adoc[]
 
-include::Forend/Evolver.adoc[]
+include::Forend/EVOLver.adoc[]
 
 include::Common/Dimensions.adoc[]
 

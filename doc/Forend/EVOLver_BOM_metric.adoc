@@ -1,0 +1,12 @@
+.{model} Forend Bill of Materials
+TODO
+[cols="1,2,3,1"]
+|===
+|Component|Purpose|Part|Quantity
+
+|
+|
+|
+|
+
+|===

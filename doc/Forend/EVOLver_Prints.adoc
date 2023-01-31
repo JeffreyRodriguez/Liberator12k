@@ -1,0 +1,20 @@
+.{model} Forend Printed Parts
+TODO
+[cols="1,1,1"]
+|===
+|Part|Filament Used|Print Time @ 0.4mm
+
+|
+|
+|
+
+|===
+
+[cols="^1,^1,^1"]
+|===
+
+|
+|
+|
+
+|===
