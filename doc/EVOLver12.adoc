@@ -67,7 +67,7 @@ include::Forend/EVOLver.adoc[]
 
 include::Common/Dimensions.adoc[]
 
-include::Minuteman/FCG_DIY_Machining.adoc[]
+include::Minuteman/DIY_Machining.adoc[]
 
 include::Forend/EVOLver_DIY_Machining.adoc[]
 

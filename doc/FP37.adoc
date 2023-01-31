@@ -26,7 +26,7 @@ your ammunition and loadings.
 === Hardware Kit vs DIY
 If you purchased a kit, all the machining is already done for you.
 
-To DIY all the parts yourself, refer to the <<Minuteman DIY Machining>> and 
+To DIY all the parts yourself, refer to the <<Minuteman DIY Machining>> and
 <<FP37 DIY Machining>> appendices.
 The project includes several fixtures and jigs to assist you in DIY machining.
 
@@ -67,7 +67,7 @@ include::Forend/TopBreak.adoc[]
 
 include::Common/Dimensions.adoc[]
 
-include::Minuteman/FCG_DIY_Machining.adoc[]
+include::Minuteman/DIY_Machining.adoc[]
 
 include::Forend/FP37_DIY_Machining.adoc[]
 

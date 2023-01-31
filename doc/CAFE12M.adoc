@@ -25,6 +25,15 @@ your own hardware, but it's very doable.
 
 TIP: This document is specific to the {model}.
 
+=== DIY Hardware
+To DIY all the parts yourself, refer to the <<Minuteman DIY Machining>> and
+<<CAFE DIY Machining>> appendices.
+The project includes several fixtures and jigs to assist you in DIY machining.
+
+A fully outfitted shop with a lathe, mill, and drill press will produce the best
+looking and most functional product.
+But you can get by with hand tools, a drill, and an angle grinder.
+
 === Minuteman Receiver
 The {model} uses the "Minuteman" universal receiver, a core component of many
 designs in the Liberator12k family. Think of it like an AR15 lower receiver.
@@ -58,7 +67,7 @@ include::Forend/TopBreak.adoc[]
 
 include::Common/Dimensions.adoc[]
 
-include::Minuteman/FCG_DIY_Machining.adoc[]
+include::Minuteman/DIY_Machining.adoc[]
 
 include::Forend/CAFE_DIY_Machining.adoc[]
 
