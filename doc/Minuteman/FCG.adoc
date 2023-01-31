@@ -41,7 +41,7 @@ include::FCG_BOM_{units}.adoc[]
 ===== Trigger Subassembly
 
 .Trigger X-Ray
-image::../.views/Receiver/FCG_{units}/XRay_Assembly.png[]
+image::../.views/Receiver/FCG_{units}/XRay_Trigger.png[]
 
 . Insert the _TriggerMiddle_ into the _Trigger_. It should slide freely.
 . Drop the _Sear Return Spring_ into the _TriggerMiddle_.
