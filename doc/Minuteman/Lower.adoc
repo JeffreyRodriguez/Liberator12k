@@ -45,7 +45,7 @@ Insert Lower Pin Retaining Pin, press it into the mount until flush.
 Grind a small groove around the center of the retaining pin to act as a detent. This secures the pin in place.
 
 ===== Subassembly
-Requires the trigger from the [Fire Control Group](../FCG.md).
+Requires the trigger from the <<Fire Control Group>>.
 
 . Lay Lower_Left flat-side up.
 . Install Lower_MountFront - the extended portion points left.
