@@ -12,11 +12,11 @@ DIY-ability is by design, for your benefit. Thanks for considering the store,
 but if you prefer to DIY I understand and fully support your decision.
 At this time DIY hardware is not fully documented.
 
-Check out the https://github.com/JeffreyRodriguez/Liberator12k/wiki/DIY-Machining[GitHub Wiki] page on DIY machining.
-It's a work in progress, but at least gives a place for the community to work on
-helping with documentation.
-
 === Incomplete Documentation Ahead
 This portion of the documentation is incomplete, contributions are welcome.
+
+Check out the https://github.com/JeffreyRodriguez/Liberator12k/wiki/DIY-Machining[GitHub Wiki] page on DIY machining.
+It's a work in progress, but at least gives a place for the community to work on
+helping with documentation between releases.
 
 include::FCG_DIY_Machining.adoc[]
