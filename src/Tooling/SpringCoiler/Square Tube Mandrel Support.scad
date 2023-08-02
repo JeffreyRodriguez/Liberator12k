@@ -44,7 +44,7 @@ echo("Pitch Radii: ", pitch_radius(units_per_tooth,n1)
                      +pitch_radius(units_per_tooth,n2));
 
 module BearingSet(height=0.75, cutter=true) {
-  for (Z = [0,height-BearingHeight(DEFAULT_BEARING)])
+  for (Z = [0,height-BearingWidth(DEFAULT_BEARING)])
   translate([0,0,Z])
   Bearing(spec=DEFAULT_BEARING, solid=cutter);
 }

@@ -2,68 +2,57 @@ use <../Meta/Units.scad>;
 //
 // Square Tube dimensions
 //
-BearingInnerRadius     = 1;
-BearingOuterRadius     = 2;
-BearingHeight          = 3;
-BearingRaceRadius      = 4;
-BearingFn              = 5;
-BearingClearanceLoose  = 6; // Added to width, should slide freely
-BearingClearanceSnug   = 7; // Added to width, should not slip (default)
+BearingInnerDiameter     = 1;
+BearingOuterDiameter     = 2;
+BearingWidth            = 3;
+BearingRaceDiameter      = 4;
+BearingFn                = 5;
 
-function BearingClearanceSnug()  = BearingClearanceSnug;
-function BearingClearanceLoose() = BearingClearanceLoose;
+function BearingClearanceSnug()  = Inches(0.01);
+function BearingClearanceLoose() = Inches(0.02);
 
-function BearingClearance(spec, clearance)     = (clearance != undef) ? lookup(clearance, spec) : 0;
-function BearingInnerRadius(spec, clearance)   = lookup(BearingInnerRadius, spec) + BearingClearance(spec, clearance);
-function BearingInnerDiameter(spec, clearance) = BearingInnerRadius(spec, clearance)*2;
-function BearingOuterRadius(spec, clearance)   = lookup(BearingOuterRadius, spec) + BearingClearance(spec, clearance);
-function BearingOuterDiameter(spec, clearance) = BearingOuterRadius(spec, clearance)*2;
-function BearingHeight(spec)                   = lookup(BearingHeight, spec);
+function BearingInnerDiameter(spec, clearance) = lookup(BearingInnerDiameter, spec) + clearance;
+function BearingInnerRadius(spec, clearance)   = BearingInnerDiameter(spec, clearance)/2;
+function BearingOuterDiameter(spec, clearance) = lookup(BearingOuterRadius, spec) + clearance;
+function BearingOuterRadius(spec, clearance)   = BearingOuterDiameter(spec, clearance)/2;
+function BearingWidth(spec)                    = lookup(BearingWidth, spec);
 function BearingRaceRadius(spec)               = lookup(BearingRaceRadius, spec);
-function BearingFn(spec)                       = lookup(BearingFn, spec);
-
 
 // 608 Bearing
 Bearing608 = [
-  [BearingInnerRadius,    0.157],
-  [BearingOuterRadius,    0.433],
-  [BearingHeight,         0.276],
-  [BearingRaceRadius,     0.2375],
-  [BearingFn,             40],
-  [BearingClearanceLoose, 0.02], // TODO: Verify
-  [BearingClearanceSnug,  0.01], // TODO: Verify
+  [BearingInnerDiameter,    Millimeters(8)],
+  [BearingOuterDiameter,    Millimeters(22)],
+  [BearingWidth,            Millimeters(7)],
+  [BearingRaceDiameter,     Millimeters(12)],
 ];
 function Spec_Bearing608() = Bearing608;
 
 // 623 Bearing
 Bearing623 = [
-  [BearingInnerRadius,    Millimeters(3/2)],
-  [BearingOuterRadius,    Millimeters(10/2)],
-  [BearingHeight,         Millimeters(4)],
-  [BearingRaceRadius,     Millimeters(5.2/2)],
-  [BearingFn,             30],
-  [BearingClearanceLoose, Millimeters(.3)], // TODO: Verify
-  [BearingClearanceSnug,  Millimeters(.15)], // TODO: Verify
+  [BearingInnerDiameter,    Millimeters(3)],
+  [BearingOuterDiameter,    Millimeters(10)],
+  [BearingWidth,            Millimeters(8)],
+  [BearingRaceDiameter,     Millimeters(5.2)],
 ];
+
 function Spec_Bearing623() = Bearing623;
 
-module Bearing2D(spec=Spec_Bearing608(), clearance=BearingClearanceSnug(), solid=false) {
-  //echo(BearingInnerRadius(spec, clearance));
+module Bearing2D(spec=Spec_Bearing608(), clearance=0, solid=false) {
   difference() {
-    circle(r=BearingOuterRadius(spec, clearance), $fn=BearingFn(spec));
+    circle(r=BearingOuterRadius(spec, clearance));
 
     if (solid==false)
-    circle(r=BearingInnerRadius(spec, clearance), $fn=BearingFn(spec)/2);
+    circle(r=BearingInnerRadius(spec, clearance));
   }
 }
 
 module Bearing(spec=Spec_Bearing608(),
-               clearance=undef,
+               clearance=0,
                extraHeight=0,
                solid=false, center=false) {
   color("SteelBlue")
   render()
-  linear_extrude(height=BearingHeight(spec)+extraHeight, center=center)
+  linear_extrude(height=BearingWidth(spec)+extraHeight, center=center)
   Bearing2D(spec=spec, clearance=clearance, solid=solid);
 }
 

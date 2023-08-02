@@ -39,7 +39,7 @@ module TubularBearingsBack(tube=Spec_SquareTubeOneInch(), bearing=Spec_Bearing60
 
   bearingOffsetY = wall+(SquareTubeOuter(tube)/2);
   difference() {
-    linear_extrude(height=BearingHeight(bearing)+backHeight)
+    linear_extrude(height=BearingWidth(bearing)+backHeight)
     TubularBearings2D();
 
     translate([-bearingOffset,bearingOffsetY,backHeight+0.0001])
