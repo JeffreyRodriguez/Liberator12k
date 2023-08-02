@@ -1,42 +1,61 @@
 use <../Meta/Units.scad>;
-//
-// Square Tube dimensions
-//
+use <../Meta/Resolution.scad>;
+
+
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
+
+// *************
+// * Constants *
+// *************
 BearingInnerDiameter     = 1;
 BearingOuterDiameter     = 2;
-BearingWidth            = 3;
+BearingWidth             = 3;
 BearingRaceDiameter      = 4;
-BearingFn                = 5;
 
+// *************
+// * Accessors *
+// *************
 function BearingClearanceSnug()  = Inches(0.01);
 function BearingClearanceLoose() = Inches(0.02);
 
 function BearingInnerDiameter(spec, clearance) = lookup(BearingInnerDiameter, spec) + clearance;
 function BearingInnerRadius(spec, clearance)   = BearingInnerDiameter(spec, clearance)/2;
-function BearingOuterDiameter(spec, clearance) = lookup(BearingOuterRadius, spec) + clearance;
+
+function BearingOuterDiameter(spec, clearance) = lookup(BearingOuterDiameter, spec) + clearance;
 function BearingOuterRadius(spec, clearance)   = BearingOuterDiameter(spec, clearance)/2;
+
+function BearingRaceDiameter(spec)             = lookup(BearingRaceDiameter, spec)/2;
+function BearingRaceRadius(spec)               = BearingRaceDiameter(spec)/2;
+
 function BearingWidth(spec)                    = lookup(BearingWidth, spec);
-function BearingRaceRadius(spec)               = lookup(BearingRaceRadius, spec);
+
+// *********
+// * Specs *
+// *********
 
 // 608 Bearing
-Bearing608 = [
+function Spec_Bearing608() = [
   [BearingInnerDiameter,    Millimeters(8)],
   [BearingOuterDiameter,    Millimeters(22)],
   [BearingWidth,            Millimeters(7)],
   [BearingRaceDiameter,     Millimeters(12)],
 ];
-function Spec_Bearing608() = Bearing608;
 
 // 623 Bearing
-Bearing623 = [
+function Spec_Bearing623() = [
   [BearingInnerDiameter,    Millimeters(3)],
   [BearingOuterDiameter,    Millimeters(10)],
   [BearingWidth,            Millimeters(8)],
   [BearingRaceDiameter,     Millimeters(5.2)],
 ];
 
-function Spec_Bearing623() = Bearing623;
-
+// ***********
+// * Modules *
+// ***********
 module Bearing2D(spec=Spec_Bearing608(), clearance=0, solid=false) {
   difference() {
     circle(r=BearingOuterRadius(spec, clearance));

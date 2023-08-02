@@ -15,7 +15,7 @@ module TubularBearings2D(tube=Spec_SquareTubeOneInch(), tubeClearance=SquareTube
       circle(r=(SquareTubeOuter(tube)/2)+(wall*1.5), $fn=20);
 
       translate([-bearingOffset,bearingOffsetY])
-      circle(r=BearingOuterRadius(bearing, clearance=undef)+wall, $fn=BearingFn(bearing));
+      circle(r=BearingOuterRadius(bearing, clearance=0)+wall);
     }
 
     // Bolt holes
@@ -25,12 +25,11 @@ module TubularBearings2D(tube=Spec_SquareTubeOneInch(), tubeClearance=SquareTube
 
     // Bearing race hole
     translate([-bearingOffset,bearingOffsetY])
-    circle(r=BearingRaceRadius(bearing),
-           $fn=BearingFn(bearing)/2);
+    circle(r=BearingRaceRadius(bearing));
 
     // Tubing hole
     translate([wall,wall])
-    Tubing2D(solid=true, clearance=tubeClearance, spec=tube);
+    Tubing2D(hollow=false, clearance=tubeClearance, spec=tube);
   }
 }
 
