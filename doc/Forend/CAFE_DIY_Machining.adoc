@@ -6,16 +6,16 @@ These instructions apply to the CAFE series. The FP37 uses epoxy for fixing the 
 
 **DO NOT DRILL THE BARREL**
 
-A fixture located at `Forend/TopBreak_CAFE12+/Fixtures/TrunnionFixture.stl`
+A fixture located at `Forend/Fixtures/TrunnionFixture.stl`
 can be used to help you drill and tap your own *Trunnion*.
 
-Using a \#8-32 tap, thread the hole in the middle of the fixture.
-Use a 1.5" \#8-32 to hold the *Trunnion* in place, like a set screw.
+Using a #8-32 tap, thread the hole in the middle of the fixture.
+Use a 1.5" #8-32 to hold the *Trunnion* in place, like a set screw.
 Now you're ready to drill and tap the holes.
 
 **DO NOT DRILL THE BARREL**
 
-Drill the holes out with a \#29 wire bit, start out very slowly so the drill bit doesn't
+Drill the holes out with a #29 wire bit, start out very slowly so the drill bit doesn't
 walk on the round surface.
 Be sure to clear your chips early and often, use lots of cutting fluid.
 
