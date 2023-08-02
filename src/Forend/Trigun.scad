@@ -49,12 +49,12 @@ _SHOW_LOWER = true;
 _SHOW_LOWER_MOUNT = true;
 _SHOW_LATCH = true;
 
+_ALPHA_BARREL = 1;  // [0:0.1:1]
 _ALPHA_FOREND = 1;  // [0:0.1:1]
-_ALPHA_LATCH = 1; // [0:0.1:1]
-_ALPHA_COLLAR = 1; // [0:0.1:1]
-_ALPHA_RECEIVER_TUBE = 1; // [0:0.1:1]
+_ALPHA_LATCH = 1;   // [0:0.1:1]
+_ALPHA_COLLAR = 1;  // [0:0.1:1]
 _ALPHA_EXTRACTOR = 1; // [0:0.1:1]
-_ALPHA_RECOIL_PLATE_HOUSING=1; // [0:0.1:1]
+_ALPHA_FRONT = 1; // [0:0.1:1]
 
 _CUTAWAY_RECEIVER = false;
 _CUTAWAY_FOREND = false;
@@ -73,12 +73,12 @@ BARREL_OUTSIDE_DIAMETER = 1.0001;
 BARREL_INSIDE_DIAMETER = 0.813;
 BARREL_CLEARANCE = 0.005;
 BARREL_LENGTH = 18;
-BARREL_OFFSET = 0.7;
-RIM_WIDTH = 0.0301;
-RIM_DIAMETER = 0.8875;
 
 /* [Fine Tuning] */
 FRAME_BOLT_LENGTH = 10;
+BARREL_OFFSET = 0.5806;
+RIM_WIDTH = 0.0301;
+RIM_DIAMETER = 0.8875;
 
 /* [Branding] */
 BRANDING_MODEL_NAME = "Trigun 12ga";
@@ -364,7 +364,7 @@ module TrigunForendAssembly(receiverLength=12, pipeAlpha=1, receiverFrontAlpha=1
   Barrels();
 
   if (_SHOW_RECEIVER_FRONT)
-  ReceiverFront(cutaway=cutaway, alpha=_ALPHA_RECOIL_PLATE_HOUSING);
+  ReceiverFront(cutaway=cutaway, alpha=_ALPHA_FRONT);
 
   if (_SHOW_FOREND)
   ReceiverForend(cutaway=_CUTAWAY_FOREND, alpha=_ALPHA_FOREND);
