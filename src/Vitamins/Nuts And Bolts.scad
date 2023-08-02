@@ -6,7 +6,6 @@ use <../Meta/slookup.scad>;
 use <../Shapes/Teardrop.scad>;
 use <../Shapes/Teardrop Taper.scad>;
 
-//use <Nuts and Bolts/NutSpec.scad>;
 use <Nuts and Bolts/BoltSpec.scad>;
 use <Nuts and Bolts/BoltSpec_Inch.scad>;
 use <Nuts and Bolts/BoltSpec_Metric.scad>;
