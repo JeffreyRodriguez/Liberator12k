@@ -39,6 +39,7 @@ _SHOW_TAKEDOWN_PIN = true;
 _SHOW_TAKEDOWN_PIN_RETAINER = true;
 
 /* [Transparency] */
+_ALPHA_FCG =  1;    // [0:0.1:1]
 _ALPHA_LOWER =  1;    // [0:0.1:1]
 _ALPHA_RECEIVER = 0.1; // [0:0.1:1]
 _ALPHA_LOWER_MOUNT = 0.5; // [0:0.1:1]
@@ -608,7 +609,7 @@ if ($preview) {
   Lower_Bolts();
 
   if (_SHOW_FCG)
-  SimpleFireControlAssembly();
+  SimpleFireControlAssembly(alpha=_ALPHA_FCG);
 
   LowerMount(cutaway=_CUTAWAY_LOWER_MOUNT, alpha=_ALPHA_LOWER_MOUNT);
 
