@@ -25,7 +25,7 @@ schedule 40 galvanized pipe.
 4130 is better, but galvanized pipe works too. The forend prints are not 100%
 compatible since schedule 40 pipe is slightly larger than 4130.
 
-TIP: This document is specific to the {mdoel}.
+TIP: This document is specific to the {model}.
 
 === Hardware Kit vs DIY
 If you purchased a kit, all the machining is already done for you.
