@@ -521,7 +521,7 @@ module RecoilPlateSideBolts(bolt=RecoilPlateBolt(), boltLength=1.5, template=fal
              nut="none",
              clearance=cutter?clearance:0);
 }
-module RecoilPlate(length=RecoilPlateLength(), spindleZ=-1, contoured=true, cutter=false, cutaway=false, alpha=1, clearance=0.005, template=false, templateHoleDiameter=0.08) {
+module RecoilPlate(length=RecoilPlateLength(), spindleZ=-1, contoured=RECOIL_PLATE_CONTOURED, cutter=false, cutaway=false, alpha=1, clearance=0.005, template=false, templateHoleDiameter=0.08) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
