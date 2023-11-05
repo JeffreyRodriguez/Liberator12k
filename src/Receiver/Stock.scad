@@ -94,7 +94,7 @@ module Stock_TakedownPin(cutter=false, clearance=0.005, alpha=1, cutaway=false) 
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
 
-if (cutter) {
+  if (cutter) {
     translate([Stock_TakedownPinX(), 0, Receiver_TakedownPinZ()])
     rotate([90,0,0])
     linear_extrude(ReceiverOD(), center=true)
@@ -114,10 +114,10 @@ module Stock_TakedownPinRetainer(cutter=false, clearance=0.005) {
   color("Silver") RenderIf(!cutter)
   translate([ButtpadX(), 0, Receiver_TakedownPinZ()-0.125])
   rotate([0,90,0]) {
-    
+
     // Pin
     cylinder(r=(3/32/2)+clear, h=2);
-    
+
     // Head
     mirror([0,0,1])
     cylinder(r=(0.3/2)+clear,
@@ -352,7 +352,7 @@ module StockAssembly(hardware=true, prints=true, cutaway=undef, alpha=1) {
 
   if (hardware && _SHOW_STOCK_TAKEDOWN_PIN)
   Stock_TakedownPin();
-  
+
   if (hardware && _SHOW_STOCK_TAKEDOWN_PIN_RETAINER)
   Stock_TakedownPinRetainer();
 
