@@ -908,21 +908,21 @@ module RevolverAssembly(hardware=_SHOW_HARDWARE, prints=_SHOW_PRINTS, stock=true
     }
 
     if (_SHOW_LOWER)
-    LowerMount(hardware=false, alpha=_ALPHA_LOWER);
+    LowerMount(hardware=hardware, alpha=_ALPHA_LOWER);
 
     if (_SHOW_LOWER)
-    Lower(hardware=false, alpha=_ALPHA_LOWER);
+    Lower(hardware=hardware, alpha=_ALPHA_LOWER);
 
     if (_SHOW_RECEIVER) {
 
       Frame_ReceiverAssembly(
-        hardware=false, alpha=_ALPHA_RECEIVER,
+        hardware=hardware, alpha=_ALPHA_RECEIVER,
         length=FRAME_BOLT_LENGTH,
         cutaway=_CUTAWAY_RECEIVER);
     }
 
     if (_SHOW_STOCK) {
-      StockAssembly(hardware=false, alpha=_ALPHA_STOCK);
+      StockAssembly(hardware=hardware, alpha=_ALPHA_STOCK);
     }
   }
 
