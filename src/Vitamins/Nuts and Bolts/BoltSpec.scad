@@ -1,5 +1,6 @@
 use <../../Meta/Units.scad>;
 use <../../Meta/slookup.scad>;
+use <../../Meta/Math/Hexagons.scad>;
 
 function Spec_BoltTemplate() = [ // these are all a total guess
   ["BoltSpec",        "Template"],
@@ -88,6 +89,8 @@ function NutHexDiameter(bolt=undef, clearance=0)
            + clearance;
 
 function NutHexRadius(bolt=undef, clearance=0) = NutHexDiameter(bolt, clearance)/2;
+
+function NutHexApothem(bolt=undef, clearance=0) = hex_apothem(NutHexRadius(bolt, clearance));
 
 function NutHexHeight(bolt=undef) = slookup("NutHexHeight", bolt);
 

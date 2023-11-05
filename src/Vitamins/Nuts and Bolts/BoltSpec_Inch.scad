@@ -132,8 +132,8 @@ function Spec_BoltOneQuarter() = [
   ["BoltHexDiameter", Inches(0.566)],
   ["BoltHexHeight",   Inches(0.25)],
 
-  ["NutHexDiameter", Inches(0.566)],
-  ["NutHexHeight",   Inches(0.25)],
+  ["NutHexDiameter", Inches(0.492)],
+  ["NutHexHeight",   Inches(0.217)],
 
   ["NutHeatsetMajorDiameter", Millimeters(9.53)],
   ["NutHeatsetMinorDiameter", Millimeters(9.0)],

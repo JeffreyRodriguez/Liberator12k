@@ -151,7 +151,6 @@ module BoltSocketCap(bolt, capHeightExtra=0, clearance=0, teardrop=false, teardr
   } else {
     cylinder(r=BoltSocketCapRadius(bolt, clearance),
             h=BoltSocketCapHeight(bolt)+capHeightExtra);
-
   }
 }
 
@@ -175,17 +174,17 @@ module NutHex(spec,
               nutSideExtra=0,
               nutSideAngle=0,
               clearance=0) {
-    translate([0,0,-(clearance?nutHeightExtra:0)+nutBackset]) {
-      cylinder(r=NutHexRadius(spec, clearance)+(clearance?nutRadiusExtra:0),
-               h=NutHexHeight(spec)+(clearance?nutHeightExtra:0), $fn=6);
+    translate([0,0,-nutHeightExtra-nutBackset]) {
+      cylinder(r=NutHexRadius(spec, clearance)+nutRadiusExtra,
+               h=NutHexHeight(spec)+clearance+nutHeightExtra, $fn=6);
 
       // Insertion side-cut
       if (clearance && nutSideExtra > 0)
       rotate(nutSideAngle)
-      translate([-NutHexRadius(spec, clearance),0,0])
-      cube([NutHexDiameter(spec, clearance),
+      translate([-NutHexApothem(spec, clearance),0,0])
+      cube([NutHexApothem(spec, clearance)*2,
             NutHexDiameter(spec, clearance)+nutSideExtra,
-            NutHexHeight(spec)+nutHeightExtra]);
+            NutHexHeight(spec)]);
     }
 };
 
@@ -195,7 +194,7 @@ module NutAcorn(spec,
     translate([0,0,-(clearance?nutHeightExtra:0)+nutBackset]) {
       cylinder(r=NutHexRadius(spec, clearance)+(clearance?nutRadiusExtra:0),
                h=NutHexHeight(spec)+(clearance?nutHeightExtra:0), $fn=6);
-      
+
       translate([0,0,NutHexHeight(spec)])
       sphere(r=NutHexRadius(spec, clearance)*0.8);
     }
@@ -279,7 +278,7 @@ module NutAndBolt(bolt=Spec_BoltTemplate(), boltLength=1, boltLengthExtra=0,
     if (nut == "hex") {
 
       color("DimGrey") RenderIf(doRender)
-      NutHex(bolt, nutHeightExtra=nutHeightExtra, clearance=clearance);
+      NutHex(bolt, nutHeightExtra=nutHeightExtra, nutSideExtra=nutSideExtra, nutSideAngle=nutSideAngle, clearance=clearance);
     } else if (nut == "heatset") {
 
       color("Gold") RenderIf(doRender)
