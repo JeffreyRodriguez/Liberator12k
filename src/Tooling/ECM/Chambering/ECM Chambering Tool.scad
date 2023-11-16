@@ -1,101 +1,168 @@
 use <../../../Meta/Manifold.scad>;
+use <../../../Meta/Cutaway.scad>;
 use <../../../Meta/Resolution.scad>;
 use <../../../Meta/Units.scad>;
-use <../../../Vitamins/Pipe.scad>;
 use <../../../Shapes/Semicircle.scad>;
 use <../../../Shapes/Chamfer.scad>;
 
+use <../../../Vitamins/Nuts And Bolts.scad>;
+use <../../../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 
-PIPE_SPEC = Spec_TubingZeroPointSevenFive();
+include <Chambers.scad>;
 
-// Smoothbore 12ga stock (old test bits)
-BARREL_ID = 0.813+0.01;
+/* [Export] */
 
-// Rifled 12ga stock
-BARREL_ID = 0.75+0.008;
+// Select a part, Render (F6), then Export to STL (F7)
+_RENDER = ""; // ["", "Prints/ChamberReamer", "Prints/JigBottom", "Prints/JigTop"]
 
-// .12ga stock
-BARREL_ID = 0.75-0.003;
-BARREL_ID = 0.787; // Pre-bored
+// Reorient the part for printing?
+_RENDER_PRINT = true;
 
-// .44 Spl stock
-BARREL_ID = 0.402; // Pre-bored
+/* [Cartridge] */
+CARTRIDGE = "300 AAC Blackout"; // ["300 AAC Blackout"]
+CHAMBER = ChamberSpec(CARTRIDGE);
 
-// .45ACP
-BARREL_ID = 0.44;
+/* [Vitamins] */
+ELECTRODE_INSET = 0.01;
+ELECTRODE_THICKNESS = 0.032;
+JIG_THICKNESS = 0.25;
+JIG_SIDE = 1;
 
-function ECM_Chambering_Insert_Diameter(barrelInnerDiameter,
-                                        fluteDepth)
-    = barrelInnerDiameter
-    - (fluteDepth*2);
+// *********
+// * Setup *
+// *********
+$fa = ResolutionFa();
+$fs = UnitsFs()*ResolutionFs();
 
-module ECM_Chambering_Insert(barrelInnerDiameter = BARREL_ID,
-                             rodMajorRadius = 0.2/2, rodMinorRadius = 0.1517/2,
-                             rodWall=0.125, rodTop=0.25,
-                             length=1.285, bottomWall=0.125, wall=0.125,
-                             fluteCount=6,
-                             $fn=50) {
+module ECM_ChamberReamer(chamber=CHAMBER, electrode=ELECTRODE_THICKNESS, core=Inches(1/8)) {
+	height = ChamberLength(chamber);
+	boreDiameter = ChamberBoreDiameter(chamber);
 
-  insertDiameter = barrelInnerDiameter;
-  insertRadius = insertDiameter/2;
-  
-  fluteWidth=min(insertDiameter*3.14/fluteCount/2, rodMajorRadius);
-  fluteDepth=(insertRadius-rodMajorRadius)-wall;
+	// Electrode
+	%color("Gold")
+	ChamberProfile(chamber, electrode);
 
-  render()
-  difference() {
-    
-    // Centering guide
-    union() {
-      
-      // Body
-      cylinder(r=insertRadius,
-               h=length);
-      
-      // Taper
-      translate([0,0,length])
-      cylinder(r1=barrelInnerDiameter/2, r2=rodMajorRadius,
-               h=rodTop);
-      
-      // Cylinder top
-      translate([0,0,length])
-      cylinder(r=rodMajorRadius+rodWall, h=rodTop);
-    }
-    
-    // Chamfer the bottom
-    CylinderChamfer(r1=insertRadius, r2=0.05, teardrop=true);
-    
-    // Chamfer the top
-    translate([0,0,length+rodTop])
-    mirror([0,0,1])
-    CylinderChamfer(r1=rodMajorRadius+rodWall, r2=0.02, teardrop=false);
-    
-    // Rod hole
-    translate([0,0,wall])
-    cylinder(r1=rodMajorRadius,
-             r2=rodMinorRadius,
-             h=length+bottomWall+rodTop,
-             $fn=20);
-    
-    // Water Flutes
-    translate([0, 0, -ManifoldGap()])
-    for (r = [1:fluteCount])
-    rotate(360/fluteCount*r)
-    linear_extrude(height=length+bottomWall+ManifoldGap(2),
-                   twist=(length+bottomWall)*90,
-                   slices=(length+bottomWall)*80)
-    translate([insertRadius-fluteDepth, -fluteWidth/2])
-    square([insertRadius, fluteWidth]);
-  }
+	color("Tan", 0.5)
+	render()
+	difference() {
 
+		// Chambering Reamer Insulator
+		Chamber(chamber);
+
+		// Electrode slot
+		ChamberProfile(chamber, electrode);
+
+		// Electrode Water Gap
+		difference() {
+
+			rotate([0,-90,0])
+			translate([0,Inches(1/16)])
+			linear_extrude(electrode*2, center=true)
+			scale([1,0.5])
+			polygon(chamber);
+
+			rotate([0,-90,0])
+			translate([0,-Inches(1/16)])
+			linear_extrude(electrode*2, center=true)
+			scale([1,0.5])
+			polygon(chamber);
+		}
+
+		// Core
+		*cylinder(d=core, h=height);
+	}
 }
+///
 
-ScaleToMillimeters() {
-  ECM_Chambering_Insert(barrelInnerDiameter=0.44,
-                        length=1.285,
-                        rodWall=0.0625,
-                        wall=0.0625);
+module ECM_ChamberElectrodeJigBolts(chamber=CHAMBER, spec=BoltSpec("M3"), length=Millimeters(10), cutter=false, clearance=0.01) {
+	for (X = [BoltSocketCapDiameter(spec),
+		        ChamberLength(chamber)/2,
+		        ChamberLength(chamber)-BoltSocketCapDiameter(spec)])
+	translate([X,-BoltRadius(spec),0])
+	mirror([0,0,1])
+	NutAndBolt(spec, nut=(cutter?"none":"hex"), boltLength=length,
+	           capOrientation=true, clearance=(cutter?clearance:0));
 }
+///
 
-// Plated insert
-*!ScaleToMillimeters() ECM_Chambering_Insert();
+module ECM_ChamberElectrodeJig(chamber=CHAMBER, electrode=ELECTRODE_THICKNESS, thickness=JIG_THICKNESS, side=JIG_SIDE, inset=ELECTRODE_INSET, cutout=true) {
+	
+	jigProfile = [
+		[0, -JIG_SIDE*2],
+		each(chamber),
+		[ChamberLength(chamber), -JIG_SIDE*2]
+	];
+	
+	color("Tan") render()
+	difference() {
+		// Jig body
+		rotate([0,90,0])
+		ChamberProfile(jigProfile, thickness, center=false);
+		
+		// Electrode cutout
+		if (cutout)
+		translate([0,inset,thickness-electrode])
+		rotate([0,90,0])
+		ChamberProfile(chamber, electrode, center=false);
+		
+		ECM_ChamberElectrodeJigBolts(chamber, cutter=true);
+	}
+}
+///
+
+// *************
+// * Rendering *
+// *************
+ScaleToMillimeters()
+if ($preview) {
+	
+	ECM_ChamberReamer();
+	
+	translate([0,2,0]) {
+		
+		// Jig electrode
+		color("Gold")
+		translate([0,0,JIG_THICKNESS-ELECTRODE_THICKNESS+ManifoldGap()])
+		rotate([0,90,0])
+		ChamberProfile(CHAMBER, ELECTRODE_THICKNESS, center=false);
+
+		// Bolts
+		ECM_ChamberElectrodeJigBolts();
+
+		// Top Plate
+		translate([0,0,JIG_THICKNESS])
+		ECM_ChamberElectrodeJig(cutout=false);
+		
+		// Bottom Plate
+		ECM_ChamberElectrodeJig();
+	}
+} else {
+
+  // *****************
+  // * Printed Parts *
+  // *****************
+  if (_RENDER == "Prints/ChamberReamer")
+    if (!_RENDER_PRINT)
+			ECM_ChamberReamer();
+    else
+      ECM_ChamberReamer();
+
+  if (_RENDER == "Prints/JigBottom")
+    if (!_RENDER_PRINT)
+			ECM_ChamberElectrodeJig();
+    else
+			ECM_ChamberElectrodeJig();
+
+  if (_RENDER == "Prints/JigTop")
+    if (!_RENDER_PRINT)
+			translate([0,0,JIG_THICKNESS])
+			ECM_ChamberElectrodeJig(cutout=false);
+    else
+			ECM_ChamberElectrodeJig(cutout=false);
+		
+  // ************
+  // * Hardware *
+  // ************
+  if (_RENDER == "Hardware/Stock_ButtpadBolt")
+  GripBolts();
+}
