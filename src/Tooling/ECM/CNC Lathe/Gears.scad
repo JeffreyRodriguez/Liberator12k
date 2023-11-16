@@ -12,7 +12,6 @@ use <../../../Vitamins/Bearing.scad>;
 use <../../../Vitamins/Pipe.scad>;
 use <../../../Vitamins/Stepper Motor.scad>;
 use <../../../Vitamins/Nuts And Bolts.scad>;
-use <ECM Drilling Cap.scad>;
 
 //all meshing gears need the same mm_per_tooth
 units_per_tooth = 0.1875;
