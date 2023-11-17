@@ -1,17 +1,17 @@
-use <../../../Meta/Animation.scad>;
-use <../../../Meta/Cutaway.scad>;
-use <../../../Meta/Cylinder Text.scad>;
-use <../../../Meta/Manifold.scad>;
-use <../../../Meta/Units.scad>;
-use <../../../Meta/Resolution.scad>;
-use <../../../Shapes/Chamfer.scad>;
-use <../../../Shapes/Components/ORing.scad>;
-use <../../../Shapes/Gear.scad>;
-use <../../../Shapes/Teardrop.scad>;
-use <../../../Vitamins/Bearing.scad>;
-use <../../../Vitamins/Pipe.scad>;
-use <../../../Vitamins/Stepper Motor.scad>;
-use <../../../Vitamins/Nuts And Bolts.scad>;
+use <../../Meta/Animation.scad>;
+use <../../Meta/Cutaway.scad>;
+use <../../Meta/Cylinder Text.scad>;
+use <../../Meta/Manifold.scad>;
+use <../../Meta/Units.scad>;
+use <../../Meta/Resolution.scad>;
+use <../../Shapes/Chamfer.scad>;
+use <../../Shapes/Components/ORing.scad>;
+use <../../Shapes/Gear.scad>;
+use <../../Shapes/Teardrop.scad>;
+use <../../Vitamins/Bearing.scad>;
+use <../../Vitamins/Pipe.scad>;
+use <../../Vitamins/Stepper Motor.scad>;
+use <../../Vitamins/Nuts And Bolts.scad>;
 
 //all meshing gears need the same mm_per_tooth
 units_per_tooth = 0.1875;
