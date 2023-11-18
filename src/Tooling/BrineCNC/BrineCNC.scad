@@ -10,7 +10,7 @@ use <../../Shapes/Components/ORing.scad>;
 use <../../Shapes/Components/Hose Barb.scad>;
 use <../../Shapes/Gear.scad>;
 use <../../Shapes/Teardrop.scad>;
-use <../../Vitamins/Stepper Motor.scad>;
+use <../../Vitamins/NEMA Stepper.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/Pipe Taper.scad>;
 include <Gears.scad>;
@@ -131,9 +131,7 @@ DRIVESCREW_MOUNT_HEIGHT = UnitSelect(Drivescrew_Mount_Height_, CHOSEN_DIMENSIONS
 DRIVESCREW_LENGTH = UnitSelect(Drive_Screw_Length_, CHOSEN_DIMENSIONS_UNIT);
 CARRIAGE_LENGTH = UnitSelect(Carriage_Length_, CHOSEN_DIMENSIONS_UNIT);
 
-
 // Derived Values
-
 BARREL_RADIUS = BARREL_DIAMETER/2;
 ELECTRODE_RADIUS = ELECTRODE_DIAMETER/2;
 TAP_RADIUS=TAP_DIAMETER/2;
@@ -153,6 +151,8 @@ CARRIAGE_MIN_Z = CARRIAGE_MAX_X-CARRIAGE_LENGTH;
 ELECTRODE_MIN_Z = BARREL_LENGTH+BARREL_INSET_BOTTOM;
 ELECTRODE_MAX_Z = ELECTRODE_MIN_Z+ELECTRODE_LENGTH;
 
+STEPPER = NEMA_Stepper_Spec("17");
+STEPPER_BOLT = BoltSpec(NEMA_Stepper_BoltSpec(STEPPER));
 
 // *********
 // * Setup *
@@ -169,10 +169,20 @@ $fs = UnitsFs()*ResolutionFs();
 // * Rotary Axis *
 // ***************
 module RotaryStepper(cutter=false) {
-	translate([BARREL_OFFSET_X, 0, DRILLHEAD_Z_MIN+0.5625])
+	translate([BARREL_OFFSET_X, 0, DRILLHEAD_Z_MIN+Inches(9/16)])
 	translate([0,driveGearPitchRadius+drivenGearPitchRadius,0]) {
-		NEMA17(cutter=cutter);
 		
+		NEMA_Stepper_BoltIterator(STEPPER)
+		mirror([0,0,1])
+		translate([0,0,Inches(9/16)])
+		Bolt(STEPPER_BOLT, length=Millimeters(16),
+		     head="socket", capOrientation=true);
+		
+		mirror([0,0,1])
+		NEMA_Stepper(STEPPER, cutter=cutter);
+		
+		// TODO: Move me into the right position for the new stepper location
+		// Drive Gear Extension
 		if (cutter)
 		mirror([0,0,1])
 		cylinder(r=0.375,h=1);
@@ -180,12 +190,18 @@ module RotaryStepper(cutter=false) {
 }
 //
 
-// Linear Motion
 module LinearStepper(cutter=false) {
+		
 	translate([DRIVESCREW_OFFSET_X, DRIVESCREW_OFFSET_Y, DRILLHEAD_Z_MIN])
-	rotate([180, 0, 0])
-	NEMA17(cutter=cutter);
+	translate([0,0,Inches(9/16)])
+	NEMA_Stepper_BoltIterator(STEPPER)
+	Bolt(STEPPER_BOLT, length=Millimeters(16),
+			 head="socket", capOrientation=true);
+	
+	translate([DRIVESCREW_OFFSET_X, DRIVESCREW_OFFSET_Y, DRILLHEAD_Z_MIN])
+	NEMA_Stepper(STEPPER, cutter=cutter);
 }
+//
 
 module DriveScrew(cutter=false) {
 	// Screw
@@ -409,6 +425,7 @@ module Barrel(clearance=Inches(0.015), cutter=false,alpha=_ALPHA_BARREL) {
 	translate([BARREL_OFFSET_X,0,BARREL_Z_MIN])
 	cylinder(r=(BARREL_DIAMETER/2)+(cutter?clearance:0), h=BARREL_LENGTH);
 }
+//
 
 // **********
 // * Prints *
@@ -516,6 +533,7 @@ module Headstock(debug=false, alpha=_ALPHA_HEADSTOCK) {
 		cube([Inches(0.25), Inches(1.66), Inches(0.5625) + ManifoldGap(2)]);
 	}
 }
+//
 
 module Tailstock(debug=false, alpha=_ALPHA_TAILSTOCK) {
   CR = Inches(1/32);
@@ -543,6 +561,7 @@ module Tailstock(debug=false, alpha=_ALPHA_TAILSTOCK) {
 	Electrode(clearance=0.05, cutter=true);
 	}
 }
+//
 
 module Carriage(extension=1, alpha=_ALPHA_CARRIAGE) {
 	color("Tomato", alpha) render()
@@ -661,7 +680,11 @@ module BarrelContact(pivotDiameter=Inches(0.125), clearance=0.008, cutter=false)
 		cube([BARREL_DIAMETER + Inches(0.25), Inches(0.25), Inches(0.75)]);
 	}
 }
+//
 
+/*************
+ * Rendering *
+ *************/
 ScaleToMillimeters()
 if ($preview) {
 

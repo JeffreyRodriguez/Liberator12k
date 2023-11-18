@@ -10,7 +10,7 @@ use <../../Shapes/Gear.scad>;
 use <../../Shapes/Teardrop.scad>;
 use <../../Vitamins/Bearing.scad>;
 use <../../Vitamins/Pipe.scad>;
-use <../../Vitamins/Stepper Motor.scad>;
+use <../../Vitamins/NEMA Stepper.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;
 
 //all meshing gears need the same mm_per_tooth
