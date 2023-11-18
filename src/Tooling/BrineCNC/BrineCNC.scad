@@ -21,21 +21,24 @@ use <aluminumExtrusions.scad>;
 _RENDER = ""; // ["", "DrivenGear", "DriveGear", "Legs", "Tailstock", "Headstock", "Carriage", "ToolHolder"]
 
 /* [Assembly] */
-_SHOW_COLUMN = true;
-_SHOW_COLUMNFOOT = true;
-_SHOW_TAILSTOCK = true;
-_SHOW_HEADSTOCK = true;
+_SHOW_HARDWARE    = true;
+_SHOW_PRINTS      = true;
+_SHOW_COLUMN      = true;
+_SHOW_COLUMNFOOT  = true;
+_SHOW_TAILSTOCK   = true;
+_SHOW_HEADSTOCK   = true;
+_SHOW_ELECTROLYTE = true;
 _SHOW_ROTARY_AXIS = true;
 _SHOW_LINEAR_AXIS = true;
-_SHOW_CARRIAGE = true;
-_SHOW_DRIP_TRAY = true;
+_SHOW_CARRIAGE    = true;
+_SHOW_DRIP_TRAY   = true;
 
 /* [Transparency] */
-_ALPHA_BARREL=1;      // [0:0.1:1]
-_ALPHA_HEADSTOCK=0.5; // [0:0.1:1]
-_ALPHA_TAILSTOCK=0.5; // [0:0.1:1]
-_ALPHA_CARRIAGE=0.5;  // [0:0.1:1]
-_ALPHA_DRIP_TRAY=1;   // [0:0.1:1]
+_ALPHA_BARREL    = 1;   // [0:0.1:1]
+_ALPHA_HEADSTOCK = 0.5; // [0:0.1:1]
+_ALPHA_TAILSTOCK = 0.5; // [0:0.1:1]
+_ALPHA_CARRIAGE  = 0.5; // [0:0.1:1]
+_ALPHA_DRIP_TRAY = 1;   // [0:0.1:1]
 
 /* [Vitamins] */
 Barrel_Units = "Inches"; // ["Millimeters", "Inches"]
@@ -46,33 +49,32 @@ Oring_Width_ = 0.09375;
 Other_Vitamins_Units = "Inches"; // ["Millimeters", "Inches"]
 Electrode_Diameter_ = 0.125;
 Tap_Diameter_ = 0.1875;
+Leadscrew_Units = "Millimeters"; // ["Millimeters", "Inches"]
+Leadscrew_Diameter_in_Millimeters = 8;
+Column_Extrusion = "2040"; // ["2020", "2040", "2060", "4040", "4060"]
+Column_Extrusion_Length_in_Millimeters = 400;
 
 // Derived Vitamin Values
-VITAMINS_UNIT = UnitType(Other_Vitamins_Unit_of_Measure);
-BARREL_UNIT = UnitType(Barrel_Unit_of_Measure);
+VITAMINS_UNIT = UnitType(Other_Vitamins_Units);
+BARREL_UNIT = UnitType(Barrel_Units);
 BARREL_DIAMETER = UnitSelect(Barrel_Diameter_, BARREL_UNIT);
 BARREL_LENGTH = UnitSelect(Barrel_Length_, BARREL_UNIT);
-ORING_UNIT = UnitType(O_Ring_Unit_of_Measure);
+ORING_UNIT = UnitType(O_Ring_Units);
 ORING_WIDTH = UnitSelect(Oring_Width_, ORING_UNIT);
 ELECTRODE_DIAMETER = UnitSelect(Electrode_Diameter_, VITAMINS_UNIT);
 TAP_DIAMETER = UnitSelect(Tap_Diameter_, VITAMINS_UNIT);
 
-/* [Scrounged Vitamins] */
-Leadscrew_Unit_of_Measure = "Millimeters"; //["Millimeters", "Inches"]
-Leadscrew_Diameter_in_Millimeters = 8;
-Column_Extrusion = "2040"; //["2020", "2040", "2060", "4040", "4060"]
-Column_Extrusion_Length_in_Millimeters = 400;
 
-LEADSCREW_UNIT = UnitType(Leadscrew_Unit_of_Measure);
+LEADSCREW_UNIT = UnitType(Leadscrew_Units);
 DRIVESCREW_DIAMETER = UnitSelect(Leadscrew_Diameter_in_Millimeters, LEADSCREW_UNIT);
 
-
 /* [Chosen Dimensions] */
-Chosen_Dimensions_Unit_of_Measure = "Inches"; //["Millimeters", "Inches"]
+Chosen_Dimensions_Units = "Inches"; // ["Millimeters", "Inches"]
 Barrel_Offset_X_ = 1.25;
 Barrel_Inset_Bottom = 0.5;
 Barrel_Inset_Top = 0.375; // Unused yet
 Barrel_Wall = 0.25;
+CHOSEN_DIMENSIONS_UNIT = UnitType(Chosen_Dimensions_Units);
 
 GEAR_PITCH = Millimeters(4); // all meshing gears need the same GEAR_PITCH
 drivenGearTeeth = 31;
@@ -87,7 +89,6 @@ echo("Drive Gear Pitch Radius: ", pitch_radius(GEAR_PITCH,driveGearTeeth));
 echo("Driven Gear Pitch Radius: ", pitch_radius(GEAR_PITCH,drivenGearTeeth));
 echo("Driven:Drive ratio ", drivenGearTeeth/driveGearTeeth);
 
-CHOSEN_DIMENSIONS_UNIT = UnitType(Chosen_Dimensions_Unit_of_Measure);
 
 // Derived Barrel Values
 BARREL_OFFSET_X = UnitSelect(Barrel_Offset_X_, CHOSEN_DIMENSIONS_UNIT);
@@ -182,11 +183,6 @@ STEPPER_BOLT = BoltSpec(NEMA_Stepper_BoltSpec(STEPPER));
 $fa = ResolutionFa();
 $fs = UnitsFs()*ResolutionFs();
 
-
-// ************
-// * Vitamins *
-// ************
-
 // ***************
 // * Rotary Axis *
 // ***************
@@ -269,8 +265,9 @@ module DriveGear(id=Millimeters(5), extension=0.375, flipZ=false) {
 }
 //
 
-//
-
+// ***************
+// * Linear Axis *
+// ***************
 module LinearStepper(cutter=false) {
 		
 	translate([DRIVESCREW_OFFSET_X, DRIVESCREW_OFFSET_Y, DRILLHEAD_Z_MIN])
@@ -336,6 +333,51 @@ module DriveNut(cutter=false) {
 		color("Gold")
 		translate([DRIVESCREW_OFFSET_X, DRIVESCREW_OFFSET_Y, CARRIAGE_MIN_Z - Millimeters(2)])
 		cylinder(d=Millimeters(10.5), h=Millimeters(11));
+	}
+}
+//
+
+module Carriage(extension=1, alpha=_ALPHA_CARRIAGE) {
+	color("Tomato", alpha) render()
+	difference() {
+
+		union() {
+			// Extension
+			translate([-COLUMN_X_WIDTH-COLUMN_WALL, -(COLUMN_Y_WIDTH/2)-COLUMN_WALL, CARRIAGE_MIN_Z])
+			ChamferedCube([COLUMN_X_WIDTH + (COLUMN_WALL*2), COLUMN_Y_WIDTH + (COLUMN_WALL*2), CARRIAGE_LENGTH + extension], r=Inches(1/16));
+
+			// Linear Drive Nut
+			hull() {
+				translate([-COLUMN_X_WIDTH - COLUMN_WALL, -(COLUMN_Y_WIDTH/2) - COLUMN_WALL, CARRIAGE_MIN_Z])
+				ChamferedCube([COLUMN_X_WIDTH+(COLUMN_WALL*2), COLUMN_Y_WIDTH+(COLUMN_WALL*2)+DRIVESCREW_OFFSET_Y, CARRIAGE_LENGTH], r=Inches(1/16));
+
+				translate([DRIVESCREW_OFFSET_X, DRIVESCREW_OFFSET_Y, CARRIAGE_MIN_Z])
+				ChamferedCylinder(r1=Inches(0.625), r2=Inches(1/16), h=CARRIAGE_LENGTH);
+			}
+
+			// Electrode Extension
+			hull() {
+				translate([-COLUMN_X_WIDTH - COLUMN_WALL, -(COLUMN_Y_WIDTH/2) - COLUMN_WALL, CARRIAGE_MIN_Z])
+				ChamferedCube([COLUMN_X_WIDTH + (COLUMN_WALL*2), COLUMN_Y_WIDTH+(COLUMN_WALL*2) + DRIVESCREW_OFFSET_Y, CARRIAGE_LENGTH], r=Inches(1/16));
+
+				translate([BARREL_OFFSET_X, 0, CARRIAGE_MIN_Z])
+				ChamferedCylinder(r1=Inches(0.375), r2=Inches(1/16), h=CARRIAGE_LENGTH);
+			}
+		}
+		
+		// Ender 3 compatible bolts head access hole
+		translate([DRIVESCREW_OFFSET_X, DRIVESCREW_OFFSET_Y, CARRIAGE_MIN_Z])
+		//rotate([180, 0, 0])
+		for (R = [90: 180: 270])
+		rotate(R)
+		translate([Millimeters(18/2), 0, Millimeters(4)])
+		cylinder(d=Millimeters(6), h=CARRIAGE_LENGTH - Millimeters(4));
+
+		Column(cutter=true);
+		translate([0,0,CARRIAGE_MIN_Z]) ColumnBottomChamfer();
+		Electrode(clearance=0.005, cutter=true);
+		DriveScrew(cutter=true);
+		DriveNut(cutter=true);
 	}
 }
 //
@@ -624,51 +666,6 @@ module Tailstock(debug=false, alpha=_ALPHA_TAILSTOCK) {
 }
 //
 
-module Carriage(extension=1, alpha=_ALPHA_CARRIAGE) {
-	color("Tomato", alpha) render()
-	difference() {
-
-		union() {
-			// Extension
-			translate([-COLUMN_X_WIDTH-COLUMN_WALL, -(COLUMN_Y_WIDTH/2)-COLUMN_WALL, CARRIAGE_MIN_Z])
-			ChamferedCube([COLUMN_X_WIDTH + (COLUMN_WALL*2), COLUMN_Y_WIDTH + (COLUMN_WALL*2), CARRIAGE_LENGTH + extension], r=Inches(1/16));
-
-			// Linear Drive Nut
-			hull() {
-				translate([-COLUMN_X_WIDTH - COLUMN_WALL, -(COLUMN_Y_WIDTH/2) - COLUMN_WALL, CARRIAGE_MIN_Z])
-				ChamferedCube([COLUMN_X_WIDTH+(COLUMN_WALL*2), COLUMN_Y_WIDTH+(COLUMN_WALL*2)+DRIVESCREW_OFFSET_Y, CARRIAGE_LENGTH], r=Inches(1/16));
-
-				translate([DRIVESCREW_OFFSET_X, DRIVESCREW_OFFSET_Y, CARRIAGE_MIN_Z])
-				ChamferedCylinder(r1=Inches(0.625), r2=Inches(1/16), h=CARRIAGE_LENGTH);
-			}
-
-			// Electrode Extension
-			hull() {
-				translate([-COLUMN_X_WIDTH - COLUMN_WALL, -(COLUMN_Y_WIDTH/2) - COLUMN_WALL, CARRIAGE_MIN_Z])
-				ChamferedCube([COLUMN_X_WIDTH + (COLUMN_WALL*2), COLUMN_Y_WIDTH+(COLUMN_WALL*2) + DRIVESCREW_OFFSET_Y, CARRIAGE_LENGTH], r=Inches(1/16));
-
-				translate([BARREL_OFFSET_X, 0, CARRIAGE_MIN_Z])
-				ChamferedCylinder(r1=Inches(0.375), r2=Inches(1/16), h=CARRIAGE_LENGTH);
-			}
-		}
-		
-		// Ender 3 compatible bolts head access hole
-		translate([DRIVESCREW_OFFSET_X, DRIVESCREW_OFFSET_Y, CARRIAGE_MIN_Z])
-		//rotate([180, 0, 0])
-		for (R = [90: 180: 270])
-		rotate(R)
-		translate([Millimeters(18/2), 0, Millimeters(4)])
-		cylinder(d=Millimeters(6), h=CARRIAGE_LENGTH - Millimeters(4));
-
-		Column(cutter=true);
-		translate([0,0,CARRIAGE_MIN_Z]) ColumnBottomChamfer();
-		Electrode(clearance=0.005, cutter=true);
-		DriveScrew(cutter=true);
-		DriveNut(cutter=true);
-	}
-}
-//
-
 module DripTray(alpha=_ALPHA_DRIP_TRAY) {
 	wall = DRIP_TRAY_WALL;
 	wall2 = wall*2;
@@ -745,7 +742,6 @@ module Legs(alpha=1, debug=false) {
 }
 //
 
-
 module BarrelContact(pivotDiameter=Inches(0.125), clearance=0.008, cutter=false) {
 	pivotRadius = pivotDiameter/2;
 
@@ -770,30 +766,31 @@ module BarrelContact(pivotDiameter=Inches(0.125), clearance=0.008, cutter=false)
 ScaleToMillimeters()
 if ($preview) {
 
-	// Core Components
-  if (_SHOW_COLUMN)
-	translate([0, 0, 1/2])
+  if (_SHOW_COLUMN && _SHOW_HARDWARE)
 	Column();
 
-	if (_SHOW_LINEAR_AXIS) {
+	if (_SHOW_LINEAR_AXIS && _SHOW_HARDWARE) {
 		DriveScrew();
 		DriveNut();
     LinearStepper();
 	}
 
 	translate([0,0,-BARREL_LENGTH*$t]) {
+		if (_SHOW_ELECTROLYTE && _SHOW_HARDWARE)
 		Electrode();
     
-    if (_SHOW_CARRIAGE)
+    if (_SHOW_LINEAR_AXIS && _SHOW_CARRIAGE)
 		Carriage();
 	}
 
 	BarrelContact();
+	
   Barrel();
 
 		rotations=3;
 
   if (_SHOW_ROTARY_AXIS) {
+		if (_SHOW_HARDWARE)
 		RotaryStepper();
 		
 		translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MIN-gearThickness])
@@ -811,23 +808,34 @@ if ($preview) {
 	}
   
   if (_SHOW_HEADSTOCK) {
-		HeadstockORing();
-		HeadstockTap();
+		if (_SHOW_ELECTROLYTE && _SHOW_HARDWARE) {
+			HeadstockORing();
+			HeadstockTap();
+		}
   
+		if (_SHOW_HARDWARE)
     HeadstockBolts();
+		
+		if (_SHOW_PRINTS)
     Headstock();
   }
     
   if (_SHOW_TAILSTOCK) {
+		if (_SHOW_HARDWARE)
 		TailstockPins();
+		
+		if (_SHOW_PRINTS)
 		Tailstock();
 	}
 	
-	if (_SHOW_DRIP_TRAY)
+	if (_SHOW_DRIP_TRAY && _SHOW_PRINTS)
 	DripTray();
 
   if (_SHOW_COLUMNFOOT) {
+		if (_SHOW_HARDWARE)
     LegBolts();
+		
+		if (_SHOW_PRINTS)
     Legs();
   }
 
