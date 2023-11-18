@@ -1,4 +1,4 @@
-use <../Meta/Manifold.scad>;
+include <../Meta/Common.scad>;
 
 // Fittings: Tee
 TeeOuterDiameter   = 1; // Diameter of the body, not the rim

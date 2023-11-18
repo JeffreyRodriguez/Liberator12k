@@ -1,24 +1,15 @@
-  include <../Meta/Animation.scad>;
-
-use <../Meta/Manifold.scad>;
-use <../Meta/Units.scad>;
-use <../Meta/Cutaway.scad>;
-use <../Meta/Resolution.scad>;
-use <../Meta/Conditionals.scad>;
+include <../Meta/Common.scad>;
 
 use <../Shapes/Teardrop.scad>;
 use <../Shapes/Chamfer.scad>;
 use <../Shapes/Components/Pivot.scad>;
-
 use <../Tooling/Jigs/Square Rod Jig.scad>;
-
 use <../Vitamins/Bearing.scad>;
 use <../Vitamins/Nuts And Bolts.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 use <../Vitamins/Springs.scad>;
-
 use <Lower.scad>;
 use <Receiver.scad>;
 
@@ -390,7 +381,7 @@ module HammerBolt(clearance=Hammer_BOLT_CLEARANCE, head=HAMMER_BOLT_HEAD, nut=HA
              capOrientation=true,
              clearance=(cutter?clearance:0),
              doRender=!cutter);
-  
+
   translate([HammerCockedX-boltLength+NutHexHeight(HammerBolt())+ManifoldGap()
              -boltHeadAdjustment,0,0])
   rotate([0,-90,0])
@@ -530,7 +521,7 @@ module RecoilPlate(length=RecoilPlateLength(), spindleZ=-1, contoured=true, cutt
                     r=1/32,
 			              teardropFlip=[true, true, true]);
     }
-		
+
 		FiringPin(cutter=true);
 		HousingBolts(cutter=true);
   }
@@ -562,7 +553,7 @@ module ChargingHandleSpring(cutter=false, clearance=0.002) {
 module TriggerBase(clearance=0.015, frontLeg=true, backLeg=true) {
   frontExtra = 0.3125;
   backHeight = 0.375;
-	
+
 	difference() {
 		union() {
 
@@ -593,7 +584,7 @@ module TriggerBase(clearance=0.015, frontLeg=true, backLeg=true) {
 			               TriggerWidth(),
 			               backHeight-clearance], r=1/16);
 		}
-		
+
 
 		// Trigger finger chamfer
 		translate([-LowerMaxX()+TriggerFingerRadius()+TriggerTravel()+SearWidth()+0.5-0.15,
@@ -761,7 +752,7 @@ module ChargingHandleMiddle(clearance=0.005) {
 module Hammer(cutter=false, clearance=Inches(0.01), cutaway=false, alpha=1) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
-	
+
 	cutHeight = cutter ? 0.125 : 0;
 	cutLength = cutter ? HammerTravel() : 0;
 	CR = cutter ? 1/32 : 1/16;
@@ -788,7 +779,7 @@ module Hammer(cutter=false, clearance=Inches(0.01), cutaway=false, alpha=1) {
                      r=CR, teardropFlip=[false,true,true]);
 
     }
-			
+
 		// Side Tracks
 		for (M = [0,1]) mirror([0,M,0])
 		translate([HammerCockedX+cutLength+clear,
@@ -807,7 +798,7 @@ module Hammer(cutter=false, clearance=Inches(0.01), cutaway=false, alpha=1) {
 			mirror([1,0,0])
 			mirror([0,0,1])
 			ChamferedCube([HammerLength+0.25, 0.375, ReceiverIR()], r=1/32);
-			
+
 			// Main Spring Hole
 			translate([HammerCockedX-HammerLength + HammerSpringHammerInsetLength,0,0])
 			rotate([0,270,0])
@@ -961,7 +952,7 @@ module Housing(clearance=0.01, cutaway=false, alpha=1) {
 
     // Insert plug
     union() {
-			
+
 			translate([0.25,0,0])
 			rotate([0,-90,0])
 			ChamferedCylinder(r1=ReceiverIR(), r2=CR, h=4.5);
@@ -998,7 +989,7 @@ module Housing(clearance=0.01, cutaway=false, alpha=1) {
                DisconnectorPivotZ-0.125-0.125])
     mirror([1,0,0])
     ChamferedCube([0.3125, SpringOuterDiameter(spring=DisconnectorSpringSpec())+0.01, 0.25], r=1/32);
-		
+
 		Hammer(cutter=true);
 
     FiringPin(cutter=true);
@@ -1318,7 +1309,7 @@ module SimpleFireControlAssembly(recoilPlateLength=RecoilPlateLength(), hardware
   disconnectStart = 0.8;
   disconnectLetdown = 0.2;
   connectStart = 0.99;
-  
+
   DisconnectorTripAF = SubAnimate(ANIMATION_STEP_CHARGE, start=0.0, end=0.2)
                      - SubAnimate(ANIMATION_STEP_CHARGER_RESET,
                                   start=connectStart);
@@ -1375,7 +1366,7 @@ module SimpleFireControlAssembly(recoilPlateLength=RecoilPlateLength(), hardware
 
       if (hardware)
       HammerSpring();
-      
+
       if (hardware)
       HammerBoltSleeve();
 
@@ -1398,7 +1389,7 @@ module SimpleFireControlAssembly(recoilPlateLength=RecoilPlateLength(), hardware
     if (hardware)
     FiringPinSpring();
   }
-  
+
   if (hardware && _SHOW_HOUSING_BOLTS)
   HousingBolts();
 

@@ -1,4 +1,4 @@
-use <../Meta/Manifold.scad>;
+include <../Meta/Common.scad>;
 
 //
 // Pipe dimensions

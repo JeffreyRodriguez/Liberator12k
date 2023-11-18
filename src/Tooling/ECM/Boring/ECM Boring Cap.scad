@@ -1,8 +1,6 @@
-use <../../../Meta/Animation.scad>;
+include <../../../Meta/Common.scad>;
+
 use <../../../Meta/Cylinder Text.scad>;
-use <../../../Meta/Cutaway.scad>;
-use <../../../Meta/Manifold.scad>;
-use <../../../Meta/Resolution.scad>;
 use <../../../Shapes/Chamfer.scad>;
 use <../../../Shapes/Teardrop.scad>;
 use <../../../Shapes/Components/ORing.scad>;

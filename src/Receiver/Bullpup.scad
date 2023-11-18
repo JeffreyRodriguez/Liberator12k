@@ -1,20 +1,10 @@
-//$t=0;
-//$t=0.681;
-include <../Meta/Animation.scad>;
-
-use <../Meta/Manifold.scad>;
-use <../Meta/Units.scad>;
-use <../Meta/Cutaway.scad>;
-use <../Meta/Resolution.scad>;
-use <../Meta/Conditionals.scad>;
+include <../Meta/Common.scad>;
 
 use <../Shapes/Chamfer.scad>;
 use <../Shapes/Teardrop.scad>;
 use <../Shapes/MLOK.scad>;
-
 use <../Vitamins/Nuts And Bolts.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec.scad>;
-
 use <../Forend/Evolver.scad>;
 use <../Forend/PumpAR15.scad>;
 use <../Forend/Revolver.scad>;
@@ -22,7 +12,6 @@ use <../Forend/TopBreak.scad>;
 use <../Forend/Trigun.scad>;
 use <../Forend/Pump.scad>;
 use <../Forend/Pump_Reversed_Mag.scad>;
-
 use <FCG.scad>;
 use <Frame.scad>;
 use <Lower.scad>;

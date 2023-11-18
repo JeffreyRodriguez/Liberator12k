@@ -1,8 +1,5 @@
-use <../../Meta/Cutaway.scad>;
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Conditionals.scad>;
-use <../../Meta/Resolution.scad>;
-use <../../Meta/Units.scad>;
+include <../../Meta/Common.scad>;
+
 use <../../Shapes/Chamfer.scad>;
 use <../../Shapes/Teardrop.scad>;
 use <../../Shapes/Semicircle.scad>;

@@ -1,7 +1,5 @@
-use <../Meta/Cutaway.scad>;
-use <../Meta/Units.scad>;
-use <../Meta/Resolution.scad>;
-use <../Meta/Conditionals.scad>;
+include <../Meta/Common.scad>;
+
 use <../Shapes/Chamfer.scad>;
 use <../Shapes/Semicircle.scad>;
 use <../Shapes/Teardrop.scad>;
@@ -133,18 +131,18 @@ module PAT_Insert(alpha=1, cutaway=_CUTAWAY_INSERT, cutter=false, clearance=Inch
                          h=PAT_Insert_Height,
                         teardropTop=true);
     }
-    
+
     // Retainer Ring
     translate([0,0,insertRetainerZ])
     rotate_extrude()
     translate([PAT_Insert_Radius+clear,0])
     rotate(-90)
     Teardrop(r=retainerRingRadius);
-    
+
     // Cut away any plastic that might impede a plain round firing pin
     if (!cutter)
     cylinder(r=0.125/2, h=0.036);
-    
+
     children();
   }
 }
@@ -176,7 +174,7 @@ module PAT37_Base(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, primerOffset=0, 
       // Rim
       ChamferedCylinder(r1=rimRadius, r2=CR, h=rimHeight);
     }
-    
+
     // ID Cutout
     difference() {
       translate([0,0,BASE_THICKNESS+CR])
@@ -184,7 +182,7 @@ module PAT37_Base(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, primerOffset=0, 
                             r2=CR,
                             h=BASE_HEIGHT-BASE_THICKNESS-CR,
                             chamferBottom=false);
-      
+
       // Retainer Ring
       translate([0,0,retainerRingZ])
       rotate_extrude()
@@ -200,10 +198,10 @@ module PAT37_Base(BASE_HEIGHT=BASE_HEIGHT, rimHeight=RIM_WIDTH, primerOffset=0, 
     rotate(-90)
     Teardrop(r=baseTorusRadius, truncated=true);
 
-    
+
       translate([OFFSET_22PAT,0,0])
       PAT22(cutter=true);
-    
+
     // PAT Module Hole
     PAT_Insert(cutter=true);
   }
@@ -219,10 +217,10 @@ if ($preview) {
     translate([OFFSET_27PAT,0,0])
     PAT27();
   }
-  
+
   if (_SHOW_INSERT)
     PAT_Insert(alpha=_ALPHA_INSERT) translate([OFFSET_22PAT,0,0]) PAT22(cutter=true);
-  
+
   if (_SHOW_BASE)
     PAT37_Base(cutaway=_CUTAWAY_BASE, alpha=_ALPHA_BASE);
 

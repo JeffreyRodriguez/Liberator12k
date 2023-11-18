@@ -1,7 +1,6 @@
+include <../Meta/Common.scad>;
+
 use <../Shapes/Teardrop.scad>;
-use <../Meta/Resolution.scad>;
-use <../Meta/Manifold.scad>;
-use <../Meta/Units.scad>;
 
 // *********
 // * Setup *

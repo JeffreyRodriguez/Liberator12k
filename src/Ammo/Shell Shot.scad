@@ -1,9 +1,9 @@
+include <../Meta/Common.scad>;
+
 use <Shell Base.scad>;
 use <Shell Topper.scad>;
 use <Primer.scad>;
 use <../Vitamins/Pipe.scad>;
-use <../Meta/Cutaway.scad>;
-use <../Meta/Manifold.scad>;
 use <../Shapes/Chamfer.scad>;
 
 CHAMBER_DIAMETER = 0.78;

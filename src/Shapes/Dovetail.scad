@@ -1,4 +1,4 @@
-use <../Meta/Manifold.scad>;
+include <../Meta/Common.scad>;
 
 DEFAULT_DOVETAIL_ANGLE  = 65;
 DEFAULT_DOVETAIL_LENGTH = 10;

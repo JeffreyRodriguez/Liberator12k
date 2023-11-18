@@ -1,9 +1,5 @@
-use <../../Meta/Animation.scad>;
-use <../../Meta/Cutaway.scad>;
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Units.scad>;
-use <../../Meta/Resolution.scad>;
-use <../../Meta/Conditionals.scad>;
+include <../../Meta/Common.scad>;
+
 use <../../Shapes/Chamfer.scad>;
 use <../../Shapes/Components/ORing.scad>;
 use <../../Shapes/Components/Hose Barb.scad>;
@@ -188,16 +184,16 @@ $fs = UnitsFs()*ResolutionFs();
 module RotaryStepper(cutter=false) {
 	translate([BARREL_OFFSET_X, 0, DRILLHEAD_Z_MIN+Inches(9/16)])
 	translate([0,driveGearPitchRadius+drivenGearPitchRadius,0]) {
-		
+
 		NEMA_Stepper_BoltIterator(STEPPER)
 		mirror([0,0,1])
 		translate([0,0,Inches(9/16)])
 		Bolt(STEPPER_BOLT, length=Millimeters(16),
 		     head="socket", capOrientation=true);
-		
+
 		mirror([0,0,1])
 		NEMA_Stepper(STEPPER, cutter=cutter);
-		
+
 		// TODO: Move me into the right position for the new stepper location
 		// Drive Gear Extension
 		if (cutter)
@@ -268,13 +264,13 @@ module DriveGear(id=Millimeters(5), extension=0.375, flipZ=false) {
 // * Linear Axis *
 // ***************
 module LinearStepper(cutter=false) {
-		
+
 	translate([DRIVESCREW_OFFSET_X, DRIVESCREW_OFFSET_Y, DRILLHEAD_Z_MIN])
 	translate([0,0,Inches(9/16)])
 	NEMA_Stepper_BoltIterator(STEPPER)
 	Bolt(STEPPER_BOLT, length=Millimeters(16),
 			 head="socket", capOrientation=true);
-	
+
 	translate([DRIVESCREW_OFFSET_X, DRIVESCREW_OFFSET_Y, DRILLHEAD_Z_MIN])
 	NEMA_Stepper(STEPPER, cutter=cutter);
 }
@@ -308,7 +304,7 @@ module DriveNut(cutter=false) {
 		rotate(R+45)
 		translate([8/25.4, 0,-10/25.4])
 		cylinder(r=3/64, h=15/25.4);
-		
+
 		// Ender 3 compatible bolts
 		color("DimGrey")
 		translate([DRIVESCREW_OFFSET_X, DRIVESCREW_OFFSET_Y, CARRIAGE_MIN_Z])
@@ -323,7 +319,7 @@ module DriveNut(cutter=false) {
 		linear_extrude(Millimeters(3.5))
 		intersection(){
 			circle(d=Millimeters(28));
-			
+
 			translate([-Millimeters(13)/2, -Millimeters(28)/2])
 			square([Millimeters(13), Millimeters(28)]);
 		}
@@ -363,7 +359,7 @@ module Carriage(extension=1, alpha=_ALPHA_CARRIAGE) {
 				ChamferedCylinder(r1=Inches(0.375), r2=Inches(1/16), h=CARRIAGE_LENGTH);
 			}
 		}
-		
+
 		// Ender 3 compatible bolts head access hole
 		translate([DRIVESCREW_OFFSET_X, DRIVESCREW_OFFSET_Y, CARRIAGE_MIN_Z])
 		//rotate([180, 0, 0])
@@ -395,14 +391,14 @@ module ColumnBottomChamfer(bevel=Millimeters(2)) {
 	bevel2 = bevel*2;
 	tabLength = Millimeters(4);
 	tabLength2 = tabLength*2;
-	
+
 	translate([-COLUMN_X_WIDTH,-COLUMN_Y_WIDTH/2,0])
 	hull() {
-		
+
 		// Extension
 		translate([tabLength,tabLength,0])
 		cube([COLUMN_X_WIDTH-tabLength2, COLUMN_Y_WIDTH-tabLength2, bevel+tabLength]);
-		
+
 		// Base
 		translate([-bevel, -bevel, 0])
 		cube([COLUMN_X_WIDTH+bevel2, COLUMN_Y_WIDTH+bevel2, ManifoldGap()]);
@@ -412,21 +408,21 @@ module ColumnBottomChamfer(bevel=Millimeters(2)) {
 
 // Cutter
 module Electrode(clearance=0.015, cutter=false) {
-	
+
 	color("Gold") RenderIf(!cutter)
 	translate([BARREL_OFFSET_X,0,ELECTRODE_MIN_Z])
 	cylinder(r=(ELECTRODE_DIAMETER/2) + (cutter?clearance:0), h=ELECTRODE_LENGTH);
-	
-	
+
+
 	color("Goldenrod") RenderIf(!cutter)
 	union()
 	translate([BARREL_OFFSET_X,0,CARRIAGE_MIN_Z-ManifoldGap()]) {
 		// Hole Cutter
 		cylinder(d=0.332, h=0.625);
-		
+
 		// Hole Taper
 		taperNPT("1/8");
-		
+
 		// Hex
 		mirror([0,0,1])
 		cylinder(d=0.5, h=0.1875, $fn=6);
@@ -436,15 +432,15 @@ module Electrode(clearance=0.015, cutter=false) {
 
 // Headstock Hardware
 module HeadstockTap(clearance=0.015, cutter=false) {
-  
+
 	// Outlet Pipe Fitting
 	color("LightGrey") RenderIf(!cutter)
 	translate([WATER_TAP_OFFSET_X,WATER_TAP_OFFSET_Y,DRILLHEAD_Z_MAX]) {
 		mirror([0,0,1]) taperNPT("1/8");
 		mirror([0,0,1]) cylinder(d=0.332, h=0.625);
-		
+
 		cylinder(d=0.5, h=0.1875, $fn=6);
-		
+
 		HoseBarb(barbOuterMajorDiameter=Inches(0.4145),
                 barbOuterMinorDiameter=Inches(0.3720),
                 barbInnerDiameter=Inches(0.2285),
@@ -452,7 +448,7 @@ module HeadstockTap(clearance=0.015, cutter=false) {
                 segments=3, segmentSpacing=0.125,
                 extraTop=0.2, extraBottom=0.3125);
 	}
-  
+
 	// Water passage to outlet pipe fitting
 	if (cutter)
 	translate([WATER_TAP_OFFSET_X,WATER_TAP_OFFSET_Y,BARREL_Z_MAX+0.125])
@@ -548,7 +544,7 @@ module Headstock(debug=false, alpha=_ALPHA_HEADSTOCK) {
 			 ChamferedCube([BARREL_OFFSET_X+BARREL_RADIUS, Millimeters(20)+(COLUMN_WALL*2), DRILLHEAD_HEIGHT], r=1/16);
 
 			union() {
-        
+
         // Barrel Sleeve
         translate([0, 0, DRILLHEAD_Z_MIN])
         translate([BARREL_OFFSET_X, 0, 0])
@@ -642,12 +638,12 @@ module Tailstock(debug=false, alpha=_ALPHA_TAILSTOCK) {
 	color("Tan", alpha) render() Cutaway(enabled=debug)
 	difference() {
 		hull() {
-      
+
 			// Barrel Sleeve
 			translate([BARREL_OFFSET_X, 0, COLUMNFOOT_PLATE_HEIGHT])
 			ChamferedCylinder(r1=BARREL_RADIUS + ORING_WIDTH + COLUMN_WALL, r2=CR,
                         h=TAILSTOCK_HEIGHT);
-      
+
 			// Tailstock Pin Supports
       for (Y = [1,-1])
 			translate([BARREL_OFFSET_X, Y*Inches(1), COLUMNFOOT_PLATE_HEIGHT])
@@ -668,30 +664,30 @@ module Tailstock(debug=false, alpha=_ALPHA_TAILSTOCK) {
 module DripTray(alpha=_ALPHA_DRIP_TRAY) {
 	wall = DRIP_TRAY_WALL;
 	wall2 = wall*2;
-	
+
 	color("Tan") render()
 	difference() {
 		union() {
-			
+
 			// Drip Tray
 			translate([COLUMN_WALL-wall, -DRIP_TRAY_WIDTH/2, 0])
 			ChamferedCube([DRIP_TRAY_LENGTH,
 										 DRIP_TRAY_WIDTH,
 										 DRIP_TRAY_DEPTH], r=Inches(1/32));
-			
+
 			// Column sleeve
 			translate([-COLUMN_X_WIDTH, -(COLUMN_Y_WIDTH/2) - COLUMN_WALL, 0])
 			ChamferedCube([COLUMN_X_WIDTH + COLUMN_WALL,
 			               COLUMN_Y_WIDTH + (COLUMN_WALL*2),
 			               DRIP_TRAY_DEPTH], r=Inches(1/16));
 		}
-		
+
 		// Hollow out the drip tray
 		translate([COLUMN_WALL, -(DRIP_TRAY_WIDTH/2)+wall, DRIP_TRAY_BASE])
 		ChamferedCube([DRIP_TRAY_LENGTH-wall2,
 									 DRIP_TRAY_WIDTH-wall2,
 									 DRIP_TRAY_DEPTH], r=Inches(1/32));
-		
+
 		Column(slots=[0,-90,90], cutter=true);
 	}
 }
@@ -699,7 +695,7 @@ module DripTray(alpha=_ALPHA_DRIP_TRAY) {
 module Legs(alpha=1, debug=false) {
 	extension=COLUMNFOOT_EXTENSION;
 	padWidth=COLUMNFOOT_PAD_WIDTH;
-	
+
 	color("Tan", alpha) render() Cutaway(enabled=debug)
 	difference() {
 		union() {
@@ -714,10 +710,10 @@ module Legs(alpha=1, debug=false) {
 			mirror([1,0,0])
 			rotate(Y*45)
 			union() {
-				
+
 				// Leg
 				hull() {
-					
+
 					// Round top
 					ChamferedCylinder(r1=COLUMN_WALL, r2=Inches(1/32), h=COLUMNFOOT_HEIGHT);
 
@@ -777,13 +773,13 @@ if ($preview) {
 	translate([0,0,-BARREL_LENGTH*$t]) {
 		if (_SHOW_ELECTROLYTE && _SHOW_HARDWARE)
 		Electrode();
-    
+
     if (_SHOW_LINEAR_AXIS && _SHOW_CARRIAGE)
 		Carriage();
 	}
 
 	BarrelContact();
-	
+
   Barrel();
 
 		rotations=3;
@@ -791,7 +787,7 @@ if ($preview) {
   if (_SHOW_ROTARY_AXIS) {
 		if (_SHOW_HARDWARE)
 		RotaryStepper();
-		
+
 		translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MIN-gearThickness])
 		mirror([0,0,1])
 		translate([0,gearDistance,0])
@@ -805,35 +801,35 @@ if ($preview) {
 		rotate(-rotations*360*$t*(driveGearTeeth/drivenGearTeeth))
 		DrivenGear();
 	}
-  
+
   if (_SHOW_HEADSTOCK) {
 		if (_SHOW_ELECTROLYTE && _SHOW_HARDWARE) {
 			HeadstockORing();
 			HeadstockTap();
 		}
-  
+
 		if (_SHOW_HARDWARE)
     HeadstockBolts();
-		
+
 		if (_SHOW_PRINTS)
     Headstock();
   }
-    
+
   if (_SHOW_TAILSTOCK) {
 		if (_SHOW_HARDWARE)
 		TailstockPins();
-		
+
 		if (_SHOW_PRINTS)
 		Tailstock();
 	}
-	
+
 	if (_SHOW_DRIP_TRAY && _SHOW_PRINTS)
 	DripTray();
 
   if (_SHOW_COLUMNFOOT) {
 		if (_SHOW_HARDWARE)
     LegBolts();
-		
+
 		if (_SHOW_PRINTS)
     Legs();
   }

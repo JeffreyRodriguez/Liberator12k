@@ -1,7 +1,5 @@
-use <../../Meta/Cutaway.scad>;
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Units.scad>;
-use <../../Meta/Resolution.scad>;
+include <../../Meta/Common.scad>;
+
 use <../../Shapes/Semicircle.scad>;
 use <../../Shapes/Teardrop.scad>;
 use <../../Shapes/Components/T Lug.scad>;
@@ -245,7 +243,7 @@ module BARBB_ReceiverBolts(cutter=false, clearance=0.01, angle=0) {
   rotate(angle)
   NutAndBolt(BoltSpec("M5"), boltLength=Millimeters(10), head="flat",
              capOrientation=true, clearance=clear);
-	
+
   // Lower
   translate([lowerX,0,tubeCenterZ])
   for (m = [0,1]) mirror([0,m,0])
@@ -1013,7 +1011,7 @@ if ($preview) {
 
   translate([LowerMaxX()+lowerX,0,-ReceiverBottomZ()]) {
     TriggerGroup(alpha=_ALPHA_RECEIVER, searLength=1.25);
-		
+
     Lower(alpha=_ALPHA_RECEIVER);
   }
 
@@ -1042,7 +1040,7 @@ if ($preview) {
     translate([ReceiverLugRearMinX()-0.25,0,0])
     BARBB_RailMount(id=1);
   }
-  
+
 
   translate([lowerX,0,0])
   BARBB_LowerReceiver();

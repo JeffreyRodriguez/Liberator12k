@@ -1,9 +1,6 @@
+include <../Meta/Common.scad>;
+
 use <Primer.scad>;
-
-use <../Meta/Cutaway.scad>;
-use <../Meta/Manifold.scad>;
-use <../Meta/Conditionals.scad>;
-
 use <../Shapes/Chamfer.scad>;
 use <../Shapes/Teardrop.scad>;
 use <../Shapes/TeardropTorus.scad>;

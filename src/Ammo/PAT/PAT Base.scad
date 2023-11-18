@@ -1,8 +1,9 @@
+include <../../Meta/Common.scad>;
+
 use <../Shell Base.scad>;
 use <../Shell Topper.scad>;
 use <../Primer.scad>;
 
-use <../../Meta/Cutaway.scad>;
 use <../../Vitamins/Pipe.scad>;
 
 DEFAULT_CHAMBER_DIAMETER = 1.08;

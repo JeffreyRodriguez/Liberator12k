@@ -1,8 +1,4 @@
-use <../../Meta/Cutaway.scad>;
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Units.scad>;
-use <../../Meta/Resolution.scad>;
-use <../../Meta/Conditionals.scad>;
+include <../../Meta/Common.scad>;
 
 use <../Bearing Surface.scad>;
 use <../Chamfer.scad>;

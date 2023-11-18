@@ -1,4 +1,5 @@
-use <../../Meta/Units.scad>;
+include <../../Meta/Common.scad>;
+
 use <BoltSpec.scad>;
 
 // Bolt tapping drill sizes: https://web.archive.org/web/20210406172745/https://www.natool.com/wp-content/uploads/2019/06/tapdrillsizes-inmet_web_catp113-116.pdf

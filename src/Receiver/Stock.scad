@@ -1,17 +1,10 @@
-//$t=0;
-use <../Meta/Manifold.scad>;
-use <../Meta/Units.scad>;
-use <../Meta/Cutaway.scad>;
-use <../Meta/Resolution.scad>;
-use <../Meta/Conditionals.scad>;
+include <../Meta/Common.scad>;
 
 use <../Shapes/Chamfer.scad>;
 use <../Shapes/Teardrop.scad>;
 use <../Shapes/MLOK.scad>;
-
 use <../Vitamins/Nuts And Bolts.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec.scad>;
-
 use <Lower.scad>;
 use <Receiver.scad>;
 

@@ -1,7 +1,5 @@
-use <../../Meta/Cutaway.scad>;
-use <../../Meta/Units.scad>;
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Resolution.scad>;
+include <../../Meta/Common.scad>;
+
 use <../../Shapes/Semicircle.scad>;
 use <../../Shapes/Teardrop.scad>;
 use <../../Shapes/Components/Bipod.scad>;

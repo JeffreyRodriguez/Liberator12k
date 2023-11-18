@@ -1,7 +1,5 @@
-use <../Meta/Conditionals.scad>;
-use <../Meta/Manifold.scad>;
-use <../Meta/Units.scad>;
-use <../Meta/Cutaway.scad>;
+include <../Meta/Common.scad>;
+
 use <../Meta/slookup.scad>;
 use <../Shapes/Chamfer.scad>;
 

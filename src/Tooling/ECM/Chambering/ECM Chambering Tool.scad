@@ -1,7 +1,5 @@
-use <../../../Meta/Manifold.scad>;
-use <../../../Meta/Cutaway.scad>;
-use <../../../Meta/Resolution.scad>;
-use <../../../Meta/Units.scad>;
+include <../../../Meta/Common.scad>;
+
 use <../../../Shapes/Semicircle.scad>;
 use <../../../Shapes/Chamfer.scad>;
 
@@ -86,25 +84,25 @@ module ECM_ChamberElectrodeJigBolts(chamber=CHAMBER, spec=BoltSpec("M3"), length
 ///
 
 module ECM_ChamberElectrodeJig(chamber=CHAMBER, electrode=ELECTRODE_THICKNESS, thickness=JIG_THICKNESS, side=JIG_SIDE, inset=ELECTRODE_INSET, cutout=true) {
-	
+
 	jigProfile = [
 		[0, -JIG_SIDE*2],
 		each(chamber),
 		[ChamberLength(chamber), -JIG_SIDE*2]
 	];
-	
+
 	color("Tan") render()
 	difference() {
 		// Jig body
 		rotate([0,90,0])
 		ChamberProfile(jigProfile, thickness, center=false);
-		
+
 		// Electrode cutout
 		if (cutout)
 		translate([0,inset,thickness-electrode])
 		rotate([0,90,0])
 		ChamberProfile(chamber, electrode, center=false);
-		
+
 		ECM_ChamberElectrodeJigBolts(chamber, cutter=true);
 	}
 }
@@ -115,11 +113,11 @@ module ECM_ChamberElectrodeJig(chamber=CHAMBER, electrode=ELECTRODE_THICKNESS, t
 // *************
 ScaleToMillimeters()
 if ($preview) {
-	
+
 	ECM_ChamberReamer();
-	
+
 	translate([0,2,0]) {
-		
+
 		// Jig electrode
 		color("Gold")
 		translate([0,0,JIG_THICKNESS-ELECTRODE_THICKNESS+ManifoldGap()])
@@ -132,7 +130,7 @@ if ($preview) {
 		// Top Plate
 		translate([0,0,JIG_THICKNESS])
 		ECM_ChamberElectrodeJig(cutout=false);
-		
+
 		// Bottom Plate
 		ECM_ChamberElectrodeJig();
 	}
@@ -159,7 +157,7 @@ if ($preview) {
 			ECM_ChamberElectrodeJig(cutout=false);
     else
 			ECM_ChamberElectrodeJig(cutout=false);
-		
+
   // ************
   // * Hardware *
   // ************

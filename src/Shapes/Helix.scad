@@ -1,8 +1,5 @@
+include <../Meta/Common.scad>;
 include<../Meta/Animation.scad>;
-
-use <../Meta/Units.scad>;
-use <../Meta/Resolution.scad>;
-use <../Meta/Manifold.scad>;
 use <../Shapes/Semicircle.scad>;
 use <../Shapes/Teardrop.scad>;
 

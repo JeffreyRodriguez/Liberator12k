@@ -1,5 +1,5 @@
-use <../Meta/Resolution.scad>;
-use <../Meta/Units.scad>;
+include <../Meta/Common.scad>;
+
 use <Teardrop.scad>;
 
 // *********

@@ -1,5 +1,5 @@
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Units.scad>;
+include <../../Meta/Common.scad>;
+
 use <../../Shapes/Chamfer.scad>;
 
 _WALL_FRONT=0.125;
@@ -95,7 +95,7 @@ module AR15_MagwellInsert(height=AR15_MagwellDepth(),
 				translate([0,0,ManifoldGap()])
 				linear_extrude(height=taperHeight+ManifoldGap())
 				AR15_MagwellTemplate(showCatch=false, showRearTab=false);
-				
+
 				linear_extrude(height=ManifoldGap())
 				translate([-0.125,0,0])
 				scale([1.5,1.5,1])
@@ -114,7 +114,7 @@ module AR15_Magwell(width=Inches(1.125),
                wallFront=Inches(0),
                 wallBack=Inches(0),
                 tabWidth=0.5, tabHeight = 1, cut=true) {
-                  
+
   length = AR15_MagazineBaseLength()
          + AR15_MagazineRearTabLength()
          + wallFront;

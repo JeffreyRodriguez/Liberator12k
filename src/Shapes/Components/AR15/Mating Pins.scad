@@ -1,8 +1,6 @@
-use <../../../Meta/Clearance.scad>;
-use <../../../Meta/Manifold.scad>;
-use <../../../Meta/Units.scad>;
-use <../../../Meta/Resolution.scad>;
+include <../../../Meta/Common.scad>;
 
+use <../../../Meta/Clearance.scad>;
 use <../../../Vitamins/Nuts And Bolts.scad>;
 
 function AR15_MatingPinSpec() = Spec_RodOneQuarterInch();

@@ -1,10 +1,4 @@
-include <../../Meta/Animation.scad>;
-
-use <../../Meta/Cutaway.scad>;
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Units.scad>;
-use <../../Meta/Resolution.scad>;
-use <../../Meta/Conditionals.scad>;
+include <../../Meta/Common.scad>;
 use <../../Shapes/Semicircle.scad>;
 use <../../Shapes/Teardrop.scad>;
 use <../../Shapes/Components/T Lug.scad>;
@@ -152,7 +146,7 @@ module Barrel(cutter=false) {
 		rotate(180)
 		AR15_Barrel(cutter=cutter);
 
-		// Gas block shaft collar  
+		// Gas block shaft collar
 		color("Black")
 		translate([0,0,barrelGasLength+ManifoldGap(2)])
 		cylinder(r=gasShaftCollarOD/2, h=gasShaftCollarWidth);
@@ -166,7 +160,7 @@ module TensionBolts(cutter=false) {
 
 module TriggerBarPin(cutter=false, clearance=0.008) {
 	clear = cutter ? clearance : 0;
-	
+
 	color("Silver") RenderIf(!cutter)
 	translate([lowerX-0.5,0,0.875])
 	rotate([90,0,0])
@@ -195,7 +189,7 @@ module SearReturnSpring(cutter=false, clearance=0.01) {
 // **********
 module EjectionPortCutout() {
   union() {
-    
+
 
     // Ejection slot
     rotate([-AR15_CamPinAngle()*0.75,0,0])
@@ -238,7 +232,7 @@ module LowerAttachment(clearance=0.007, extraFront=0) {
 
       translate([LowerMaxX()+lowerX,0,lowerZ])
       ReceiverLugFront(extraTop=lowerZ);
-      
+
       translate([LowerMaxX()+lowerX,0,lowerZ])
       ReceiverLugRear(extraTop=lowerZ);
     }
@@ -277,18 +271,18 @@ module SearSupport(cutter=false, clearance=0.01, alpha=_ALPHA_SEAR_SUPPORT, cuta
 										  r=chamferRadius, teardropFlip=[true, true, true]);
 			}
 		}
-		
+
 		translate([trunnionMinX,0,0])
 		rotate([0,90,0])
 		ChamferedCircularHole(r1=1/2, r2=chamferRadius, h=length);
-		
+
 		for (P = [0:0.1:1]) // TODO: Do better, this is a hack.
 		HammAR_Sear(pivot=P, cutter=true);
-		
+
 		HammAR_SearPin(cutter=true);
-		
+
 		HammAR_Cutter();
-		
+
 		translate([-TriggerTravel(),0,0])
 		TriggerBar(cutter=true);
 	}
@@ -303,7 +297,7 @@ module Trunnion(alpha=_ALPHA_TRUNNION, cutaway=false) {
 			Receiver_Segment(length=trunnionLength,
 			                 highTop=true,
 			                 chamferFront=true, chamferBack=true);
-			
+
 			Magwell();
 		}
 
@@ -313,11 +307,11 @@ module Trunnion(alpha=_ALPHA_TRUNNION, cutaway=false) {
 			rotate([0,-90,0])
 			cylinder(r=AR15_BoltHeadRadius()+0.01,
 			         h=abs(boltCarrierMaxX)+ManifoldGap(2));
-			
+
 			translate([barrelX-0.375-0.01625,0,0])
 			rotate([0,-90,0])
 			cylinder(r=0.5+0.01, h=ManifoldGap());
-			
+
 			translate([magwellX+0.125+0.012,0,-AR15BarrelExtensionRadius()])
 			linear_extrude(AR15BarrelExtensionRadius())
 			AR15_MagwellTemplate(showRearTab=false);
@@ -329,7 +323,7 @@ module Trunnion(alpha=_ALPHA_TRUNNION, cutaway=false) {
 			         r2=boltCarrierRadius+0.015,
 			          h=barrelExtensionLandingHeight);
 		}
-		
+
 		// Vertical slot
 		translate([trunnionMinX,-(ReceiverTopSlotWidth()/2)-ReceiverSlotClearance(),-chamferRadius])
 		mirror([1,0,0])
@@ -340,25 +334,25 @@ module Trunnion(alpha=_ALPHA_TRUNNION, cutaway=false) {
 		                    center=false, corners=false,
 		                    chamferRadius=chamferRadius, chamferTop=false);
 
-		
+
 		EjectionPortCutout();
 		Barrel(cutter=true);
 		HammAR_Cutter();
 		HammAR_HandleSlot();
-		
+
 		translate([trunnionMinX,0,0])
 		HammAR_Chamfer();
-		
+
 		translate([magwellX,0,magwellZ])
 		AR15_MagwellInsert(extraTop=abs(magwellZ)-(0.3));
-		
+
 		translate([-trunnionLength,0,0])
 		HammAR_Chamfer();
-		
+
 		TensionBolts(cutter=true);
-		
+
 		MlokRailCuts();
-		
+
 		translate([trunnionMinX,0,0])
 		mirror([1,0,0])
 		ReceiverTopSlot(length=trunnionLength,
@@ -375,19 +369,19 @@ module BarrelRetainer(alpha=_ALPHA_RECEIVER, cutaway=false) {
 		Receiver_Segment(length=barrelRetainerLength,
 		                 highTop=true,
 		                 chamferFront=true, chamferBack=true);
-		
+
 		translate([barrelRetainerMinX,0,0])
 		mirror([1,0,0])
 		ReceiverTopSlot(length=barrelRetainerLength,
 		                verticalSlot=false);
-		
+
 		translate([barrelRetainerMinX,0,0])
 		rotate([0,90,0])
 		HoleChamfer(r1=AR15BarrelChamberRadius(), r2=1/32);
-		
+
 		Barrel(cutter=true);
 		TensionBolts(cutter=true);
-		
+
 		MlokRailCuts();
 	}
 }
@@ -404,34 +398,34 @@ module Stock(bottomDiameter=1, wall=0.25, clearance=0.008, alpha=_ALPHA_STOCK) {
 			Receiver_Segment(length=highTopLength,
 			                 highTop=true,
 			                 chamferFront=true, chamferBack=true);
-			
+
 			translate([trunnionMinX-highTopLength,0,0])
 			Receiver_Segment(length=stockLength-highTopLength,
 			                 highTop=false, chamferBack=true);
 		}
-		
+
 		HammAR_HandleSlot();
-		
+
 		translate([HammAR_X()-clearance,0,0])
 		rotate([0,-90,0])
 		linear_extrude(HammAR_Length()+clearance, center=false)
 		HammAR_Cutter2D(pivot=true);
-		
-		
+
+
 		translate([HammAR_X()-HammAR_Length(),0,0])
 		rotate([0,-90,0])
 		linear_extrude(stockLength, center=false)
 		HammAR_Cutter2D(pivot=false);
-		
+
 		translate([trunnionMinX-stockLength,0,0])
 		HammAR_Chamfer(pivot=false);
-		
+
 		translate([trunnionMinX,0,0])
 		mirror([1,0,0])
 		HammAR_Chamfer(pivot=true);
-		
+
 		TensionBolts(cutter=true);
-		
+
 		for (P = [0:0.1:1]) // TODO: Do better, this is a hack.
 		HammAR_Sear(pivot=P, cutter=true);
   }
@@ -442,18 +436,18 @@ module Buttpad(clearance=0.008, alpha=1) {
 	difference() {
 		translate([stockMinX-ButtpadX(),0,0])
 		Stock_Buttpad(boltHoles=false, lowerExtension=false, doRender=false, alpha=alpha);
-		
+
 		translate([HammAR_X()-HammAR_Length()-clearance,0,0])
 		rotate([0,-90,0])
 		linear_extrude(stockLength+clearance, center=false)
 		HammAR_Cutter2D(camTrack=false, pivot=false, clearance=0.02);
-		
+
 		translate([stockMinX,0,0])
 		mirror([1,0,0])
 		HammAR_Chamfer(camTrack=false, pivot=false, clearance=0.02);
-		
+
 		TensionBolts(cutter=true);
-		
+
 		translate([stockMinX-0.5,0,0])
 		TensionBoltIterator()
 		ChamferedCylinder(r1=0.25, r2=1/32, h=ButtpadLength());
@@ -469,7 +463,7 @@ module Magwell(cutter=false) {
     translate([magwellX,0,magwellZ])
     AR15_MagwellInsert();
   }
-  
+
   if (cutter)
   translate([magwellX,0,magwellZ])
   AR15_MagwellInsert(extraTop=abs(magwellZ));
@@ -481,26 +475,26 @@ module Forend(alpha=_ALPHA_RECEIVER, cutaway=false) {
 	difference() {
 		union() {
 			hull() {
-					
+
 					translate([receiverMaxX,0,0])
 					mirror([1,0,0])
 					Receiver_Segment(length=ForendLength,
 					                 highTop=false,
 					                 chamferBack=true, chamferFront=true);
-				
+
 					translate([receiverMaxX,0,0])
 					mirror([1,0,0])
 					Receiver_Segment(length=0.125,
 					                 highTop=true,
 					                 chamferBack=true, chamferFront=true);
 			}
-			
+
 			hull() {
 				translate([receiverMaxX+ForendLength,0,0])
 				Receiver_Segment(length=0.125,
 				                 highTop=false,
 				                 chamferBack=true, chamferFront=true);
-				
+
 				translate([receiverMaxX,-(LowerMaxWidth()/2),0])
 				mirror([0,0,1])
 				ChamferedCube([0.125,
@@ -509,29 +503,29 @@ module Forend(alpha=_ALPHA_RECEIVER, cutaway=false) {
 				              teardropFlip=[true,true,true], r=CR);
 			}
 		}
-		
+
 		translate([receiverMaxX,0,0])
 		rotate([0,90,0])
 		ChamferedCircularHole(r1=(1.25/2)+0.01, r2=CR, h=ForendLength);
-		
+
 		translate([barrelRetainerMinX,0,0])
 		rotate([0,90,0])
 		HoleChamfer(r1=AR15BarrelChamberRadius(), r2=1/32);
-		
+
 		TensionBolts(cutter=true);
 	}
 }
 module TriggerGuide(clearance=0.01, alpha=_ALPHA_TRIGGER) {
 	CR = 1/16;
 	roundBodyLength = 2;
-	
+
 	bodyX = lowerX-roundBodyLength+0.75;
-	
+
 	color("Chocolate", alpha) render()
 	difference() {
 		translate([bodyX,0,0])
 		union() {
-			
+
 			// Round body
 			rotate([0,90,0])
 			ChamferedCylinder(r1=ReceiverIR()-clearance, r2=CR,
@@ -553,7 +547,7 @@ module TriggerGuide(clearance=0.01, alpha=_ALPHA_TRIGGER) {
 										 ReceiverTopSlotHorizontalWidth()-(clearance*2),
 										 ReceiverTopSlotHorizontalHeight()-clearance],
 										r=chamferRadius, teardropFlip=[true, true, true]);
-			
+
 			// Trigger attachment
 			translate([roundBodyLength,-(0.75/2)+clearance,ReceiverBottomZ()])
 			mirror([1,0,0])
@@ -561,7 +555,7 @@ module TriggerGuide(clearance=0.01, alpha=_ALPHA_TRIGGER) {
 										 0.75-(clearance*2),
 										 abs(ReceiverBottomZ())],
 										r=chamferRadius, teardropFlip=[true, true, true]);
-			
+
 			// Side slots
 			sideWidth = (ReceiverIR()+Receiver_SideSlotDepth()-clearance)*2;
 			sideHeight= Receiver_SideSlotHeight()-clearance;
@@ -573,12 +567,12 @@ module TriggerGuide(clearance=0.01, alpha=_ALPHA_TRIGGER) {
 										 sideHeight],
 										r=chamferRadius, teardropFlip=[false, true, true]);
 		}
-		
+
 		// Barrel clearance
 		translate([bodyX,0,0])
 		rotate([0,90,0])
 		ChamferedCircularHole(r1=(1/2), r2=CR, h=roundBodyLength);
-		
+
 		TriggerBarPin(cutter=true);
 		TriggerBar(cutter=true);
 		Trigger(cutter=true);
@@ -589,19 +583,19 @@ module TriggerBar(cutter=false, clearance=0.008) {
 	clear2 = clear*2;
 	CR = 1/16;
 	clearCR = cutter ? CR : 0;
-	
+
 	width = 0.25;
-	
+
 	color("Olive") RenderIf(!cutter)
 	difference() {
 		union() {
-			
+
 			hull() {
 				translate([-0.25,-(width/2)-clear,1-clear])
 				ChamferedCube([lowerX, width+clear2, width+clearCR+clear2],
 				              r=CR,
 				              teardropFlip=[true,true,false]);
-				
+
 				// Angled tip (long)
 				translate([-0.625,-(width/2)-clear,1.25+clearCR+clear])
 				mirror([0,0,1])
@@ -609,14 +603,14 @@ module TriggerBar(cutter=false, clearance=0.008) {
 				              r=(1/32),
 				              teardropFlip=[true,true,false]);
 			}
-			
+
 			// Trigger Guide Connector Block
 			translate([lowerX-1.5-clearCR,-(width/2)-clear,0.625-clear])
 			ChamferedCube([1.5+clearCR, width+clear2, 0.625+clearCR+clear2],
 			               r=CR,
 			               teardropFlip=[true,true,false]);
 		}
-		
+
 		if (!cutter)
 		TriggerBarPin(cutter=true);
 	}
@@ -626,14 +620,14 @@ module Trigger(cutter=false, clearance=0.015, alpha=_ALPHA_TRIGGER) {
 	clear2 = clear*2;
 	CR = 1/16;
 	connectionLength = 0.75;
-	
+
 	color("Olive", alpha) RenderIf(!cutter)
 	difference() {
 		union() {
-			
+
 			translate([LowerMaxX()+lowerX,0,0])
 			TriggerBase(frontLeg=true, backLeg=false);
-			
+
 			// Connect trigger base and round body
 			translate([lowerX+ReceiverLugRearMaxX()+0.625-clear,
 								 -(TriggerWidth()/2)-clear,
@@ -643,7 +637,7 @@ module Trigger(cutter=false, clearance=0.015, alpha=_ALPHA_TRIGGER) {
 										 TriggerHeight()+0.5+clear2],
 										 r=1/16);
 		}
-		
+
 		TriggerSpring(cutter=true);
 		TriggerPlunger(cutter=true);
 	}
@@ -654,33 +648,33 @@ module TriggerPlunger(cutter=false, clearance=0.01, alpha=0.5) {
 	clear2 = clear*2;
 	clearCR = cutter ? CR : 0;
 	width = 0.3125;
-	
+
 	travelCut = cutter ? 0.375 : 0;
-	
+
 	color("Chocolate", alpha) RenderIf(!cutter)
 	difference() {
 		union() {
-			
+
 			// Body
 			translate([triggerReturnX,0,triggerReturnZ])
 			rotate([0,90,0])
 			ChamferedCylinder(r1=(width/2)+clear, r2=CR, h=1.125+travelCut);
-			
+
 			// Key
 			*translate([triggerReturnX+0.375-clearCR,-(1/8/2)-clear,triggerReturnZ])
 			ChamferedCube([0.125+clearCR+travelCut, (1/8)+clear2, (width/2)+(1/16)+clear], r=CR);
 		}
-		
+
 		TriggerSpring(cutter=true);
 	}
-	
+
 }
 ///
 
 ScaleToMillimeters()
 //translate([-stockMinX+ButtpadLength(),0,0])
 if ($preview) {
-	
+
 
   triggerAF = SubAnimate(ANIMATION_STEP_FIRE, end=0.5)
 	          - SubAnimate(ANIMATION_STEP_CHARGE);
@@ -695,27 +689,27 @@ if ($preview) {
 	disconnectorAF = SubAnimate(ANIMATION_STEP_LOAD, start=0.84, end=0.9)
 	               - SubAnimate(ANIMATION_STEP_LOCK);
 	echo("Disconnector AF: ", disconnectorAF);
-	
+
 	if (_SHOW_BARREL)
 	Barrel();
-	
+
 	translate([-TriggerTravel()*triggerAF,0,0]) {
-		
+
 		if (_SHOW_TRIGGER)
 		TriggerSpring();
-		
+
 		if (_SHOW_TRIGGER)
 		TriggerPlunger();
-		
+
 		if (_SHOW_TRIGGER_BAR)
 		TriggerBarPin();
-		
+
 		if (_SHOW_TRIGGER_BAR)
 		TriggerBar();
-		
+
 		if (_SHOW_TRIGGER)
 		Trigger();
-		
+
 		if (_SHOW_TRIGGER_GUIDE)
 		TriggerGuide();
 	}
@@ -725,10 +719,10 @@ if ($preview) {
 		LowerMount(searSupport=false, hammerGuide=false, takedownPin=false, alpha=_ALPHA_LOWER);
 		Lower(alpha=_ALPHA_LOWER);
 	}
-	
+
 	if (_SHOW_TENSION_BOLTS)
 	TensionBolts();
-	
+
 	if (_SHOW_HAMMAR)
 	HammAR(rotationAF=chargerRotationAF,
 	       travelAF=chargeAF,
@@ -738,19 +732,19 @@ if ($preview) {
 	       screws=_SHOW_HAMMAR_SCREWS,
 	       sear=_SHOW_SEAR,
 	       alpha=_ALPHA_BOLT_CARRIER);
-	
+
 	if (_SHOW_SEAR_SUPPORT)
 	SearSupport(cutaway=_CUTAWAY_SEAR_SUPPORT);
 
 	if (_SHOW_TRUNNION)
 	Trunnion(cutaway=_CUTAWAY_TRUNNION);
-	
+
 	if (_SHOW_BARREL_RETAINER)
 	BarrelRetainer();
-	
+
 	if (_SHOW_FOREND)
 	Forend();
-	
+
 	if (_SHOW_RECEIVER)
 	translate([receiverMaxX,0,0])
 	Receiver(alpha=_ALPHA_RECEIVER, highTop=true, mlok=false, takedownPin=false);
@@ -772,7 +766,7 @@ if ($preview) {
 			rotate([0,-90,0])
 			translate([-barrelRetainerMinX,0,0])
 			BarrelRetainer();
-		
+
 	if (_RENDER == "Prints/Forend")
 		if (!_RENDER_PRINT)
 			Forend();
@@ -780,7 +774,7 @@ if ($preview) {
 			rotate([0,-90,0])
 			translate([-receiverMaxX,0,0])
 			Forend();
-		
+
 	if (_RENDER == "Prints/HammerCompressor")
 		if (!_RENDER_PRINT)
 			HammerCompressor();
@@ -795,7 +789,7 @@ if ($preview) {
 			rotate([0,-90,0])
 			translate([-boltCarrierMinX,0,0])
 			BoltCarrier();
-		
+
 	if (_RENDER == "Prints/BoltCarrierBack")
 		if (!_RENDER_PRINT)
 			BoltCarrierBack();

@@ -1,5 +1,4 @@
-use <../Meta/Units.scad>;
-use <../Meta/Resolution.scad>;
+include <../Meta/Common.scad>;
 
 
 // *********

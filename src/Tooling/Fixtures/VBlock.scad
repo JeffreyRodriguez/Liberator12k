@@ -1,10 +1,4 @@
-include <../../Meta/Animation.scad>;
-
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Units.scad>;
-use <../../Meta/Conditionals.scad>;
-use <../../Meta/Cutaway.scad>;
-use <../../Meta/Resolution.scad>;
+include <../../Meta/Common.scad>;
 
 use <../../Shapes/Chamfer.scad>;
 use <../../Shapes/MLOK.scad>;
@@ -12,7 +6,6 @@ use <../../Shapes/Teardrop.scad>;
 use <../../Shapes/TeardropTorus.scad>;
 use <../../Shapes/Semicircle.scad>;
 use <../../Shapes/ZigZag.scad>;
-
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 /* [Export] */

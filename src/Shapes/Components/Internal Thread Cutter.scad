@@ -1,5 +1,5 @@
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Resolution.scad>;
+include <../../Meta/Common.scad>;
+
 use <../../Vitamins/Pipe.scad>;
 
 //Spec_TubingThreeQuarterByFiveEighthInch

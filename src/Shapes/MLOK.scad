@@ -1,6 +1,5 @@
-use <../Meta/Units.scad>;
-use <../Meta/Manifold.scad>;
-use <../Meta/Resolution.scad>;
+include <../Meta/Common.scad>;
+
 use <../Vitamins/Nuts And Bolts.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;

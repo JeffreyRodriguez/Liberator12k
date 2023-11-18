@@ -1,5 +1,5 @@
-use <../Meta/Resolution.scad>;
-use <../Meta/Manifold.scad>;
+include <../Meta/Common.scad>;
+
 use <Semicircle.scad>;
 
 

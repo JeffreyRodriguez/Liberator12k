@@ -1,20 +1,12 @@
-
-//$t=0.6;
-use <../Meta/Cutaway.scad>;
-use <../Meta/Manifold.scad>;
-use <../Meta/Resolution.scad>;
-use <../Meta/Conditionals.scad>;
-use <../Meta/Units.scad>;
+include <../Meta/Common.scad>;
 
 use <../Shapes/Chamfer.scad>;
 use <../Shapes/Components/Grip Handle.scad>;
 use <../Shapes/Components/T Lug.scad>;
-
 use <../Vitamins/Nuts And Bolts.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
-
 use <FCG.scad>;
 use <Receiver.scad>;
 

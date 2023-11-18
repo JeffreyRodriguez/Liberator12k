@@ -1,6 +1,4 @@
-use <../Meta/Resolution.scad>;
-use <../Meta/Units.scad>;
-use <../Meta/Manifold.scad>;
+include <../Meta/Common.scad>;
 use <../Meta/slookup.scad>;
 
 SPRING_OD = 0.625;

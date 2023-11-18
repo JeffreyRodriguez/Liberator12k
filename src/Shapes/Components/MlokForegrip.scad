@@ -1,15 +1,10 @@
-use <../../Meta/Cutaway.scad>;
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Units.scad>;
-use <../../Meta/Resolution.scad>;
-use <../../Meta/Conditionals.scad>;
-
-use <../Chamfer.scad>;
+include <../../Meta/Common.scad>;
 
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
+use <../Chamfer.scad>;
 
 // Picatinny rail mounts on top of receiver w/ M-LOK
 MLOK_BOLT           = "#8-32";   // ["M4", "#8-32"]

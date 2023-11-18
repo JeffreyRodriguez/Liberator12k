@@ -1,5 +1,4 @@
-use <../../../Meta/Manifold.scad>;
-use <../../../Meta/Units.scad>;
+include <../../../Meta/Common.scad>;
 
 
 // Length of the barrel to be rifled
@@ -42,21 +41,21 @@ module ECM_RiflingChannel(outsideDiameter = BARREL_ID,
   render()
   difference() {
     union() {
-      
+
       linear_extrude(height=length,
                       twist=twistSign*length*twistRate*360,
                      slices=length*10) {
         intersection() {
             if (intersect)
             circle(r=(outsideDiameter/2));
-          
+
             // Water Grooves
             for (groove = [0:grooveCount-1])
             rotate(360/(grooveCount)*groove)
             translate([outsideRadius,0])
             circle(r=grooveDepth, $fn=20);
           }
-        
+
         // Wire Grooves
         for (groove = [0:grooveCount-1])
         rotate(360/(grooveCount)*groove)
@@ -64,7 +63,7 @@ module ECM_RiflingChannel(outsideDiameter = BARREL_ID,
         circle(r=wireDiameter/2, $fn=10);
       }
     }
-    
+
   }
 }
 
@@ -80,10 +79,10 @@ module ECM_RiflingMandrel(outsideDiameter = BARREL_ID,
   render()
   difference() {
     union() {
-      
+
       // Chamber
       cylinder(r=chamberDiameter/2, h=chamberLength+base);
-      
+
       // Body
       translate([0,0,base-ManifoldGap()])
       cylinder(r=outsideRadius,
@@ -93,7 +92,7 @@ module ECM_RiflingMandrel(outsideDiameter = BARREL_ID,
       cylinder(r1=outsideRadius,
                r2=outsideRadius-grooveDepth,
                 h=outsideRadius);
-      
+
       // Base
       linear_extrude(height=base)
       difference() {
@@ -102,18 +101,18 @@ module ECM_RiflingMandrel(outsideDiameter = BARREL_ID,
         circle(r=outsideRadius*0.9-ManifoldGap());
       }
     }
-    
+
     // Water channels
     rotate(360*twistRate*-twistSign*(base+chamberLength))
     translate([0,0,base+chamberLength-ManifoldGap()])
     ECM_RiflingChannel(length=length-chamberLength-0.05+ManifoldGap());
-    
+
     // Base water channels
     translate([0,0,-ManifoldGap()])
     ECM_RiflingChannel(length=base+chamberLength+ManifoldGap(3),
                        outsideDiameter=outsideDiameter,
                        intersect=true);
-    
+
   }
 }
 

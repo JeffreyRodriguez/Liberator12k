@@ -1,8 +1,5 @@
-use <../../../Meta/Animation.scad>;
-use <../../../Meta/Cutaway.scad>;
-use <../../../Meta/Manifold.scad>;
-use <../../../Meta/Resolution.scad>;
-use <../../../Meta/Units.scad>;
+include <../../../Meta/Common.scad>;
+
 use <../../../Vitamins/Pipe.scad>;
 use <../../../Vitamins/Rod.scad>;
 use <../../../Shapes/Chamfer.scad>;

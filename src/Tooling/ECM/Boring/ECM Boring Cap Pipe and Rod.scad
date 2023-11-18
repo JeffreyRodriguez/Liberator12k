@@ -1,4 +1,5 @@
-use <../../../Meta/Resolution.scad>;
+include <../../../Meta/Common.scad>;
+
 use <../../../Vitamins/Pipe.scad>;
 use <../../../Vitamins/Rod.scad>;
 

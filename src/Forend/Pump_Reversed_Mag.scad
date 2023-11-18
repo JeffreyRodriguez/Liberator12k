@@ -1,10 +1,4 @@
-include <../Meta/Animation.scad>;
-
-use <../Meta/Manifold.scad>;
-use <../Meta/Units.scad>;
-use <../Meta/Cutaway.scad>;
-use <../Meta/Conditionals.scad>;
-use <../Meta/Resolution.scad>;
+include <../Meta/Common.scad>;
 
 use <../Shapes/Chamfer.scad>;
 use <../Shapes/Semicircle.scad>;

@@ -1,4 +1,5 @@
-use <../../Meta/Units.scad>;
+include <../../Meta/Common.scad>;
+
 use <../../Shapes/Chamfer.scad>;
 use <../../Shapes/Components/ORing.scad>;
 use <../../Shapes/TeardropTorus.scad>;
@@ -21,7 +22,7 @@ difference() {
   translate([0,0,Z])
   TeardropTorus(majorRadius=(INNER_DIAMETER/2)-(ORING_WIDTH*0.25),
                 minorRadius=(ORING_WIDTH*0.75)-CLEARANCE);
-  
+
   // Center Hole
   ChamferedCircularHole(r1=(HOLE_DIAMETER/2)+CLEARANCE,
                         r2=CHAMFER_RADIUS,

@@ -1,4 +1,5 @@
-use <../../Meta/Manifold.scad>;
+include <../../Meta/Common.scad>;
+
 use <../Chamfer.scad>;
 use <../Teardrop.scad>;
 use <Hose Barb.scad>;

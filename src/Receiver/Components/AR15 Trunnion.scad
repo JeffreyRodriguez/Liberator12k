@@ -1,17 +1,8 @@
-include <../../Meta/Animation.scad>;
+include <../../Meta/Common.scad>;
 
-use <../../Meta/Manifold.scad>;
 use <../../Meta/Math/Circles.scad>;
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Units.scad>;
-use <../../Meta/Cutaway.scad>;
-use <../../Meta/Resolution.scad>;
-use <../../Meta/Conditionals.scad>;
-
 use <../../Shapes/Chamfer.scad>;
-
 use <../../Vitamins/AR15/Barrel.scad>;
-
 use <../Lower.scad>;
 use <../Receiver.scad>;
 

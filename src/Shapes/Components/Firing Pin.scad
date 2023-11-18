@@ -1,13 +1,7 @@
-include <../../Meta/Animation.scad>;
-
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Units.scad>;
-use <../../Meta/Cutaway.scad>;
-use <../../Meta/Resolution.scad>;
-
-use <../Chamfer.scad>;
+include <../../Meta/Common.scad>;
 
 use <../../Vitamins/Nuts And Bolts.scad>;
+use <../Chamfer.scad>;
 
 // Settings: Vitamins
 DEFAULT_FIRING_PIN_RETAINER_BOLT = Spec_BoltM4();

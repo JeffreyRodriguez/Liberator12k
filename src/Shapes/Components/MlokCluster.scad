@@ -1,16 +1,12 @@
-use <../../Meta/Cutaway.scad>;
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Units.scad>;
-use <../../Meta/Resolution.scad>;
-use <../../Meta/Conditionals.scad>;
-
-use <../Chamfer.scad>;
-use <../MLOK.scad>;
+include <../../Meta/Common.scad>;
 
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
 use <../../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
+use <../Chamfer.scad>;
+use <../MLOK.scad>;
+
 
 /* [Assembly] */
 _SHOW_CLUSTER = true;

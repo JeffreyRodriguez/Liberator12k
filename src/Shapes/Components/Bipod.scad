@@ -1,10 +1,9 @@
-use <../../Meta/Cutaway.scad>;
-use <../../Meta/Manifold.scad>;
-use <../../Meta/Resolution.scad>;
-use <../Teardrop.scad>;
-use <../Chamfer.scad>;
+include <../../Meta/Common.scad>;
+
 use <../../Vitamins/Pipe.scad>;
 use <../../Vitamins/Square Tube.scad>;
+use <../Teardrop.scad>;
+use <../Chamfer.scad>;
 
 module Bipod(bottomDiameter=1, legDiameter=5/16,
              length=2, extend=1, frontWall=0.25, bipodLegLength=6,

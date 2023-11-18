@@ -1,5 +1,5 @@
-use <../../../Meta/Manifold.scad>;
-use <../../../Meta/Units.scad>;
+include <../../../Meta/Common.scad>;
+
 use <../../../Vitamins/Pipe.scad>;
 use <../../../Vitamins/Rod.scad>;
 use <../../../Vitamins/Nuts And Bolts.scad>;

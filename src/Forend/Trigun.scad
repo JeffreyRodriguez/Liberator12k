@@ -1,34 +1,24 @@
-include <../Meta/Animation.scad>;
+include <../Meta/Common.scad>;
 
-use <../Meta/Manifold.scad>;
-use <../Meta/Units.scad>;
-use <../Meta/Cutaway.scad>;
-use <../Meta/Resolution.scad>;
-use <../Meta/Conditionals.scad>;
-
+use <../Ammo/Shell Slug.scad>;
+use <../Ammo/Cartridges/Cartridge.scad>;
+use <../Ammo/Cartridges/Cartridge_12GA.scad>;
+use <../Receiver/FCG.scad>;
+use <../Receiver/Frame.scad>;
+use <../Receiver/Lower.scad>;
+use <../Receiver/Receiver.scad>;
+use <../Receiver/Stock.scad>;
 use <../Shapes/Chamfer.scad>;
 use <../Shapes/Bearing Surface.scad>;
 use <../Shapes/Teardrop.scad>;
 use <../Shapes/TeardropTorus.scad>;
 use <../Shapes/Semicircle.scad>;
 use <../Shapes/ZigZag.scad>;
-
 use <../Shapes/Components/Pivot.scad>;
 use <../Shapes/Components/Pump Grip.scad>;
-
 use <../Vitamins/Nuts And Bolts.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 use <../Vitamins/Pipe.scad>;
-
-use <../Ammo/Shell Slug.scad>;
-use <../Ammo/Cartridges/Cartridge.scad>;
-use <../Ammo/Cartridges/Cartridge_12GA.scad>;
-
-use <../Receiver/FCG.scad>;
-use <../Receiver/Frame.scad>;
-use <../Receiver/Lower.scad>;
-use <../Receiver/Receiver.scad>;
-use <../Receiver/Stock.scad>;
 
 /* [Print] */
 

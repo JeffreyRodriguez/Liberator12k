@@ -1,7 +1,6 @@
-use <../../../Meta/Clearance.scad>;
-use <../../../Meta/Units.scad>;
-use <../../../Meta/Manifold.scad>;
+include <../../../Meta/Common.scad>;
 
+use <../../../Meta/Clearance.scad>;
 use <Mating Pins.scad>;
 
 function AR15_TriggerPocketDepth()         = Millimeters(32);

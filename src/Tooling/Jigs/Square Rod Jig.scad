@@ -1,6 +1,5 @@
-use <../../Meta/Resolution.scad>;
-use <../../Meta/Units.scad>;
-use <../../Meta/Manifold.scad>;
+include <../../Meta/Common.scad>;
+
 use <../../Shapes/Chamfer.scad>;
 use <../../Shapes/Components/ORing.scad>;
 use <../../Shapes/TeardropTorus.scad>;

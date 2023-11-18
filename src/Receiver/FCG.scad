@@ -1,24 +1,15 @@
-include <../Meta/Animation.scad>;
-
-use <../Meta/Manifold.scad>;
-use <../Meta/Units.scad>;
-use <../Meta/Cutaway.scad>;
-use <../Meta/Resolution.scad>;
-use <../Meta/Conditionals.scad>;
+include <../Meta/Common.scad>;
 
 use <../Shapes/Teardrop.scad>;
 use <../Shapes/Chamfer.scad>;
 use <../Shapes/Components/Pivot.scad>;
-
 use <../Tooling/Jigs/Square Rod Jig.scad>;
-
 use <../Vitamins/Bearing.scad>;
 use <../Vitamins/Nuts And Bolts.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec_Metric.scad>;
 use <../Vitamins/Nuts and Bolts/BoltSpec_Inch.scad>;
 use <../Vitamins/Springs.scad>;
-
 use <Lower.scad>;
 use <Receiver.scad>;
 
@@ -390,7 +381,7 @@ module HammerBolt(clearance=Hammer_BOLT_CLEARANCE, head=HAMMER_BOLT_HEAD, nut=HA
              capOrientation=true,
              clearance=(cutter?clearance:0),
              doRender=!cutter);
-  
+
   translate([HammerCockedX-boltLength+NutHexHeight(HammerBolt())+ManifoldGap()
              -boltHeadAdjustment,0,0])
   rotate([0,-90,0])
@@ -613,7 +604,7 @@ module ChargingHandleSpring(cutter=false, clearance=0.002) {
 module TriggerBase(clearance=0.015, frontLeg=true, backLeg=true) {
   frontExtra = 0.3125;
   backHeight = 0.375;
-	
+
 	difference() {
 		union() {
 
@@ -644,7 +635,7 @@ module TriggerBase(clearance=0.015, frontLeg=true, backLeg=true) {
 			               TriggerWidth(),
 			               backHeight-clearance], r=1/16);
 		}
-		
+
 
 		// Trigger finger chamfer
 		translate([-LowerMaxX()+TriggerFingerRadius()+TriggerTravel()+SearWidth()+0.5-0.15,
@@ -1351,7 +1342,7 @@ module SimpleFireControlAssembly(recoilPlateLength=RecoilPlateLength(), hardware
   disconnectStart = 0.8;
   disconnectLetdown = 0.2;
   connectStart = 0.99;
-  
+
   DisconnectorTripAF = SubAnimate(ANIMATION_STEP_CHARGE, start=0.0, end=0.2)
                      - SubAnimate(ANIMATION_STEP_CHARGER_RESET,
                                   start=connectStart);
@@ -1408,7 +1399,7 @@ module SimpleFireControlAssembly(recoilPlateLength=RecoilPlateLength(), hardware
 
       if (hardware)
       HammerSpring();
-      
+
       if (hardware)
       HammerBoltSleeve();
 
@@ -1434,7 +1425,7 @@ module SimpleFireControlAssembly(recoilPlateLength=RecoilPlateLength(), hardware
 
   if (hardware && _SHOW_RECOIL_PLATE_BOLTS)
   RecoilPlateSideBolts();
-  
+
   if (hardware && _SHOW_HOUSING_BOLTS)
   HousingBolts();
 

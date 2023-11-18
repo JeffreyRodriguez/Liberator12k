@@ -1,7 +1,4 @@
-use <../Meta/Cutaway.scad>;
-use <../Meta/Resolution.scad>;
-use <../Meta/Manifold.scad>;
-use <../Meta/Units.scad>;
+include <../Meta/Common.scad>;
 
 use <../Vitamins/Pipe.scad>;
 use <../Vitamins/Rod.scad>;

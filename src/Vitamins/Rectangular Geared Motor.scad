@@ -1,6 +1,6 @@
+include <../Meta/Common.scad>;
+
 use <Nuts And Bolts.scad>;
-use <../Meta/Units.scad>;
-use <../Meta/Resolution.scad>;
 
 MOTOR_OFFSET_Z = Inches(-0.25);
 MOTOR_DIAMETER = Inches(1.22);

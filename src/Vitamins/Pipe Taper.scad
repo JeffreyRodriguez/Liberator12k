@@ -1,6 +1,6 @@
-use <../Meta/Resolution.scad>;
+include <../Meta/Common.scad>;
+
 use <../Meta/slookup.scad>;
-use <../Meta/Units.scad>;
 
 /* [Taper Preview] */
 _NPT_SIZE = "1/8"; // ["1/16", "1/8", "1/4", "3/8", "1/2", "3/4", "1", "1 1/4", "1 1/2", "2"]
@@ -30,11 +30,11 @@ function taperNPT_D(E0, V) = E0 - 0.0625*V;
 module taperNPT(specName, L1 = 0) {
 	spec = NPT_Spec(specName);
 	assert(spec != undef, concat("Could not find NPT spec: ", specName));
-	
+
 	outsideDiameter = NPT_OD(spec);
 	tpi = NPT_ThreadsPerInch(spec);
 	L1 = NPT_L1(spec);
-	
+
 	taperNPT_(outsideDiameter, tpi, L1, V = 3/tpi);
 }
 
