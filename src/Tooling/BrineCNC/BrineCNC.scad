@@ -13,7 +13,6 @@ use <../../Shapes/Teardrop.scad>;
 use <../../Vitamins/NEMA Stepper.scad>;
 use <../../Vitamins/Nuts And Bolts.scad>;
 use <../../Vitamins/Pipe Taper.scad>;
-include <Gears.scad>;
 use <aluminumExtrusions.scad>;
 
 /* [Export] */
@@ -74,6 +73,19 @@ Barrel_Offset_X_ = 1.25;
 Barrel_Inset_Bottom = 0.5;
 Barrel_Inset_Top = 0.375; // Unused yet
 Barrel_Wall = 0.25;
+
+GEAR_PITCH = Millimeters(4); // all meshing gears need the same GEAR_PITCH
+drivenGearTeeth = 31;
+driveGearTeeth = 20;
+gearClearance = 0.015;
+gearThickness = 1/2;
+driveGearPitchRadius = pitch_radius(GEAR_PITCH,driveGearTeeth);
+drivenGearPitchRadius = pitch_radius(GEAR_PITCH,drivenGearTeeth);
+gearDistance  = driveGearPitchRadius+drivenGearPitchRadius;
+
+echo("Drive Gear Pitch Radius: ", pitch_radius(GEAR_PITCH,driveGearTeeth));
+echo("Driven Gear Pitch Radius: ", pitch_radius(GEAR_PITCH,drivenGearTeeth));
+echo("Driven:Drive ratio ", drivenGearTeeth/driveGearTeeth);
 
 CHOSEN_DIMENSIONS_UNIT = UnitType(Chosen_Dimensions_Unit_of_Measure);
 
@@ -198,6 +210,65 @@ module RotaryStepper(cutter=false) {
 		cylinder(r=0.375,h=1);
 	}
 }
+//
+
+module DrivenGear(id=0.75+0.02, extension=0.375) {
+  color("OliveDrab") render()
+  difference() {
+    union() {
+      intersection() {
+        ChamferedCylinder(r1=drivenGearPitchRadius+(GEAR_PITCH/3), r2=1/16, h=gearThickness, $fn=60);
+
+        translate([0,0,gearThickness/2])
+        gear(GEAR_PITCH,drivenGearTeeth,gearThickness,0,
+             clearance=gearClearance);
+      }
+
+      ChamferedCylinder(r1=driveGearPitchRadius+GEAR_PITCH, r2=1/16, h=gearThickness+extension, $fn=50);
+    }
+
+    ChamferedCircularHole(r1=id/2,
+                          r2=1/32,
+                           h=gearThickness+extension, $fn=40);
+
+    translate([0,0,gearThickness+0.125])
+    for (r = [0, 120, -120]) rotate(r)
+    rotate([0,90,0])
+    Bolt(bolt=BoltSpec("M4"), teardrop=true, teardropAngle=180, length=2);
+  }
+}
+//
+
+module DriveGear(id=Millimeters(5), extension=0.375, flipZ=false) {
+  translate([0,0,flipZ?gearThickness+extension:0]) mirror([0,0,flipZ?1:0])
+  color("DarkCyan") render()
+  difference() {
+    union() {
+      intersection() {
+        ChamferedCylinder(r1=driveGearPitchRadius+(GEAR_PITCH/3), r2=1/16,
+                          h=gearThickness, $fn=60);
+
+        translate([0,0,(gearThickness/2)])
+        gear(GEAR_PITCH,driveGearTeeth,gearThickness,0,
+             clearance=gearClearance);
+      }
+
+      ChamferedCylinder(r1=0.36, r2=1/16,
+                        chamferBottom=false, h=gearThickness+extension, $fn=50);
+    }
+    echo("ID: ", id)
+    ChamferedCircularHole(r1=(id/2)+0.005,
+                          r2=1/32,
+                           h=gearThickness+extension, $fn=40);
+
+    translate([0,0,gearThickness+0.125])
+    for (r = [0, 120, -120]) rotate(r)
+    rotate([0,90,0])
+    Bolt(bolt=BoltSpec("M4"), teardrop=true, teardropAngle=180, length=2);
+  }
+}
+//
+
 //
 
 module LinearStepper(cutter=false) {
