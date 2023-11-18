@@ -26,28 +26,25 @@ _SHOW_COLUMN = true;
 _SHOW_COLUMNFOOT = true;
 _SHOW_TAILSTOCK = true;
 _SHOW_HEADSTOCK = true;
-_SHOW_ROTARY_MOTOR = true;
-_SHOW_ROTARY_GEARS = true;
-_SHOW_LINEAR_MOTOR = true;
+_SHOW_ROTARY_AXIS = true;
+_SHOW_LINEAR_AXIS = true;
 _SHOW_CARRIAGE = true;
-
 _SHOW_DRIP_TRAY = true;
 
 /* [Transparency] */
-_ALPHA_BARREL=1; // [0:0.1:1]
+_ALPHA_BARREL=1;      // [0:0.1:1]
 _ALPHA_HEADSTOCK=0.5; // [0:0.1:1]
 _ALPHA_TAILSTOCK=0.5; // [0:0.1:1]
-_ALPHA_CARRIAGE=0.5; // [0:0.1:1]
-_ALPHA_DRIP_TRAY=1; // [0:0.1:1]
+_ALPHA_CARRIAGE=0.5;  // [0:0.1:1]
 _ALPHA_DRIP_TRAY=1;   // [0:0.1:1]
 
 /* [Vitamins] */
-Barrel_Unit_of_Measure = "Inches"; //["Millimeters", "Inches"]
+Barrel_Units = "Inches"; // ["Millimeters", "Inches"]
 Barrel_Diameter_ = 0.75;
 Barrel_Length_ = 6;
-O_Ring_Unit_of_Measure = "Inches"; //["Millimeters", "Inches"]
+O_Ring_Units = "Inches"; // ["Millimeters", "Inches"]
 Oring_Width_ = 0.09375;
-Other_Vitamins_Unit_of_Measure = "Inches"; //["Millimeters", "Inches"]
+Other_Vitamins_Units = "Inches"; // ["Millimeters", "Inches"]
 Electrode_Diameter_ = 0.125;
 Tap_Diameter_ = 0.1875;
 
@@ -707,60 +704,53 @@ if ($preview) {
 	translate([0, 0, 1/2])
 	Column();
 
-	DriveScrew();
+	if (_SHOW_LINEAR_AXIS) {
+		DriveScrew();
+		DriveNut();
+    LinearStepper();
+	}
 
 	translate([0,0,-BARREL_LENGTH*$t]) {
 		Electrode();
-		DriveNut();
     
     if (_SHOW_CARRIAGE)
 		Carriage();
 	}
 
-	*BarrelContact();
+	BarrelContact();
   Barrel();
 
 		rotations=3;
 
-  // Barrel drive
-  if (_SHOW_ROTARY_GEARS)
-  translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MIN-gearThickness])
-  mirror([0,0,1])
-  translate([0,gearDistance,0])
-  mirror([0,0,1])
-  rotate(rotations*360*$t)
-  rotate(360/driveGearTeeth*0.45)
-  DriveGear();
+  if (_SHOW_ROTARY_AXIS) {
+		RotaryStepper();
+		
+		translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MIN-gearThickness])
+		mirror([0,0,1])
+		translate([0,gearDistance,0])
+		mirror([0,0,1])
+		rotate(rotations*360*$t)
+		rotate(360/driveGearTeeth*0.45)
+		DriveGear();
 
-  if (_SHOW_ROTARY_GEARS)
-  translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MIN])
-  mirror([0,0,1])
-  rotate(-rotations*360*$t*(driveGearTeeth/drivenGearTeeth))
-  DrivenGear();
-  
-  if (_SHOW_ROTARY_MOTOR)
-  RotaryStepper();
-  
-  if (_SHOW_HEADSTOCK)
-  HeadstockORing();
-  
-  if (_SHOW_HEADSTOCK)
-  HeadstockTap();
-
-  if (_SHOW_LINEAR_MOTOR) {
-    LinearStepper();
-  }
+		translate([BARREL_OFFSET_X,0,DRILLHEAD_Z_MIN])
+		mirror([0,0,1])
+		rotate(-rotations*360*$t*(driveGearTeeth/drivenGearTeeth))
+		DrivenGear();
+	}
   
   if (_SHOW_HEADSTOCK) {
-    Headstock();
+		HeadstockORing();
+		HeadstockTap();
+  
     HeadstockBolts();
+    Headstock();
   }
     
-  if (_SHOW_TAILSTOCK)
-  Tailstock();
-    
-  if (_SHOW_TAILSTOCK)
-  TailstockPins();
+  if (_SHOW_TAILSTOCK) {
+		TailstockPins();
+		Tailstock();
+	}
 	
 	if (_SHOW_DRIP_TRAY)
 	DripTray();
