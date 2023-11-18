@@ -575,23 +575,40 @@ module Revolver_BarrelSupport(doRender=true, cutaway=false, alpha=_ALPHA_FOREND)
   }
 }
 
-module Revolver_FrameSpacer(length=ForendMinX(), cutaway=false, alpha=_ALPHA_FOREND) {
+module Revolver_FrameSpacer(length=ForendMinX()+0.02, cutaway=false, alpha=_ALPHA_FOREND) {
   extraBottom=0;
 
   color("Tan", alpha)
   render() Cutaway(cutaway)
   difference() {
-    hull() {
+		union() {
+			hull() {
 
-      // Main support
-      Frame_Support(length=length);
+				// Main support
+				Frame_Support(length=length-0.75);
 
-      // Rear ears
-      Frame_Support(length=ManifoldGap(), extraBottom=0.5);
+				// Rear ears
+				Frame_Support(length=ManifoldGap(), extraBottom=0.5);
 
-      mirror([1,0,0])
-      ReceiverTopSegment(length=length, chamferFront=false, chamferBack=false);
-    }
+				mirror([1,0,0])
+				ReceiverTopSegment(length=length-1.25,
+				                   chamferFront=false,
+				                   chamferBack=true);
+			}
+			
+      // Front Extension
+			Frame_BoltIterator() {
+				width=(FrameBoltRadius()+WallFrameBolt())*2;
+				
+				translate([0,-width/2,-width/2])
+				ChamferedCube([length, width, width], r=1/4,
+				              teardropXYZ=[false,false,false],
+				              teardropTopXYZ=[false,false,false],
+				              chamfer=[true, false, false]);
+			}
+			
+		}
+		
 
     Frame_Bolts(cutter=true);
 
