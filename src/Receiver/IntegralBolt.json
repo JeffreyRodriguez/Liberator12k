@@ -1,0 +1,43 @@
+{
+    "parameterSets": {
+        "inch": "",
+        "metric": {
+            "VITAMIN_UNITS": "Millimeters",
+            "ACTION_ROD_BOLT": "M4",
+            "ACTION_ROD_BOLT_CLEARANCE_": "0.381",
+            "CHARGING_HANDLE_BOLT": "M4",
+            "CHARGING_HANDLE_BOLT_CLEARANCE_": "0.381",
+            "DisconnectorExtension_": "0",
+            "DisconnectorHeight_": "6.35",
+            "DisconnectorOffset_": "20.955",
+            "DisconnectorOffsetY_": "-3.175",
+            "DisconnectorPivotAngle": "-6",
+            "DisconnectorPivotZ_": "12.7",
+            "DisconnectorThickness_": "12.7",
+            "DisconnectorTripBackset_": "4.7625",
+            "Disconnector_SPRING_CLEARANCE_": "0.127",
+            "Disconnector_SPRING_DIAMETER_": "5.842",
+            "HammerLength_": "50.8",
+            "HammerOvertravelX_": "6.35",
+            "Hammer_BOLT": "M6",
+            "Hammer_BOLT_CLEARANCE_": "0.381",
+            "HAMMER_BOLT_SLEEVE_DIAMETER_": "7.14375",
+            "HAMMER_BOLT_SLEEVE_CLEARANCE_": "0.254",
+            "RECOIL_PLATE_CONTOURED": "true",
+            "FIRING_PIN_BODY_DIAMETER_": "7.9375",
+            "FIRING_PIN_BODY_LENGTH_": "25.4",
+            "FIRING_PIN_CLEARANCE_": "0.254",
+            "FIRING_PIN_DIAMETER_": "2.413",
+            "FIRING_PIN_HEAD_THICKNESS_": "0.635",
+            "RECOIL_PLATE_BOLT": "M4",
+            "RECOIL_PLATE_BOLT_CLEARANCE_": "0.381",
+            "chargerTravel_": "50.8",
+            "disconnectDistance_": "3.175",
+            "SEAR_WIDTH_": "6.35",
+            "SEAR_CLEARANCE_": "0.127",
+            "SEAR_PIN_DIAMETER_": "2.5",
+            "SEAR_PIN_CLEARANCE_": "0.254"
+        }
+    },
+    "fileFormatVersion": "1"
+}
