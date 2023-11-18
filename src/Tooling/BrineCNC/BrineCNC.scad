@@ -31,6 +31,7 @@ _SHOW_ROTARY_GEARS = true;
 _SHOW_LINEAR_MOTOR = true;
 _SHOW_CARRIAGE = true;
 
+_SHOW_DRIP_TRAY = true;
 
 /* [Transparency] */
 _ALPHA_BARREL=1; // [0:0.1:1]
@@ -38,6 +39,7 @@ _ALPHA_HEADSTOCK=0.5; // [0:0.1:1]
 _ALPHA_TAILSTOCK=0.5; // [0:0.1:1]
 _ALPHA_CARRIAGE=0.5; // [0:0.1:1]
 _ALPHA_DRIP_TRAY=1; // [0:0.1:1]
+_ALPHA_DRIP_TRAY=1;   // [0:0.1:1]
 
 /* [Vitamins] */
 Barrel_Unit_of_Measure = "Inches"; //["Millimeters", "Inches"]
@@ -99,6 +101,12 @@ Water_Tap_Offset_X_ = BARREL_OFFSET_X;
 Water_Tap_Offset_Y_ = -1;
 Tailstock_Pin_Diameter = 0.098425;
 Tailstock_Height = 0.5;
+Drip_Tray_Length_ = 3;
+Drip_Tray_Width_ = 6;
+Drip_Tray_Depth_ = 1;
+Drip_Tray_Base_ = 0.125;
+Drip_Tray_Wall_ = 0.125;
+Drive_Screw_Length_ = 15.748;
 
 Intermediate_Shaft_Diameter_ = 5/16;
 
@@ -119,6 +127,11 @@ WATER_TAP_OFFSET_X = UnitSelect(Water_Tap_Offset_X_, CHOSEN_DIMENSIONS_UNIT);
 WATER_TAP_OFFSET_Y = UnitSelect(Water_Tap_Offset_Y_, CHOSEN_DIMENSIONS_UNIT);
 TAILSTOCK_PIN_RADIUS = UnitSelect(Tailstock_Pin_Diameter, CHOSEN_DIMENSIONS_UNIT)/2;
 TAILSTOCK_HEIGHT = UnitSelect(Tailstock_Height, CHOSEN_DIMENSIONS_UNIT)/2;
+DRIP_TRAY_LENGTH = UnitSelect(Drip_Tray_Length_, CHOSEN_DIMENSIONS_UNIT);
+DRIP_TRAY_WIDTH = UnitSelect(Drip_Tray_Width_, CHOSEN_DIMENSIONS_UNIT);
+DRIP_TRAY_DEPTH = UnitSelect(Drip_Tray_Depth_, CHOSEN_DIMENSIONS_UNIT);
+DRIP_TRAY_BASE = UnitSelect(Drip_Tray_Base_, CHOSEN_DIMENSIONS_UNIT);
+DRIP_TRAY_WALL = UnitSelect(Drip_Tray_Wall_, CHOSEN_DIMENSIONS_UNIT);
 
 INTERMEDIATE_SHAFT_DIAMETER = UnitSelect(Intermediate_Shaft_Diameter_, CHOSEN_DIMENSIONS_UNIT);
 
@@ -399,26 +412,6 @@ module LegBolts(cutter=false) {
 }
 //
 
-// Leg Module
-  
-  // Leg
-  hull() {
-    
-    // Round top
-    translate([COLUMN_WALL/2,0,0])
-    ChamferedCylinder(r1=COLUMN_WALL, r2=Inches(1/32), h=COLUMNFOOT_HEIGHT);
-
-    // Square tip
-    translate([0,-(padWidth/4),0])
-    ChamferedCube([padWidth+extension, padWidth/2, Inches(0.1875)],
-                  r=Inches(1/32));
-  }
-
-  // Foot Pad
-  translate([extension,-(padWidth/2),0])
-  ChamferedCube([padWidth, padWidth, Inches(0.125)],
-                r=Inches(1/32));
-}
 // Workpiece
 module Barrel(clearance=Inches(0.015), cutter=false,alpha=_ALPHA_BARREL) {
 	color("Silver", alpha)
@@ -606,58 +599,79 @@ module Carriage(extension=1, alpha=_ALPHA_CARRIAGE) {
 		DriveNut(cutter=true);
 	}
 }
+//
+
+module DripTray(alpha=_ALPHA_DRIP_TRAY) {
+	wall = DRIP_TRAY_WALL;
+	wall2 = wall*2;
+	
+	color("Tan") render()
+	difference() {
+		union() {
+			
+			// Drip Tray
+			translate([COLUMN_WALL-wall, -DRIP_TRAY_WIDTH/2, 0])
+			ChamferedCube([DRIP_TRAY_LENGTH,
+										 DRIP_TRAY_WIDTH,
+										 DRIP_TRAY_DEPTH], r=Inches(1/32));
+			
+			// Column sleeve
+			translate([-COLUMN_X_WIDTH, -(COLUMN_Y_WIDTH/2) - COLUMN_WALL, 0])
+			ChamferedCube([COLUMN_X_WIDTH + COLUMN_WALL,
+			               COLUMN_Y_WIDTH + (COLUMN_WALL*2),
+			               DRIP_TRAY_DEPTH], r=Inches(1/16));
+		}
+		
+		// Hollow out the drip tray
+		translate([COLUMN_WALL, -(DRIP_TRAY_WIDTH/2)+wall, DRIP_TRAY_BASE])
+		ChamferedCube([DRIP_TRAY_LENGTH-wall2,
+									 DRIP_TRAY_WIDTH-wall2,
+									 DRIP_TRAY_DEPTH], r=Inches(1/32));
+		
+		Column(slots=[0,-90,90], cutter=true);
+	}
+}
 
 module Legs(alpha=1, debug=false) {
+	extension=COLUMNFOOT_EXTENSION;
+	padWidth=COLUMNFOOT_PAD_WIDTH;
+	
 	color("Tan", alpha) render() Cutaway(enabled=debug)
 	difference() {
 		union() {
 
 			// Column sleeve
 			translate([-COLUMN_X_WIDTH-COLUMN_WALL, -(COLUMN_Y_WIDTH/2) - COLUMN_WALL, 0])
-			ChamferedCube([COLUMN_X_WIDTH + (COLUMN_WALL*2), COLUMN_Y_WIDTH + (COLUMN_WALL*2), COLUMNFOOT_HEIGHT], r=Inches(1/16));
+			ChamferedCube([COLUMN_WALL, COLUMN_Y_WIDTH + (COLUMN_WALL*2), COLUMNFOOT_HEIGHT], r=Inches(1/16));
 
 			// Legs
-      for (X = [0, -COLUMN_X_WIDTH])
       for (Y = [1,-1])
-			translate([X, Y*(COLUMN_Y_WIDTH/2), 0])
-      mirror([(X == 0 ? 0 : 1),0,0])
-			rotate(Y*45) Leg();
-      
-      // Tailstock Mounting Plate
-      hull() {
-        
-        // Extensions
-        for (Y = [1,-1])
-        translate([0, Y*(COLUMN_Y_WIDTH/2), 0])
-        rotate(Y*45)
-        translate([COLUMNFOOT_EXTENSION, 0, 0])
-        ChamferedCylinder(r1=COLUMN_WALL/2, r2=Inches(1/32), h=COLUMNFOOT_PLATE_HEIGHT);
-        
-        // Center
-        ChamferedCylinder(r1=COLUMN_WALL, r2=Inches(1/32), h=COLUMNFOOT_PLATE_HEIGHT);
-      }
-      
-      // Catch Pan Front Wall
-      hull()
-      for (Y = [1,-1])
-      translate([0, Y*(COLUMN_Y_WIDTH/2), 0])
-      rotate(Y*45)
-      translate([COLUMNFOOT_EXTENSION+(COLUMNFOOT_PAD_WIDTH/2), 0, 0])
-      ChamferedCylinder(r1=COLUMNFOOT_PAD_WIDTH/4, r2=Inches(1/32), h=Inches(1));
-      
-      // Catch Pan Walls
-      for (M=[0,1]) mirror([0,M,0])
-      hull()
-      translate([0, (COLUMN_Y_WIDTH/2), 0])
-      rotate(45)
-      for (X = [0,1])
-      translate([(X*COLUMNFOOT_EXTENSION)+(COLUMNFOOT_PAD_WIDTH/2), 0, 0])
-      ChamferedCylinder(r1=COLUMNFOOT_PAD_WIDTH/4, r2=Inches(1/32), h=Inches(1));
+			translate([-COLUMN_X_WIDTH-COLUMN_WALL, Y*((COLUMN_Y_WIDTH/2)+COLUMN_WALL), 0])
+			mirror([1,0,0])
+			rotate(Y*45)
+			union() {
+				
+				// Leg
+				hull() {
+					
+					// Round top
+					ChamferedCylinder(r1=COLUMN_WALL, r2=Inches(1/32), h=COLUMNFOOT_HEIGHT);
+
+					// Square tip
+					translate([0,-(padWidth/4),0])
+					ChamferedCube([padWidth+extension, padWidth/2, Inches(0.1875)],
+												r=Inches(1/32));
+				}
+
+				// Foot Pad
+				translate([extension,-(padWidth/2),0])
+				ChamferedCube([padWidth, padWidth, Inches(0.125)],
+											r=Inches(1/32));
+			}
 		}
 
 		LegBolts(cutter=true);
     TailstockPins(cutter=true);
-		translate([0, 0, 1/2])
 		Column(slots=[0,-90,90], cutter=true);
 	}
 }
@@ -747,6 +761,9 @@ if ($preview) {
     
   if (_SHOW_TAILSTOCK)
   TailstockPins();
+	
+	if (_SHOW_DRIP_TRAY)
+	DripTray();
 
   if (_SHOW_COLUMNFOOT) {
     LegBolts();
