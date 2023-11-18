@@ -1,4 +1,4 @@
-use <../Meta/Conditionals/RenderIf.scad>;
+use <../Meta/Conditionals.scad>;
 use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
 use <../Meta/Resolution.scad>;

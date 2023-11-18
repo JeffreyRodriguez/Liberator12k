@@ -4,8 +4,7 @@ use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
 use <../Meta/Cutaway.scad>;
 use <../Meta/Resolution.scad>;
-use <../Meta/Conditionals/RenderIf.scad>;
-use <../Meta/Conditionals/MirrorIf.scad>;
+use <../Meta/Conditionals.scad>;
 
 use <../Meta/Math/Triangles.scad>;
 
@@ -595,20 +594,20 @@ module Revolver_FrameSpacer(length=ForendMinX()+0.02, cutaway=false, alpha=_ALPH
 				                   chamferFront=false,
 				                   chamferBack=true);
 			}
-			
+
       // Front Extension
 			Frame_BoltIterator() {
 				width=(FrameBoltRadius()+WallFrameBolt())*2;
-				
+
 				translate([0,-width/2,-width/2])
 				ChamferedCube([length, width, width], r=1/4,
 				              teardropXYZ=[false,false,false],
 				              teardropTopXYZ=[false,false,false],
 				              chamfer=[true, false, false]);
 			}
-			
+
 		}
-		
+
 
     Frame_Bolts(cutter=true);
 
@@ -865,7 +864,7 @@ module RevolverForendAssembly(hardware=true, prints=true, pipeAlpha=1, cutaway=f
     translate([SpindlePinTravel()*animateLock,0,0]) {
       if (hardware)
       Revolver_ForendSpindle();
-      
+
       if (hardware)
       Revolver_ForendSpindlePin();
 

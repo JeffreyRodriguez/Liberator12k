@@ -1,5 +1,5 @@
 use <../../Vitamins/Nuts And Bolts.scad>;
-use <../../Meta/Conditionals/RenderIf.scad>;
+use <../../Meta/Conditionals.scad>;
 use <../../Meta/Resolution.scad>;
 use <../../Meta/Cutaway.scad>;
 use <../../Meta/Manifold.scad>;

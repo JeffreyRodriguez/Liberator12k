@@ -1,9 +1,8 @@
 use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
+use <../Meta/Conditionals.scad>;
 use <../Meta/Cutaway.scad>;
-use <../Meta/Conditionals/HullIf.scad>;
 use <../Meta/Resolution.scad>;
-use <../Meta/Conditionals/RenderIf.scad>;
 
 use <../Shapes/Chamfer.scad>;
 use <../Shapes/MLOK.scad>;
@@ -374,13 +373,13 @@ module Receiver(receiverLength=ReceiverLength(), mlok=RECEIVER_MLOK, highTop=REC
     ReceiverBottomSlot(length=ReceiverLength()-0.5, chamferBottom=false);
     Receiver_RoundSlot();
     Receiver_SideSlot();
-		
+
 		if (highTop)
     ReceiverTopSlot();
 
 		if (takedownPin)
     Receiver_TakedownPin(cutter=true);
-		
+
     Receiver_TensionBolts(cutter=true);
   }
 }

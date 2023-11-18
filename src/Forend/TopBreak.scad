@@ -4,8 +4,7 @@ use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
 use <../Meta/Cutaway.scad>;
 use <../Meta/Resolution.scad>;
-use <../Meta/Conditionals/RenderIf.scad>;
-use <../Meta/Conditionals/MirrorIf.scad>;
+use <../Meta/Conditionals.scad>;
 
 use <../Shapes/Bearing Surface.scad>;
 use <../Shapes/Chamfer.scad>;
@@ -580,7 +579,7 @@ module TopBreak_HandguardBolts(nutType="heatset", length=11.75, cutter=false, cl
                nut=nutType, nutHeightExtra=(cutter?BarrelRadius():0),
                teardrop=false, teardropAngle=180, capOrientation=true,
                clearance=cutter?clearance:0, doRender=!cutter);
-    
+
     color("Silver")
     RenderIf(!cutter)
     NutAcorn(spec=HandguardBolt());

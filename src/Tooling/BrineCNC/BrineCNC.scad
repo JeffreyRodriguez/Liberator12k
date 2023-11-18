@@ -3,7 +3,7 @@ use <../../Meta/Cutaway.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
 use <../../Meta/Resolution.scad>;
-use <../../Meta/Conditionals/RenderIf.scad>;
+use <../../Meta/Conditionals.scad>;
 use <../../Shapes/Chamfer.scad>;
 use <../../Shapes/Components/ORing.scad>;
 use <../../Shapes/Components/Hose Barb.scad>;

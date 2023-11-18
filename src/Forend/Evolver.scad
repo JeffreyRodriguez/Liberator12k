@@ -4,8 +4,7 @@ use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
 use <../Meta/Cutaway.scad>;
 use <../Meta/Resolution.scad>;
-use <../Meta/Conditionals/RenderIf.scad>;
-use <../Meta/Conditionals/MirrorIf.scad>;
+use <../Meta/Conditionals.scad>;
 
 use <../Meta/CAM.scad>;
 use <../Meta/Math/Circles.scad>;

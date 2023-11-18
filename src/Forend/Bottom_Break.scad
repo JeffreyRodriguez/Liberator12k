@@ -4,7 +4,7 @@ use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
 use <../Meta/Cutaway.scad>;
 use <../Meta/Resolution.scad>;
-use <../Meta/Conditionals/RenderIf.scad>;
+use <../Meta/Conditionals.scad>;
 
 use <../Shapes/Chamfer.scad>;
 use <../Shapes/Bearing Surface.scad>;

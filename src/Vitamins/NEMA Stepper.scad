@@ -1,6 +1,4 @@
-use <../Meta/Conditionals/RenderIf.scad>;
-use <../Meta/Conditionals/TranslateIf.scad>;
-use <../Meta/Conditionals/MirrorIf.scad>;
+use <../Meta/Conditionals.scad>;
 use <../Meta/Manifold.scad>;
 use <../Meta/Units.scad>;
 use <../Meta/Resolution.scad>;
@@ -47,7 +45,7 @@ module NEMA_Stepper(spec=NEMA_Stepper_Spec("17"), height=undef, shaftLength=unde
 
   sideLength = NEMA_Stepper_SideLength(spec);
   sideLengthHalf = sideLength/2;
-	
+
 	_height = default(NEMA_Stepper_Height(spec), height);
 
   color("DimGrey", 0.5)
@@ -76,12 +74,12 @@ module NEMA_Stepper(spec=NEMA_Stepper_Spec("17"), height=undef, shaftLength=unde
 module NEMA_Stepper_BoltIterator(spec, center=true, height=undef, reorient=true) {
   holeSpacing = NEMA_Stepper_HoleSpacing(spec);
   holeSpacingHalf = holeSpacing/2;
-	
+
   sideLength = NEMA_Stepper_SideLength(spec);
   sideLengthHalf = sideLength/2;
-	
+
 	_height = default(NEMA_Stepper_Height(spec), height);
-	
+
 	TranslateIf(!center, [sideLengthHalf, sideLengthHalf,0])
 	for (X = [1,-1]) for (Y=[1,-1])
 	TranslateIf(!reorient, [0,0,_height])
@@ -113,7 +111,7 @@ function NEMA_Stepper_Spec(name) = slookup(name, NEMA_STEPPER_SPECS);
 /***********
  * Example *
  ***********/
- 
+
 EXAMPLE_SPEC = NEMA_Stepper_Spec(Example_Spec_);
 
 NEMA_Stepper_BoltIterator(EXAMPLE_SPEC,
