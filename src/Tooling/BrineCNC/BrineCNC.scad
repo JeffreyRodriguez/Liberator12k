@@ -1,6 +1,5 @@
 use <../../Meta/Animation.scad>;
 use <../../Meta/Cutaway.scad>;
-use <../../Meta/Cylinder Text.scad>;
 use <../../Meta/Manifold.scad>;
 use <../../Meta/Units.scad>;
 use <../../Meta/Resolution.scad>;
@@ -64,7 +63,6 @@ ORING_WIDTH = UnitSelect(Oring_Width_, ORING_UNIT);
 ELECTRODE_DIAMETER = UnitSelect(Electrode_Diameter_, VITAMINS_UNIT);
 TAP_DIAMETER = UnitSelect(Tap_Diameter_, VITAMINS_UNIT);
 
-
 LEADSCREW_UNIT = UnitType(Leadscrew_Units);
 DRIVESCREW_DIAMETER = UnitSelect(Leadscrew_Diameter_in_Millimeters, LEADSCREW_UNIT);
 
@@ -81,7 +79,8 @@ drivenGearTeeth = 31;
 driveGearTeeth = 20;
 gearClearance = 0.015;
 gearThickness = 1/2;
-driveGearPitchRadius = pitch_radius(GEAR_PITCH,driveGearTeeth);
+
+driveGearPitchRadius  = pitch_radius(GEAR_PITCH,driveGearTeeth);
 drivenGearPitchRadius = pitch_radius(GEAR_PITCH,drivenGearTeeth);
 gearDistance  = driveGearPitchRadius+drivenGearPitchRadius;
 
