@@ -321,17 +321,6 @@ module Revolver_PumpLockRod(cutter=false, clearance=0.005) {
   cube([length, width+clear2, width+clear2]);
 }
 
-module Revolver_BlastPlateBolts(bolt=RecoilPlateBolt(), boltLength=Revolver_BarrelSupportLength(), template=false, cutter=false, clearance=0.01, cutaway=false) {
-  clear = cutter ? clearance : 0;
-
-  color("Silver")
-  RenderIf(!cutter) Cutaway(cutaway)
-  for (M = [0,1]) mirror([0,M,0])
-  translate([ForendMaxX(),BarrelRadius()+0.375,0])
-  rotate([0,90,0])
-  Bolt(bolt=bolt, length=boltLength+ManifoldGap(), clearance=clear, head="hex", capOrientation=true);
-}
-
 module Revolver_BlastPlate(clearance=0.01, holeClearance=0.002, cutter=false, cutaway=false) {
   clear = cutter ? clearance : 0;
   clear2 = clear*2;
@@ -549,8 +538,6 @@ module Revolver_BarrelSupport(doRender=true, cutaway=false, alpha=_ALPHA_FOREND)
     Revolver_Barrel(cutter=true);
 
     Revolver_BlastPlate(cutter=true);
-
-    Revolver_BlastPlateBolts(cutter=true);
 
     Revolver_ForendSpindle(cutter=true);
 
@@ -838,9 +825,6 @@ module RevolverForendAssembly(hardware=true, prints=true, pipeAlpha=1, cutaway=f
 
   if (_SHOW_BLAST_PLATE && hardware)
   Revolver_BlastPlate(cutaway=_CUTAWAY_SHIELD);
-
-  if (hardware)
-  Revolver_BlastPlateBolts(cutaway=_CUTAWAY_SHIELD);
 
   if (_SHOW_SHIELD && hardware)
   Revolver_Shield(cutaway=_CUTAWAY_SHIELD);
